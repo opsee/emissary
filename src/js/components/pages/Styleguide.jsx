@@ -4,12 +4,24 @@ import TabbedArea from 'react-bootstrap/lib/TabbedArea';
 import TabPane from 'react-bootstrap/lib/TabPane';
 import Toolbar from '../global/Toolbar.jsx';
 import Loader from '../global/Loader.jsx';
+import CheckItem from '../checks/CheckItem.jsx';
 const classNames = require('classnames');
 
+import Store from '../../stores/StyleguideStore';
+import Actions from '../../actions/StyleguideActions';
+
+function getState(){
+  return {
+    checks: Store.getChecks()
+  }
+}
 export default React.createClass({
-  getInitialState() {
-    return {
-    }
+  mixins: [Store.mixin],
+  storeDidChange() {
+    this.setState(getState());
+  },
+  getDefaultProps() {
+    return getState();
   },
   render() {
     return (
@@ -114,9 +126,13 @@ export default React.createClass({
 
           <h2 className="h3">Checks</h2>
           <ul className="list-unstyled">
-            <li ng-repeat="check in checks">
-              <check-item check="check"></check-item>
-            </li>
+          {this.props.checks.map(check => {
+            return (
+              <li>
+                <CheckItem check={check}/>
+              </li>
+            );
+          })}
           </ul>
 
           <hr/>
@@ -180,7 +196,7 @@ export default React.createClass({
             <h3>Buttons</h3>
 
             <div className="padding-bx2">
-              <div className="padding pull-left" ng-repeat="b in ['primary','success','warning','danger','info','default']">
+              <div className="padding pull-left">
               {['primary','success','warning','danger','info','default'].map(i => {
                 return (
                   <button className={"btn btn-"+i} type="button">{i}</button>
