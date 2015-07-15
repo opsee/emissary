@@ -5,6 +5,7 @@ import TaskList from '../TaskList.jsx';
 import RadialGraph from '../global/RadialGraph.jsx';
 import TodoStore from '../../stores/TodoStore';
 import ActionCreator from '../../actions/Todo';
+import Toolbar from '../global/Toolbar.jsx';
 
 export default React.createClass({
   _onChange() {
@@ -43,20 +44,22 @@ export default React.createClass({
   render() {
     let {tasks} = this.state;
     return (
-      <div className="container">
-        <Jumbotron>
-          <h1>Learning Flux</h1>
-          <p>
-            Below is a list of tasks you can implement to better grasp the patterns behind Flux.<br />
-            Most features are left unimplemented with clues to guide you on the learning process.
-          </p>
-        </Jumbotron>
-
-        <TaskList tasks={tasks}/>
-
-        <Button onClick={this.handleAddTask} bsStyle="danger">Add</Button>
-        <Button onClick={this.handleClear} bsStyle="primary">Clear List</Button>
-        <RadialGraph great="rogers"/>
+      <div>
+        <Toolbar title="Environment"/>
+          <div className="container">
+            <div className="row">
+              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+                <ul className="nav nav-tabs">
+                  <li className="{active:$state.is('home.instances')}">
+                    <a href="#" ui-sref="home.instances">Instances</a>
+                  </li>
+                  <li className="{active:$state.is('home.groups')}">
+                    <a href="#" ui-sref="home.groups">Groups</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
       </div>
     );
   }
