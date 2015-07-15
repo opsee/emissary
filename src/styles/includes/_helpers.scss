@@ -1,0 +1,65 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+.ng-hide{
+  display: none;
+}
+
+//color helpers
+.bg-gray-300{
+  background-color: $gray-300;
+}
+.bg-gray-500{
+  background-color: $gray-500;
+}
+.bg-gray-900{
+  background-color: $gray-900;
+}
+.bg-brand-primary{
+  background-color: $brand-primary;
+}
+.bg-brand-success{
+  background-color: $brand-success;
+}
+.bg-brand-info{
+  background-color: $brand-info;
+}
+.bg-brand-warning{
+  background-color: $brand-warning;
+}
+.bg-brand-danger{
+  background-color: $brand-danger;
+}
+.bg-body{
+  background-color: $body-bg;
+}
+
+.fill-white{
+  fill:white;
+}
+.fill-primary{
+  fill:$brand-primary;
+}
+.fill-success{
+  fill:$brand-success;
+}
+.fill-info{
+  fill:$brand-info;
+}
+.fill-warning{
+  fill:$brand-warning;
+}
+.fill-danger{
+  fill:$brand-danger;
+}
+
+.user-select-none{
+  @include user-select(none);
+}
+
+.text-cutoff{
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
