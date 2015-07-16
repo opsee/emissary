@@ -6,6 +6,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import Loader from '../global/Loader.jsx';
 import CheckItem from '../checks/CheckItem.jsx';
 const classNames = require('classnames');
+import _ from 'lodash';
 
 import Store from '../../stores/StyleguideStore';
 import Actions from '../../actions/StyleguideActions';
@@ -125,15 +126,19 @@ export default React.createClass({
           <hr/>
 
           <h2 className="h3">Checks</h2>
-          <ul className="list-unstyled">
-          {this.props.checks.map(check => {
-            return (
-              <li>
-                <CheckItem check={check}/>
-              </li>
-            );
+          {_.range(1).map(i => {
+            return(
+              <ul className="list-unstyled">
+              {this.props.checks.map(check => {
+                return (
+                  <li>
+                    <CheckItem {...check}/>
+                  </li>
+                );
+              })}
+              </ul>
+            )
           })}
-          </ul>
 
           <hr/>
 

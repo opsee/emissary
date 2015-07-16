@@ -60,18 +60,38 @@ let _checks = [
 ]
 
 function setSilence(opts){
-  let index = _.findIndex(_checks, {id:opts.check.id});
+  let index = _.findIndex(_checks, {id:opts.id});
     if(index > -1){
-      console.log('yes',index);
       let check = _checks[index];
-      check.name = 'Wow!';
       check.status.silence.startDate = new Date();
       check.status.silence.duration = moment.duration(opts.length, opts.unit).asMilliseconds();
+      check.status.silence.remaining = getSilenceRemaining(check);
+      check.status.silence.timer = setInterval(() => regenSilenceRemaining(check),1000);
       // if($rootScope.user.hasUser()){
       //   check.status.silence.user = $rootScope.user.name || $rootScope.user.email;
       //   check.status.silence.user = 'you';
       // }
     }
+}
+
+function regenSilenceRemaining(check){
+  if(check && check.status.silence.remaining > 0){
+    check.status.silence.remaining -= 1000;
+  }else{
+    clearInterval(check.status.silence.timer);
+  }
+  StyleguideStore.emitChange();
+}
+
+function getSilenceRemaining(check){
+  if(check && check.status.silence.startDate){
+    const startDate = check.status.silence.startDate;
+    if(startDate instanceof Date){
+      const finalVal = startDate.valueOf() + check.status.silence.duration;
+      return finalVal - Date.now();
+    }
+  }
+  return false;
 }
 
 const StyleguideStore = Flux.createStore(
@@ -83,7 +103,6 @@ const StyleguideStore = Flux.createStore(
     switch(payload.actionType) {
       case 'CHECK_SILENCE':
       setSilence(payload.text);
-      console.log(_checks[0]);
       StyleguideStore.emitChange();
       break;
       // add more cases for other actionTypes...

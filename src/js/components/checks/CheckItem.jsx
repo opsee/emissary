@@ -8,8 +8,8 @@ export default React.createClass({
       on:false
     }
   },
-  silence(check){
-    Actions.silence(check);
+  silence(id){
+    Actions.silence(id);
   },
   handleClick() {
     this.setState({
@@ -17,18 +17,17 @@ export default React.createClass({
     })
   },
   render() {
-    const check = this.props.check;
     return (
       <div className="row">
         <div className="col-xs-12 display-flex flex-vertical-align">
           <a href="/check/{{check.id}}" className="flex-1 display-flex flex-vertical-align link-style-1">
-            <RadialGraph item={check}/>
+            <RadialGraph {...this.props}/>
             <div className="padding-tb line-height-1">
-              <div>{check.name}</div>
-              <div className="text-secondary">{check.getInfo}</div>
+              <div>{this.props.name}</div>
+              <div className="text-secondary">{this.props.getInfo}</div>
             </div>
           </a>
-          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,check)} title="Silence check">
+          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.id)} title="Silence check">
           silence
           </button>
         </div>

@@ -7,8 +7,8 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <RouteHandler/>
         <Header/>
+        <RouteHandler/>
       </div>
     );
   }
