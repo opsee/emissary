@@ -29,7 +29,7 @@ export default React.createClass({
   },
   getText(){
     const millis = this.props.status.silence.remaining;
-    if(!millis){
+    if(!millis || millis < 0){
       return this.props.status.health;
     }
     const duration = moment.duration(millis);
@@ -76,15 +76,28 @@ export default React.createClass({
     const w = this.props.width/2;
     return `translate(${w},${w})`;
   },
+  isFailingOrPassing(){
+    return this.props.status.health < 50 ? 'failing' : 'passing';
+  },
+  isPerfect(){
+    return this.props.status.health == 100 ? 'perfect' : '';
+  },
   render() {
     const text = 'foo';
     const status = this.props.status;
+    if(!status){
+      return(
+        <div>
+          No status defined.
+        </div>
+      )
+    }
     return (
-      <div className={'radial-graph '+status.state+(status.silence.remaining ? ' silenced' : '')} title={this.getTitle()}>
+      <div className={`radial-graph ${status.state} ${this.isPerfect()} (status.silence.remaining ? ' silenced' : '')`} title={this.getTitle()}>
         <svg>
           <path className="loader" transform={this.getTranslate()} d={this.getPath()}/>
         </svg>
-        <div className="radial-graph-inner {{bool}}" ng-if="status.state == 'running'">{this.getText()}</div>
+        <div className={`radial-graph-inner ${this.isFailingOrPassing()}`}>{this.getText()}</div>
       <div className="pie-slice"></div>
     </div>
     );

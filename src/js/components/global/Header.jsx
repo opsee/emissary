@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
+import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({
   render(){
@@ -11,29 +12,29 @@ export default React.createClass({
               <div className="col-xs-12 col-sm-10 col-sm-offset-1">
                 <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
                   <li>
-                   <a className="md-navbar-link" href="/" ng-className="{'active':isActive('home')}">
+                   <Link to="home" className="md-navbar-link">
                      <span className="md-navbar-title">Environment</span>
-                   </a>
+                   </Link>
                  </li>
                   <li>
-                   <a className="md-navbar-link" href="/checks" ng-className="{'active':isActive('checks')}">
+                   <Link to="checks" className="md-navbar-link">
                      <span className="md-navbar-title">Checks</span>
-                   </a>
+                   </Link>
                  </li>
                   <li>
-                   <a className="md-navbar-link" href="/more" ng-className="{'active':isActive('more')}">
+                   <Link to="more" className="md-navbar-link">
                      <span className="md-navbar-title">More</span>
-                   </a>
+                   </Link>
                  </li>
-                 <li className="" ng-if="user.hasUser()">
-                   <a className="md-navbar-link" href="/profile" ng-className="{'active':isActive('profile')}">
+                 <li ng-if="user.hasUser()">
+                   <Link to="profile" className="md-navbar-link">
                      <span className="md-navbar-title">Profile</span>
-                   </a>
+                   </Link>
                  </li>
-                 <li className="" ng-if="!user.hasUser()">
-                   <a className="md-navbar-link" href="/login" ng-className="{'active':isActive('login')}">
+                 <li ng-if="!user.hasUser()">
+                   <Link to="login" className="md-navbar-link">
                      <span className="md-navbar-title">Login</span>
-                   </a>
+                   </Link>
                  </li>
                 </ul>
               </div>

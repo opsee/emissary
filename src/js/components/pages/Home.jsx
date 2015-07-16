@@ -3,46 +3,27 @@ import Button from 'react-bootstrap/lib/Button';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import TaskList from '../TaskList.jsx';
 import RadialGraph from '../global/RadialGraph.jsx';
-import TodoStore from '../../stores/TodoStore';
+import Store from '../../stores/HomeStore';
 import ActionCreator from '../../actions/Todo';
 import Toolbar from '../global/Toolbar.jsx';
+import InstanceItem from '../instances/InstanceItem.jsx';
+import GroupItem from '../groups/GroupItem.jsx';
 
+function getState(){
+  return {
+    instances: Store.getInstances(),
+    groups: Store.getGroups()
+  }
+}
 export default React.createClass({
-  _onChange() {
-    this.setState(TodoStore.getAll());
+  mixins: [Store.mixin],
+  storeDidChange() {
+    this.setState(getState());
   },
-
-  getInitialState() {
-    return TodoStore.getAll();
-  },
-
-  componentDidMount() {
-    TodoStore.addChangeListener(this._onChange);
-  },
-
-  componentWillUnmount() {
-    TodoStore.removeChangeListener(this._onChange);
-  },
-
-  handleAddTask(e) {
-    let title = prompt('Enter task title:');
-    if (title) {
-      ActionCreator.addItem(title);
-    }
-  },
-
-  handleClear(e) {
-    ActionCreator.clearList();
-  },
-
   getDefaultProps() {
-    return {
-      tasks: []
-    }
+    return getState();
   },
-
   render() {
-    let {tasks} = this.state;
     return (
       <div>
         <Toolbar title="Environment"/>
@@ -59,6 +40,24 @@ export default React.createClass({
                 </ul>
               </div>
             </div>
+              <ul className="list-unstyled">
+                {this.props.instances.map(i => {
+                  return (
+                    <li>
+                      <InstanceItem {...i}/>
+                    </li>
+                    )
+                })}
+              </ul>
+              <ul className="list-unstyled">
+                {this.props.groups.map(i => {
+                  return (
+                    <li>
+                      <GroupItem {...i}/>
+                    </li>
+                    )
+                })}
+              </ul>
           </div>
       </div>
     );

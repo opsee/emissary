@@ -24,6 +24,9 @@ $graphWidth:40px;
         fill:$brand-success;
       }
     }
+    &.perfect{
+      background-color:$brand-success;
+    }
     &.stopped{
       background-color:$gray-700 !important;
       .radial-graph-inner{

@@ -1,14 +1,7 @@
 import React from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
-import Store from '../../stores/CheckStore';
 import Link from 'react-router/lib/components/Link';
-
-function getState(){
-  return {
-    checks: Store.getChecks()
-  }
-}
 
 export default React.createClass({
   getInitialState() {
@@ -28,7 +21,7 @@ export default React.createClass({
     return (
       <div className="row">
         <div className="col-xs-12 display-flex flex-vertical-align">
-          <Link to="check" params={this.props} className="flex-1 display-flex flex-vertical-align link-style-1">
+          <Link to="instance" params={this.props} className="flex-1 display-flex flex-vertical-align link-style-1">
             <RadialGraph {...this.props}/>
             <div className="padding-tb line-height-1">
               <div>{this.props.name}</div>
