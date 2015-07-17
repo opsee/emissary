@@ -10,7 +10,6 @@ export default React.createClass({
     console.log(this.props.params);
   },
   render() {
-    console.log(this.props.params);
     return (
       <div>
         <Toolbar title="Other Pages"/>

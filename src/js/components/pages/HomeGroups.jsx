@@ -8,13 +8,9 @@ import ActionCreator from '../../actions/Todo';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
-import Link from 'react-router/lib/components/Link';
 
 function getState(){
   return {
-    instances: Store.getInstances(),
     groups: Store.getGroups()
   }
 }
@@ -28,24 +24,15 @@ export default React.createClass({
   },
   render() {
     return (
-      <div>
-        <Toolbar title="Environment"/>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-                <ul className="nav nav-tabs">
-                  <li>
-                    <Link to="homeInstances">Instances</Link>
-                  </li>
-                  <li>
-                    <Link to="homeGroups">Groups</Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <RouteHandler/>
-          </div>
-      </div>
+      <ul className="list-unstyled">
+        {this.props.groups.map(i => {
+          return (
+            <li>
+              <GroupItem {...i}/>
+            </li>
+            )
+        })}
+      </ul>
     );
   }
 });

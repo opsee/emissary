@@ -48,6 +48,14 @@ let _data = {
     },
   ],
   groups:[
+    {
+      id:'209490jgalkj',
+      name:'foo group'
+    },
+    {
+      id:'234oijaligrhglkj',
+      name:'fee!'
+    }
   ]
 }
 

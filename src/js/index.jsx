@@ -2,27 +2,43 @@ import React, {PropTypes} from 'react';
 import Router from 'react-router';
 const Route = Router.Route;
 import Opsee from './components/Opsee.jsx';
+import NotFoundRoute from 'react-router/lib/components/NotFoundRoute';
+import DefaultRoute from 'react-router/lib/components/DefaultRoute';
+import Redirect from 'react-router/lib/components/Redirect';
 
 //pages
 import Home from './components/pages/Home.jsx';
+import HomeInstances from './components/pages/HomeInstances.jsx';
+import HomeGroups from './components/pages/HomeGroups.jsx';
 import More from './components/pages/More.jsx';
 import Styleguide from './components/pages/Styleguide.jsx';
 import Checks from './components/pages/Checks.jsx';
 import CheckSingle from './components/checks/Single.jsx';
+import CheckNotFound from './components/checks/NotFound.jsx';
 import Group from './components/pages/Group.jsx';
 import Instance from './components/pages/Instance.jsx';
 import Login from './components/pages/Login.jsx';
 import PasswordForgot from './components/pages/PasswordForgot.jsx';
 import Onboard from './components/pages/Onboard.jsx';
 
+import NotFound from './components/pages/NotFound.jsx';
+
 const RouteHandler = Router.RouteHandler;
 const routes = (
   <Route handler={Opsee}>
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
-    <Route path="/" name="home" handler={Home}/>
+    <Route path="/" name="home" handler={Home}>
+      <Redirect from="/" to="/home/instances" />
+      <Route path="/home/instances" name="homeInstances" handler={HomeInstances}/>
+      <Route path="/home/groups" name="homeGroups" handler={HomeGroups}/>
+    </Route>
     <Route path="/instance/:id" name="instance" handler={Instance}/>
+
     <Route path="/checks" name="checks" handler={Checks}/>
-    <Route path="/check/:id" name="check" handler={CheckSingle}/>
+    <Route path="/check/:id" name="check" handler={CheckSingle}>
+      <NotFoundRoute handler={CheckNotFound}/>
+    </Route>
+
     <Route path="/group/:id" name="group" handler={Group}/>
     <Route path="/start" name="start" handler={Onboard}/>
     <Route path="/intro/1" name="tutorial" handler={More}/>
@@ -44,6 +60,8 @@ const routes = (
 
     <Route path="/more" name="more" handler={More}/>
     <Route path="/docs" name="docs" handler={More}/>
+
+    <NotFoundRoute handler={NotFound}/>
   </Route>
 );
 

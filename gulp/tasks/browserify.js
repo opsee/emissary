@@ -19,7 +19,10 @@ bundler.on('update', bundle);
 function bundle() {
   return bundler.bundle()
   // log errors if they happen
-  .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+  .on('error', function(err){
+    gutil.log(err.toString(), 'Browserify Error');
+    this.emit('end');
+  })
   .pipe(source(config.outputName))
   .pipe(gulp.dest(config.dest))
   .pipe(connect.reload());
