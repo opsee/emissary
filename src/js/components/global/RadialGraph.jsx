@@ -1,21 +1,56 @@
 import React from 'react';
 import moment from 'moment';
+import Radium from 'radium';
+
+var SetIntervalMixin = {
+  componentWillMount: function() {
+    this.intervals = [];
+  },
+  setInterval: function() {
+    this.intervals.push(setInterval.apply(null, arguments));
+  },
+  componentWillUnmount: function() {
+    this.intervals.map(clearInterval);
+  }
+};
 
 export default React.createClass({
+  mixins: [SetIntervalMixin],
   getInitialState() {
-    return {
-      on:false
-    }
+    return this.props;
   },
   getDefaultProps(){
     return {
-      width:40
+      width:40,
+      silenceRemaining:0
+    }
+  },
+  componentDidMount(){
+    this.setupSilence()
+  },
+  componentWillReceiveProps(nextProps){
+    if(!this.state.silenceRemaining){
+      this.setupSilence();
+    }
+  },
+  tick(){
+    this.setState({
+      silenceRemaining:this.getSilenceRemaining()
+    });
+  },
+  setupSilence(){
+    const remaining = this.getSilenceRemaining();
+    if(remaining){
+      this.setInterval(this.tick,1000);
+      this.tick();
+    }else{
+      this.intervals.map(clearInterval);
     }
   },
   getTitle(){
-    switch(this.props.status.state){
+    switch(this.state.status.state){
       case 'running':
-      return this.props.status.silence.remaining ? 
+      return this.state.silenceRemaining ? 
       `This check is running, but is ` :
       `This check is running and has a health of %`;
       break;
@@ -27,10 +62,19 @@ export default React.createClass({
       break;
     }
   },
+  getSilenceRemaining(){
+    const startDate = this.state.status.silence.startDate;
+    let num = 0;
+    if(startDate && startDate instanceof Date){
+      const finalVal = startDate.valueOf() + this.state.status.silence.duration;
+      num = finalVal - Date.now();
+    }
+    return num > 0 ? num : 0;
+  },
   getText(){
-    const millis = this.props.status.silence.remaining;
+    const millis = this.state.silenceRemaining;
     if(!millis || millis < 0){
-      return this.props.status.health;
+      return this.state.status.health;
     }
     const duration = moment.duration(millis);
     let unit = 'h';
@@ -47,12 +91,11 @@ export default React.createClass({
     return (time,10)+unit;
   },
   getPath(){
-    const health = this.props.status.health;
+    const health = this.state.status.health;
     if(!health){return '';}
     let percentage;
-    if(this.props.status.silence.remaining){
-      percentage = this.props.status.silence.remaining / this.props.status.silence.duration;
-      percentage *= 100;
+    if(this.state.silenceRemaining){
+      percentage = (this.state.silenceRemaining / this.state.status.silence.duration) * 100;
     } else {
       percentage = health;
     }
@@ -64,7 +107,7 @@ export default React.createClass({
     }
 
     percentage = parseInt(percentage,10);
-    const w = this.props.width/2;
+    const w = this.state.width/2;
     const α = (percentage/100)*360;
     const r = ( α * Math.PI / 180 );
     const x = Math.sin( r ) * w;
@@ -73,19 +116,17 @@ export default React.createClass({
     return `M 0 0 v -${w} A ${w} ${w} 1 ${mid} 1 ${x} ${y} z`;
   },
   getTranslate(){
-    const w = this.props.width/2;
+    const w = this.state.width/2;
     return `translate(${w},${w})`;
   },
-  isFailingOrPassing(){
-    return this.props.status.health < 50 ? 'failing' : 'passing';
+  isFailing(){
+    return this.state.status.health < 50;
   },
   isPerfect(){
-    return this.props.status.health == 100 ? 'perfect' : '';
+    return this.state.status.health == 100;
   },
   render() {
-    const text = 'foo';
-    const status = this.props.status;
-    if(!status){
+    if(!this.state.status){
       return(
         <div>
           No status defined.
@@ -93,12 +134,11 @@ export default React.createClass({
       )
     }
     return (
-      <div className={`radial-graph ${status.state} ${this.isPerfect()} (status.silence.remaining ? ' silenced' : '')`} title={this.getTitle()}>
+      <div className={`radial-graph ${this.state.status.state} ${this.isPerfect() ? 'perfect' : ''} ${(this.state.silenceRemaining ? ' silenced' : '')}`} title={this.getTitle()}>
         <svg>
           <path className="loader" transform={this.getTranslate()} d={this.getPath()}/>
         </svg>
-        <div className={`radial-graph-inner ${this.isFailingOrPassing()}`}>{this.getText()}</div>
-      <div className="pie-slice"></div>
+        <div className={`radial-graph-inner ${this.isFailing() ? 'failing' : 'passing'}`}>{this.getText()}</div>
     </div>
     );
   }

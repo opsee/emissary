@@ -4,13 +4,10 @@ import Actions from '../../actions/CheckActions';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import Store from '../../stores/CheckStore';
-import CheckItem from '../checks/CheckItem.jsx';
 import Link from 'react-router/lib/components/Link';
 
 function getState(){
-  return {
-    checks:Store.getChecks()
-  }
+  return Store.getCheck()
 }
 
 export default React.createClass({
@@ -26,24 +23,17 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar title="All Checks">
-          <Link to="checkCreate" className="btn btn-primary btn-fab" title="Create New Check">
+      <div>
+        <Toolbar title="Create Check">
+          <Link to="checkCreate" className="btn btn-primary btn-fab" title="Create New Check" btnPosition={true}>
           </Link>
         </Toolbar>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <h2>Check Information</h2>
-              <ul className="list-unstyled">
-                {this.props.checks.map(i => {
-                  return (
-                    <li>
-                      <CheckItem {...i}/>
-                    </li>
-                    )
-                })}
-              </ul>
+              <div className="ui-view-container">
+                <div ui-view className="transition-sibling"></div>
+              </div>
             </div>
           </div>
         </div>

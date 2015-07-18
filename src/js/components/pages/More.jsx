@@ -7,7 +7,6 @@ import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({
   componentDidMount(){
-    console.log(this.props.params);
   },
   render() {
     return (

@@ -13,6 +13,12 @@ const actions = Flux.createActions({
       actionType: 'CLEARED_LIST',
       text:text
     }
+  },
+  setPort:function(text){
+    return {
+      actionType:'CHECK_SET_PORT',
+      text:text
+    }
   }
 });
 

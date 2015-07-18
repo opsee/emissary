@@ -14,6 +14,8 @@ import More from './components/pages/More.jsx';
 import Styleguide from './components/pages/Styleguide.jsx';
 import Checks from './components/pages/Checks.jsx';
 import CheckSingle from './components/checks/Single.jsx';
+import CheckEdit from './components/checks/Edit.jsx';
+import CheckCreate from './components/checks/Create.jsx';
 import CheckNotFound from './components/checks/NotFound.jsx';
 import Group from './components/pages/Group.jsx';
 import Instance from './components/pages/Instance.jsx';
@@ -35,6 +37,8 @@ const routes = (
     <Route path="/instance/:id" name="instance" handler={Instance}/>
 
     <Route path="/checks" name="checks" handler={Checks}/>
+    <Route path="/check/create" name="checkCreate" handler={CheckCreate}/>
+    <Route path="/check/edit/:id" name="checkEdit" handler={CheckEdit}/>
     <Route path="/check/:id" name="check" handler={CheckSingle}>
       <NotFoundRoute handler={CheckNotFound}/>
     </Route>

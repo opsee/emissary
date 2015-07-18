@@ -27,55 +27,19 @@ let _instance = {
   ]
 }
 
-function setSilence(opts){
-  let index = _.findIndex(_check, {id:opts.id});
-    if(index > -1){
-      let check = _checks[index];
-      check.status.silence.startDate = new Date();
-      check.status.silence.duration = moment.duration(opts.length, opts.unit).asMilliseconds();
-      check.status.silence.remaining = getSilenceRemaining(check);
-      check.status.silence.timer = setInterval(() => regenSilenceRemaining(check),1000);
-      // if($rootScope.user.hasUser()){
-      //   check.status.silence.user = $rootScope.user.name || $rootScope.user.email;
-      //   check.status.silence.user = 'you';
-      // }
-    }
-}
-
-function regenSilenceRemaining(check){
-  if(check && check.status.silence.remaining > 0){
-    check.status.silence.remaining -= 1000;
-  }else{
-    clearInterval(check.status.silence.timer);
-  }
-  CheckStore.emitChange();
-}
-
-function getSilenceRemaining(check){
-  if(check && check.status.silence.startDate){
-    const startDate = check.status.silence.startDate;
-    if(startDate instanceof Date){
-      const finalVal = startDate.valueOf() + check.status.silence.duration;
-      return finalVal - Date.now();
-    }
-  }
-  return false;
-}
-
-const CheckStore = Flux.createStore(
+const InstanceStore = Flux.createStore(
   {
     getInstance(){
       return _instance;
     }
   }, function(payload){
     switch(payload.actionType) {
-      case 'CHECK_SILENCE':
-      setSilence(payload.text);
-      CheckStore.emitChange();
+      case 'TEST':
+      InstanceStore.emitChange();
       break;
       // add more cases for other actionTypes...
     }
   }
 )
 
-export default CheckStore;
+export default InstanceStore;

@@ -4,6 +4,7 @@ import Actions from '../../actions/CheckActions';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import Store from '../../stores/CheckStore';
+import Link from 'react-router/lib/components/Link';
 
 function getState(){
   return Store.getCheck()
@@ -24,9 +25,9 @@ export default React.createClass({
     return (
       <div className="bg-body" style={{position:"relative"}}>
         <Toolbar title={`Check ${this.props.name || this.props.params.id}`}>
-          <button ng-click="edit()" className="btn btn-primary btn-fab" title="Edit {{::check.name}}">
-
-          </button>
+          <Link to="checkEdit" params={{id:this.props.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
+        edit1
+          </Link>
         </Toolbar>
         <div className="container">
           <div className="row">

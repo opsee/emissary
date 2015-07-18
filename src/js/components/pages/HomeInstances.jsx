@@ -22,7 +22,6 @@ export default React.createClass({
     return getState();
   },
   render() {
-    console.log(this.props);
     return (
       <ul className="list-unstyled">
         {this.props.instances.map(i => {

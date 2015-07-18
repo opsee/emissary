@@ -10,12 +10,8 @@ export default React.createClass({
     }
   },
   silence(id){
+    return console.log('silence');
     Actions.silence(id);
-  },
-  handleClick() {
-    this.setState({
-      on:!this.state.on
-    })
   },
   render() {
     return (
