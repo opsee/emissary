@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import Radium from 'radium';
+import colors from 'seedling/colors';
 
 var SetIntervalMixin = {
   componentWillMount: function() {
@@ -14,14 +15,102 @@ var SetIntervalMixin = {
   }
 };
 
-export default React.createClass({
+const radialWidth = 40;
+
+const RadialGraph = React.createClass({
   mixins: [SetIntervalMixin],
+  styles(){
+    return {
+      base:{
+        backgroundColor:"black",
+        color:"#303030",
+        borderRadius:'100%',
+        fontWeight:500,
+        position:"relative",
+        height:radialWidth,
+        width:radialWidth,
+        minHeight:radialWidth,
+        minWidth:radialWidth,
+        margin:'0 1em 0 0',
+        fontFamily:"Tungsten Rounded A, Tungsten Rounded B, sans-serif",
+        fontSize:'16px'
+      },
+      parentStatus:() => {
+        let state = this.getRadialState();
+        let color = colors.danger;
+        switch(state){
+          case 'perfect':
+          color = colors.success;
+          break;
+          case 'stopped':
+          color = 'gray'//gray-700
+          break;
+          case 'stopped':
+          break;
+          case 'restarting':
+          break;
+          case 'unmonitored':
+          break;
+          case 'silenced':
+          color = colors.primary;
+          break;
+        }
+        return {
+          backgroundColor:color
+        }
+      },
+      inner:{
+        backgroundColor:"transparent",
+        borderRadius:"100%",
+        border:"3px solid black",
+        height: radialWidth - 4,
+        width: radialWidth - 4,
+        left:"50%",
+        top:"50%",
+        marginTop:-((radialWidth - 4) / 2),
+        marginLeft:-((radialWidth - 4) / 2),
+        lineHeight: radialWidth - 10 + 'px',
+        position: "absolute",
+        textAlign: "center",
+      },
+      innerStatus:() => {
+        let state = this.getRadialState();
+        switch(state){
+          case 'running':
+          return {
+            backgroundColor:colors.success
+          }
+          break;
+        }
+      },
+      loader:() => {
+        let state = this.getRadialState();
+        let color = colors.success;
+        switch(state){
+          case 'stopped':
+          color = 'gray'//gray-700
+          break;
+          case 'restarting':
+          color = colors.info
+          break;
+          case 'unmonitored':
+          color = colors.warning
+          break;
+          case 'silenced':
+          color = colors.info
+          break;
+        }
+        return {
+          fill:color
+        }
+      }
+    }
+  },
   getInitialState() {
     return this.props;
   },
   getDefaultProps(){
     return {
-      width:40,
       silenceRemaining:0
     }
   },
@@ -37,6 +126,13 @@ export default React.createClass({
     this.setState({
       silenceRemaining:this.getSilenceRemaining()
     });
+  },
+  getRadialState(){
+    let state = this.state.status.state;
+    const health = this.state.status.health;
+    state = health == 100 ? 'perfect' : state;
+    state = this.state.silenceRemaining ? 'silenced' : state;
+    return state;
   },
   setupSilence(){
     const remaining = this.getSilenceRemaining();
@@ -107,7 +203,7 @@ export default React.createClass({
     }
 
     percentage = parseInt(percentage,10);
-    const w = this.state.width/2;
+    const w = radialWidth/2;
     const α = (percentage/100)*360;
     const r = ( α * Math.PI / 180 );
     const x = Math.sin( r ) * w;
@@ -116,14 +212,8 @@ export default React.createClass({
     return `M 0 0 v -${w} A ${w} ${w} 1 ${mid} 1 ${x} ${y} z`;
   },
   getTranslate(){
-    const w = this.state.width/2;
+    const w = radialWidth/2;
     return `translate(${w},${w})`;
-  },
-  isFailing(){
-    return this.state.status.health < 50;
-  },
-  isPerfect(){
-    return this.state.status.health == 100;
   },
   render() {
     if(!this.state.status){
@@ -134,12 +224,14 @@ export default React.createClass({
       )
     }
     return (
-      <div className={`radial-graph ${this.state.status.state} ${this.isPerfect() ? 'perfect' : ''} ${(this.state.silenceRemaining ? ' silenced' : '')}`} title={this.getTitle()}>
+      <div style={[this.styles().base, this.styles().parentStatus()]} title={this.getTitle()}>
         <svg>
-          <path className="loader" transform={this.getTranslate()} d={this.getPath()}/>
+          <path className="loader" transform={this.getTranslate()} d={this.getPath()} style={[this.styles().loader()]}/>
         </svg>
-        <div className={`radial-graph-inner ${this.isFailing() ? 'failing' : 'passing'}`}>{this.getText()}</div>
+        <div style={[this.styles().inner, this.styles().parentStatus(), this.styles().innerStatus()]}>{this.getText()}</div>
     </div>
     );
   }
 });
+
+export default Radium(RadialGraph);
