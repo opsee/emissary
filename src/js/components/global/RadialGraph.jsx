@@ -225,8 +225,8 @@ const RadialGraph = React.createClass({
     }
     return (
       <div style={[this.styles().base, this.styles().parentStatus()]} title={this.getTitle()}>
-        <svg>
-          <path className="loader" transform={this.getTranslate()} d={this.getPath()} style={[this.styles().loader()]}/>
+        <svg style={{width:radialWidth, height:radialWidth, overflow:'hidden'}}>
+          <path className="loader" transform={this.getTranslate()} d={this.getPath()} style={this.styles().loader()}/>
         </svg>
         <div style={[this.styles().inner, this.styles().parentStatus(), this.styles().innerStatus()]}>{this.getText()}</div>
     </div>
