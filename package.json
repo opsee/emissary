@@ -47,6 +47,7 @@
     "lodash": "^3.10.0",
     "mcfly": "0.0.10",
     "moment": "^2.10.3",
+    "newforms": "^0.12.1",
     "object-assign": "^3.0.0",
     "path": "^0.11.14",
     "radium": "^0.13.4",

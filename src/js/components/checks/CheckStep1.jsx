@@ -2,8 +2,9 @@ import React from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link';
+import forms from 'newforms';
 
-export default React.createClass({
+const CheckStep1 = React.createClass({
   getDefaultProps() {
   },
   protocols:[
@@ -192,3 +193,122 @@ export default React.createClass({
     );
   }
 });
+
+
+var choices = [
+  [1, 'foo']
+, [2, 'bar']
+, [3, 'baz']
+, [4, 'ter']
+]
+var choicesWithCategories = [
+  ['B Choices', [[2, 'bar'], [3, 'baz']]]
+, ['F Choices', [[1, 'foo']]]
+, ['T Choices', [[4, 'ter']]]
+]
+var choicesWithEmpty = [['', '----']].concat(choices)
+var dateFormats = [
+  '%Y-%m-%d' // '2006-10-25'
+, '%d/%m/%Y' // '25/10/2006'
+, '%d/%m/%y' // '25/10/06'
+]
+var timeFormat = '%H:%M' // '14:30'
+var dateTimeFormats = dateFormats.map(df => `${df} ${timeFormat}`)
+
+function opseeInput(bf){
+  var help;
+      if (bf.helpText) {
+        help = (bf.helpText.__html
+                ? <p dangerouslySetInnerHTML={bf.helpText}/>
+                : <p>{bf.helpText}</p>)
+      }
+      var errors = bf.errors().messages().map(message => <div>{message}</div>)
+      return (
+        <div>
+          <div className="form-group">
+            <label htmlFor={bf.idForLabel()}>
+              <span className="form-label">{bf.label}</span>
+              <span className="form-message">
+                {errors}
+              </span>
+            </label>
+            {
+              // bf.labelTag()
+            }
+            {bf.render()}
+          </div>
+          {
+            // ''+bf._isControlled()
+          }
+          {
+            // JSON.stringify(bf._validation())
+          }
+        </div>
+      )
+}
+
+var CheckStep1Form = forms.Form.extend({
+  // CharField: forms.CharField({
+  //   minLength: 5, 
+  //   maxLength: 10, 
+  //   widgetAttrs: {
+  //     autoFocus: true
+  //   },
+  //   helpText: {
+  //     __html: 'Any text between 5 and 10 characters long.<br>(Try "Answer" then the Integer field below)'
+  //   }
+  // }),
+  port: forms.CharField({
+    helpText: {
+      __html: 'Port',
+    },
+  }),
+  clean() {
+  },
+  render() {
+    return this.boundFields().map(opseeInput)
+  }
+})
+
+const data = {
+  port:80
+}
+
+var AllFields = React.createClass({
+  getInitialState() {
+    return({
+      form: new CheckStep1Form({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data})
+    })
+  }
+
+, render() {
+    var nonFieldErrors = this.state.form.nonFieldErrors()
+    return (
+      <form encType='multipart/form-data' ref="form" onSubmit={this.onSubmit}>
+        <div>
+          <strong>Non field errors: {nonFieldErrors.render()}</strong>
+            {this.state.form.render()}
+            <button type="submit">submit</button>
+          <pre>{this.state.form.cleanedData && JSON.stringify(this.state.form.cleanedData, null, ' ')}</pre>
+        </div>
+        {
+        //  <div className="form-group display-flex flex-wrap" ng-className="{'has-error':checkStep1Form.checkPort.$invalid && checkStep1Form.checkPort.$touched}">
+        //   <input id="checkPort" name="checkPort" type="text" className="form-control flex-order-1" placeholder="e.g. 80" ng-required="true" value={this.props.port} onChange={this.setPort}/>
+        //   <label for="checkPort">
+        //     <span className="form-label">Port</span>
+        //     <default-messages ng-model="checkStep1Form.checkPort"></default-messages>
+        //   </label>
+        // </div>
+      }
+      </form>
+    )
+  }
+
+, onSubmit(e) {
+    e.preventDefault()
+    this.state.form.validate(this.refs.form)
+    this.forceUpdate()
+  }
+})
+
+export default AllFields;

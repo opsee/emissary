@@ -64,7 +64,7 @@
   }
 }//.form-group
 
-.form-control{
+.form-control, input{
   box-shadow:none;
   @include placeholder($text-color-secondary);
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
@@ -72,6 +72,7 @@
   border: none;
   color: $text-color;
   padding: 0.5em;
+  width:100%;
   &:hover {
     & ~ .input-icon {
       fill: $gray-400;
