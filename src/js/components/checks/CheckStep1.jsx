@@ -1,90 +1,32 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
 import _ from 'lodash';
 
-const OpseeLabel = React.createClass({
-  render(){
-    return(
-      <label htmlFor={this.props.id}>
-        <span className="form-label">{this.props.label}</span>
-        <span className="form-message">
-          {this.props.errors}
-        </span>
-      </label>
-    )
-  }
-});
-
-const OpseeInputWithLabel = React.createClass({
-  render(){
-    return(
-      <div>
-      <OpseeLabel {...this.props}/>
-      {this.props.bf.render()}
-    </div>
-    )
-  }
-});
-
-const OpseeDropdown = React.createClass({
-  getInitialState(){
-    return this.props;
-  },
-  onSelect(key){
-    this.props.onChange.call(this,key);
-    let choice = _.find(this.props.choices, choice => choice[0] == key);
-    this.setState({
-      label:choice[1]
-    })
-  },
-  render(){
-    return(
-      <DropdownButton title={this.state.label} key={this.props.id}>
-      {
-        this.props.choices.map(choice => {
-          return (
-            <MenuItem eventKey={choice[0]} onSelect={this.onSelect}>{choice[1]}</MenuItem>
-          )
-        })
-      }
-      </DropdownButton>
-    )
-  }
-});
+import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
+import OpseeDropdown from '../forms/OpseeDropdown.jsx';
 
 function opseeInputs(bf){
   const type = bf.field.constructor.name;
-  const errors = bf.errors().messages().map(message => <div>{message}</div>)
-  function onChange(e,t){
-    const obj = {};
-    obj[bf.name] = e;
-    bf.form.updateData(obj);
+  function output(type){
+    switch(type){
+      case 'ChoiceField':
+      return(
+        <OpseeDropdown bf={bf}/>
+      );
+      break;
+      default:
+      return(
+        <OpseeInputWithLabel bf={bf}/>
+      );
+      break;
+    }
   }
   return (
     <div>
       <div className="form-group">
-          {
-            (function(){
-              switch(type){
-                case 'ChoiceField':
-                return(
-                  <OpseeDropdown label={bf.label} id={bf.idForLabel()} bf={bf} choices={bf.field._choices} onChange={onChange}/>
-                );
-                break;
-                default:
-                return(
-                  <OpseeInputWithLabel label={bf.label} id={bf.idForLabel()} bf={bf}/>
-                );
-                break;
-              }
-            }
-          )()
-        }
+        {output(type)}
       </div>
     </div>
   )
@@ -98,8 +40,16 @@ const groupOptions = [
 const methodOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name,name]);
 
 const HeaderForm = forms.Form.extend({
-  key: forms.CharField(),
-  value: forms.CharField()
+  key: forms.CharField({
+    widgetAttrs:{
+      placeholder:'e.g. content-type'
+    }
+  }),
+  value: forms.CharField({
+    widgetAttrs:{
+      placeholder:'e.g. application/json'
+    }
+  })
 });
 
 const HeaderFormSet = forms.FormSet.extend({
@@ -150,7 +100,18 @@ const InfoForm = forms.Form.extend({
   render() {
     return(
       <div>
-        {this.boundFields().map(opseeInputs)}
+        <h2>Choose a Group to Check</h2>
+        {opseeInputs(this.boundField('group'))}
+        <h2>Define a Request</h2>
+        {this.boundFields((field, fieldName) => {
+          if(fieldName.match('protocol|port|method|path')){
+            return true;
+          }
+          return false;
+        }).map(opseeInputs)}
+        {
+          // opseeInputs(this.boundField('group')).map(opseeInputs)
+        }
         {
           // this.headers.forms().map(form => form.boundFields().map(opseeInputs))
         }
@@ -171,10 +132,45 @@ const AllFields = React.createClass({
     })
   },
   renderHeaderForm(){
-    return (
+    return(
       <div>
-      {this.state.headers.forms().map(form => form.boundFields().map(opseeInputs))}
-      <button className="btn btn-info">Add Another Header</button>
+        <h2>Request Headers</h2>
+        {this.state.headers.forms().map((form, index) => {
+          return (
+            <div>
+              <div className="row">
+                <div className="col-xs-12">
+                  <h3>Header {index+1}</h3>
+                </div>
+              </div>
+              <div className="display-flex">
+                <div className="row flex-1">
+                  <div className="container-fluid">
+                    <div className="row">
+                      {form.boundFields().map(bf => {
+                        return(
+                          <div className="col-xs-12 col-sm-6">
+                            {opseeInputs(bf)}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+                <div className="padding-lr">
+                    <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
+                      remove
+                    {
+                      //<svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_close" /></svg>
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+        })
+        }
+        <button className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add Another Header</button>
       </div>
     )
   },
@@ -188,20 +184,24 @@ const AllFields = React.createClass({
     const nonFieldErrors = this.state.info.nonFieldErrors()
     return (
       <form ref="form" onSubmit={this.onSubmit}>
-        <div>
-            {this.state.info.render()}
-            {this.renderHeaderForm()}
-            <button type="submit" className="btn btn-primary">Submit</button>
-          <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
-          <strong>Non field errors: {nonFieldErrors.render()}</strong>
-        </div>
+          {this.state.info.render()}
+          {this.renderHeaderForm()}
+          <button type="submit" className="btn btn-primary">Submit</button>
+          {
+            //<pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
+          }
+          {
+            <strong>Non field errors: {nonFieldErrors.render()}</strong>
+          }
       </form>
     )
   },
   onSubmit(e) {
     e.preventDefault()
-    this.state.form.validate(this.refs.form)
-    this.forceUpdate()
+    this.state.info.validate(this.refs.info)
+    this.state.headers.validate(this.refs.headers)
+    this.forceUpdate();
+    console.log(this.cleanedData());
   }
 })
 
