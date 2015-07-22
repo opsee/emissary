@@ -5,9 +5,6 @@ import Link from 'react-router/lib/components/Link'
 
 export default React.createClass({
   getInitialState() {
-    return {
-      on:false
-    }
   },
   silence(id){
     Actions.silence(id);
