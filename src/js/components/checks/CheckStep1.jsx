@@ -3,7 +3,6 @@ import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
-import RenderForm from 'newforms/RenderForm';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import _ from 'lodash';
@@ -107,7 +106,7 @@ const HeaderFormSet = forms.FormSet.extend({
   form:HeaderForm
 });
 
-const InfoForm = forms.Form.extend({
+const Info = forms.Form.extend({
   group: forms.ChoiceField({choices:groupOptions}),
   port: forms.CharField({
     widgetAttrs:{
@@ -123,58 +122,37 @@ const InfoForm = forms.Form.extend({
 });
 
 const InfoFormSet = forms.FormSet.extend({
-  form:InfoForm
+  form:Info
 })
 
-const CheckStep1Form = React.createClass({
-  info: new InfoFormSet(),
-  getInitialState(){
-    return {
-      info:new InfoFormSet({
-      }),
-      headers:new HeaderFormSet({
-      }),
+const InfoForm = forms.Form.extend({
+  // info: new InfoFormSet(),
+  group: forms.ChoiceField({choices:groupOptions}),
+  port: forms.CharField({
+    widgetAttrs:{
+      placeholder:'e.g. 8080'
     }
-  },
-  // group: forms.ChoiceField({choices:groupOptions}),
-  // port: forms.CharField({
-  //   widgetAttrs:{
-  //     placeholder:'e.g. 8080'
-  //   }
-  // }),
-  // method: forms.ChoiceField({choices:methodOptions}),
-  // path: forms.CharField({
-  //   widgetAttrs:{
-  //     placeholder:'e.g. /healthcheck'
-  //   }
-  // }),
-  // headers: new HeaderFormSet({
-  //   onChange:this.forceUpdate.bind(this)
-  // }),
+  }),
+  method: forms.ChoiceField({choices:methodOptions}),
+  path: forms.CharField({
+    widgetAttrs:{
+      placeholder:'e.g. /healthcheck'
+    }
+  }),
+  // headers: new HeaderFormSet(),
   clean() {
   },
   getCleanedData(){
     return {
-      info: this.state.info.cleanedData(),
       headers: this.state.headers.cleanedData()
     }
-  },
-  renderInfoForm(){
-    return this.state.info.forms().map(form => form.boundFields().map(opseeInputs))
-  },
-  renderHeadersForm(){
-    return this.state.headers.forms().map(form => form.boundFields().map(opseeInputs))
   },
   render() {
     return(
       <div>
+        {this.boundFields().map(opseeInputs)}
         {
-          this.renderInfoForm()
-          // this.boundFields().map(opseeInputs)
-        }
-        {
-          this.renderHeadersForm()
-          // this.state.headers.forms().map(form => form.boundFields().map(opseeInputs))
+          // this.headers.forms().map(form => form.boundFields().map(opseeInputs))
         }
       </div>
     )
@@ -188,24 +166,34 @@ const data = {
 const AllFields = React.createClass({
   getInitialState() {
     return({
-      form: new CheckStep1Form({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data}),
+      info: new InfoForm({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data}),
+      headers: new HeaderFormSet({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data})
     })
   },
-  getCleanedData(){
-    debugger;
-    console.log()
+  renderHeaderForm(){
+    return (
+      <div>
+      {this.state.headers.forms().map(form => form.boundFields().map(opseeInputs))}
+      <button className="btn btn-info">Add Another Header</button>
+      </div>
+    )
+  },
+  cleanedData(){
+    const headers = {
+      headers:this.state.headers.cleanedData()
+    }
+    return _.assign(headers, this.state.info.cleanedData);
   },
   render() {
-    // const nonFieldErrors = this.state.form.nonFieldErrors()
+    const nonFieldErrors = this.state.info.nonFieldErrors()
     return (
       <form ref="form" onSubmit={this.onSubmit}>
-          <div>
-            {this.state.form.render()}
+        <div>
+            {this.state.info.render()}
+            {this.renderHeaderForm()}
             <button type="submit" className="btn btn-primary">Submit</button>
-          <pre>{this.state.form.cleanedData && JSON.stringify(this.state.form.cleanedData(), null, ' ')}</pre>
-          {
-            //<strong>Non field errors: {nonFieldErrors.render()}</strong>
-          }
+          <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
+          <strong>Non field errors: {nonFieldErrors.render()}</strong>
         </div>
       </form>
     )
