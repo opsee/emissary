@@ -43,11 +43,20 @@ const relationshipOptions = relationships.map(relationship => [relationship.id, 
 
 const AssertionsForm = forms.Form.extend({
   type: forms.ChoiceField({choices:assertionTypeOptions}),
-  relationship: forms.ChoiceField({choices:relationshipOptions}),
+  relationship: forms.ChoiceField({
+    choices:relationshipOptions,
+  }),
   operand: forms.CharField({
     widgetAttrs:{
       placeholder:'operand'
-    }
+    },
+    required:false
+  }),
+  value: forms.CharField({
+    widgetAttrs:{
+      placeholder:'operand'
+    },
+    required:false
   })
 });
 
@@ -55,92 +64,49 @@ const AssertionsFormSet = forms.FormSet.extend({
   form:AssertionsForm
 });
 
-const Info = forms.Form.extend({
-  // group: forms.ChoiceField({choices:groupOptions}),
-  // port: forms.CharField({
-  //   widgetAttrs:{
-  //     placeholder:'e.g. 8080'
-  //   }
-  // }),
-  // method: forms.ChoiceField({choices:methodOptions}),
-  // path: forms.CharField({
-  //   widgetAttrs:{
-  //     placeholder:'e.g. /healthcheck'
-  //   }
-  // })
-});
-
-const InfoFormSet = forms.FormSet.extend({
-  form:Info
-})
-
-const InfoForm = forms.Form.extend({
-  // info: new InfoFormSet(),
-  // group: forms.ChoiceField({choices:groupOptions}),
-  port: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. 8080'
-    }
-  }),
-  // method: forms.ChoiceField({choices:methodOptions}),
-  path: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. /healthcheck'
-    }
-  }),
-  // headers: new AssertionsFormSet(),
-  clean() {
-  },
-  getCleanedData(){
-    return {
-      headers: this.state.assertions.cleanedData()
-    }
-  },
-  render() {
-    return(
-      <div>
-        <h2>Choose a Group to Check</h2>
-        {opseeInputs(this.boundField('group'))}
-        <h2>Define a Request</h2>
-        {this.boundFields((field, fieldName) => {
-          if(fieldName.match('protocol|port|method|path')){
-            return true;
-          }
-          return false;
-        }).map(opseeInputs)}
-        {
-          // opseeInputs(this.boundField('group')).map(opseeInputs)
-        }
-        {
-          // this.headers.forms().map(form => form.boundFields().map(opseeInputs))
-        }
-      </div>
-    )
-  }
-})
-
-const data = {
-  port:80
-}
-
 const AllFields = React.createClass({
   getInitialState() {
-    return({
-      info: new InfoForm({
-        onChange: this.forceUpdate.bind(this), 
-        labelSuffix:'', 
-        data:data
-      }),
+    var obj = {
       assertions: new AssertionsFormSet({
         onChange: this.forceUpdate.bind(this), 
         labelSuffix:'',
-        data:data
+        initial:this.props.check.assertions,
+        extra:0
       }),
       response:this.props.response
-    })
+    };
+    //this is a workaround because the library is not working correctly with initial + data formset
+    const self = this;
+    setTimeout(function(){
+      self.state.assertions.forms().forEach((form,i) => {
+        form.setData(self.props.check.assertions[i]);
+      });
+    },10);
+    return obj;
   },
-  assertionPassing(index){
-    return true;
+  operandInputNeeded(form, bf){
+    const data = form.cleanedData;
+    if(data && data.relationship){
+      if(data.type == 'header' || !data.relationship.match('empty|notEmpty')){
+        return(
+          <div className="col-xs-10 col-xs-offset-2">
+            {opseeInputs(bf)}
+          </div>
+        )
+      }
+    }
+  },
+  valueInputNeeded(form, bf){
+    const data = form.cleanedData;
+    if(data && data.relationship && data.type == 'header'){
+      if(!data.relationship.match('empty|notEmpty')){
+        return(
+          <div className="col-xs-10 col-xs-offset-2">
+            {opseeInputs(bf)}
+          </div>
+        )
+      }
+    }
   },
   renderAssertionsForm(){
     return(
@@ -173,12 +139,10 @@ const AllFields = React.createClass({
                           );
                           break;
                           case 'operand':
-                          return(
-                            <div className="col-xs-10 col-xs-offset-2">
-                              {opseeInputs(bf)}
-                            </div>
-                            );
+                          return this.operandInputNeeded(form, bf);
                           break;
+                          case 'value':
+                          return this.valueInputNeeded(form, bf);
                         }
                       })}
                     </div>
@@ -197,7 +161,7 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button className="btn btn-info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Assertion</button>
+        <button type="button" className="btn btn-info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Assertion</button>
       </div>
     )
   },
@@ -205,7 +169,7 @@ const AllFields = React.createClass({
     const obj = {
       assertions:this.state.assertions.cleanedData()
     }
-    return _.assign(obj, this.state.info.cleanedData);
+    return _.assign(obj);
   },
   renderSubmitButton(){
     if(this.props.standalone){
@@ -215,7 +179,6 @@ const AllFields = React.createClass({
     }
   },
   render() {
-    const nonFieldErrors = this.state.info.nonFieldErrors()
     return (
       <form ref="form" onSubmit={this.onSubmit}>
           <h2>Add Assertions</h2>
@@ -228,10 +191,10 @@ const AllFields = React.createClass({
       <br/>
           <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
           {
-            //<pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
+            <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
           }
           {
-            <strong>Non field errors: {nonFieldErrors.render()}</strong>
+            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
           }
       </form>
     )

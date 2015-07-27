@@ -20,6 +20,8 @@ function getState(){
 }
 
 let checkStep1Data = {}
+let checkStep2Data = {}
+let checkStep3Data = {}
 
 export default React.createClass({
   mixins: [Store.mixin],
@@ -38,6 +40,12 @@ export default React.createClass({
   updateCheckStep1Data(data){
     checkStep1Data = data;
   },
+  updateCheckStep2Data(data){
+    checkStep2Data = data;
+  },
+  updateCheckStep3Data(data){
+    checkStep3Data = data;
+  },
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
@@ -50,13 +58,13 @@ export default React.createClass({
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <div ng-form="editForm">
                 <div className="padding-tb">
-                  <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data} ref="checkStep1"/>
+                  <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data}/>
                 </div>
                 <div className="padding-tb">
-                  <CheckStep2 {...this.state}/>
+                  <CheckStep2 {...this.state} onChange={this.updateCheckStep2Data}/>
                 </div>
                 <div className="padding-tb">
-                  <CheckStep3 {...this.state}/>
+                  <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data}/>
                 </div>
               </div>
               {this.state.foo}

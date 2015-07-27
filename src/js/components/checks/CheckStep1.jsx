@@ -139,9 +139,6 @@ const AllFields = React.createClass({
         form.setData(self.props.check.headers[i]);
       });
     },10);
-    setTimeout(function(){
-      self.setState({foo:'whoa'});
-    },500);
     return obj;
   },
   componentDidUpdate(){
@@ -186,7 +183,7 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add Another Header</button>
+        <button type="button" className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add Another Header</button>
       </div>
     )
   },

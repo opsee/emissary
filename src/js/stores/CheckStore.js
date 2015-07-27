@@ -43,8 +43,8 @@ let _check = Immutable.fromJS({
   ],
   assertions:[
     {
-      key:'code',
-      relationship:'equals',
+      type:'statusCode',
+      relationship:'equal',
       operand:200
     }
   ],
