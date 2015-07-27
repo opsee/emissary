@@ -4,8 +4,8 @@ import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link'
 
 export default React.createClass({
-  getInitialState() {
-  },
+  // getInitialState() {
+  // },
   silence(id){
     Actions.silence(id);
   },

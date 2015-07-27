@@ -6,18 +6,32 @@ import _ from 'lodash';
 
 export default React.createClass({
   getInitialState(){
+    let label = this.props.bf.value();
+    if(label){
+      label = this.getLabelFromChoice(label);
+    }else{
+      label = this.props.bf.label;
+    }
     return _.extend(this.props, {
-      label:this.props.bf.label
+      label:label
     });
+  },
+  getLabelFromChoice(key){
+    let bf = this.state && this.state.bf || this.props.bf;
+    let choice = _.find(bf.field._choices, choice => choice[0] == key);
+    if(choice && Array.isArray(choice)){
+      choice = choice[1];
+    }
+    return choice;
   },
   onSelect(key){
     const obj = {};
     obj[this.state.bf.name] = key;
     this.state.bf.form.updateData(obj);
-    let choice = _.find(this.state.bf.field._choices, choice => choice[0] == key);
-    if(choice){
+    let label = this.getLabelFromChoice(key);
+    if(label){
       this.setState({
-        label:choice[1]
+        label:label
       })
     }
   },

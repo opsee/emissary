@@ -10,8 +10,16 @@ import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
 
 function getState(){
-  return Store.getCheck()
+  return {
+    check:Store.getCheck(),
+    response:Store.getResponse(),
+    checkStep1Data:{
+      foo:true
+    }
+  }
 }
+
+let checkStep1Data = {}
 
 export default React.createClass({
   mixins: [Store.mixin],
@@ -24,11 +32,17 @@ export default React.createClass({
   getDefaultProps() {
     return getState();
   },
+  getCleanData(){
+    return checkStep1Data;
+  },
+  updateCheckStep1Data(data){
+    checkStep1Data = data;
+  },
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar btnleft={true} title={`Edit Check ${this.props.name || this.props.params.id}`} >
-          <Link to="check" params={{id:this.props.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
+        <Toolbar btnleft={true} title={`Edit Check ${this.state.check.name || this.state.check.params.id}`} >
+          <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
           </Link>
         </Toolbar>
         <div className="container">
@@ -36,7 +50,7 @@ export default React.createClass({
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <div ng-form="editForm">
                 <div className="padding-tb">
-                  <CheckStep1 {...this.state}/>
+                  <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data} ref="checkStep1"/>
                 </div>
                 <div className="padding-tb">
                   <CheckStep2 {...this.state}/>
@@ -45,6 +59,11 @@ export default React.createClass({
                   <CheckStep3 {...this.state}/>
                 </div>
               </div>
+              {this.state.foo}
+              {
+                <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
+              }
+              <div className="padding-tb"><br/><br/></div>
             </div>
           </div>
         </div>

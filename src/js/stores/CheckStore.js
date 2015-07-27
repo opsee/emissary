@@ -5,11 +5,13 @@ import moment from 'moment';
 import Immutable from 'immutable';
 
 // data storage
-const _check = Immutable.fromJS({
+let _check = Immutable.fromJS({
   name:'My great check2',
   info:'Fun info here2.',
   id:'foo',
-  port:80,
+  method:'POST',
+  path:'/foodog',
+  port:8080,
   meta:[
     {
       key:'State',
@@ -24,10 +26,28 @@ const _check = Immutable.fromJS({
       value:'HTTP'
     }
   ],
-  group:{
-    name:'foogroup',
-    id:'moogroup'
-  },
+  group:'group-1',
+  headers:[
+    {
+      'key':'testkey',
+      'value':'testvalue'
+    },
+    {
+      'key':'testkey222',
+      'value':'testvalue2222'
+    },
+    {
+      'key':'testkey3333',
+      'value':'testvalue3333'
+    }
+  ],
+  assertions:[
+    {
+      key:'code',
+      relationship:'equals',
+      operand:200
+    }
+  ],
   instances:[
   {
     name:'a-q8r-309fo (US-West-1)',
@@ -73,6 +93,31 @@ const _check = Immutable.fromJS({
   },
   ]
 });
+
+let _response = Immutable.fromJS(
+  {
+    "data": [
+      {
+        "code": "100",
+        "phrase": "Continue",
+        "description": "\"indicates that the initial part of a request has been received and has not yet been rejected by the server $$$.\"",
+      },
+      {
+        "code": "101",
+        "phrase": "Switching Protocols",
+        "description": "\"indicates that the server understands and is willing to comply with the client's request, via the Upgrade header field, for a change in the application protocol being used on this connection.\"",
+      },
+    ],
+    "status": 200,
+    "statusText": "OK",
+    "headers": {
+      "date": "Mon, 29 Jun 2015 17:49:21 GMT",
+      "last-modified": "Tue, 16 Jun 2015 17:15:06 GMT",
+      "content-type": "application/json",
+      "cache-control": "public, max-age=0"
+    }
+  }
+);
 
 let _checks = [
   {
@@ -150,7 +195,10 @@ const CheckStore = Flux.createStore(
     },
     getChecks(){
       return _checks;
-    }
+    },
+    getResponse(){
+      return _response.toJS();
+    },
   }, function(payload){
     switch(payload.actionType) {
       case 'CHECK_SILENCE':

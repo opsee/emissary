@@ -43,13 +43,13 @@ const HeaderForm = forms.Form.extend({
   key: forms.CharField({
     widgetAttrs:{
       placeholder:'e.g. content-type'
-    }
+    },
   }),
   value: forms.CharField({
     widgetAttrs:{
       placeholder:'e.g. application/json'
-    }
-  })
+    },
+  }),
 });
 
 const HeaderFormSet = forms.FormSet.extend({
@@ -76,7 +76,6 @@ const InfoFormSet = forms.FormSet.extend({
 })
 
 const InfoForm = forms.Form.extend({
-  // info: new InfoFormSet(),
   group: forms.ChoiceField({choices:groupOptions}),
   port: forms.CharField({
     widgetAttrs:{
@@ -89,13 +88,7 @@ const InfoForm = forms.Form.extend({
       placeholder:'e.g. /healthcheck'
     }
   }),
-  // headers: new HeaderFormSet(),
   clean() {
-  },
-  getCleanedData(){
-    return {
-      headers: this.state.headers.cleanedData()
-    }
   },
   render() {
     return(
@@ -126,10 +119,33 @@ const data = {
 
 const AllFields = React.createClass({
   getInitialState() {
-    return({
-      info: new InfoForm({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data}),
-      headers: new HeaderFormSet({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data})
-    })
+    const obj = {
+      info: new InfoForm({
+        onChange: this.forceUpdate.bind(this),
+        labelSuffix:'',
+        data:this.props.check
+      }),
+      headers: new HeaderFormSet({
+        onChange: this.forceUpdate.bind(this),
+        labelSuffix:'',
+        initial:this.props.check.headers,
+        extra:0
+      }),
+    }
+    //this is a workaround because the library is not working correctly with initial + data formset
+    const self = this;
+    setTimeout(function(){
+      self.state.headers.forms().forEach((form,i) => {
+        form.setData(self.props.check.headers[i]);
+      });
+    },10);
+    setTimeout(function(){
+      self.setState({foo:'whoa'});
+    },500);
+    return obj;
+  },
+  componentDidUpdate(){
+    this.props.onChange(this.getCleanedData());
   },
   renderHeaderForm(){
     return(
@@ -174,21 +190,31 @@ const AllFields = React.createClass({
       </div>
     )
   },
-  cleanedData(){
-    const headers = {
-      headers:this.state.headers.cleanedData()
+  getCleanedData(){
+    let headerData = this.state.headers.cleanedData();
+    // let headerData = this.state.headers.data;
+    const data = {
+      headers:headerData
     }
-    return _.assign(headers, this.state.info.cleanedData);
+    return _.assign(data, this.state.info.cleanedData);
+  },
+  renderSubmitButton(){
+    if(this.props.standalone){
+      return(
+        <button type="submit" className="btn btn-primary">Submit</button>
+      )
+    }
   },
   render() {
-    const nonFieldErrors = this.state.info.nonFieldErrors()
+    const nonFieldErrors = this.state.info.nonFieldErrors();
+    // const headerErrors = this.state.headers.errors();
     return (
       <form ref="form" onSubmit={this.onSubmit}>
           {this.state.info.render()}
           {this.renderHeaderForm()}
-          <button type="submit" className="btn btn-primary">Submit</button>
+          {this.renderSubmitButton()}
           {
-            //<pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
+            // <pre>{this.getCleanedData && JSON.stringify(this.getCleanedData(), null, ' ')}</pre>
           }
           {
             <strong>Non field errors: {nonFieldErrors.render()}</strong>

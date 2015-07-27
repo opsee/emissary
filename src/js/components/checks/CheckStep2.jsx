@@ -126,8 +126,17 @@ const data = {
 const AllFields = React.createClass({
   getInitialState() {
     return({
-      info: new InfoForm({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data}),
-      assertions: new AssertionsFormSet({onChange: this.forceUpdate.bind(this), labelSuffix:'', data:data})
+      info: new InfoForm({
+        onChange: this.forceUpdate.bind(this), 
+        labelSuffix:'', 
+        data:data
+      }),
+      assertions: new AssertionsFormSet({
+        onChange: this.forceUpdate.bind(this), 
+        labelSuffix:'',
+        data:data
+      }),
+      response:this.props.response
     })
   },
   assertionPassing(index){
@@ -145,7 +154,7 @@ const AllFields = React.createClass({
                   <div className="container-fluid">
                     <div className="row">
                       <div className="col-xs-2">
-                        <AssertionCounter label={index} fields={form.boundFields()}/>
+                        <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
                       </div>
                       {form.boundFields().map(bf => {
                         switch(bf.name){
@@ -188,15 +197,22 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button className="btn btn-info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Header</button>
+        <button className="btn btn-info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Assertion</button>
       </div>
     )
   },
   cleanedData(){
-    const headers = {
-      headers:this.state.assertions.cleanedData()
+    const obj = {
+      assertions:this.state.assertions.cleanedData()
     }
-    return _.assign(headers, this.state.info.cleanedData);
+    return _.assign(obj, this.state.info.cleanedData);
+  },
+  renderSubmitButton(){
+    if(this.props.standalone){
+      return(
+        <button type="submit" className="btn btn-primary">Submit</button>
+      )
+    }
   },
   render() {
     const nonFieldErrors = this.state.info.nonFieldErrors()
@@ -206,7 +222,11 @@ const AllFields = React.createClass({
           <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion per check.</p>
           <br />
           {this.renderAssertionsForm()}
-          <button type="submit" className="btn btn-primary">Submit</button>
+          {this.renderSubmitButton()}
+                <h2>Your Response &amp; Request</h2>
+      <p>We are including the content of your response and your request to help you define assertions.</p>
+      <br/>
+          <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
           {
             //<pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
           }
