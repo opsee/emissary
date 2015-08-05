@@ -1,8 +1,11 @@
 import React from 'react';
 import Actions from '../../actions/CheckActions';
+import RouterActions from '../../actions/RouterActions';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
+import BottomButtonNav from '../global/BottomButtonNav.jsx';
+import Toolbar from '../global/Toolbar.jsx';
 
 import slate from 'slate';
 import assertionTypes from 'slate/src/types';
@@ -154,7 +157,11 @@ const AllFields = React.createClass({
   componentDidUpdate(){
     this.props.onChange(this.getCleanedData());
   },
-  render() {
+  submit(){
+    RouterActions.transition('checkCreateStep3');
+    // this.props.stepSubmit(this.getCleanedData());
+  },
+  innerRender() {
     return (
       <form ref="form" onSubmit={this.onSubmit}>
           <h2>Add Assertions</h2>
@@ -174,6 +181,38 @@ const AllFields = React.createClass({
           }
       </form>
     )
+  },
+  renderAsPage(){
+    return (
+      <div>
+        <div className="bg-body" style={{position:"relative"}}>
+          <Toolbar btnleft={true} title={`Create Check Step 2`}>
+            {
+              // this.renderLink()
+            }
+          </Toolbar>
+          <div className="container">
+            <div className="row">
+              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+              {this.innerRender()}
+              </div>
+            </div>
+          </div>
+        </div>
+        <BottomButtonNav>
+          <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
+            <span>Next: Test This Request 
+            {
+              // <svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_chevron_right" /></svg>
+            }
+              </span>
+          </button>
+        </BottomButtonNav>
+      </div>
+    )
+  },
+  render() {
+    return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
   onSubmit(e) {
     e.preventDefault()

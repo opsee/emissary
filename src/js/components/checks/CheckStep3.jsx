@@ -3,6 +3,8 @@ import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
+import BottomButtonNav from '../global/BottomButtonNav.jsx';
+import Toolbar from '../global/Toolbar.jsx';
 
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
@@ -57,7 +59,6 @@ const InfoForm = forms.Form.extend({
     return(
       <div>
         <h2>Check Name &amp; Message</h2>
-        <h2>Define a Request</h2>
         {this.boundFields().map(bf => {
           return <OpseeBoundField bf={bf}/>
         })}
@@ -154,7 +155,7 @@ const AllFields = React.createClass({
       )
     }
   },
-  render() {
+  innerRender() {
     const nonFieldErrors = this.state.info.nonFieldErrors();
     // const notificationErrors = this.state.notifications.errors();
     return (
@@ -170,6 +171,38 @@ const AllFields = React.createClass({
           }
       </form>
     )
+  },
+  renderAsPage(){
+    return (
+      <div>
+        <div className="bg-body" style={{position:"relative"}}>
+          <Toolbar btnleft={true} title={`Create Check Step 3`}>
+            {
+              // this.renderLink()
+            }
+          </Toolbar>
+          <div className="container">
+            <div className="row">
+              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+              {this.innerRender()}
+              </div>
+            </div>
+          </div>
+        </div>
+        <BottomButtonNav>
+          <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
+              <span>Finish 
+              {
+                // <svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_chevron_right" /></svg>
+              }
+                </span>
+            </button>
+          </BottomButtonNav>
+      </div>
+    )
+  },
+  render() {
+    return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
   onSubmit(e) {
     e.preventDefault()

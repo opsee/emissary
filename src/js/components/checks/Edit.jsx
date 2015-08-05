@@ -63,13 +63,13 @@ export default React.createClass({
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <div ng-form="editForm">
                 <div className="padding-tb">
-                  <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data}/>
+                  <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data} renderAsInclude={true}/>
                 </div>
                 <div className="padding-tb">
-                  <CheckStep2 {...this.state} onChange={this.updateCheckStep2Data}/>
+                  <CheckStep2 {...this.state} onChange={this.updateCheckStep2Data} renderAsInclude={true}/>
                 </div>
                 <div className="padding-tb">
-                  <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data}/>
+                  <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data} renderAsInclude={true}/>
                 </div>
               </div>
               {this.state.foo}

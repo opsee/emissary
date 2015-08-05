@@ -201,6 +201,24 @@ const CheckStore = Flux.createStore(
     getCheck(){
       return _check.toJS();
     },
+    newCheck(){
+      return {
+        name:null,
+        info:null,
+        id:null,
+        method:null,
+        path:null,
+        port:null,
+        meta:[],
+        group:null,
+        headers:[],
+        assertions:[],
+        interval:null,
+        message:null,
+        notifications:[],
+        instances:[]
+      }
+    },
     getChecks(){
       return _checks;
     },
