@@ -8,35 +8,8 @@ import slate from 'slate';
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 
-import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
-import OpseeDropdown from '../forms/OpseeDropdown.jsx';
+import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
-
-
-function opseeInputs(bf){
-  const type = bf.field.constructor.name;
-  function output(type){
-    switch(type){
-      case 'ChoiceField':
-      return(
-        <OpseeDropdown bf={bf}/>
-      );
-      break;
-      default:
-      return(
-        <OpseeInputWithLabel bf={bf}/>
-      );
-      break;
-    }
-  }
-  return (
-    <div>
-      <div className="form-group">
-        {output(type)}
-      </div>
-    </div>
-  )
-}
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -90,7 +63,7 @@ const AllFields = React.createClass({
       if(data.type == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
           <div className="col-xs-10 col-xs-offset-2">
-            {opseeInputs(bf)}
+            <OpseeBoundField bf={bf}/>
           </div>
         )
       }
@@ -102,7 +75,7 @@ const AllFields = React.createClass({
       if(!data.relationship.match('empty|notEmpty')){
         return(
           <div className="col-xs-10 col-xs-offset-2">
-            {opseeInputs(bf)}
+            <OpseeBoundField bf={bf}/>
           </div>
         )
       }
@@ -127,14 +100,14 @@ const AllFields = React.createClass({
                           case 'type':
                           return(
                             <div className="col-xs-10 col-sm-4">
-                              {opseeInputs(bf)}
+                              <OpseeBoundField bf={bf}/>
                             </div>
                           );
                           break;
                           case 'relationship':
                           return(
                             <div className="col-xs-10 col-xs-offset-2 col-sm-6 col-sm-offset-0">
-                              {opseeInputs(bf)}
+                              <OpseeBoundField bf={bf}/>
                             </div>
                           );
                           break;
@@ -165,7 +138,7 @@ const AllFields = React.createClass({
       </div>
     )
   },
-  cleanedData(){
+  getCleanedData(){
     const obj = {
       assertions:this.state.assertions.cleanedData()
     }
@@ -177,6 +150,9 @@ const AllFields = React.createClass({
         <button type="submit" className="btn btn-primary">Submit</button>
       )
     }
+  },
+  componentDidUpdate(){
+    this.props.onChange(this.getCleanedData());
   },
   render() {
     return (

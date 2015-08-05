@@ -4,33 +4,7 @@ import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
 
-import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
-import OpseeDropdown from '../forms/OpseeDropdown.jsx';
-
-function opseeInputs(bf){
-  const type = bf.field.constructor.name;
-  function output(type){
-    switch(type){
-      case 'ChoiceField':
-      return(
-        <OpseeDropdown bf={bf}/>
-      );
-      break;
-      default:
-      return(
-        <OpseeInputWithLabel bf={bf}/>
-      );
-      break;
-    }
-  }
-  return (
-    <div>
-      <div className="form-group">
-        {output(type)}
-      </div>
-    </div>
-  )
-}
+import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 
 const groupOptions = [
   ['group-1','Group 1'],
@@ -94,28 +68,23 @@ const InfoForm = forms.Form.extend({
     return(
       <div>
         <h2>Choose a Group to Check</h2>
-        {opseeInputs(this.boundField('group'))}
+        <OpseeBoundField bf={this.boundField('group')}/>
         <h2>Define a Request</h2>
         {this.boundFields((field, fieldName) => {
           if(fieldName.match('protocol|port|method|path')){
             return true;
           }
           return false;
-        }).map(opseeInputs)}
-        {
-          // opseeInputs(this.boundField('group')).map(opseeInputs)
-        }
-        {
-          // this.headers.forms().map(form => form.boundFields().map(opseeInputs))
-        }
+        }).map(bf => {
+          return (
+            <OpseeBoundField bf={bf}/>
+          );
+        })
+      }
       </div>
     )
   }
 })
-
-const data = {
-  port:80
-}
 
 const AllFields = React.createClass({
   getInitialState() {
@@ -163,7 +132,7 @@ const AllFields = React.createClass({
                       {form.boundFields().map(bf => {
                         return(
                           <div className="col-xs-12 col-sm-6">
-                            {opseeInputs(bf)}
+                            <OpseeBoundField bf={bf}/>
                           </div>
                         )
                       })}

@@ -1,5 +1,5 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
+import _ from 'lodash';
 import Actions from '../../actions/CheckActions';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
@@ -46,6 +46,11 @@ export default React.createClass({
   updateCheckStep3Data(data){
     checkStep3Data = data;
   },
+  submit(){
+    var obj = {};
+    _.assign(obj, checkStep1Data, checkStep2Data, checkStep3Data);
+    console.log(obj);
+  },
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
@@ -80,7 +85,7 @@ export default React.createClass({
             <div className="container">
               <div className="row">
                 <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-                  <button type="button" ng-click="save()" className="btn btn-flat btn-success" ng-disabled="editForm.$invalid">
+                  <button type="button" onClick={this.submit.bind(this)} className="btn btn-flat btn-success" ng-disabled="editForm.$invalid">
                     <span>Finish 
                     {
                     //<svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_checkmark" /></svg>

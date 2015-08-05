@@ -4,38 +4,9 @@ import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
 
+import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
 import OpseeDropdown from '../forms/OpseeDropdown.jsx';
-
-function opseeInputs(bf){
-  const type = bf.field.constructor.name;
-  function output(type){
-    switch(type){
-      case 'ChoiceField':
-      return(
-        <OpseeDropdown bf={bf}/>
-      );
-      break;
-      default:
-      return(
-        <OpseeInputWithLabel bf={bf}/>
-      );
-      break;
-    }
-  }
-  return (
-    <div>
-      <div className="form-group">
-        {output(type)}
-      </div>
-    </div>
-  )
-}
-
-const groupOptions = [
-  ['group-1','Group 1'],
-  ['group-2','Group 2']
-]
 
 const intervalOptions = [
   ['5m','5min'],
@@ -44,21 +15,27 @@ const intervalOptions = [
   ['7d','7d'],
 ]
 
-const HeaderForm = forms.Form.extend({
-  key: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. content-type'
-    },
+const notificationOptions = [
+  ['email','Email'],
+  ['desktop','Desktop'],
+  ['webhook','Webhook'],
+  ['slack','Slack'],
+]
+
+
+const NotificationForm = forms.Form.extend({
+  channel: forms.ChoiceField({
+    choices:notificationOptions
   }),
   value: forms.CharField({
     widgetAttrs:{
-      placeholder:'e.g. application/json'
+      placeholder:'test@testing.com'
     },
   }),
 });
 
-const HeaderFormSet = forms.FormSet.extend({
-  form:HeaderForm
+const NotificationFormSet = forms.FormSet.extend({
+  form:NotificationForm
 });
 
 
@@ -81,13 +58,9 @@ const InfoForm = forms.Form.extend({
       <div>
         <h2>Check Name &amp; Message</h2>
         <h2>Define a Request</h2>
-        {this.boundFields().map(opseeInputs)}
-        {
-          // opseeInputs(this.boundField('group')).map(opseeInputs)
-        }
-        {
-          // this.headers.forms().map(form => form.boundFields().map(opseeInputs))
-        }
+        {this.boundFields().map(bf => {
+          return <OpseeBoundField bf={bf}/>
+        })}
       </div>
     )
   }
@@ -105,18 +78,18 @@ const AllFields = React.createClass({
         labelSuffix:'',
         data:this.props.check
       }),
-      headers: new HeaderFormSet({
+      notifications: new NotificationFormSet({
         onChange: this.forceUpdate.bind(this),
         labelSuffix:'',
-        initial:this.props.check.headers,
+        initial:this.props.check.notifications,
         extra:0
       }),
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     const self = this;
     setTimeout(function(){
-      self.state.headers.forms().forEach((form,i) => {
-        form.setData(self.props.check.headers[i]);
+      self.state.notifications.forms().forEach((form,i) => {
+        form.setData(self.props.check.notifications[i]);
       });
     },10);
     return obj;
@@ -124,16 +97,16 @@ const AllFields = React.createClass({
   componentDidUpdate(){
     this.props.onChange(this.getCleanedData());
   },
-  renderHeaderForm(){
+  renderNotificationForm(){
     return(
       <div>
-        <h2>Request Headers</h2>
-        {this.state.headers.forms().map((form, index) => {
+        <h2>Request Notifications</h2>
+        {this.state.notifications.forms().map((form, index) => {
           return (
             <div>
               <div className="row">
                 <div className="col-xs-12">
-                  <h3>Header {index+1}</h3>
+                  <h3>Notification {index+1}</h3>
                 </div>
               </div>
               <div className="display-flex">
@@ -143,7 +116,7 @@ const AllFields = React.createClass({
                       {form.boundFields().map(bf => {
                         return(
                           <div className="col-xs-12 col-sm-6">
-                            {opseeInputs(bf)}
+                            <OpseeBoundField bf={bf}/>
                           </div>
                         )
                       })}
@@ -151,7 +124,7 @@ const AllFields = React.createClass({
                   </div>
                 </div>
                 <div className="padding-lr">
-                    <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
+                    <button type="button" className="btn btn-icon btn-flat" onClick={this.state.notifications.removeForm.bind(this.state.notifications,index)} title="Remove this Notification">
                       remove
                     {
                       //<svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_close" /></svg>
@@ -163,15 +136,14 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button type="button" className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add Another Header</button>
+        <button type="button" className="btn btn-info" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}>Add Another Notification</button>
       </div>
     )
   },
   getCleanedData(){
-    let headerData = this.state.headers.cleanedData();
-    // let headerData = this.state.headers.data;
+    let notificationData = this.state.notifications.cleanedData();
     const data = {
-      headers:headerData
+      notifications:notificationData
     }
     return _.assign(data, this.state.info.cleanedData);
   },
@@ -184,11 +156,11 @@ const AllFields = React.createClass({
   },
   render() {
     const nonFieldErrors = this.state.info.nonFieldErrors();
-    // const headerErrors = this.state.headers.errors();
+    // const notificationErrors = this.state.notifications.errors();
     return (
       <form ref="form" onSubmit={this.onSubmit}>
           {this.state.info.render()}
-          {this.renderHeaderForm()}
+          {this.renderNotificationForm()}
           {this.renderSubmitButton()}
           {
             // <pre>{this.getCleanedData && JSON.stringify(this.getCleanedData(), null, ' ')}</pre>
@@ -202,7 +174,7 @@ const AllFields = React.createClass({
   onSubmit(e) {
     e.preventDefault()
     this.state.info.validate(this.refs.info)
-    this.state.headers.validate(this.refs.headers)
+    this.state.notifications.validate(this.refs.notifications)
     this.forceUpdate();
     console.log(this.cleanedData());
   }

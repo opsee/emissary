@@ -48,6 +48,14 @@ let _check = Immutable.fromJS({
       operand:200
     }
   ],
+  interval:'15m',
+  message:'This is a great message',
+  notifications:[
+    {
+     channel:'email',
+     value:'great@mygreatthing.com' 
+    }
+  ],
   instances:[
   {
     name:'a-q8r-309fo (US-West-1)',
