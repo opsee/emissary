@@ -8,6 +8,7 @@ import _ from 'lodash';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import Toolbar from '../global/Toolbar.jsx';
+import CloseIcon from '../icons/Close.jsx';
 
 const groupOptions = [
   ['group-1','Group 1'],
@@ -32,25 +33,6 @@ const HeaderForm = forms.Form.extend({
 const HeaderFormSet = forms.FormSet.extend({
   form:HeaderForm
 });
-
-const Info = forms.Form.extend({
-  group: forms.ChoiceField({choices:groupOptions}),
-  port: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. 8080'
-    }
-  }),
-  method: forms.ChoiceField({choices:methodOptions}),
-  path: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. /healthcheck'
-    }
-  })
-});
-
-const InfoFormSet = forms.FormSet.extend({
-  form:Info
-})
 
 const InfoForm = forms.Form.extend({
   group: forms.ChoiceField({choices:groupOptions}),
@@ -145,10 +127,7 @@ const AllFields = React.createClass({
                 </div>
                 <div className="padding-lr">
                     <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
-                      remove
-                    {
-                      //<svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_close" /></svg>
-                    }
+                      <CloseIcon btn={true}/>
                   </button>
                 </div>
               </div>

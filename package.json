@@ -42,6 +42,7 @@
     "eslint-plugin-react": "^2.7.0",
     "flux": "^2.0.3",
     "gulp-compass": "^2.1.0",
+    "gulp-iconify": "^0.3.2",
     "highlight.js": "^8.6.0",
     "immutable": "^3.7.4",
     "lodash": "^3.10.0",
@@ -56,6 +57,7 @@
     "react-components": "^0.2.0",
     "react-router": "^0.13.3",
     "seedling": "git+ssh://git@github.com/opsee/seedling.git",
-    "slate": "git+ssh://git@github.com/opsee/slate.git"
+    "slate": "git+ssh://git@github.com/opsee/slate.git",
+    "swagger-client": "^2.1.2"
   }
 }

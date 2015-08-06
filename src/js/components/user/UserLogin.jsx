@@ -25,13 +25,17 @@ export default React.createClass({
       on:!this.state.on
     })
   },
+  loginBtnText(){
+    return 'Log in'
+  },
   render() {
     return (
       <form name="loginForm" ng-submit="submit()">
         <UserInputs include={["email","password"]}/>
         <button ng-disabled="state == options.inProgress || loginForm.$invalid || submitting" type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled>
-          <span ng-if="!submitting">Log In</span>
-          <span ng-if="submitting">Logging In...</span>
+          <span>
+            {this.loginBtnText()}
+          </span>
         </button>
         <div className="clearfix"><br/></div>
         <div className="clearfix">

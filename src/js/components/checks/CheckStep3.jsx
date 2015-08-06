@@ -9,6 +9,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
 import OpseeDropdown from '../forms/OpseeDropdown.jsx';
+import CloseIcon from '../icons/Close.jsx';
 
 const intervalOptions = [
   ['5m','5min'],
@@ -126,10 +127,7 @@ const AllFields = React.createClass({
                 </div>
                 <div className="padding-lr">
                     <button type="button" className="btn btn-icon btn-flat" onClick={this.state.notifications.removeForm.bind(this.state.notifications,index)} title="Remove this Notification">
-                      remove
-                    {
-                      //<svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_close" /></svg>
-                    }
+                      <CloseIcon btn={true}/>
                   </button>
                 </div>
               </div>

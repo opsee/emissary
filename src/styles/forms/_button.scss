@@ -152,6 +152,8 @@ $button-fab-padding: 1.60rem !default;
   border-radius: 50%;
   background-clip: padding-box;
   overflow: hidden;
+  background-size: 24px 24px;
+  background-position: 50% 50%;
   &:hover {
     @include transform(scale(1.2));
   }
