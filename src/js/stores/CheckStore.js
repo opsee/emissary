@@ -46,6 +46,11 @@ let _check = Immutable.fromJS({
       type:'statusCode',
       relationship:'equal',
       operand:200
+    },
+    {
+      type:'statusCode',
+      relationship:'equal',
+      operand:401
     }
   ],
   interval:'15m',

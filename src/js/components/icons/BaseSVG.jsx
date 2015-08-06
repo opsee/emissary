@@ -1,4 +1,4 @@
-var React = require('react')
+import React from 'react';
 import Radium from 'radium';
 
 const Base = React.createClass({
@@ -22,6 +22,13 @@ const Base = React.createClass({
         left:'50%',
         top:'50%',
         margin:'-12px 0 0 -12px'
+      }
+    }else if(this.props.inline){
+      style = {
+        display:'inline-block',
+        height:'1.3em',
+        width:'1.3em',
+        verticalAlign:'text-bottom'
       }
     }
     return (

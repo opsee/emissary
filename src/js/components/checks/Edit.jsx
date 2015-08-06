@@ -8,6 +8,8 @@ import Link from 'react-router/lib/components/Link';
 import CheckStep1 from '../checks/CheckStep1.jsx';
 import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
+import CheckmarkIcon from '../icons/Checkmark.jsx';
+import colors from 'seedling/colors';
 
 function getState(){
   return {
@@ -86,10 +88,9 @@ export default React.createClass({
               <div className="row">
                 <div className="col-xs-12 col-sm-10 col-sm-offset-1">
                   <button type="button" onClick={this.submit.bind(this)} className="btn btn-flat btn-success" ng-disabled="editForm.$invalid">
-                    <span>Finish 
-                    {
-                    //<svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_checkmark" /></svg>
-                    }</span>
+                    <span>Finish&nbsp;&nbsp;
+                      <CheckmarkIcon inline={true} fill={colors.success}/>
+                    </span>
                   </button>
                 </div>
               </div>

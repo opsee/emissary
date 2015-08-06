@@ -5,11 +5,12 @@ import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import Toolbar from '../global/Toolbar.jsx';
-
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
 import OpseeDropdown from '../forms/OpseeDropdown.jsx';
 import CloseIcon from '../icons/Close.jsx';
+import ChevronRightIcon from '../icons/ChevronRight.jsx';
+import colors from 'seedling/colors';
 
 const intervalOptions = [
   ['5m','5min'],
@@ -190,10 +191,8 @@ const AllFields = React.createClass({
         <BottomButtonNav>
           <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
               <span>Finish 
-              {
-                // <svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_chevron_right" /></svg>
-              }
-                </span>
+                <ChevronRightIcon inline={true} fill={colors.success}/>
+              </span>
             </button>
           </BottomButtonNav>
       </div>

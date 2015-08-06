@@ -12,6 +12,7 @@
   margin-top: 3px;
   text-align: center;
   width: 32px;
+  position: relative;
   &.success {
     background-color: $brand-success;
   }
@@ -22,11 +23,11 @@
 .assertion-validation {
   @extend .md-shadow-bottom-z-1;
   border-radius:50%;
-  @include opacity(0);
+  opacity:0;
   @include transition(transform $swift-ease-out-duration $swift-ease-out-timing-function,
                       opacity $swift-ease-out-duration $swift-ease-out-timing-function,
                       visibility $swift-ease-out-duration $swift-ease-out-timing-function);
-  @include transform(translate(0,-24px));
+  // @include transform(translate(0,-24px));
   background-color: $gray-900;
   display: block;
   height: 18px;
@@ -39,8 +40,8 @@
   fill: $brand-danger;
   visibility: hidden;
   &.active {
-    @include opacity(100);
-    @include transform(translate(0,0));
+    opacity:1;
+    // @include transform(translate(0,0));
     visibility: visible;
   }
 }

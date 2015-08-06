@@ -4,18 +4,19 @@ import RouterActions from '../../actions/RouterActions';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
-
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import Toolbar from '../global/Toolbar.jsx';
 import CloseIcon from '../icons/Close.jsx';
+import ChevronRightIcon from '../icons/ChevronRight.jsx';
+import colors from 'seedling/colors';
 
 const groupOptions = [
   ['group-1','Group 1'],
   ['group-2','Group 2']
 ]
 
-const methodOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name,name]);
+const methodOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
 
 const HeaderForm = forms.Form.extend({
   key: forms.CharField({
@@ -126,7 +127,7 @@ const AllFields = React.createClass({
                   </div>
                 </div>
                 <div className="padding-lr">
-                    <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
+                  <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
                       <CloseIcon btn={true}/>
                   </button>
                 </div>
@@ -181,10 +182,10 @@ const AllFields = React.createClass({
     return (
       <div>
         <div className="bg-body" style={{position:"relative"}}>
-          <Toolbar btnleft={true} title={`Create Check Step 1`}>
-            {
-              // this.renderLink()
-            }
+          <Toolbar btnPosition="midRight" title="Create Check Step 1">
+            <Link to="checks" className="btn btn-icon btn-flat">
+              <CloseIcon btn={true}/>
+            </Link>
           </Toolbar>
           <div className="container">
             <div className="row">
@@ -197,10 +198,8 @@ const AllFields = React.createClass({
         <BottomButtonNav>
           <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
               <span>Next: Test This Request 
-              {
-                // <svg className="icon" viewBox="0 0 24 24"><use xlink:href="#ico_chevron_right" /></svg>
-              }
-                </span>
+                <ChevronRightIcon inline={true} fill={colors.success}/>
+              </span>
             </button>
           </BottomButtonNav>
       </div>
