@@ -4,8 +4,7 @@ import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import _ from 'lodash';
 import slate from 'slate';
-import CheckmarkIcon from '../icons/Checkmark.jsx';
-import CloseIcon from '../icons/Close.jsx';
+import {Close, Checkmark} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
 import Radium from 'radium';
 
@@ -53,9 +52,9 @@ const AssertionCounter = React.createClass({
   },
   getSmallIcon(){
     return this.state.passing ? (
-      <CheckmarkIcon style={assertionIconStyle} fill={colors.success}/>
+      <Checkmark style={assertionIconStyle} fill={colors.success}/>
     ) : (
-      <CloseIcon style={assertionIconStyle} fill={colors.danger}/>
+      <Close style={assertionIconStyle} fill={colors.danger}/>
     )
   },
   render(){

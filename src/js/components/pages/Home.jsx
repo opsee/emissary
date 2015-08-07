@@ -41,9 +41,9 @@ export default React.createClass({
                     <Link to="homeGroups">Groups</Link>
                   </li>
                 </ul>
+                <RouteHandler/>
               </div>
             </div>
-            <RouteHandler/>
           </div>
       </div>
     );

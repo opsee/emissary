@@ -11,8 +11,7 @@ import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
-import CloseIcon from '../icons/Close.jsx';
-import ChevronRightIcon from '../icons/ChevronRight.jsx';
+import {Close, ChevronRight} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
@@ -127,7 +126,7 @@ const AllFields = React.createClass({
                 </div>
                 <div className="padding-lr">
                     <button type="button" className="btn btn-icon btn-flat" onClick={this.state.assertions.removeForm.bind(this.state.assertions,index)} title="Remove this Assertion">
-                      <CloseIcon btn={true}/>
+                      <Close btn={true}/>
                   </button>
                 </div>
               </div>
@@ -200,7 +199,7 @@ const AllFields = React.createClass({
         <BottomButtonNav>
           <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
             <span>Next: Test This Request
-              <ChevronRightIcon inline={true} fill={colors.success}/>
+              <ChevronRight inline={true} fill={colors.success}/>
             </span>
           </button>
         </BottomButtonNav>

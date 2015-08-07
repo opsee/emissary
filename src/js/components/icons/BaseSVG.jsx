@@ -16,21 +16,6 @@ const Base = React.createClass({
   },
   render: function() {
     let style = {};
-    if(this.props.btn){
-      style = {
-        position:'absolute',
-        left:'50%',
-        top:'50%',
-        margin:'-12px 0 0 -12px'
-      }
-    }else if(this.props.inline){
-      style = {
-        display:'inline-block',
-        height:'1.3em',
-        width:'1.3em',
-        verticalAlign:'text-bottom'
-      }
-    }
     return (
       <svg xmlns="http://www.w3.org/svg/2000"
         viewBox={this.state.viewBox}

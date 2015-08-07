@@ -7,8 +7,7 @@ import _ from 'lodash';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import Toolbar from '../global/Toolbar.jsx';
-import CloseIcon from '../icons/Close.jsx';
-import ChevronRightIcon from '../icons/ChevronRight.jsx';
+import {Close, ChevronRight} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
 
 const groupOptions = [
@@ -128,7 +127,7 @@ const AllFields = React.createClass({
                 </div>
                 <div className="padding-lr">
                   <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
-                      <CloseIcon btn={true}/>
+                      <Close btn={true}/>
                   </button>
                 </div>
               </div>
@@ -184,7 +183,7 @@ const AllFields = React.createClass({
         <div className="bg-body" style={{position:"relative"}}>
           <Toolbar btnPosition="midRight" title="Create Check Step 1">
             <Link to="checks" className="btn btn-icon btn-flat">
-              <CloseIcon btn={true}/>
+              <Close btn={true}/>
             </Link>
           </Toolbar>
           <div className="container">
@@ -198,7 +197,7 @@ const AllFields = React.createClass({
         <BottomButtonNav>
           <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
               <span>Next: Test This Request 
-                <ChevronRightIcon inline={true} fill={colors.success}/>
+                <ChevronRight inline={true} fill={colors.success}/>
               </span>
             </button>
           </BottomButtonNav>

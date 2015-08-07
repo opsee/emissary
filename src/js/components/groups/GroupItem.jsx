@@ -2,6 +2,8 @@ import React from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link'
+import {MoreHoriz} from '../icons/Module.jsx';
+import colors from 'seedling/colors';
 
 export default React.createClass({
   // getInitialState() {
@@ -26,7 +28,7 @@ export default React.createClass({
             </div>
           </Link>
           <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.id)} title="Silence check">
-          silence
+            <MoreHoriz btn={true}/>
           </button>
         </div>
       </div>

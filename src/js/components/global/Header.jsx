@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import Link from 'react-router/lib/components/Link';
+import {Person, Checkmark, MoreHoriz} from '../icons/Module.jsx';
 
 export default React.createClass({
   render(){
@@ -18,6 +19,7 @@ export default React.createClass({
                  </li>
                   <li>
                    <Link to="checks" className="md-navbar-link">
+                     <Checkmark nav={true}/>
                      <span className="md-navbar-title">Checks</span>
                    </Link>
                  </li>
@@ -28,6 +30,7 @@ export default React.createClass({
                  </li>
                  <li ng-if="user.hasUser()">
                    <Link to="profile" className="md-navbar-link">
+                   <Person nav={true}/>
                      <span className="md-navbar-title">Profile</span>
                    </Link>
                  </li>

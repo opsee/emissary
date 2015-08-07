@@ -56,14 +56,14 @@
     color: $text-color;
     background-color: transparent !important;
     text-decoration: none;
-    .md-navbar-icon {
+    svg {
       fill: $text-color;
     }
   }
   &:active, &.active {
     color: white;
-    .md-navbar-icon {
-      fill: white;
+    svg {
+      fill:white !important;
     }
   }
   @include breakpoint($screen-sm){

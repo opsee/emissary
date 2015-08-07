@@ -8,8 +8,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
 import OpseeDropdown from '../forms/OpseeDropdown.jsx';
-import CloseIcon from '../icons/Close.jsx';
-import ChevronRightIcon from '../icons/ChevronRight.jsx';
+import {Close, ChevronRight} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
 
 const intervalOptions = [
@@ -128,7 +127,7 @@ const AllFields = React.createClass({
                 </div>
                 <div className="padding-lr">
                     <button type="button" className="btn btn-icon btn-flat" onClick={this.state.notifications.removeForm.bind(this.state.notifications,index)} title="Remove this Notification">
-                      <CloseIcon btn={true}/>
+                      <Close btn={true}/>
                   </button>
                 </div>
               </div>
@@ -191,7 +190,7 @@ const AllFields = React.createClass({
         <BottomButtonNav>
           <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
               <span>Finish 
-                <ChevronRightIcon inline={true} fill={colors.success}/>
+                <ChevronRight inline={true} fill={colors.success}/>
               </span>
             </button>
           </BottomButtonNav>
