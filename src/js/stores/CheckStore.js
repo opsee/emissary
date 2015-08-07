@@ -189,10 +189,6 @@ let _checks = [
   }
 ]
 
-function setPort(port){
-  _check.port = port;
-}
-
 function setSilence(opts){
   let check = _.findWhere(_checks, {id:opts.id});
     if(check){
@@ -234,10 +230,6 @@ const CheckStore = Flux.createStore(
     switch(payload.actionType) {
       case 'CHECK_SILENCE':
       setSilence(payload.text);
-      CheckStore.emitChange();
-      break;
-      case 'CHECK_SET_PORT':
-      setPort(payload.text);
       CheckStore.emitChange();
       break;
       // add more cases for other actionTypes...

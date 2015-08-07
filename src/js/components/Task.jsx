@@ -1,5 +1,4 @@
 import React from 'react';
-import ActionCreator from '../actions/Todo';
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 import Input from 'react-bootstrap/lib/Input';
 

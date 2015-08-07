@@ -4,7 +4,6 @@ import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import TaskList from '../TaskList.jsx';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Store from '../../stores/HomeStore';
-import ActionCreator from '../../actions/Todo';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';

@@ -1,16 +1,8 @@
 import React from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/CheckActions';
-import Store from '../../stores/CheckStore';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
-
-function getState(){
-  return {
-    checks: Store.getChecks()
-  }
-}
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
@@ -44,22 +36,22 @@ const InfoForm = forms.Form.extend({
 
 export default React.createClass({
   getInitialState() {
+    var self = this;
     return {
       info:new InfoForm({
-        onChange: this.forceUpdate.bind(this),
+        onChange: function(){
+          self.props.onChange(self.state.info.cleanedData);
+          self.forceUpdate();
+        },
         labelSuffix:'',
-        data:this.props
+        data:this.props,
+        onChangeDelay:100
       })
     }
   },
-  silence(id){
-    Actions.silence(id);
-  },
-  handleClick() {
-    this.setState({
-      on:!this.state.on
-    })
-  },
+  // componentDidUpdate(){
+  //   this.props.onChange(this.state.info.cleanedData);
+  // },
   render() {
     return (
       <div>

@@ -14,12 +14,6 @@ const actions = Flux.createActions({
       text:text
     }
   },
-  setPort:function(text){
-    return {
-      actionType:'CHECK_SET_PORT',
-      text:text
-    }
-  }
 });
 
 export default actions;

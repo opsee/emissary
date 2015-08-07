@@ -24,9 +24,11 @@ import CheckStep3 from './components/checks/CheckStep3.jsx';
 import CheckNotFound from './components/checks/NotFound.jsx';
 import Group from './components/pages/Group.jsx';
 import Instance from './components/pages/Instance.jsx';
+
 import Login from './components/pages/Login.jsx';
 import PasswordForgot from './components/pages/PasswordForgot.jsx';
 import Onboard from './components/pages/Onboard.jsx';
+import Profile from './components/pages/Profile.jsx';
 
 import NotFound from './components/pages/NotFound.jsx';
 
@@ -68,7 +70,7 @@ const routes = (
     <Route path="/admin/signups" name="adminSignups" handler={More}/>
     <Route path="/system-status" name="systemStatus" handler={More}/>
 
-    <Route path="/profile" name="profile" handler={More}/>
+    <Route path="/profile" name="profile" handler={Profile}/>
     <Route path="/login" name="login" handler={Login}/>
     <Route path="/password-forgot" name="passwordForgot" handler={PasswordForgot}/>
 
