@@ -3,7 +3,7 @@ import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/InstanceActions';
 import Toolbar from '../global/Toolbar.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
-import TimeAgo from 'react-components/timeago';
+import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import InstanceStore from '../../stores/InstanceStore';
 import InstanceActions from '../../actions/InstanceActions';
@@ -52,15 +52,19 @@ export default React.createClass({
               <table className="table">
                 <tr>
                   <td><strong>State</strong></td>
-                  <td>{this.data().state}</td>
+                  <td>{this.data().status.state}</td>
                 </tr>
                 <tr>
                   <td><strong>Last Checked</strong></td>
-                  <td><TimeAgo time={this.data().lastChecked}/></td>
+                  <td title={`Last Checked: ${this.data().lastChecked.toISOString()}`}>
+                    <TimeAgo date={this.data().lastChecked}/>
+                  </td>
                 </tr>
                 <tr>
                   <td><strong>Created</strong></td>
-                  <td><TimeAgo time={this.data().meta.created}/></td>
+                  <td>
+                    <TimeAgo date={this.data().meta.created}/>
+                  </td>
                 </tr>
                 <tr>
                   <td><strong>Instance Size</strong></td>
