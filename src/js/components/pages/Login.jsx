@@ -33,7 +33,6 @@ export default React.createClass({
     this.setState({
       submitting:true
     });
-    console.log(this.state.data);
     Actions.userLogin(this.state.data);
   },
   disabled(){

@@ -77,18 +77,9 @@ const TodoStore = Flux.createStore(
     },
   }, function(payload){
     switch(payload.actionType) {
-      case 'TASK_ADDED':
-        let text = payload.text.trim();
-        if (text !== '') {
-          addItem(text);
-          TodoStore.emitChange();
-        }
-        break;
-
-      case 'CLEARED_LIST':
-        clear();
-        TodoStore.emitChange();
-      // add more cases for other actionTypes...
+      case 'GET_INSTANCES_SUCCESS':
+        _data.instances = payload.data;
+      break;
     }
   }
 )

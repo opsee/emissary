@@ -5,29 +5,33 @@ import TaskList from '../TaskList.jsx';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Store from '../../stores/HomeStore';
 import Toolbar from '../global/Toolbar.jsx';
-import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
+import GroupStore from '../../stores/GroupStore';
+import GroupActions from '../../actions/GroupActions';
 
 function getState(){
   return {
-    groups: Store.getGroups()
+    groups: GroupStore.getGroups()
   }
 }
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [GroupStore.mixin],
   storeDidChange() {
     this.setState(getState());
   },
-  getDefaultProps() {
+  componentWillMount(){
+    GroupActions.getGroups();
+  },
+  getInitialState(){
     return getState();
   },
   render() {
     return (
       <ul className="list-unstyled">
-        {this.props.groups.map(i => {
+        {this.state.groups.map(i => {
           return (
             <li>
-              <GroupItem {...i}/>
+              <GroupItem item={i}/>
             </li>
             )
         })}

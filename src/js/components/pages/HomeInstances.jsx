@@ -6,27 +6,32 @@ import RadialGraph from '../global/RadialGraph.jsx';
 import Store from '../../stores/HomeStore';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
+import InstanceStore from '../../stores/InstanceStore';
+import InstanceActions from '../../actions/InstanceActions';
 
 function getState(){
   return {
-    instances: Store.getInstances()
+    instances: InstanceStore.getInstances()
   }
 }
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [InstanceStore.mixin],
   storeDidChange() {
     this.setState(getState());
   },
-  getDefaultProps() {
+  componentWillMount(){
+    InstanceActions.getInstances();
+  },
+  getInitialState(){
     return getState();
   },
   render() {
     return (
       <ul className="list-unstyled">
-        {this.props.instances.map(i => {
+        {this.state.instances.map(i => {
           return (
             <li>
-              <InstanceItem {...i}/>
+              <InstanceItem item={i}/>
             </li>
             )
         })}

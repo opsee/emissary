@@ -1,9 +1,10 @@
 import Constants from '../Constants';
 import Flux from '../Flux';
 import request from 'superagent';
+import storage from '../storage';
 
 // data storage
-let _user = {
+let _user = storage.getItem('user') || {
   name:null,
   email:null,
   id:null,
@@ -16,8 +17,14 @@ let _status = {
   error:false
 }
 
-function addItem(title, completed=false) {
-  _data.push({title, completed});
+function loginSuccess(data){
+  _status = {
+    pending:false,
+    success:true,
+    error:false
+  }
+  _user = data;
+  storage.setItem('user',_user);
 }
 
 const UserStore = Flux.createStore(
@@ -27,6 +34,9 @@ const UserStore = Flux.createStore(
     },
     getStatus(){
       return _status;
+    },
+    getAuth(){
+      return _user.token;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -39,12 +49,7 @@ const UserStore = Flux.createStore(
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_SUCCESS':
-        _status = {
-          pending:false,
-          success:true,
-          error:false
-        }
-        _user = payload.data;
+        loginSuccess(payload.data);
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_ERROR':

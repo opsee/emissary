@@ -2,18 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import Radium from 'radium';
 import colors from 'seedling/colors';
-
-var SetIntervalMixin = {
-  componentWillMount: function() {
-    this.intervals = [];
-  },
-  setInterval: function() {
-    this.intervals.push(setInterval.apply(null, arguments));
-  },
-  componentWillUnmount: function() {
-    this.intervals.map(clearInterval);
-  }
-};
+import {SetIntervalMixin} from '../../mixins';
 
 const radialWidth = 40;
 

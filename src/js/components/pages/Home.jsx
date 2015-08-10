@@ -7,9 +7,10 @@ import Store from '../../stores/HomeStore';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
+import Router, {RouteHandler} from 'react-router';
 import Link from 'react-router/lib/components/Link';
+import InstanceStore from '../../stores/InstanceStore';
+import InstanceActions from '../../actions/InstanceActions';
 
 function getState(){
   return {

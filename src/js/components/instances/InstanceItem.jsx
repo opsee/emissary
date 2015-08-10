@@ -7,9 +7,7 @@ import colors from 'seedling/colors';
 
 export default React.createClass({
   getInitialState() {
-    return {
-      on:false
-    }
+    return this.props;
   },
   silence(id){
     return console.log('silence');
@@ -19,14 +17,14 @@ export default React.createClass({
     return (
       <div className="row">
         <div className="col-xs-12 display-flex flex-vertical-align">
-          <Link to="instance" params={this.props} className="flex-1 display-flex flex-vertical-align link-style-1">
-            <RadialGraph {...this.props}/>
+          <Link to="instance" params={{id:this.state.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
+            <RadialGraph {...this.state.item.toJS()}/>
             <div className="padding-tb line-height-1">
-              <div>{this.props.name}</div>
-              <div className="text-secondary">{this.props.getInfo}</div>
+              <div>{this.state.item.get('name')}</div>
+              <div className="text-secondary">{this.state.item.get('getInfo')}</div>
             </div>
           </Link>
-          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.id)} title="Silence check">
+          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
             <MoreHoriz btn={true}/>
           </button>
         </div>
