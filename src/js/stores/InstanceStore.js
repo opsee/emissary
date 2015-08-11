@@ -34,20 +34,20 @@ var Instance = Record({
   lastChecked:new Date(),
   info:null,
   id:null,
-  meta:new Map({
+  meta:Map({
     created:new Date(),
     instanceSize:'t2-micro'
   }),
-  status:new Map({
+  status:Map({
     health:100,
     state:'running',
-    silence:new Map({
+    silence:Map({
       startDate:null,
       duration:null
     })
   }),
-  checks:new List(),
-  groups:new List()
+  checks:List(),
+  groups:List()
 })
 
 let _instances = List();
@@ -74,7 +74,7 @@ const statics = {
   }
 }
 
-const InstanceStore = Flux.createStore(
+const Store = Flux.createStore(
   {
     getInstance(){
       return _instance;
@@ -87,14 +87,20 @@ const InstanceStore = Flux.createStore(
     switch(payload.actionType) {
       case 'GET_INSTANCES_SUCCESS':
         statics.getInstancesSuccess(payload.data);
-        InstanceStore.emitChange();
+        Store.emitChange();
       break;
       case 'GET_INSTANCE_SUCCESS':
         statics.getInstanceSuccess(payload.data);
-        InstanceStore.emitChange();
+        Store.emitChange();
+      break;
+      case 'GET_INSTANCE_PENDING':
+        if(_instance.get('id') != payload.data){
+          _instance = new Instance();
+          Store.emitChange();
+        }
       break;
     }
   }
 )
 
-export default InstanceStore;
+export default Store;

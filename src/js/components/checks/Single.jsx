@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Toolbar from '../global/Toolbar.jsx';
@@ -7,7 +7,9 @@ import Store from '../../stores/CheckStore';
 import Link from 'react-router/lib/components/Link';
 
 function getState(){
-  return Store.getCheck()
+  return {
+    check:Store.getCheck()
+  }
 }
 
 export default React.createClass({
@@ -24,8 +26,8 @@ export default React.createClass({
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar title={`Check ${this.props.name || this.props.params.id}`}>
-          <Link to="checkEdit" params={{id:this.props.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
+        <Toolbar title={`Check ${this.props.check.name || this.props.check.params.id}`}>
+          <Link to="checkEdit" params={{id:this.props.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
         edit1
           </Link>
         </Toolbar>
@@ -35,7 +37,7 @@ export default React.createClass({
               <h2>Check Information</h2>
               <table className="table">
                 <tbody>
-                {this.props.meta.map(i => {
+                {this.props.check.meta.map(i => {
                   return (
                     <tr>
                       <td><strong>{i.key}</strong></td>
@@ -47,10 +49,10 @@ export default React.createClass({
               </table>
               <h2>Check Instances</h2>
               <ul className="list-unstyled">
-                {this.props.instances.map(i => {
+                {this.props.check.instances.map(i => {
                   return (
-                    <li>
-                      <InstanceItem {...i}/>
+                    <li key={i.get('id')}>
+                      <InstanceItem item={i}/>
                     </li>
                     )
                 })}

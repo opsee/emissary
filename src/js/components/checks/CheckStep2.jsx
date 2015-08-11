@@ -42,9 +42,10 @@ const AssertionsFormSet = forms.FormSet.extend({
 
 const AllFields = React.createClass({
   getInitialState() {
+    const self = this;
     var obj = {
       assertions: new AssertionsFormSet({
-        onChange: this.forceUpdate.bind(this), 
+        onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.assertions,
         extra:0
@@ -52,13 +53,16 @@ const AllFields = React.createClass({
       response:this.props.response
     };
     //this is a workaround because the library is not working correctly with initial + data formset
-    const self = this;
     setTimeout(function(){
       self.state.assertions.forms().forEach((form,i) => {
         form.setData(self.props.check.assertions[i]);
       });
     },10);
     return obj;
+  },
+  changeAndUpdate(){
+    this.props.onChange(this.getCleanedData())
+    this.forceUpdate();
   },
   operandInputNeeded(form, bf){
     const data = form.cleanedData;
@@ -150,9 +154,6 @@ const AllFields = React.createClass({
         <button type="submit" className="btn btn-primary">Submit</button>
       )
     }
-  },
-  componentDidUpdate(){
-    this.props.onChange(this.getCleanedData());
   },
   submit(){
     RouterActions.transition('checkCreateStep3');

@@ -1,5 +1,4 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
@@ -19,11 +18,30 @@ export default React.createClass({
   storeDidChange() {
     this.setState(getState());
   },
-  getDefaultProps() {
+  getInitialState(){
     return getState();
   },
   silence(id){
     Actions.silence(id);
+  },
+  renderChecks(){
+    if(this.state.checks.size){
+      return(
+        <ul className="list-unstyled">
+        {this.state.checks.map(c => {
+          return (
+            <li key={c.get('id')}>
+              <CheckItem item={c}/>
+            </li>
+            )
+        })}
+      </ul>
+      )
+    }else{
+      return (
+        <p>No Checks - <Link to="checkCreate" title="Create New Check">Create One</Link></p>
+      );
+    }
   },
   render() {
     return (
@@ -36,16 +54,7 @@ export default React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <h2>Check Information</h2>
-              <ul className="list-unstyled">
-                {this.props.checks.map(i => {
-                  return (
-                    <li>
-                      <CheckItem {...i}/>
-                    </li>
-                    )
-                })}
-              </ul>
+              {this.renderChecks()}
             </div>
           </div>
         </div>

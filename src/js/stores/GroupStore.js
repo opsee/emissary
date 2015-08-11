@@ -9,7 +9,7 @@ var Group = Record({
   id:null,
   name:null,
   customer_id:null,
-  instances:new List(),
+  instances:List(),
   status:Map({
   health:100,
   state:'running',
@@ -21,7 +21,7 @@ var Group = Record({
 });
 
 let _group = new Group();
-let _groups = List();
+let _groups = new List();
 
 const statics = {
   getGroupSuccess(data){
@@ -44,7 +44,7 @@ const statics = {
   }
 }
 
-const GroupStore = Flux.createStore(
+const Store = Flux.createStore(
   {
     getGroup(){
       return _group;
@@ -57,20 +57,20 @@ const GroupStore = Flux.createStore(
     switch(payload.actionType) {
       case 'GET_GROUPS_SUCCESS':
         statics.getGroupsSuccess(payload.data);
-        GroupStore.emitChange();
+        Store.emitChange();
       break;
       case 'GET_GROUP_SUCCESS':
         statics.getGroupSuccess(payload.data);
-        GroupStore.emitChange();
+        Store.emitChange();
       break;
       case 'GET_GROUP_PENDING':
         if(_group.get('id') != payload.data){
           _group = new Group();
-          GroupStore.emitChange();
+          Store.emitChange();
         }
       break;
     }
   }
 )
 
-export default GroupStore;
+export default Store;

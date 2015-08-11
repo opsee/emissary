@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default React.createClass({
-  render(){
+  errors(){
     const errors = this.props.bf && this.props.bf.errors().messages().map(message => {
       return(
         <div>
@@ -15,12 +15,16 @@ export default React.createClass({
           Bad input params.
         </div>
       )
+    }else{
+      return errors;
     }
+  },
+  render(){
     return(
       <label htmlFor={this.props.id}>
         <span className="form-label">{this.props.label}</span>
         <span className="form-message">
-          {errors}
+          {this.errors()}
         </span>
       </label>
     )

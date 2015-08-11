@@ -73,14 +73,15 @@ const InfoForm = forms.Form.extend({
 
 const AllFields = React.createClass({
   getInitialState() {
+    const self = this;
     const obj = {
       info: new InfoForm({
-        onChange: this.forceUpdate.bind(this),
+        onChange:self.changeAndUpdate,
         labelSuffix:'',
         data:this.props.check
       }),
       headers: new HeaderFormSet({
-        onChange: this.forceUpdate.bind(this),
+        onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check && this.props.check.headers || [],
         extra:0
@@ -88,7 +89,6 @@ const AllFields = React.createClass({
       check:this.props.check
     }
     //this is a workaround because the library is not working correctly with initial + data formset
-    const self = this;
     setTimeout(function(){
       self.state.headers.forms().forEach((form,i) => {
         form.setData(self.props.check.headers[i]);
@@ -96,8 +96,9 @@ const AllFields = React.createClass({
     },10);
     return obj;
   },
-  componentDidUpdate(){
-    this.props.onChange(this.getCleanedData());
+  changeAndUpdate(){
+    this.props.onChange(this.getCleanedData())
+    this.forceUpdate();
   },
   renderHeaderForm(){
     return(
@@ -172,7 +173,7 @@ const AllFields = React.createClass({
             // <pre>{this.getCleanedData && JSON.stringify(this.getCleanedData(), null, ' ')}</pre>
           }
           {
-            <strong>Non field errors: {nonFieldErrors.render()}</strong>
+            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
           }
       </form>
     )

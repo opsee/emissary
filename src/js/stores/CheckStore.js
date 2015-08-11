@@ -2,7 +2,7 @@ import Constants from '../Constants';
 import Flux from '../Flux';
 import _ from 'lodash';
 import moment from 'moment';
-import Immutable from 'immutable';
+import Immutable, {Record, List, Map} from 'immutable';
 
 // data storage
 let _check = Immutable.fromJS({
@@ -132,93 +132,37 @@ let _response = Immutable.fromJS(
   }
 );
 
-let _checks = [
-  {
-    name:'My great check2',
-    info:'Fun info here2.',
-    id:'foo',
-    status:{
-      health:50,
-      state:'running',
-      silence:{
-        startDate:null,
-        duration:null
-      }
-    },
-    meta:[
-      {
-        key:'State',
-        value:'Failing'
-      },
-      {
-        key:'Port',
-        value:80
-      },
-      {
-        key:'Protocol',
-        value:'HTTP'
-      }
-    ],
-  },
-    {
-    name:'My great check3333',
-    info:'wow, great.',
-    id:'great',
-    status:{
-      health:100,
-      state:'running',
-      silence:{
-        startDate:null,
-        duration:null
-      }
-    },
-    meta:[
-      {
-        key:'State',
-        value:'Failing'
-      },
-      {
-        key:'Port',
-        value:80
-      },
-      {
-        key:'Protocol',
-        value:'HTTP'
-      }
-    ],
-  }
-]
+let _checks = new List();
+
+var Check = Record({
+  name:null,
+  info:null,
+  id:null,
+  method:null,
+  path:null,
+  port:null,
+  meta:List(),
+  group:null,
+  headers:List(),
+  assertions:List(),
+  interval:null,
+  message:null,
+  notifications:List(),
+  instances:List()
+})
 
 function setSilence(opts){
-  let check = _.findWhere(_checks, {id:opts.id});
-    if(check){
-      check.status.silence.startDate = new Date();
-      check.status.silence.duration = moment.duration(opts.length, opts.unit).asMilliseconds();
-    }
+  let check = _checks.filter((c) => c.get('id') == opts.id).first();
+  if(check){
+    check.status.silence.startDate = new Date();
+    check.status.silence.duration = moment.duration(opts.sizelength, opts.unit).asMilliseconds();
+  }
 }
 
 const CheckStore = Flux.createStore(
   {
     getCheck(){
-      return _check.toJS();
-    },
-    newCheck(){
-      return {
-        name:null,
-        info:null,
-        id:null,
-        method:null,
-        path:null,
-        port:null,
-        meta:[],
-        group:null,
-        headers:[],
-        assertions:[],
-        interval:null,
-        message:null,
-        notifications:[],
-        instances:[]
-      }
+      return _check;
     },
     getChecks(){
       return _checks;
@@ -226,6 +170,9 @@ const CheckStore = Flux.createStore(
     getResponse(){
       return _response.toJS();
     },
+    newCheck(){
+      return new Check();
+    }
   }, function(payload){
     switch(payload.actionType) {
       case 'CHECK_SILENCE':

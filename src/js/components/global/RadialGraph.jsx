@@ -3,6 +3,7 @@ import moment from 'moment';
 import Radium from 'radium';
 import colors from 'seedling/colors';
 import {SetIntervalMixin} from '../../mixins';
+import _ from 'lodash';
 
 const radialWidth = 40;
 
@@ -96,12 +97,9 @@ const RadialGraph = React.createClass({
     }
   },
   getInitialState() {
-    return this.props;
-  },
-  getDefaultProps(){
-    return {
+    return _.defaults({
       silenceRemaining:0
-    }
+    }, this.props);
   },
   componentDidMount(){
     this.setupSilence()

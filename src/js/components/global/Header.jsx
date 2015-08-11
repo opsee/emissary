@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import Link from 'react-router/lib/components/Link';
-import {Person, Checkmark, MoreHoriz} from '../icons/Module.jsx';
+import {Person, Checkmark, MoreHoriz, Home} from '../icons/Module.jsx';
 import UserStore from '../../stores/UserStore';
 
 export default React.createClass({
@@ -20,7 +20,7 @@ export default React.createClass({
     if(this.state.user && this.state.user.id){
       return (
         <Link to="profile" className="md-navbar-link">
-          <Person nav={true}/>
+          <Person nav={true}/>&nbsp;
           <span className="md-navbar-title">Profile</span>
         </Link>
       )
@@ -42,17 +42,19 @@ export default React.createClass({
                 <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
                   <li>
                    <Link to="home" className="md-navbar-link">
+                     <Home nav={true}/>&nbsp;
                      <span className="md-navbar-title">Environment</span>
                    </Link>
                  </li>
                   <li>
                    <Link to="checks" className="md-navbar-link">
-                     <Checkmark nav={true}/>
+                     <Checkmark nav={true}/>&nbsp;
                      <span className="md-navbar-title">Checks</span>
                    </Link>
                  </li>
                   <li>
                    <Link to="more" className="md-navbar-link">
+                     <MoreHoriz nav={true}/>&nbsp;
                      <span className="md-navbar-title">More</span>
                    </Link>
                  </li>

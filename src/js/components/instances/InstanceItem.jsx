@@ -1,11 +1,16 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Actions from '../../actions/CheckActions';
 import Link from 'react-router/lib/components/Link';
 import {MoreHoriz} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
+import Immutable, {Record} from 'immutable';
 
 export default React.createClass({
+  propTypes:{
+    item:React.PropTypes.instanceOf(Record).isRequired,
+  },
   getInitialState() {
     return this.props;
   },

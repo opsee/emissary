@@ -31,7 +31,7 @@ export default React.createClass({
     this.getData()
   },
   componentDidMount(){
-    this.setInterval(this.getData, 10000);
+    this.setInterval(this.getData, 30000);
   },
   getInitialState(){
     return getState();
@@ -43,10 +43,9 @@ export default React.createClass({
     return this.state.instance.toJS();
   },
   render() {
-    console.log('render');
     return (
       <div>
-        <Toolbar title={`Instance: ${this.data().name || this.data().id}`}/>
+        <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || ''}`}/>
         <div className="container">
           <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <table className="table">
@@ -74,10 +73,10 @@ export default React.createClass({
 
               <h2>Groups - ( {this.data().groups.length} )</h2>
               <ul className="list-unstyled">
-                {this.state.instance.get('groups').map(i => {
+                {this.state.instance.get('groups').map(g => {
                   return (
-                    <li>
-                      <GroupItem item={i}/>
+                    <li key={g.get('id')}>
+                      <GroupItem item={g}/>
                     </li>
                     )
                 })}
@@ -87,7 +86,7 @@ export default React.createClass({
               <ul className="list-unstyled">
                 {this.state.instance.get('checks').map(i => {
                   return (
-                    <li>
+                    <li key={i.get('id')}>
                       <CheckItem item={i}/>
                     </li>
                     )

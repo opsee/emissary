@@ -5,7 +5,9 @@ import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({
   getInitialState(){
-    return this.props;
+    return {
+      item:this.props.item
+    }
   },
   silence(id){
     Actions.silence(id);
@@ -14,14 +16,14 @@ export default React.createClass({
     return (
       <div className="row">
         <div className="col-xs-12 display-flex flex-vertical-align">
-          <Link to="check" params={this.props} className="flex-1 display-flex flex-vertical-align link-style-1">
-            <RadialGraph {...this.props}/>
+          <Link to="check" params={{id:this.props.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
+            <RadialGraph {...this.props.item.toJS()}/>
             <div className="padding-tb line-height-1">
-              <div>{this.props.name}</div>
-              <div className="text-secondary">{this.props.getInfo}</div>
+              <div>{this.props.item.get('name')}</div>
+              <div className="text-secondary">{this.props.item.get('getInfo')}</div>
             </div>
           </Link>
-          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.id)} title="Silence check">
+          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.item.get('id'))} title="Silence check">
           silence
           </button>
         </div>

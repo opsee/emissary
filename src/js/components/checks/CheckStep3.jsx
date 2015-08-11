@@ -6,8 +6,6 @@ import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import Toolbar from '../global/Toolbar.jsx';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
-import OpseeInputWithLabel from '../forms/OpseeInputWithLabel.jsx';
-import OpseeDropdown from '../forms/OpseeDropdown.jsx';
 import {Close, ChevronRight} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
 
@@ -53,6 +51,7 @@ const InfoForm = forms.Form.extend({
       placeholder:'It all crashed.'
     }
   }),
+  validation:'auto',
   interval: forms.ChoiceField({choices:intervalOptions}),
   clean() {
   },
@@ -74,21 +73,21 @@ const data = {
 
 const AllFields = React.createClass({
   getInitialState() {
+    const self = this;
     const obj = {
       info: new InfoForm({
-        onChange: this.forceUpdate.bind(this),
+        onChange:self.changeAndUpdate,
         labelSuffix:'',
         data:this.props.check
       }),
       notifications: new NotificationFormSet({
-        onChange: this.forceUpdate.bind(this),
+        onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.notifications,
         extra:0
       }),
     }
     //this is a workaround because the library is not working correctly with initial + data formset
-    const self = this;
     setTimeout(function(){
       self.state.notifications.forms().forEach((form,i) => {
         form.setData(self.props.check.notifications[i]);
@@ -96,8 +95,9 @@ const AllFields = React.createClass({
     },10);
     return obj;
   },
-  componentDidUpdate(){
-    this.props.onChange(this.getCleanedData());
+  changeAndUpdate(){
+    this.props.onChange(this.getCleanedData())
+    this.forceUpdate();
   },
   renderNotificationForm(){
     return(
@@ -165,7 +165,7 @@ const AllFields = React.createClass({
             // <pre>{this.getCleanedData && JSON.stringify(this.getCleanedData(), null, ' ')}</pre>
           }
           {
-            <strong>Non field errors: {nonFieldErrors.render()}</strong>
+            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
           }
       </form>
     )
@@ -188,7 +188,7 @@ const AllFields = React.createClass({
           </div>
         </div>
         <BottomButtonNav>
-          <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
+          <button className="btn btn-flat btn-success" type="button" onClick={this.onSubmit}>
               <span>Finish 
                 <ChevronRight inline={true} fill={colors.success}/>
               </span>
@@ -205,7 +205,7 @@ const AllFields = React.createClass({
     this.state.info.validate(this.refs.info)
     this.state.notifications.validate(this.refs.notifications)
     this.forceUpdate();
-    console.log(this.cleanedData());
+    this.props.onSubmit();
   }
 })
 

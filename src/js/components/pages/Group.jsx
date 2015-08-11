@@ -30,7 +30,7 @@ export default React.createClass({
     this.getData();
   },
   componentDidMount(){
-    this.setInterval(this.getData, 10000);
+    this.setInterval(this.getData, 30000);
   },
   getInitialState(){
     return getState();
@@ -59,7 +59,7 @@ export default React.createClass({
               <ul className="list-unstyled">
                 {this.state.group.get('instances').map(i => {
                   return (
-                    <li>
+                    <li key={i.get('id')}>
                       <InstanceItem item={i}/>
                     </li>
                     )

@@ -39,7 +39,7 @@ export default React.createClass({
     var self = this;
     return {
       info:new InfoForm({
-        onChange: function(){
+        onChange(){
           self.props.onChange(self.state.info.cleanedData);
           self.forceUpdate();
         },
