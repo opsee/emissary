@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Store from '../../stores/HomeStore';
+import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
 

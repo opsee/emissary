@@ -3,7 +3,7 @@ import Flux from '../Flux';
 import _ from 'lodash';
 import moment from 'moment';
 import Immutable, {Record, List, Map} from 'immutable';
-import InstanceStore from './InstanceStore';
+import InstanceStore from './Instance';
 
 var Group = Record({
   id:null,

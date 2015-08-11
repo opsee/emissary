@@ -2,7 +2,7 @@ import React from 'react';
 import Actions from '../../actions/Check';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Store from '../../stores/CheckStore';
+import Store from '../../stores/Check';
 import CheckItem from '../checks/CheckItem.jsx';
 import Link from 'react-router/lib/components/Link';
 import {Add} from '../icons/Module.jsx';

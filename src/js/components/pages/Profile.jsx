@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Store from '../../stores/UserStore';
+import Store from '../../stores/User';
 import UserActions from '../../actions/User';
 import Toolbar from '../global/Toolbar.jsx';
 import Link from 'react-router/lib/components/Link';

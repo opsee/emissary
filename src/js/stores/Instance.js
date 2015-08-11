@@ -3,7 +3,7 @@ import Flux from '../Flux';
 import _ from 'lodash';
 import moment from 'moment';
 import Immutable, {Record, List, Map} from 'immutable';
-import GroupStore from './GroupStore';
+import GroupStore from './Group';
 
 // data storage
 let _testInstance = {

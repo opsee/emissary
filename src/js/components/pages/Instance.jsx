@@ -5,7 +5,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import InstanceStore from '../../stores/InstanceStore';
+import InstanceStore from '../../stores/Instance';
 import InstanceActions from '../../actions/Instance';
 import {SetInterval} from '../../mixins';
 import Immutable from 'immutable';

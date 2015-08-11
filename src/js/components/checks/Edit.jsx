@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Actions from '../../actions/Check';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Store from '../../stores/CheckStore';
+import Store from '../../stores/Check';
 import Link from 'react-router/lib/components/Link';
 import CheckStep1 from '../checks/CheckStep1.jsx';
 import CheckStep2 from '../checks/CheckStep2.jsx';

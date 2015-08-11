@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import Link from 'react-router/lib/components/Link';
 import {Person, Checkmark, MoreHoriz, Home} from '../icons/Module.jsx';
-import UserStore from '../../stores/UserStore';
+import UserStore from '../../stores/User';
 
 export default React.createClass({
   mixins: [UserStore.mixin],

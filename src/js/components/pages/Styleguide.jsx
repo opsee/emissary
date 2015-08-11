@@ -8,7 +8,7 @@ import CheckItem from '../checks/CheckItem.jsx';
 const classNames = require('classnames');
 import _ from 'lodash';
 
-import Store from '../../stores/CheckStore';
+import Store from '../../stores/Check';
 import Actions from '../../actions/Styleguide';
 
 function getState(){

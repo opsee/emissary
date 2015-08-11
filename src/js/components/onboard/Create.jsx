@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
-import OnboardStore from '../../stores/OnboardStore';
-import UserStore from '../../stores/UserStore';
+import OnboardStore from '../../stores/Onboard';
+import UserStore from '../../stores/User';
 
 
 export default React.createClass({

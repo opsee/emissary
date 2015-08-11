@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/lib/Button';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import TaskList from '../TaskList.jsx';
 import RadialGraph from '../global/RadialGraph.jsx';
-import Store from '../../stores/HomeStore';
+import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import InstanceStore from '../../stores/InstanceStore';
+import InstanceStore from '../../stores/Instance';
 import InstanceActions from '../../actions/Instance';
 
 function getState(){

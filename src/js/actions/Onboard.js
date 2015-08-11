@@ -2,34 +2,30 @@ import Constants from '../Constants';
 import Flux from '../Flux';
 import request from '../request';
 
-// request.get('https://api.github.com/users/mralexgray/repos').then(function(res){
-//   console.log(res);
-// })
-
 const actions = Flux.createActions({
-  userLogin(data){
+  signupCreate(data){
     request
-      .post(`${Constants.api}/authenticate/password`)
+      .post(`${Constants.api}/signups`)
       .send(data).then(res => {
-        Flux.actions.userLoginSuccess(res.body);
-      }).catch(err => {
-        Flux.actions.userLoginError(err.response && err.response.text);
+        Flux.actions.signupCreateSuccess(res);
+      }).catch(res => {
+        Flux.actions.userLoginError(res);
       });
     return {
-      actionType: 'USER_LOGIN_PENDING',
+      actionType: 'SIGNUP_CREATE_PENDING',
       data:data
     }
   },
-  userLoginSuccess(data){
+  signupCreateSuccess(res){
     return {
-      actionType: 'USER_LOGIN_SUCCESS',
-      data:data
+      actionType: 'SIGNUP_CREATE_SUCCESS',
+      data:res.body
     }
   },
-  userLoginError(err){
+  signupCreateError(res){
     return {
-      actionType: 'USER_LOGIN_ERROR',
-      data:err
+      actionType: 'SIGNUP_CREATE_ERROR',
+      data:res.response
     }
   },
   userLogOut(){

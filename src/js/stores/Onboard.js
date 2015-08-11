@@ -35,9 +35,12 @@ const UserStore = Flux.createStore(
     getStatus(){
       return _status;
     },
+    getAuth(){
+      return _user.token;
+    }
   }, function(payload){
     switch(payload.actionType) {
-      case 'SIGNUP_CREATE_PENDING':
+      case 'USER_LOGIN_PENDING':
         _status = {
           pending:true,
           success:false,

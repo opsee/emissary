@@ -1,4 +1,4 @@
-import UserStore from './stores/UserStore';
+import UserStore from './stores/User';
 
 export default {
   PageAuth(transition, params, query){

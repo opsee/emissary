@@ -1,7 +1,7 @@
 import Constants from '../Constants';
 import Flux from '../Flux';
 import request from '../request';
-import UserStore from '../stores/UserStore';
+import UserStore from '../stores/User';
 import response from '../response';
 
 const actions = Flux.createActions({
