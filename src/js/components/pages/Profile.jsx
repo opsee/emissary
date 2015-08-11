@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Store from '../../stores/UserStore';
-import Actions from '../../actions/UserActions';
+import UserActions from '../../actions/User';
 import Toolbar from '../global/Toolbar.jsx';
 import Link from 'react-router/lib/components/Link';
 import UserInputs from '../user/UserInputs.jsx';
@@ -16,6 +16,9 @@ export default React.createClass({
     //   router.transitionTo('home');
     // }else{
     // }
+    if(!Store.getAuth()){
+      return router.transitionTo('login');
+    }
     this.setState({
       user:Store.getUser()
     })
@@ -25,6 +28,9 @@ export default React.createClass({
       user:Store.getUser()
     }
   },
+  logOut(){
+    return UserActions.userLogOut();
+  },
   render() {
     return (
        <div>
@@ -33,6 +39,9 @@ export default React.createClass({
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <pre>{JSON.stringify(this.state.user, null, ' ')}</pre>
+              <div>
+                <button className="btn btn-warning" onClick={this.logOut}>Log Out</button>
+              </div>
             </div>
           </div>
         </div>

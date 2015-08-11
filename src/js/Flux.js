@@ -4,4 +4,3 @@ import assign from 'object-assign';
 
 const Flux = new McFly();
 export default Flux;
-

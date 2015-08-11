@@ -1,5 +1,5 @@
 import React from 'react';
-import Actions from '../../actions/CheckActions';
+import Actions from '../../actions/Check';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';

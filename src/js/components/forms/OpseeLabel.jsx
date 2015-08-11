@@ -2,9 +2,9 @@ import React from 'react';
 
 export default React.createClass({
   errors(){
-    const errors = this.props.bf && this.props.bf.errors().messages().map(message => {
+    const errors = this.props.bf && this.props.bf.errors().messages().map((message, i) => {
       return(
-        <div>
+        <div key={i}>
           {message}
         </div>
       )

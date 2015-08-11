@@ -5,8 +5,8 @@ import InstanceItem from '../instances/InstanceItem.jsx';
 import TimeAgo from 'react-components/timeago';
 import GroupItem from '../groups/GroupItem.jsx';
 import GroupStore from '../../stores/GroupStore';
-import GroupActions from '../../actions/GroupActions';
-import {SetIntervalMixin} from '../../mixins';
+import GroupActions from '../../actions/Group';
+import {SetInterval} from '../../mixins';
 import Immutable from 'immutable';
 
 function getState(){
@@ -16,7 +16,7 @@ function getState(){
 }
 
 export default React.createClass({
-  mixins: [GroupStore.mixin, SetIntervalMixin],
+  mixins: [GroupStore.mixin, SetInterval],
   storeDidChange() {
     this.setState(getState());
   },

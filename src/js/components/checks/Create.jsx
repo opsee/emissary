@@ -1,6 +1,6 @@
 import React from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/CheckActions';
+import Actions from '../../actions/Check';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import Store from '../../stores/CheckStore';

@@ -7,7 +7,7 @@ import Store from '../../stores/HomeStore';
 import Toolbar from '../global/Toolbar.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
 import GroupStore from '../../stores/GroupStore';
-import GroupActions from '../../actions/GroupActions';
+import GroupActions from '../../actions/Group';
 
 function getState(){
   return {

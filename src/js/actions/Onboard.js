@@ -7,7 +7,7 @@ import request from '../request';
 // })
 
 const actions = Flux.createActions({
-  userLogin:function(data){
+  userLogin(data){
     request
       .post(`${Constants.api}/authenticate/password`)
       .send(data).then(res => {
@@ -30,6 +30,11 @@ const actions = Flux.createActions({
     return {
       actionType: 'USER_LOGIN_ERROR',
       data:err
+    }
+  },
+  userLogOut(){
+    return {
+      actionType: 'USER_LOG_OUT'
     }
   }
 });

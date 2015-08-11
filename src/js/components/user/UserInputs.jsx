@@ -26,7 +26,7 @@ const InfoForm = forms.Form.extend({
       <div>
       {
         this.data.include.map(field => {
-          return <OpseeBoundField bf={this.boundField(field)}/>
+          return <OpseeBoundField bf={this.boundField(field)} key={field}/>
         })
       }
       </div>
@@ -49,9 +49,6 @@ export default React.createClass({
       })
     }
   },
-  // componentDidUpdate(){
-  //   this.props.onChange(this.state.info.cleanedData);
-  // },
   render() {
     return (
       <div>

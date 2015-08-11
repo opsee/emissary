@@ -2,13 +2,13 @@ import React from 'react';
 import moment from 'moment';
 import Radium from 'radium';
 import colors from 'seedling/colors';
-import {SetIntervalMixin} from '../../mixins';
+import {SetInterval} from '../../mixins';
 import _ from 'lodash';
 
 const radialWidth = 40;
 
 const RadialGraph = React.createClass({
-  mixins: [SetIntervalMixin],
+  mixins: [SetInterval],
   styles(){
     return {
       base:{

@@ -17,7 +17,7 @@ export default React.createClass({
     }
   },
   renderLoginButton(){
-    if(this.state.user && this.state.user.id){
+    if(UserStore.getAuth()){
       return (
         <Link to="profile" className="md-navbar-link">
           <Person nav={true}/>&nbsp;

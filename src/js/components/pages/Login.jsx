@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Store from '../../stores/UserStore';
-import Actions from '../../actions/UserActions';
+import Actions from '../../actions/User';
 import Toolbar from '../global/Toolbar.jsx';
 import Link from 'react-router/lib/components/Link';
 import UserInputs from '../user/UserInputs.jsx';
@@ -9,7 +9,7 @@ import router from '../../router.jsx';
 
 export default React.createClass({
   mixins: [Store.mixin],
-  storeDidChange(foo, moo){
+  storeDidChange(){
     const status = Store.getStatus();
     this.setState({status})
     if(status.success){

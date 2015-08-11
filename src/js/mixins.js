@@ -1,12 +1,12 @@
 export default {
-  SetIntervalMixin:{
-    componentWillMount: function() {
+  SetInterval:{
+    componentWillMount(){
       this.intervals = [];
     },
-    setInterval: function() {
+    setInterval(){
       this.intervals.push(setInterval.apply(null, arguments));
     },
-    componentWillUnmount: function() {
+    componentWillUnmount(){
       this.intervals.map(clearInterval);
     }
   }

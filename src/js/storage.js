@@ -1,12 +1,12 @@
 export default {
-  getItem(item){
+  get(item){
     var item = window.localStorage[item];
     return item ? JSON.parse(item) : null;
   },
-  setItem(item, data){
+  set(item, data){
     return window.localStorage.setItem(item, JSON.stringify(data));
   },
-  removeItem(item){
+  remove(item){
     return delete window.localStorage[item];
   }
 }

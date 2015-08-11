@@ -7,7 +7,7 @@ import Store from '../../stores/HomeStore';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import InstanceStore from '../../stores/InstanceStore';
-import InstanceActions from '../../actions/InstanceActions';
+import InstanceActions from '../../actions/Instance';
 
 function getState(){
   return {

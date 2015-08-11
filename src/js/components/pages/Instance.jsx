@@ -1,13 +1,13 @@
 import React from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/InstanceActions';
+import Actions from '../../actions/Instance';
 import Toolbar from '../global/Toolbar.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import InstanceStore from '../../stores/InstanceStore';
-import InstanceActions from '../../actions/InstanceActions';
-import {SetIntervalMixin} from '../../mixins';
+import InstanceActions from '../../actions/Instance';
+import {SetInterval} from '../../mixins';
 import Immutable from 'immutable';
 
 function getState(){
@@ -17,7 +17,7 @@ function getState(){
 }
 
 export default React.createClass({
-  mixins: [InstanceStore.mixin, SetIntervalMixin],
+  mixins: [InstanceStore.mixin, SetInterval],
   storeDidChange() {
     this.setState(getState());
   },

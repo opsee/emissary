@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/CheckActions';
+import Actions from '../../actions/Check';
 import Link from 'react-router/lib/components/Link';
 import {MoreHoriz} from '../icons/Module.jsx';
 import colors from 'seedling/colors';

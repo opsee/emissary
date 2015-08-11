@@ -2,18 +2,14 @@ import Constants from '../Constants';
 import Flux from '../Flux';
 import request from 'superagent';
 import storage from '../storage';
-import Immutable, {Record, List, Map} from 'immutable';
 
-var User = Record({
+// data storage
+let _user = storage.get('user') || {
   name:null,
   email:null,
   id:null,
   token:null
-})
-
-let initialUser = storage.get('user');
-initialUser = initialUser ? Immutable.fromJS(initialUser) : null;
-let _user = initialUser || new User();
+}
 
 let _status = {
   pending:false,
@@ -21,20 +17,14 @@ let _status = {
   error:false
 }
 
-const statics = {
-  loginSuccess(data){
-    _status = {
-      pending:false,
-      success:true,
-      error:false
-    }
-    _user = Immutable.fromJS(data);
-    storage.set('user',_user.toJS());
-  },
-  logout(){
-   storage.remove('user');
-   _user = new User();
+function loginSuccess(data){
+  _status = {
+    pending:false,
+    success:true,
+    error:false
   }
+  _user = data;
+  storage.set('user',_user);
 }
 
 const UserStore = Flux.createStore(
@@ -46,7 +36,7 @@ const UserStore = Flux.createStore(
       return _status;
     },
     getAuth(){
-      return _user.get('token');
+      return _user.token;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -59,7 +49,7 @@ const UserStore = Flux.createStore(
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_SUCCESS':
-        statics.loginSuccess(payload.data);
+        loginSuccess(payload.data);
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_ERROR':
@@ -68,10 +58,6 @@ const UserStore = Flux.createStore(
           success:false,
           error:true
         }
-        UserStore.emitChange();
-      break;
-      case 'USER_LOG_OUT':
-        statics.logout();
         UserStore.emitChange();
       break;
     }

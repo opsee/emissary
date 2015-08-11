@@ -27,8 +27,9 @@ import Instance from './components/pages/Instance.jsx';
 
 import Login from './components/pages/Login.jsx';
 import PasswordForgot from './components/pages/PasswordForgot.jsx';
-import Onboard from './components/pages/Onboard.jsx';
 import Profile from './components/pages/Profile.jsx';
+
+import OnboardCreate from './components/onboard/Create.jsx';
 
 import NotFound from './components/pages/NotFound.jsx';
 
@@ -56,7 +57,7 @@ const routes = (
     </Route>
 
     <Route path="/group/:id" name="group" handler={Group}/>
-    <Route path="/start" name="start" handler={Onboard}/>
+    <Route path="/start" name="start" handler={OnboardCreate}/>
     <Route path="/intro/1" name="tutorial" handler={More}/>
 
     <Route path="/start/password" name="onboardPassword" handler={More}/>

@@ -10,7 +10,8 @@ import GroupItem from '../groups/GroupItem.jsx';
 import Router, {RouteHandler} from 'react-router';
 import Link from 'react-router/lib/components/Link';
 import InstanceStore from '../../stores/InstanceStore';
-import InstanceActions from '../../actions/InstanceActions';
+import InstanceActions from '../../actions/Instance';
+import {PageAuth} from '../../statics';
 
 function getState(){
   return {
@@ -20,6 +21,9 @@ function getState(){
 }
 export default React.createClass({
   mixins: [Store.mixin],
+  statics:{
+    willTransitionTo:PageAuth
+  },
   storeDidChange() {
     this.setState(getState());
   },

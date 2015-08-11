@@ -6,9 +6,9 @@ import UserStore from '../../stores/UserStore';
 
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [UserStore.mixin, OnboardStore.mixin],
   storeDidChange(){
-    const status = Store.getStatus();
+    const status = OnboardStore.getStatus();
     this.setState({status})
     if(status.success){
       router.transitionTo('home');
@@ -17,20 +17,20 @@ export default React.createClass({
   },
   getInitialState(){
     return {
-      user:Store.getUser(),
+      user:UserStore.getUser().toJS(),
       status:OnboardStore.getStatus()
     }
   },
   updateUserData(data){
     this.setState({
-      data:data
+      user:data
     })
   },
   disabled(){
-    return !(this.state.data.name && this.state.data.email);
+    return !(this.state.user.name && this.state.user.email);
   },
   btnText(){
-    return this.state.status.pending ? 'Logging In...' : 'Log In';
+    return this.state.status.pending ? 'Creating...' : 'Create Account';
   },
   render() {
     return (
@@ -40,9 +40,9 @@ export default React.createClass({
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <form name="signupForm" ng-submit="submit()" user-signup novalidate>
-                <UserInputs include={["name","email"]}/>
+                <UserInputs include={["name","email"]} onChange={this.updateUserData}/>
                 <button type="submit" className="btn btn-success btn-raised btn-block" disabled={this.disabled()}>
-                  {this.loginBtnText()}
+                  {this.btnText()}
                   {
                   // <img ng-show="state == options.inProgress" src="/public/img/tailspin_icon.svg" className="status_icon tailspin" alt="loading icon"/>
                   }

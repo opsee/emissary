@@ -9,7 +9,7 @@ const classNames = require('classnames');
 import _ from 'lodash';
 
 import Store from '../../stores/CheckStore';
-import Actions from '../../actions/StyleguideActions';
+import Actions from '../../actions/Styleguide';
 
 function getState(){
   return {
