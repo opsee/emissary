@@ -12,7 +12,7 @@ export default React.createClass({
   storeDidChange(){
     const status = Store.getStatus();
     this.setState({status})
-    if(status.success){
+    if(status == 'success'){
       router.transitionTo('home');
     }else{
     }
@@ -36,10 +36,11 @@ export default React.createClass({
     Actions.userLogin(this.state.data);
   },
   disabled(){
-    return !(this.state.data.email && this.state.data.password);
+    const incomplete = !(this.state.data.email && this.state.data.password);
+    return incomplete || this.state.status == 'pending';
   },
   loginBtnText(){
-    return this.state.status.pending ? 'Logging In...' : 'Log In';
+    return this.state.status == 'pending' ? 'Logging In...' : 'Log In';
   },
   render() {
     return (
@@ -50,7 +51,7 @@ export default React.createClass({
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
-                <button ng-disabled="state == options.inProgress || loginForm.$invalid || submitting" type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
+                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
                   <span>
                     {this.loginBtnText()}
                   </span>

@@ -15,11 +15,7 @@ let initialUser = storage.get('user');
 initialUser = initialUser ? Immutable.fromJS(initialUser) : null;
 let _user = initialUser || new User();
 
-let _status = {
-  pending:false,
-  success:false,
-  error:false
-}
+let _status = null;
 
 const statics = {
   setUser(data){
@@ -27,11 +23,6 @@ const statics = {
     storage.set('user',_user.toJS());
   },
   loginSuccess(data){
-    _status = {
-      pending:false,
-      success:true,
-      error:false
-    }
     statics.setUser(data);
   },
   logout(){
@@ -54,23 +45,16 @@ const UserStore = Flux.createStore(
   }, function(payload){
     switch(payload.actionType) {
       case 'USER_LOGIN_PENDING':
-        _status = {
-          pending:true,
-          success:false,
-          error:false
-        }
+        _status = 'pending';
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_SUCCESS':
+        _status = 'success';
         statics.loginSuccess(payload.data);
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_ERROR':
-        _status = {
-          pending:false,
-          success:false,
-          error:true
-        }
+        _status = payload.data;
         UserStore.emitChange();
       break;
       case 'USER_LOG_OUT':

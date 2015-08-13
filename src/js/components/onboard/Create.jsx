@@ -4,54 +4,61 @@ import UserInputs from '../user/UserInputs.jsx';
 import OnboardStore from '../../stores/Onboard';
 import UserStore from '../../stores/User';
 import router from '../../router.jsx';
-
+import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin],
+   mixins: [UserStore.mixin, OnboardStore.mixin],
   storeDidChange(){
     const status = OnboardStore.getSignupCreateStatus();
     this.setState({status})
-    if(status.success){
+    if(status == 'success'){
       router.transitionTo('onboardThanks');
     }
   },
   getInitialState(){
     return {
-      user:UserStore.getUser().toJS(),
+      data:UserStore.getUser(),
       status:OnboardStore.getSignupCreateStatus()
     }
   },
   updateUserData(data){
     this.setState({
-      user:data
+      data:data
     })
   },
+  submit(e){
+    e.preventDefault();
+    this.setState({
+      submitting:true
+    });
+    OnboardActions.signupCreate(this.state.data);
+  },
   disabled(){
-    return !(this.state.user.name && this.state.user.email);
+    const incomplete = !(this.state.data.name && this.state.data.email);
+    return incomplete || this.state.status == 'pending';
   },
   btnText(){
-    return this.state.status.pending ? 'Creating...' : 'Create Account';
+    return this.state.status == 'pending' ? 'Creating...' : 'Create Account';
   },
   render() {
     return (
-      <div>
+       <div>
         <Toolbar title="Create Your Account"/>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <form name="signupForm" ng-submit="submit()" user-signup novalidate>
-                <UserInputs include={["name","email"]} onChange={this.updateUserData}/>
-                <button type="submit" className="btn btn-success btn-raised btn-block" disabled={this.disabled()}>
-                  {this.btnText()}
-                  {
-                  // <img ng-show="state == options.inProgress" src="/public/img/tailspin_icon.svg" className="status_icon tailspin" alt="loading icon"/>
-                  }
+              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+                <UserInputs include={['email', 'name']}  onChange={this.updateUserData}/>
+                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
+                  <span>
+                    {this.btnText()}
+                  </span>
                 </button>
+                <div className="clearfix"><br/></div>
+                <div className="clearfix">
+                  <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
+                </div>
               </form>
-              <div className="padding-tb">
-                <div><br/></div>
-                <a className="btn btn-flat btn-default" href="/login">Need to Login?</a>
-              </div>
             </div>
           </div>
         </div>

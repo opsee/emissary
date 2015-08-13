@@ -17,39 +17,21 @@ let _status = {
   error:false
 }
 
-function loginSuccess(data){
-  _status = {
-    pending:false,
-    success:true,
-    error:false
-  }
-  _user = data;
-  storage.set('user',_user);
-}
+let _signupCreateStatus;
 
 const UserStore = Flux.createStore(
   {
-    getUser(){
-      return _user;
+    getSignupCreateStatus(){
+      return _signupCreateStatus;
     },
-    getStatus(){
-      return _status;
-    },
-    getAuth(){
-      return _user.token;
-    }
   }, function(payload){
     switch(payload.actionType) {
       case 'USER_LOGIN_PENDING':
-        _status = {
-          pending:true,
-          success:false,
-          error:false
-        }
+        _signupCreateStatus = 'pending';
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_SUCCESS':
-        loginSuccess(payload.data);
+        _signupCreateStatus = 'success';
         UserStore.emitChange();
       break;
       case 'USER_LOGIN_ERROR':
