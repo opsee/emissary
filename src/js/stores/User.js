@@ -22,14 +22,17 @@ let _status = {
 }
 
 const statics = {
+  setUser(data){
+    _user = Immutable.fromJS(data);
+    storage.set('user',_user.toJS());
+  },
   loginSuccess(data){
     _status = {
       pending:false,
       success:true,
       error:false
     }
-    _user = Immutable.fromJS(data);
-    storage.set('user',_user.toJS());
+    statics.setUser(data);
   },
   logout(){
    storage.remove('user');

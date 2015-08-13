@@ -27,11 +27,6 @@ const actions = Flux.createActions({
       actionType: 'SIGNUP_CREATE_ERROR',
       data:res.response
     }
-  },
-  userLogOut(){
-    return {
-      actionType: 'USER_LOG_OUT'
-    }
   }
 });
 

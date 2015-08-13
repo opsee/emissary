@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 import Store from '../../stores/Check';
 import Actions from '../../actions/Styleguide';
+import GlobalActions from '../../actions/Global';
 
 function getState(){
   return {
@@ -23,6 +24,9 @@ export default React.createClass({
   },
   getDefaultProps() {
     return getState();
+  },
+  notify(){
+    GlobalActions.globalModalMessage('This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>');
   },
   render() {
     return (
@@ -243,7 +247,7 @@ export default React.createClass({
           <Loader/>
 
           <h3>Notifcations</h3>
-          <button className="btn btn-primary" ng-click="notify()">GLOBAL NOTIFICATION</button>
+          <button className="btn btn-primary" onClick={this.notify}>GLOBAL NOTIFICATION</button>
         </div>
       </div>
       </div>

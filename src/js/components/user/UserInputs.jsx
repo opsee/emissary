@@ -45,7 +45,10 @@ export default React.createClass({
         },
         labelSuffix:'',
         data:this.props,
-        onChangeDelay:100
+        validation:{
+          on:'blur change',
+          onChangeDelay:100
+        }
       })
     }
   },

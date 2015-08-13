@@ -30,6 +30,7 @@ import PasswordForgot from './components/pages/PasswordForgot.jsx';
 import Profile from './components/pages/Profile.jsx';
 
 import OnboardCreate from './components/onboard/Create.jsx';
+import OnboardThanks from './components/onboard/Thanks.jsx';
 
 import AdminSignups from './components/admin/Signups.jsx';
 
@@ -60,6 +61,7 @@ const routes = (
 
     <Route path="/group/:id" name="group" handler={Group}/>
     <Route path="/start" name="start" handler={OnboardCreate}/>
+    <Route path="/start/thanks" name="onboardThanks" handler={OnboardThanks}/>
     <Route path="/intro/1" name="tutorial" handler={More}/>
 
     <Route path="/start/password" name="onboardPassword" handler={More}/>

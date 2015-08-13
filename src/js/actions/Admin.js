@@ -3,62 +3,27 @@ import Flux from '../Flux';
 import request from '../request';
 import UserStore from '../stores/User';
 import response from '../response';
+import _ from 'lodash';
 
-const actions = Flux.createActions({
-  getSignups(data){
-    const auth = UserStore.getAuth();
-    request
-      .get(`${Constants.api}/signups`)
-      .set('Authorization', auth)
-      .then(res => {
-        Flux.actions.getSignupsSuccess(res);
-      }).catch(res => {
-        response(res).then(Flux.actions.getSignupsError);
-      });
-    return {
-      actionType: 'GET_SIGNUPS_PENDING'
-    }
+var getSignups = Flux.statics.addAsyncAction('getSignups', 
+  (id) => {
+    return request
+    .get(`${Constants.api}/signups`)
+    .set('Authorization', UserStore.getAuth())
   },
-  getSignupsSuccess(res){
-    return {
-      actionType: 'GET_SIGNUPS_SUCCESS',
-      data:res.body && res.body
-    }
-  },
-  getSignupsError(res){
-    console.log(res);
-    return {
-      actionType: 'GET_SIGNUPS_ERROR',
-      data:res.response
-    }
-  },
-  activateSignup(signup){
-    const auth = UserStore.getAuth();
-    request
-      .post(`${Constants.api}/signups/send-activation?email=${signup.email}`)
-      .set('Authorization', auth)
-      .send({email:signup.email})
-      .then(res => {
-        Flux.actions.activateSignupSuccess(res);
-      }).catch(res => {
-        response(res).then(Flux.actions.activateSignupError);
-      });
-    return {
-      actionType: 'ACTIVATE_SIGNUP_PENDING'
-    }
-  },
-  activateSignupSuccess(res){
-    return {
-      actionType: 'ACTIVATE_SIGNUP_SUCCESS',
-      data:res.body && res.body
-    }
-  },
-  activateSignupError(res){
-    return {
-      actionType: 'ACTIVATE_SIGNUP_ERROR',
-      data:res.response
-    }
-  }
-});
+  res => res && res.body,
+  res => res && res.response
+);
 
-export default actions;
+var activateSignup = Flux.statics.addAsyncAction('activateSignup', 
+  (signup) => {
+    return request
+    .post(`${Constants.api}/signups/send-activation?email=${signup.email}`)
+    .set('Authorization', UserStore.getAuth())
+    .send({email:signup.email})
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
+export default _.assign({}, getSignups, activateSignup);

@@ -1,37 +1,23 @@
 import Constants from '../Constants';
 import Flux from '../Flux';
 import request from '../request';
+import _ from 'lodash';
 
 // request.get('https://api.github.com/users/mralexgray/repos').then(function(res){
 //   console.log(res);
 // })
 
-const actions = Flux.createActions({
-  userLogin(data){
-    request
-      .post(`${Constants.api}/authenticate/password`)
-      .send(data).then(res => {
-        Flux.actions.userLoginSuccess(res.body);
-      }).catch(err => {
-        Flux.actions.userLoginError(err.response && err.response.text);
-      });
-    return {
-      actionType: 'USER_LOGIN_PENDING',
-      data:data
-    }
+var userLogin = Flux.statics.addAsyncAction('userLogin',
+  (data) => {
+    return request
+    .post(`${Constants.api}/authenticate/password`)
+    .send(data)
   },
-  userLoginSuccess(data){
-    return {
-      actionType: 'USER_LOGIN_SUCCESS',
-      data:data
-    }
-  },
-  userLoginError(err){
-    return {
-      actionType: 'USER_LOGIN_ERROR',
-      data:err
-    }
-  },
+  res => res.body && res.body,
+  res => res && res.response
+);
+
+const userLogOut = Flux.createActions({
   userLogOut(){
     return {
       actionType: 'USER_LOG_OUT'
@@ -39,4 +25,4 @@ const actions = Flux.createActions({
   }
 });
 
-export default actions;
+export default _.assign({}, userLogin, userLogOut);

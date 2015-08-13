@@ -13,7 +13,7 @@ const Store = Flux.createStore(
   }, function(payload){
     switch(payload.actionType) {
       case 'GLOBAL_MODAL_MESSAGE':
-        _modalMessage = payload.data;
+        _modalMessage = {__html:payload.data};
         Store.emitChange();
       break;
     }

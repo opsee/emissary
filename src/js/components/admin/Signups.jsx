@@ -8,10 +8,21 @@ const RouteHandler = Router.RouteHandler;
 import _ from 'lodash';
 import {Checkmark} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
+import TimeAgo from 'react-timeago';
+
+function getSignups(){
+  const signups = Store.getSignups().toJS();
+  return _.chain(signups).map(s => {
+    s.created_at = new Date(Date.parse(s.created_at));
+    return s;
+  }).sortBy(s => {
+    return -1*s.created_at;
+  }).value()
+}
 
 function getState(){
   return {
-    signups:Store.getSignups().toJS()
+    signups:getSignups()
   }
 }
 
@@ -76,7 +87,7 @@ export default React.createClass({
             </h2>
             <div>
               <div><a href="mailto:{{::signup.email}}">{signup.email}</a></div>
-              <span>#{signup.id} - {signup.created_at}</span>
+              <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
             </div>
           </div>
           <div>

@@ -8,5 +8,5 @@ gulp.task('styles', function() {
   gulp.src(config.dist.sass)
     .pipe(compass(config.dist))
     .pipe(gulp.dest(config.dist.css))
-    .pipe(connect.reload());
+    .pipe(connect.reload())
 });

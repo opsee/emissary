@@ -28,6 +28,7 @@ const statics = {
     _group = statics.groupFromJS(data)
   },
   getGroupsSuccess(data){
+    console.log(data);
     _groups = Immutable.fromJS(data.map(statics.groupFromJS));
   },
   groupFromJS(data){

@@ -17,6 +17,12 @@ let _status = {
   error:false
 }
 
+let _signupCreateStatus = {
+  pending:false,
+  success:false,
+  error:false
+}
+
 function loginSuccess(data){
   _status = {
     pending:false,
@@ -35,6 +41,9 @@ const UserStore = Flux.createStore(
     getStatus(){
       return _status;
     },
+    getSignupCreateStatus(){
+      return _signupCreateStatus;
+    },
   }, function(payload){
     switch(payload.actionType) {
       case 'SIGNUP_CREATE_PENDING':
@@ -45,11 +54,11 @@ const UserStore = Flux.createStore(
         }
         UserStore.emitChange();
       break;
-      case 'USER_LOGIN_SUCCESS':
+      case 'SIGNUP_CREATE_SUCCESS':
         loginSuccess(payload.data);
         UserStore.emitChange();
       break;
-      case 'USER_LOGIN_ERROR':
+      case 'SIGNUP_CREATE_ERROR':
         _status = {
           pending:false,
           success:false,

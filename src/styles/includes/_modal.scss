@@ -4,29 +4,31 @@
   @include breakpoint($screen-sm) {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
   }
+  background:$brand-warning;
+  color:$gray-900;
+  a{
+    color:$brand-info;
+  }
 }
-.modal[size="notify"] {
+.modal.notify{
   &.fade .modal-dialog { @include translate(0, 100px) }
   &.in .modal-dialog { @include translate(0, 0) }
   .modal-dialog {
-    bottom: 0;
     display: block;
-    margin: 0 0 0 0;
-    overflow: hidden;
-    position: absolute;
+    bottom: 0;
     right: 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    margin: 0;
+    position: absolute;
     width: 100%;
     @include breakpoint($screen-sm) {
       bottom: 32px;
       max-width: 500px;
       right: 32px;
     }
-  }
+  } 
 }
 
-.modal[size="context"] {
+.modal.context{
   &.fade .modal-dialog {
     @include translate(0, 100%);
     @include transition(transform $swift-ease-out-duration $swift-ease-out-timing-function);
@@ -66,7 +68,5 @@
 }
 
 .modal-backdrop{
-  &.notify{
-    background:none;
-  }
+  background:none;
 }

@@ -3,22 +3,22 @@ import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
 import OnboardStore from '../../stores/Onboard';
 import UserStore from '../../stores/User';
+import router from '../../router.jsx';
 
 
 export default React.createClass({
   mixins: [UserStore.mixin, OnboardStore.mixin],
   storeDidChange(){
-    const status = OnboardStore.getStatus();
+    const status = OnboardStore.getSignupCreateStatus();
     this.setState({status})
     if(status.success){
-      router.transitionTo('home');
-    }else{
+      router.transitionTo('onboardThanks');
     }
   },
   getInitialState(){
     return {
       user:UserStore.getUser().toJS(),
-      status:OnboardStore.getStatus()
+      status:OnboardStore.getSignupCreateStatus()
     }
   },
   updateUserData(data){

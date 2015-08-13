@@ -7,9 +7,6 @@ const RouteHandler = Router.RouteHandler;
 
 export default React.createClass({
   componentDidMount(){
-    setTimeout(function(){
-      Actions.globalModalMessage('fooooooo');
-    },2000);
   },
   render() {
     return (
