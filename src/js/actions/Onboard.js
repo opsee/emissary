@@ -9,7 +9,7 @@ const actions = Flux.createActions({
       .send(data).then(res => {
         Flux.actions.signupCreateSuccess(res);
       }).catch(res => {
-        Flux.actions.userLoginError(res);
+        Flux.actions.signupCreateError(res);
       });
     return {
       actionType: 'SIGNUP_CREATE_PENDING',

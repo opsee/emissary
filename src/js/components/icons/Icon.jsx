@@ -30,7 +30,7 @@ function Icon(path){
           verticalAlign:'text-bottom',
         }
       }
-      return style;
+      return style || this.props.style;
     },
     getFill(){
       if(this.props.nav && this.props.active){
@@ -38,7 +38,7 @@ function Icon(path){
       }else if(this.props.nav){
         return 'rgba(255, 255, 255, 0.54)';
       }
-      return null;
+      return this.props.fill || null;
     },
     render(){
       return (

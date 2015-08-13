@@ -1,7 +1,4 @@
 import React from 'react';
-import OpseeLabel from '../forms/OpseeLabel.jsx';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
 import _ from 'lodash';
 import slate from 'slate';
 import {Close, Checkmark} from '../icons/Module.jsx';

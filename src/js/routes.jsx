@@ -31,6 +31,8 @@ import Profile from './components/pages/Profile.jsx';
 
 import OnboardCreate from './components/onboard/Create.jsx';
 
+import AdminSignups from './components/admin/Signups.jsx';
+
 import NotFound from './components/pages/NotFound.jsx';
 
 const RouteHandler = Router.RouteHandler;
@@ -68,7 +70,7 @@ const routes = (
     <Route path="/start/vpc-select" name="onboardVpcSelect" handler={More}/>
     <Route path="/start/bastion" name="onboardBastion" handler={More}/>
 
-    <Route path="/admin/signups" name="adminSignups" handler={More}/>
+    <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/system-status" name="systemStatus" handler={More}/>
 
     <Route path="/profile" name="profile" handler={Profile}/>
