@@ -48,7 +48,7 @@ export default React.createClass({
         validation:{
           on:'blur change',
           onChangeDelay:100
-        }
+        },
       })
     }
   },

@@ -1,65 +1,63 @@
 import React, {PropTypes} from 'react';
-import Store from '../../stores/User';
-import Actions from '../../actions/User';
 import Toolbar from '../global/Toolbar.jsx';
-import Link from 'react-router/lib/components/Link';
 import UserInputs from '../user/UserInputs.jsx';
-import _ from 'lodash';
-import router from '../../router.jsx';
+import OnboardStore from '../../stores/Onboard';
+import OnboardActions from '../../actions/Onboard';
+import UserStore from '../../stores/User';
+import {State} from 'react-router';
+import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [State],
   storeDidChange(){
-    const status = Store.getUserLoginStatus();
+    const status = OnboardStore.getSetPasswordStatus();
     this.setState({status})
     if(status == 'success'){
-      router.transitionTo('home');
-    }else{
+      router.transitionTo('onboardThanks');
     }
   },
   getInitialState(){
     return {
-      data:Store.getUser(),
-      status:Store.getUserLoginStatus()
+      status:null,
+      email:this.getQuery().email,
+      token:this.getQuery().token,
+      password:null
     }
   },
   updateUserData(data){
-    this.setState({
-      data:data
-    })
+    this.setState({password:data.password})
   },
   submit(e){
     e.preventDefault();
     this.setState({
       submitting:true
     });
-    Actions.userLogin(this.state.data);
+    OnboardActions.setPassword(this.state);
   },
   disabled(){
-    const incomplete = !(this.state.data.email && this.state.data.password);
-    return incomplete || this.state.status == 'pending';
+    return !this.state.password || this.state.status == 'pending';
   },
-  loginBtnText(){
-    return this.state.status == 'pending' ? 'Logging In...' : 'Log In';
+  btnText(){
+    return this.state.status == 'pending' ? 'Setting...' : 'Set';
   },
   render() {
+    console.log(this.state);
     return (
        <div>
-        <Toolbar title="Login to Your Account"/>
+        <Toolbar title="Set Your Password"/>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
+                <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
                 <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
                   <span>
-                    {this.loginBtnText()}
+                    {this.btnText()}
                   </span>
                 </button>
                 <div className="clearfix"><br/></div>
                 <div className="clearfix">
                   <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
-                  <Link to="start" className="btn btn-flat btn-info pull-right">Need an Account?</Link>
                 </div>
               </form>
             </div>

@@ -1,3 +1,4 @@
 export default {
-  api:'http://api-beta.opsee.co'
+  api:'http://api-beta.opsee.co',
+  apiDelay:0
 }

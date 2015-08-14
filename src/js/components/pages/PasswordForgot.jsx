@@ -1,35 +1,63 @@
 import React, {PropTypes} from 'react';
-import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
+import UserStore from '../../stores/User';
+import UserActions from '../../actions/User';
+import router from '../../router.jsx';
+import Link from 'react-router/lib/components/Link';
 
-function getState(){
-  return {
-    instances: Store.getInstances(),
-    groups: Store.getGroups()
-  }
-}
 export default React.createClass({
-  mixins: [Store.mixin],
-  storeDidChange() {
-    this.setState(getState());
+  mixins: [UserStore.mixin],
+  storeDidChange(){
+    const status = UserStore.getUserSendResetEmailStatus();
+    this.setState({status})
+    if(status == 'success'){
+      // router.transitionTo('onboardThanks');
+    }
   },
-  getDefaultProps() {
-    return getState();
+  getInitialState(){
+    return {
+      data:UserStore.getUser().toJS(),
+      status:UserStore.getUserSendResetEmailStatus()
+    }
+  },
+  updateUserData(data){
+    this.setState({
+      data:data
+    })
+  },
+  submit(e){
+    e.preventDefault();
+    this.setState({
+      submitting:true
+    });
+    UserActions.userSendResetEmail(this.state.data);
+  },
+  disabled(){
+    return !this.state.data.email || this.state.status == 'pending';
+  },
+  btnText(){
+    return this.state.status == 'pending' ? 'Sending...' : 'Send Reset Email';
   },
   render() {
     return (
-      <form name="passwordForgotForm" ng-submit="submit()" className="container">
-        <div className="col-xs-12">
-          <h1>Forgot Password</h1>
-          <UserInputs include={["email"]}/>
-          <button ng-disabled="passwordForgotForm.$invalid" type="submit" className="btn btn-raised btn-success btn-block">Send Reset Email</button>
-          <div><br/></div>
-          {
-            //<div ng-if="msg">{{msg}}</div>
-          }
+       <div>
+        <Toolbar title="Send Reset Email"/>
+        <div className="container">
+          <div className="row">
+            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+                <UserInputs include={['email']}  onChange={this.updateUserData} email={this.state.data.email}/>
+                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
+                  <span>
+                    {this.btnText()}
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
     );
   }
 });

@@ -1,14 +1,13 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import request from '../request';
 import UserStore from '../stores/User';
-import response from '../response';
 import _ from 'lodash';
 
 var getSignups = Flux.statics.addAsyncAction('getSignups', 
   (id) => {
     return request
-    .get(`${Constants.api}/signups`)
+    .get(`${constants.api}/signups`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res && res.body,
@@ -18,7 +17,7 @@ var getSignups = Flux.statics.addAsyncAction('getSignups',
 var activateSignup = Flux.statics.addAsyncAction('activateSignup', 
   (signup) => {
     return request
-    .post(`${Constants.api}/signups/send-activation?email=${signup.email}`)
+    .post(`${constants.api}/signups/send-activation?email=${signup.email}`)
     .set('Authorization', UserStore.getAuth())
     .send({email:signup.email})
   },

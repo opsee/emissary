@@ -31,6 +31,11 @@ import Profile from './components/pages/Profile.jsx';
 
 import OnboardCreate from './components/onboard/Create.jsx';
 import OnboardThanks from './components/onboard/Thanks.jsx';
+import OnboardPassword from './components/onboard/Password.jsx';
+import OnboardTutorial from './components/onboard/Tutorial.jsx';
+import OnboardTutorial1 from './components/onboard/Tutorial1.jsx';
+import OnboardTutorial2 from './components/onboard/Tutorial2.jsx';
+import OnboardTeam from './components/onboard/Team.jsx';
 
 import AdminSignups from './components/admin/Signups.jsx';
 
@@ -60,13 +65,17 @@ const routes = (
     </Route>
 
     <Route path="/group/:id" name="group" handler={Group}/>
+
     <Route path="/start" name="start" handler={OnboardCreate}/>
     <Route path="/start/thanks" name="onboardThanks" handler={OnboardThanks}/>
-    <Route path="/intro/1" name="tutorial" handler={More}/>
-
-    <Route path="/start/password" name="onboardPassword" handler={More}/>
+    <Route path="/start/password" name="onboardPassword" handler={OnboardPassword}/>
+    <Route path="/start/tutorial" name="tutorial" handler={OnboardTutorial}>
+      <Redirect from="/start/tutorial" to="/start/tutorial/1" />
+      <Route path="/start/tutorial/1" name="tutorial1" handler={OnboardTutorial1}/>
+      <Route path="/start/tutorial/2" name="tutorial2" handler={OnboardTutorial2}/>
+    </Route>
     <Route path="/start/profile" name="onboardProfile" handler={More}/>
-    <Route path="/start/team" name="onboardTeam" handler={More}/>
+    <Route path="/start/team" name="onboardTeam" handler={OnboardTeam}/>
     <Route path="/start/region-select" name="onboardRegionSelect" handler={More}/>
     <Route path="/start/credentials" name="onboardCredentials" handler={More}/>
     <Route path="/start/vpc-select" name="onboardVpcSelect" handler={More}/>

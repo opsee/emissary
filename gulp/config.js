@@ -61,9 +61,13 @@ module.exports = {
     src: 'src/index.html',
     dest: dest
   },
+  img: {
+    src: 'src/img/**/*.*',
+    dest: dest+'/img'
+  },
   watch: {
-    srcJs: src+'/js/**/*.*',
-    srcSass: src+'/styles/**/*.*',
+    js: src+'/js/**/*.*',
+    sass: src+'/styles/**/*.*',
     // tasks: ['build']
   }
 };

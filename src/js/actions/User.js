@@ -1,4 +1,4 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import request from '../request';
 import _ from 'lodash';
@@ -10,7 +10,17 @@ import _ from 'lodash';
 var userLogin = Flux.statics.addAsyncAction('userLogin',
   (data) => {
     return request
-    .post(`${Constants.api}/authenticate/password`)
+    .post(`${constants.api}/authenticate/password`)
+    .send(data)
+  },
+  res => res.body && res.body,
+  res => res && res.response
+);
+
+var userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
+  (data) => {
+    return request
+    .post(`${constants.api}/authenticate/reset`)
     .send(data)
   },
   res => res.body && res.body,
@@ -25,4 +35,4 @@ const userLogOut = Flux.createActions({
   }
 });
 
-export default _.assign({}, userLogin, userLogOut);
+export default _.assign({}, userLogin, userSendResetEmail, userLogOut);

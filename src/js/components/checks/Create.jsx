@@ -5,8 +5,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import Store from '../../stores/Check';
 import Link from 'react-router/lib/components/Link';
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
+import Router, {RouteHandler} from 'react-router';
 import _ from 'lodash';
 
 function getState(){

@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
 import OnboardStore from '../../stores/Onboard';
+import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
 import router from '../../router.jsx';
 import Link from 'react-router/lib/components/Link';
@@ -17,7 +18,7 @@ export default React.createClass({
   },
   getInitialState(){
     return {
-      data:UserStore.getUser(),
+      data:UserStore.getUser().toJS(),
       status:OnboardStore.getSignupCreateStatus()
     }
   },
@@ -48,7 +49,7 @@ export default React.createClass({
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={['email', 'name']}  onChange={this.updateUserData}/>
+                <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
                   <span>
                     {this.btnText()}

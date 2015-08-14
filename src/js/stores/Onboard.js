@@ -1,7 +1,8 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import request from 'superagent';
 import storage from '../storage';
+import './User'
 
 // data storage
 let _user = storage.get('user') || {
@@ -11,39 +12,28 @@ let _user = storage.get('user') || {
   token:null
 }
 
-let _status = {
-  pending:false,
-  success:false,
-  error:false
-}
+let _statuses = {
+  signupCreate:null,
+  setPassword:null
+};
 
-let _signupCreateStatus;
-
-const UserStore = Flux.createStore(
+const Store = Flux.createStore(
   {
     getSignupCreateStatus(){
-      return _signupCreateStatus;
+      return _statuses.signupCreate;
     },
+    getSetPasswordStatus(){
+      return _statuses.setPassword;
+    }
   }, function(payload){
     switch(payload.actionType) {
-      case 'USER_LOGIN_PENDING':
-        _signupCreateStatus = 'pending';
-        UserStore.emitChange();
-      break;
-      case 'USER_LOGIN_SUCCESS':
-        _signupCreateStatus = 'success';
-        UserStore.emitChange();
-      break;
-      case 'USER_LOGIN_ERROR':
-        _status = {
-          pending:false,
-          success:false,
-          error:true
-        }
-        UserStore.emitChange();
+      case 'SIGNUP_CREATE_SUCCESS':
+        // loginSuccess(payload.data);
       break;
     }
+    _statuses = Flux.statics.statusProcessor(payload, _statuses);
+    Store.emitChange();
   }
 )
 
-export default UserStore;
+export default Store;

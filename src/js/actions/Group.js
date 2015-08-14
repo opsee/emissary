@@ -1,4 +1,4 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import request from '../request';
 import UserStore from '../stores/User';
@@ -8,7 +8,7 @@ import _ from 'lodash';
 var getGroups = Flux.statics.addAsyncAction('getGroups',
   () => {
     return request
-    .get(`${Constants.api}/groups`)
+    .get(`${constants.api}/groups`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body && res.body.groups, 
@@ -18,7 +18,7 @@ var getGroups = Flux.statics.addAsyncAction('getGroups',
 var getGroup = Flux.statics.addAsyncAction('getGroup', 
   (id) => {
     return request
-    .get(`${Constants.api}/group/${id}`)
+    .get(`${constants.api}/group/${id}`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,

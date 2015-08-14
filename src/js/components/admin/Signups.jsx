@@ -50,27 +50,37 @@ export default React.createClass({
   submit(){
     console.log(this.state.check);
   },
+  isUnapprovedSignup(s){
+    return !s.activation_id;
+  },
+  isApprovedSignup(s){
+    return !!s.activation_id && !s.activation_used;
+  },
+  isUser(s){
+    return !!s.activation_id && s.activation_used;
+  },
   getUnapproved(){
-    return _.filter(this.state.signups, s => !s.activation_id);
+    return _.filter(this.state.signups, this.isUnapprovedSignup);
   },
   getApproved(){
-    return _.filter(this.state.signups, s => !!s.activation_id && !s.activation_used);
+    return _.filter(this.state.signups, this.isApprovedSignup);
   },
   getUsers(){
-    return _.filter(this.state.signups, s => !!s.activation_id && s.activation_used);
+    return _.filter(this.state.signups, this.isUser);
   },
   activateSignup:Actions.activateSignup,
   outputCheckmark(signup){
-    if(signup.activation_used){
+    if(this.isUser(signup)){
       return <Checkmark fill={colors.success}/>
     }else{
       return <span/>
     }
   },
   outputButton(signup){
-    if(!signup.activation_id){
+    if(this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
+      const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
       return (
-        <button type="button" className="btn btn-flat btn-primary" onClick={this.activateSignup.bind(null, signup)}>Activate User</button>
+        <button type="button" className="btn btn-flat btn-primary" onClick={this.activateSignup.bind(null, signup)}>{text}</button>
       )
     }else{
       return <span/>;

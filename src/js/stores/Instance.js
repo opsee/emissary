@@ -1,4 +1,4 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import _ from 'lodash';
 import moment from 'moment';
@@ -74,6 +74,11 @@ const statics = {
   }
 }
 
+let _statuses = {
+  getInstances:null,
+  getInstance:null
+}
+
 const Store = Flux.createStore(
   {
     getInstance(){
@@ -87,19 +92,18 @@ const Store = Flux.createStore(
     switch(payload.actionType) {
       case 'GET_INSTANCES_SUCCESS':
         statics.getInstancesSuccess(payload.data);
-        Store.emitChange();
       break;
       case 'GET_INSTANCE_SUCCESS':
         statics.getInstanceSuccess(payload.data);
-        Store.emitChange();
       break;
       case 'GET_INSTANCE_PENDING':
         if(_instance.get('id') != payload.data){
           _instance = new Instance();
-          Store.emitChange();
         }
       break;
     }
+    _statuses = Flux.statics.statusProcessor(payload, _statuses);
+    Store.emitChange();
   }
 )
 

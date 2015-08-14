@@ -10,12 +10,6 @@ import router from '../../router.jsx';
 export default React.createClass({
   mixins: [Store.mixin],
   storeDidChange(){
-    // const status = Store.getStatus();
-    // this.setState({status})
-    // if(status.success){
-    //   router.transitionTo('home');
-    // }else{
-    // }
     if(!Store.getAuth()){
       return router.transitionTo('login');
     }

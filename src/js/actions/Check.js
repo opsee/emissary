@@ -1,4 +1,4 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 
 const actions = Flux.createActions({

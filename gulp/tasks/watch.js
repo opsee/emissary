@@ -1,13 +1,17 @@
 var gulp = require('gulp');
-var config = require('../config').watch;
+var config = require('../config');
 
-gulp.task('watch', ['watchJs','watchSass'], function(){
+gulp.task('watch', ['watchJs','watchSass', 'watchImg'], function(){
 })
 
 gulp.task('watchJs', [], function() {
-  gulp.watch(config.srcJS, ['buildJs']);
+  gulp.watch(config.watch.js, ['buildJs']);
 });
 
 gulp.task('watchSass', [], function() {
-  gulp.watch(config.srcSass, ['buildSass']);
+  gulp.watch(config.watch.sass, ['buildSass']);
+});
+
+gulp.task('watchImg', [], function() {
+  gulp.watch(config.img.src, ['buildImg']);
 });

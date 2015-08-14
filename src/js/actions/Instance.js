@@ -1,15 +1,14 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import request from '../request';
 import UserStore from '../stores/User';
-import response from '../response';
 import _ from 'lodash';
 
 
 var getInstances = Flux.statics.addAsyncAction('getInstances',
   () => {
     return request
-    .get(`${Constants.api}/instances`)
+    .get(`${constants.api}/instances`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body && res.body.instances,
@@ -19,7 +18,7 @@ var getInstances = Flux.statics.addAsyncAction('getInstances',
 var getInstance = Flux.statics.addAsyncAction('getInstance', 
   (id) => {
     return request
-    .get(`${Constants.api}/instance/${id}`)
+    .get(`${constants.api}/instance/${id}`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,

@@ -1,29 +1,25 @@
-import Constants from '../Constants';
+import constants from '../constants';
 import Flux from '../Flux';
 import request from 'superagent';
 import storage from '../storage';
 import Immutable, {Record, List, Map} from 'immutable';
+import _ from 'lodash';
 
 var User = Record({
-  name:null,
+  name:'cliff',
   email:null,
   id:null,
   token:null
 })
 
 let initialUser = storage.get('user');
-initialUser = initialUser ? Immutable.fromJS(initialUser) : null;
+initialUser = initialUser ? new User(initialUser) : null;
 let _user = initialUser || new User();
-
-let _status = null;
 
 const statics = {
   setUser(data){
     _user = Immutable.fromJS(data);
     storage.set('user',_user.toJS());
-  },
-  loginSuccess(data){
-    statics.setUser(data);
   },
   logout(){
    storage.remove('user');
@@ -31,38 +27,37 @@ const statics = {
   }
 }
 
-const UserStore = Flux.createStore(
+let _statuses = {
+  userLogin:null,
+  userSendResetEmail:null
+};
+
+const Store = Flux.createStore(
   {
     getUser(){
       return _user;
     },
-    getStatus(){
-      return _status;
+    getUserLoginStatus(){
+      return _statuses.userLogin;
     },
     getAuth(){
       return _user.get('token');
+    },
+    getUserSendResetEmailStatus(){
+      return _statuses.userSendResetEmail;
     }
   }, function(payload){
     switch(payload.actionType) {
-      case 'USER_LOGIN_PENDING':
-        _status = 'pending';
-        UserStore.emitChange();
-      break;
       case 'USER_LOGIN_SUCCESS':
-        _status = 'success';
-        statics.loginSuccess(payload.data);
-        UserStore.emitChange();
-      break;
-      case 'USER_LOGIN_ERROR':
-        _status = payload.data;
-        UserStore.emitChange();
+        statics.setUser(payload.data);
       break;
       case 'USER_LOG_OUT':
         statics.logout();
-        UserStore.emitChange();
       break;
     }
+    _statuses = Flux.statics.statusProcessor(payload, _statuses);
+    Store.emitChange();
   }
 )
 
-export default UserStore;
+export default Store;
