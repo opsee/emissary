@@ -1,45 +1,30 @@
 import React, {PropTypes} from 'react';
 import Toolbar from '../global/Toolbar.jsx';
-import UserInputs from '../user/UserInputs.jsx';
 import OnboardStore from '../../stores/Onboard';
 import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
+import AWSStore from '../../stores/AWS';
 import {State} from 'react-router';
-import router from '../../router.jsx';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
 import $q from 'q';
+import router from '../../router.jsx';
 
 let checkSubdomainPromise;
 let domainPromisesArray = [];
 
+const regions = AWSStore.getRegions();
+const regionChoices = regions.map(r => {
+  return [r.id, r.name]
+});
+
 const InfoForm = forms.Form.extend({
-  name: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Initech'
-    }
+  regions: forms.MultipleChoiceField({
+    choices: regionChoices,
+    widget: forms.CheckboxSelectMultiple
   }),
-  subdomain: forms.SlugField({
-    widgetAttrs:{
-      placeholder:'initech[.opsee.co]'
-    },
-    validation:{
-      on:'blur change',
-      onChangeDelay:200
-    }
-  }),
-  cleanSubdomain(cb){
-    const string = this.cleanedData.subdomain;
-    const date = Date.now();
-    OnboardActions.subdomainAvailability(string, date);
-    domainPromisesArray.push({date:date,promise:$q.defer()});
-    const correctPromise = domainPromisesArray[(domainPromisesArray.length-1)].promise;
-    correctPromise.promise.then((avail) => {
-      avail ? cb() : cb(null, 'is not available.');
-    });
-  }
 });
 
 const Team = React.createClass({
@@ -55,27 +40,32 @@ const Team = React.createClass({
     }
     const createOrgStatus = OnboardStore.getCreateOrgStatus();
     if(createOrgStatus == 'success'){
-      router.transitionTo('onboardRegionSelect');
+      router.transitionTo('onboardThanks');
     }
-    this.setState({createOrgStatus});
   },
   getInitialState() {
     var self = this;
     var data = OnboardStore.getData();
-    return {
+    const obj = {
       info:new InfoForm({
         onChange(){
           self.onChange(self.state.info.cleanedData);
           self.forceUpdate();
         },
         labelSuffix:'',
-        data:_.cloneDeep(self.props),
+        data: {
+          regions:['us-west-1', 'sa-east-1']
+        },
         validation:{
           on:'blur change',
           onChangeDelay:100
         },
       })
     }
+    setTimeout(function(){
+      obj.info.validate();
+    },10);
+    return obj;
   },
   onChange(data){
     this.setState({name:data.name, subdomain:data.subdomain});
@@ -85,39 +75,42 @@ const Team = React.createClass({
   },
   submit(e){
     e.preventDefault();
-    OnboardActions.createOrg({name:this.state.name, subdomain:this.state.subdomain});
+    OnboardActions.setRegions(this.state.info.cleanedData.regions);
+    router.transitionTo('onboardCredentials');
   },
   disabled(){
-    const incomplete = (!this.state.name || !this.state.subdomain);
-    return incomplete || (this.state.availStatus == 'pending' && !this.state.domainAvailable);
+    return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
   },
-  btnText(){
-    return this.state.createOrgStatus == 'pending' ? 'Setting...' : 'Set';
+  toggleAll(value){
+    if(value){
+      this.state.info.updateData({
+        regions:regions.map(r => {
+          return r.id
+        })
+      })
+    }else{
+      this.state.info.updateData({regions:[]});
+    }
   },
   render() {
     return (
        <div>
-        <Toolbar title="Create Your Team"/>
+        <Toolbar title="Regions to launch Bastions in"/>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <OpseeBoundField bf={this.state.info.boundField('name')}/>
-                <div className="text-sm text-secondary">
-                  <em>This name will appear in headings and menus to identify your team. Your company name is probably a good choice, but it doesn&rsquo;t need to be official or anything.</em>
-                </div>
-                <div><br/></div>
-                <OpseeBoundField bf={this.state.info.boundField('subdomain')}/>
-                <div className="text-sm text-secondary">
-                  <em>The web address you'll use to access your team's account. Keep it short and memorable. Only lowercase letters, numbers, and dashes are allowed, and it must start with a letter.</em>
-                </div>
+               <p>Choose the regions you'd like to launch Opsee bastions in. We're not going to install anything yet, we&rsquo;re first looking for active VPCs and subnets in the regions you select.</p>
+               <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button> - <button type="button" className="btn btn-flat btn-warning" onClick={this.toggleAll.bind(null, false)}>Deselect All</button></h2>
+                <OpseeBoundField bf={this.state.info.boundField('regions')}/>
                 <div><br/></div>
                 <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>
-                    {this.btnText()}
-                  </span>
+                  <span>Next</span>
                 </button>
               </form>
+              {
+              // <pre>{JSON.stringify(this.state.info.cleanedData, null, ' ')}</pre>
+              }
             </div>
           </div>
         </div>
