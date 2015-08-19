@@ -38,6 +38,8 @@ import OnboardTutorial2 from './components/onboard/Tutorial2.jsx';
 import OnboardTeam from './components/onboard/Team.jsx';
 import OnboardRegionSelect from './components/onboard/RegionSelect.jsx';
 import OnboardCredentials from './components/onboard/Credentials.jsx';
+import OnboardVPCSelect from './components/onboard/VPCSelect.jsx';
+import OnboardInstall from './components/onboard/Install.jsx';
 
 import AdminSignups from './components/admin/Signups.jsx';
 
@@ -80,8 +82,8 @@ const routes = (
     <Route path="/start/team" name="onboardTeam" handler={OnboardTeam}/>
     <Route path="/start/region-select" name="onboardRegionSelect" handler={OnboardRegionSelect}/>
     <Route path="/start/credentials" name="onboardCredentials" handler={OnboardCredentials}/>
-    <Route path="/start/vpc-select" name="onboardVpcSelect" handler={More}/>
-    <Route path="/start/bastion" name="onboardBastion" handler={More}/>
+    <Route path="/start/vpc-select" name="onboardVpcSelect" handler={OnboardVPCSelect}/>
+    <Route path="/start/bastion" name="onboardInstall" handler={OnboardInstall}/>
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/system-status" name="systemStatus" handler={More}/>

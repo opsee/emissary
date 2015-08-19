@@ -32,7 +32,7 @@ export default React.createClass({
     this.setState({
       submitting:true
     });
-    OnboardActions.signupCreate(this.state.data);
+    OnboardActions.onboardSignupCreate(this.state.data);
   },
   disabled(){
     const incomplete = !(this.state.data.name && this.state.data.email);

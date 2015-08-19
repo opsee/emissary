@@ -4,7 +4,7 @@ import request from '../request';
 import _ from 'lodash';
 import UserStore from '../stores/User';
 
-const signupCreate = Flux.statics.addAsyncAction('signupCreate',
+const onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
   (data) => {
     return request
     .post(`${constants.api}/signups`)
@@ -14,7 +14,7 @@ const signupCreate = Flux.statics.addAsyncAction('signupCreate',
   res => res && res.response
 );
 
-const setPassword = Flux.statics.addAsyncAction('setPassword',
+const onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
   (data) => {
     return request
     .post(`${constants.api}/activations/${data.token}/activate`)
@@ -42,7 +42,7 @@ const subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability
   res => res && res.response
 );
 
-const createOrg = Flux.statics.addAsyncAction('createOrg',
+const onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
   (data) => {
     return request
     .post(`${constants.api}/orgs`)
@@ -53,13 +53,51 @@ const createOrg = Flux.statics.addAsyncAction('createOrg',
   res => res && res.response
 );
 
-const setRegions = Flux.createActions({
-  setRegions(data){
+const onboardSetRegions = Flux.createActions({
+  onboardSetRegions(data){
     return {
-      actionType: 'ONBOARD_SET_REGIONS',
+      actionType:'ONBOARD_SET_REGIONS',
       data:data
     }
   }
 });
 
-export default _.assign({}, signupCreate, setPassword, subdomainAvailability, createOrg, setRegions);
+const onboardSetCredentials = Flux.createActions({
+  onboardSetCredentials(data){
+    return {
+      actionType:'ONBOARD_SET_CREDENTIALS',
+      data:data
+    }
+  }
+});
+
+const onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
+  (data) => {
+    return request
+    .post(`${constants.api}/scan-vpcs`)
+    .set('Authorization', UserStore.getAuth())
+    .send(data)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
+const onboardSetVpcs = Flux.createActions({
+  onboardSetVpcs(data){
+    return {
+      actionType:'ONBOARD_SET_VPCS',
+      data:data
+    }
+  }
+});
+
+const onboardInstall = Flux.createActions({
+  onboardInstall(data){
+    return {
+      actionType:'ONBOARD_INSTALL',
+      data:data
+    }
+  }
+});
+
+export default _.assign({}, onboardSignupCreate, onboardSetPassword, subdomainAvailability, onboardCreateOrg, onboardSetRegions, onboardSetCredentials, onboardVpcScan);

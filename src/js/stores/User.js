@@ -1,6 +1,5 @@
 import constants from '../constants';
 import Flux from '../Flux';
-import request from 'superagent';
 import storage from '../storage';
 import Immutable, {Record, List, Map} from 'immutable';
 import _ from 'lodash';

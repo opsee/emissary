@@ -32,7 +32,7 @@ export default React.createClass({
     this.setState({
       submitting:true
     });
-    OnboardActions.setPassword(this.state);
+    OnboardActions.onboardSetPassword(this.state);
   },
   disabled(){
     return !this.state.password || this.state.status == 'pending';

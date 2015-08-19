@@ -10,7 +10,7 @@ export default React.createClass({
     };
   },
   onChange(id){
-    let data = this.props.bf.value();
+    let data = this.props.bf.value() || [];
     if(_.findWhere(data, id)){
       data = _.pull(data, id);
     }else{
@@ -24,7 +24,6 @@ export default React.createClass({
     return _.findWhere(this.props.bf.value(), w.choiceValue);
   },
   render(){
-    // return this.props.bf.render();
     return(
       <ul className="list-unstyled">
         {this.props.bf.subWidgets().map((w, i) => {

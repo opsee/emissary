@@ -61,11 +61,9 @@ const Team = React.createClass({
   },
   getInitialState() {
     var self = this;
-    var data = OnboardStore.getData();
     return {
       info:new InfoForm({
         onChange(){
-          self.onChange(self.state.info.cleanedData);
           self.forceUpdate();
         },
         labelSuffix:'',
@@ -77,19 +75,12 @@ const Team = React.createClass({
       })
     }
   },
-  onChange(data){
-    this.setState({name:data.name, subdomain:data.subdomain});
-  },
-  updateUserData(data){
-    this.setState({password:data.password})
-  },
   submit(e){
     e.preventDefault();
-    OnboardActions.createOrg({name:this.state.name, subdomain:this.state.subdomain});
+    OnboardActions.onboardCreateOrg(this.state.info.cleanedData);
   },
   disabled(){
-    const incomplete = (!this.state.name || !this.state.subdomain);
-    return incomplete || (this.state.availStatus == 'pending' && !this.state.domainAvailable);
+    return !this.state.info.isValid() || (this.state.availStatus == 'pending' && !this.state.domainAvailable);
   },
   btnText(){
     return this.state.createOrgStatus == 'pending' ? 'Setting...' : 'Set';

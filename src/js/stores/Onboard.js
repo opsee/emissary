@@ -1,30 +1,30 @@
 import constants from '../constants';
 import Flux from '../Flux';
-import request from 'superagent';
 import storage from '../storage';
 import './User'
 import _ from 'lodash';
 
-// data storage
-let _user = storage.get('user') || {
-  name:null,
-  email:null,
-  id:null,
-  token:null
-}
-
 let _statuses = {
-  signupCreate:null,
-  setPassword:null,
+  onboardSignupCreate:null,
+  onboardSetPassword:null,
   subdomainAvailability:null,
-  createOrg:null
+  onboardCreateOrg:null,
+  onboardVpcScan:null
 };
 
-let _data = {
+let _teamData = {
   customer_id:null,
-  domain:null,
-  regions:[]
+  subdomain:null
 }
+
+let _installData = {
+  regions:['us-west-1', 'us-east-1'],
+  'access-key':null,
+  'secret-key':null,
+  vpcs:[]
+}
+
+let _availableVpcs = [];
 
 let _domainPromisesArray = [];
 let _subdomainAvailable;
@@ -32,13 +32,13 @@ let _subdomainAvailable;
 const Store = Flux.createStore(
   {
     getSignupCreateStatus(){
-      return _statuses.signupCreate;
+      return _statuses.onboardSignupCreate;
     },
     getSetPasswordStatus(){
-      return _statuses.setPassword;
+      return _statuses.onboardSetPassword;
     },
-    getData(){
-      return _data;
+    getInstallData(){
+      return _installData;
     },
     getSubdomainAvailable(){
       return _subdomainAvailable;
@@ -47,7 +47,13 @@ const Store = Flux.createStore(
       return _statuses.subdomainAvailability;
     },
     getCreateOrgStatus(){
-      return _statuses.createOrg;
+      return _statuses.onboardCreateOrg;
+    },
+    getVpcScanStatus(){
+      return _statuses.onboardVpcScan;
+    },
+    getAvailableVpcs(){
+      return _availableVpcs;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -59,9 +65,20 @@ const Store = Flux.createStore(
         _domainPromisesArray = _.sortBy(_domainPromisesArray, 'date');
         _subdomainAvailable = _.last(_domainPromisesArray);
       break;
+      case 'ONBOARD_CREATE_ORG':
+      _teamData = _.extend(_teamData, payload.data);
+      break;
       case 'ONBOARD_SET_REGIONS':
-      console.log(payload.data);
-      _data.regions = payload.data;
+      _installData.regions = payload.data;
+      break;
+      case 'ONBOARD_SET_CREDENTIALS':
+      _installData = _.extend(_installData, payload.data);
+      break;
+      case 'ONBOARD_VPC_SCAN_SUCCESS':
+      _availableVpcs = payload.data;
+      break;
+      case 'ONBOARD_SET_VPCS':
+      _installData = _.extend(_installData, payload.data);
       break;
     }
     _statuses = Flux.statics.statusProcessor(payload, _statuses);
