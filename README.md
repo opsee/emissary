@@ -1,4 +1,4 @@
-# rapier
+# Emissary
 React front-end
 
 ## Running your project
