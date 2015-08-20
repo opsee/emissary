@@ -2,14 +2,10 @@ import constants from '../constants';
 import Flux from '../Flux';
 import request from '../request';
 import UserStore from '../stores/User';
+import _ from 'lodash';
 
-const actions = Flux.createActions({
-  globalModalMessage(data){
-    return {
-      actionType: 'GLOBAL_MODAL_MESSAGE',
-      data:data
-    }
-  }
-});
+let _actions = {};
 
-export default actions;
+_actions.globalModalMessage = Flux.statics.addAction('globalModalMessage');
+
+export default _.assign({}, ..._.values(_actions));

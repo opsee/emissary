@@ -4,7 +4,9 @@ import request from '../request';
 import _ from 'lodash';
 import UserStore from '../stores/User';
 
-const onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
+let _actions = {};
+
+_actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
   (data) => {
     return request
     .post(`${constants.api}/signups`)
@@ -14,7 +16,7 @@ const onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
   res => res && res.response
 );
 
-const onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
+_actions.onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
   (data) => {
     return request
     .post(`${constants.api}/activations/${data.token}/activate`)
@@ -24,7 +26,7 @@ const onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
   res => res && res.response
 );
 
-const subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability',
+_actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability',
   (subdomain, date) => {
     return request
     .get(`${constants.api}/orgs/subdomain/${subdomain}`)
@@ -42,7 +44,7 @@ const subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability
   res => res && res.response
 );
 
-const onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
+_actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
   (data) => {
     return request
     .post(`${constants.api}/orgs`)
@@ -53,25 +55,13 @@ const onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
   res => res && res.response
 );
 
-const onboardSetRegions = Flux.createActions({
-  onboardSetRegions(data){
-    return {
-      actionType:'ONBOARD_SET_REGIONS',
-      data:data
-    }
-  }
-});
+_actions.onboardSetRegions = Flux.statics.addAction('onboardSetRegions');
 
-const onboardSetCredentials = Flux.createActions({
-  onboardSetCredentials(data){
-    return {
-      actionType:'ONBOARD_SET_CREDENTIALS',
-      data:data
-    }
-  }
-});
+_actions.onboardSetRegions = Flux.statics.addAction('onboardSetRegions');
 
-const onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
+_actions.onboardSetCredentials = Flux.statics.addAction('onboardSetCredentials');
+
+_actions.onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
   (data) => {
     return request
     .post(`${constants.api}/scan-vpcs`)
@@ -82,22 +72,26 @@ const onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
   res => res && res.response
 );
 
-const onboardSetVpcs = Flux.createActions({
-  onboardSetVpcs(data){
-    return {
-      actionType:'ONBOARD_SET_VPCS',
-      data:data
-    }
-  }
-});
+_actions.onboardSetVpcs = Flux.statics.addAction('onboardSetVpcs');
 
-const onboardInstall = Flux.createActions({
-  onboardInstall(data){
-    return {
-      actionType:'ONBOARD_INSTALL',
-      data:data
-    }
-  }
-});
+_actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
+  (data) => {
+    return request
+    .post(`${constants.api}/bastions/launch`)
+    .send(data)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
 
-export default _.assign({}, onboardSignupCreate, onboardSetPassword, subdomainAvailability, onboardCreateOrg, onboardSetRegions, onboardSetCredentials, onboardVpcScan);
+_actions.onboardExampleInstall = Flux.statics.addAsyncAction('onboardExampleInstall',
+  (data) => {
+    return request
+    .get(`/img/bastion-install-messages-example.json`)
+    .send(data)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
+export default _.assign({}, ..._.values(_actions));

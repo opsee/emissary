@@ -25,7 +25,7 @@ export default React.createClass({
                 <li><Link to="onboardRegionSelect">Region Select</Link></li>
                 <li><Link to="onboardCredentials">Credentials</Link></li>
                 <li><Link to="onboardVpcSelect">VPC Scan + Select</Link></li>
-                <li><Link to="onboardBastion">Bastion Installation</Link></li>
+                <li><Link to="onboardInstall">Bastion Installation</Link></li>
                 <li><Link to="adminSignups">Admin: Signups</Link></li>
                 <li><Link to="systemStatus">System Status</Link></li>
                 <li><Link to="styleguide">Style Guide</Link></li>

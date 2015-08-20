@@ -83,7 +83,7 @@ const routes = (
     <Route path="/start/region-select" name="onboardRegionSelect" handler={OnboardRegionSelect}/>
     <Route path="/start/credentials" name="onboardCredentials" handler={OnboardCredentials}/>
     <Route path="/start/vpc-select" name="onboardVpcSelect" handler={OnboardVPCSelect}/>
-    <Route path="/start/bastion" name="onboardInstall" handler={OnboardInstall}/>
+    <Route path="/start/install" name="onboardInstall" handler={OnboardInstall}/>
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/system-status" name="systemStatus" handler={More}/>

@@ -81,7 +81,7 @@ const Team = React.createClass({
   },
   submit(e){
     e.preventDefault();
-    router.transitionTo('onboardCredentials');
+    router.transitionTo('onboardInstall');
   },
   disabled(){
     return !this.state.info.cleanedData.vpcs;

@@ -5,6 +5,17 @@ import _ from 'lodash';
 
 const Flux = new McFly();
 Flux.statics = {
+  addAction(baseName, data){
+    const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
+    let obj = {};
+    obj[baseName] = function(data){
+      return {
+        actionType:upperName,
+        data:data
+      }
+    };
+    return Flux.createActions(obj);
+  },
   addAsyncAction(baseName, requestFn, successFn, errorFn){
     const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
     let obj = {};

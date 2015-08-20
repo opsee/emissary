@@ -3,11 +3,9 @@ import Flux from '../Flux';
 import request from '../request';
 import _ from 'lodash';
 
-// request.get('https://api.github.com/users/mralexgray/repos').then(function(res){
-//   console.log(res);
-// })
+let _actions = {};
 
-var userLogin = Flux.statics.addAsyncAction('userLogin',
+_actions.userLogin = Flux.statics.addAsyncAction('userLogin',
   (data) => {
     return request
     .post(`${constants.api}/authenticate/password`)
@@ -17,7 +15,7 @@ var userLogin = Flux.statics.addAsyncAction('userLogin',
   res => res && res.response
 );
 
-var userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
+_actions.userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   (data) => {
     return request
     .post(`${constants.api}/authenticate/reset`)
@@ -27,12 +25,6 @@ var userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   res => res && res.response
 );
 
-const userLogOut = Flux.createActions({
-  userLogOut(){
-    return {
-      actionType: 'USER_LOG_OUT'
-    }
-  }
-});
+_actions.userLogOut = Flux.statics.addAction('userLogOut');
 
-export default _.assign({}, userLogin, userSendResetEmail, userLogOut);
+export default _.assign({}, ..._.values(_actions));

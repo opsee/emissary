@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var connect = require('gulp-connect');
 var config = require('../config').watch;
 
-gulp.task('build', ['buildJs', 'buildSass', 'img'], function() {
+gulp.task('build', ['buildJs', 'buildSass', 'buildImg'], function() {
   // gulp.src(config.src).pipe(connect.reload());
 });
 

@@ -69,6 +69,7 @@ const Store = Flux.createStore(
       _teamData = _.extend(_teamData, payload.data);
       break;
       case 'ONBOARD_SET_REGIONS':
+      console.log(payload.data);
       _installData.regions = payload.data;
       break;
       case 'ONBOARD_SET_CREDENTIALS':
@@ -79,6 +80,12 @@ const Store = Flux.createStore(
       break;
       case 'ONBOARD_SET_VPCS':
       _installData = _.extend(_installData, payload.data);
+      break;
+      case 'ONBOARD_INSTALL':
+      console.log(_installData);
+      break;
+      case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
+      console.log(payload.data);
       break;
     }
     _statuses = Flux.statics.statusProcessor(payload, _statuses);
