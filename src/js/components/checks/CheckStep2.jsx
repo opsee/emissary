@@ -48,14 +48,18 @@ const AllFields = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.assertions,
-        extra:0
+        extra:1
       }),
       response:this.props.response
     };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.assertions.forms().forEach((form,i) => {
-        form.setData(self.props.check.assertions[i]);
+        //checking here accounts for empty assertion forms
+        let data = self.props.check.assertions[i];
+        if(data){
+          form.setData(data);  
+        }
       });
     },10);
     return obj;
@@ -91,7 +95,6 @@ const AllFields = React.createClass({
   renderAssertionsForm(){
     return(
       <div>
-        <h2>Assertions</h2>
         {this.state.assertions.forms().map((form, index) => {
           return (
             <div>
@@ -162,21 +165,22 @@ const AllFields = React.createClass({
   innerRender() {
     return (
       <form ref="form" onSubmit={this.onSubmit}>
-          <h2>Add Assertions</h2>
-          <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion per check.</p>
-          <br />
-          {this.renderAssertionsForm()}
-          {this.renderSubmitButton()}
-                <h2>Your Response &amp; Request</h2>
-      <p>We are including the content of your response and your request to help you define assertions.</p>
-      <br/>
-          <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
-          {
-            <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
-          }
-          {
-            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
-          }
+        <h2>Add Assertions</h2>
+        <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion per check.</p>
+        <br />
+        {this.renderAssertionsForm()}
+        {this.renderSubmitButton()}
+        <div><br/></div>
+        <h2>Your Response &amp; Request</h2>
+        <p>We are including the content of your response and your request to help you define assertions.</p>
+        <br/>
+            <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
+            {
+              <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
+            }
+            {
+              // <strong>Non field errors: {nonFieldErrors.render()}</strong>
+            }
       </form>
     )
   },

@@ -31,7 +31,7 @@ const HeaderForm = forms.Form.extend({
 });
 
 const HeaderFormSet = forms.FormSet.extend({
-  form:HeaderForm
+  form:HeaderForm,
 });
 
 const InfoForm = forms.Form.extend({
@@ -83,8 +83,13 @@ const AllFields = React.createClass({
       headers: new HeaderFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        initial:this.props.check && this.props.check.headers || [],
-        extra:0
+        // initial:this.props.check && this.props.check.headers || [],
+        emptyPermitted:false,
+        extra:0,
+        // canDelete:true,
+        validation:{
+          on:'blur change'
+        }
       }),
       check:this.props.check
     }
@@ -94,11 +99,14 @@ const AllFields = React.createClass({
         form.setData(self.props.check.headers[i]);
       });
     },10);
-    return obj;
+    return _.extend(obj, {
+      cleanedData:null
+    });
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData())
-    this.forceUpdate();
+    this.props.onChange(this.getCleanedData());
+    this.setState({cleanedData:this.getCleanedData()});
+    // this.forceUpdate();
   },
   renderHeaderForm(){
     return(
@@ -106,7 +114,7 @@ const AllFields = React.createClass({
         <h2>Request Headers</h2>
         {this.state.headers.forms().map((form, index) => {
           return (
-            <div key={`header-form-${i}`}>
+            <div key={`header-form-${index}`}>
               <div className="row">
                 <div className="col-xs-12">
                   <h3>Header {index+1}</h3>
@@ -136,7 +144,7 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button type="button" className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add Another Header</button>
+        <button type="button" className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header</button>
       </div>
     )
   },
@@ -153,19 +161,38 @@ const AllFields = React.createClass({
       return(
         <button type="submit" className="btn btn-primary">Submit</button>
       )
+    }else{
+      return(
+        <div>
+          <div><br/><br/></div>
+          <div>
+            <button className="btn btn-success btn-block" type="submit" onClick={this.submit} disabled={this.disabled()}>
+              <span>Next: Test This Request 
+                <ChevronRight inline={true} fill={colors.success}/>
+              </span>
+            </button>
+          </div>
+        </div>
+      )
     }
   },
   renderLink(){
     return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : '<div/>';
   },
-  submit(){
+  submit(e){
+    e.preventDefault();
     router.transitionTo('checkCreateStep2');
     // this.props.stepSubmit(this.getCleanedData());
+  },
+  disabled(){
+    //TODO validate header form as well
+    // return !(this.state.info.isValid() && this.state.headers.isValid());
+    return !this.state.info.isValid();
   },
   innerRender(){
     const nonFieldErrors = this.state.info.nonFieldErrors();
     return (
-      <form ref="form" onSubmit={this.onSubmit}>
+      <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
           {this.state.info.render()}
           {this.renderHeaderForm()}
           {this.renderSubmitButton()}
@@ -195,13 +222,6 @@ const AllFields = React.createClass({
             </div>
           </div>
         </div>
-        <BottomButtonNav>
-          <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
-              <span>Next: Test This Request 
-                <ChevronRight inline={true} fill={colors.success}/>
-              </span>
-            </button>
-          </BottomButtonNav>
       </div>
     )
   },

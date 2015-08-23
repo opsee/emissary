@@ -46,19 +46,19 @@ const InfoForm = forms.Form.extend({
       placeholder:'My Service 404 Check'
     }
   }),
-  message: forms.CharField({
-    widgetAttrs:{
-      placeholder:'It all crashed.'
-    }
-  }),
+  // message: forms.CharField({
+  //   widgetAttrs:{
+  //     placeholder:'It all crashed.'
+  //   }
+  // }),
   validation:'auto',
-  interval: forms.ChoiceField({choices:intervalOptions}),
+  // interval: forms.ChoiceField({choices:intervalOptions}),
   clean() {
   },
   render() {
     return(
       <div>
-        <h2>Check Name &amp; Message</h2>
+        <h2>Check Name</h2>
         {this.boundFields().map(bf => {
           return <OpseeBoundField bf={bf}/>
         })}

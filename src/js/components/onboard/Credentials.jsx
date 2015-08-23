@@ -80,7 +80,7 @@ const Credentials = React.createClass({
                <div><br/></div>
                <OpseeBoundField bf={this.state.info.boundField('access-key')}/>
                <OpseeBoundField bf={this.state.info.boundField('secret-key')}/>
-               <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
+               <button type="submit" className="btn btn-raised btn-success btn-block" disabled={this.disabled()}>
                   <span>Next</span>
                 </button>
               </form>

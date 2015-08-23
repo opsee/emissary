@@ -145,8 +145,8 @@ var Check = Record({
   group:null,
   headers:List(),
   assertions:List(),
-  interval:null,
-  message:null,
+  // interval:null,
+  // message:null,
   notifications:List(),
   instances:List()
 })
