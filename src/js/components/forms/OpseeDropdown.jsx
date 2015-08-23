@@ -6,15 +6,15 @@ import _ from 'lodash';
 
 export default React.createClass({
   getInitialState(){
-    let label = this.props.bf.value();
+    let label = _.clone(this.props.bf.value());
     if(label){
       label = this.getLabelFromChoice(label);
     }else{
-      label = this.props.bf.label;
+      label = _.clone(this.props.bf.label);
     }
     return _.extend(this.props, {
       label:label
-    });
+    })
   },
   getLabelFromChoice(key){
     let bf = this.state && this.state.bf || this.props.bf;
@@ -39,9 +39,9 @@ export default React.createClass({
     return(
       <DropdownButton title={this.state.label} key={this.props.bf.idForLabel()}>
       {
-        this.props.bf.field._choices.map(choice => {
+        this.props.bf.field._choices.map((choice, i) => {
           return (
-            <MenuItem eventKey={choice[0]} onSelect={this.onSelect}>{choice[1]}</MenuItem>
+            <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]} onSelect={this.onSelect}>{choice[1]}</MenuItem>
           )
         })
       }

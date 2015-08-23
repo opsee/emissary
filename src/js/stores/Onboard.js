@@ -18,7 +18,7 @@ let _teamData = {
 }
 
 let _installData = {
-  regions:['us-west-1', 'us-east-1'],
+  regions:[],//['us-west-1', 'us-east-1'],
   'access-key':null,
   'secret-key':null,
   vpcs:[]
@@ -69,7 +69,6 @@ const Store = Flux.createStore(
       _teamData = _.extend(_teamData, payload.data);
       break;
       case 'ONBOARD_SET_REGIONS':
-      console.log(payload.data);
       _installData.regions = payload.data;
       break;
       case 'ONBOARD_SET_CREDENTIALS':
@@ -77,6 +76,8 @@ const Store = Flux.createStore(
       break;
       case 'ONBOARD_VPC_SCAN_SUCCESS':
       _availableVpcs = payload.data;
+      break;
+      case 'ONBOARD_VPC_SCAN_ERROR':
       break;
       case 'ONBOARD_SET_VPCS':
       _installData = _.extend(_installData, payload.data);

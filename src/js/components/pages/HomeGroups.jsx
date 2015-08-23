@@ -26,16 +26,22 @@ export default React.createClass({
     return getState();
   },
   render() {
-    return (
-      <ul className="list-unstyled">
-        {this.state.groups.map((group, i) => {
-          return (
-            <li key={i}>
-              <GroupItem item={group}/>
-            </li>
-            )
-        })}
-      </ul>
-    );
+    if(this.state.groups.size){
+      return (
+        <ul className="list-unstyled">
+          {this.state.groups.map((group, i) => {
+            return (
+              <li key={i}>
+                <GroupItem item={group}/>
+              </li>
+              )
+          })}
+        </ul>
+      );
+    }else{
+      return (
+        <div>No Groups found.</div>
+      )
+    }
   }
 });

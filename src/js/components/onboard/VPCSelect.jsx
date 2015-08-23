@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Toolbar from '../global/Toolbar.jsx';
+import Alert from '../global/Alert.jsx';
 import OnboardStore from '../../stores/Onboard';
 import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
@@ -74,7 +75,9 @@ const Team = React.createClass({
         },
       })
     }
-    return obj;
+    return _.extend(obj, {
+      status:'pending'
+    });
   },
   componentWillMount(){
     OnboardActions.onboardVpcScan(OnboardStore.getInstallData());
@@ -104,7 +107,7 @@ const Team = React.createClass({
           Looking for VPCs...
         </div>
       )
-    }else{
+    }else if(this.state.status == 'success'){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPCs you&rsquo;d like to install bastions in.</p>
@@ -113,6 +116,12 @@ const Team = React.createClass({
           <div><br/></div>
           <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>Install</button>
         </div>
+      )
+    }else{
+      return (
+        <Alert type="danger">
+          {this.state.status.body.error}
+        </Alert>
       )
     }
   },

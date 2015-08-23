@@ -10,10 +10,7 @@ export default React.createClass({
   mixins: [UserStore.mixin],
   storeDidChange(){
     const status = UserStore.getUserSendResetEmailStatus();
-    this.setState({status})
-    if(status == 'success'){
-      // router.transitionTo('onboardThanks');
-    }
+    this.setState({status});
   },
   getInitialState(){
     return {
@@ -28,9 +25,6 @@ export default React.createClass({
   },
   submit(e){
     e.preventDefault();
-    this.setState({
-      submitting:true
-    });
     UserActions.userSendResetEmail(this.state.data);
   },
   disabled(){
@@ -39,21 +33,33 @@ export default React.createClass({
   btnText(){
     return this.state.status == 'pending' ? 'Sending...' : 'Send Reset Email';
   },
+  innerRender(){
+    if(this.state.status == 'success'){
+      return (
+        <p>Success. Check your email.</p>
+      )
+    }else{
+      return (
+      <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+        <p>Fill in your email and NEW password and you will be emailed for verification.</p>
+        <UserInputs include={['email', 'password']}  onChange={this.updateUserData} email={this.state.data.email}/>
+        <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
+          <span>
+            {this.btnText()}
+          </span>
+        </button>
+      </form>
+      );
+    }
+  },
   render() {
     return (
        <div>
-        <Toolbar title="Send Reset Email"/>
+        <Toolbar title="Change Your Password"/>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={['email']}  onChange={this.updateUserData} email={this.state.data.email}/>
-                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>
-                    {this.btnText()}
-                  </span>
-                </button>
-              </form>
+              {this.innerRender()}
             </div>
           </div>
         </div>

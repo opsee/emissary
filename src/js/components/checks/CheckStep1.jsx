@@ -60,9 +60,9 @@ const InfoForm = forms.Form.extend({
             return true;
           }
           return false;
-        }).map(bf => {
+        }).map((bf, i) => {
           return (
-            <OpseeBoundField bf={bf}/>
+            <OpseeBoundField bf={bf} key={i}/>
           );
         })
       }
@@ -106,7 +106,7 @@ const AllFields = React.createClass({
         <h2>Request Headers</h2>
         {this.state.headers.forms().map((form, index) => {
           return (
-            <div>
+            <div key={`header-form-${i}`}>
               <div className="row">
                 <div className="col-xs-12">
                   <h3>Header {index+1}</h3>
@@ -116,9 +116,9 @@ const AllFields = React.createClass({
                 <div className="row flex-1">
                   <div className="container-fluid">
                     <div className="row">
-                      {form.boundFields().map(bf => {
+                      {form.boundFields().map((bf, i) => {
                         return(
-                          <div className="col-xs-12 col-sm-6">
+                          <div className="col-xs-12 col-sm-6" key={`header-field-${index}-${i}`}>
                             <OpseeBoundField bf={bf}/>
                           </div>
                         )

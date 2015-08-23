@@ -50,9 +50,12 @@ const Store = Flux.createStore(
   }, function(payload){
     switch(payload.actionType) {
       case 'USER_LOGIN_SUCCESS':
-        // statics.setUser(payload.data);
-        // GlobalActions.globalSocketAuth();
-        UserActions.userGetProfile(payload.data);
+        if(payload.data && payload.data.token){
+          statics.setUser(payload.data);
+          GlobalActions.globalSocketStart();
+        }else{
+          UserActions.userGetProfile(payload.data);
+        }
       break;
       case 'USER_LOG_OUT':
         statics.logout();

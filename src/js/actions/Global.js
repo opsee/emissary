@@ -3,17 +3,22 @@ import Flux from '../Flux';
 import request from '../request';
 import UserStore from '../stores/User';
 import _ from 'lodash';
-import socket from '../socket';
+import Socket from '../socket';
 
 let _actions = {};
+let socket;
 
 _actions.globalModalMessage = Flux.statics.addAction('globalModalMessage');
 
 _actions.globalModalMessage = Flux.statics.addAction('globalModalMessageConsume');
 
+_actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', function(){
+  socket = Socket();
+});
+
 _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
   const auth = UserStore.getAuth();
-  if(auth){
+  if(auth && socket){
     const authCmd = JSON.stringify({
       command:'authenticate',
       attributes:{

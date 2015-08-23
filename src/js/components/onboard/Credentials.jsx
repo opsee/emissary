@@ -27,7 +27,7 @@ const InfoForm = forms.Form.extend({
   }),
 });
 
-const Team = React.createClass({
+const Credentials = React.createClass({
   mixins: [OnboardStore.mixin],
   storeDidChange(){
     const data = OnboardStore.getInstallData();
@@ -92,4 +92,4 @@ const Team = React.createClass({
   }
 });
 
-export default Team;
+export default Credentials;

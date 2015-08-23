@@ -26,7 +26,8 @@ export default React.createClass({
     return getState();
   },
   render() {
-    return (
+    if(this.state.instances.size){
+      return (
       <ul className="list-unstyled">
         {this.state.instances.map((instance, i) => {
           return (
@@ -37,5 +38,10 @@ export default React.createClass({
         })}
       </ul>
     );
+    }else{
+      return (
+        <div>No Instances found.</div>
+      )
+    }
   }
 });

@@ -30,6 +30,10 @@ const InfoForm = forms.Form.extend({
 const Team = React.createClass({
   mixins: [State, OnboardStore.mixin],
   storeDidChange(){
+    const data = OnboardStore.getInstallData();
+    if(data && data.regions && data.regions.length){
+      router.transitionTo('onboardCredentials'); 
+    }
   },
   getInitialState() {
     var self = this;
@@ -57,7 +61,6 @@ const Team = React.createClass({
   submit(e){
     e.preventDefault();
     OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
-    router.transitionTo('onboardCredentials');
   },
   disabled(){
     return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;

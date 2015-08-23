@@ -58,7 +58,7 @@ const statics = {
     _instance = statics.instanceFromJS(data);
   },
   getInstancesSuccess(data){
-    _instances = Immutable.fromJS(data.map(statics.instanceFromJS));
+    _instances = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
   },
   instanceFromJS(data){
     //just getting some id's back from server at the moment

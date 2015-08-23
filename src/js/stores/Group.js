@@ -55,7 +55,7 @@ const Store = Flux.createStore(
   }, function(payload){
     switch(payload.actionType) {
       case 'GET_GROUPS_SUCCESS':
-        _groups = Immutable.fromJS(payload.data.map(statics.groupFromJS));
+        _groups = payload.data && payload.data.length ? Immutable.fromJS(payload.data.map(statics.groupFromJS)) : [];
       break;
       case 'GET_GROUP_SUCCESS':
         _group = statics.groupFromJS(payload.data)
