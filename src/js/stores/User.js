@@ -3,6 +3,8 @@ import Flux from '../Flux';
 import storage from '../storage';
 import Immutable, {Record, List, Map} from 'immutable';
 import _ from 'lodash';
+import GlobalActions from '../actions/Global';
+import UserActions from '../actions/User';
 
 var User = Record({
   name:'cliff',
@@ -48,7 +50,9 @@ const Store = Flux.createStore(
   }, function(payload){
     switch(payload.actionType) {
       case 'USER_LOGIN_SUCCESS':
-        statics.setUser(payload.data);
+        // statics.setUser(payload.data);
+        // GlobalActions.globalSocketAuth();
+        UserActions.userGetProfile(payload.data);
       break;
       case 'USER_LOG_OUT':
         statics.logout();

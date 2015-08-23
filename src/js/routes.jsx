@@ -42,6 +42,7 @@ import OnboardVPCSelect from './components/onboard/VPCSelect.jsx';
 import OnboardInstall from './components/onboard/Install.jsx';
 
 import AdminSignups from './components/admin/Signups.jsx';
+import AdminSocket from './components/admin/Socket.jsx';
 
 import NotFound from './components/pages/NotFound.jsx';
 
@@ -86,6 +87,7 @@ const routes = (
     <Route path="/start/install" name="onboardInstall" handler={OnboardInstall}/>
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
+    <Route path="/admin/socket" name="adminSocket" handler={AdminSocket}/>
     <Route path="/system-status" name="systemStatus" handler={More}/>
 
     <Route path="/profile" name="profile" handler={Profile}/>

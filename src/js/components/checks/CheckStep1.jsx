@@ -1,6 +1,6 @@
 import React from 'react';
 import Actions from '../../actions/Check';
-import RouterActions from '../../actions/Router';
+import router from '../../router.jsx';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
@@ -159,7 +159,7 @@ const AllFields = React.createClass({
     return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : '<div/>';
   },
   submit(){
-    RouterActions.transition('checkCreateStep2');
+    router.transitionTo('checkCreateStep2');
     // this.props.stepSubmit(this.getCleanedData());
   },
   innerRender(){

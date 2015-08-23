@@ -28,10 +28,10 @@ export default React.createClass({
   render() {
     return (
       <ul className="list-unstyled">
-        {this.state.instances.map(i => {
+        {this.state.instances.map((instance, i) => {
           return (
-            <li>
-              <InstanceItem item={i}/>
+            <li key={i}>
+              <InstanceItem item={instance}/>
             </li>
             )
         })}

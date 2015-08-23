@@ -33,7 +33,10 @@ export default React.createClass({
     this.setState({
       submitting:true
     });
-    Actions.userLogin(this.state.data);
+    Actions.userLogin({
+      username:this.state.data.email,
+      password:this.state.data.password
+    });
   },
   disabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);

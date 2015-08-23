@@ -1,6 +1,6 @@
 import React from 'react';
 import Actions from '../../actions/Check';
-import RouterActions from '../../actions/Router';
+import router from '../../router.jsx';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
@@ -156,7 +156,7 @@ const AllFields = React.createClass({
     }
   },
   submit(){
-    RouterActions.transition('checkCreateStep3');
+    router.transitionTo('checkCreateStep3');
     // this.props.stepSubmit(this.getCleanedData());
   },
   innerRender() {

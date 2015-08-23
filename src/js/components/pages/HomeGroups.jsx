@@ -28,10 +28,10 @@ export default React.createClass({
   render() {
     return (
       <ul className="list-unstyled">
-        {this.state.groups.map(i => {
+        {this.state.groups.map((group, i) => {
           return (
-            <li>
-              <GroupItem item={i}/>
+            <li key={i}>
+              <GroupItem item={group}/>
             </li>
             )
         })}

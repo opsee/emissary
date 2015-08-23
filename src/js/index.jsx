@@ -2,6 +2,7 @@ import React from 'react';
 import router from './router.jsx';
 import client from 'swagger-client';
 import _ from 'lodash';
+import GlobalActions from './actions/Global';
 
 window._ = _;
 

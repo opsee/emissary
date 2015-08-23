@@ -1,22 +1,26 @@
 import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
-import Store from '../../stores/Global';
+import GlobalStore from '../../stores/Global';
+import GlobalActions from '../../actions/Global';
 
 function getState(){
   return {
-    msg:Store.getModalMessage(),
+    msg:GlobalStore.getModalMessage(),
     showModal:false
   }
 }
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [GlobalStore.mixin],
   storeDidChange() {
     var obj = getState();
-    this.setState({
-      msg:obj.msg,
-      showModal:true
-    })
+    if(obj && obj.msg){
+      this.setState({
+        msg:obj.msg,
+        showModal:true
+      });
+      GlobalActions.globalModalMessageConsume();
+    }
   },
   getInitialState:getState,
   close(){
