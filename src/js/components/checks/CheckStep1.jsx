@@ -1,14 +1,17 @@
 import React from 'react';
-import Actions from '../../actions/Check';
-import router from '../../router.jsx';
-import Link from 'react-router/lib/components/Link';
-import forms from 'newforms';
 import _ from 'lodash';
+import router from '../../router.jsx';
+import forms from 'newforms';
+import colors from 'seedling/colors';
+import {Grid, Row, Col, Button} from 'react-bootstrap/lib';
+
+import Actions from '../../actions/Check';
+
+import Link from 'react-router/lib/components/Link';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import Toolbar from '../global/Toolbar.jsx';
 import {Close, ChevronRight} from '../icons/Module.jsx';
-import colors from 'seedling/colors';
 
 const groupOptions = [
   ['group-1','Group 1'],
@@ -115,24 +118,24 @@ const AllFields = React.createClass({
         {this.state.headers.forms().map((form, index) => {
           return (
             <div key={`header-form-${index}`}>
-              <div className="row">
-                <div className="col-xs-12">
+              <Row>
+                <Col xs={12}>
                   <h3>Header {index+1}</h3>
-                </div>
-              </div>
+                </Col>
+              </Row>
               <div className="display-flex">
                 <div className="row flex-1">
-                  <div className="container-fluid">
-                    <div className="row">
-                      {form.boundFields().map((bf, i) => {
-                        return(
-                          <div className="col-xs-12 col-sm-6" key={`header-field-${index}-${i}`}>
-                            <OpseeBoundField bf={bf}/>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
+                <Grid fluid={true}>
+                  <Row>
+                    {form.boundFields().map((bf, i) => {
+                      return(
+                        <Col xs={12} sm={6} key={`header-field-${index}-${i}`}>
+                          <OpseeBoundField bf={bf}/>
+                        </Col>
+                      )
+                    })}
+                    </Row>
+                  </Grid>
                 </div>
                 <div className="padding-lr">
                   <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
@@ -144,7 +147,9 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button type="button" className="btn btn-info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header</button>
+        <Button bsStyle="info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
+            Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+        </Button>
       </div>
     )
   },
@@ -159,18 +164,20 @@ const AllFields = React.createClass({
   renderSubmitButton(){
     if(this.props.standalone){
       return(
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+          Submit
+        </Button>
       )
     }else{
       return(
         <div>
           <div><br/><br/></div>
           <div>
-            <button className="btn btn-success btn-block" type="submit" onClick={this.submit} disabled={this.disabled()}>
-              <span>Next: Test This Request 
-                <ChevronRight inline={true} fill={colors.success}/>
-              </span>
-            </button>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+                <span>Next: Test This Request 
+                  <ChevronRight inline={true} fill={colors.success}/>
+                </span>
+            </Button>
           </div>
         </div>
       )
@@ -208,20 +215,18 @@ const AllFields = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <div className="bg-body" style={{position:"relative"}}>
-          <Toolbar btnPosition="midRight" title="Create Check Step 1">
-            <Link to="checks" className="btn btn-icon btn-flat">
-              <Close btn={true}/>
-            </Link>
-          </Toolbar>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              {this.innerRender()}
-              </div>
-            </div>
-          </div>
-        </div>
+        <Toolbar btnPosition="midRight" title="Create Check Step 1">
+          <Link to="checks" className="btn btn-icon btn-flat">
+            <Close btn={true}/>
+          </Link>
+        </Toolbar>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
+                {this.innerRender()}
+            </Col>
+          </Row>
+        </Grid>
       </div>
     )
   },
