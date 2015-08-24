@@ -10,13 +10,14 @@ import _ from 'lodash';
 
 function getState(){
   return {
-    check:Store.newCheck().toJS()
+    check:Store.newCheck().toJS(),
+    statuses:{
+      step1:null,
+      step2:null,
+      step3:null
+    }
   }
 }
-
-let checkStep1Data = {}
-let checkStep2Data = {}
-let checkStep3Data = {}
 
 export default React.createClass({
   mixins: [Store.mixin],
@@ -29,6 +30,9 @@ export default React.createClass({
   },
   stepSubmit(data){
     console.log('step submit', data);
+  },
+  setStatus(obj){
+    this.setState(_.extend(this.state.statuses, obj));
   },
   updateData(data){
     let obj = _.assign(this.state.check, data);
@@ -45,7 +49,7 @@ export default React.createClass({
       {
         //<pre>{JSON.stringify(this.state.check, null, ' ')}</pre>
       }
-        <RouteHandler {...this.state}  onChange={this.updateData} onSubmit={this.submit}/>
+        <RouteHandler {...this.state}  onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus}/>
       </div>
     );
   }

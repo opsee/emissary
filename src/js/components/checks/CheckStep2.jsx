@@ -160,6 +160,9 @@ const AllFields = React.createClass({
   },
   submit(){
     router.transitionTo('checkCreateStep3');
+    this.props.setStatus({
+      step2:'complete'
+    });
     // this.props.stepSubmit(this.getCleanedData());
   },
   innerRender() {

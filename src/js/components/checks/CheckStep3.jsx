@@ -75,16 +75,15 @@ const AllFields = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      info: new InfoForm({
+      info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        data:this.props.check
-      }),
+      }, self.dataComplete() ? {data:this.props.check} : null)),
       notifications: new NotificationFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.notifications,
-        extra:0
+        extra:1
       }),
     }
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -95,14 +94,17 @@ const AllFields = React.createClass({
     },10);
     return obj;
   },
+  dataComplete(){
+    return _.chain(['name']).map(s => this.props.check[s]).every().value();
+  },
   changeAndUpdate(){
     this.props.onChange(this.getCleanedData())
-    this.forceUpdate();
+    // this.forceUpdate();
   },
   renderNotificationForm(){
     return(
       <div>
-        <h2>Request Notifications</h2>
+        <h2>Notifications</h2>
         {this.state.notifications.forms().map((form, index) => {
           return (
             <div>
@@ -206,6 +208,9 @@ const AllFields = React.createClass({
     this.state.notifications.validate(this.refs.notifications)
     this.forceUpdate();
     this.props.onSubmit();
+    this.props.setStatus({
+      step3:'complete'
+    });
   }
 })
 

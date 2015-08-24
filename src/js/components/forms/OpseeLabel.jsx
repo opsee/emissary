@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 export default React.createClass({
+  propTypes:{
+    bf:React.PropTypes.object.isRequired
+  },
   errors(){
     const errors = this.props.bf && this.props.bf.errors().messages().map((message, i) => {
       return(
@@ -9,7 +12,7 @@ export default React.createClass({
         </div>
       )
     });
-    if(!errors || !this.props.label){
+    if(!errors || !this.props.bf.label){
       return(
         <div>
           Bad input params.
@@ -21,8 +24,8 @@ export default React.createClass({
   },
   render(){
     return(
-      <label htmlFor={this.props.id}>
-        <span className="form-label">{this.props.label}</span>
+      <label htmlFor={this.props.bf.idForLabel()}>
+        <span className="form-label">{this.props.bf.label}</span>
         <span className="form-message">
           {this.errors()}
         </span>

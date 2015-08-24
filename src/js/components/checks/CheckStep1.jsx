@@ -74,15 +74,21 @@ const InfoForm = forms.Form.extend({
   }
 })
 
+function step1DataComplete(){
+  return 
+}
+
 const AllFields = React.createClass({
   getInitialState() {
     const self = this;
+    console.log();
     const obj = {
-      info: new InfoForm({
+      info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        data:this.props.check
-      }),
+        // data:self.props.check,
+        // errors:forms.ErrorObject.fromJSON({})
+      }, self.dataComplete() ? {data:self.props.check} : null)),
       headers: new HeaderFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
@@ -105,6 +111,9 @@ const AllFields = React.createClass({
     return _.extend(obj, {
       cleanedData:null
     });
+  },
+  dataComplete(){
+    return _.chain(['group', 'port', 'method', 'path']).map(s => this.props.check[s]).every().value();
   },
   changeAndUpdate(){
     this.props.onChange(this.getCleanedData());
@@ -189,12 +198,14 @@ const AllFields = React.createClass({
   submit(e){
     e.preventDefault();
     router.transitionTo('checkCreateStep2');
-    // this.props.stepSubmit(this.getCleanedData());
+    this.props.setStatus({
+      step1:'complete'
+    });
   },
   disabled(){
     //TODO validate header form as well
     // return !(this.state.info.isValid() && this.state.headers.isValid());
-    return !this.state.info.isValid();
+    return !this.state.info.isComplete();
   },
   innerRender(){
     const nonFieldErrors = this.state.info.nonFieldErrors();
