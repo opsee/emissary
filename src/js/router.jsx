@@ -3,7 +3,7 @@ import Router from 'react-router';
 
 var router = Router.create({
   routes: routes,
-  // location: Router.HistoryLocation
+  location: Router.HistoryLocation
 });
 
 export default {  
