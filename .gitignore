@@ -6,3 +6,4 @@
 *.sublime-workspace
 *.log
 /temp/
+Gemfile.lock
