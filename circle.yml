@@ -3,8 +3,7 @@ dependencies:
     - npm install -g gulp
     - npm install
     - bundle install
-    - bundle exec gulp prod
-    - gulp docker
+    - bundle exec gulp docker
     - docker info
 machine:
   services:
