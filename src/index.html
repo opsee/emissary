@@ -10,6 +10,11 @@
   <div id="main">
     <!-- Flux goes here -->
   </div>
+  <!-- @if ENV='prod' -->
+  <script src="/js/index.min.js"></script>
+  <!-- @endif -->
+  <!-- @if NODE_ENV!='prod' -->
   <script src="/js/index.js"></script>
+  <!-- @endif -->
 </body>
 </html>

@@ -1,2 +1,2 @@
 var gulp = require('gulp');
-gulp.task('prod', ['uglify', 'html', 'styles', 'buildImg']);
+gulp.task('prod', ['uglify', 'htmlProd', 'styles', 'buildImg']);

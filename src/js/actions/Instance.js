@@ -7,7 +7,6 @@ import _ from 'lodash';
 
 var getInstances = Flux.statics.addAsyncAction('getInstances',
   () => {
-    console.log(constants);
     return request
     .get(`${config.api}/instances`)
     .set('Authorization', UserStore.getAuth())
