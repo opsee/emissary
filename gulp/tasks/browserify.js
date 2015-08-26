@@ -6,15 +6,22 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var connect = require('gulp-connect');
 var config = require('../config').browserify;
+var transform = require('vinyl-transform');
 
 watchify.args.debug = config.debug;
 var bundler = watchify(browserify(config.src, watchify.args), {poll:true});
-config.settings.transform.forEach(function(t) {
+config.transform.forEach(function(t) {
   bundler.transform(t);
 });
 
-gulp.task('browserify', bundle);
+gulp.task('browserifyWatch', bundle);
 bundler.on('update', bundle);
+
+gulp.task('browserify', function(){
+  return browserify(config.src, config).bundle()
+  .pipe(source('index.js'))
+  .pipe(gulp.dest(config.dest))
+});
 
 function bundle() {
   return bundler.bundle()

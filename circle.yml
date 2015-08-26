@@ -3,7 +3,8 @@ dependencies:
     - npm install -g gulp
     - npm install
     - bundle install
-    - bundle exec gulp docker
+    - bundle exec gulp prod
+    - gulp docker
     - docker info
 machine:
   services:
@@ -13,7 +14,7 @@ machine:
 #    - url: https://hooks.slack.com/services/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
 test:
   override:
-    - docker run -d -p 9000:80 quay.io/opsee/emissary; sleep 10
+    - docker run -d -p 9000:80 quay.io/opsee/emissary; sleep 10;
     - curl http://localhost:9000/
 deployment:
   hub:
