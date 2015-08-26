@@ -1,4 +1,4 @@
-import constants from '../constants';
+import config from '../config';
 import Flux from '../Flux';
 import request from '../request';
 import _ from 'lodash';
@@ -9,7 +9,7 @@ let _actions = {};
 _actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
   (data) => {
     return request
-    .post(`${constants.api}/signups`)
+    .post(`${config.api}/signups`)
     .send(data)
   },
   res => res && res.body,
@@ -19,7 +19,7 @@ _actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate'
 _actions.onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
   (data) => {
     return request
-    .post(`${constants.api}/activations/${data.token}/activate`)
+    .post(`${config.api}/activations/${data.token}/activate`)
     .send(data)
   },
   res => res && res.body,
@@ -29,7 +29,7 @@ _actions.onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
 _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability',
   (subdomain, date) => {
     return request
-    .get(`${constants.api}/orgs/subdomain/${subdomain}`)
+    .get(`${config.api}/orgs/subdomain/${subdomain}`)
     .set('Authorization', UserStore.getAuth())
     .send({date:date})
   },
@@ -47,7 +47,7 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
 _actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
   (data) => {
     return request
-    .post(`${constants.api}/orgs`)
+    .post(`${config.api}/orgs`)
     .set('Authorization', UserStore.getAuth())
     .send(data)
   },
@@ -64,7 +64,7 @@ _actions.onboardSetCredentials = Flux.statics.addAction('onboardSetCredentials')
 _actions.onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
   (data) => {
     return request
-    .post(`${constants.api}/scan-vpcs`)
+    .post(`${config.api}/scan-vpcs`)
     .set('Authorization', UserStore.getAuth())
     .send(data)
   },
@@ -77,7 +77,7 @@ _actions.onboardSetVpcs = Flux.statics.addAction('onboardSetVpcs');
 _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
   (data) => {
     return request
-    .post(`${constants.api}/bastions/launch`)
+    .post(`${config.api}/bastions/launch`)
     .send(data)
   },
   res => res && res.body,

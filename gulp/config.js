@@ -50,6 +50,7 @@ module.exports = {
   },
   browserify: {
     transform: ['babelify', 'reactify'],
+    paths: ['./src/js/', './node_modules'],
     src: src + '/js/index.jsx',
     dest: dest + '/js',
     outputName: 'index.js',

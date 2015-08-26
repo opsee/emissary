@@ -1,3 +1,5 @@
 export default {
-  apiDelay:4000
+  api:'http://api-beta.opsee.co',
+  apiDelay:0,
+  auth0:'https://opsee.auth0.com'
 }

@@ -1,5 +1,5 @@
 import McFly from 'mcfly';
-import constants from './constants';
+import config from './config';
 import assign from 'object-assign';
 import _ from 'lodash';
 
@@ -39,7 +39,7 @@ Flux.statics = {
         requestFn.call(null, ...args)
         .then(Flux.actions[`${baseName}Success`])
         .catch(Flux.actions[`${baseName}Error`]);
-      }, constants.apiDelay);
+      }, config.apiDelay);
       return {
         actionType:`${upperName}_PENDING`,
         data:args[0]

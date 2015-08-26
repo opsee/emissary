@@ -1,4 +1,4 @@
-import constants from '../constants';
+import config from '../config';
 import Flux from '../Flux';
 import storage from '../storage';
 import Immutable, {Record, List, Map} from 'immutable';

@@ -1,4 +1,4 @@
-import constants from '../constants';
+import config from '../config';
 import Flux from '../Flux';
 import request from '../request';
 import _ from 'lodash';
@@ -9,7 +9,7 @@ let _actions = {};
 _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
   (data) => {
     return request
-    .post(`${constants.api}/authenticate/password`)
+    .post(`${config.api}/authenticate/password`)
     .send({email:data.username, password:data.password})
   },
   res => res.body && res.body,
@@ -34,7 +34,7 @@ _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
 _actions.userGetProfile = Flux.statics.addAsyncAction('userGetProfile',
   (data) => {
     return request
-    .get(`${constants.auth0}/userinfo`)
+    .get(`${config.auth0}/userinfo`)
     .set('Authorization', `Bearer ${data.access_token}`)
   },
   res => res.body && res.body,
@@ -44,7 +44,7 @@ _actions.userGetProfile = Flux.statics.addAsyncAction('userGetProfile',
 _actions.userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   (data) => {
     return request
-    .post(`${constants.auth0}/dbconnections/change_password`)
+    .post(`${config.auth0}/dbconnections/change_password`)
     .send(_.extend(data, {
       connection:'Username-Password-Authentication'
     }))
