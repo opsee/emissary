@@ -5,7 +5,6 @@ import TabPane from 'react-bootstrap/lib/TabPane';
 import Toolbar from '../global/Toolbar.jsx';
 import Loader from '../global/Loader.jsx';
 import CheckItem from '../checks/CheckItem.jsx';
-const classNames = require('classnames');
 import _ from 'lodash';
 
 import Store from '../../stores/Check';
