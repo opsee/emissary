@@ -52,6 +52,9 @@
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  svg{
+    fill:$text-color-secondary;
+  }
   &:hover, &:active, &:focus {
     color: $text-color;
     background-color: transparent !important;

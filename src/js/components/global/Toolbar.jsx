@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import Radium from 'radium';
 import colors from 'seedling/colors';
-
+import DocumentTitle from 'react-document-title';
 
 var outer = {
   backgroundColor:colors.gray900,
@@ -37,10 +37,19 @@ var btnPositions = {
 
 
 var Toolbar = React.createClass({
+  propTypes:{
+    title:PropTypes.string.isRequired
+  },
+  outputTitle(){
+    return (
+      <DocumentTitle title={this.props.documentTitle || this.props.title}/>
+    );
+  },
   render(){
     var childStyle = this.props.btnPosition ? btnPositions[this.props.btnPosition] : btnPositions.default;
     return(
       <div style={outer}>
+        {this.outputTitle()}
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1" style={inner}>

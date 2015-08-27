@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Opsee</title>
-  <link rel="stylesheet" href="/styles/style.css">
-  <link rel="stylesheet" type="text/css" href="//cloud.typography.com/6076032/646208/css/fonts.css" />
-</head>
-<body>
-  <div id="main">
-    <!-- Flux goes here -->
-  </div>
-  <!-- @if ENV='prod' -->
-  <script src="/js/index.min.js"></script>
-  <!-- @endif -->
-  <!-- @if NODE_ENV!='prod' -->
-  <script src="/js/index.js"></script>
-  <!-- @endif -->
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Opsee</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" type="text/css" href="//cloud.typography.com/6076032/646208/css/fonts.css" />
+    <link rel="shortcut icon" href="/img/favicon.ico">
+  </head>
+  <body>
+    <div id="main"></div>
+    <!-- @if ENV='prod' -->
+    <script src="/js/index.min.js"></script>
+    <!-- @endif -->
+    <!-- @if ENV!='prod' -->
+    <script src="/js/index.js"></script>
+    <!-- @endif -->
+  </body>
 </html>

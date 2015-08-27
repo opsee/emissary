@@ -28,15 +28,18 @@ export default React.createClass({
   render() {
     if(this.state.instances.size){
       return (
-      <ul className="list-unstyled">
-        {this.state.instances.map((instance, i) => {
-          return (
-            <li key={i}>
-              <InstanceItem item={instance}/>
-            </li>
-            )
-        })}
-      </ul>
+        <div>
+        <DocumentTitle title="Home - Instances"/>
+          <ul className="list-unstyled">
+            {this.state.instances.map((instance, i) => {
+              return (
+                <li key={i}>
+                  <InstanceItem item={instance}/>
+                </li>
+                )
+            })}
+          </ul>
+        </div>
     );
     }else{
       return (

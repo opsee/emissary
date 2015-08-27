@@ -4,6 +4,7 @@ import Header from './global/Header.jsx';
 import MessageModal from './global/MessageModal.jsx';
 import Actions from '../actions/Global';
 const RouteHandler = Router.RouteHandler;
+import DocumentTitle from 'react-document-title';
 
 export default React.createClass({
   componentDidMount(){
@@ -11,6 +12,7 @@ export default React.createClass({
   render() {
     return (
       <div>
+        <DocumentTitle title="Opsee"/>
         <Header/>
         <RouteHandler/>
         <MessageModal/>

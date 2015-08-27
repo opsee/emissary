@@ -6,8 +6,6 @@ const RouteHandler = Router.RouteHandler;
 import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({
-  componentDidMount(){
-  },
   render() {
     return (
       <div>
@@ -34,7 +32,6 @@ export default React.createClass({
             </div>
           </div>
         </div>
-        <RouteHandler {...this.props}/>
       </div>
     );
   }

@@ -10,12 +10,10 @@ module.exports = {
       root: dest,
       host: 'localhost',
       port: 8080,
-      livereload: {
-        port: 35929
-      },
+      livereload: false,
       middleware: function(connect, options){
         const rules = [
-            "!\\.html|\\.js|\\.css|\\.svg|\\.jp(e?)g|\\.png|\\.woff|\\.tiff|\\.gif$ /index.html"
+            "!\\.html|\\.js|\\.css|\\.svg|\\.jp(e?)g|\\.png|\\.woff|\\.tiff|\\.ico|\\.gif$ /index.html"
         ];
         return [rewrite(rules)];
       }
