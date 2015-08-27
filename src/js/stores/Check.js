@@ -175,11 +175,6 @@ const CheckStore = Flux.createStore(
     }
   }, function(payload){
     switch(payload.actionType) {
-      case 'CHECK_SILENCE':
-      setSilence(payload.text);
-      CheckStore.emitChange();
-      break;
-      // add more cases for other actionTypes...
     }
   }
 )

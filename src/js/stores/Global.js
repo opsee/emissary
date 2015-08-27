@@ -43,10 +43,10 @@ const Store = Flux.createStore(
         _modalMessage.used = true;
       break;
       case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
-      console.log(payload.data);
+        console.log(payload.data);
       break;
       case 'GLOBAL_SOCKET_MESSAGE':
-      statics.parseSocketMessage(payload.data);
+        statics.parseSocketMessage(payload.data);
       break;
     }
     _statuses = Flux.statics.statusProcessor(payload, _statuses);

@@ -26,8 +26,8 @@ export default React.createClass({
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar title={`Check ${this.props.check.name || this.props.check.params.id}`}>
-          <Link to="checkEdit" params={{id:this.props.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
+        <Toolbar title={`Check ${this.props.check.name || this.props.check.get('id')}`}>
+          <Link to="checkEdit" params={{id:this.props.check.get('id')}} className="btn btn-primary btn-fab" title="Edit {this.props.check.get('name')}">
         edit1
           </Link>
         </Toolbar>
@@ -37,7 +37,7 @@ export default React.createClass({
               <h2>Check Information</h2>
               <table className="table">
                 <tbody>
-                {this.props.check.meta.map(i => {
+                {this.props.check.get('meta').map(i => {
                   return (
                     <tr>
                       <td><strong>{i.key}</strong></td>
@@ -49,7 +49,7 @@ export default React.createClass({
               </table>
               <h2>Check Instances</h2>
               <ul className="list-unstyled">
-                {this.props.check.instances.map(i => {
+                {this.props.check.get('instances').map(i => {
                   return (
                     <li key={i.get('id')}>
                       <InstanceItem item={i}/>

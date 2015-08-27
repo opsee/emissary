@@ -56,8 +56,8 @@ export default React.createClass({
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar btnleft={true} title={`Edit Check ${this.state.check.name || this.state.check.params.id}`} >
-          <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}">
+        <Toolbar btnleft={true} title={`Edit Check ${this.state.check.name || this.state.check.get('id')}`} >
+          <Link to="check" params={{id:this.state.check.get('id')}} className="btn btn-primary btn-fab" title="Edit {check.name}">
           </Link>
         </Toolbar>
         <div className="container">

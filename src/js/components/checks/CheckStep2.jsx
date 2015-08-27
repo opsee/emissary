@@ -1,7 +1,8 @@
 import React from 'react';
 import Actions from '../../actions/Check';
 import router from '../../router.jsx';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
+import {Grid, Row, Col, Button} from 'react-bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
@@ -13,9 +14,17 @@ import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
 import {Close, ChevronRight} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
+import Highlight from 'react-highlight';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
+
+function relationshipConcernsEmpty(relationship){
+  if(typeof relationship == 'string' && relationship.match('empty|notEmpty')){
+    return true;
+  }
+  return false;
+}
 
 const AssertionsForm = forms.Form.extend({
   type: forms.ChoiceField({choices:assertionTypeOptions}),
@@ -33,7 +42,24 @@ const AssertionsForm = forms.Form.extend({
       placeholder:'operand'
     },
     required:false
-  })
+  }),
+  clean:function(){
+    if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
+      if(!this.cleanedData.operand){
+        throw forms.ValidationError('Assertion must have operand.');
+      }
+    }
+    switch(this.cleanedData.type){
+      case 'statusCode':
+      break;
+      case 'header':
+      if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
+        if(!this.cleanedData.value){
+          throw forms.ValidationError('Header assertion must have a value.');
+        }
+      }
+    }
+  }
 });
 
 const AssertionsFormSet = forms.FormSet.extend({
@@ -48,7 +74,7 @@ const AllFields = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.assertions,
-        extra:1
+        // minNum:1
       }),
       response:this.props.response
     };
@@ -92,6 +118,28 @@ const AllFields = React.createClass({
       }
     }
   },
+  renderRemoveAssertionButton(index){
+    if(index > 0){
+      return (
+        <div className="padding-lr">
+            <button type="button" className="btn btn-icon btn-flat" onClick={this.removeAssertion.bind(null,index)} title="Remove this Assertion">
+              <Close btn={true}/>
+          </button>
+        </div>
+      )
+    }else{
+      return (
+       <div className="padding-lr">
+         <div style={{width:'48px'}}/>
+       </div>
+      )
+    }
+  },
+  removeAssertion(index){
+    if(index > 0){
+      this.state.assertions.removeForm(index);
+    }
+  },
   renderAssertionsForm(){
     return(
       <div>
@@ -100,25 +148,25 @@ const AllFields = React.createClass({
             <div>
               <div className="display-flex">
                 <div className="row flex-1">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-xs-2">
+                  <Grid fluid={true}>
+                    <Row>
+                      <Col xs={2}>
                         <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
-                      </div>
+                      </Col>
                       {form.boundFields().map(bf => {
                         switch(bf.name){
                           case 'type':
                           return(
-                            <div className="col-xs-10 col-sm-4">
+                            <Col xs={10} sm={4}>
                               <OpseeBoundField bf={bf}/>
-                            </div>
+                            </Col>
                           );
                           break;
                           case 'relationship':
                           return(
-                            <div className="col-xs-10 col-xs-offset-2 col-sm-6 col-sm-offset-0">
+                            <Col xs={10} xsOffset={2} sm={6} smOffset={0}>
                               <OpseeBoundField bf={bf}/>
-                            </div>
+                            </Col>
                           );
                           break;
                           case 'operand':
@@ -128,20 +176,16 @@ const AllFields = React.createClass({
                           return this.valueInputNeeded(form, bf);
                         }
                       })}
-                    </div>
-                  </div>
+                    </Row>
+                  </Grid>
                 </div>
-                <div className="padding-lr">
-                    <button type="button" className="btn btn-icon btn-flat" onClick={this.state.assertions.removeForm.bind(this.state.assertions,index)} title="Remove this Assertion">
-                      <Close btn={true}/>
-                  </button>
-                </div>
+                {this.renderRemoveAssertionButton(index)}
               </div>
             </div>
           )
         })
         }
-        <button type="button" className="btn btn-info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Assertion</button>
+        <Button bsStyle="info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Assertion</Button>
       </div>
     )
   },
@@ -154,75 +198,76 @@ const AllFields = React.createClass({
   renderSubmitButton(){
     if(this.props.standalone){
       return(
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+          Submit
+        </Button>
+      )
+    }else{
+      return(
+        <div>
+          <div><br/><br/></div>
+          <div>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+                <span>Next: Test This Request 
+                  <ChevronRight inline={true} fill={colors.success}/>
+                </span>
+            </Button>
+          </div>
+        </div>
       )
     }
   },
+  disabled(){
+    //TODO validate header form as well
+    // return !(this.state.info.isValid() && this.state.headers.isValid());
+    return !_.chain(this.state.assertions.forms()).map(a => a.isComplete()).every().value();
+    return !this.state.assertions.isValid();
+  },
   submit(){
     router.transitionTo('checkCreateStep3');
-    this.props.setStatus({
-      step2:'complete'
-    });
-    // this.props.stepSubmit(this.getCleanedData());
   },
   innerRender() {
     return (
-      <form ref="form" onSubmit={this.onSubmit}>
+      <form ref="form" onSubmit={this.submit}>
         <h2>Add Assertions</h2>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion per check.</p>
         <br />
         {this.renderAssertionsForm()}
-        {this.renderSubmitButton()}
         <div><br/></div>
         <h2>Your Response &amp; Request</h2>
         <p>We are including the content of your response and your request to help you define assertions.</p>
-        <br/>
-            <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
-            {
-              <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
-            }
-            {
-              // <strong>Non field errors: {nonFieldErrors.render()}</strong>
-            }
+        <Highlight className="json">
+          {this.state.response && JSON.stringify(this.state.response.data, null, ' ')}
+        </Highlight>
+        {
+          // <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
+        }
+          {
+            // <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
+          }
+          {
+            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
+          }
+        {this.renderSubmitButton()}
       </form>
     )
   },
   renderAsPage(){
     return (
       <div>
-        <div className="bg-body" style={{position:"relative"}}>
-          <Toolbar btnleft={true} title={`Create Check Step 2`}>
-            {
-              // this.renderLink()
-            }
-          </Toolbar>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Toolbar btnleft={true} title={`Create Check Step 2`}/>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               {this.innerRender()}
-              </div>
-            </div>
-          </div>
-        </div>
-        <BottomButtonNav>
-          <button className="btn btn-flat btn-success" type="button" onClick={this.submit}>
-            <span>Next: Test This Request
-              <ChevronRight inline={true} fill={colors.success}/>
-            </span>
-          </button>
-        </BottomButtonNav>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     )
   },
   render() {
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
-  },
-  onSubmit(e) {
-    e.preventDefault()
-    this.state.info.validate(this.refs.info)
-    this.state.assertions.validate(this.refs.headers)
-    this.forceUpdate();
-    console.log(this.cleanedData());
   }
 })
 

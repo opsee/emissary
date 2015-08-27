@@ -55,9 +55,9 @@ const InfoForm = forms.Form.extend({
   render() {
     return(
       <div>
-        <h2>Choose a Group</h2>
+        <h2>Choose an AWS Group</h2>
         <OpseeBoundField bf={this.boundField('group')}/>
-        <h2>Define a Request</h2>
+        <h2>Define an HTTP Request</h2>
         {this.boundFields((field, fieldName) => {
           if(fieldName.match('protocol|port|method|path')){
             return true;
@@ -182,8 +182,8 @@ const AllFields = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                <span>Next: Test This Request 
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'}>
+                <span>Next: Define Assertions
                   <ChevronRight inline={true} fill={colors.success}/>
                 </span>
             </Button>

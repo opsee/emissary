@@ -11,11 +11,7 @@ import _ from 'lodash';
 function getState(){
   return {
     check:Store.newCheck().toJS(),
-    statuses:{
-      step1:null,
-      step2:null,
-      step3:null
-    }
+    response:Store.getResponse()
   }
 }
 

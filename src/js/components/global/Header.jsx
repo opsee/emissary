@@ -1,22 +1,16 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 import {Person, Checkmark, MoreHoriz, Home, Opsee} from '../icons/Module.jsx';
 import UserStore from '../../stores/User';
+import {Grid, Row, Col} from 'react-bootstrap';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
   storeDidChange(){
-    this.setState({
-      user:UserStore.getUser()
-    })
+    this.forceUpdate();
   },
-  getInitialState(){
-    return {
-      user:UserStore.getUser()
-    }
-  },
-  renderLoginButton(){
+  renderLoginLink(){
     if(UserStore.getAuth()){
       return (
         <Link to="profile" className="md-navbar-link">
@@ -36,9 +30,9 @@ export default React.createClass({
     return(
       <header id="header" ng-hide="hideHeader">
         <nav className="md-navbar" role="navigation">
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
                 <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
                   <li>
                    <Link to="home" className="md-navbar-link" style={{padding:'5px'}}>
@@ -71,13 +65,13 @@ export default React.createClass({
                    </Link>
                  </li>
                  <li>
-                   {this.renderLoginButton()}
+                   {this.renderLoginLink()}
                  </li>
                 </ul>
-              </div>
-            </div>
-          </div>
-        </nav>
+                </Col>
+              </Row>
+            </Grid>
+          </nav>
         <SearchBox/>
         </header>
     )
