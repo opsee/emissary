@@ -4,38 +4,32 @@ import OnboardStore from '../../stores/Onboard';
 import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
 import AWSStore from '../../stores/AWS';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
 import router from '../../router.jsx';
+import {Grid, Row, Col, Button} from 'react-bootstrap';
 
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
     widget: forms.PasswordInput,
     label:'AWS Key',
     widgetAttrs:{
-      placeholder:'your 20-digit AWS access key ID',
+      placeholder:'Your AWS Access Key',
     }
   }),
   'secret-key': forms.CharField({
     widget: forms.PasswordInput,
     label:'AWS Secret',
     widgetAttrs:{
-      placeholder:'your 40-digit secret key',
+      placeholder:'Your AWS Secret Key',
     }
   }),
 });
 
 const Credentials = React.createClass({
-  mixins: [OnboardStore.mixin],
-  storeDidChange(){
-    const data = OnboardStore.getInstallData();
-    const dataHasValues = _.chain(data).values().every(_.identity).value();
-    if(dataHasValues && data.regions.length){
-      router.transitionTo('onboardVpcSelect')
-    }
-  },
+  mixins: [],
   statics:{
     willTransitionTo(transition, params, query){
       const data = OnboardStore.getInstallData();
@@ -48,21 +42,25 @@ const Credentials = React.createClass({
     var self = this;
     var data = OnboardStore.getInstallData();
     return {
-      info:new InfoForm({
+      info:new InfoForm(_.extend({
         onChange(){
+          OnboardActions.onboardSetCredentials(self.state.info.cleanedData);
           self.forceUpdate();
         },
-        data:data,
         labelSuffix:'',
         validation:{
           on:'blur change',
           onChangeDelay:100
         },
-      })
+      }, self.dataComplete() ? {data:data} :  null))
     }
+  },
+  dataComplete(){
+    return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
   },
   submit(e){
     e.preventDefault();
+    router.transitionTo('onboardVpcSelect')
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
   },
   disabled(){
@@ -72,9 +70,9 @@ const Credentials = React.createClass({
     return (
        <div>
         <Toolbar title="AWS Credentials"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+          <Grid>
+            <Row>
+              <Col xs={12} sm={10} smOffset={1}>
               <form onSubmit={this.submit}>
                <p>We need your AWS credentials to scan your environment for instances and services, and report back any errors. They&rsquo;re required to continue, but <strong>we will not store them.</strong></p>
                <div><br/></div>
@@ -84,9 +82,9 @@ const Credentials = React.createClass({
                   <span>Next</span>
                 </button>
               </form>
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

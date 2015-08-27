@@ -21,7 +21,7 @@ export default React.createClass({
               <p>The Bastion is a prebuilt AMI that runs inside your AWS environment. It automatically discovers your infrastructure and services, and coordinates health checking and incident response. When you run a health check or restart an instance in Opsee, it&rsquo;s the Bastion doing the work.</p>
               <div className="clearfix"><br/></div>
               <div className="clearfix">
-                <Link to="onboardTeam" className="btn btn-primary btn-block">
+                <Link to="onboardRegionSelect" className="btn btn-primary btn-block">
                   Next&nbsp;<ChevronRight inline={true}/>
                 </Link>
               </div>
