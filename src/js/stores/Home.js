@@ -67,7 +67,7 @@ function clear(){
   _data = [];
 }
 
-const TodoStore = Flux.createStore(
+const Store = Flux.createStore(
   {
     getInstances(){
       return _data.instances;
@@ -84,4 +84,4 @@ const TodoStore = Flux.createStore(
   }
 )
 
-export default TodoStore;
+export default Store;

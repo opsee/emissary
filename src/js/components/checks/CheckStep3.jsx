@@ -1,6 +1,7 @@
 import React from 'react';
 import Actions from '../../actions/Check';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
+import {Grid, Row, Col, Button} from 'react-bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
@@ -46,15 +47,8 @@ const InfoForm = forms.Form.extend({
       placeholder:'My Service 404 Check'
     }
   }),
-  // message: forms.CharField({
-  //   widgetAttrs:{
-  //     placeholder:'It all crashed.'
-  //   }
-  // }),
   validation:'auto',
   // interval: forms.ChoiceField({choices:intervalOptions}),
-  clean() {
-  },
   render() {
     return(
       <div>
@@ -83,13 +77,18 @@ const AllFields = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.notifications,
-        extra:1
+        minNum:!this.props.check.notifications.length ? 1 : 0,
+        extra:0
       }),
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.notifications.forms().forEach((form,i) => {
-        form.setData(self.props.check.notifications[i]);
+        let notif = self.props.check.notifications[i];
+        console.log(notif);
+        if(notif){
+          form.setData(notif);
+        }
       });
     },10);
     return obj;
@@ -148,10 +147,28 @@ const AllFields = React.createClass({
     }
     return _.assign(data, this.state.info.cleanedData);
   },
+  disabled(){
+    return !this.state.info.isComplete();
+  },
   renderSubmitButton(){
     if(this.props.standalone){
       return(
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+          Finish
+        </Button>
+      )
+    }else{
+      return(
+        <div>
+          <div><br/><br/></div>
+          <div>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+                <span>Finish
+                  <ChevronRight inline={true} fill={colors.success}/>
+                </span>
+            </Button>
+          </div>
+        </div>
       )
     }
   },
@@ -181,21 +198,14 @@ const AllFields = React.createClass({
               // this.renderLink()
             }
           </Toolbar>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+          <Grid>
+            <Row>
+              <Col xs={12} sm={10} smOffset={1}>
               {this.innerRender()}
-              </div>
-            </div>
-          </div>
+              </Col>
+            </Row>
+          </Grid>
         </div>
-        <BottomButtonNav>
-          <button className="btn btn-flat btn-success" type="button" onClick={this.onSubmit}>
-              <span>Finish 
-                <ChevronRight inline={true} fill={colors.success}/>
-              </span>
-            </button>
-          </BottomButtonNav>
       </div>
     )
   },
@@ -204,13 +214,7 @@ const AllFields = React.createClass({
   },
   onSubmit(e) {
     e.preventDefault()
-    this.state.info.validate(this.refs.info)
-    this.state.notifications.validate(this.refs.notifications)
-    this.forceUpdate();
     this.props.onSubmit();
-    this.props.setStatus({
-      step3:'complete'
-    });
   }
 })
 

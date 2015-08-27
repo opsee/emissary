@@ -74,7 +74,8 @@ const AllFields = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.assertions,
-        // minNum:1
+        minNum:!this.props.check.assertions.length ? 1 : 0,
+        extra:0
       }),
       response:this.props.response
     };
@@ -218,12 +219,11 @@ const AllFields = React.createClass({
     }
   },
   disabled(){
-    //TODO validate header form as well
-    // return !(this.state.info.isValid() && this.state.headers.isValid());
     return !_.chain(this.state.assertions.forms()).map(a => a.isComplete()).every().value();
     return !this.state.assertions.isValid();
   },
-  submit(){
+  submit(e){
+    e.preventDefault();
     router.transitionTo('checkCreateStep3');
   },
   innerRender() {

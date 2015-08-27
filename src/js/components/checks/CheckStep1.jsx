@@ -204,7 +204,8 @@ const AllFields = React.createClass({
   },
   disabled(){
     //TODO validate header form as well
-    // return !(this.state.info.isValid() && this.state.headers.isValid());
+    let headersComplete = _.chain(this.state.headers.forms()).map(h => h.isComplete()).every().value();
+    return !(this.state.info.isComplete() && headersComplete);
     return !this.state.info.isComplete();
   },
   innerRender(){
