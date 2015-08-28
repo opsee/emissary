@@ -7,6 +7,6 @@ console.log('Preprocessing HTML as '+(argv.env || 'development'));
 
 gulp.task('html', function() {
   return gulp.src(config.src)
-  .pipe(preprocess({context: { ENV: argv.env}}))
+  .pipe(preprocess({context: { ENV: argv.env, API:argv.api}}))
   .pipe(gulp.dest(config.dest));
 });
