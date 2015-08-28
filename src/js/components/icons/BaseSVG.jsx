@@ -3,8 +3,8 @@ import Radium from 'radium';
 
 const Base = React.createClass({
   getInitialState(){
-    let width = this.props.size || 24;
-    let height = this.props.size || 24;
+    let width = this.props.width || 24;
+    let height = this.props.height || 24;
     return {
       width:width,
       height:height,

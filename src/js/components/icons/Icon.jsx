@@ -4,8 +4,6 @@ import Radium from 'radium';
 
 function Icon(path){
   return Radium(React.createClass({
-    fill:null,
-    style:null,
     generateStyle(){
       let style;
       if(this.props.btn){
@@ -30,7 +28,7 @@ function Icon(path){
           verticalAlign:'text-bottom',
         }
       }
-      return style || this.props.style;
+      return this.props.style || style;
     },
     getFill(){
       if(this.props.nav && this.props.active){

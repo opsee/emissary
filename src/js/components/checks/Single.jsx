@@ -40,8 +40,8 @@ export default React.createClass({
                 {this.props.check.get('meta').map(i => {
                   return (
                     <tr>
-                      <td><strong>{i.key}</strong></td>
-                      <td>{i.value}</td>
+                      <td><strong>{i.get('key')}</strong></td>
+                      <td>{i.get('value')}</td>
                     </tr>
                     )
                 })}
