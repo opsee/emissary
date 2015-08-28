@@ -11,7 +11,7 @@ import Store from '../../stores/Check';
 import Actions from '../../actions/Styleguide';
 import GlobalActions from '../../actions/Global';
 
-import {Add} from '../icons/module.jsx';
+import {Add} from '../icons/Module.jsx';
 import OpseeToggle from '../forms/OpseeToggle.jsx';
 
 function getState(){
