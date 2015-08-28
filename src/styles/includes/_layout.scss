@@ -104,86 +104,30 @@ to prevent collapsing during animation*/
   position: relative;
 }
 
-[ui-view]{
-  @include transition(all $swift-ease-out-duration $swift-ease-out-timing-function);
-  &.transition-parent-child {
-    @include transition(all $swift-ease-out-duration $swift-ease-out-timing-function);
-  }
-  &.no-transition{
-    @include transition(none !important);
-  }
-  &.ng-enter {
-    &.transition-sibling{
-      @include transform(translateY(15px));
-    }
-    &.transition-parent-child{
-      @include transform(translateY(-100%));
-    }
-    &.transition-push{
-      @include transform(translateX(-50%));
-    }
-  }
-  &.ng-enter,&.ng-leave-active {
-    position:absolute;
-    left:0;
-    right:0;
-    &.transition-sibling{
-      opacity:0;
-    }
-    &.transition-push{
-      opacity:0;
-    }
-  }
-  &.ng-enter-active,&.ng-leave {
-    position:absolute;
-    left:0;
-    right:0;
-    &.transition-sibling {
-      opacity:1;
-      @include transform(none);
-    }
-    &.transition-parent-child {
-      opacity:1;
-      @include transform(translateY(0));
-    }
-    &.transition-push{
-      opacity:1;
-      @include transform(none);
-    }
-  }
-  &.ng-leave-active {
-    &.transition-sibling {
-      @include transform(translateY(-15px));
-      opacity:0;
-    }
-    &.transition-parent-child {
-      // opacity:0;
-      @include transform(none);
-      &.transition-reverse{
-        opacity:0;
-        @include transform(translateY(100%));
-      }
-    }
-    &.transition-push{
-      opacity:0;
-    }
-  }
-}
+  // &.transition-parent-child {
+  //   @include transition(all $swift-ease-out-duration $swift-ease-out-timing-function);
+  // }
+  // &.no-transition{
+  //   @include transition(none !important);
+  // }
 
-.transition-msg{
+.page-enter, .page-leave{
   @include transition(all $swift-ease-out-duration $swift-ease-out-timing-function);
-  &.ng-enter {
-    @include transform(translateY(15px));
-  }
-  &.ng-enter,&.ng-leave-active {
-    opacity:0;
-  }
-  &.ng-enter-active,&.ng-leave {
-    opacity:1;
-    @include transform(none);
-  }
-  &.ng-leave-active {
-    @include transform(translateY(-15px));
-    opacity:0;
-  }
+  position:absolute;
+  left:0;
+  right:0;
+}
+.page-enter {
+  @include transform(translateY(15px));
+}
+.page-enter,.page-leave-active{
+  opacity:0;
+}
+.page-enter-active,.page-leave {
+  opacity:1;
+  @include transform(none);
+}
+.page-leave-active {
+  @include transform(translateY(-15px));
+  opacity:0;
 }

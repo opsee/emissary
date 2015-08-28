@@ -1,16 +1,26 @@
-import React from 'react';
+import React from 'react/addons';
+var {CSSTransitionGroup} = React.addons;
 import router from './router.jsx';
 import client from 'swagger-client';
 import _ from 'lodash';
-import GlobalActions from './actions/Global';
 
 window._ = _;
 
 router.run((Root, state) => {  
-    React.render(
-        <Root params={state.params}/>,
-        document.getElementById('main')
-    );
+  React.render(
+      (
+        <div>
+          <Root params={state.params} {...state}>
+          {
+            // <CSSTransitionGroup transitionName="example">
+            //   {React.cloneElement(this.props.children || <div/>, {key:'foo'})}
+            // </CSSTransitionGroup>
+          }
+          </Root>
+        </div>
+      ),
+      document.getElementById('main')
+  );
 });
 
 // var swagger = new client({

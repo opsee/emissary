@@ -36,7 +36,7 @@ export default React.createClass({
                 <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
                   <li>
                    <Link to="home" className="md-navbar-link" style={{padding:'5px'}}>
-                   <Opsee viewBox="0 0 24 12" style={{width:'60px',height:'40px'}}/>
+                   <Opsee viewBox="0 0 24 12" style={{width:'60px',height:'40px'}} nav={true}/>
                    </Link>
                  </li>
                  {

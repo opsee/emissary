@@ -7,7 +7,7 @@ import GlobalActions from '../actions/Global';
 import UserActions from '../actions/User';
 
 var User = Record({
-  name:'cliff',
+  name:null,
   email:null,
   id:null,
   token:null

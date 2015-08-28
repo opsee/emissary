@@ -1,0 +1,42 @@
+import React, {PropTypes} from 'react';
+import OpseeLabel from '../forms/OpseeLabel.jsx';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+import _ from 'lodash';
+import Autosuggest from 'react-autosuggest';
+
+const SuggestionRenderer = React.createClass({
+  render(){
+    console.log(this.props);
+    return(
+      <div>
+        foo
+      </div>
+    )
+  }
+});
+
+export default React.createClass({
+  propTypes:{
+    suggestions:PropTypes.func.isRequired,
+    onSuggestionSelected:PropTypes.func.isRequired
+  },
+  getData(input, cb){
+    let data = ['foo','fa','fee']
+    cb(null, data);
+  },
+  selectItem(choice, event){
+    console.log(choice);
+  },
+  suggestionRenderer(suggestion, input){
+    console.log(suggestion, input);
+    return 'foo';
+  },
+  render(){
+    return(
+      <div>
+        <Autosuggest {...this.props} suggestionRenderer={this.suggestionRenderer}/>
+      </div>
+    )
+  }
+});

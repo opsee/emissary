@@ -2,6 +2,9 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
 export default React.createClass({
+  propTypes:{
+    on:PropTypes.bool.isRequired
+  },
   onClick(){
     this.props.onChange.call(null, this.props.id);
   },

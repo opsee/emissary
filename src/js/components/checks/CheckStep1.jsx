@@ -198,9 +198,6 @@ const AllFields = React.createClass({
   submit(e){
     e.preventDefault();
     router.transitionTo('checkCreateStep2');
-    this.props.setStatus({
-      step1:'complete'
-    });
   },
   disabled(){
     //TODO validate header form as well
@@ -245,13 +242,6 @@ const AllFields = React.createClass({
   render() {
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
-  onSubmit(e) {
-    e.preventDefault()
-    this.state.info.validate(this.refs.info)
-    this.state.headers.validate(this.refs.headers)
-    this.forceUpdate();
-    console.log(this.cleanedData());
-  }
 })
 
 export default AllFields;

@@ -5,6 +5,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import Store from '../../stores/Check';
 import Link from 'react-router/lib/components/Link';
+import {Edit} from '../icons/Module.jsx';
 
 function getState(){
   return {
@@ -26,9 +27,9 @@ export default React.createClass({
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar title={`Check ${this.props.check.name || this.props.check.get('id')}`}>
-          <Link to="checkEdit" params={{id:this.props.check.get('id')}} className="btn btn-primary btn-fab" title="Edit {this.props.check.get('name')}">
-        edit1
+        <Toolbar title={`Check ${this.props.check.get('name') || this.props.check.get('id')}`}>
+          <Link to="checkEdit" params={{id:this.props.check.get('id')}} className="btn btn-primary btn-fab" title={`Edit ${this.props.check.get('name')}`}>
+            <Edit btn={true}/>
           </Link>
         </Toolbar>
         <div className="container">

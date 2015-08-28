@@ -6,7 +6,7 @@ import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
-import Router, {RouteHandler} from 'react-router';
+import {RouteHandler} from 'react-router';
 import Link from 'react-router/lib/components/Link';
 import InstanceStore from '../../stores/Instance';
 import InstanceActions from '../../actions/Instance';

@@ -7,6 +7,7 @@ import CheckItem from '../checks/CheckItem.jsx';
 import Link from 'react-router/lib/components/Link';
 import {Add} from '../icons/Module.jsx';
 import {PageAuth} from '../../statics';
+import {Grid, Row, Col } from 'react-bootstrap';
 
 function getState(){
   return {
@@ -49,19 +50,19 @@ export default React.createClass({
   },
   render() {
     return (
-      <div style={{position:"relative"}}>
+      <div>
         <Toolbar title="All Checks">
           <Link to="checkCreate" className="btn btn-primary btn-fab" title="Create New Check">
             <Add btn={true}/>
           </Link>
         </Toolbar>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               {this.renderChecks()}
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

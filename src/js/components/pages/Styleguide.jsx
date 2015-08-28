@@ -1,28 +1,40 @@
 import React, {PropTypes} from 'react';
-import Button from 'react-bootstrap/lib/Button';
-import TabbedArea from 'react-bootstrap/lib/TabbedArea';
-import TabPane from 'react-bootstrap/lib/TabPane';
+import _ from 'lodash';
+
+import {Grid, Row, Col, TabbedArea, TabPane} from 'react-bootstrap';
+import Button from '../forms/OpseeButton.jsx';
 import Toolbar from '../global/Toolbar.jsx';
 import Loader from '../global/Loader.jsx';
 import CheckItem from '../checks/CheckItem.jsx';
-import _ from 'lodash';
 
 import Store from '../../stores/Check';
 import Actions from '../../actions/Styleguide';
 import GlobalActions from '../../actions/Global';
 
+import {Add} from '../icons/module.jsx';
+import OpseeToggle from '../forms/OpseeToggle.jsx';
+
 function getState(){
   return {
-    checks: Store.getChecks()
+    checks: Store.getChecks(),
+    toggles:[{on:true},{on:false},{on:true}]
   }
 }
 export default React.createClass({
   mixins: [Store.mixin],
+  getInitialState(){
+    return getState();
+  },
   storeDidChange() {
     this.setState(getState());
   },
   getDefaultProps() {
     return getState();
+  },
+  triggerToggle(index){
+    let toggles = this.state.toggles;
+    toggles[index].on = !toggles[index].on;
+    this.setState({toggles:toggles});
   },
   notify(){
     GlobalActions.globalModalMessage('This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>');
@@ -32,6 +44,7 @@ export default React.createClass({
       <div>
       <Toolbar title="Opsee Styleguide">
         <a className="btn btn-success btn-fab" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
+          <Add btn={true}/>
         </a>
       </Toolbar>
 
@@ -49,15 +62,11 @@ export default React.createClass({
       <div className="container">
         <div className="col-xs-12 col-sm-10 col-sm-offset-1">
           <div><br/></div>
-          <div>
-            <img src="/node_modules/seedling/img/logo-color-border-light.svg" width="150"/>
-          </div>
-          <div><br/></div>
-          {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map(i =>{
+          {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
             return (
-              <div className="clearfix">
-                <div className={'bg-'+i+' pull-left'} style={{width:"45px",height:"45px"}} type="button"></div>
-                <div className="padding pull-left">{i}</div>
+              <div className="clearfix" key={`color-${i}`}>
+                <div className={`bg-${color} pull-left`} style={{width:"45px",height:"45px"}} type="button"></div>
+                <div className="padding pull-left">{color}</div>
               </div>
             )
           })}
@@ -73,7 +82,7 @@ export default React.createClass({
           <ul>
           {[1,2,3,4].map(i => {
             return( 
-              <li>List Item {i}</li>
+              <li key={`unordered-item-${i}`}>List Item {i}</li>
             );
           })}
           </ul>
@@ -84,19 +93,23 @@ export default React.createClass({
           <ol>
             {[1,2,3,4].map(i => {
             return( 
-              <li>List Item {i}</li>
+              <li key={`ordered-item-${i}`}>List Item {i}</li>
               );
             })}
           </ol>
 
           <h3>Toggle Switches</h3>
           <ul className="list-unstyled">
-            <li className="display-flex flex-wrap padding-tb" ng-repeat="o in [{},{selected:true},{}]">
-              <toggle-switch ng-model="o.selected"></toggle-switch>
-              <div className="flex-1">
-                <label className="user-select-none" ng-click="o.selected = !o.selected">Item </label>
-              </div>
-            </li>
+          {this.state.toggles.map((t,i) => {
+            return(
+              <li className="display-flex flex-wrap padding-tb" key={`toggle-${i}`}>
+                <OpseeToggle on={t.on}/>
+                <div className="flex-1">
+                  <label className="user-select-none" onClick={this.triggerToggle.bind(null, i)}>Item </label>
+                </div>
+              </li>
+            )
+          })}
           </ul>
 
           <hr/>
@@ -129,12 +142,12 @@ export default React.createClass({
           <hr/>
 
           <h2 className="h3">Checks</h2>
-          {_.range(1).map(i => {
+          {_.range(1).map((i, ci) => {
             return(
-              <ul className="list-unstyled">
-              {this.props.checks.map(check => {
+              <ul className="list-unstyled" key={`check-list-${ci}`}>
+              {this.props.checks.map((check, id) => {
                 return (
-                  <li>
+                  <li key={`check-${id}`}>
                     <CheckItem {...check}/>
                   </li>
                 );
@@ -146,10 +159,10 @@ export default React.createClass({
           <hr/>
 
           <h3>Cards</h3>
-          <div className="row">
+          <Row>
           {[1,2,3,4].map(i => {
             return (
-              <div className="col-xs-12 col-sm-6 padding-tb">
+              <Col xs={12} sm={6} className="padding-tb" key={`card-${i}`}>
                 <div className="bg-gray-900 md-shadow-bottom-z-1">
                   <div className="padding">
                     <h2 className="margin-none">A title goes here</h2>
@@ -159,14 +172,14 @@ export default React.createClass({
                     </div>
                   </div>
                   <div>
-                    <button type="button" className="btn btn-flat btn-default">Delete</button>
-                    <button type="button" className="btn btn-flat btn-primary pull-right">Activate</button>
+                    <Button bsStyle="default" flat={true}>Delete</Button>
+                    <Button bsStyle="primary" flat={true} className="pull-right">Activate</Button>
                   </div>
                 </div>
-              </div>
+              </Col>
             )
           })}
-          </div>
+          </Row>
 
           <hr/>
 
@@ -175,7 +188,7 @@ export default React.createClass({
           <form name="testform" id="testform">
             <div className="form-group display-flex flex-wrap">
               <input id="testinput1" name="testinput1" type="text" ng-model="user.account.team_name" placeholder="input placeholder" className="form-control flex-order-1" ng-required="true" ng-minlength="3"/>
-              <label for="testinput1">
+              <label htmlFor="testinput1">
                 <span>Text Input Label</span>
                 <default-messages ng-model="testform.testinput1"></default-messages>
               </label>
@@ -183,7 +196,7 @@ export default React.createClass({
 
             <div className="form-group display-flex flex-wrap">
               <input id="testinput2" name="testinput2" type="text" placeholder="email@domain.com" className="form-control has-icon flex-order-1" ng-required="true" ng-pattern="regex.email" ng-model="testinput2"/>
-              <label for="testinput2">
+              <label htmlFor="testinput2">
                 <span>Email (w/icon)</span>
                 <default-messages ng-model="testform.testinput2"></default-messages>
               </label>
@@ -207,7 +220,7 @@ export default React.createClass({
               <div className="padding pull-left">
               {['primary','success','warning','danger','info','default'].map(i => {
                 return (
-                  <button className={"btn btn-"+i} type="button">{i}</button>
+                  <button className={"btn btn-"+i} type="button" key={`btn-${i}`}>{i}</button>
                 )
               })}
               </div>
@@ -223,7 +236,7 @@ export default React.createClass({
             <div className="padding-bx2">
               {['primary','success','warning','danger','info','default'].map(i => {
                 return (
-                  <div className="padding pull-left">
+                  <div className="padding pull-left" key={`btn-flat-${i}`}>
                     <button className={"btn btn-flat btn-"+i} type="button">{i}</button>
                   </div>
                 )

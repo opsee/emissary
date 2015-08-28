@@ -6,23 +6,19 @@ var router = Router.create({
   location: Router.HistoryLocation
 });
 
-export default {  
-  makePath: function(to, params, query) {
-    return router.makePath(to, params, query);
-  },
-  makeHref: function(to, params, query) {
-    return router.makeHref(to, params, query);
-  },
-  transitionTo: function(to, params, query) {
-    router.transitionTo(to, params, query);
-  },
-  replaceWith: function(to, params, query) {
-    router.replaceWith(to, params, query);
-  },
-  goBack: function() {
-    router.goBack();
-  },
-  run: function(render) {
-    router.run(render);
+export default {
+  makePath:router.makePath,
+  makeHref:router.makeHref,
+  transitionTo:router.transitionTo,
+  replaceWith:router.replaceWith,
+  goBack:router.goBack,
+  run:router.run,
+  getAllRoutes(){
+    return router.routes[0].childRoutes.map(r => {
+      return {
+        name:r.name,
+        path:r.path
+      }
+    })
   }
 };

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+
+let include = [];
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
@@ -25,7 +27,7 @@ const InfoForm = forms.Form.extend({
     return(
       <div>
       {
-        this.data.include.map(field => {
+        include.map(field => {
           return <OpseeBoundField bf={this.boundField(field)} key={field}/>
         })
       }
@@ -35,21 +37,34 @@ const InfoForm = forms.Form.extend({
 });
 
 export default React.createClass({
+  propTypes:{
+    include:PropTypes.array.isRequired
+  },
+  componentWillMount(){
+    include = this.props.include;
+  },
   getInitialState() {
     var self = this;
     return {
-      info:new InfoForm({
+      info:new InfoForm(_.extend({
         onChange(){
           self.props.onChange(self.state.info.cleanedData);
           self.forceUpdate();
         },
         labelSuffix:'',
-        data:this.props,
         validation:{
           on:'blur change',
           onChangeDelay:100
         },
-      })
+      },self.dataComplete()))
+    }
+  },
+  dataComplete(){
+    const test = _.chain(this.props.include).map(s => this.props[s]).every().value();
+    if(test){
+      return {
+        data:this.props
+      }
     }
   },
   render() {
