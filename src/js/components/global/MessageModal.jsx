@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Modal} from 'react-bootstrap';
+import {Modal} from '../../bootstrap';
 import GlobalStore from '../../stores/Global';
 import GlobalActions from '../../actions/Global';
 

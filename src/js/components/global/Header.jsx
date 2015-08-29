@@ -3,7 +3,7 @@ import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
 import {Person, Checkmark, MoreHoriz, Home, Opsee} from '../icons/Module.jsx';
 import UserStore from '../../stores/User';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Grid, Row, Col} from '../../bootstrap';
 
 export default React.createClass({
   mixins: [UserStore.mixin],

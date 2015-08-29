@@ -2,7 +2,7 @@ import React from 'react';
 import Actions from '../../actions/Check';
 import router from '../../router.jsx';
 import {Link} from 'react-router';
-import {Grid, Row, Col, Button} from 'react-bootstrap';
+import {Grid, Row, Col, Button} from '../../bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';

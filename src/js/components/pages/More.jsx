@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
-import Button from 'react-bootstrap/lib/Button';
+import {Button} from '../../bootstrap';
 import Toolbar from '../global/Toolbar.jsx';
 import Router from 'react-router';
 const RouteHandler = Router.RouteHandler;
-import Link from 'react-router/lib/components/Link';
+import Link from 'react-router';
 
 export default React.createClass({
   render() {

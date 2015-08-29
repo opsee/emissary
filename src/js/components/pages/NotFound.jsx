@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Grid, Row, Col} from '../../bootstrap';
 
 function getState(){
   return {

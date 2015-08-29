@@ -7,7 +7,7 @@ import CheckItem from '../checks/CheckItem.jsx';
 import Link from 'react-router/lib/components/Link';
 import {Add} from '../icons/Module.jsx';
 import {PageAuth} from '../../statics';
-import {Grid, Row, Col } from 'react-bootstrap';
+import {Grid, Row, Col } from '../../bootstrap';
 
 function getState(){
   return {

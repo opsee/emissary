@@ -6,7 +6,7 @@ import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
 import {State} from 'react-router';
 import Link from 'react-router/lib/components/Link';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Grid, Row, Col} from '../../bootstrap';
 
 
 export default React.createClass({

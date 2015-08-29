@@ -3,7 +3,7 @@ import _ from 'lodash';
 import router from '../../router.jsx';
 import forms from 'newforms';
 import colors from 'seedling/colors';
-import {Grid, Row, Col, Button} from 'react-bootstrap';
+import {Grid, Row, Col, Button} from '../../bootstrap';
 
 import Actions from '../../actions/Check';
 

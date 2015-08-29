@@ -1,7 +1,7 @@
 import React from 'react';
 import OpseeLabel from '../forms/OpseeLabel.jsx';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
+import DropdownButton from '../../bootstrap';
+import MenuItem from '../../bootstrap';
 import _ from 'lodash';
 
 export default React.createClass({

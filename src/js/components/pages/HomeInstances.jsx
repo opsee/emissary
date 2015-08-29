@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
-import Button from 'react-bootstrap/lib/Button';
-import Jumbotron from 'react-bootstrap/lib/Jumbotron';
+import {Button} from '../../bootstrap';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';

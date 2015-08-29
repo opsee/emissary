@@ -9,7 +9,7 @@ import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
 import router from '../../router.jsx';
-import {Grid, Row, Col, Button} from 'react-bootstrap';
+import {Grid, Row, Col, Button} from '../../bootstrap';
 
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
