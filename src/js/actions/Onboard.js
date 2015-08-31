@@ -9,7 +9,7 @@ let _actions = {};
 _actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
   (data) => {
     return request
-    .post(`${config.api}/signups`)
+    .post(`${config.authApi}/signups`)
     .send(data)
   },
   res => res && res.body,

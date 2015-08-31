@@ -5,7 +5,8 @@ import OnboardStore from '../../stores/Onboard';
 import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
 import router from '../../modules/router.js';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({
    mixins: [UserStore.mixin, OnboardStore.mixin],
@@ -45,9 +46,9 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title="Create Your Account"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
@@ -60,9 +61,9 @@ export default React.createClass({
                   <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
                 </div>
               </form>
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
