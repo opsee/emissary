@@ -6,7 +6,7 @@ import TimeAgo from 'react-components/timeago';
 import GroupItem from '../groups/GroupItem.jsx';
 import GroupStore from '../../stores/Group';
 import GroupActions from '../../actions/Group';
-import {SetInterval} from '../../mixins';
+import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 
 function getState(){

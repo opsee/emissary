@@ -1,18 +1,17 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../bootstrap';
+import {Button} from '../../modules/bootstrap';
 import Toolbar from '../global/Toolbar.jsx';
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
-import Link from 'react-router';
+import {Link} from 'react-router';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({
   render() {
     return (
       <div>
         <Toolbar title="Other Pages"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               <h3>Delete this page and route before launch</h3>
               <ul>
                 <li><Link to="start">Signup</Link></li>
@@ -29,9 +28,9 @@ export default React.createClass({
                 <li><Link to="styleguide">Style Guide</Link></li>
                 <li><Link to="docs">Docs</Link></li>
               </ul>
-            </div>
-          </div>
-        </div>
+              </Col>
+            </Row>
+          </Grid>
       </div>
     );
   }

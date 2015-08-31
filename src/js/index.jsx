@@ -1,6 +1,6 @@
 import React from 'react/addons';
 var {CSSTransitionGroup} = React.addons;
-import router from './router.jsx';
+import router from './modules/router.js';
 import client from 'swagger-client';
 import _ from 'lodash';
 

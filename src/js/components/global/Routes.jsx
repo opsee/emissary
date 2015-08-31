@@ -1,50 +1,50 @@
 import React, {PropTypes} from 'react';
 import Router from 'react-router';
 const Route = Router.Route;
-import Opsee from './components/Opsee.jsx';
+import Opsee from '../global/Opsee.jsx';
 import NotFoundRoute from 'react-router/lib/components/NotFoundRoute';
 import DefaultRoute from 'react-router/lib/components/DefaultRoute';
 import Redirect from 'react-router/lib/components/Redirect';
 
 //pages
-import Home from './components/pages/Home.jsx';
-import HomeInstances from './components/pages/HomeInstances.jsx';
-import HomeGroups from './components/pages/HomeGroups.jsx';
-import More from './components/pages/More.jsx';
-import Styleguide from './components/pages/Styleguide.jsx';
-import Checks from './components/pages/Checks.jsx';
-import CheckSingle from './components/checks/Single.jsx';
-import CheckEdit from './components/checks/Edit.jsx';
-import CheckCreate from './components/checks/Create.jsx';
+import Home from '../pages/Home.jsx';
+import HomeInstances from '../pages/HomeInstances.jsx';
+import HomeGroups from '../pages/HomeGroups.jsx';
+import More from '../pages/More.jsx';
+import Styleguide from '../pages/Styleguide.jsx';
+import Checks from '../pages/Checks.jsx';
+import CheckSingle from '../checks/Single.jsx';
+import CheckEdit from '../checks/Edit.jsx';
+import CheckCreate from '../checks/Create.jsx';
 
-import CheckStep1 from './components/checks/CheckStep1.jsx';
-import CheckStep2 from './components/checks/CheckStep2.jsx';
-import CheckStep3 from './components/checks/CheckStep3.jsx';
+import CheckStep1 from '../checks/CheckStep1.jsx';
+import CheckStep2 from '../checks/CheckStep2.jsx';
+import CheckStep3 from '../checks/CheckStep3.jsx';
 
-import CheckNotFound from './components/checks/NotFound.jsx';
-import Group from './components/pages/Group.jsx';
-import Instance from './components/pages/Instance.jsx';
+import CheckNotFound from '../checks/NotFound.jsx';
+import Group from '../pages/Group.jsx';
+import Instance from '../pages/Instance.jsx';
 
-import Login from './components/pages/Login.jsx';
-import PasswordForgot from './components/pages/PasswordForgot.jsx';
-import Profile from './components/pages/Profile.jsx';
+import Login from '../pages/Login.jsx';
+import PasswordForgot from '../pages/PasswordForgot.jsx';
+import Profile from '../pages/Profile.jsx';
 
-import OnboardCreate from './components/onboard/Create.jsx';
-import OnboardThanks from './components/onboard/Thanks.jsx';
-import OnboardPassword from './components/onboard/Password.jsx';
-import OnboardTutorial from './components/onboard/Tutorial.jsx';
-import OnboardTutorial1 from './components/onboard/Tutorial1.jsx';
-import OnboardTutorial2 from './components/onboard/Tutorial2.jsx';
-import OnboardTeam from './components/onboard/Team.jsx';
-import OnboardRegionSelect from './components/onboard/RegionSelect.jsx';
-import OnboardCredentials from './components/onboard/Credentials.jsx';
-import OnboardVPCSelect from './components/onboard/VPCSelect.jsx';
-import OnboardInstall from './components/onboard/Install.jsx';
+import OnboardCreate from '../onboard/Create.jsx';
+import OnboardThanks from '../onboard/Thanks.jsx';
+import OnboardPassword from '../onboard/Password.jsx';
+import OnboardTutorial from '../onboard/Tutorial.jsx';
+import OnboardTutorial1 from '../onboard/Tutorial1.jsx';
+import OnboardTutorial2 from '../onboard/Tutorial2.jsx';
+import OnboardTeam from '../onboard/Team.jsx';
+import OnboardRegionSelect from '../onboard/RegionSelect.jsx';
+import OnboardCredentials from '../onboard/Credentials.jsx';
+import OnboardVPCSelect from '../onboard/VPCSelect.jsx';
+import OnboardInstall from '../onboard/Install.jsx';
 
-import AdminSignups from './components/admin/Signups.jsx';
-import AdminSocket from './components/admin/Socket.jsx';
+import AdminSignups from '../admin/Signups.jsx';
+import AdminSocket from '../admin/Socket.jsx';
 
-import NotFound from './components/pages/NotFound.jsx';
+import NotFound from '../pages/NotFound.jsx';
 
 const RouteHandler = Router.RouteHandler;
 const routes = (

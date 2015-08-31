@@ -9,6 +9,7 @@ import _ from 'lodash';
 import {Checkmark} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
 import TimeAgo from 'react-timeago';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getSignups(){
   const signups = Store.getSignups().toJS();
@@ -88,7 +89,7 @@ export default React.createClass({
   },
   output(signup){
     return (
-      <div className="col-xs-12 col-sm-6 padding-tb">
+      <Col xs={12} sm={6} className="padding-tb">
         <div className="bg-gray-900 md-shadow-bottom-z-1">
           <div className="padding">
             <h2 className="margin-none">
@@ -104,27 +105,27 @@ export default React.createClass({
             {this.outputButton(signup)}
           </div>
         </div>
-      </div>
+      </Col>
     )
   },
   render() {
     return (
       <div>
         <Toolbar title="Signups"/>
-        <div className="container">
-          <div className="row">
+        <Grid>
+          <Row>
             <h2 className="text-danger">Unapproved</h2>
             {this.getUnapproved().map(this.output)}
-          </div>
-          <div className="row">
+          </Row>
+          <Row>
             <h2 className="text-warning">Approved</h2>
             {this.getApproved().map(this.output)}
-          </div>
-          <div className="row">
+          </Row>
+          <Row>
             <h2 className="text-success">Users</h2>
             {this.getUsers().map(this.output)}
-          </div>
-        </div>
+          </Row>
+        </Grid>
       </div>
     );
   }

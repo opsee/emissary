@@ -5,7 +5,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import Link from 'react-router/lib/components/Link';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 
 export default React.createClass({
   mixins: [Store.mixin],

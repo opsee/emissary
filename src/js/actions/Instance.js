@@ -1,6 +1,6 @@
-import config from '../config';
-import Flux from '../Flux';
-import request from '../request';
+import config from '../modules/config';
+import Flux from '../modules/flux';
+import request from '../modules/request';
 import UserStore from '../stores/User';
 import _ from 'lodash';
 

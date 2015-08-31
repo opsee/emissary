@@ -1,5 +1,5 @@
-import config from '../config';
-import Flux from '../Flux';
+import config from '../modules/config';
+import Flux from '../modules/flux';
 import _ from 'lodash';
 import Immutable, {Record, List, Map} from 'immutable';
 

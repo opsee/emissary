@@ -7,7 +7,7 @@ import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import {Close, ChevronRight} from '../icons/Module.jsx';
 import ProgressBar from '../global/ProgressBar.jsx';
 import {Checkmark} from '../icons/Module.jsx';

@@ -6,8 +6,8 @@ import Store from '../../stores/Check';
 import CheckItem from '../checks/CheckItem.jsx';
 import Link from 'react-router/lib/components/Link';
 import {Add} from '../icons/Module.jsx';
-import {PageAuth} from '../../statics';
-import {Grid, Row, Col } from '../../bootstrap';
+import {PageAuth} from '../../modules/statics';
+import {Grid, Row, Col } from '../../modules/bootstrap';
 
 function getState(){
   return {

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Autosuggest from 'react-autosuggest';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 
 export default React.createClass({
   getInitialState(){

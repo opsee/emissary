@@ -1,13 +1,12 @@
 import React, {PropTypes} from 'react';
 import OpseeLabel from '../forms/OpseeLabel.jsx';
-import DropdownButton from '../../bootstrap';
-import MenuItem from '../../bootstrap/MenuItem';
+import DropdownButton from '../../modules/bootstrap';
+import MenuItem from '../../modules/bootstrap/MenuItem';
 import _ from 'lodash';
 import Autosuggest from 'react-autosuggest';
 
 const SuggestionRenderer = React.createClass({
   render(){
-    console.log(this.props);
     return(
       <div>
         foo

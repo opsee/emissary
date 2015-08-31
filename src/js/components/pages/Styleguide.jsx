@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Grid, Row, Col, TabbedArea, TabPane} from '../../bootstrap';
+import {Grid, Row, Col, TabbedArea, TabPane} from '../../modules/bootstrap';
 import Button from '../forms/OpseeButton.jsx';
 import Toolbar from '../global/Toolbar.jsx';
 import Loader from '../global/Loader.jsx';

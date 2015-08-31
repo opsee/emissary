@@ -1,6 +1,6 @@
-import config from '../config';
-import Flux from '../Flux';
-import storage from '../storage';
+import config from '../modules/config';
+import Flux from '../modules/flux';
+import storage from '../modules/storage';
 import Immutable, {Record, List, Map} from 'immutable';
 import _ from 'lodash';
 import GlobalActions from '../actions/Global';

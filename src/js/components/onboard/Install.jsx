@@ -7,7 +7,7 @@ import AWSStore from '../../stores/AWS';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import _ from 'lodash';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import {Close, ChevronRight} from '../icons/Module.jsx';
 import BastionInstall from './BastionInstaller.jsx';
 

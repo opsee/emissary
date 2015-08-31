@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import forms from 'newforms';
 import colors from 'seedling/colors';
-import {Grid, Row, Col, Button} from '../../bootstrap';
+import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 
 import Actions from '../../actions/Check';
 

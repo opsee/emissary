@@ -4,7 +4,7 @@ import UserInputs from '../user/UserInputs.jsx';
 import OnboardStore from '../../stores/Onboard';
 import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({

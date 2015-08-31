@@ -5,7 +5,7 @@ import OnboardStore from '../../stores/Onboard';
 import OnboardActions from '../../actions/Onboard';
 import UserStore from '../../stores/User';
 import {State} from 'react-router';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import Link from 'react-router/lib/components/Link';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';

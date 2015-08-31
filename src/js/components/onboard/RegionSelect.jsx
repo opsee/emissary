@@ -10,7 +10,7 @@ import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
 import $q from 'q';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 
 let checkSubdomainPromise;
 let domainPromisesArray = [];

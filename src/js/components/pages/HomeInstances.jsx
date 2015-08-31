@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../bootstrap';
+import {Button} from '../../modules/bootstrap';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';

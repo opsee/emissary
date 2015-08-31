@@ -1,5 +1,5 @@
-import config from '../config';
-import Flux from '../Flux';
+import config from '../modules/config';
+import Flux from '../modules/flux';
 
 const actions = Flux.createActions({
   silence(id, length = 1, unit = 'm'){

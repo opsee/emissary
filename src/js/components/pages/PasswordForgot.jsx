@@ -3,7 +3,7 @@ import Toolbar from '../global/Toolbar.jsx';
 import UserInputs from '../user/UserInputs.jsx';
 import UserStore from '../../stores/User';
 import UserActions from '../../actions/User';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import Link from 'react-router/lib/components/Link';
 
 export default React.createClass({

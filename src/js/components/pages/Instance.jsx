@@ -7,7 +7,7 @@ import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import InstanceStore from '../../stores/Instance';
 import InstanceActions from '../../actions/Instance';
-import {SetInterval} from '../../mixins';
+import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 
 function getState(){

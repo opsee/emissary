@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../bootstrap';
+import {Button} from '../../modules/bootstrap';
 import RadialGraph from '../global/RadialGraph.jsx';
 import Store from '../../stores/Home';
 import Toolbar from '../global/Toolbar.jsx';
@@ -9,7 +9,7 @@ import {RouteHandler} from 'react-router';
 import Link from 'react-router/lib/components/Link';
 import InstanceStore from '../../stores/Instance';
 import InstanceActions from '../../actions/Instance';
-import {PageAuth} from '../../statics';
+import {PageAuth} from '../../modules/statics';
 
 function getState(){
   return {

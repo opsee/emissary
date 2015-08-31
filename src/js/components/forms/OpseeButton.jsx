@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from '../../bootstrap';
+import {Button} from '../../modules/bootstrap';
 
 export default React.createClass({
   render(){

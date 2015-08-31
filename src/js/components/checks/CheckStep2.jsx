@@ -1,8 +1,8 @@
 import React from 'react';
 import Actions from '../../actions/Check';
-import router from '../../router.jsx';
+import router from '../../modules/router.js';
 import {Link} from 'react-router';
-import {Grid, Row, Col, Button} from '../../bootstrap';
+import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
@@ -14,7 +14,7 @@ import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
 import {Close, ChevronRight} from '../icons/Module.jsx';
 import colors from 'seedling/colors';
-import Highlight from 'react-highlight';
+import Highlight from '../global/Highlight.jsx';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -95,24 +95,24 @@ const AllFields = React.createClass({
     this.props.onChange(this.getCleanedData())
     this.forceUpdate();
   },
-  operandInputNeeded(form, bf){
+  operandInputNeeded(form, bf, assertionIndex, bfi){
     const data = form.cleanedData;
     if(data && data.relationship){
       if(data.type == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
-          <div className="col-xs-10 col-xs-offset-2">
+          <div className="col-xs-10 col-xs-offset-2" key={`assertion-${assertionIndex}-field-${bfi}`}>
             <OpseeBoundField bf={bf}/>
           </div>
         )
       }
     }
   },
-  valueInputNeeded(form, bf){
+  valueInputNeeded(form, bf, assertionIndex, bfi){
     const data = form.cleanedData;
     if(data && data.relationship && data.type == 'header'){
       if(!data.relationship.match('empty|notEmpty')){
         return(
-          <div className="col-xs-10 col-xs-offset-2">
+          <div className="col-xs-10 col-xs-offset-2" key={`assertion-${assertionIndex}-field-${bfi}`}>
             <OpseeBoundField bf={bf}/>
           </div>
         )
@@ -146,7 +146,7 @@ const AllFields = React.createClass({
       <div>
         {this.state.assertions.forms().map((form, index) => {
           return (
-            <div>
+            <div key={`assertion-${index}`}>
               <div className="display-flex">
                 <div className="row flex-1">
                   <Grid fluid={true}>
@@ -154,27 +154,28 @@ const AllFields = React.createClass({
                       <Col xs={2}>
                         <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
                       </Col>
-                      {form.boundFields().map(bf => {
+                      {form.boundFields().map((bf, bfi) => {
                         switch(bf.name){
                           case 'type':
                           return(
-                            <Col xs={10} sm={4}>
+                            <Col xs={10} sm={4} key={`assertion-${index}-field-${bfi}`}>
                               <OpseeBoundField bf={bf}/>
                             </Col>
                           );
                           break;
                           case 'relationship':
                           return(
-                            <Col xs={10} xsOffset={2} sm={6} smOffset={0}>
+                            <Col xs={10} xsOffset={2} sm={6} smOffset={0} key={`assertion-${index}-field-${bfi}`}>
                               <OpseeBoundField bf={bf}/>
                             </Col>
                           );
                           break;
                           case 'operand':
-                          return this.operandInputNeeded(form, bf);
+                          return this.operandInputNeeded(form, bf, index, bfi);
                           break;
                           case 'value':
-                          return this.valueInputNeeded(form, bf);
+                          return this.valueInputNeeded(form, bf, index, bfi);
+                          break;
                         }
                       })}
                     </Row>
@@ -236,7 +237,7 @@ const AllFields = React.createClass({
         <div><br/></div>
         <h2>Your Response &amp; Request</h2>
         <p>We are including the content of your response and your request to help you define assertions.</p>
-        <Highlight className="json">
+        <Highlight>
           {this.state.response && JSON.stringify(this.state.response.data, null, ' ')}
         </Highlight>
         {

@@ -1,4 +1,4 @@
-import routes from './routes.jsx';
+import routes from '../components/global/Routes.jsx';
 import Router from 'react-router';
 
 var router = Router.create({

@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import Radium from 'radium';
 import colors from 'seedling/colors';
-import {SetInterval} from '../../mixins';
+import {SetInterval} from '../../modules/mixins';
 import _ from 'lodash';
 
 const radialWidth = 40;

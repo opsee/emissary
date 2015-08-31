@@ -6,6 +6,7 @@ import Link from 'react-router/lib/components/Link';
 import Router from 'react-router';
 const RouteHandler = Router.RouteHandler;
 import _ from 'lodash';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({
   mixins: [GlobalStore.mixin],
@@ -24,9 +25,9 @@ export default React.createClass({
     return (
       <div>
        <Toolbar title="Socket Messages"/>
-       <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+       <Grid>
+         <Row>
+           <Col xs={12} sm={10} smOffset={1}>
                {this.state.messages.map((m, i) => {
                   return (
                     <div key={i}>
@@ -34,9 +35,9 @@ export default React.createClass({
                     </div>
                   )
                })}
-             </div>
-           </div>
-         </div>
+             </Col>
+           </Row>
+         </Grid>
       </div>
     );
   }
