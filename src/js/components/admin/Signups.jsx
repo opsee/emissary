@@ -1,18 +1,16 @@
 import React from 'react';
-import Toolbar from '../global/Toolbar.jsx';
-import Actions from '../../actions/Admin';
-import Store from '../../stores/Admin';
-import Link from 'react-router/lib/components/Link';
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
+import {Toolbar} from '../global';
+import {AdminActions} from '../../actions';
+import {AdminStore} from '../../stores';
+import {Link} from 'react-router';
 import _ from 'lodash';
-import {Checkmark} from '../icons/Module.jsx';
+import {Checkmark} from '../icons';
 import colors from 'seedling/colors';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getSignups(){
-  const signups = Store.getSignups().toJS();
+  const signups = AdminStore.getSignups().toJS();
   return _.chain(signups).map(s => {
     s.created_at = new Date(Date.parse(s.created_at));
     return s;
@@ -28,13 +26,13 @@ function getState(){
 }
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [AdminStore.mixin],
   storeDidChange() {
     this.setState(getState());
   },
   getInitialState:getState,
   getData(){
-    Actions.getSignups()
+    AdminActions.getSignups()
   },
   componentWillMount(){
     this.getData();
@@ -69,7 +67,7 @@ export default React.createClass({
   getUsers(){
     return _.filter(this.state.signups, this.isUser);
   },
-  activateSignup:Actions.activateSignup,
+  activateSignup:AdminActions.activateSignup,
   outputCheckmark(signup){
     if(this.isUser(signup)){
       return <Checkmark fill={colors.success}/>

@@ -3,25 +3,24 @@ import _ from 'lodash';
 
 import {Grid, Row, Col, TabbedArea, TabPane} from '../../modules/bootstrap';
 import Button from '../forms/OpseeButton.jsx';
-import Toolbar from '../global/Toolbar.jsx';
-import Loader from '../global/Loader.jsx';
+import {Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
-import Store from '../../stores/Check';
+import {CheckStore} from '../../stores';
 import Actions from '../../actions/Styleguide';
 import GlobalActions from '../../actions/Global';
 
-import {Add} from '../icons/Module.jsx';
+import {Add} from '../icons';
 import OpseeToggle from '../forms/OpseeToggle.jsx';
 
 function getState(){
   return {
-    checks: Store.getChecks(),
+    checks: CheckStore.getChecks(),
     toggles:[{on:true},{on:false},{on:true}]
   }
 }
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [CheckStore.mixin],
   getInitialState(){
     return getState();
   },

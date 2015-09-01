@@ -1,28 +1,31 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import OnboardStore from '../../stores/Onboard';
+import {OnboardStore} from '../../stores';
 import OnboardActions from '../../actions/Onboard';
-import UserStore from '../../stores/User';
+import {UserStore} from '../../stores';
 import {State} from 'react-router';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import router from '../../modules/router';
 
 
 export default React.createClass({
-  mixins: [State],
+  mixins: [State, OnboardStore.mixin],
   storeDidChange(){
     const status = OnboardStore.getSetPasswordStatus();
     this.setState({status})
     if(status == 'success'){
-      router.transitionTo('onboardThanks');
+      router.transitionTo('tutorial');
+    }else{
+      console.error(status);
     }
   },
   getInitialState(){
     return {
       status:null,
-      email:this.getQuery().email,
-      token:this.getQuery().token,
+      token:this.props.query.token,
+      id:this.props.query.id,
       password:null
     }
   },

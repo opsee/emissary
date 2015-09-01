@@ -1,17 +1,15 @@
 import React from 'react';
 import _ from 'lodash';
-import router from '../../modules/router.js';
+import router from '../../modules/router';
 import forms from 'newforms';
 import colors from 'seedling/colors';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 
-import Actions from '../../actions/Check';
-
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
-import Toolbar from '../global/Toolbar.jsx';
-import {Close, ChevronRight} from '../icons/Module.jsx';
+import {Toolbar} from '../global';
+import {Close, ChevronRight} from '../icons';
 
 const groupOptions = [
   ['group-1','Group 1'],
@@ -81,7 +79,6 @@ function step1DataComplete(){
 const AllFields = React.createClass({
   getInitialState() {
     const self = this;
-    console.log();
     const obj = {
       info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,

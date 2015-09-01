@@ -1,25 +1,25 @@
 import React, {PropTypes} from 'react';
-import Store from '../../stores/User';
+import {UserStore} from '../../stores';
 import UserActions from '../../actions/User';
-import Toolbar from '../global/Toolbar.jsx';
-import Link from 'react-router/lib/components/Link';
+import {Toolbar} from '../global';
+import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [UserStore.mixin],
   storeDidChange(){
-    if(!Store.getAuth()){
+    if(!UserStore.getAuth()){
       return router.transitionTo('login');
     }
     this.setState({
-      user:Store.getUser()
+      user:UserStore.getUser()
     })
   },
   getInitialState(){
     return {
-      user:Store.getUser()
+      user:UserStore.getUser()
     }
   },
   logOut(){

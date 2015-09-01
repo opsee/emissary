@@ -19,7 +19,10 @@ let _user = initialUser || new User();
 
 const statics = {
   setUser(data){
-    _user = Immutable.fromJS(data);
+    if(data && data.user){
+      data.user.token = data.token;
+    }
+    _user = Immutable.fromJS(data.user || data);
     storage.set('user',_user.toJS());
   },
   logout(){
@@ -38,17 +41,18 @@ const Store = Flux.createStore(
     getUser(){
       return _user;
     },
+    getAuth(){
+      return _user.get('token') ? `Bearer ${_user.get('token')}` : null;
+    },
     getUserLoginStatus(){
       return _statuses.userLogin;
-    },
-    getAuth(){
-      return _user.get('token');
     },
     getUserSendResetEmailStatus(){
       return _statuses.userSendResetEmail;
     }
   }, function(payload){
     switch(payload.actionType) {
+      case 'ONBOARD_SET_PASSWORD_SUCCESS':
       case 'USER_LOGIN_SUCCESS':
         if(payload.data && payload.data.token){
           statics.setUser(payload.data);

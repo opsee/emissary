@@ -1,14 +1,13 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
-import OnboardStore from '../../stores/Onboard';
+import {Toolbar} from '../global';
+import {OnboardStore} from '../../stores';
 import OnboardActions from '../../actions/Onboard';
-import UserStore from '../../stores/User';
-import AWSStore from '../../stores/AWS';
-import Link from 'react-router/lib/components/Link';
+import {UserStore} from '../../stores';
+import {Link} from 'react-router';
 import forms from 'newforms';
 import _ from 'lodash';
 import router from '../../modules/router.js';
-import {Close, ChevronRight} from '../icons/Module.jsx';
+import {Close, ChevronRight} from '../icons';
 import BastionInstall from './BastionInstaller.jsx';
 
 const Team = React.createClass({

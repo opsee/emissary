@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import OnboardStore from '../../stores/Onboard';
+import {OnboardStore} from '../../stores';
 import OnboardActions from '../../actions/Onboard';
-import UserStore from '../../stores/User';
-import Link from 'react-router/lib/components/Link';
+import {UserStore} from '../../stores';
+import {Link} from 'react-router';
 import Router, {RouteHandler} from 'react-router';
 
 export default React.createClass({

@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react';
 import {Button} from '../../modules/bootstrap';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Store from '../../stores/Home';
-import Toolbar from '../global/Toolbar.jsx';
+import {RadialGraph} from '../global';
+import {Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
-import GroupStore from '../../stores/Group';
-import GroupActions from '../../actions/Group';
+import {GroupStore} from '../../stores';
+import {GroupActions} from '../../actions';
 
 function getState(){
   return {

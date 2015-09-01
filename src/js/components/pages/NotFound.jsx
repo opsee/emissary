@@ -1,23 +1,8 @@
 import React, {PropTypes} from 'react';
-import Store from '../../stores/Home';
-import Toolbar from '../global/Toolbar.jsx';
-import UserInputs from '../user/UserInputs.jsx';
+import {Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-function getState(){
-  return {
-    instances: Store.getInstances(),
-    groups: Store.getGroups()
-  }
-}
 export default React.createClass({
-  mixins: [Store.mixin],
-  storeDidChange() {
-    this.setState(getState());
-  },
-  getDefaultProps() {
-    return getState();
-  },
   render() {
     return (
       <div>

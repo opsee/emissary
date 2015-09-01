@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Modal} from '../../modules/bootstrap';
-import GlobalStore from '../../stores/Global';
-import GlobalActions from '../../actions/Global';
+import {GlobalStore} from '../../stores';
+import {GlobalActions} from '../../actions';
 
 function getState(){
   return {

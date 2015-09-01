@@ -1,13 +1,12 @@
 import React from 'react';
-import Actions from '../../actions/Check';
 import {Link} from 'react-router';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
-import {Close, ChevronRight} from '../icons/Module.jsx';
+import {Close, ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 
 const intervalOptions = [

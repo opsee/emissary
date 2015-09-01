@@ -1,11 +1,12 @@
 import config from '../modules/config';
+//no idea why I can't use import {UserStore} from '../stores'; here. Something wrong with browserify+require
+import UserStore from '../stores/User';
 import Flux from '../modules/flux';
 import request from '../modules/request';
-import UserStore from '../stores/User';
 import _ from 'lodash';
 
 
-var getInstances = Flux.statics.addAsyncAction('getInstances',
+const getInstances = Flux.statics.addAsyncAction('getInstances',
   () => {
     return request
     .get(`${config.api}/instances`)
@@ -15,7 +16,7 @@ var getInstances = Flux.statics.addAsyncAction('getInstances',
   res => res && res.response
 );
 
-var getInstance = Flux.statics.addAsyncAction('getInstance', 
+const getInstance = Flux.statics.addAsyncAction('getInstance', 
   (id) => {
     return request
     .get(`${config.api}/instance/${id}`)

@@ -1,11 +1,10 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import TimeAgo from 'react-components/timeago';
 import GroupItem from '../groups/GroupItem.jsx';
-import GroupStore from '../../stores/Group';
-import GroupActions from '../../actions/Group';
+import {GroupStore} from '../../stores';
+import {GroupActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 

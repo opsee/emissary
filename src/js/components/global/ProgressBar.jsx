@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
-import {Close, ChevronRight} from '../icons/Module.jsx';
+import {Close, ChevronRight} from '../icons';
 
 export default React.createClass({
   render() {

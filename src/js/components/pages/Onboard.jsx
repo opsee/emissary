@@ -1,9 +1,7 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import OnboardStore from '../../stores/Onboard';
-import UserStore from '../../stores/User';
-
+import {OnboardStore} from '../../stores';
 
 export default React.createClass({
   mixins: [Store.mixin],

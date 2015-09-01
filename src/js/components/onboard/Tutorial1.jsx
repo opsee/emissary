@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import Link from 'react-router/lib/components/Link';
-import {ChevronRight} from '../icons/Module.jsx';
+import {Link} from 'react-router';
+import {ChevronRight} from '../icons';
 import statics from '../../modules/statics';
 
 export default React.createClass({

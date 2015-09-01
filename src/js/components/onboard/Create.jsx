@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import OnboardStore from '../../stores/Onboard';
+import {OnboardStore} from '../../stores';
 import OnboardActions from '../../actions/Onboard';
-import UserStore from '../../stores/User';
+import {UserStore} from '../../stores';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';

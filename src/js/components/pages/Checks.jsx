@@ -1,22 +1,22 @@
 import React from 'react';
-import Actions from '../../actions/Check';
-import Toolbar from '../global/Toolbar.jsx';
+import {CheckActions} from '../../actions';
+import {Toolbar} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Store from '../../stores/Check';
+import {CheckStore} from '../../stores';
 import CheckItem from '../checks/CheckItem.jsx';
-import Link from 'react-router/lib/components/Link';
-import {Add} from '../icons/Module.jsx';
+import {Link} from 'react-router';
+import {Add} from '../icons';
 import {PageAuth} from '../../modules/statics';
-import {Grid, Row, Col } from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    checks:Store.getChecks()
+    checks:CheckStore.getChecks()
   }
 }
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [CheckStore.mixin],
   statics:{
     willTransitionTo:PageAuth
   },
@@ -27,7 +27,7 @@ export default React.createClass({
     return getState();
   },
   silence(id){
-    Actions.silence(id);
+    CheckActions.silence(id);
   },
   renderChecks(){
     if(this.state.checks.size){

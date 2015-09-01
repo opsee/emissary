@@ -1,23 +1,19 @@
 import React from 'react';
 import _ from 'lodash';
-import Actions from '../../actions/Check';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Store from '../../stores/Check';
-import Link from 'react-router/lib/components/Link';
+import {CheckStore} from '../../stores';
+import {Link} from 'react-router';
 import CheckStep1 from '../checks/CheckStep1.jsx';
 import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
-import {Checkmark} from '../icons/Module.jsx';
+import {Checkmark} from '../icons';
 import colors from 'seedling/colors';
 
 function getState(){
   return {
-    check:Store.getCheck(),
-    response:Store.getResponse(),
-    checkStep1Data:{
-      foo:true
-    }
+    check:CheckStore.getCheck().toJS(),
+    response:CheckStore.getResponse()
   }
 }
 
@@ -26,7 +22,7 @@ let checkStep2Data = {}
 let checkStep3Data = {}
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [CheckStore.mixin],
   getInitialState() {
     return getState()
   },
@@ -74,7 +70,6 @@ export default React.createClass({
                   <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data} renderAsInclude={true}/>
                 </div>
               </div>
-              {this.state.foo}
               {
                 <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
               }

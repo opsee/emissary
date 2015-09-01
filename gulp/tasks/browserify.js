@@ -8,6 +8,7 @@ var config = require('../config').browserify;
 var transform = require('vinyl-transform');
 
 watchify.args.debug = config.debug;
+// watchify.args.fullPaths = true;
 var bundler = watchify(browserify(config.src, watchify.args), {poll:true});
 config.transform.forEach(function(t) {
   bundler.transform(t);

@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checkmark, MoreHoriz, Home, Opsee} from '../icons/Module.jsx';
-import UserStore from '../../stores/User';
+import {Person, Checkmark, MoreHoriz, Home, Opsee} from '../icons';
+import {UserStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({

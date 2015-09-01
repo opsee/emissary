@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import slate from 'slate';
-import {Close, Checkmark} from '../icons/Module.jsx';
+import {Close, Checkmark} from '../icons';
 import colors from 'seedling/colors';
 import Radium from 'radium';
 

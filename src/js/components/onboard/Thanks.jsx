@@ -1,5 +1,5 @@
 import React from 'react';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 
 export default React.createClass({
   render() {

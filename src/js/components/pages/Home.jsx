@@ -1,24 +1,24 @@
 import React, {PropTypes} from 'react';
 import {Button} from '../../modules/bootstrap';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Store from '../../stores/Home';
-import Toolbar from '../global/Toolbar.jsx';
+import {RadialGraph} from '../global';
+import {HomeStore} from '../../stores';
+import {Toolbar} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
 import {RouteHandler} from 'react-router';
-import Link from 'react-router/lib/components/Link';
-import InstanceStore from '../../stores/Instance';
-import InstanceActions from '../../actions/Instance';
+import {Link} from 'react-router';
+import {InstanceActions} from '../../actions';
 import {PageAuth} from '../../modules/statics';
+import GlobalActions from '../../actions/Global';
 
 function getState(){
   return {
-    instances: Store.getInstances(),
-    groups: Store.getGroups()
+    instances: HomeStore.getInstances(),
+    groups: HomeStore.getGroups()
   }
 }
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [HomeStore.mixin],
   statics:{
     willTransitionTo:PageAuth
   },

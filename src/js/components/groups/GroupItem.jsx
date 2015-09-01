@@ -1,8 +1,8 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
+import {RadialGraph} from '../global';
 import Actions from '../../actions/Check';
 import Link from 'react-router/lib/components/Link'
-import {MoreHoriz} from '../icons/Module.jsx';
+import {MoreHoriz} from '../icons';
 import colors from 'seedling/colors';
 
 export default React.createClass({

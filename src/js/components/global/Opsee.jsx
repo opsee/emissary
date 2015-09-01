@@ -15,9 +15,14 @@ export default React.createClass({
         <DocumentTitle title="Opsee"/>
         <Header/>
         <div style={{position:'relative'}}>
-          <CSSTransitionGroup component="div" transitionName="page">
-            <RouteHandler {...this.props} key={this.props.pathname}/>
-          </CSSTransitionGroup>
+        {
+          // <CSSTransitionGroup component="div" transitionName="page">
+          // <RouteHandler {...this.props} key={this.props.pathname}/>
+        }
+            <RouteHandler {...this.props}/>
+        {
+          // </CSSTransitionGroup>
+        }
         </div>
         {
         // <RouteHandler/>

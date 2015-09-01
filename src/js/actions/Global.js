@@ -1,7 +1,7 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
-import UserStore from '../stores/User';
+import {UserStore} from '../stores';
 import _ from 'lodash';
 import Socket from '../modules/socket';
 
@@ -22,7 +22,7 @@ _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
     const authCmd = JSON.stringify({
       command:'authenticate',
       attributes:{
-        hmac:auth.replace('HMAC ','')
+        hmac:auth.replace('Bearer ','')
       }
     });
     socket.send(authCmd);

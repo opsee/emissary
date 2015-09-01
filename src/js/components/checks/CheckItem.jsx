@@ -1,7 +1,7 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/Check';
-import Link from 'react-router/lib/components/Link';
+import {RadialGraph} from '../global';
+import {CheckActions} from '../../actions';
+import {Link} from 'react-router';
 
 export default React.createClass({
   getInitialState(){
@@ -10,7 +10,7 @@ export default React.createClass({
     }
   },
   silence(id){
-    Actions.silence(id);
+    CheckActions.silence(id);
   },
   render() {
     return (

@@ -1,12 +1,10 @@
 import React from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/Instance';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import InstanceStore from '../../stores/Instance';
-import InstanceActions from '../../actions/Instance';
+import {InstanceStore} from '../../stores';
+import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 
@@ -37,7 +35,7 @@ export default React.createClass({
     return getState();
   },
   silence(id){
-    Actions.silence(id);
+    InstanceActions.silence(id);
   },
   data(){
     return this.state.instance.toJS();

@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import UserStore from '../../stores/User';
+import {UserStore} from '../../stores';
 import UserActions from '../../actions/User';
 import router from '../../modules/router.js';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 
 export default React.createClass({
   mixins: [UserStore.mixin],

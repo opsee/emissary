@@ -1,20 +1,20 @@
 import React, {PropTypes} from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Actions from '../../actions/Check';
-import Toolbar from '../global/Toolbar.jsx';
+import {CheckActions} from '../../actions';
+import {Toolbar} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Store from '../../stores/Check';
-import Link from 'react-router/lib/components/Link';
-import {Edit} from '../icons/Module.jsx';
+import {CheckStore} from '../../stores';
+import {Link} from 'react-router';
+import {Edit} from '../icons';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    check:Store.getCheck()
+    check:CheckStore.getCheck()
   }
 }
 
 export default React.createClass({
-  mixins: [Store.mixin],
+  mixins: [CheckStore.mixin],
   storeDidChange() {
     this.setState(getState());
   },
@@ -22,7 +22,7 @@ export default React.createClass({
     return getState();
   },
   silence(id){
-    Actions.silence(id);
+    CheckActions.silence(id);
   },
   render() {
     return (
@@ -32,9 +32,9 @@ export default React.createClass({
             <Edit btn={true}/>
           </Link>
         </Toolbar>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               <h2>Check Information</h2>
               <table className="table">
                 <tbody>
@@ -58,9 +58,9 @@ export default React.createClass({
                     )
                 })}
               </ul>
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

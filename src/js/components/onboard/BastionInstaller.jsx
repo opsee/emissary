@@ -1,16 +1,15 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
-import OnboardStore from '../../stores/Onboard';
+import {Toolbar} from '../global';
+import {OnboardStore} from '../../stores';
 import OnboardActions from '../../actions/Onboard';
-import AWSStore from '../../stores/AWS';
-import Link from 'react-router/lib/components/Link';
+import {Link} from 'react-router';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
-import {Close, ChevronRight} from '../icons/Module.jsx';
+import {Close, ChevronRight} from '../icons';
 import ProgressBar from '../global/ProgressBar.jsx';
-import {Checkmark} from '../icons/Module.jsx';
+import {Checkmark} from '../icons';
 
 const BastionInstaller = React.createClass({
   getInitialState() {

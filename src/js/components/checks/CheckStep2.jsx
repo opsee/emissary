@@ -1,18 +1,17 @@
 import React from 'react';
-import Actions from '../../actions/Check';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
-import Toolbar from '../global/Toolbar.jsx';
+import {Toolbar} from '../global';
 import slate from 'slate';
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
-import {Close, ChevronRight} from '../icons/Module.jsx';
+import {Close, ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 
@@ -195,7 +194,7 @@ const AllFields = React.createClass({
     const obj = {
       assertions:this.state.assertions.cleanedData()
     }
-    return _.assign(obj);
+    return _.assign({}, obj);
   },
   renderSubmitButton(){
     if(this.props.standalone){

@@ -2,7 +2,7 @@ import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';
-import UserStore from '../stores/User';
+import {UserStore} from '../stores';
 
 let _actions = {};
 
@@ -19,7 +19,7 @@ _actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate'
 _actions.onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
   (data) => {
     return request
-    .post(`${config.api}/activations/${data.token}/activate`)
+    .post(`${config.authApi}/signups/${data.id}/claim`)
     .send(data)
   },
   res => res && res.body,

@@ -1,9 +1,7 @@
 import React, {PropTypes} from 'react';
-import Toolbar from '../global/Toolbar.jsx';
-import OnboardStore from '../../stores/Onboard';
+import {Toolbar} from '../global';
 import OnboardActions from '../../actions/Onboard';
-import UserStore from '../../stores/User';
-import AWSStore from '../../stores/AWS';
+import {OnboardStore} from '../../stores';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';

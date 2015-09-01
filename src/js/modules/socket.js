@@ -1,4 +1,4 @@
-import GlobalActions from '../actions/Global';
+import {GlobalActions} from '../actions';
 
 function start(){
   const socket = new WebSocket('ws://api-beta.opsee.co/stream/');

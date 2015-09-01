@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import RadialGraph from '../global/RadialGraph.jsx';
-import Link from 'react-router/lib/components/Link';
+import {RadialGraph} from '../global';
+import {Link} from 'react-router';
 import forms from 'newforms';
 import OpseeBoundField from '../forms/OpseeBoundField.jsx';
 
