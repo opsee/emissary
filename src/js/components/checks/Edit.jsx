@@ -27,9 +27,11 @@ function getState(){
   }
 }
 
-let checkStep1Data = {}
-let checkStep2Data = {}
-let checkStep3Data = {}
+let stepData = {
+  step1:{},
+  step2:{},
+  step3:{}
+}
 
 export default React.createClass({
   mixins: [CheckStore.mixin],
@@ -43,19 +45,14 @@ export default React.createClass({
     return getState();
   },
   getCleanData(){
-    return _.assign({}, checkStep1Data, checkStep2Data, checkStep3Data);
+    return _.assign({}, stepData.step1, stepData.step2, stepData.step3);
   },
-  updateCheckStep1Data(data, disabled){
-    checkStep1Data = data;
-    this.setState({step1:{disabled:disabled}});
-  },
-  updateCheckStep2Data(data, disabled){
-    checkStep2Data = data;
-    this.setState({step1:{disabled:disabled}});
-  },
-  updateCheckStep3Data(data, disabled){
-    checkStep3Data = data;
-    this.setState({step1:{disabled:disabled}});
+  updateData(data, disabled, num){
+    // this.setState({check:_.extend(this.state.check,data)});
+    var obj = {};
+    obj[`step${num}`] = {disabled:disabled};
+    stepData[`step${num}`] = data;
+    this.setState(obj);
   },
   disabled(){
     return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
@@ -75,16 +72,16 @@ export default React.createClass({
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
               <div className="padding-tb">
-                <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data} renderAsInclude={true}/>
+                <CheckStep1 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
               </div>
               <div className="padding-tb">
-                <CheckStep2 {...this.state} onChange={this.updateCheckStep2Data} renderAsInclude={true}/>
+                <CheckStep2 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
               </div>
               <div className="padding-tb">
-                <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data} renderAsInclude={true}/>
+                <CheckStep3 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
               </div>
               {
-                // <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
+                <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
               }
               <div><br/></div>
               <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>

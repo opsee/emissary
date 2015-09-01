@@ -89,7 +89,7 @@ const AllFields = React.createClass({
     return _.chain(['name']).map(s => this.props.check[s]).every().value();
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData(), this.disabled())
+    this.props.onChange(this.getCleanedData(), this.disabled(), 3)
   },
   renderNotificationForm(){
     return(

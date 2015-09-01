@@ -118,7 +118,7 @@ const AllFields = React.createClass({
     }
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData(), this.disabled());
+    this.props.onChange(this.getCleanedData(), this.disabled(), 1);
     this.setState({cleanedData:this.getCleanedData()});
     // this.forceUpdate();
   },

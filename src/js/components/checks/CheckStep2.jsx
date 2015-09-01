@@ -68,6 +68,7 @@ const AssertionsFormSet = forms.FormSet.extend({
 const AllFields = React.createClass({
   getInitialState() {
     const self = this;
+    console.log(this.props.check);
     var obj = {
       assertions: new AssertionsFormSet({
         onChange:self.changeAndUpdate,
@@ -80,7 +81,7 @@ const AllFields = React.createClass({
     };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
-      self.state.assertions.forms().forEach((form,i) => {
+      self.state.assertions.forms().forEach((form, i) => {
         //checking here accounts for empty assertion forms
         let data = self.props.check.assertions[i];
         if(data){
@@ -91,7 +92,7 @@ const AllFields = React.createClass({
     return obj;
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData(), this.disabled())
+    this.props.onChange(this.getCleanedData(), this.disabled(), 2)
   },
   operandInputNeeded(form, bf, assertionIndex, bfi){
     const data = form.cleanedData;
