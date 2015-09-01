@@ -175,6 +175,9 @@ const CheckStore = Flux.createStore(
     }
   }, function(payload){
     switch(payload.actionType) {
+      case 'CHECK_CREATE_ERROR':
+        console.error(payload.data);
+      break;
     }
   }
 )

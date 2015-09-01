@@ -7,13 +7,23 @@ import {Link} from 'react-router';
 import CheckStep1 from '../checks/CheckStep1.jsx';
 import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
-import {Checkmark} from '../icons';
+import {Checkmark, Close} from '../icons';
 import colors from 'seedling/colors';
+import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 
 function getState(){
   return {
     check:CheckStore.getCheck().toJS(),
-    response:CheckStore.getResponse()
+    response:CheckStore.getResponse(),
+    step1:{
+      disabled:false
+    },
+    step2:{
+      disabled:false
+    },
+    step3:{
+      disabled:false
+    }
   }
 }
 
@@ -33,64 +43,58 @@ export default React.createClass({
     return getState();
   },
   getCleanData(){
-    return checkStep1Data;
+    return _.assign({}, checkStep1Data, checkStep2Data, checkStep3Data);
   },
-  updateCheckStep1Data(data){
+  updateCheckStep1Data(data, disabled){
     checkStep1Data = data;
+    this.setState({step1:{disabled:disabled}});
   },
-  updateCheckStep2Data(data){
+  updateCheckStep2Data(data, disabled){
     checkStep2Data = data;
+    this.setState({step1:{disabled:disabled}});
   },
-  updateCheckStep3Data(data){
+  updateCheckStep3Data(data, disabled){
     checkStep3Data = data;
+    this.setState({step1:{disabled:disabled}});
+  },
+  disabled(){
+    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
   },
   submit(){
-    var obj = {};
-    _.assign(obj, checkStep1Data, checkStep2Data, checkStep3Data);
-    console.log(obj);
+    console.log(this.getCleanData());
   },
   render() {
     return (
       <div className="bg-body" style={{position:"relative"}}>
-        <Toolbar btnleft={true} title={`Edit Check ${this.state.check.name || this.state.check.get('id')}`} >
-          <Link to="check" params={{id:this.state.check.get('id')}} className="btn btn-primary btn-fab" title="Edit {check.name}">
+        <Toolbar btnPosition="midRight" title={`Edit ${this.state.check.name || this.state.check.id}`}>
+          <Link to="check" params={{id:this.state.check.id}} className="btn btn-icon btn-flat" title="Return to Check">
+            <Close btn={true}/>
           </Link>
         </Toolbar>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <div ng-form="editForm">
-                <div className="padding-tb">
-                  <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data} renderAsInclude={true}/>
-                </div>
-                <div className="padding-tb">
-                  <CheckStep2 {...this.state} onChange={this.updateCheckStep2Data} renderAsInclude={true}/>
-                </div>
-                <div className="padding-tb">
-                  <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data} renderAsInclude={true}/>
-                </div>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
+              <div className="padding-tb">
+                <CheckStep1 {...this.state} onChange={this.updateCheckStep1Data} renderAsInclude={true}/>
+              </div>
+              <div className="padding-tb">
+                <CheckStep2 {...this.state} onChange={this.updateCheckStep2Data} renderAsInclude={true}/>
+              </div>
+              <div className="padding-tb">
+                <CheckStep3 {...this.state} onChange={this.updateCheckStep3Data} renderAsInclude={true}/>
               </div>
               {
-                <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
+                // <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
               }
-              <div className="padding-tb"><br/><br/></div>
-            </div>
-          </div>
-        </div>
-
-        <div className="btn-container btn-container-fixed btn-container-bordered-top btn-container-righty">
-            <div className="container">
-              <div className="row">
-                <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-                  <button type="button" onClick={this.submit.bind(this)} className="btn btn-flat btn-success" ng-disabled="editForm.$invalid">
-                    <span>Finish&nbsp;&nbsp;
-                      <Checkmark inline={true} fill={colors.success}/>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+              <div><br/></div>
+              <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+                <span>Finish
+                  <Checkmark inline={true} fill={colors.success}/>
+                </span>
+            </Button>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

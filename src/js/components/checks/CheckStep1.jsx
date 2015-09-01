@@ -63,7 +63,7 @@ const InfoForm = forms.Form.extend({
           return false;
         }).map((bf, i) => {
           return (
-            <OpseeBoundField bf={bf} key={i}/>
+            <OpseeBoundField bf={bf} key={`bound-field-${i}`}/>
           );
         })
       }
@@ -112,8 +112,13 @@ const AllFields = React.createClass({
   dataComplete(){
     return _.chain(['group', 'port', 'method', 'path']).map(s => this.props.check[s]).every().value();
   },
+  componentDidMount(){
+    if(this.props.renderAsInclude){
+      this.changeAndUpdate();
+    }
+  },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData());
+    this.props.onChange(this.getCleanedData(), this.disabled());
     this.setState({cleanedData:this.getCleanedData()});
     // this.forceUpdate();
   },
@@ -168,13 +173,7 @@ const AllFields = React.createClass({
     return _.assign(data, this.state.info.cleanedData);
   },
   renderSubmitButton(){
-    if(this.props.standalone){
-      return(
-        <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-          Submit
-        </Button>
-      )
-    }else{
+    if(!this.props.renderAsInclude){
       return(
         <div>
           <div><br/><br/></div>
@@ -187,6 +186,8 @@ const AllFields = React.createClass({
           </div>
         </div>
       )
+    }else{
+      return <div/>
     }
   },
   renderLink(){

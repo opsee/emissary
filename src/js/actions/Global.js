@@ -1,7 +1,7 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
-import {UserStore} from '../stores';
+import UserStore from '../stores/User';
 import _ from 'lodash';
 import Socket from '../modules/socket';
 

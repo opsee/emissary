@@ -91,8 +91,7 @@ const AllFields = React.createClass({
     return obj;
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData())
-    this.forceUpdate();
+    this.props.onChange(this.getCleanedData(), this.disabled())
   },
   operandInputNeeded(form, bf, assertionIndex, bfi){
     const data = form.cleanedData;
@@ -197,13 +196,7 @@ const AllFields = React.createClass({
     return _.assign({}, obj);
   },
   renderSubmitButton(){
-    if(this.props.standalone){
-      return(
-        <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-          Submit
-        </Button>
-      )
-    }else{
+    if(!this.props.renderAsInclude){
       return(
         <div>
           <div><br/><br/></div>
@@ -216,6 +209,8 @@ const AllFields = React.createClass({
           </div>
         </div>
       )
+    }else{
+      return <div/>
     }
   },
   disabled(){

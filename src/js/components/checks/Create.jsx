@@ -1,8 +1,8 @@
 import React from 'react';
 import {CheckActions} from '../../actions';
 import {Toolbar} from '../global';
-import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
+import InstanceItem from '../instances/InstanceItem.jsx';
 import {Link} from 'react-router';
 import Router, {RouteHandler} from 'react-router';
 import _ from 'lodash';
@@ -32,7 +32,7 @@ export default React.createClass({
     });
   },
   submit(){
-    console.log(this.state.check);
+    CheckActions.checkCreate(this.state.check);
   },
   render() {
     return (

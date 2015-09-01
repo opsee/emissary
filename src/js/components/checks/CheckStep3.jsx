@@ -16,12 +16,7 @@ const intervalOptions = [
   ['7d','7d'],
 ]
 
-const notificationOptions = [
-  ['email','Email'],
-  ['desktop','Desktop'],
-  ['webhook','Webhook'],
-  ['slack','Slack'],
-]
+const notificationOptions = ['email','desktop','webhook','slack'].map(s => [s, _.capitalize(s)]);
 
 
 const NotificationForm = forms.Form.extend({
@@ -47,7 +42,6 @@ const InfoForm = forms.Form.extend({
     }
   }),
   validation:'auto',
-  // interval: forms.ChoiceField({choices:intervalOptions}),
   render() {
     return(
       <div>
@@ -84,7 +78,6 @@ const AllFields = React.createClass({
     setTimeout(function(){
       self.state.notifications.forms().forEach((form,i) => {
         let notif = self.props.check.notifications[i];
-        console.log(notif);
         if(notif){
           form.setData(notif);
         }
@@ -96,8 +89,7 @@ const AllFields = React.createClass({
     return _.chain(['name']).map(s => this.props.check[s]).every().value();
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData())
-    // this.forceUpdate();
+    this.props.onChange(this.getCleanedData(), this.disabled())
   },
   renderNotificationForm(){
     return(
@@ -113,17 +105,17 @@ const AllFields = React.createClass({
               </div>
               <div className="display-flex">
                 <div className="row flex-1">
-                  <div className="container-fluid">
-                    <div className="row">
+                  <Grid fluid={true}>
+                    <Row>
                       {form.boundFields().map(bf => {
                         return(
-                          <div className="col-xs-12 col-sm-6">
-                            <OpseeBoundField bf={bf}/>
-                          </div>
+                          <Col xs={12} sm={6}>
+                           <OpseeBoundField bf={bf}/>
+                         </Col>
                         )
                       })}
-                    </div>
-                  </div>
+                    </Row>
+                  </Grid>
                 </div>
                 <div className="padding-lr">
                     <button type="button" className="btn btn-icon btn-flat" onClick={this.state.notifications.removeForm.bind(this.state.notifications,index)} title="Remove this Notification">
@@ -147,16 +139,11 @@ const AllFields = React.createClass({
     return _.assign(data, this.state.info.cleanedData);
   },
   disabled(){
-    return !this.state.info.isComplete();
+    let notifsComplete = _.chain(this.state.notifications.forms()).map(n => n.isComplete()).every().value();
+    return !(this.state.info.isComplete() && notifsComplete);
   },
   renderSubmitButton(){
-    if(this.props.standalone){
-      return(
-        <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-          Finish
-        </Button>
-      )
-    }else{
+    if(!this.props.renderAsInclude){
       return(
         <div>
           <div><br/><br/></div>
@@ -169,6 +156,8 @@ const AllFields = React.createClass({
           </div>
         </div>
       )
+    }else{
+      return <div/>
     }
   },
   innerRender() {

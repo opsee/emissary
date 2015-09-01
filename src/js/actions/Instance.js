@@ -1,6 +1,5 @@
 import config from '../modules/config';
-//no idea why I can't use import {UserStore} from '../stores'; here. Something wrong with browserify+require
-import UserStore from '../stores/User';
+import {UserStore} from '../stores';
 import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';

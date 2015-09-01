@@ -28,10 +28,20 @@ function makeChange(kwargs) {
   return stream.map(transform);
 }
 
-gulp.task('swagger', function() {
+gulp.task('swaggerApi', function(){
+  return request('http://api-beta.opsee.co/api/swagger.json')
+    .pipe(source('api.js'))
+    .pipe(buffer())
+    .pipe(makeChange({className:'Api'}))
+    .pipe(gulp.dest('./src/js/swagger/'))
+})
+
+gulp.task('swaggerAuth', function(){
   return request('https://auth.opsee.co/swagger.json')
-  .pipe(source('auth.js'))
-  .pipe(buffer())
-  .pipe(makeChange({className:'Auth'}))
-  .pipe(gulp.dest('./src/js/swagger/'))
-});
+    .pipe(source('auth.js'))
+    .pipe(buffer())
+    .pipe(makeChange({className:'Auth'}))
+    .pipe(gulp.dest('./src/js/swagger/'))
+})
+
+gulp.task('swagger', ['swaggerApi', 'swaggerAuth']);

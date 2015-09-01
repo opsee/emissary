@@ -3,8 +3,6 @@ import Flux from '../modules/flux';
 import storage from '../modules/storage';
 import Immutable, {Record, List, Map} from 'immutable';
 import _ from 'lodash';
-import GlobalActions from '../actions/Global';
-import UserActions from '../actions/User';
 
 var User = Record({
   name:null,
@@ -16,6 +14,10 @@ var User = Record({
 let initialUser = storage.get('user');
 initialUser = initialUser ? new User(initialUser) : null;
 let _user = initialUser || new User();
+
+if(_user.get('token')){
+  require('../actions/Global').globalSocketStart();
+}
 
 const statics = {
   setUser(data){
@@ -42,7 +44,8 @@ const Store = Flux.createStore(
       return _user;
     },
     getAuth(){
-      return _user.get('token') ? `Bearer ${_user.get('token')}` : null;
+      return _user.get('token') ? `${_user.get('token')}` : null;
+      // return _user.get('token') ? `Bearer ${_user.get('token')}` : null;
     },
     getUserLoginStatus(){
       return _statuses.userLogin;
@@ -56,9 +59,9 @@ const Store = Flux.createStore(
       case 'USER_LOGIN_SUCCESS':
         if(payload.data && payload.data.token){
           statics.setUser(payload.data);
-          GlobalActions.globalSocketStart();
+          require('../actions/Global').globalSocketStart();
         }else{
-          UserActions.userGetProfile(payload.data);
+          require('../actions/User').userGetProfile(payload.data);
         }
       break;
       case 'USER_LOG_OUT':
@@ -68,6 +71,6 @@ const Store = Flux.createStore(
     _statuses = Flux.statics.statusProcessor(payload, _statuses);
     Store.emitChange();
   }
-)
+);
 
 export default Store;
