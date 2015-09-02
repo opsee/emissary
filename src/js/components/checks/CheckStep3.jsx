@@ -5,7 +5,7 @@ import forms from 'newforms';
 import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import {Toolbar} from '../global';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 import {Close, ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 
@@ -47,7 +47,7 @@ const InfoForm = forms.Form.extend({
       <div>
         <h2>Check Name</h2>
         {this.boundFields().map(bf => {
-          return <OpseeBoundField bf={bf}/>
+          return <BoundField bf={bf}/>
         })}
       </div>
     )
@@ -110,7 +110,7 @@ const AllFields = React.createClass({
                       {form.boundFields().map(bf => {
                         return(
                           <Col xs={12} sm={6}>
-                           <OpseeBoundField bf={bf}/>
+                           <BoundField bf={bf}/>
                          </Col>
                         )
                       })}

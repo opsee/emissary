@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {RadialGraph} from '../global';
-import Actions from '../../actions/Check';
+import {CheckActions} from '../../actions';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import colors from 'seedling/colors';
@@ -15,7 +15,7 @@ export default React.createClass({
   },
   silence(id){
     return console.log('silence');
-    Actions.silence(id);
+    CheckActions.silence(id);
   },
   render() {
     return (

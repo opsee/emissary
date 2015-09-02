@@ -9,7 +9,7 @@ import {Toolbar} from '../global';
 import slate from 'slate';
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
 import {Close, ChevronRight} from '../icons';
 import colors from 'seedling/colors';
@@ -100,7 +100,7 @@ const AllFields = React.createClass({
       if(data.type == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
           <div className="col-xs-10 col-xs-offset-2" key={`assertion-${assertionIndex}-field-${bfi}`}>
-            <OpseeBoundField bf={bf}/>
+            <BoundField bf={bf}/>
           </div>
         )
       }
@@ -112,7 +112,7 @@ const AllFields = React.createClass({
       if(!data.relationship.match('empty|notEmpty')){
         return(
           <div className="col-xs-10 col-xs-offset-2" key={`assertion-${assertionIndex}-field-${bfi}`}>
-            <OpseeBoundField bf={bf}/>
+            <BoundField bf={bf}/>
           </div>
         )
       }
@@ -158,14 +158,14 @@ const AllFields = React.createClass({
                           case 'type':
                           return(
                             <Col xs={10} sm={4} key={`assertion-${index}-field-${bfi}`}>
-                              <OpseeBoundField bf={bf}/>
+                              <BoundField bf={bf}/>
                             </Col>
                           );
                           break;
                           case 'relationship':
                           return(
                             <Col xs={10} xsOffset={2} sm={6} smOffset={0} key={`assertion-${index}-field-${bfi}`}>
-                              <OpseeBoundField bf={bf}/>
+                              <BoundField bf={bf}/>
                             </Col>
                           );
                           break;

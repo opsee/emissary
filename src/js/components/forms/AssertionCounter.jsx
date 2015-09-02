@@ -58,7 +58,7 @@ const AssertionCounter = React.createClass({
     return(
       <div title={this.getTitle()} className={`assertion-counter ${this.state.passing ? 'success' : 'danger'}`}>
       {this.props.label+1}
-      <div className={`assertion-validation ${this.isActive()}`} ng-className="{active: assertion.relationship}">
+      <div className={`assertion-validation ${this.isActive()}`}>
       {this.getSmallIcon()}
       </div>
     </div>

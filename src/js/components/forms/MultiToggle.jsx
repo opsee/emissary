@@ -1,15 +1,17 @@
-import React from 'react';
-import OpseeLabel from '../forms/OpseeLabel.jsx';
-import OpseeToggle from '../forms/OpseeToggle.jsx';
+import React, {PropTypes} from 'react';
+import ToggleWithLabel from './ToggleWithLabel.jsx';
 import _ from 'lodash';
 
 export default React.createClass({
+  propTypes:{
+    bf:PropTypes.object.isRequired
+  },
   getInitialState(){
     return {
       data:this.props.bf.value()
     };
   },
-  onChange(id){
+  onChange(id, bool){
     let data = this.props.bf.value() || [];
     if(_.findWhere(data, id)){
       data = _.pull(data, id);
@@ -28,11 +30,8 @@ export default React.createClass({
       <ul className="list-unstyled">
         {this.props.bf.subWidgets().map((w, i) => {
           return (
-            <li className="display-flex flex-wrap padding-tb-sm" key={i}>
-              <OpseeToggle on={this.widgetIsActive(w)} onChange={this.onChange} id={w.choiceValue}/>
-              <div className="flex-1">
-                <label onClick={this.onChange.bind(null, w.choiceValue)} className="user-select-none">{w.choiceValue} ({w.choiceLabel})</label>
-              </div>
+            <li className="padding-tb-sm" key={i}>
+              <ToggleWithLabel on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceValue} (${w.choiceLabel})`}/>
             </li>
           )
         })}

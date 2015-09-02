@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {RadialGraph} from '../global';
 import {Link} from 'react-router';
 import forms from 'newforms';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 
 let include = [];
 
@@ -28,7 +28,7 @@ const InfoForm = forms.Form.extend({
       <div>
       {
         include.map(field => {
-          return <OpseeBoundField bf={this.boundField(field)} key={field}/>
+          return <BoundField bf={this.boundField(field)} key={field}/>
         })
       }
       </div>

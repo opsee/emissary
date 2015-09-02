@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
-import Actions from '../../actions/User';
+import {UserActions} from '../../actions';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
@@ -33,7 +33,7 @@ export default React.createClass({
     this.setState({
       submitting:true
     });
-    Actions.userLogin(this.state.data);
+    UserActions.userLogin(this.state.data);
   },
   disabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);

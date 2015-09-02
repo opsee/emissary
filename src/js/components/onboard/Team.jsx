@@ -2,13 +2,13 @@ import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
-import OnboardActions from '../../actions/Onboard';
+import {OnboardActions} from '../../actions';
 import {UserStore} from '../../stores';
 import {State} from 'react-router';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import forms from 'newforms';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 
@@ -93,12 +93,12 @@ const Team = React.createClass({
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <OpseeBoundField bf={this.state.info.boundField('name')}/>
+                <BoundField bf={this.state.info.boundField('name')}/>
                 <div className="text-sm text-secondary">
                   <em>This name will appear in headings and menus to identify your team. Your company name is probably a good choice, but it doesn&rsquo;t need to be official or anything.</em>
                 </div>
                 <div><br/></div>
-                <OpseeBoundField bf={this.state.info.boundField('subdomain')}/>
+                <BoundField bf={this.state.info.boundField('subdomain')}/>
                 <div className="text-sm text-secondary">
                   <em>The web address you'll use to access your team's account. Keep it short and memorable. Only lowercase letters, numbers, and dashes are allowed, and it must start with a letter.</em>
                 </div>

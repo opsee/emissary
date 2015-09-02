@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
-import OnboardActions from '../../actions/Onboard';
+import {OnboardActions} from '../../actions';
 import {UserStore} from '../../stores';
 import {State} from 'react-router';
 import {Link} from 'react-router';

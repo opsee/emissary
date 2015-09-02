@@ -2,16 +2,14 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
 import {Grid, Row, Col, TabbedArea, TabPane} from '../../modules/bootstrap';
-import Button from '../forms/OpseeButton.jsx';
 import {Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
 import {CheckStore} from '../../stores';
-import Actions from '../../actions/Styleguide';
-import GlobalActions from '../../actions/Global';
+import {StyleguideActions, GlobalActions} from '../../actions';
 
 import {Add} from '../icons';
-import OpseeToggle from '../forms/OpseeToggle.jsx';
+import {Button, Toggle, ToggleWithLabel} from '../forms';
 
 function getState(){
   return {
@@ -30,9 +28,9 @@ export default React.createClass({
   getDefaultProps() {
     return getState();
   },
-  triggerToggle(index){
+  triggerToggle(index, bool){
     let toggles = this.state.toggles;
-    toggles[index].on = !toggles[index].on;
+    toggles[index].on = bool;
     this.setState({toggles:toggles});
   },
   notify(){
@@ -101,11 +99,8 @@ export default React.createClass({
           <ul className="list-unstyled">
           {this.state.toggles.map((t,i) => {
             return(
-              <li className="display-flex flex-wrap padding-tb" key={`toggle-${i}`}>
-                <OpseeToggle on={t.on}/>
-                <div className="flex-1">
-                  <label className="user-select-none" onClick={this.triggerToggle.bind(null, i)}>Item </label>
-                </div>
+              <li className="padding-tb" key={`toggle-${i}`}>
+                <ToggleWithLabel on={t.on} onChange={this.triggerToggle} id={i} label="Item"/>
               </li>
             )
           })}

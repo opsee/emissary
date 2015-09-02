@@ -6,7 +6,7 @@ import colors from 'seedling/colors';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 
 import {Link} from 'react-router';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import {Toolbar} from '../global';
 import {Close, ChevronRight} from '../icons';
@@ -54,7 +54,7 @@ const InfoForm = forms.Form.extend({
     return(
       <div>
         <h2>Choose an AWS Group</h2>
-        <OpseeBoundField bf={this.boundField('group')}/>
+        <BoundField bf={this.boundField('group')}/>
         <h2>Define an HTTP Request</h2>
         {this.boundFields((field, fieldName) => {
           if(fieldName.match('protocol|port|method|path')){
@@ -63,7 +63,7 @@ const InfoForm = forms.Form.extend({
           return false;
         }).map((bf, i) => {
           return (
-            <OpseeBoundField bf={bf} key={`bound-field-${i}`}/>
+            <BoundField bf={bf} key={`bound-field-${i}`}/>
           );
         })
       }
@@ -141,7 +141,7 @@ const AllFields = React.createClass({
                     {form.boundFields().map((bf, i) => {
                       return(
                         <Col xs={12} sm={6} key={`header-field-${index}-${i}`}>
-                          <OpseeBoundField bf={bf}/>
+                          <BoundField bf={bf}/>
                         </Col>
                       )
                     })}

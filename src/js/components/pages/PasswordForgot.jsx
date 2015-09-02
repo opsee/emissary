@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {UserStore} from '../../stores';
-import UserActions from '../../actions/User';
+import {UserActions} from '../../actions';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
 

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
-import OpseeLabel from '../forms/OpseeLabel.jsx';
+import {OpseeLabel} from '../forms';
 import DropdownButton from '../../modules/bootstrap';
-import MenuItem from '../../modules/bootstrap/MenuItem';
+import {MenuItem} from '../../modules/bootstrap';
 import _ from 'lodash';
 import Autosuggest from 'react-autosuggest';
 

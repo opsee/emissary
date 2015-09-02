@@ -1,6 +1,6 @@
 import React from 'react';
 import {RadialGraph} from '../global';
-import Actions from '../../actions/Check';
+import {CheckActions} from '../../actions';
 import Link from 'react-router/lib/components/Link'
 import {MoreHoriz} from '../icons';
 import colors from 'seedling/colors';
@@ -10,7 +10,7 @@ export default React.createClass({
     return this.props;
   },
   silence(id){
-    Actions.silence(id);
+    CheckActions.silence(id);
   },
   render() {
     return (

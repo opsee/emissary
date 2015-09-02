@@ -2,10 +2,10 @@ import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import Alert from '../global/Alert.jsx';
 import {OnboardStore, AWSStore} from '../../stores';
-import OnboardActions from '../../actions/Onboard';
+import {OnboardActions} from '../../actions';
 import {Link} from 'react-router';
 import forms from 'newforms';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 import router from '../../modules/router.js';
@@ -110,7 +110,7 @@ const Team = React.createClass({
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPCs you&rsquo;d like to install bastions in.</p>
          <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button></h2>
-          <OpseeBoundField bf={this.state.info.boundField('vpcs')}/>
+          <BoundField bf={this.state.info.boundField('vpcs')}/>
           <div><br/></div>
           <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>Install</button>
         </div>

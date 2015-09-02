@@ -7,9 +7,8 @@ import InstanceItem from '../instances/InstanceItem.jsx';
 import GroupItem from '../groups/GroupItem.jsx';
 import {RouteHandler} from 'react-router';
 import {Link} from 'react-router';
-import {InstanceActions} from '../../actions';
+import {InstanceActions, GlobalActions} from '../../actions';
 import {PageAuth} from '../../modules/statics';
-import GlobalActions from '../../actions/Global';
 
 function getState(){
   return {

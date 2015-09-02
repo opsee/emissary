@@ -21,6 +21,8 @@ let statics = {
   }
 }
 
+let _socketStarted = false;
+
 const Store = Flux.createStore(
   {
     getModalMessage(){
@@ -28,6 +30,9 @@ const Store = Flux.createStore(
     },
     getSocketMessages(){
       return _socketMessages;
+    },
+    getSocketStarted(){
+      return _socketStarted;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -38,6 +43,9 @@ const Store = Flux.createStore(
             __html:payload.data
           }
         };
+      break;
+      case 'GLOBAL_SOCKET_START':
+        _socketStarted = true;
       break;
       case 'GLOBAL_MODAL_MESSAGE_CONSUME':
         _modalMessage.used = true;

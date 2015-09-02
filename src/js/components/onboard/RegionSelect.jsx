@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
-import OnboardActions from '../../actions/Onboard';
+import {OnboardActions} from '../../actions';
 import {State} from 'react-router';
 import {Link} from 'react-router';
 import forms from 'newforms';
-import OpseeBoundField from '../forms/OpseeBoundField.jsx';
+import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 import router from '../../modules/router.js';
@@ -84,7 +84,7 @@ const Team = React.createClass({
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                <p>Choose the regions you'd like to launch Opsee bastions in. We're not going to install anything yet, we&rsquo;re first looking for active VPCs and subnets in the regions you select.</p>
                <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button> - <button type="button" className="btn btn-flat btn-warning" onClick={this.toggleAll.bind(null, false)}>Deselect All</button></h2>
-                <OpseeBoundField bf={this.state.info.boundField('regions')}/>
+                <BoundField bf={this.state.info.boundField('regions')}/>
                 <div><br/></div>
                 <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
                   <span>Next</span>

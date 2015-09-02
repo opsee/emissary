@@ -1,8 +1,10 @@
 import React from 'react';
 
-import OpseeInputWithLabel from './OpseeInputWithLabel.jsx';
-import OpseeDropdown from './OpseeDropdown.jsx';
-import OpseeMultiToggle from './OpseeMultiToggle.jsx';
+import MultiToggle from './MultiToggle.jsx';
+import InputWithLabel from './InputWithLabel.jsx';
+import Dropdown from './Dropdown.jsx';
+
+console.log(MultiToggle,InputWithLabel,Dropdown);
 
 export default React.createClass({
   output(){
@@ -10,19 +12,19 @@ export default React.createClass({
       case 'ChoiceField':
       return(
         <div className="form-group">
-          <OpseeDropdown bf={this.props.bf}/>
+          <Dropdown bf={this.props.bf}/>
         </div>
       );
       break;
       case 'MultipleChoiceField':
         return (
-          <OpseeMultiToggle bf={this.props.bf}/>
+          <MultiToggle bf={this.props.bf}/>
         );
       break;
       default:
       return(
         <div className="form-group">
-          <OpseeInputWithLabel bf={this.props.bf}/>
+          <InputWithLabel bf={this.props.bf}/>
         </div>
       );
       break;

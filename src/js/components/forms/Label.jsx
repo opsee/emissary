@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 
 export default React.createClass({
   propTypes:{
-    bf:React.PropTypes.object.isRequired
+    bf:PropTypes.object.isRequired
   },
   errors(){
     const errors = this.props.bf && this.props.bf.errors().messages().map((message, i) => {

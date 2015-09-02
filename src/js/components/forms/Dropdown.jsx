@@ -1,5 +1,5 @@
 import React from 'react';
-import OpseeLabel from '../forms/OpseeLabel.jsx';
+import {OpseeLabel} from '../forms';
 import {DropdownButton, MenuItem} from '../../modules/bootstrap';
 import _ from 'lodash';
 

@@ -15,10 +15,6 @@ let initialUser = storage.get('user');
 initialUser = initialUser ? new User(initialUser) : null;
 let _user = initialUser || new User();
 
-if(_user.get('token')){
-  require('../actions/Global').globalSocketStart();
-}
-
 const statics = {
   setUser(data){
     if(data && data.user){
@@ -59,9 +55,6 @@ const Store = Flux.createStore(
       case 'USER_LOGIN_SUCCESS':
         if(payload.data && payload.data.token){
           statics.setUser(payload.data);
-          require('../actions/Global').globalSocketStart();
-        }else{
-          require('../actions/User').userGetProfile(payload.data);
         }
       break;
       case 'USER_LOG_OUT':

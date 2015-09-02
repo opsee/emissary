@@ -28,7 +28,7 @@ export default React.createClass({
   },
   render(){
     return(
-      <header id="header" ng-hide="hideHeader">
+      <header id="header" ng-hide="hideHeader" className="user-select-none">
         <nav className="md-navbar" role="navigation">
         <Grid>
           <Row>
