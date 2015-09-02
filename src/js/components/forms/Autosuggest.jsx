@@ -15,7 +15,6 @@ const SuggestionRenderer = React.createClass({
   }
 });
 
-
 export default React.createClass({
   propTypes:{
     suggestions:PropTypes.func.isRequired,

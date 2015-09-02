@@ -1,5 +1,5 @@
 import AssertionCounter from './AssertionCounter.jsx';
-import AutoSuggest from './AutoSuggest.jsx';
+import Autosuggest from './Autosuggest.jsx';
 import BoundField from './BoundField.jsx';
 import Button from './Button.jsx';
 import Dropdown from './Dropdown.jsx';
@@ -11,7 +11,7 @@ import ToggleWithLabel from './ToggleWithLabel.jsx';
 
 export default {
   AssertionCounter,
-  AutoSuggest,
+  Autosuggest,
   Button,
   BoundField,
   Dropdown,
