@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
-import Alert from '../global/Alert.jsx';
+import {Alert} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {Link} from 'react-router';

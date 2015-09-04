@@ -115,8 +115,8 @@ const RadialGraph = React.createClass({
     });
   },
   getRadialState(){
-    let state = this.state.status.state;
-    const health = this.state.status.health;
+    let state = this.state.state;
+    const health = this.state.health;
     state = health == 100 ? 'perfect' : state;
     state = this.state.silenceRemaining ? 'silenced' : state;
     return state;
@@ -131,7 +131,7 @@ const RadialGraph = React.createClass({
     }
   },
   getTitle(){
-    switch(this.state.status.state){
+    switch(this.state.state){
       case 'running':
       return this.state.silenceRemaining ? 
       `This check is running, but is ` :
@@ -146,10 +146,10 @@ const RadialGraph = React.createClass({
     }
   },
   getSilenceRemaining(){
-    const startDate = this.state.status.silence.startDate;
+    const startDate = this.state.silenceDate;
     let num = 0;
     if(startDate && startDate instanceof Date){
-      const finalVal = startDate.valueOf() + this.state.status.silence.duration;
+      const finalVal = startDate.valueOf() + this.state.silenceDuration;
       num = finalVal - Date.now();
     }
     return num > 0 ? num : 0;
@@ -157,7 +157,7 @@ const RadialGraph = React.createClass({
   getText(){
     const millis = this.state.silenceRemaining;
     if(!millis || millis < 0){
-      return this.state.status.health;
+      return this.state.health;
     }
     const duration = moment.duration(millis);
     let unit = 'h';
@@ -174,11 +174,11 @@ const RadialGraph = React.createClass({
     return (time,10)+unit;
   },
   getPath(){
-    const health = this.state.status.health;
+    const health = this.state.health;
     if(!health){return '';}
     let percentage;
     if(this.state.silenceRemaining){
-      percentage = (this.state.silenceRemaining / this.state.status.silence.duration) * 100;
+      percentage = (this.state.silenceRemaining / this.state.silenceDuration) * 100;
     } else {
       percentage = health;
     }
@@ -203,10 +203,10 @@ const RadialGraph = React.createClass({
     return `translate(${w},${w})`;
   },
   render() {
-    if(!this.state.status){
+    if(!this.state.state){
       return(
         <div>
-          No status defined.
+          No state defined.
         </div>
       )
     }

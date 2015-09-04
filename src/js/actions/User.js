@@ -6,26 +6,26 @@ import {auth} from '../swagger';
 
 let _actions = {};
 
-_actions.userLogin = Flux.statics.addAsyncAction('userLogin',
-  (data) => {
-    return request
-    .post(`${config.api}/authenticate/password`)
-    .send(data)
-  },
-  res => res.body && res.body,
-  res => res && res.response
-);
-
 // _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
 //   (data) => {
-//     // return auth.authenticateFromPassword(data);
 //     return request
-//     .post(`${config.authApi}/authenticate/password`)
+//     .post(`${config.api}/authenticate/password`)
 //     .send(data)
 //   },
-//   res => res && res.body,
+//   res => res.body && res.body,
 //   res => res && res.response
 // );
+
+_actions.userLogin = Flux.statics.addAsyncAction('userLogin',
+  (data) => {
+    // return auth.authenticateFromPassword(data);
+    return request
+    .post(`${config.authApi}/authenticate/password`)
+    .send(data)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
 
 _actions.userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   (data) => {

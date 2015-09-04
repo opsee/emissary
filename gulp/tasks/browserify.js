@@ -27,8 +27,8 @@ function bundle() {
   return bundler.bundle()
   // log errors if they happen
   .on('error', function(err){
-    gutil.log(err.toString(), 'Browserify Error');
-    // this.emit('end');
+    gutil.log(err.toString(), 'Browserify Error')
+    this.emit('end');
   })
   .pipe(source(config.outputName))
   .pipe(gulp.dest(config.dest))

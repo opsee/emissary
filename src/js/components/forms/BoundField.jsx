@@ -4,8 +4,6 @@ import MultiToggle from './MultiToggle.jsx';
 import InputWithLabel from './InputWithLabel.jsx';
 import Dropdown from './Dropdown.jsx';
 
-console.log(MultiToggle,InputWithLabel,Dropdown);
-
 export default React.createClass({
   output(){
     switch(this.props.bf.field.constructor.name){

@@ -1,6 +1,6 @@
 /*jshint -W069 */
 /**
- * API for user/org management and authentication
+ * API for user/customer management and authentication
  * @class Auth
  * @param {(string|object)} [domainOrOptions] - The project domain or options object. If object, see the object's optional properties.
  * @param {string} [domainOrOptions.domain] - The project domain

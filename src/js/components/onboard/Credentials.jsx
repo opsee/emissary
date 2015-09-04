@@ -9,8 +9,6 @@ import _ from 'lodash';
 import router from '../../modules/router.js';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-console.log(Grid,Row,Col,BoundField,Link,OnboardStore,OnboardActions,Toolbar)
-
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
     widget: forms.PasswordInput,

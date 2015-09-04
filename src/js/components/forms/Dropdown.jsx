@@ -11,7 +11,7 @@ export default React.createClass({
     }else{
       label = _.clone(this.props.bf.label);
     }
-    return _.extend(this.props, {
+    return _.extend({}, this.props, {
       label:label
     })
   },
@@ -23,7 +23,7 @@ export default React.createClass({
     }
     return choice;
   },
-  onSelect(key){
+  onSelect(event, key){
     const obj = {};
     obj[this.state.bf.name] = key;
     this.state.bf.form.updateData(obj);
@@ -36,11 +36,11 @@ export default React.createClass({
   },
   render(){
     return(
-      <DropdownButton title={this.state.label} key={this.props.bf.idForLabel()}>
+      <DropdownButton title={this.state.label} key={this.props.bf.idForLabel()} id={this.props.bf.idForLabel()} onSelect={this.onSelect}>
       {
         this.props.bf.field._choices.map((choice, i) => {
           return (
-            <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]} onSelect={this.onSelect}>{choice[1]}</MenuItem>
+            <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]}>{choice[1]}</MenuItem>
           )
         })
       }

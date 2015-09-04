@@ -40,8 +40,8 @@ const Store = Flux.createStore(
       return _user;
     },
     getAuth(){
-      return _user.get('token') ? `${_user.get('token')}` : null;
-      // return _user.get('token') ? `Bearer ${_user.get('token')}` : null;
+      // return _user.get('token') ? `${_user.get('token')}` : null;
+      return _user.get('token') ? `Bearer ${_user.get('token')}` : null;
     },
     getUserLoginStatus(){
       return _statuses.userLogin;

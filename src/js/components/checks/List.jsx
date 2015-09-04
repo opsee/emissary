@@ -26,6 +26,12 @@ export default React.createClass({
   getInitialState(){
     return getState();
   },
+  getData(){
+    CheckActions.getChecks();
+  },
+  componentWillMount(){
+    this.getData();
+  },
   silence(id){
     CheckActions.silence(id);
   },

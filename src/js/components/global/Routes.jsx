@@ -12,7 +12,7 @@ import HomeInstances from '../pages/HomeInstances.jsx';
 import HomeGroups from '../pages/HomeGroups.jsx';
 import More from '../pages/More.jsx';
 import Styleguide from '../pages/Styleguide.jsx';
-import Checks from '../pages/Checks.jsx';
+import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
 import CheckCreate from '../checks/Create.jsx';
@@ -57,7 +57,7 @@ const routes = (
     </Route>
     <Route path="/instance/:id" name="instance" handler={Instance}/>
 
-    <Route path="/checks" name="checks" handler={Checks}/>
+    <Route path="/checks" name="checks" handler={CheckList}/>
     <Route path="/check-create" name="checkCreate" handler={CheckCreate}>
       <Redirect from="/check-create" to="/check-create-step-1" />
       <Route path="/check-create-step-1" name="checkCreateStep1" handler={CheckStep1}/>

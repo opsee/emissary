@@ -3,8 +3,9 @@ const src = './src';
 const gutil = require('gulp-util');
 const rewrite = require('connect-modrewrite');
 const path = require('path');
+const argv = require('yargs').argv;
 
-module.exports = {
+const config = {
   server: {
     settings: {
       root: dest,
@@ -66,5 +67,9 @@ module.exports = {
     js: src+'/js/**/*.*',
     sass: src+'/styles/**/*.*',
     // tasks: ['build']
-  }
+  },
+  env:argv.env || 'development'
 };
+
+console.log('Processing project as '+config.env);
+module.exports = config;

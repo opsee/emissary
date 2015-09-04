@@ -7,6 +7,7 @@ var source = require('vinyl-source-stream');
 var CodeGen = require('swagger-js-codegen').CodeGen;
 var stream = require('event-stream');
 var buffer = require('vinyl-buffer');
+var gutil = require('gulp-util');
 
 function makeChange(kwargs) {
   // you're going to receive Vinyl files as chunks
@@ -30,6 +31,10 @@ function makeChange(kwargs) {
 
 gulp.task('swaggerApi', function(){
   return request('http://api-beta.opsee.co/api/swagger.json')
+    .on('error', function(err){
+      gutil.log(err.toString(), 'Swagger Auth Error')
+      this.emit('end');
+    })
     .pipe(source('api.js'))
     .pipe(buffer())
     .pipe(makeChange({className:'Api'}))
@@ -38,6 +43,10 @@ gulp.task('swaggerApi', function(){
 
 gulp.task('swaggerAuth', function(){
   return request('https://auth.opsee.co/swagger.json')
+    .on('error', function(err){
+      gutil.log(err.toString(), 'Swagger Auth Error')
+      this.emit('end');
+    })
     .pipe(source('auth.js'))
     .pipe(buffer())
     .pipe(makeChange({className:'Auth'}))

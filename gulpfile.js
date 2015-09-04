@@ -11,6 +11,7 @@
   when you run `gulp`.
 */
 var requireDir = require('require-dir');
+var argv = require('yargs').argv;
 
 // Require all tasks in gulp/tasks, including subfolders
 requireDir('./gulp/tasks', { recurse: true });

@@ -5,7 +5,7 @@ import moment from 'moment';
 import Immutable, {Record, List, Map} from 'immutable';
 
 // data storage
-let _check = Immutable.fromJS({
+let _testCheck = Immutable.fromJS({
   name:'My great check2',
   info:'Fun info here2.',
   id:'foo',
@@ -72,42 +72,30 @@ let _check = Immutable.fromJS({
     lastChecked:new Date(),
     info:'Fun info here.',
     id:'foo',
-    status:{
-      health:25,
-      state:'running',
-      silence:{
-        startDate:null,
-        duration:null
-      }
-    },
+    health:25,
+    state:'running',
+    silenceDate:null,
+    silenceDuration:null
   },
   {
     name:'aefiljea-fae-fe (US-West-2)',
     lastChecked:new Date(),
     info:'Secondary info.',
     id:'foo-2',
-    status:{
-      health:50,
-      state:'running',
-      silence:{
-        startDate:null,
-        duration:null
-      }
-    },
+    health:45,
+    state:'running',
+    silenceDate:null,
+    silenceDuration:null
   },
   {
     name:'popfaef-eefff-f (US-West-3)',
     lastChecked:new Date(),
     info:'Great info here.',
     id:'foo-3',
-    status:{
-      health:100,
-      state:'running',
-      silence:{
-        startDate:null,
-        duration:null
-      }
-    },
+    health:100,
+    state:'running',
+    silenceDate:null,
+    silenceDuration:null
   },
   ]
 });
@@ -137,40 +125,111 @@ let _response = Immutable.fromJS(
   }
 );
 
-let _checks = new List();
+let _statuses = {
+  getCheck:null,
+  getChecks:null
+}
+
+var Header = Record({
+  key:'TestKey',
+  value:'TestValue'
+});
+
+var TestCheck = Record({
+  name:'Test Check',
+  info:null,
+  id:null,
+  method:'GET',
+  target:Map({
+    name:'coreos',
+    type:'sg',
+    id:'sg-c852dbad'
+  }),
+  path:'/',
+  port:80,
+  meta:List(),
+  group:'sg-c852dbad',
+  headers:List([new Header()]),
+  assertions:List(),
+  protocol:'http',
+  // interval:null,
+  // message:null,
+  notifications:List(),
+  instances:List(),
+  health:100,
+  state:'running',
+  silenceDate:null,
+  silenceDuration:null
+})
 
 var Check = Record({
   name:null,
   info:null,
   id:null,
   method:null,
+  target:Map({
+    name:null,
+    type:null,
+    id:null,
+  }),
   path:null,
-  port:null,
+  port:80,
   meta:List(),
   group:null,
   headers:List(),
   assertions:List(),
+  protocol:null,
   // interval:null,
   // message:null,
   notifications:List(),
-  instances:List()
+  instances:List(),
+  health:100,
+  state:'running',
+  silenceDate:null,
+  silenceDuration:null
 })
+
+
+let _checks = new List();
+let _check = new Check();
 
 function setSilence(opts){
   let check = _checks.filter((c) => c.get('id') == opts.id).first();
   if(check){
-    check.status.silence.startDate = new Date();
-    check.status.silence.duration = moment.duration(opts.sizelength, opts.unit).asMilliseconds();
+    check.silenceDate = new Date();
+    check.silenceDuration = moment.duration(opts.sizelength, opts.unit).asMilliseconds();
   }
 }
 
-const CheckStore = Flux.createStore(
+const statics = {
+  getCheckSuccess(data){
+    _check = statics.checkFromJS(data);
+  },
+  getChecksSuccess(data){
+    _checks = List(data.map(c => {
+      return statics.checkFromJS(c);
+    }))
+  },
+  checkFromJS(data){
+    data = _.extend(data, data.check_spec.value);
+    data.name = data.check_spec.value.name;
+    return new Check(data);
+  }
+}
+
+const Store = Flux.createStore(
   {
     getCheck(){
       return _check;
     },
+    getCheckStatus(){
+      return _statuses.getCheck;
+    },
     getChecks(){
       return _checks;
+    },
+    getChecksStatus(){
+      return _statuses.getChecks;
     },
     getResponse(){
       return _response.toJS();
@@ -180,11 +239,19 @@ const CheckStore = Flux.createStore(
     }
   }, function(payload){
     switch(payload.actionType) {
+      case 'GET_CHECKS_SUCCESS':
+        statics.getChecksSuccess(payload.data);
+      break;
+      case 'GET_CHECK_SUCCESS':
+        statics.getCheckSuccess(payload.data);
+      break;
       case 'CHECK_CREATE_ERROR':
         console.error(payload.data);
       break;
     }
+    _statuses = Flux.statics.statusProcessor(payload, _statuses);
+    Store.emitChange()
   }
 )
 
-export default CheckStore;
+export default Store;

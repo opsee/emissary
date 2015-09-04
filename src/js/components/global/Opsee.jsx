@@ -1,13 +1,12 @@
 import React from 'react/addons';
 const {CSSTransitionGroup} = React.addons;
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
+import {RouteHandler} from 'react-router';
 import router from '../../modules/router';
-import Header from '../global/Header.jsx';
-import MessageModal from '../global/MessageModal.jsx';
+import {Header, MessageModal} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
+import GoogleAnalytics from 'react-g-analytics';
 
 function startSocket(){
   let user = UserStore.getUser();
@@ -31,6 +30,7 @@ export default React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
+        <GoogleAnalytics id="UA-59205908-2"/>
         <Header/>
         <div style={{position:'relative'}}>
         {

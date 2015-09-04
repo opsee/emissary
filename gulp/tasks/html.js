@@ -1,12 +1,10 @@
 var gulp = require('gulp');
-var config = require('../config').html;
+var config = require('../config');
 var preprocess = require('gulp-preprocess');
 var argv = require('yargs').argv;
 
-console.log('Preprocessing HTML as '+(argv.env || 'development'));
-
 gulp.task('html', function() {
-  return gulp.src(config.src)
-  .pipe(preprocess({context: { ENV: argv.env, API:argv.api}}))
-  .pipe(gulp.dest(config.dest));
+  return gulp.src(config.html.src)
+  .pipe(preprocess({context: { ENV: config.env, API:argv.api}}))
+  .pipe(gulp.dest(config.html.dest));
 });
