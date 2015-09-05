@@ -50,15 +50,20 @@ var Instance = Record({
   groups:List()
 })
 
-let _instances = List();
-let _instance = new Instance();
-
 const statics = {
   getInstanceSuccess(data){
-    _instance = statics.instanceFromJS(data);
+    _data.instance = statics.instanceFromJS(data);
+    Store.emitChange();
+  },
+  getInstancePending(data){
+    if(_data.instance.get('id') != data){
+      _data.instance = new Instance();
+      Store.emitChange();
+    }
   },
   getInstancesSuccess(data){
-    _instances = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
+    _data.instances = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
+    Store.emitChange();
   },
   instanceFromJS(data){
     //just getting some id's back from server at the moment
@@ -74,6 +79,11 @@ const statics = {
   }
 }
 
+let _data = {
+  instances:new List(),
+  instance:new Instance()
+}
+
 let _statuses = {
   getInstances:null,
   getInstance:null
@@ -82,28 +92,29 @@ let _statuses = {
 const Store = Flux.createStore(
   {
     getInstance(){
-      return _instance;
+      return _data.instance;
     },
     getInstances(){
-      return _instances;
+      return _data.instances;
     },
     instanceFromJS:statics.instanceFromJS
   }, function(payload){
     switch(payload.actionType) {
-      case 'GET_INSTANCES_SUCCESS':
+      case 'GET_data.INSTANCES_SUCCESS':
         statics.getInstancesSuccess(payload.data);
       break;
-      case 'GET_INSTANCE_SUCCESS':
+      case 'GET_data.INSTANCE_SUCCESS':
         statics.getInstanceSuccess(payload.data);
       break;
-      case 'GET_INSTANCE_PENDING':
-        if(_instance.get('id') != payload.data){
-          _instance = new Instance();
-        }
+      case 'GET_data.INSTANCE_PENDING':
+        statics.getInstancePending(payload.data);
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses);
-    Store.emitChange();
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();  
+    }
   }
 )
 

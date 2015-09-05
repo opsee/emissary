@@ -20,10 +20,20 @@ var Group = Record({
   })
 });
 
-let _group = new Group();
-let _groups = new List();
-
 const statics = {
+  getGroupSuccess(data){
+    _data.group = statics.groupFromJS(data);
+    Store.emitChange();
+  },
+  getGroupPending(data){
+    if(_data.group.get('id') != data){
+      _data.group = new Group();
+    }
+  },
+  getGroupsSuccess(data){
+    _data.groups = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : [];
+    Store.emitChange();
+  },
   groupFromJS(data){
     //just getting some id's back from server at the moment
     if(typeof data == 'string'){
@@ -38,6 +48,11 @@ const statics = {
   }
 }
 
+let _data = {
+  group:new Group(),
+  groups:new List()
+}
+
 let _statuses = {
   getGroups:null,
   getGroup:null
@@ -46,28 +61,29 @@ let _statuses = {
 const Store = Flux.createStore(
   {
     getGroup(){
-      return _group;
+      return _data.group;
     },
     getGroups(){
-      return _groups;
+      return _data.groups;
     },
     groupFromJS:statics.groupFromJS
   }, function(payload){
     switch(payload.actionType) {
       case 'GET_GROUPS_SUCCESS':
-        _groups = payload.data && payload.data.length ? Immutable.fromJS(payload.data.map(statics.groupFromJS)) : [];
+        statics.getGroupsSuccess(payload.data);
       break;
       case 'GET_GROUP_SUCCESS':
-        _group = statics.groupFromJS(payload.data)
+        statics.getGroupSuccess(payload.data);
       break;
       case 'GET_GROUP_PENDING':
-        if(_group.get('id') != payload.data){
-          _group = new Group();
-        }
+        statics.getGroupPending(payload.data);
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses);
-    Store.emitChange();
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();  
+    }
   }
 )
 

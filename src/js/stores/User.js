@@ -11,22 +11,27 @@ var User = Record({
   token:null
 })
 
-let initialUser = storage.get('user');
-initialUser = initialUser ? new User(initialUser) : null;
-let _user = initialUser || new User();
-
 const statics = {
   setUser(data){
     if(data && data.user){
       data.user.token = data.token;
     }
-    _user = Immutable.fromJS(data.user || data);
-    storage.set('user',_user.toJS());
+    _data.user = Immutable.fromJS(data.user || data);
+    storage.set('user',_data.user.toJS());
+    Store.emitChange();
   },
   logout(){
    storage.remove('user');
-   _user = new User();
+   _data.user = new User();
+   Store.emitChange();
   }
+}
+
+let initialUser = storage.get('user');
+initialUser = initialUser ? new User(initialUser) : null;
+
+let _data = {
+  user:initialUser || new User()
 }
 
 let _statuses = {
@@ -36,12 +41,11 @@ let _statuses = {
 
 const Store = Flux.createStore(
   {
-    getUser(){
-      return _user;
-    },
     getAuth(){
-      // return _user.get('token') ? `${_user.get('token')}` : null;
-      return _user.get('token') ? `Bearer ${_user.get('token')}` : null;
+      return _data.user.get('token') ? `Bearer ${_data.user.get('token')}` : null;
+    },
+    getUser(){
+      return _data.user;
     },
     getUserLoginStatus(){
       return _statuses.userLogin;
@@ -53,16 +57,17 @@ const Store = Flux.createStore(
     switch(payload.actionType) {
       case 'ONBOARD_SET_PASSWORD_SUCCESS':
       case 'USER_LOGIN_SUCCESS':
-        if(payload.data && payload.data.token){
-          statics.setUser(payload.data);
-        }
+        statics.setUser(payload.data);
       break;
       case 'USER_LOG_OUT':
         statics.logout();
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses);
-    Store.emitChange();
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();  
+    }
   }
 );
 

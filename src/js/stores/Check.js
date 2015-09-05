@@ -125,11 +125,6 @@ let _response = Immutable.fromJS(
   }
 );
 
-let _statuses = {
-  getCheck:null,
-  getChecks:null
-}
-
 var Header = Record({
   key:'TestKey',
   value:'TestValue'
@@ -190,9 +185,6 @@ var Check = Record({
 })
 
 
-let _checks = new List();
-let _check = new Check();
-
 function setSilence(opts){
   let check = _checks.filter((c) => c.get('id') == opts.id).first();
   if(check){
@@ -203,12 +195,14 @@ function setSilence(opts){
 
 const statics = {
   getCheckSuccess(data){
-    _check = statics.checkFromJS(data);
+    _data.check = statics.checkFromJS(data);
+    Store.emitChange();
   },
   getChecksSuccess(data){
-    _checks = List(data.map(c => {
+    _data.checks = new List(data.map(c => {
       return statics.checkFromJS(c);
     }))
+    Store.emitChange();
   },
   checkFromJS(data){
     data = _.extend(data, data.check_spec.value);
@@ -217,25 +211,40 @@ const statics = {
   }
 }
 
+let _data = {
+  checks:new List(),
+  check:new Check(),
+  response:'foo'//_response
+}
+
+let _statuses = {
+  getCheck:null,
+  getChecks:null,
+  checkCreate:null
+}
+
 const Store = Flux.createStore(
   {
     getCheck(){
-      return _check;
+      return _data.check;
     },
-    getCheckStatus(){
+    getGetCheckStatus(){
       return _statuses.getCheck;
     },
+    getCheckCreateStatus(){
+      return _statuses.checkCreate;
+    },
     getChecks(){
-      return _checks;
+      return _data.checks;
     },
     getChecksStatus(){
       return _statuses.getChecks;
     },
-    getResponse(){
-      return _response.toJS();
-    },
     newCheck(){
       return new Check();
+    },
+    getResponse(){
+      return _data.response;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -249,8 +258,11 @@ const Store = Flux.createStore(
         console.error(payload.data);
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses);
-    Store.emitChange()
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();  
+    }
   }
 )
 

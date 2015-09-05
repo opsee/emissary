@@ -18,6 +18,7 @@ export default React.createClass({
   mixins: [CheckStore.mixin],
   storeDidChange() {
     this.setState(getState());
+    // const status = 
   },
   getInitialState:getState,
   silence(id){

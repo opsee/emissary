@@ -21,7 +21,7 @@ export default React.createClass({
   },
   storeDidChange() {
     this.setState(getState());
-    const status = CheckStore.getCheckStatus();
+    const status = CheckStore.getGetCheckStatus();
     if(status != 'success' && status != 'pending'){
       console.log(status);
     }

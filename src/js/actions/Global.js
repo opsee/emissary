@@ -29,7 +29,9 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
       if(!data){
         return false;
       }
-      Flux.actions.globalSocketMessage(data);
+      if(data.command != 'heartbeat'){
+        Flux.actions.globalSocketMessage(data);
+      }
     }
   }
 });

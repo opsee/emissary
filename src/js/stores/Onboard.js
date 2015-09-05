@@ -66,31 +66,38 @@ const Store = Flux.createStore(
         _subdomainAvailable = _.last(_domainPromisesArray);
       break;
       case 'ONBOARD_CREATE_ORG':
-      _teamData = _.extend(_teamData, payload.data);
+        _teamData = _.extend(_teamData, payload.data);
+        Store.emitChange();
       break;
       case 'ONBOARD_SET_REGIONS':
-      _installData.regions = payload.data;
+        _installData.regions = payload.data;
+        Store.emitChange();
       break;
       case 'ONBOARD_SET_CREDENTIALS':
-      _installData = _.extend(_installData, payload.data);
+        _installData = _.extend(_installData, payload.data);
+        Store.emitChange();
       break;
       case 'ONBOARD_VPC_SCAN_SUCCESS':
-      _availableVpcs = payload.data;
+        _availableVpcs = payload.data;
       break;
       case 'ONBOARD_VPC_SCAN_ERROR':
       break;
       case 'ONBOARD_SET_VPCS':
-      _installData = _.extend(_installData, payload.data);
+        _installData = _.extend(_installData, payload.data);
+        Store.emitChange();
       break;
       case 'ONBOARD_INSTALL':
-      console.log(_installData);
+        console.log(_installData);
       break;
       case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
-      console.log(payload.data);
+        console.log(payload.data);
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses);
-    Store.emitChange();
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();
+    }
   }
 )
 

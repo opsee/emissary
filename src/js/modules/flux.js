@@ -70,6 +70,25 @@ Flux.statics = {
       }
     }
     return statuses;
+  },
+  createStore(data, statuses, statics, switchFn){
+    var obj = {};
+    function makeFn(o, key){
+      return function(){
+        console.log(o,key);
+        return o[key];
+      }
+    }
+    for(var key1 in data){
+      const str = _.startCase(key1).split(' ').join('');
+      obj[`get${str}`] = makeFn(data, key1);
+    }
+    for(var key2 in statuses){
+      const str = _.startCase(key2).split(' ').join('');
+      obj[`get${str}Status`] = makeFn(statuses, key2);
+    }
+    statics = _.extend(statics, obj);
+    return Flux.createStore(statics, switchFn);
   }
 }
 export default Flux;

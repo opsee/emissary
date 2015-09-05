@@ -2,53 +2,66 @@ import config from '../modules/config';
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
 
-let _modalMessage = {
-  used:false,
-  msg:null
+let statics = {
+  globalModalMessage(data){
+    _data.modalMessage = {
+      used:false,
+      msg:{
+        __html:data
+      }
+    };
+    Store.emitChange();
+  },
+  globalModalMessageConsume(){
+    _data.modalMessage.used = true;
+  },
+  globalSocketStart(){
+    _data.socketStarted = true;
+    Store.emitChange();
+  },
+  parseSocketMessage(msg = {command:null}){
+    if(msg.command && msg.command != 'heartbeat'){
+      _data.socketMessages.push(msg);
+      Store.emitChange();
+    }
+  }
+}
+
+let _data = {
+  socketStarted:false,
+  socketMessages:[],
+  modalMessage:{
+    used:false,
+    msg:null
+  }
 }
 
 let _statuses = {
   globalSocketConnect:null
 }
 
-let _socketMessages = [];
-
-let statics = {
-  parseSocketMessage(msg = {command:null}){
-    if(msg.command && msg.command != 'heartbeat'){
-      _socketMessages.push(msg);
-    }
-  }
-}
-
-let _socketStarted = false;
-
 const Store = Flux.createStore(
   {
     getModalMessage(){
-      return !_modalMessage.used && _modalMessage.msg;
+      return !_data.modalMessage.used && _data.modalMessage.msg;
     },
     getSocketMessages(){
-      return _socketMessages;
+      return _data.socketMessages;
     },
     getSocketStarted(){
-      return _socketStarted;
+      return _data.socketStarted;
     }
   }, function(payload){
+    console.log(payload);
     switch(payload.actionType) {
       case 'GLOBAL_MODAL_MESSAGE':
-        _modalMessage = {
-          used:false,
-          msg:{
-            __html:payload.data
-          }
-        };
-      break;
-      case 'GLOBAL_SOCKET_START':
-        _socketStarted = true;
+        statics.globalModalMessage(payload.data);
       break;
       case 'GLOBAL_MODAL_MESSAGE_CONSUME':
-        _modalMessage.used = true;
+        statics.globalModalMessageConsume(payload.data);
+      break;
+      case 'GLOBAL_SOCKET_START':
+        statics.globalSocketStart(payload.data);
       break;
       case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
         console.log(payload.data);
@@ -57,8 +70,11 @@ const Store = Flux.createStore(
         statics.parseSocketMessage(payload.data);
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses);
-    Store.emitChange();
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();  
+    }
   }
 )
 
