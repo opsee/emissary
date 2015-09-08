@@ -3,6 +3,7 @@ import Flux from '../modules/flux';
 import storage from '../modules/storage';
 import './User'
 import _ from 'lodash';
+import GlobalStore from './Global';
 
 let _statuses = {
   onboardSignupCreate:null,
@@ -88,9 +89,6 @@ const Store = Flux.createStore(
       break;
       case 'ONBOARD_INSTALL':
         console.log(_installData);
-      break;
-      case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
-        console.log(payload.data);
       break;
     }
     const newStatuses = Flux.statics.statusProcessor(payload, _statuses);

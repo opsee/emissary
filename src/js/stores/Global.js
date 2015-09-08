@@ -52,7 +52,6 @@ const Store = Flux.createStore(
       return _data.socketStarted;
     }
   }, function(payload){
-    console.log(payload);
     switch(payload.actionType) {
       case 'GLOBAL_MODAL_MESSAGE':
         statics.globalModalMessage(payload.data);
@@ -64,6 +63,15 @@ const Store = Flux.createStore(
         statics.globalSocketStart(payload.data);
       break;
       case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
+        console.log(payload.data);
+      break;
+      case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
+        payload.data.forEach(function(d, i){
+          setTimeout(function(){
+            _data.socketMessages.push(d);
+            Store.emitChange();
+          }, i*1000);
+        });
         console.log(payload.data);
       break;
       case 'GLOBAL_SOCKET_MESSAGE':

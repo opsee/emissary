@@ -8,7 +8,7 @@ import forms from 'newforms';
 import _ from 'lodash';
 import router from '../../modules/router.js';
 import {Close, ChevronRight} from '../icons';
-import BastionInstall from './BastionInstaller.jsx';
+import BastionInstaller from './BastionInstaller.jsx';
 
 const Team = React.createClass({
   mixins: [OnboardStore.mixin],
@@ -31,7 +31,9 @@ const Team = React.createClass({
   getInitialState() {
     var self = this;
     const obj = {
-      bastions:[]
+      bastions:[{
+        instance_id: "5tRx0JWEOQgGVdLoKj1W3Z"
+      }]
     }
     return obj;
   },

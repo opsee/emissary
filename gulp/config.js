@@ -68,7 +68,8 @@ const config = {
     sass: src+'/styles/**/*.*',
     // tasks: ['build']
   },
-  env:argv.env || 'development'
+  env:argv.env || 'development',
+  api:argv.api || null
 };
 
 console.log('Processing project as '+config.env);

@@ -7,7 +7,9 @@ import {auth} from '../swagger';
 
 var getSignups = Flux.statics.addAsyncAction('getSignups', 
   (id) => {
-    return auth.listSignups();
+    // return auth.listSignups({
+    //   Authorization:UserStore.getAuth()
+    // });
     return request
     .get(`${config.authApi}/signups`)
     .set('Authorization', UserStore.getAuth())
