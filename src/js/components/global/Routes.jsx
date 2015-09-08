@@ -85,6 +85,7 @@ const routes = (
     <Route path="/start/credentials" name="onboardCredentials" handler={OnboardCredentials}/>
     <Route path="/start/vpc-select" name="onboardVpcSelect" handler={OnboardVPCSelect}/>
     <Route path="/start/install" name="onboardInstall" handler={OnboardInstall}/>
+    <Route path="/start/install-example" name="onboardInstallExample" handler={OnboardInstall} example={true}/>
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/admin/socket" name="adminSocket" handler={AdminSocket}/>

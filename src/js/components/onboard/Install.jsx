@@ -49,7 +49,9 @@ const Team = React.createClass({
   },
   componentWillMount(){
     // OnboardActions.onboardInstall();
-    OnboardActions.onboardExampleInstall();
+    if(this.props.path.match('example')){
+      OnboardActions.onboardExampleInstall();
+    }
   },
   disabled(){
     return !this.state.info.cleanedData.vpcs;

@@ -78,6 +78,7 @@ _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
   (data) => {
     return request
     .post(`${config.api}/bastions/launch`)
+    .set('Authorization', UserStore.getAuth())
     .send(data)
   },
   res => res && res.body,
