@@ -1,6 +1,7 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
+import _ from 'lodash';
 
 let statics = {
   globalModalMessage(data){
@@ -70,9 +71,8 @@ const Store = Flux.createStore(
           setTimeout(function(){
             _data.socketMessages.push(d);
             Store.emitChange();
-          }, i*1000);
+          }, i*500);
         });
-        console.log(payload.data);
       break;
       case 'GLOBAL_SOCKET_MESSAGE':
         statics.parseSocketMessage(payload.data);

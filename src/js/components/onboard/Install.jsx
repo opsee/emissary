@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
-import {OnboardStore} from '../../stores';
+import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {UserStore} from '../../stores';
 import {Link} from 'react-router';
@@ -11,13 +11,25 @@ import {Close, ChevronRight} from '../icons';
 import BastionInstaller from './BastionInstaller.jsx';
 
 const Team = React.createClass({
-  mixins: [OnboardStore.mixin],
+  mixins: [OnboardStore.mixin, GlobalStore.mixin],
   storeDidChange(){
     const data = OnboardStore.getInstallData();
     const dataHasValues = _.chain(data).values().every(_.identity).value();
     if(dataHasValues && data.regions.length && data.vpcs.length){
       // router.transitionTo('onboardInstall');
     }
+    let msgs = _.filter(GlobalStore.getSocketMessages(),{command:'launch-bastion'});
+    const bastions = _.chain(msgs)
+    // .reject({instance_id:"5tRx0JWEOQgGVdLoKj1W3Z"})
+    .groupBy('instance_id').map((value, key) => {
+      return {
+        id:key,
+        messages:_.chain(value).pluck('attributes').sort(function(a,b){
+          return Date.parse(a.Timestamp) - Date.parse(b.Timestamp)
+        }).value()
+      }
+    }).value();
+    this.setState({bastions});
   },
   statics:{
     willTransitionTo(transition, params, query){
@@ -31,9 +43,7 @@ const Team = React.createClass({
   getInitialState() {
     var self = this;
     const obj = {
-      bastions:[{
-        instance_id: "5tRx0JWEOQgGVdLoKj1W3Z"
-      }]
+      bastions:[]
     }
     return obj;
   },

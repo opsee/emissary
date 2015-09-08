@@ -69,7 +69,7 @@ const config = {
     // tasks: ['build']
   },
   env:argv.env || 'development',
-  api:argv.api || null
+  api:argv.api
 };
 
 console.log('Processing project as '+config.env);
