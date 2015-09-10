@@ -18,7 +18,7 @@ let domainPromisesArray = [];
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
-  return [r.id, r.name]
+  return [r.id, `${r.id} - ${r.name}`]
 });
 
 const InfoForm = forms.Form.extend({

@@ -12,9 +12,7 @@ export default React.createClass({
         let renderer;
         try{
           renderer = this.props.bf.field.widget.renderer().constructor.name;
-        }catch(err){
-          console.log(err);
-        }
+        }catch(err){}
         if(renderer && renderer == 'RadioFieldRenderer'){
           return <RadioSelect bf={this.props.bf}/>
         }else{

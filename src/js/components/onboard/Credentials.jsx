@@ -45,7 +45,8 @@ const Credentials = React.createClass({
       });
     }).flatten().value();
     if(vpcs.length){
-      if(vpcs.length === 1){
+      if(false){
+      // if(vpcs.length === 1){
         OnboardActions.onboardSetVpcs(vpcs);
         router.transitionTo('onboardInstall');
       }else{

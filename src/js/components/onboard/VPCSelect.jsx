@@ -14,9 +14,9 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 const regions = AWSStore.getRegions();
 
 const InfoForm = forms.Form.extend({
-  vpcs: forms.MultipleChoiceField({
+  vpcs: forms.ChoiceField({
     choices:[],
-    widget: forms.CheckboxSelectMultiple
+    widget: forms.RadioSelect
   }),
 });
 
@@ -38,7 +38,14 @@ const Team = React.createClass({
       const regionsWithVpcs = OnboardStore.getAvailableVpcs();
       let vpcs = regionsWithVpcs.map(r => {
         return r.vpcs.map(v => {
-          return [v['vpc-id'], r.region];
+          let name = v['vpc-id'];
+          if(v.tags){
+            let nameTag = _.findWhere(v.tags, {key:'Name'});
+            if(nameTag){
+              name = `${nameTag.value} - ${v['vpc-id']}`;
+            }
+          }
+          return [v['vpc-id'], `${name} (${r.region})`];
         });
       });
       vpcs = _.flatten(vpcs);
@@ -105,8 +112,7 @@ const Team = React.createClass({
     }else if(this.state.status == 'success'){
       return (
         <div>
-          <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPCs you&rsquo;d like to install bastions in.</p>
-         <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button></h2>
+          <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>
           <BoundField bf={this.state.info.boundField('vpcs')}/>
           <div><br/></div>
           <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>Install</button>
@@ -123,7 +129,7 @@ const Team = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Select VPCs"/>
+        <Toolbar title="Select a VPC"/>
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>

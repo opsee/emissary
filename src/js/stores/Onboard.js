@@ -123,11 +123,13 @@ const Store = Flux.createStore(
       break;
       case 'ONBOARD_VPC_SCAN_SUCCESS':
         _availableVpcs = payload.data;
+        Store.emitChange();
       break;
       case 'ONBOARD_VPC_SCAN_ERROR':
       break;
       case 'ONBOARD_SET_VPCS':
-        _installData = _.assign(_installData, {vpcs:payload.data});
+        const data = Array.isArray(payload.data) ? payload.data : [payload.data];
+        _installData = _.assign(_installData, {vpcs:data});
         Store.emitChange();
       break;
       case 'GLOBAL_SOCKET_MESSAGE':

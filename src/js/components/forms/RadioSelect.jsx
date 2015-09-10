@@ -26,7 +26,7 @@ export default React.createClass({
         {this.props.bf.subWidgets().map((w, i) => {
           return (
             <li className="padding-tb-sm" key={i}>
-              <RadioWithLabel on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceValue} (${w.choiceLabel})`}/>
+              <RadioWithLabel on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
             </li>
           )
         })}

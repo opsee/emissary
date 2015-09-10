@@ -9,6 +9,7 @@ import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
 import {Checkmark, Close} from '../icons';
 import colors from 'seedling/colors';
+import {CheckActions} from '../../actions';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 
 function getState(){
@@ -57,42 +58,59 @@ export default React.createClass({
   disabled(){
     return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
   },
+  getData(){
+    CheckActions.getCheck(this.props.params.id);
+  },
+  componentWillMount(){
+    this.getData();
+  },
   submit(){
     console.log(this.getCleanData());
   },
+  renderLink(){
+    return this.state.check.id ? 
+    (
+      <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Return to Check">
+        <Close btn={true}/>
+      </Link>
+    )
+     : <div/>;
+  },
   render() {
-    return (
-      <div>
-        <Toolbar btnPosition="midRight" title={`Edit ${this.state.check.name || this.state.check.id}`}>
-          <Link to="check" params={{id:this.state.check.id}} className="btn btn-icon btn-flat" title="Return to Check">
-            <Close btn={true}/>
-          </Link>
-        </Toolbar>
-        <Grid>
-          <Row>
-            <Col xs={12} sm={10} smOffset={1}>
-              <div className="padding-tb">
-                <CheckStep1 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
-              </div>
-              <div className="padding-tb">
-                <CheckStep2 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
-              </div>
-              <div className="padding-tb">
-                <CheckStep3 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
-              </div>
-              {
-                <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
-              }
-              <div><br/></div>
-              <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                <span>Finish
-                  <Checkmark inline={true} fill={colors.success}/>
-                </span>
-            </Button>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
+    if(this.state.check.id){
+      return (
+        <div>
+          <Toolbar btnPosition="midRight" title={`Edit ${this.state.check.name || this.state.check.id}`}>
+            {this.renderLink()}
+          </Toolbar>
+          <Grid>
+            <Row>
+              <Col xs={12} sm={10} smOffset={1}>
+                <div className="padding-tb">
+                  <CheckStep1 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                </div>
+                <div className="padding-tb">
+                  <CheckStep2 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                </div>
+                <div className="padding-tb">
+                  <CheckStep3 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                </div>
+                {
+                  <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
+                }
+                <div><br/></div>
+                <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+                  <span>Finish
+                    <Checkmark inline={true} fill={colors.success}/>
+                  </span>
+              </Button>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      );
+    }else{
+      return <div/>
+    }
   }
 });

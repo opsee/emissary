@@ -187,7 +187,7 @@ const AllFields = React.createClass({
     }
   },
   renderLink(){
-    return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : '<div/>';
+    return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
   },
   submit(e){
     e.preventDefault();
