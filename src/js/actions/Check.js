@@ -26,6 +26,7 @@ _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
           protocol:data.protocol,
           port:data.port,
           verb:data.method,
+          interval:'5m',
           headers:data.headers.map(h => {
             return {
               name:h.key,

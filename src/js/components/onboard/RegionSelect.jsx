@@ -9,6 +9,9 @@ import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 import router from '../../modules/router.js';
+import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
+import colors from 'seedling/colors';
 
 let checkSubdomainPromise;
 let domainPromisesArray = [];
@@ -19,9 +22,9 @@ const regionChoices = regions.map(r => {
 });
 
 const InfoForm = forms.Form.extend({
-  regions: forms.MultipleChoiceField({
+  regions: forms.ChoiceField({
     choices: regionChoices,
-    widget: forms.CheckboxSelectMultiple
+    widget: forms.RadioSelect
   }),
 });
 
@@ -77,25 +80,25 @@ const Team = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Regions to launch Bastions in"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Toolbar title="Region to Scan for VPCs"/>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-               <p>Choose the regions you'd like to launch Opsee bastions in. We're not going to install anything yet, we&rsquo;re first looking for active VPCs and subnets in the regions you select.</p>
-               <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button> - <button type="button" className="btn btn-flat btn-warning" onClick={this.toggleAll.bind(null, false)}>Deselect All</button></h2>
+               <p>Choose the region you'd like to launch your Opsee Bastion in. We're not going to install anything yet, we&rsquo;re first looking for active VPCs and subnets in the region you select.</p>
+               {
+               // <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button> - <button type="button" className="btn btn-flat btn-warning" onClick={this.toggleAll.bind(null, false)}>Deselect All</button></h2>
+               }
                 <BoundField bf={this.state.info.boundField('regions')}/>
                 <div><br/></div>
-                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>Next</span>
-                </button>
+                <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron={true}>Next</Button>
               </form>
               {
               // <pre>{JSON.stringify(this.state.info.cleanedData, null, ' ')}</pre>
               }
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

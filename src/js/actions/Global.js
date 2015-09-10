@@ -17,6 +17,7 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
     socket = new WebSocket('ws://api-beta.opsee.co/stream/');
     socket.onopen = function(event){
       Flux.actions.globalSocketAuth();
+      Flux.actions.globalSocketSubscribe('launch-bastion');
     }
     socket.onmessage = function(event){
       let data;
@@ -42,8 +43,19 @@ _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
     const authCmd = JSON.stringify({
       command:'authenticate',
       attributes:{
-        hmac:auth.replace('Bearer ','')
+        token:auth.replace('Bearer ','')
       }
+    });
+    socket.send(authCmd);
+  }
+});
+
+_actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe', (str) => {
+  const auth = UserStore.getAuth();
+  if(auth && socket && str){
+    const authCmd = JSON.stringify({
+      command:'subscribe',
+      attributes:{subscribe_to:str}
     });
     socket.send(authCmd);
   }

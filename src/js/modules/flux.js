@@ -8,13 +8,13 @@ Flux.statics = {
   addAction(baseName, fn){
     const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
     let obj = {};
-    obj[baseName] = function(data){
+    obj[baseName] = function(...args){
       if(typeof fn == 'function'){
-        fn.call();
+        fn.call(null, ...args);
       }
       return {
         actionType:upperName,
-        data:data
+        data:args[0]
       }
     };
     return Flux.createActions(obj);

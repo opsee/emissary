@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {ChevronRight} from '../icons';
+import {StepCounter} from '../global';
 
 export default React.createClass({
   statics:{
@@ -25,6 +26,7 @@ export default React.createClass({
                   Next&nbsp;<ChevronRight inline={true}/>
                 </Link>
               </div>
+              <StepCounter active={2} steps={2}/>
             </div>
           </div>
         </div>

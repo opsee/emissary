@@ -6,7 +6,7 @@ import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import {Close, ChevronRight} from '../icons';
+import {Close} from '../icons';
 import colors from 'seedling/colors';
 
 const intervalOptions = [
@@ -148,11 +148,7 @@ const AllFields = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                <span>Finish
-                  <ChevronRight inline={true} fill={colors.success}/>
-                </span>
-            </Button>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
           </div>
         </div>
       )
@@ -180,7 +176,7 @@ const AllFields = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <div className="bg-body" style={{position:"relative"}}>
+        <div>
           <Toolbar btnleft={true} title={`Create Check Step 3`}>
             {
               // this.renderLink()

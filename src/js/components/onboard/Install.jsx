@@ -9,18 +9,32 @@ import _ from 'lodash';
 import router from '../../modules/router.js';
 import {Close, ChevronRight} from '../icons';
 import BastionInstaller from './BastionInstaller.jsx';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
-const Team = React.createClass({
+const statics = {
+  checkedInstallStatus:false
+}
+
+const Install = React.createClass({
   mixins: [OnboardStore.mixin, GlobalStore.mixin],
   storeDidChange(){
-    const data = OnboardStore.getInstallData();
-    const dataHasValues = _.chain(data).values().every(_.identity).value();
-    if(dataHasValues && data.regions.length && data.vpcs.length){
-      // router.transitionTo('onboardInstall');
-    }
-    let msgs = _.filter(GlobalStore.getSocketMessages(),{command:'launch-bastion'});
+    // const data = OnboardStore.getFinalInstallData();
+    // OnboardStore.getBastionHasLaunchedPromise().then(function(started){
+    //   if(data && !started){
+    //     const dataHasValues = _.chain(data).values().every(_.identity).value();
+    //     if(dataHasValues && data.regions.length){
+    //       OnboardActions.onboardInstall(data);
+    //     }
+    //   }else if(!data){
+    //     router.transitionTo('onboardRegionSelect');
+    //   }
+    //   this.setState({checkedInstallStatus:true});
+    // })
+    let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command:'launch-bastion'}).filter(m => {
+        return m.attributes && m.attributes.ResourceType;
+      }).value();
     const bastions = _.chain(msgs)
-    // .reject({instance_id:"5tRx0JWEOQgGVdLoKj1W3Z"})
+    //.reject({instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'})
     .groupBy('instance_id').map((value, key) => {
       return {
         id:key,
@@ -33,31 +47,48 @@ const Team = React.createClass({
   },
   statics:{
     willTransitionTo(transition, params, query){
-      // const data = OnboardStore.getInstallData();
-      // const dataHasValues = _.chain(data).values().every(_.identity).value();
-      // if(!dataHasValues || !data.regions.length){
-      //   transition.redirect('onboardRegionSelect');
-      // }
+      if(!transition.path.match('example')){
+        // const data = OnboardStore.getInstallData();
+        // const dataHasValues = _.chain(data).values().every(_.identity).value();
+        // if(!dataHasValues || !data.regions.length){
+        //   transition.redirect('onboardRegionSelect');
+        // }
+      }
     }
   },
   getInitialState() {
-    var self = this;
-    const obj = {
+    return {
       bastions:[]
     }
-    return obj;
   },
   componentWillMount(){
-    // OnboardActions.onboardInstall();
     if(this.props.path.match('example')){
       OnboardActions.onboardExampleInstall();
+    }else{
+      OnboardStore.getBastionHasLaunchedPromise().then(function(started){
+        statics.checkedInstallStatus = true;
+        const data = OnboardStore.getFinalInstallData();
+        if(data && !started){
+          const dataHasValues = _.chain(data).values().every(_.identity).value();
+          if(dataHasValues && data.regions.length){
+            OnboardActions.onboardInstall(data);
+          }
+        }else if(!data && !started){
+          router.transitionTo('onboardRegionSelect');
+        }
+      })
     }
   },
-  disabled(){
-    return !this.state.info.cleanedData.vpcs;
+  bastionStatuses(){
+    return _.chain(this.state.bastions).pluck('messages').map(bastionMsgs => {
+      return _.chain(bastionMsgs).filter({ResourceType:'AWS::CloudFormation::Stack'}).filter(msg => {
+        return msg.ResourceStatus == 'CREATE_COMPLETE' || msg.ResourceStatus == 'ROLLBACK_COMPLETE'
+      }).pluck('ResourceStatus').first().value()
+     }).value();
   },
   bastionsComplete(){
-    return false;
+    const stats = this.bastionStatuses();
+    return _.every(stats) && stats.length;
   },
   renderBtn(){
     if(this.bastionsComplete()){
@@ -66,26 +97,54 @@ const Team = React.createClass({
       )
     }
   },
+  renderText(){
+    if(!statics.checkedInstallStatus && !this.state.bastions.length){
+      return (
+        <p>Checking installation status...</p>
+      )
+    }
+    if(this.bastionsComplete()){
+      const bastionErrors = _.filter(this.bastionStatuses(), stat => stat == 'ROLLBACK_COMPLETE');
+      const bastionSucccesses = _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
+      if(bastionErrors.length && !bastionSucccesses.length){
+        return (
+          <p>{bastionErrors.length} Bastions failed to install correctly</p>
+        )
+      }else if(bastionErrors.length){
+        return (
+          <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSucccesses.length} completed successfully.</p>
+        )
+      }else{
+        return (
+          <p>{bastionSucccesses.length} Bastion installed correctly.</p>
+        )
+      }
+    }else{
+      return (
+        <p>We are now installing the bastion in your selected VPCs. This could take a few minutes.</p>
+      )
+    }
+  },
   render() {
     return (
        <div>
         <Toolbar title="Bastion Installation"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <p>We are now installing the bastion in your selected VPCs. This could take a few minutes.</p>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
+              {this.renderText()}
               {this.state.bastions.map(b => {
                 return (
                   <BastionInstaller {...b}/>
                 )
               })}
               {this.renderBtn()}
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
 });
 
-export default Team;
+export default Install;

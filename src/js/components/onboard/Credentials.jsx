@@ -8,6 +8,7 @@ import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import router from '../../modules/router.js';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import colors from 'seedling/colors';
 
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
@@ -27,12 +28,28 @@ const InfoForm = forms.Form.extend({
 });
 
 const Credentials = React.createClass({
-  mixins: [],
+  mixins: [OnboardStore.mixin],
   statics:{
     willTransitionTo(transition, params, query){
       const data = OnboardStore.getInstallData();
       if(!data.regions.length){
         transition.redirect('onboardRegionSelect');
+      }
+    }
+  },
+  storeDidChange(){
+    const regionsWithVpcs = OnboardStore.getAvailableVpcs();
+    let vpcs = _.chain(regionsWithVpcs).map(r => {
+      return r.vpcs.map(v => {
+        return v['vpc-id']
+      });
+    }).flatten().value();
+    if(vpcs.length){
+      if(vpcs.length === 1){
+        OnboardActions.onboardSetVpcs(vpcs);
+        router.transitionTo('onboardInstall');
+      }else{
+        router.transitionTo('onboardVpcSelect');
       }
     }
   },
@@ -58,8 +75,9 @@ const Credentials = React.createClass({
   },
   submit(e){
     e.preventDefault();
-    router.transitionTo('onboardVpcSelect')
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
+    OnboardActions.onboardVpcScan(OnboardStore.getInstallData());
+    // router.transitionTo('onboardVpcSelect')
   },
   disabled(){
     return !this.state.info.isValid();
@@ -76,9 +94,7 @@ const Credentials = React.createClass({
                <div><br/></div>
                <BoundField bf={this.state.info.boundField('access-key')}/>
                <BoundField bf={this.state.info.boundField('secret-key')}/>
-               <button type="submit" className="btn btn-raised btn-success btn-block" disabled={this.disabled()}>
-                  <span>Next</span>
-                </button>
+               <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Next'} chevron={true}>Next</Button>
               </form>
             </Col>
           </Row>

@@ -62,7 +62,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="bg-body" style={{position:"relative"}}>
+      <div>
         <Toolbar btnPosition="midRight" title={`Edit ${this.state.check.name || this.state.check.id}`}>
           <Link to="check" params={{id:this.state.check.id}} className="btn btn-icon btn-flat" title="Return to Check">
             <Close btn={true}/>

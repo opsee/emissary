@@ -7,6 +7,7 @@ import ProgressBar from './ProgressBar.jsx';
 import RadialGraph from './RadialGraph.jsx';
 import Routes from './Routes.jsx';
 import SearchBox from './SearchBox.jsx';
+import StepCounter from './StepCounter.jsx';
 import Toolbar from './Toolbar.jsx';
 
 export default {
@@ -19,5 +20,6 @@ export default {
   RadialGraph,
   Routes,
   SearchBox,
+  StepCounter,
   Toolbar
 }

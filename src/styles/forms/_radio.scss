@@ -1,0 +1,17 @@
+.radio {
+  // @include transition(background-color $swift-ease-in-out-duration $swift-ease-in-out-timing-function);
+  cursor: pointer;
+  display: inline-block;
+  height: 1.3em;
+  width:1.3em;
+  border-radius:100%;
+  // background:$gray-700;
+  border:2px solid $gray-700;
+  font-size:1.2em;
+  @include user-select(none);
+  position: relative;
+  margin:0 1.2em 0 0;
+  &.active{
+    background: $brand-primary;
+  }
+}

@@ -162,6 +162,7 @@ var Check = Record({
   info:null,
   id:null,
   method:null,
+  verb:null,
   target:Map({
     name:null,
     type:null,

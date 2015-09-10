@@ -46,9 +46,6 @@ export default React.createClass({
       check:obj
     });
   },
-  submit(){
-    console.log(this.state.check);
-  },
   isUnapprovedSignup(s){
     return !s.activation_id;
   },

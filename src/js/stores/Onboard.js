@@ -4,6 +4,7 @@ import storage from '../modules/storage';
 import './User'
 import _ from 'lodash';
 import GlobalStore from './Global';
+import $q from 'q';
 
 let _statuses = {
   onboardSignupCreate:null,
@@ -25,6 +26,8 @@ let _installData = {
   vpcs:[]
 }
 
+let _bastionHasLaunched = false;
+
 let _availableVpcs = [];
 
 let _domainPromisesArray = [];
@@ -37,6 +40,17 @@ const Store = Flux.createStore(
     },
     getSetPasswordStatus(){
       return _statuses.onboardSetPassword;
+    },
+    getBastionHasLaunchedPromise(){
+      var d = $q.defer();
+      if(_bastionHasLaunched){
+        d.resolve(_bastionHasLaunched);
+      }else{
+        setTimeout(() => {
+          d.resolve(_bastionHasLaunched);
+        },17000);
+      }
+      return d.promise;
     },
     getInstallData(){
       return _installData;
@@ -55,6 +69,32 @@ const Store = Flux.createStore(
     },
     getAvailableVpcs(){
       return _availableVpcs;
+    },
+    getFinalInstallData(){
+      let relation = _installData.vpcs.map(function(v){
+        Store.getAvailableVpcs().forEach(
+          function(r){
+            r.vpcs.forEach(function(rvpc){
+              if(rvpc['vpc-id'] == v){
+                v = {id:v,region:r.region}
+              }
+            })
+          });
+        return v.id ? v : false;
+      });
+      if(!_.every(relation) || !relation.length){
+        return false;
+      }
+      //TODO fix this so it works with multiple vpcs later
+      relation = relation.map(r => {
+        return {
+          region:r.region,
+          vpcs:[{id:r.id}]
+        }
+      });
+      let aggregate = _.assign({}, _installData, {regions:relation}, {'instance-size':'t2.micro'});
+      delete aggregate.vpcs;
+      return aggregate;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -67,15 +107,18 @@ const Store = Flux.createStore(
         _subdomainAvailable = _.last(_domainPromisesArray);
       break;
       case 'ONBOARD_CREATE_ORG':
-        _teamData = _.extend(_teamData, payload.data);
+        _teamData = _.assign(_teamData, payload.data);
         Store.emitChange();
       break;
       case 'ONBOARD_SET_REGIONS':
-        _installData.regions = payload.data;
+        _installData.regions = [payload.data];
+        if(window.location.host.match('localhost')){
+          _installData.regions = ['us-west-1']
+        }
         Store.emitChange();
       break;
       case 'ONBOARD_SET_CREDENTIALS':
-        _installData = _.extend(_installData, payload.data);
+        _installData = _.assign(_installData, payload.data);
         Store.emitChange();
       break;
       case 'ONBOARD_VPC_SCAN_SUCCESS':
@@ -84,11 +127,19 @@ const Store = Flux.createStore(
       case 'ONBOARD_VPC_SCAN_ERROR':
       break;
       case 'ONBOARD_SET_VPCS':
-        _installData = _.extend(_installData, payload.data);
+        _installData = _.assign(_installData, {vpcs:payload.data});
         Store.emitChange();
       break;
+      case 'GLOBAL_SOCKET_MESSAGE':
+        if(payload.data && payload.data.command && payload.data.command == 'launch-bastion'){
+          _bastionHasLaunched = true;
+          Store.emitChange();
+        }
+      break;
       case 'ONBOARD_INSTALL':
-        console.log(_installData);
+        _bastionHasLaunched = true;
+        console.info('Launching Bastion');
+        Store.emitChange();
       break;
     }
     const newStatuses = Flux.statics.statusProcessor(payload, _statuses);

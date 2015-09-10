@@ -178,11 +178,7 @@ const AllFields = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'}>
-                <span>Next: Define Assertions
-                  <ChevronRight inline={true} fill={colors.success}/>
-                </span>
-            </Button>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
           </div>
         </div>
       )

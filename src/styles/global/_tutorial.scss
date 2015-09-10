@@ -80,13 +80,10 @@
   content: "";
   display: inline-block;
   height: 12px;
-  margin: 16px 8px 16px 0;
+  margin: 16px 8px;
   width: 12px;
   &.active {
     background-color: white;
-  }
-  &:last-of-type {
-    margin-right: 0;
   }
   @include breakpoint($screen-sm) {
     border: 3px solid white;

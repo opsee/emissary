@@ -202,11 +202,7 @@ const AllFields = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                <span>Next: Test This Request 
-                  <ChevronRight inline={true} fill={colors.success}/>
-                </span>
-            </Button>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next: Test This Request</Button>
           </div>
         </div>
       )

@@ -4,7 +4,7 @@ import {Toolbar} from '../global';
 export default React.createClass({
   render() {
     return (
-      <div className="bg-body" style={{position:"relative"}}>
+      <div>
         Check Not Found.
       </div>
     );

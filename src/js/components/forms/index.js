@@ -6,6 +6,7 @@ import Dropdown from './Dropdown.jsx';
 import InputWithLabel from './InputWithLabel.jsx';
 import Label from './Label.jsx';
 import MultiToggle from './MultiToggle.jsx';
+import RadioWithLabel from './RadioWithLabel.jsx';
 import Toggle from './Toggle.jsx';
 import ToggleWithLabel from './ToggleWithLabel.jsx';
 
@@ -18,6 +19,7 @@ export default {
   InputWithLabel,
   Label,
   MultiToggle,
+  RadioWithLabel,
   Toggle,
   ToggleWithLabel
 }

@@ -20,10 +20,11 @@ export default React.createClass({
     willTransitionTo:PageAuth
   },
   storeDidChange() {
-    this.setState(getState());
     const status = CheckStore.getGetCheckStatus();
-    if(status != 'success' && status != 'pending'){
-      console.log(status);
+    if(status == 'success'){
+      this.setState(getState());
+    }else if(status != 'pending'){
+      this.setState({error:status})
     }
   },
   getInitialState(){
@@ -38,37 +39,61 @@ export default React.createClass({
   silence(id){
     CheckActions.silence(id);
   },
+  getLink(){
+    const target = this.state.check.get('target');
+    if(target.type == 'sg'){
+      return (
+        <Link to="group" params={{id:target.id}}>{target.name || target.id}</Link>
+      )
+    }else{
+      //elb
+      return (
+        <Link to="group" params={{id:target.id}}>{target.name || target.id}</Link>
+      )
+    }
+  },
   innerRender(){
-    console.log(this.state.check);
-    if(this.state.check && this.state.check.get('id')){
+    if(!this.state.error && this.state.check && this.state.check.get('id')){
       return(
         <div>
           <h2>Check Information</h2>
           <table className="table">
-            <tbody>
-            {this.state.check.get('meta').map(i => {
-              return (
-                <tr>
-                  <td><strong>{i.get('key')}</strong></td>
-                  <td>{i.get('value')}</td>
-                </tr>
-                )
-            })}
-            </tbody>
+            <tr>
+              <td><strong>Group</strong></td>
+              <td>{this.getLink()}</td>
+            </tr>
+            <tr>
+              <td><strong>Path</strong></td>
+              <td>{this.state.check.get('path')}</td>
+            </tr>
+            <tr>
+              <td><strong>Port</strong></td>
+              <td>{this.state.check.get('port')}</td>
+            </tr>
+            <tr>
+              <td><strong>Protocol</strong></td>
+              <td>{this.state.check.get('protocol')}</td>
+            </tr>
+            <tr>
+              <td><strong>Method</strong></td>
+              <td>{this.state.check.get('verb')}</td>
+            </tr>
           </table>
-          <h2>Check Instances</h2>
-          <ul className="list-unstyled">
-            {this.state.check.get('instances').map(i => {
-              return (
-                <li key={i.get('id')}>
-                  <InstanceItem item={i}/>
-                </li>
-                )
-            })}
-          </ul>
+          {
+          // <h2>Check Instances</h2>
+          // <ul className="list-unstyled">
+          //   {this.state.check.get('instances').map(i => {
+          //     return (
+          //       <li key={i.get('id')}>
+          //         <InstanceItem item={i}/>
+          //       </li>
+          //       )
+          //   })}
+          // </ul>
+          }
         </div>
       )
-    }else{
+    }else if(this.state.error){
       return (
         <Alert type="danger">
           Something went wrong trying to get Check {this.props.params.id}.

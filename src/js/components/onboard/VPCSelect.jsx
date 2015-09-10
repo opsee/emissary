@@ -8,15 +8,10 @@ import forms from 'newforms';
 import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
-import router from '../../modules/router.js';
-
-let checkSubdomainPromise;
-let domainPromisesArray = [];
+import router from '../../modules/router';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 const regions = AWSStore.getRegions();
-const regionChoices = regions.map(r => {
-  return [r.id, r.name]
-});
 
 const InfoForm = forms.Form.extend({
   vpcs: forms.MultipleChoiceField({
@@ -32,6 +27,7 @@ const Team = React.createClass({
     const data = OnboardStore.getInstallData();
     const dataHasValues = _.chain(data).values().every(_.identity).value();
     if(dataHasValues && data.regions.length && data.vpcs.length){
+      // OnboardActions.onboardSetVpcs()
       router.transitionTo('onboardInstall');
     }
   },
@@ -77,12 +73,13 @@ const Team = React.createClass({
       status:'pending'
     });
   },
-  componentWillMount(){
-    OnboardActions.onboardVpcScan(OnboardStore.getInstallData());
-  },
+  // componentWillMount(){
+  //   OnboardActions.onboardVpcScan(OnboardStore.getInstallData());
+  // },
   submit(e){
     e.preventDefault();
-    router.transitionTo('onboardInstall');
+    OnboardActions.onboardSetVpcs(this.state.info.cleanedData.vpcs);
+    // router.transitionTo('onboardInstall');
   },
   disabled(){
     return !this.state.info.cleanedData.vpcs;
@@ -115,10 +112,10 @@ const Team = React.createClass({
           <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>Install</button>
         </div>
       )
-    }else{
+    }else if(this.state.status != 'pending'){
       return (
         <Alert type="danger">
-          {this.state.status.body.error}
+          {this.state.status && this.state.status.body && this.state.status.body.error}
         </Alert>
       )
     }
@@ -126,19 +123,19 @@ const Team = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Regions to launch Bastions in"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+        <Toolbar title="Select VPCs"/>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
+              <form name="loginForm" onSubmit={this.submit}>
               {this.innerRender()}
               </form>
               {
               // <pre>{JSON.stringify(this.state.info.cleanedData, null, ' ')}</pre>
               }
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
