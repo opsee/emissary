@@ -9,7 +9,7 @@ let socket;
 
 _actions.globalModalMessage = Flux.statics.addAction('globalModalMessage');
 
-_actions.globalModalMessage = Flux.statics.addAction('globalModalMessageConsume');
+_actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageConsume');
 
 _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', function(){
   if(!socket){

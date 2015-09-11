@@ -25,9 +25,10 @@ import CheckNotFound from '../checks/NotFound.jsx';
 import Group from '../pages/Group.jsx';
 import Instance from '../pages/Instance.jsx';
 
-import Login from '../pages/Login.jsx';
-import PasswordForgot from '../pages/PasswordForgot.jsx';
-import Profile from '../pages/Profile.jsx';
+import Login from '../user/Login.jsx';
+import PasswordForgot from '../user/PasswordForgot.jsx';
+import PasswordChange from '../user/PasswordChange.jsx';
+import Profile from '../user/Profile.jsx';
 
 import OnboardCreate from '../onboard/Create.jsx';
 import OnboardThanks from '../onboard/Thanks.jsx';
@@ -94,6 +95,7 @@ const routes = (
     <Route path="/profile" name="profile" handler={Profile}/>
     <Route path="/login" name="login" handler={Login}/>
     <Route path="/password-forgot" name="passwordForgot" handler={PasswordForgot}/>
+    <Route path="/password-change" name="passwordChange" handler={PasswordChange}/>
 
     <Route path="/more" name="more" handler={More}/>
     <Route path="/docs" name="docs" handler={More}/>

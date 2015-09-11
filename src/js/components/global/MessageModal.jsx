@@ -2,10 +2,11 @@ import React, {PropTypes} from 'react';
 import {Modal} from '../../modules/bootstrap';
 import {GlobalStore} from '../../stores';
 import {GlobalActions} from '../../actions';
+import colors from 'seedling/colors';
 
 function getState(){
   return {
-    msg:GlobalStore.getModalMessage(),
+    options:GlobalStore.getModalMessage(),
     showModal:false
   }
 }
@@ -14,10 +15,13 @@ export default React.createClass({
   mixins: [GlobalStore.mixin],
   storeDidChange() {
     var obj = getState();
-    if(obj && obj.msg){
+    if(obj && obj.options){
       this.setState({
-        msg:obj.msg,
-        showModal:true
+        msg:{
+          __html:obj.options.html
+        },
+        showModal:true,
+        style:obj.options.style
       });
       GlobalActions.globalModalMessageConsume();
     }
@@ -29,6 +33,11 @@ export default React.createClass({
   open(){
     this.setState({ showModal: true });
   },
+  getStyle(){
+    return {
+      background:this.state.style ? colors[this.state.style] : colors.warning
+    }
+  },
   render() {
     return (
       <div>
@@ -38,7 +47,7 @@ export default React.createClass({
           //   <Modal.Title>Modal heading</Modal.Title>
           // </Modal.Header>
         }
-          <Modal.Body>
+          <Modal.Body style={this.getStyle()}>
             <div dangerouslySetInnerHTML={this.state.msg}/>
           </Modal.Body>
           {

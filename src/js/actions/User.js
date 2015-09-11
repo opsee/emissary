@@ -27,18 +27,28 @@ _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
   res => res && res.response
 );
 
+_actions.userEdit = Flux.statics.addAsyncAction('userEdit',
+  (data) => {
+    return request
+    .put(`${config.authApi}/users/{id}`)
+    .send(data)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
 _actions.userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   (data) => {
     return request
-    .post(`${config.auth0}/dbconnections/change_password`)
-    .send(_.extend(data, {
-      connection:'Username-Password-Authentication'
-    }))
+    .post(`${config.authApi}/authenticate/token`)
+    .send(data)
   },
   res => res.body && res.body,
   res => res && res.response
 );
 
 _actions.userLogOut = Flux.statics.addAction('userLogOut');
+
+_actions.userSet = Flux.statics.addAction('userSet');
 
 export default _.assign({}, ..._.values(_actions));

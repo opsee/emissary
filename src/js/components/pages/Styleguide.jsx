@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Grid, Row, Col, TabbedArea, TabPane} from '../../modules/bootstrap';
+import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
 import {Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
@@ -44,8 +44,11 @@ export default React.createClass({
     })
     this.setState({radios});
   },
-  notify(){
-    GlobalActions.globalModalMessage('This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>');
+  notify(style){
+    GlobalActions.globalModalMessage({
+      html:'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
+      style:style
+    });
   },
   render() {
     return (
@@ -58,10 +61,10 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-            <TabbedArea defaultActiveKey={2}>
-              <TabPane eventKey={1} tab='Tab 1'>TabPane 1 content</TabPane>
-              <TabPane eventKey={2} tab='Tab 2'>TabPane 2 content</TabPane>
-            </TabbedArea>
+            <Tabs defaultActiveKey={2}>
+              <Tab eventKey={1} tab='Tab 1'>Tab 1 content</Tab>
+              <Tab eventKey={2} tab='Tab 2'>Tab 2 content</Tab>
+            </Tabs>
             </Col>
           </Row>
         </Grid>
@@ -277,7 +280,8 @@ export default React.createClass({
             <Loader/>
 
             <h3>Notifcations</h3>
-            <button className="btn btn-primary" onClick={this.notify}>GLOBAL NOTIFICATION</button>
+            <Button bsStyle="danger" onClick={this.notify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
+            <Button bsStyle="success" onClick={this.notify.bind(null, 'success')}>Success NOTIFICATION</Button>
           </Col>
         </Row>
       </Grid>

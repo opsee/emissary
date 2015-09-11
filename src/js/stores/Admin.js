@@ -29,17 +29,29 @@ const statics = {
   }
 }
 
+let _statuses = {
+  adminActivateSignup:null
+}
+
 const Store = Flux.createStore(
   {
     getSignups(){
       return _signups;
     },
+    getActivateSignupStatus(){
+      return _statuses.adminActivateSignup;
+    }
   }, function(payload){
     switch(payload.actionType) {
-      case 'GET_SIGNUPS_SUCCESS':
-      statics.getSignupsSuccess(payload.data);
-      Store.emitChange();
+      case 'ADMIN_GET_SIGNUPS_SUCCESS':
+        statics.getSignupsSuccess(payload.data);
+        Store.emitChange();
       break;
+    }
+    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
+    if(!_.isEqual(_statuses, newStatuses)){
+      _statuses = newStatuses;
+      Store.emitChange();
     }
   }
 )

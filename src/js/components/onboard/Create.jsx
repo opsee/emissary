@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
-import {OnboardActions} from '../../actions';
+import {OnboardActions, GlobalActions} from '../../actions';
 import {UserStore} from '../../stores';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
@@ -15,6 +15,10 @@ export default React.createClass({
     this.setState({status})
     if(status == 'success'){
       router.transitionTo('onboardThanks');
+    }else if(status && status != 'pending'){
+      GlobalActions.globalModalMessage({
+        html:status.body && status.body.message,
+      });
     }
   },
   getInitialState(){

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Toolbar} from '../global';
-import {AdminActions} from '../../actions';
+import {AdminActions, GlobalActions} from '../../actions';
 import {AdminStore} from '../../stores';
 import {Link} from 'react-router';
 import _ from 'lodash';
@@ -9,7 +9,14 @@ import colors from 'seedling/colors';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-function getSignups(){
+function getState(){
+  return {
+    signups:getData(),
+    approveStatus:AdminStore.getActivateSignupStatus()
+  }
+}
+
+function getData(){
   const signups = AdminStore.getSignups().toJS();
   return _.chain(signups).map(s => {
     s.created_at = new Date(Date.parse(s.created_at));
@@ -19,41 +26,34 @@ function getSignups(){
   }).value()
 }
 
-function getState(){
-  return {
-    signups:getSignups()
-  }
-}
-
 export default React.createClass({
   mixins: [AdminStore.mixin],
   storeDidChange() {
-    this.setState(getState());
+    const data = getState();
+    console.log(data);
+    this.setState(data);
+    if(data.approveStatus == 'success'){
+      GlobalActions.globalModalMessage({
+        html:'User activated. Email sent.',
+        style:'success'
+      });
+    }
   },
   getInitialState:getState,
-  getData(){
-    AdminActions.getSignups()
-  },
   componentWillMount(){
-    this.getData();
+    AdminActions.adminGetSignups()
   },
   stepSubmit(data){
     console.log('step submit', data);
   },
-  updateData(data){
-    let obj = _.assign(this.state.check, data);
-    this.setState({
-      check:obj
-    });
-  },
   isUnapprovedSignup(s){
-    return !s.activation_id;
+    return !s.claimed;
   },
   isApprovedSignup(s){
     return !!s.activation_id && !s.activation_used;
   },
   isUser(s){
-    return !!s.activation_id && s.activation_used;
+    return s.claimed;
   },
   getUnapproved(){
     return _.filter(this.state.signups, this.isUnapprovedSignup);
@@ -64,7 +64,7 @@ export default React.createClass({
   getUsers(){
     return _.filter(this.state.signups, this.isUser);
   },
-  activateSignup:AdminActions.activateSignup,
+  activateSignup:AdminActions.adminActivateSignup,
   outputCheckmark(signup){
     if(this.isUser(signup)){
       return <Checkmark fill={colors.success}/>

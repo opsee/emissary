@@ -4,11 +4,12 @@ import storage from '../modules/storage';
 import _ from 'lodash';
 
 let statics = {
-  globalModalMessage(data){
+  globalModalMessage(kwargs){
     _data.modalMessage = {
       used:false,
-      msg:{
-        __html:data
+      options:{
+        html:kwargs.html,
+        style:kwargs.style
       }
     };
     Store.emitChange();
@@ -33,7 +34,7 @@ let _data = {
   socketMessages:[],
   modalMessage:{
     used:false,
-    msg:null
+    options:null
   }
 }
 
@@ -44,7 +45,7 @@ let _statuses = {
 const Store = Flux.createStore(
   {
     getModalMessage(){
-      return !_data.modalMessage.used && _data.modalMessage.msg;
+      return !_data.modalMessage.used && _data.modalMessage.options;
     },
     getSocketMessages(){
       return _data.socketMessages;

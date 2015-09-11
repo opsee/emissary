@@ -9,8 +9,8 @@ import Modal from 'react-bootstrap/lib/Modal';
 // import Navbar from 'react-bootstrap/lib/Navbar';
 // import NavItemLink from 'react-router-bootstrap/lib/NavItemLink';
 import Row from 'react-bootstrap/lib/Row';
-import TabbedArea from 'react-bootstrap/lib/TabbedArea';
-import TabPane from 'react-bootstrap/lib/TabPane';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 
 export default {
   Button,
@@ -24,6 +24,6 @@ export default {
   // Navbar,
   // NavItemLink,
   Row,
-  TabbedArea,
-  TabPane
+  Tabs,
+  Tab
 }

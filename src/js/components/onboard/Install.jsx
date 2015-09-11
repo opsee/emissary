@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Toolbar} from '../global';
+import {Alert, Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {UserStore} from '../../stores';
@@ -18,23 +18,19 @@ const statics = {
 const Install = React.createClass({
   mixins: [OnboardStore.mixin, GlobalStore.mixin],
   storeDidChange(){
-    // const data = OnboardStore.getFinalInstallData();
-    // OnboardStore.getBastionHasLaunchedPromise().then(function(started){
-    //   if(data && !started){
-    //     const dataHasValues = _.chain(data).values().every(_.identity).value();
-    //     if(dataHasValues && data.regions.length){
-    //       OnboardActions.onboardInstall(data);
-    //     }
-    //   }else if(!data){
-    //     router.transitionTo('onboardRegionSelect');
-    //   }
-    //   this.setState({checkedInstallStatus:true});
-    // })
     let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command:'launch-bastion'}).filter(m => {
         return m.attributes && m.attributes.ResourceType;
       }).value();
+
+    let reject = false;
+    if(this.props.query.fail){
+      reject = {instance_id:'1r6k6YRB3Uzh0Bk5vmZsFU'}
+    }else if(this.props.query.success){
+      reject = {instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'}
+    }
+
     const bastions = _.chain(msgs)
-    //.reject({instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'})
+    .reject(reject)
     .groupBy('instance_id').map((value, key) => {
       return {
         id:key,
@@ -90,11 +86,27 @@ const Install = React.createClass({
     const stats = this.bastionStatuses();
     return _.every(stats) && stats.length;
   },
+  getBastionErrors(){
+    return _.filter(this.bastionStatuses(), stat => stat == 'ROLLBACK_COMPLETE');
+  },
+  getBastionSuccesses(){
+    return _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
+  },
   renderBtn(){
+    const bastionErrors = this.getBastionErrors();
+    const bastionSuccesses = this.getBastionSuccesses();
     if(this.bastionsComplete()){
-      return(
-        <Link to="checks" className="btn btn-raised btn-block btn-primary">Create a Check&nbsp;<ChevronRight inline={true} fill="white"/></Link>
-      )
+      if(!bastionErrors.length || bastionSuccesses.length){
+        return(
+          <Link to="checks" className="btn btn-raised btn-block btn-primary">Create a Check&nbsp;<ChevronRight inline={true} fill="white"/></Link>
+        )
+      }else{
+        return (
+          <Alert type="info">
+            We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+          </Alert>
+        )
+      }
     }
   },
   renderText(){
@@ -104,24 +116,24 @@ const Install = React.createClass({
       )
     }
     if(this.bastionsComplete()){
-      const bastionErrors = _.filter(this.bastionStatuses(), stat => stat == 'ROLLBACK_COMPLETE');
-      const bastionSucccesses = _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
-      if(bastionErrors.length && !bastionSucccesses.length){
+      const bastionErrors = this.getBastionErrors();
+      const bastionSuccesses = this.getBastionSuccesses();
+      if(bastionErrors.length && !bastionSuccesses.length){
         return (
-          <p>{bastionErrors.length} Bastions failed to install correctly</p>
+          <p>{bastionErrors.length > 1 ? bastionErrors.length : ''} Bastion{bastionErrors.length > 1 ? 's' : ''} failed to install correctly</p>
         )
       }else if(bastionErrors.length){
         return (
-          <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSucccesses.length} completed successfully.</p>
+          <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
         )
       }else{
         return (
-          <p>{bastionSucccesses.length} Bastion installed correctly.</p>
+          <p>{bastionErrors.length > 1 ? bastionErrors.length+' ' : ''}Bastion installed correctly.</p>
         )
       }
     }else{
       return (
-        <p>We are now installing the bastion in your selected VPCs. This could take a few minutes.</p>
+        <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
       )
     }
   },

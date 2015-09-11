@@ -6,9 +6,13 @@ import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
+import {PageAuth} from '../../modules/statics';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
+  statics:{
+    willTransitionTo:PageAuth
+  },
   storeDidChange(){
     if(!UserStore.getAuth()){
       return router.transitionTo('login');

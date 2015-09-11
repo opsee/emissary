@@ -41,8 +41,8 @@ export default React.createClass({
     }else{
       return (
       <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-        <p>Fill in your email and NEW password and you will be emailed for verification.</p>
-        <UserInputs include={['email', 'password']}  onChange={this.updateUserData} email={this.state.data.email}/>
+        <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
+        <UserInputs include={['email']}  onChange={this.updateUserData} email={this.state.data.email}/>
         <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
           <span>
             {this.btnText()}

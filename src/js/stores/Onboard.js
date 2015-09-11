@@ -26,7 +26,10 @@ let _installData = {
   vpcs:[]
 }
 
-let _bastionHasLaunched = false;
+let _data = {
+  bastionHasLaunched:false,
+  bastionLaunchHasBeenChecked:false
+}
 
 let _availableVpcs = [];
 
@@ -43,11 +46,12 @@ const Store = Flux.createStore(
     },
     getBastionHasLaunchedPromise(){
       var d = $q.defer();
-      if(_bastionHasLaunched){
-        d.resolve(_bastionHasLaunched);
+      if(_data.bastionHasLaunched || _data.bastionLaunchHasBeenChecked){
+        d.resolve(_data.bastionHasLaunched);
       }else{
         setTimeout(() => {
-          d.resolve(_bastionHasLaunched);
+          _data.bastionLaunchHasBeenChecked = true;
+          d.resolve(_data.bastionHasLaunched);
         },17000);
       }
       return d.promise;
@@ -134,12 +138,17 @@ const Store = Flux.createStore(
       break;
       case 'GLOBAL_SOCKET_MESSAGE':
         if(payload.data && payload.data.command && payload.data.command == 'launch-bastion'){
-          _bastionHasLaunched = true;
+          _data.bastionLaunchHasBeenChecked = true;
+          _data.bastionHasLaunched = true;
           Store.emitChange();
         }
       break;
+      case 'ONBOARD_SET_PASSWORD_SUCCESS':
+        _data.bastionLaunchHasBeenChecked = true;
+      break;
       case 'ONBOARD_INSTALL':
-        _bastionHasLaunched = true;
+        _data.bastionLaunchHasBeenChecked = true;
+        _data.bastionHasLaunched = true;
         console.info('Launching Bastion');
         Store.emitChange();
       break;

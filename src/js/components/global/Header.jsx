@@ -11,7 +11,7 @@ export default React.createClass({
     this.forceUpdate();
   },
   renderLoginLink(){
-    if(UserStore.getAuth()){
+    if(UserStore.hasUser()){
       return (
         <Link to="profile" className="md-navbar-link">
           <Person nav={true}/>&nbsp;

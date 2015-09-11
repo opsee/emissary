@@ -36,13 +36,17 @@ let _data = {
 
 let _statuses = {
   userLogin:null,
-  userSendResetEmail:null
+  userSendResetEmail:null,
+  userEdit:null
 };
 
 const Store = Flux.createStore(
   {
     getAuth(){
       return _data.user.get('token') ? `Bearer ${_data.user.get('token')}` : null;
+    },
+    hasUser(){
+      return !!(_data.user.get('token') && _data.user.get('email'));
     },
     getUser(){
       return _data.user;
@@ -52,10 +56,14 @@ const Store = Flux.createStore(
     },
     getUserSendResetEmailStatus(){
       return _statuses.userSendResetEmail;
+    },
+    getUserEditStatus(){
+      return _statuses.userEdit;
     }
   }, function(payload){
     switch(payload.actionType) {
       case 'ONBOARD_SET_PASSWORD_SUCCESS':
+      case 'USER_SET':
       case 'USER_LOGIN_SUCCESS':
         statics.setUser(payload.data);
       break;

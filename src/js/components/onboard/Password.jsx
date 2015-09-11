@@ -17,7 +17,7 @@ export default React.createClass({
     this.setState({status})
     if(status == 'success'){
       router.transitionTo('tutorial');
-    }else{
+    }else if(status != 'pending'){
       console.error(status);
     }
   },

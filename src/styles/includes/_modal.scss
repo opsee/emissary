@@ -1,4 +1,9 @@
-.modal-content {
+.modal-content{
+  box-shadow:none;
+  border:0;
+}
+
+.modal-body {
   @extend .md-shadow-bottom-z-2;
   border: none;
   @include breakpoint($screen-sm) {

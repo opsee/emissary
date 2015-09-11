@@ -2,34 +2,28 @@ import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import Radium from 'radium';
 import colors from 'seedling/colors';
-
-
-var outer = {
-  // backgroundColor:colors.gray900,
-}
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 var Alert = React.createClass({
   getOuterStyle(){
-    let style;
-    switch(this.props.type){
-      case 'danger':
-        style = {
-          backgroundColor:colors.danger,
-          color:'white'
-        }
-      break;
+    let style = {
+      backgroundColor:colors.danger,
+      color:'white'
+    };
+    if(this.props.type){
+      style.backgroundColor = colors[this.props.type];
     }
     return style;
   },
   render(){
     return(
-      <div className="container-fluid" style={this.getOuterStyle()}>
-        <div className="row">
-          <div className="col-xs-12 padding-tb">
+      <Grid fluid={true} style={this.getOuterStyle()}>
+        <Row>
+          <Col xs={12} className="padding-tb">
             {this.props.children}
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 })

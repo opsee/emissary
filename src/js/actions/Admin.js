@@ -5,7 +5,9 @@ import {UserStore} from '../stores';
 import _ from 'lodash';
 import {auth} from '../swagger';
 
-var getSignups = Flux.statics.addAsyncAction('getSignups', 
+let _actions = {};
+
+_actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups', 
   (id) => {
     return request
     .get(`${config.authApi}/signups`)
@@ -15,7 +17,7 @@ var getSignups = Flux.statics.addAsyncAction('getSignups',
   res => res && res.response
 );
 
-var activateSignup = Flux.statics.addAsyncAction('activateSignup', 
+_actions.adminActivateSignup = Flux.statics.addAsyncAction('adminActivateSignup', 
   (signup) => {
     return request
     .put(`${config.authApi}/signups/${signup.id}/activate`)
@@ -25,4 +27,4 @@ var activateSignup = Flux.statics.addAsyncAction('activateSignup',
   res => res && res.response
 );
 
-export default _.assign({}, getSignups, activateSignup);
+export default _.assign({}, ..._.values(_actions));
