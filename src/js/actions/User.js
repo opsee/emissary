@@ -3,6 +3,7 @@ import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';
 import {auth} from '../swagger';
+import {UserStore} from '../stores';
 
 let _actions = {};
 
@@ -30,7 +31,8 @@ _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
 _actions.userEdit = Flux.statics.addAsyncAction('userEdit',
   (data) => {
     return request
-    .put(`${config.authApi}/users/{id}`)
+    .put(`${config.authApi}/users/${data.id}`)
+    .set('Authorization', UserStore.getAuth())
     .send(data)
   },
   res => res && res.body,

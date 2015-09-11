@@ -65,10 +65,13 @@ const Store = Flux.createStore(
       case 'ONBOARD_SET_PASSWORD_SUCCESS':
       case 'USER_SET':
       case 'USER_LOGIN_SUCCESS':
+      case 'USER_EDIT_SUCCESS':
         statics.setUser(payload.data);
+        Store.emitChange();  
       break;
       case 'USER_LOG_OUT':
         statics.logout();
+        Store.emitChange();  
       break;
     }
     const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
