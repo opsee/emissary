@@ -33,6 +33,7 @@ export default React.createClass({
     console.log(data);
     this.setState(data);
     if(data.approveStatus == 'success'){
+      AdminActions.adminGetSignups();
       GlobalActions.globalModalMessage({
         html:'User activated. Email sent.',
         style:'success'
@@ -47,10 +48,10 @@ export default React.createClass({
     console.log('step submit', data);
   },
   isUnapprovedSignup(s){
-    return !s.claimed;
+    return !s.claimed && !s.activated;
   },
   isApprovedSignup(s){
-    return !!s.activation_id && !s.activation_used;
+    return s.activated;
   },
   isUser(s){
     return s.claimed;

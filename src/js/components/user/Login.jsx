@@ -11,7 +11,6 @@ export default React.createClass({
   mixins: [UserStore.mixin],
   storeDidChange(){
     const status = UserStore.getUserLoginStatus();
-    console.log(status);
     this.setState({status})
     if(status == 'success'){
       router.transitionTo('home');

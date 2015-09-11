@@ -47,11 +47,22 @@ const Store = Flux.createStore(
         statics.getSignupsSuccess(payload.data);
         Store.emitChange();
       break;
+      case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
+        // _statuses.adminActivateSignup = null;
+        // Store.emitChange();
+      break;
     }
     const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
     if(!_.isEqual(_statuses, newStatuses)){
       _statuses = newStatuses;
       Store.emitChange();
+    }else{
+      _statuses = _.mapValues(_statuses, val => {
+        if(val == 'success'){
+          return null;
+        }
+        return val;
+      });
     }
   }
 )
