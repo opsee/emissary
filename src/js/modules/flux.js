@@ -92,7 +92,20 @@ Flux.statics = {
     },50);
     return statuses;
   },
-  createStore(data, statuses, statics, switchFn){
+  generateStatusFunctions(statuses){
+    let statusFunctions = {};
+    let keys = _.chain(statuses).keys().map(k => {
+      let arr = [k]
+      arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+      return arr;
+    }).forEach(a => {
+      statusFunctions[a[1]] = function(){
+        return _statuses[a[0]]
+      }
+    }).value();
+    return statusFunctions;
+  },
+  createStoreAutomated(data, statuses, statics, switchFn){
     var obj = {};
     function makeFn(o, key){
       return function(){
