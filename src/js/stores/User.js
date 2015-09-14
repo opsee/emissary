@@ -74,11 +74,7 @@ const Store = Flux.createStore(
         Store.emitChange();  
       break;
     }
-    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
-    if(!_.isEqual(_statuses, newStatuses)){
-      _statuses = newStatuses;
-      Store.emitChange();  
-    }
+    _statuses = Flux.statics.statusProcessor(payload, _statuses, Store);
   }
 );
 

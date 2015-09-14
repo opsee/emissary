@@ -47,7 +47,8 @@ Flux.statics = {
     }
     return Flux.createActions(obj);
   },
-  statusProcessor(payload, originalStatuses){
+  statusProcessor(payload, originalStatuses, Store){
+    let haveChanged = false;
     let statuses = _.cloneDeep(originalStatuses);
     let keys = Object.keys(statuses);
     let possible = _.chain(keys).map(k => {
@@ -69,6 +70,26 @@ Flux.statics = {
         statuses[k] = payload.data;
       }
     }
+
+    if(!_.isEqual(statuses, originalStatuses)){
+      haveChanged = true;
+    }else{
+      let resetSuccessStatuses = _.mapValues(statuses, val => {
+        if(val == 'success'){
+          return null;
+        }
+        return val;
+      });
+      if(!_.isEqual(statuses, resetSuccessStatuses)){
+        statuses = resetSuccessStatuses;
+        haveChanged = true;
+      }
+    }
+    setTimeout(() => {
+      if(haveChanged && Store){
+        Store.emitChange();
+      }
+    },50);
     return statuses;
   },
   createStore(data, statuses, statics, switchFn){
