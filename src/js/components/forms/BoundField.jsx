@@ -4,6 +4,7 @@ import MultiToggle from './MultiToggle.jsx';
 import InputWithLabel from './InputWithLabel.jsx';
 import Dropdown from './Dropdown.jsx';
 import RadioSelect from './RadioSelect.jsx';
+import MultiButtonToggle from './MultiButtonToggle.jsx';
 
 export default React.createClass({
   output(){
@@ -24,7 +25,11 @@ export default React.createClass({
         }
       break;
       case 'MultipleChoiceField':
-        return <MultiToggle bf={this.props.bf}/>
+        if(this.props.bf.field.label == 'buttonToggle'){
+          return <MultiButtonToggle bf={this.props.bf}/>
+        }else{
+          return <MultiToggle bf={this.props.bf}/>
+        }
       break;
       case 'ChoiceField':
         return <RadioSelect bf={this.props.bf}/>

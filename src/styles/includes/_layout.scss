@@ -38,6 +38,9 @@
 .justify-content-end{
   @include justify-content(flex-end);
 }
+.justify-content-center{
+  @include justify-content(center);
+}
 .flex-75{
   @include flex(1 75%);
 }

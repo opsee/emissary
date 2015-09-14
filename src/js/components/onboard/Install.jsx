@@ -10,6 +10,7 @@ import router from '../../modules/router.js';
 import {Close, ChevronRight} from '../icons';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import Survey from './Survey.jsx';
 
 const statics = {
   checkedInstallStatus:false
@@ -92,6 +93,13 @@ const Install = React.createClass({
   getBastionSuccesses(){
     return _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
   },
+  renderSurvey(){
+    return (
+      <div className="padding-tb">
+        <Survey/>
+      </div>
+    )
+  },
   renderBtn(){
     const bastionErrors = this.getBastionErrors();
     const bastionSuccesses = this.getBastionSuccesses();
@@ -151,6 +159,7 @@ const Install = React.createClass({
                 )
               })}
               {this.renderBtn()}
+              {this.renderSurvey()}
             </Col>
           </Row>
         </Grid>
