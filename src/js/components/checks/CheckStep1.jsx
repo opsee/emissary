@@ -9,7 +9,8 @@ import {Link} from 'react-router';
 import {BoundField} from '../forms';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import {Toolbar} from '../global';
-import {Close, ChevronRight} from '../icons';
+import {Close, Add} from '../icons';
+import {StepCounter} from '../global';
 
 const groupOptions = [
   ['group-1','Group 1'],
@@ -73,7 +74,7 @@ const InfoForm = forms.Form.extend({
 })
 
 function step1DataComplete(){
-  return 
+  return
 }
 
 const AllFields = React.createClass({
@@ -158,8 +159,8 @@ const AllFields = React.createClass({
           )
         })
         }
-        <Button bsStyle="info" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
-            Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+        <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
+            <Add fill={colors.primary} inline={true}/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     )
@@ -180,6 +181,7 @@ const AllFields = React.createClass({
           <div>
             <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
           </div>
+          <StepCounter active={1} steps={3}/>
         </div>
       )
     }else{
@@ -218,7 +220,7 @@ const AllFields = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check Step 1">
+        <Toolbar btnPosition="midRight" title="Create a Check: Step 1">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>

@@ -6,8 +6,9 @@ import _ from 'lodash';
 import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import {Close} from '../icons';
+import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
+import {StepCounter} from '../global';
 
 const intervalOptions = [
   ['5m','5min'],
@@ -127,7 +128,7 @@ const AllFields = React.createClass({
           )
         })
         }
-        <button type="button" className="btn btn-info" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}>Add Another Notification</button>
+        <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
       </div>
     )
   },
@@ -150,6 +151,7 @@ const AllFields = React.createClass({
           <div>
             <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
           </div>
+          <StepCounter active={3} steps={3}/>
         </div>
       )
     }else{
@@ -177,7 +179,7 @@ const AllFields = React.createClass({
     return (
       <div>
         <div>
-          <Toolbar btnleft={true} title={`Create Check Step 3`}>
+          <Toolbar btnleft={true} title={`Create a Check: Step 3`}>
             {
               // this.renderLink()
             }
