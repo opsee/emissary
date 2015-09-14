@@ -33,7 +33,7 @@ const Team = React.createClass({
   storeDidChange(){
     const data = OnboardStore.getInstallData();
     if(data && data.regions && data.regions.length){
-      router.transitionTo('onboardCredentials'); 
+      router.transitionTo('onboardCredentials');
     }
   },
   getInitialState() {
@@ -80,12 +80,12 @@ const Team = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Region to Scan for VPCs"/>
+        <Toolbar title="Choose a Region"/>
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-               <p>Choose the region you'd like to launch your Opsee Bastion in. We're not going to install anything yet, we&rsquo;re first looking for active VPCs and subnets in the region you select.</p>
+               <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
                {
                // <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button> - <button type="button" className="btn btn-flat btn-warning" onClick={this.toggleAll.bind(null, false)}>Deselect All</button></h2>
                }
