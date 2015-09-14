@@ -5,6 +5,7 @@ import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -55,14 +56,14 @@ export default React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Change Your Password"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Toolbar title="Forgot Password"/>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               {this.innerRender()}
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

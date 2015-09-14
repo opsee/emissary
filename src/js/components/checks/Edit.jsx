@@ -70,7 +70,7 @@ export default React.createClass({
   renderLink(){
     return this.state.check.id ? 
     (
-      <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Return to Check">
+      <Link to="check" params={{id:this.state.check.id}} className="btn btn-deafult btn-fab" title="Return to Check">
         <Close btn={true}/>
       </Link>
     )
@@ -87,7 +87,7 @@ export default React.createClass({
             <Row>
               <Col xs={12} sm={10} smOffset={1}>
                 <div className="padding-tb">
-                  <CheckStep1 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckStep1 check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
                 </div>
                 <div className="padding-tb">
                   <CheckStep2 {...this.state} onChange={this.updateData} renderAsInclude={true}/>

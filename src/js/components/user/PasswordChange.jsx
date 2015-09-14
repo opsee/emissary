@@ -12,7 +12,7 @@ export default React.createClass({
   statics:{
     willTransitionTo(transition, params, query){
       if(!query.id || !query.token){
-        transition.redirect('login');
+        transition.redirect('passwordForgot');
       }
     }
   },
@@ -36,7 +36,7 @@ export default React.createClass({
   },
   submit(e){
     e.preventDefault();
-    UserActions.userEdit(this.state.data);
+    UserActions.userEdit({password:this.state.password, id:this.props.query.id});
   },
   componentWillMount(){
     UserActions.userSet(this.props.query);

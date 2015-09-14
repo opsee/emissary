@@ -6,23 +6,6 @@ import Immutable, {Record, List, Map} from 'immutable';
 
 let _signups = new List();
 
-var Check = Record({
-  name:null,
-  info:null,
-  id:null,
-  method:null,
-  path:null,
-  port:null,
-  meta:List(),
-  group:null,
-  headers:List(),
-  assertions:List(),
-  interval:null,
-  message:null,
-  notifications:List(),
-  instances:List()
-});
-
 const statics = {
   getSignupsSuccess(data){
     _signups = Immutable.fromJS(data)
@@ -47,13 +30,13 @@ const Store = Flux.createStore(
         statics.getSignupsSuccess(payload.data);
         Store.emitChange();
       break;
+      case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
+        // _statuses.adminActivateSignup = null;
+        // Store.emitChange();
+      break;
     }
-    const newStatuses = Flux.statics.statusProcessor(payload, _statuses);
-    if(!_.isEqual(_statuses, newStatuses)){
-      _statuses = newStatuses;
-      Store.emitChange();
-    }
+    _statuses = Flux.statics.statusProcessor(payload, _statuses, Store);
   }
-)
+);
 
 export default Store;
