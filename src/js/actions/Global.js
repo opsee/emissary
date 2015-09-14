@@ -14,7 +14,7 @@ _actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageC
 _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', function(){
   if(!socket){
     console.info('Socket Started.');
-    socket = new WebSocket('ws://api-beta.opsee.co/stream/');
+    socket = new WebSocket('wss://api-beta.opsee.co/stream/');
     socket.onopen = function(event){
       Flux.actions.globalSocketAuth();
       Flux.actions.globalSocketSubscribe('launch-bastion');
