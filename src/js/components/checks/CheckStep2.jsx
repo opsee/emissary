@@ -11,9 +11,10 @@ import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import AssertionCounter from '../forms/AssertionCounter.jsx';
-import {Close, ChevronRight} from '../icons';
+import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
+import {StepCounter} from '../global';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -85,7 +86,7 @@ const AllFields = React.createClass({
         //checking here accounts for empty assertion forms
         let data = self.props.check.assertions[i];
         if(data){
-          form.setData(data);  
+          form.setData(data);
         }
       });
     },10);
@@ -186,7 +187,8 @@ const AllFields = React.createClass({
           )
         })
         }
-        <Button bsStyle="info" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>Add Another Assertion</Button>
+        <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}><Add fill={colors.primary} inline={true}/> Add Another Assertion
+        </Button>
       </div>
     )
   },
@@ -204,6 +206,7 @@ const AllFields = React.createClass({
           <div>
             <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next: Test This Request</Button>
           </div>
+          <StepCounter active={2} steps={3}/>
         </div>
       )
     }else{
@@ -247,7 +250,7 @@ const AllFields = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnleft={true} title={`Create Check Step 2`}/>
+        <Toolbar btnleft={true} title={`Create a Check: Step 2`}/>
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
