@@ -11,7 +11,7 @@ export default React.createClass({
   render() {
     return (
        <div>
-         <Toolbar title="This is How We Do It"/>
+         <Toolbar title="How Opsee Works"/>
          <RouteHandler/>
       </div>
     );

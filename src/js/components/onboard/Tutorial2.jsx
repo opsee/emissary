@@ -16,7 +16,7 @@ export default React.createClass({
        <div>
         <div className="container">
           <div className="row">
-            <div className="col-xs-12 col-md-10 col-md-offset-1">
+            <div className="col-xs-12">
               <img src="/img/tut-bastion.svg"/>
               <h2>Then, the Bastion Works for You</h2>
               <p>The Bastion is a prebuilt AMI that runs inside your AWS environment. It automatically discovers your infrastructure and services, and coordinates health checking and incident response. When you run a health check or restart an instance in Opsee, it&rsquo;s the Bastion doing the work.</p>

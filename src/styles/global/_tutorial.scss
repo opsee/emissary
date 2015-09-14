@@ -20,27 +20,11 @@
 }
 
 .step-image {
-  @include transition(transform $swift-ease-out-duration $swift-ease-out-timing-function,
-                      opacity $swift-ease-out-duration $swift-ease-out-timing-function,
-                      visibility $swift-ease-out-duration $swift-ease-out-timing-function);
   display: block;
-  margin: 0 auto;
-  width: 100%;
-  .ng-enter &{
-    opacity: 0;
-    @include transform(translateX(100%));
-  }
-  .ng-enter-active &{
-    opacity:1;
-    @include transform(translateX(0%));
-  }
-  .ng-leave &{
-    opacity: 1;
-    @include transform(none);
-  }
-  .ng-leave-active &{
-    opacity: 0;
-    @include transform(translateX(-100%));
+  margin: 0 auto 2em auto;
+  width: 70%;
+  @include breakpoint($screen-sm) {
+    width: 50%;
   }
 }
 
