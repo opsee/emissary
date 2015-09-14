@@ -4,14 +4,27 @@
   display: inline-block;
   height: 1.3em;
   width:1.3em;
+  background: none;
   border-radius:100%;
-  background:none;
-  border:2px solid $gray-700;
+  border:3px solid $gray-500;
   font-size:1.2em;
   @include user-select(none);
   position: relative;
   margin:0 1.2em 0 0;
-  &.active{
-    background: $brand-primary;
+  &:after {
+    @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
+    background-color: transparent;
+    border-radius:100%;
+    content: "";
+    display: block;
+    height: 0.5em;
+    left: 50%;
+    margin: -0.25em 0 0 -0.25em;
+    position: absolute;
+    top: 50%;
+    width: 0.5em;
+  }
+  &.active:after{
+    background-color: $brand-primary;
   }
 }

@@ -37,6 +37,7 @@ import OnboardPassword from '../onboard/Password.jsx';
 import OnboardTutorial from '../onboard/Tutorial.jsx';
 import OnboardTutorial1 from '../onboard/Tutorial1.jsx';
 import OnboardTutorial2 from '../onboard/Tutorial2.jsx';
+import OnboardTutorial3 from '../onboard/Tutorial3.jsx';
 import OnboardTeam from '../onboard/Team.jsx';
 import OnboardRegionSelect from '../onboard/RegionSelect.jsx';
 import OnboardCredentials from '../onboard/Credentials.jsx';
@@ -80,6 +81,7 @@ const routes = (
       <Redirect from="/start/tutorial" to="/start/tutorial/1" />
       <Route path="/start/tutorial/1" name="tutorial1" handler={OnboardTutorial1}/>
       <Route path="/start/tutorial/2" name="tutorial2" handler={OnboardTutorial2}/>
+      <Route path="/start/tutorial/3" name="tutorial3" handler={OnboardTutorial3}/>
     </Route>
     <Route path="/start/profile" name="onboardProfile" handler={More}/>
     <Route path="/start/team" name="onboardTeam" handler={OnboardTeam}/>

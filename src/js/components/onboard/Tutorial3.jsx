@@ -7,7 +7,7 @@ export default React.createClass({
   statics:{
     willTransitionTo(transition, params, query, cb){
       const newImg = new Image();
-      newImg.src = '/img/tut-discovery.svg';
+      newImg.src = '/img/tut-checks3.svg';
       newImg.onload = () => cb();
     }
   },
@@ -17,16 +17,16 @@ export default React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12">
-              <img className="step-image" src="/img/tut-discovery.svg"/>
-              <h2>Opsee Discovers Your Infrastructure</h2>
-              <p>The Bastion Instance then uses AWS APIs to discover your instances and groups. The bastion is always scanning, and detects changes to infrastructure automatically.</p>
+              <img className="step-image" src="/img/tut-checks3.svg"/>
+              <h2>Create Health Checks, but Don't Maintain Them</h2>
+              <p>In Opsee you can create health checks for security groups, ELBs, and soon other entities like EC2 Tags, Regions, or Availability Zones. Opsee applies these checks to the right instances for you, and knows when new instances come online.</p>
               <div className="clearfix"><br/></div>
               <div className="clearfix">
-                <Link to="tutorial3" className="btn btn-success btn-raised btn-block">
-                  Next&nbsp;<ChevronRight inline={true}/>
+                <Link to="onboardRegionSelect" className="btn btn-success btn-raised btn-block">
+                  Start Installation&nbsp;<ChevronRight inline={true}/>
                 </Link>
               </div>
-              <StepCounter active={2} steps={3}/>
+              <StepCounter active={3} steps={3}/>
             </div>
           </div>
         </div>

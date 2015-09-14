@@ -23,11 +23,11 @@ export default React.createClass({
               <p>The first thing we do is add the Bastion Instance to your AWS environment. Learn more about the Bastion Instance in our docs.</p>
               <div className="clearfix"><br/></div>
               <div className="clearfix">
-                <Link to="tutorial2" className="btn btn-primary btn-block">
+                <Link to="tutorial2" className="btn btn-success btn-raised btn-block">
                   Next&nbsp;<ChevronRight inline={true}/>
                 </Link>
               </div>
-              <StepCounter active={1} steps={2}/>
+              <StepCounter active={1} steps={3}/>
             </div>
           </div>
         </div>
