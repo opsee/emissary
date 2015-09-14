@@ -4,7 +4,8 @@ React.initializeTouchEvents(true);
 
 export default React.createClass({
   propTypes:{
-    on:PropTypes.bool.isRequired
+    on:PropTypes.bool.isRequired,
+    id:PropTypes.string.isRequired
   },
   handleTouch(e){
     e.preventDefault();
@@ -17,6 +18,10 @@ export default React.createClass({
     return this.props.on ? 'active' : '';
   },
   render(){
-    return <div className={`radio ${this.isActive()}`} onClick={this.onClick} onTouchEnd={this.handleTouch}></div>
+    return (
+      <div onClick={this.onClick} onTouchEnd={this.handleTouch} className="padding-tb-sm" style={{cursor:'pointer'}}>
+        <button className={`radio ${this.isActive()}`} type="button" onClick={this.onClick} id={this.props.id}/>
+      </div>
+    )
   }
 });

@@ -26,7 +26,7 @@ export default React.createClass({
       <div className="display-flex flex-wrap">
         <Radio on={this.props.on} onChange={this.props.onChange} id={this.props.id} />
         <div className="flex-1">
-          <label className={`user-select-none`} style={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)}>
+          <label className={`user-select-none padding-tb-sm`} style={this.getStyle()} htmlFor={this.props.id}>
             {this.props.label}
           </label>
         </div>
