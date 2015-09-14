@@ -8,7 +8,7 @@ export default React.createClass({
   statics:{
       willTransitionTo(transition, params, query, cb){
         const newImg = new Image();
-        newImg.src = '/img/tut-checks.svg';
+        newImg.src = '/img/tut-bastion2.svg';
         newImg.onload = () => cb();
     }
   },
@@ -17,10 +17,10 @@ export default React.createClass({
        <div>
         <div className="container">
           <div className="row">
-            <div className="col-xs-12 col-md-10 col-md-offset-1">
-              <img src="/img/tut-checks.svg"/>
-              <h2>First, You Create Health Checks</h2>
-              <p>You create health and performance checks for your services, Opsee manages them for you. Checks are automatically applied to the right instances and added to new instances when they come online.</p>
+            <div className="col-xs-12">
+              <img className="step-image" src="/img/tut-bastion2.svg"/>
+              <h2>First, Add the Bastion Instance</h2>
+              <p>The first thing we do is add the Bastion Instance to your AWS environment. Learn more about the Bastion Instance in our docs.</p>
               <div className="clearfix"><br/></div>
               <div className="clearfix">
                 <Link to="tutorial2" className="btn btn-primary btn-block">
