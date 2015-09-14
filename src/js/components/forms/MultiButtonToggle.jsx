@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import ToggleWithLabel from './ToggleWithLabel.jsx';
+import ButtonToggle from './ButtonToggle.jsx';
 import _ from 'lodash';
 
 export default React.createClass({
@@ -27,11 +27,11 @@ export default React.createClass({
   },
   render(){
     return(
-      <ul className="list-unstyled">
+      <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
         {this.props.bf.subWidgets().map((w, i) => {
           return (
-            <li className="padding-tb-sm" key={i}>
-              <ToggleWithLabel on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+            <li className="padding-tb-sm" key={i} style={{margin:'0 .5em'}}>
+              <ButtonToggle on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
             </li>
           )
         })}

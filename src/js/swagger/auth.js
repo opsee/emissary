@@ -23,6 +23,250 @@ var Auth = (function() {
     /**
      * 
      * @method
+     * @name Auth#authenticateFromPassword
+     * @param {} email - A user's email
+     * @param {} password - A user's password
+     * 
+     */
+    Auth.prototype.authenticateFromPassword = function(parameters) {
+        if (parameters === undefined) {
+            parameters = {};
+        }
+        var deferred = Q.defer();
+
+        var domain = this.domain;
+        var path = '/authenticate/password';
+
+        var body;
+        var queryParameters = {};
+        var headers = {};
+        var form = {};
+
+        if (parameters['email'] !== undefined) {
+            body = parameters['email'];
+        }
+
+        if (parameters['email'] === undefined) {
+            deferred.reject(new Error('Missing required  parameter: email'));
+            return deferred.promise;
+        }
+
+        if (parameters['password'] !== undefined) {
+            body = parameters['password'];
+        }
+
+        if (parameters['password'] === undefined) {
+            deferred.reject(new Error('Missing required  parameter: password'));
+            return deferred.promise;
+        }
+
+        if (parameters.$queryParameters) {
+            Object.keys(parameters.$queryParameters)
+                .forEach(function(parameterName) {
+                    var parameter = parameters.$queryParameters[parameterName];
+                    queryParameters[parameterName] = parameter;
+                });
+        }
+
+        var req = {
+            method: 'POST',
+            uri: domain + path,
+            qs: queryParameters,
+            headers: headers,
+            body: body
+        };
+        if (Object.keys(form).length > 0) {
+            req.form = form;
+        }
+        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
+            req.json = true;
+        }
+        request(req, function(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else {
+                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (e) {
+
+                    }
+                }
+                if (response.statusCode >= 200 && response.statusCode <= 299) {
+                    deferred.resolve({
+                        response: response,
+                        body: body
+                    });
+                } else {
+                    deferred.reject({
+                        response: response,
+                        body: body
+                    });
+                }
+            }
+        });
+
+        return deferred.promise;
+    };
+    /**
+     * 
+     * @method
+     * @name Auth#authenticateFromToken
+     * @param {} email - A user's email
+     * 
+     */
+    Auth.prototype.authenticateFromToken = function(parameters) {
+        if (parameters === undefined) {
+            parameters = {};
+        }
+        var deferred = Q.defer();
+
+        var domain = this.domain;
+        var path = '/authenticate/token';
+
+        var body;
+        var queryParameters = {};
+        var headers = {};
+        var form = {};
+
+        if (parameters['email'] !== undefined) {
+            body = parameters['email'];
+        }
+
+        if (parameters['email'] === undefined) {
+            deferred.reject(new Error('Missing required  parameter: email'));
+            return deferred.promise;
+        }
+
+        if (parameters.$queryParameters) {
+            Object.keys(parameters.$queryParameters)
+                .forEach(function(parameterName) {
+                    var parameter = parameters.$queryParameters[parameterName];
+                    queryParameters[parameterName] = parameter;
+                });
+        }
+
+        var req = {
+            method: 'POST',
+            uri: domain + path,
+            qs: queryParameters,
+            headers: headers,
+            body: body
+        };
+        if (Object.keys(form).length > 0) {
+            req.form = form;
+        }
+        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
+            req.json = true;
+        }
+        request(req, function(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else {
+                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (e) {
+
+                    }
+                }
+                if (response.statusCode >= 200 && response.statusCode <= 299) {
+                    deferred.resolve({
+                        response: response,
+                        body: body
+                    });
+                } else {
+                    deferred.reject({
+                        response: response,
+                        body: body
+                    });
+                }
+            }
+        });
+
+        return deferred.promise;
+    };
+    /**
+     * 
+     * @method
+     * @name Auth#echoSession
+     * @param {string} Authorization - The Bearer token
+     * 
+     */
+    Auth.prototype.echoSession = function(parameters) {
+        if (parameters === undefined) {
+            parameters = {};
+        }
+        var deferred = Q.defer();
+
+        var domain = this.domain;
+        var path = '/authenticate/echo';
+
+        var body;
+        var queryParameters = {};
+        var headers = {};
+        var form = {};
+
+        if (parameters['Authorization'] !== undefined) {
+            headers['Authorization'] = parameters['Authorization'];
+        }
+
+        if (parameters['Authorization'] === undefined) {
+            deferred.reject(new Error('Missing required  parameter: Authorization'));
+            return deferred.promise;
+        }
+
+        if (parameters.$queryParameters) {
+            Object.keys(parameters.$queryParameters)
+                .forEach(function(parameterName) {
+                    var parameter = parameters.$queryParameters[parameterName];
+                    queryParameters[parameterName] = parameter;
+                });
+        }
+
+        var req = {
+            method: 'GET',
+            uri: domain + path,
+            qs: queryParameters,
+            headers: headers,
+            body: body
+        };
+        if (Object.keys(form).length > 0) {
+            req.form = form;
+        }
+        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
+            req.json = true;
+        }
+        request(req, function(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else {
+                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (e) {
+
+                    }
+                }
+                if (response.statusCode >= 200 && response.statusCode <= 299) {
+                    deferred.resolve({
+                        response: response,
+                        body: body
+                    });
+                } else {
+                    deferred.reject({
+                        response: response,
+                        body: body
+                    });
+                }
+            }
+        });
+
+        return deferred.promise;
+    };
+    /**
+     * 
+     * @method
      * @name Auth#listSignups
      * @param {string} Authorization - The Bearer token - an admin user token is required
      * @param {integer} per_page - Pagination - number of records per page
@@ -689,250 +933,6 @@ var Auth = (function() {
 
         var req = {
             method: 'DELETE',
-            uri: domain + path,
-            qs: queryParameters,
-            headers: headers,
-            body: body
-        };
-        if (Object.keys(form).length > 0) {
-            req.form = form;
-        }
-        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
-            req.json = true;
-        }
-        request(req, function(error, response, body) {
-            if (error) {
-                deferred.reject(error);
-            } else {
-                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
-                    try {
-                        body = JSON.parse(body);
-                    } catch (e) {
-
-                    }
-                }
-                if (response.statusCode >= 200 && response.statusCode <= 299) {
-                    deferred.resolve({
-                        response: response,
-                        body: body
-                    });
-                } else {
-                    deferred.reject({
-                        response: response,
-                        body: body
-                    });
-                }
-            }
-        });
-
-        return deferred.promise;
-    };
-    /**
-     * 
-     * @method
-     * @name Auth#authenticateFromPassword
-     * @param {} email - A user's email
-     * @param {} password - A user's password
-     * 
-     */
-    Auth.prototype.authenticateFromPassword = function(parameters) {
-        if (parameters === undefined) {
-            parameters = {};
-        }
-        var deferred = Q.defer();
-
-        var domain = this.domain;
-        var path = '/authenticate/password';
-
-        var body;
-        var queryParameters = {};
-        var headers = {};
-        var form = {};
-
-        if (parameters['email'] !== undefined) {
-            body = parameters['email'];
-        }
-
-        if (parameters['email'] === undefined) {
-            deferred.reject(new Error('Missing required  parameter: email'));
-            return deferred.promise;
-        }
-
-        if (parameters['password'] !== undefined) {
-            body = parameters['password'];
-        }
-
-        if (parameters['password'] === undefined) {
-            deferred.reject(new Error('Missing required  parameter: password'));
-            return deferred.promise;
-        }
-
-        if (parameters.$queryParameters) {
-            Object.keys(parameters.$queryParameters)
-                .forEach(function(parameterName) {
-                    var parameter = parameters.$queryParameters[parameterName];
-                    queryParameters[parameterName] = parameter;
-                });
-        }
-
-        var req = {
-            method: 'POST',
-            uri: domain + path,
-            qs: queryParameters,
-            headers: headers,
-            body: body
-        };
-        if (Object.keys(form).length > 0) {
-            req.form = form;
-        }
-        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
-            req.json = true;
-        }
-        request(req, function(error, response, body) {
-            if (error) {
-                deferred.reject(error);
-            } else {
-                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
-                    try {
-                        body = JSON.parse(body);
-                    } catch (e) {
-
-                    }
-                }
-                if (response.statusCode >= 200 && response.statusCode <= 299) {
-                    deferred.resolve({
-                        response: response,
-                        body: body
-                    });
-                } else {
-                    deferred.reject({
-                        response: response,
-                        body: body
-                    });
-                }
-            }
-        });
-
-        return deferred.promise;
-    };
-    /**
-     * 
-     * @method
-     * @name Auth#authenticateFromToken
-     * @param {} email - A user's email
-     * 
-     */
-    Auth.prototype.authenticateFromToken = function(parameters) {
-        if (parameters === undefined) {
-            parameters = {};
-        }
-        var deferred = Q.defer();
-
-        var domain = this.domain;
-        var path = '/authenticate/token';
-
-        var body;
-        var queryParameters = {};
-        var headers = {};
-        var form = {};
-
-        if (parameters['email'] !== undefined) {
-            body = parameters['email'];
-        }
-
-        if (parameters['email'] === undefined) {
-            deferred.reject(new Error('Missing required  parameter: email'));
-            return deferred.promise;
-        }
-
-        if (parameters.$queryParameters) {
-            Object.keys(parameters.$queryParameters)
-                .forEach(function(parameterName) {
-                    var parameter = parameters.$queryParameters[parameterName];
-                    queryParameters[parameterName] = parameter;
-                });
-        }
-
-        var req = {
-            method: 'POST',
-            uri: domain + path,
-            qs: queryParameters,
-            headers: headers,
-            body: body
-        };
-        if (Object.keys(form).length > 0) {
-            req.form = form;
-        }
-        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
-            req.json = true;
-        }
-        request(req, function(error, response, body) {
-            if (error) {
-                deferred.reject(error);
-            } else {
-                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
-                    try {
-                        body = JSON.parse(body);
-                    } catch (e) {
-
-                    }
-                }
-                if (response.statusCode >= 200 && response.statusCode <= 299) {
-                    deferred.resolve({
-                        response: response,
-                        body: body
-                    });
-                } else {
-                    deferred.reject({
-                        response: response,
-                        body: body
-                    });
-                }
-            }
-        });
-
-        return deferred.promise;
-    };
-    /**
-     * 
-     * @method
-     * @name Auth#echoSession
-     * @param {string} Authorization - The Bearer token
-     * 
-     */
-    Auth.prototype.echoSession = function(parameters) {
-        if (parameters === undefined) {
-            parameters = {};
-        }
-        var deferred = Q.defer();
-
-        var domain = this.domain;
-        var path = '/authenticate/echo';
-
-        var body;
-        var queryParameters = {};
-        var headers = {};
-        var form = {};
-
-        if (parameters['Authorization'] !== undefined) {
-            headers['Authorization'] = parameters['Authorization'];
-        }
-
-        if (parameters['Authorization'] === undefined) {
-            deferred.reject(new Error('Missing required  parameter: Authorization'));
-            return deferred.promise;
-        }
-
-        if (parameters.$queryParameters) {
-            Object.keys(parameters.$queryParameters)
-                .forEach(function(parameterName) {
-                    var parameter = parameters.$queryParameters[parameterName];
-                    queryParameters[parameterName] = parameter;
-                });
-        }
-
-        var req = {
-            method: 'GET',
             uri: domain + path,
             qs: queryParameters,
             headers: headers,

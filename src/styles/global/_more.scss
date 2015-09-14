@@ -12,3 +12,7 @@
     text-decoration: none;
   }
 }
+
+svg{
+  @include transition(border $swift-ease-out-duration $swift-ease-out-timing-function);
+}
