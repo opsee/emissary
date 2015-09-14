@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {RadialGraph} from '../global';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';

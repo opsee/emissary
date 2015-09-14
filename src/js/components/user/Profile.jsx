@@ -7,6 +7,9 @@ import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
 import {PageAuth} from '../../modules/statics';
+import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
+import {Edit} from '../icons';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -18,12 +21,12 @@ export default React.createClass({
       return router.transitionTo('login');
     }
     this.setState({
-      user:UserStore.getUser()
+      user:UserStore.getUser().toJS()
     })
   },
   getInitialState(){
     return {
-      user:UserStore.getUser()
+      user:UserStore.getUser().toJS()
     }
   },
   logOut(){
@@ -32,17 +35,23 @@ export default React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Your Profile"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <pre>{JSON.stringify(this.state.user, null, ' ')}</pre>
+        <Toolbar title="Your Profile">
+          <Link className="btn btn-primary btn-fab" to="profileEdit" title="Edit Your Profile">
+            <Edit btn={true}/>
+          </Link>
+        </Toolbar>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
+              <h2>{this.state.user.name}</h2>
+              <div>Email: {this.state.user.email}</div>
               <div>
-                <button className="btn btn-warning" onClick={this.logOut}>Log Out</button>
+                <div><br/><br/></div>
+                <Button bsStyle="default" onClick={this.logOut}>Log Out</Button>
               </div>
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

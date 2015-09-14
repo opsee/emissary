@@ -37,30 +37,36 @@ let _data = {
 let _statuses = {
   userLogin:null,
   userSendResetEmail:null,
-  userEdit:null
+  userEdit:null,
+  userGetUser:null
 };
 
+const _public = {
+  getAuth(){
+    return _data.user.get('token') ? `Bearer ${_data.user.get('token')}` : null;
+  },
+  hasUser(){
+    return !!(_data.user.get('token') && _data.user.get('email'));
+  },
+  getUser(){
+    return _data.user;
+  },
+}
+
+let statusFunctions = {};
+let keys = _.chain(_statuses).keys().map(k => {
+  let arr = [k]
+  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  return arr;
+}).forEach(a => {
+  statusFunctions[a[1]] = function(){
+    return _statuses[a[0]]
+  }
+}).value();
+
 const Store = Flux.createStore(
-  {
-    getAuth(){
-      return _data.user.get('token') ? `Bearer ${_data.user.get('token')}` : null;
-    },
-    hasUser(){
-      return !!(_data.user.get('token') && _data.user.get('email'));
-    },
-    getUser(){
-      return _data.user;
-    },
-    getUserLoginStatus(){
-      return _statuses.userLogin;
-    },
-    getUserSendResetEmailStatus(){
-      return _statuses.userSendResetEmail;
-    },
-    getUserEditStatus(){
-      return _statuses.userEdit;
-    }
-  }, function(payload){
+  _.assign({}, _public, statusFunctions),
+  function(payload){
     switch(payload.actionType) {
       case 'ONBOARD_SET_PASSWORD_SUCCESS':
       case 'USER_SET':

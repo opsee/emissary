@@ -29,6 +29,7 @@ import Login from '../user/Login.jsx';
 import PasswordForgot from '../user/PasswordForgot.jsx';
 import PasswordChange from '../user/PasswordChange.jsx';
 import Profile from '../user/Profile.jsx';
+import ProfileEdit from '../user/ProfileEdit.jsx';
 
 import OnboardCreate from '../onboard/Create.jsx';
 import OnboardThanks from '../onboard/Thanks.jsx';
@@ -95,6 +96,7 @@ const routes = (
     <Route path="/system-status" name="systemStatus" handler={More}/>
 
     <Route path="/profile" name="profile" handler={Profile}/>
+    <Route path="/profile/edit" name="profileEdit" handler={ProfileEdit}/>
     <Route path="/login" name="login" handler={Login}/>
     <Route path="/password-forgot" name="passwordForgot" handler={PasswordForgot}/>
     <Route path="/password-change" name="passwordChange" handler={PasswordChange}/>

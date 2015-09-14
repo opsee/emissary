@@ -19,9 +19,19 @@ let _actions = {};
 
 _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
   (data) => {
-    // return auth.authenticateFromPassword(data);
     return request
     .post(`${config.authApi}/authenticate/password`)
+    .send(data)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
+_actions.userGetUser = Flux.statics.addAsyncAction('userGetUser',
+  (data) => {
+    return request
+    .get(`${config.authApi}/users/${data.id}`)
+    .set('Authorization', UserStore.getAuth())
     .send(data)
   },
   res => res && res.body,
