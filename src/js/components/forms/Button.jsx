@@ -18,6 +18,9 @@ export default React.createClass({
       return <ChevronRight inline={true} fill={fill}/>
     }
   },
+  getStyle(){
+    return this.props.style || {};
+  },
   render(){
     return (
       <Button {...this.props} className={this.props.className + (this.props.flat ? ' btn-flat' : '')}>

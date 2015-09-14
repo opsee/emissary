@@ -9,7 +9,7 @@ import {CheckStore} from '../../stores';
 import {StyleguideActions, GlobalActions} from '../../actions';
 
 import {Add} from '../icons';
-import {Button, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Button, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
 
 function getState(){
   return {
@@ -17,6 +17,9 @@ function getState(){
     toggles:[{on:true},{on:false},{on:true}],
     radios:_.range(3).map(i => {
       return {on:false}
+    }),
+    buttonToggles:['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map(i => {
+      return {title:i, on:false}
     })
   }
 }
@@ -34,7 +37,7 @@ export default React.createClass({
   triggerToggle(index, bool){
     let toggles = this.state.toggles;
     toggles[index].on = bool;
-    this.setState({toggles:toggles});
+    this.setState({toggles});
   },
   triggerRadio(index, bool){
     const radios = _.range(3).map(i => {
@@ -43,6 +46,11 @@ export default React.createClass({
       }
     })
     this.setState({radios});
+  },
+  triggerButtonToggle(index, bool){
+    let buttonToggles = this.state.buttonToggles
+    buttonToggles[index].on = bool;
+    this.setState({buttonToggles});
   },
   notify(style){
     GlobalActions.globalModalMessage({
@@ -127,7 +135,20 @@ export default React.createClass({
             {this.state.radios.map((t,i) => {
               return(
                 <li className="padding-tb" key={`radio-${i}`}>
-                  <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={i} label={`Item ${i}`} />
+                  <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={i.toString()} label={`Item ${i}`} />
+                </li>
+              )
+            })}
+            </ul>
+
+            <hr/>
+
+          <h3>Button Toggles</h3>
+            <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
+            {this.state.buttonToggles.map((t,i) => {
+              return(
+                <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin:'0 .5em'}}>
+                  <ButtonToggle on={t.on} onChange={this.triggerButtonToggle} id={i.toString()} label={t.title} />
                 </li>
               )
             })}
