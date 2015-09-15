@@ -22,9 +22,9 @@
 .step-image {
   display: block;
   margin: 0 auto 2em auto;
-  width: 70%;
+  width: 80%;
   @include breakpoint($screen-sm) {
-    width: 50%;
+    width: 60%;
   }
 }
 

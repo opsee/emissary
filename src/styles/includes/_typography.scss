@@ -12,6 +12,16 @@ pre, code {
 }
 pre {
   background-color: $gray-900;
+  padding: 0.25em;
+}
+.text-serif {
+  font-family: $font-family-serif;
+}
+.text-secondary {
+  color:$text-color-secondary;
+}
+.text-sm {
+  font-size:.8em;
 }
 
 .md-title {
@@ -37,16 +47,8 @@ h3,.h3{
   color: $text-color-secondary;
 }
 
-.text-secondary{
-  color:$text-color-secondary;
-}
-
-.text-sm{
-  font-size:.8em;
-}
-
-em{
-  font-family:$font-family-serif;
+em {
+  text-decoration: italic;
 }
 
 .line-height-1{

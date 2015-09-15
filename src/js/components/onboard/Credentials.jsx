@@ -91,11 +91,14 @@ const Credentials = React.createClass({
             <Row>
               <Col xs={12} sm={10} smOffset={1}>
               <form onSubmit={this.submit}>
-               <p>We need your AWS credentials to scan your environment for instances and services, and report back any errors. They&rsquo;re required to continue, but <strong>we will not store them.</strong></p>
-               <div><br/></div>
-               <BoundField bf={this.state.info.boundField('access-key')}/>
-               <BoundField bf={this.state.info.boundField('secret-key')}/>
-               <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Next'} chevron={true}>Next</Button>
+                <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> You can <a href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
+                <div><br/></div>
+                <BoundField bf={this.state.info.boundField('access-key')}/>
+                <BoundField bf={this.state.info.boundField('secret-key')}/>
+
+                <p className="text-serif text-secondary text-sm padding-bx2">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
+
+                <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron={true}>Next</Button>
               </form>
             </Col>
           </Row>
