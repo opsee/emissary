@@ -16,6 +16,9 @@ import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
 import CheckCreate from '../checks/Create.jsx';
+import Docs from '../docs/Docs.jsx';
+import DocsBastion from '../docs/Bastion.jsx';
+import DocsCloudformation from '../docs/Cloudformation.jsx';
 
 import CheckStep1 from '../checks/CheckStep1.jsx';
 import CheckStep2 from '../checks/CheckStep2.jsx';
@@ -102,7 +105,10 @@ const routes = (
     <Route path="/password-change" name="passwordChange" handler={PasswordChange}/>
 
     <Route path="/more" name="more" handler={More}/>
-    <Route path="/docs" name="docs" handler={More}/>
+
+    <Route path="/docs" name="docs" handler={Docs}/>
+    <Route path="/docs/bastion" name="docsBastion" handler={DocsBastion}/>
+    <Route path="/docs/cloudformation" name="docsCloudformation" handler={DocsCloudformation}/>
 
     <NotFoundRoute handler={NotFound}/>
   </Route>
