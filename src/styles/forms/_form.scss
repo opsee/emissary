@@ -8,7 +8,7 @@
   }
   label {
     @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
-    color: $text-color;
+    color: $text-color-secondary;
     display: block;
     font-size: 0.875em;
     font-weight: $body-font-weight;

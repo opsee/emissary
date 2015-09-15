@@ -14,9 +14,9 @@ import UserInputs from './UserInputs.jsx';
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
     widget: forms.PasswordInput,
-    label:'Set New Password',
+    label:'New Password',
     widgetAttrs:{
-      placeholder:'New Password'
+      placeholder:''
     },
     required:false
   }),
