@@ -2,6 +2,7 @@ import React from 'react';
 import {RadialGraph} from '../global';
 import {CheckActions} from '../../actions';
 import {Link} from 'react-router';
+import {MoreHoriz} from '../icons';
 
 export default React.createClass({
   getInitialState(){
@@ -23,8 +24,8 @@ export default React.createClass({
               <div className="text-secondary">{this.props.item.get('getInfo')}</div>
             </div>
           </Link>
-          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.item.get('id'))} title="Silence check">
-          silence
+          <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.item.get('id'))} title="Check Actions">
+            <MoreHoriz inline={true}/>
           </button>
         </div>
       </div>

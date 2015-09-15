@@ -8,18 +8,18 @@ let include = [];
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
     widgetAttrs:{
-      placeholder:'email'
+      placeholder:'address@domain.com'
     }
   }),
   name: forms.CharField({
     widgetAttrs:{
-      placeholder:'name'
+      placeholder:'First Last'
     }
   }),
   password: forms.CharField({
     widget: forms.PasswordInput,
     widgetAttrs:{
-      placeholder:'password'
+      placeholder:'Your Password'
     }
   }),
   render() {

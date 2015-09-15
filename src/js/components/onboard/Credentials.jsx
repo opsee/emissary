@@ -13,14 +13,14 @@ import colors from 'seedling/colors';
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
     widget: forms.PasswordInput,
-    label:'AWS Key',
+    label:'Access Key ID',
     widgetAttrs:{
-      placeholder:'Your AWS Access Key',
+      placeholder:'Your AWS Access Key ID',
     }
   }),
   'secret-key': forms.CharField({
     widget: forms.PasswordInput,
-    label:'AWS Secret',
+    label:'Secret Key',
     widgetAttrs:{
       placeholder:'Your AWS Secret Key',
     }
