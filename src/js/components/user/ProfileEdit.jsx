@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
-import {UserActions} from '../../actions';
+import {UserActions, GlobalActions} from '../../actions';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import _ from 'lodash';
@@ -14,12 +14,16 @@ import UserInputs from './UserInputs.jsx';
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
     widget: forms.PasswordInput,
+    label:'Set New Password',
     widgetAttrs:{
-      placeholder:'password'
-    }
+      placeholder:'New Password'
+    },
+    required:false
   }),
   render(){
-    return <BoundField bf={this.boundField('password')}/>
+    return (
+      <BoundField bf={this.boundField('password')}/>
+    )
   }
 });
 
@@ -37,22 +41,30 @@ export default React.createClass({
     if(status == 'success'){
       this.setState({
         user:UserStore.getUser().toJS(),
-        password:this.getForm()
+        passwordForm:this.getForm()
       });
+    }
+    const editStatus = UserStore.getUserEditStatus();
+    if(editStatus == 'success'){
+      router.transitionTo('profile');
+    }else if(editStatus && editStatus != 'pending'){
+      GlobalActions.globalModalMessage({
+        html:'Something went wrong.'
+      })
     }
   },
   getInitialState() {
     // return this.getForm();
     return {
       user:UserStore.getUser().toJS(),
-      password:this.getForm()
+      passwordForm:this.getForm()
     }
   },
   getForm(){
     var self = this;
     return new PasswordForm({
       onChange(){
-        self.props.onChange(self.state.info.cleanedData);
+        self.updatePassword(self.state.passwordForm.cleanedData);
         self.forceUpdate();
       },
       labelSuffix:'',
@@ -62,13 +74,14 @@ export default React.createClass({
       },
     });
   },
-  updateUserData(data){
-    this.setState({
-      info:data
-    })
+  updateUserData(data, isComplete){
+    let user = _.clone(this.state.user);
+    user.name = data.name;
+    user.email = data.email;
+    this.setState({user});
   },
-  updatePassword(password){
-    this.setState({password})
+  updatePassword(data){
+    this.setState({password:data.password})
   },
   dataComplete(){
     return UserStore.getUser().get('name') && UserStore.getUser().toJS();
@@ -78,8 +91,16 @@ export default React.createClass({
       UserActions.userGetUser(UserStore.getUser().get('id'));
     }
   },
-  submit(){
-
+  submit(e){
+    e.preventDefault();
+    let data = this.state.user;
+    if(this.state.password){
+      data.password = this.state.password;
+    }
+    UserActions.userEdit(data);
+  },
+  disabled(){
+    return !(this.state.user.email && this.state.user.name);
   },
   render() {
     return (
@@ -90,8 +111,8 @@ export default React.createClass({
             <Col xs={12} sm={10} smOffset={1}>
             <form onSubmit={this.submit}>
               <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.user.email} name={this.state.user.name}/>
-              {this.state.password.render()}
-              <Button bsStyle="primary" type="submit">Submit</Button>
+              {this.state.passwordForm.render()}
+              <Button bsStyle="primary" type="submit" disabled={this.disabled()}>Submit</Button>
             </form>
             </Col>
           </Row>

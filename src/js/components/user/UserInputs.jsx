@@ -47,7 +47,7 @@ export default React.createClass({
     return {
       info:new InfoForm(_.extend({
         onChange(){
-          self.props.onChange(self.state.info.cleanedData);
+          self.props.onChange(self.state.info.cleanedData, this.isComplete());
           self.forceUpdate();
         },
         labelSuffix:'',
