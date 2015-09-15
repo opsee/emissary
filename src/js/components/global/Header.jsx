@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checkmark, MoreHoriz, Home, Opsee} from '../icons';
+import {Person, Checkmark, MoreHoriz, Cloud, Login} from '../icons';
 import {UserStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
@@ -21,6 +21,7 @@ export default React.createClass({
     }else{
       return (
         <Link to="login" className="md-navbar-link">
+          <Login nav={true}/>&nbsp;
           <span className="md-navbar-title">Login</span>
         </Link>
       )
@@ -35,18 +36,11 @@ export default React.createClass({
             <Col xs={12} sm={10} smOffset={1}>
                 <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
                   <li>
-                   <Link to="home" className="md-navbar-link" style={{padding:'5px'}}>
-                   <Opsee viewBox="0 0 24 12" style={{width:'60px',height:'40px'}} nav={true}/>
+                   <Link to="home" className="md-navbar-link">
+                     <Cloud nav={true}/>&nbsp;
+                     <span className="md-navbar-title">Environment</span>
                    </Link>
                  </li>
-                 {
-                 //  <li>
-                 //   <Link to="home" className="md-navbar-link">
-                 //     <Home nav={true}/>&nbsp;
-                 //     <span className="md-navbar-title">Environment</span>
-                 //   </Link>
-                 // </li>
-                 }
                   <li>
                    <Link to="checks" className="md-navbar-link">
                      <Checkmark nav={true}/>&nbsp;
