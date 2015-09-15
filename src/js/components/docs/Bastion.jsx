@@ -29,6 +29,12 @@ export default React.createClass({
               <h2>Does Opsee install any software on my systems?</h2>
               <p>No. Opsee does not install any software on your systems.</p>
 
+              <h2>How does the Bastion Instance handle VPCs?</h2>
+              <p>Opsee allows you to choose a VPC to install your Bastion Instance. Since Opsee can only support 1 Bastion Instance per customer right now, installation in multiple VPCs is not yet supported. If VPC support is important to you, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
+
+              <h2>How does the Bastion Instance handle subnets?</h2>
+              <p>Opsee will choose the default subnet in your VPC to install the Bastion Instance. If you have multiple subnets and are interested in support, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
+
               <h2>Can I add more than one Bastion Instance?</h2>
               <p>You're only able to have 1 Bastion Instance in your environment right now. We're working on ways to add more Bastion Instances across multiple regions, VPCs, and subnets, and we'll keep you posted. If you're interested in this capability now, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
 
