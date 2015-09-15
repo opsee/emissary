@@ -19,7 +19,7 @@ const InfoForm = forms.Form.extend({
   password: forms.CharField({
     widget: forms.PasswordInput,
     widgetAttrs:{
-      placeholder:''
+      placeholder:'Your Password'
     }
   }),
   render() {

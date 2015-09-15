@@ -16,7 +16,7 @@ const PasswordForm = forms.Form.extend({
     widget: forms.PasswordInput,
     label:'New Password',
     widgetAttrs:{
-      placeholder:''
+      placeholder:'Enter a new password'
     },
     required:false
   }),
