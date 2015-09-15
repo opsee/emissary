@@ -8,13 +8,11 @@ let include = [];
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
     widgetAttrs:{
-      className: 'has-icon',
       placeholder:'address@domain.com'
     }
   }),
   name: forms.CharField({
     widgetAttrs:{
-      className: 'has-icon',
       placeholder:'First Last'
     }
   }),
