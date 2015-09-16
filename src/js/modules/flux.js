@@ -85,11 +85,12 @@ Flux.statics = {
         haveChanged = true;
       }
     }
-    setTimeout(() => {
-      if(haveChanged && Store){
-        Store.emitChange();
-      }
-    },50);
+    return {statuses, haveChanged};
+    // setTimeout(() => {
+    //   if(haveChanged && Store){
+    //     Store.emitChange();
+    //   }
+    // },50);
     return statuses;
   },
   generateStatusFunctions(statuses){

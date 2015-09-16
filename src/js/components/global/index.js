@@ -1,9 +1,9 @@
 import Alert from './Alert.jsx';
 import Header from './Header.jsx';
+import HTMLFile from './HTMLFile.jsx';
 import Loader from './Loader.jsx';
 import MessageModal from './MessageModal.jsx';
 import Opsee from './Opsee.jsx';
-import Page from './Page.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import RadialGraph from './RadialGraph.jsx';
 import Routes from './Routes.jsx';
@@ -14,10 +14,10 @@ import Toolbar from './Toolbar.jsx';
 export default {
   Alert,
   Header,
+  HTMLFile,
   Loader,
   MessageModal,
   Opsee,
-  Page,
   ProgressBar,
   RadialGraph,
   Routes,

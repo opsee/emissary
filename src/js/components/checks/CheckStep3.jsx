@@ -9,6 +9,7 @@ import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
 import {StepCounter} from '../global';
+import {UserStore} from '../../stores';
 
 const intervalOptions = [
   ['5m','5min'],
@@ -17,7 +18,7 @@ const intervalOptions = [
   ['7d','7d'],
 ]
 
-const notificationOptions = ['email','desktop','webhook','slack'].map(s => [s, _.capitalize(s)]);
+const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
 
 const NotificationForm = forms.Form.extend({
@@ -62,6 +63,15 @@ const data = {
 const AllFields = React.createClass({
   getInitialState() {
     const self = this;
+    
+    let initialNotifs = self.props.check.notifications;
+    if(!initialNotifs.length){
+      initialNotifs.push({
+        channel:'email',
+        value:UserStore.getUser().get('email')
+      })
+    }
+
     const obj = {
       info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
@@ -70,15 +80,16 @@ const AllFields = React.createClass({
       notifications: new NotificationFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        initial:this.props.check.notifications,
-        minNum:!this.props.check.notifications.length ? 1 : 0,
+        initial:initialNotifs,
+        minNum:!initialNotifs.length ? 1 : 0,
         extra:0
       }),
     }
+
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.notifications.forms().forEach((form,i) => {
-        let notif = self.props.check.notifications[i];
+        let notif = initialNotifs[i];
         if(notif){
           form.setData(notif);
         }
@@ -91,6 +102,28 @@ const AllFields = React.createClass({
   },
   changeAndUpdate(){
     this.props.onChange(this.getCleanedData(), this.disabled(), 3)
+  },
+  renderRemoveNotificationButton(index){
+    if(index > 0){
+      return (
+        <div className="padding-lr">
+            <button type="button" className="btn btn-icon btn-flat" onClick={this.removeNotification.bind(null,index)} title="Remove this Notification">
+              <Close btn={true}/>
+          </button>
+        </div>
+      )
+    }else{
+      return (
+       <div className="padding-lr">
+         <div style={{width:'48px'}}/>
+       </div>
+      )
+    }
+  },
+  removeNotification(index){
+    if(index > 0){
+      this.state.notifications.removeForm(index);
+    }
   },
   renderNotificationForm(){
     return(
@@ -118,11 +151,7 @@ const AllFields = React.createClass({
                     </Row>
                   </Grid>
                 </div>
-                <div className="padding-lr">
-                    <button type="button" className="btn btn-icon btn-flat" onClick={this.state.notifications.removeForm.bind(this.state.notifications,index)} title="Remove this Notification">
-                      <Close btn={true}/>
-                  </button>
-                </div>
+                {this.renderRemoveNotificationButton(index)}
               </div>
             </div>
           )
