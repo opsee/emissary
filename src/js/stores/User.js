@@ -80,7 +80,11 @@ const Store = Flux.createStore(
         Store.emitChange();  
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses, Store);
+    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
+    _statuses = statusData.statuses;
+    if(statusData.haveChanged){
+      Store.emitChange();
+    }
   }
 );
 

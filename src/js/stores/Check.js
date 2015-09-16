@@ -261,7 +261,11 @@ const Store = Flux.createStore(
         console.error(payload.data);
       break;
     }
-    _statuses = Flux.statics.statusProcessor(payload, _statuses, Store);
+    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
+    _statuses = statusData.statuses;
+    if(statusData.haveChanged){
+      Store.emitChange();
+    }
   }
 )
 
