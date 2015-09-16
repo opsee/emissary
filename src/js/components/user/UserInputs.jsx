@@ -13,7 +13,7 @@ const InfoForm = forms.Form.extend({
   }),
   name: forms.CharField({
     widgetAttrs:{
-      placeholder:'First Last'
+      placeholder:'Your Name'
     }
   }),
   password: forms.CharField({
