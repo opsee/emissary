@@ -18,6 +18,7 @@
     width: 100%;
   }
   .dropdown-toggle, [dropdown-toggle]{
+    @include box-shadow(none);
     border-radius:0;
     background-color: transparent;
     font-weight: $body-font-weight;

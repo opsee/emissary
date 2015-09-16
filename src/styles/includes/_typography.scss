@@ -35,16 +35,16 @@ h1, .h1{
 }
 
 h2, .h2{
+  color: $text-color-secondary;
   margin:0 0 .5em 0;
   font-family:$headings-font-family;
 }
 
 h3,.h3{
   font-family: $font-family-sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.25em;
   font-weight: $body-font-weight-med;
-  line-height: 1.6rem;
-  color: $text-color-secondary;
+  line-height: 1.4em;
 }
 
 em {
