@@ -63,4 +63,6 @@ _actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe',
 
 _actions.globalSocketMessage = Flux.statics.addAction('globalSocketMessage');
 
+_actions.globalSetNav = Flux.statics.addAction('globalSetNav');
+
 export default _.assign({}, ..._.values(_actions));

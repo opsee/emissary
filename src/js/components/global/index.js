@@ -3,6 +3,7 @@ import Header from './Header.jsx';
 import Loader from './Loader.jsx';
 import MessageModal from './MessageModal.jsx';
 import Opsee from './Opsee.jsx';
+import Page from './Page.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import RadialGraph from './RadialGraph.jsx';
 import Routes from './Routes.jsx';
@@ -16,6 +17,7 @@ export default {
   Loader,
   MessageModal,
   Opsee,
+  Page,
   ProgressBar,
   RadialGraph,
   Routes,

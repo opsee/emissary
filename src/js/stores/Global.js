@@ -35,7 +35,8 @@ let _data = {
   modalMessage:{
     used:false,
     options:null
-  }
+  },
+  showNav:true
 }
 
 let _statuses = {
@@ -52,6 +53,9 @@ const Store = Flux.createStore(
     },
     getSocketStarted(){
       return _data.socketStarted;
+    },
+    getShowNav(){
+      return _data.showNav;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -77,6 +81,10 @@ const Store = Flux.createStore(
       break;
       case 'GLOBAL_SOCKET_MESSAGE':
         statics.parseSocketMessage(payload.data);
+      break;
+      case 'GLOBAL_SET_NAV':
+        _data.showNav = payload.data;
+        Store.emitChange();
       break;
     }
     _statuses = Flux.statics.statusProcessor(payload, _statuses, Store);

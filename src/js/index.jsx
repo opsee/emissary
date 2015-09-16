@@ -2,10 +2,16 @@ import React from 'react/addons';
 var {CSSTransitionGroup} = React.addons;
 import router from './modules/router.js';
 import _ from 'lodash';
+import {hideNavList} from './components/global/Routes.jsx';
+import {GlobalActions} from './actions';
 
 window._ = _;
 
-router.run((Root, state) => {  
+router.run((Root, state) => {
+  const testRoutes = state.routes;
+  const names = _.pluck(testRoutes, 'name');
+  const bool = !(_.intersection(names, hideNavList).length);
+  GlobalActions.globalSetNav(bool);
   React.render(
       (
         <div>

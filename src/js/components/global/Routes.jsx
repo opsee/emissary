@@ -114,4 +114,9 @@ const routes = (
   </Route>
 );
 
-export default routes;
+const hideNavList = ['start', 'onboardThanks', 'onboardPassword', 'tutorial', 'onboardRegionSelect', 'onboardCredentials', 'onboardVpcSelect', 'onboardInstall', 'onboardInstallExample', 'login'];
+
+export default {
+  routes,
+  hideNavList
+}
