@@ -62,7 +62,7 @@ export default React.createClass({
                 </button>
                 <div className="clearfix"><br/></div>
                 <div className="clearfix">
-                  <Link to="passwordForgot">Forgot Password?</Link>
+                  <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
                 </div>
               </form>
             </Col>
