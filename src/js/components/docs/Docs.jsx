@@ -12,7 +12,6 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-              <h3>RTFM</h3>
               <ul>
                 <li><Link to="docsBastion">The Bastion Instance</Link></li>
                 <li><Link to="docsCloudformation">Our Cloudformation Template and Permissions</Link></li>
