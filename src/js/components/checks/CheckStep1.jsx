@@ -40,8 +40,9 @@ const InfoForm = forms.Form.extend({
   group: forms.ChoiceField({choices:groupOptions}),
   port: forms.CharField({
     widgetAttrs:{
-      placeholder:'e.g. 8080'
-    }
+      placeholder:'e.g. 8080',
+    },
+    widget:forms.NumberInput
   }),
   method: forms.ChoiceField({choices:methodOptions}),
   path: forms.CharField({

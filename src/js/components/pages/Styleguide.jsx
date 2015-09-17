@@ -16,10 +16,10 @@ function getState(){
     checks: CheckStore.getChecks(),
     toggles:[{on:true},{on:false},{on:true}],
     radios:_.range(3).map(i => {
-      return {on:false}
+      return {id:`radio-${i}`,on:false}
     }),
-    buttonToggles:['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map(i => {
-      return {title:i, on:false}
+    buttonToggles:['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
+      return {title:title, on:false, id:`button-toggle-${i}`}
     })
   }
 }
@@ -39,18 +39,31 @@ export default React.createClass({
     toggles[index].on = bool;
     this.setState({toggles});
   },
-  triggerRadio(index, bool){
-    const radios = _.range(3).map(i => {
-      return {
-        on:i == index ? bool : false
-      }
-    })
-    this.setState({radios});
+  triggerRadio(id, bool){
+    let radios = _.clone(this.state.radios);
+    const index = _.findIndex(radios, {id});
+    if(index > -1){
+      radios = radios.map(r => {
+        r.on = r.id == id ? bool : false;
+        return r;
+      });
+      this.setState({radios});
+    }
   },
-  triggerButtonToggle(index, bool){
-    let buttonToggles = this.state.buttonToggles
-    buttonToggles[index].on = bool;
-    this.setState({buttonToggles});
+  triggerButtonToggle(id, bool){
+    let buttonToggles = _.clone(this.state.buttonToggles);
+    const index = _.findIndex(buttonToggles, {id});
+    if(index > -1){
+      buttonToggles = buttonToggles.map(r => {
+        r.on = r.id == id ? bool : r.on;
+        return r;
+      });
+      this.setState({buttonToggles});
+    }
+
+    // let buttonToggles = this.state.buttonToggles
+    // buttonToggles[index].on = bool;
+    // this.setState({buttonToggles});
   },
   notify(style){
     GlobalActions.globalModalMessage({
@@ -134,8 +147,8 @@ export default React.createClass({
             <ul className="list-unstyled">
             {this.state.radios.map((t,i) => {
               return(
-                <li className="padding-tb" key={`radio-${i}`}>
-                  <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={i.toString()} label={`Item ${i}`} />
+                <li className="" key={`radio-${i}`}>
+                  <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
                 </li>
               )
             })}
@@ -148,7 +161,7 @@ export default React.createClass({
             {this.state.buttonToggles.map((t,i) => {
               return(
                 <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin:'0 .5em'}}>
-                  <ButtonToggle on={t.on} onChange={this.triggerButtonToggle} id={i.toString()} label={t.title} />
+                  <ButtonToggle on={t.on} onChange={this.triggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
                 </li>
               )
             })}

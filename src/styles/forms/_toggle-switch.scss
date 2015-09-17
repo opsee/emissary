@@ -23,9 +23,13 @@
     border-radius:100%;
     width:50%;
     height:0;
+    padding:0;
+    border:0;
     padding-top:50%;
     top:0;
     left:0;
+    -webkit-appearance:none;
+    display: block;
     @include transform(scale(1.2) translateX(8%));
     position:absolute;
   }
