@@ -51,7 +51,7 @@ export default React.createClass({
     return !s.claimed && !s.activated;
   },
   isApprovedSignup(s){
-    return s.activated;
+    return s.activated && !s.claimed;
   },
   isUser(s){
     return s.claimed;
@@ -109,18 +109,26 @@ export default React.createClass({
       <div>
         <Toolbar title="Signups"/>
         <Grid>
-          <Row>
-            <h2 className="text-danger">Unapproved</h2>
-            {this.getUnapproved().map(this.output)}
-          </Row>
-          <Row>
-            <h2 className="text-warning">Approved</h2>
-            {this.getApproved().map(this.output)}
-          </Row>
-          <Row>
-            <h2 className="text-success">Users</h2>
-            {this.getUsers().map(this.output)}
-          </Row>
+          <Col xs={12} sm={10} smOffset={1}>
+            <Row>
+              <h2 className="text-danger">Unapproved</h2>
+              <div className="display-flex-sm flex-wrap">
+                {this.getUnapproved().map(this.output)}
+              </div>
+            </Row>
+            <Row>
+              <h2 className="text-warning">Approved</h2>
+              <div className="display-flex-sm flex-wrap">
+                {this.getApproved().map(this.output)}
+              </div>
+            </Row>
+            <Row>
+              <h2 className="text-success">Users</h2>
+              <div className="display-flex-sm flex-wrap">
+                {this.getUsers().map(this.output)}
+              </div>
+            </Row>
+          </Col>
         </Grid>
       </div>
     );

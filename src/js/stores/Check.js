@@ -217,7 +217,7 @@ const statics = {
 let _data = {
   checks:new List(),
   check:new Check(),
-  response:'foo'//_response
+  response:_response.toJS()
 }
 
 let _statuses = {
