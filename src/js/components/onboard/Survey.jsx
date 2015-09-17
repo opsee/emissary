@@ -1,12 +1,13 @@
 import React, {PropTypes} from 'react';
-import {OnboardActions} from '../../actions';
-import {OnboardStore} from '../../stores';
+import {OnboardActions, UserActions} from '../../actions';
+import {OnboardStore, UserStore} from '../../stores';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
+import config from '../../modules/config';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper']
 
@@ -31,11 +32,10 @@ const Survey = React.createClass({
   },
   getInitialState() {
     var self = this;
-    var data = OnboardStore.getInstallData();
     return {
-      info:new InfoForm(_.extend({
+      info:new InfoForm({
         onChange(){
-          // OnboardActions.onboardSetSurvey(self.state.info.cleanedData);
+          self.dataHasChanged();
           self.forceUpdate();
         },
         labelSuffix:'',
@@ -43,8 +43,14 @@ const Survey = React.createClass({
           on:'blur change',
           onChangeDelay:100
         },
-      }, self.dataComplete() ? {data:data} :  null))
+      })
     }
+  },
+  componentWillMount(){
+    UserActions.userGetData(UserStore.getUser().toJS());
+  },
+  dataHasChanged(){
+    UserActions.userPutData('bastionInstallSurvey', this.state.info.cleanedData);
   },
   dataComplete(){
     return false;

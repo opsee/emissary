@@ -11,7 +11,10 @@
   <body>
     <div id="main"></div>
     <!-- @ifdef API -->
-    <script>window.apiDomain = '<!-- @echo API -->'</script>
+    <script>window.apiDomain = '<!-- @echo API -->';</script>
+    <!-- @endif -->
+    <!-- @ifdef REV -->
+    <script>window.revision = '<!-- @echo REV -->';</script>
     <!-- @endif -->
     <!-- @if ENV='prod' -->
     <script src="/js/index.min.js"></script>

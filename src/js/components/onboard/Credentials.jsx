@@ -1,14 +1,16 @@
 import React, {PropTypes} from 'react';
-import {Toolbar} from '../global';
+import {Alert, Toolbar} from '../global';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
-import router from '../../modules/router.js';
+import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
+import config from '../../modules/config';
+import storage from '../../modules/storage';
 
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
@@ -38,20 +40,26 @@ const Credentials = React.createClass({
     }
   },
   storeDidChange(){
-    const regionsWithVpcs = OnboardStore.getAvailableVpcs();
-    let vpcs = _.chain(regionsWithVpcs).map(r => {
-      return r.vpcs.map(v => {
-        return v['vpc-id']
-      });
-    }).flatten().value();
-    if(vpcs.length){
-      if(false){
-      // if(vpcs.length === 1){
-        OnboardActions.onboardSetVpcs(vpcs);
-        router.transitionTo('onboardInstall');
-      }else{
-        router.transitionTo('onboardVpcSelect');
+    const vpcScanStatus = OnboardStore.getVpcScanStatus();
+    if(vpcScanStatus == 'success'){
+      const regionsWithVpcs = OnboardStore.getAvailableVpcs();
+      let vpcs = _.chain(regionsWithVpcs).map(r => {
+        return r.vpcs.map(v => {
+          return v['vpc-id']
+        });
+      }).flatten().value();
+      if(vpcs.length){
+        if(vpcs.length === 1 && !storage.get('showVpcsOnboard')){
+          OnboardActions.onboardSetVpcs(vpcs);
+          router.transitionTo('onboardInstall');
+        }else{
+          router.transitionTo('onboardVpcSelect');
+        }
       }
+    }else if(vpcScanStatus && vpcScanStatus != 'pending'){
+      this.setState({
+        error:vpcScanStatus && vpcScanStatus.body && vpcScanStatus.body.error
+      })
     }
   },
   getInitialState() {
@@ -76,12 +84,27 @@ const Credentials = React.createClass({
   },
   submit(e){
     e.preventDefault();
+    this.setState({
+      error:null
+    });
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
-    OnboardActions.onboardVpcScan(OnboardStore.getInstallData());
+    OnboardActions.onboardVpcScan(OnboardStore.getVpcScanData());
     // router.transitionTo('onboardVpcSelect')
   },
   disabled(){
     return !this.state.info.isValid();
+  },
+  renderError(){
+    if(this.state.error){
+      return (
+        <div>
+          <div><br/></div>
+          <Alert type="danger">
+            {this.state.error}
+          </Alert>
+        </div>
+      )
+    }
   },
   render() {
     return (
@@ -100,6 +123,7 @@ const Credentials = React.createClass({
 
                 <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron={true}>Next</Button>
               </form>
+              {this.renderError()}
             </Col>
           </Row>
         </Grid>

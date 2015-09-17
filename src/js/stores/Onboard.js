@@ -71,6 +71,13 @@ const Store = Flux.createStore(
     getVpcScanStatus(){
       return _statuses.onboardVpcScan;
     },
+    getVpcScanData(){
+      return {
+        'access-key':_installData['access-key'],
+        'secret-key':_installData['secret-key'],
+        regions:_installData.regions
+      }
+    },
     getAvailableVpcs(){
       return _availableVpcs;
     },
@@ -127,7 +134,6 @@ const Store = Flux.createStore(
       break;
       case 'ONBOARD_VPC_SCAN_SUCCESS':
         _availableVpcs = payload.data;
-        Store.emitChange();
       break;
       case 'ONBOARD_VPC_SCAN_ERROR':
       break;

@@ -31,14 +31,16 @@ let initialUser = storage.get('user');
 initialUser = initialUser ? new User(initialUser) : null;
 
 let _data = {
-  user:initialUser || new User()
+  user:initialUser || new User(),
+  data:{}
 }
 
 let _statuses = {
   userLogin:null,
   userSendResetEmail:null,
   userEdit:null,
-  userGetUser:null
+  userGetUser:null,
+  userPutData:null
 };
 
 const _public = {
@@ -51,6 +53,9 @@ const _public = {
   getUser(){
     return _data.user;
   },
+  getUserData(){
+    return _data.userData;
+  }
 }
 
 let statusFunctions = {};
@@ -78,6 +83,10 @@ const Store = Flux.createStore(
       case 'USER_LOG_OUT':
         statics.logout();
         Store.emitChange();  
+      break;
+      case 'USER_PUT_DATA_SUCCESS':
+      case 'USER_GET_DATA_SUCCESS':
+        _data.userData = payload.data;
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

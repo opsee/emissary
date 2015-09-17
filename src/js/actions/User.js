@@ -49,6 +49,45 @@ _actions.userEdit = Flux.statics.addAsyncAction('userEdit',
   res => res && res.response
 );
 
+_actions.userPutData = Flux.statics.addAsyncAction('userPutData',
+  (key, data) => {
+    let user = UserStore.getUserData();
+    let history = user[key];
+    let index;
+    if(history && Array.isArray(history) && history.length){
+      index = history.length -1;
+    }else{
+      index = 0;
+      user[key] = [];
+    }
+    let record = user[key][index];
+    if(record && record.revision != config.revision){
+      index++;
+    }
+    user[key][index] = {
+      revision:config.revision,
+      data:data
+    }
+    return request
+    .put(`${config.authApi}/users/${UserStore.getUser().get('id')}/data`)
+    .set('Authorization', UserStore.getAuth())
+    .send(user)
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
+_actions.userGetData = Flux.statics.addAsyncAction('userGetData',
+  (data) => {
+    return request
+    .get(`${config.authApi}/users/${data.id}/data`)
+    .set('Authorization', UserStore.getAuth())
+    // .send({})
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
 _actions.userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   (data) => {
     return request

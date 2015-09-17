@@ -32,10 +32,8 @@ const Team = React.createClass({
     }
   },
   setVpcs(){
-    const status = OnboardStore.getVpcScanStatus();
-    this.setState({status});
-    if(status == 'success'){
-      const regionsWithVpcs = OnboardStore.getAvailableVpcs();
+    const regionsWithVpcs = OnboardStore.getAvailableVpcs()
+    if(regionsWithVpcs.length){
       let vpcs = regionsWithVpcs.map(r => {
         return r.vpcs.map(v => {
           let name = v['vpc-id'];
@@ -50,7 +48,7 @@ const Team = React.createClass({
       });
       vpcs = _.flatten(vpcs);
       this.state.info.fields.vpcs.setChoices(vpcs);
-      this.forceUpdate();
+      this.setState({vpcs:vpcs});
     }
   },
   statics:{
@@ -77,16 +75,13 @@ const Team = React.createClass({
       })
     }
     return _.extend(obj, {
-      status:'pending'
+      status:'pending',
+      vpcs:[]
     });
   },
-  // componentWillMount(){
-  //   OnboardActions.onboardVpcScan(OnboardStore.getInstallData());
-  // },
   submit(e){
     e.preventDefault();
     OnboardActions.onboardSetVpcs(this.state.info.cleanedData.vpcs);
-    // router.transitionTo('onboardInstall');
   },
   disabled(){
     return !this.state.info.cleanedData.vpcs;
@@ -103,13 +98,7 @@ const Team = React.createClass({
     }
   },
   innerRender(){
-    if(this.state.status == 'pending'){
-      return (
-        <div>
-          Looking for VPCs...
-        </div>
-      )
-    }else if(this.state.status == 'success'){
+    if(this.state.vpcs.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>
@@ -118,10 +107,10 @@ const Team = React.createClass({
           <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>Install</button>
         </div>
       )
-    }else if(this.state.status != 'pending'){
+    }else{
       return (
         <Alert type="danger">
-          {this.state.status && this.state.status.body && this.state.status.body.error}
+          Either you have no active VPCs or something else went wrong.
         </Alert>
       )
     }
@@ -136,9 +125,6 @@ const Team = React.createClass({
               <form name="loginForm" onSubmit={this.submit}>
               {this.innerRender()}
               </form>
-              {
-              // <pre>{JSON.stringify(this.state.info.cleanedData, null, ' ')}</pre>
-              }
             </Col>
           </Row>
         </Grid>

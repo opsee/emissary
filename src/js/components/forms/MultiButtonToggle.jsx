@@ -20,7 +20,8 @@ export default React.createClass({
     }
     var obj = {};
     obj[this.props.bf.name] = data;
-    this.props.bf.form.setData(obj);
+    const combined = _.assign({},this.props.bf.form.cleanedData,obj);
+    this.props.bf.form.setData(combined);
   },
   widgetIsActive(w){
     return _.findWhere(this.props.bf.value(), w.choiceValue);
