@@ -13,6 +13,8 @@ pre, code {
 pre {
   background-color: $gray-900;
   padding: 0.25em;
+  white-space: pre;
+  width: 100%;
 }
 .text-serif {
   font-family: $font-family-serif;
