@@ -2,9 +2,9 @@ import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import Radium from 'radium';
 import colors from 'seedling/colors';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
-var Alert = React.createClass({
+var OpseeAlert = React.createClass({
   getOuterStyle(){
     let style = {
       backgroundColor:colors.danger,
@@ -16,6 +16,10 @@ var Alert = React.createClass({
     return style;
   },
   render(){
+    return (
+      <Alert bsStyle={this.props.type}>
+      </Alert>
+    );
     return(
       <Grid fluid={true} style={this.getOuterStyle()}>
         <Row>
@@ -28,4 +32,4 @@ var Alert = React.createClass({
   }
 })
 
-export default Radium(Alert);
+export default Radium(OpseeAlert);

@@ -49,9 +49,9 @@ _actions.userEdit = Flux.statics.addAsyncAction('userEdit',
   res => res && res.response
 );
 
-_actions.userPutData = Flux.statics.addAsyncAction('userPutData',
-  (key, data) => {
-    let user = UserStore.getUserData();
+_actions.userPutUserData = Flux.statics.addAsyncAction('userPutUserData',
+  (key, data, reset) => {
+    let user = UserStore.getUserData() || {};
     let history = user[key];
     let index;
     if(history && Array.isArray(history) && history.length){
@@ -68,6 +68,9 @@ _actions.userPutData = Flux.statics.addAsyncAction('userPutData',
       revision:config.revision,
       data:data
     }
+    if(reset){
+      user[key] = false;
+    }
     return request
     .put(`${config.authApi}/users/${UserStore.getUser().get('id')}/data`)
     .set('Authorization', UserStore.getAuth())
@@ -77,12 +80,11 @@ _actions.userPutData = Flux.statics.addAsyncAction('userPutData',
   res => res && res.response
 );
 
-_actions.userGetData = Flux.statics.addAsyncAction('userGetData',
+_actions.userGetUserData = Flux.statics.addAsyncAction('userGetUserData',
   (data) => {
     return request
-    .get(`${config.authApi}/users/${data.id}/data`)
+    .get(`${config.authApi}/users/${UserStore.getUser().get('id')}/data`)
     .set('Authorization', UserStore.getAuth())
-    // .send({})
   },
   res => res && res.body,
   res => res && res.response

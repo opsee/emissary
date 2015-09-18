@@ -32,7 +32,7 @@ initialUser = initialUser ? new User(initialUser) : null;
 
 let _data = {
   user:initialUser || new User(),
-  data:{}
+  userData:null
 }
 
 let _statuses = {
@@ -40,7 +40,8 @@ let _statuses = {
   userSendResetEmail:null,
   userEdit:null,
   userGetUser:null,
-  userPutData:null
+  userPutUserData:null,
+  userGetUserData:null
 };
 
 const _public = {
@@ -84,8 +85,8 @@ const Store = Flux.createStore(
         statics.logout();
         Store.emitChange();  
       break;
-      case 'USER_PUT_DATA_SUCCESS':
-      case 'USER_GET_DATA_SUCCESS':
+      case 'USER_PUT_USER_DATA_SUCCESS':
+      case 'USER_GET_USER_DATA_SUCCESS':
         _data.userData = payload.data;
       break;
     }

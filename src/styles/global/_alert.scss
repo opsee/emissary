@@ -1,0 +1,19 @@
+.alert{
+  &.alert-success, &.alert-info, &.alert-warning, &.alert-danger{
+    color:white;
+  }
+}
+.alert-dismissable{
+  .close{
+    float: right;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    opacity: .2;
+    background:none;
+    border:none;
+    top:-10px;
+    right:-28px;
+  }
+}

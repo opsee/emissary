@@ -1,3 +1,4 @@
+import Alert from 'react-bootstrap/lib/Alert';
 import Button from 'react-bootstrap/lib/Button';
 import ButtonLink from 'react-router-bootstrap/lib/ButtonLink';
 import Col from 'react-bootstrap/lib/Col';
@@ -13,6 +14,7 @@ import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 
 export default {
+  Alert,
   Button,
   ButtonLink,
   Col,

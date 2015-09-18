@@ -3,14 +3,14 @@ import _ from 'lodash';
 import router from '../../modules/router';
 import forms from 'newforms';
 import colors from 'seedling/colors';
-import {Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Link} from 'react-router';
-import {BoundField} from '../forms';
-import BottomButtonNav from '../global/BottomButtonNav.jsx';
-import {Toolbar} from '../global';
+import {BoundField, Button} from '../forms';
+import {Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
-import {StepCounter} from '../global';
+import {UserDataRequirement} from '../user';
+import {UserActions} from '../../actions';
 
 const groupOptions = [
   ['group-1','Group 1'],
@@ -74,10 +74,6 @@ const InfoForm = forms.Form.extend({
   }
 })
 
-function step1DataComplete(){
-  return
-}
-
 const AllFields = React.createClass({
   getInitialState() {
     const self = this;
@@ -85,16 +81,12 @@ const AllFields = React.createClass({
       info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        // data:self.props.check,
-        // errors:forms.ErrorObject.fromJSON({})
       }, self.dataComplete() ? {data:self.props.check} : null)),
       headers: new HeaderFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        // initial:this.props.check && this.props.check.headers || [],
         emptyPermitted:false,
         extra:0,
-        // canDelete:true,
         validation:{
           on:'blur change'
         }
@@ -151,16 +143,16 @@ const AllFields = React.createClass({
                   </Grid>
                 </div>
                 <div className="padding-lr">
-                  <button type="button" className="btn btn-icon btn-flat" onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
+                  <Button icon={true} flat={true} onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
                       <Close btn={true}/>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
           )
         })
         }
-        <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
+        <Button flat={true} bsStyle="primary" noPad={true} onClick={this.state.headers.addAnother.bind(this.state.headers)}>
             <Add fill={colors.primary} inline={true}/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
@@ -168,7 +160,6 @@ const AllFields = React.createClass({
   },
   getCleanedData(){
     let headerData = this.state.headers.cleanedData();
-    // let headerData = this.state.headers.data;
     const data = {
       headers:headerData
     }
@@ -202,19 +193,27 @@ const AllFields = React.createClass({
     return !(this.state.info.isComplete() && headersComplete);
     return !this.state.info.isComplete();
   },
+  dismissHelperText(){
+    UserActions.userPutUserData('hasDismissedCheckCreationHelp');
+  },
+  renderHelperText(){
+      return (
+        <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
+          <Alert type="info" onDismiss={this.dismissHelperText}>
+            <p>Let’s create your first health check! Tell us which security group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
+          </Alert>
+          <div><br/></div>
+        </UserDataRequirement>
+      )
+  },
   innerRender(){
     const nonFieldErrors = this.state.info.nonFieldErrors();
     return (
       <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
-          {this.state.info.render()}
-          {this.renderHeaderForm()}
-          {this.renderSubmitButton()}
-          {
-            // <pre>{this.getCleanedData && JSON.stringify(this.getCleanedData(), null, ' ')}</pre>
-          }
-          {
-            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
-          }
+        {this.renderHelperText()}
+        {this.state.info.render()}
+        {this.renderHeaderForm()}
+        {this.renderSubmitButton()}
       </form>
     )
   },
