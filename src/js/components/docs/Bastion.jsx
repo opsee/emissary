@@ -29,6 +29,9 @@ export default React.createClass({
               <h2>Does Opsee install any software on my systems?</h2>
               <p>No. Opsee does not install any software on your systems.</p>
 
+              <h2>Tell me about the security measures Opsee has taken with the Bastion</h2>
+              <p>We're glad you asked! The Bastion Instance is an Amazon AMI defined by a CloudFormation template. Its credentials are updated every hour. Any credentials it needs to run health checks are stored on an encrypted EBS volume inside your network. The Bastion Instance can even keep running if it can't connect to Opsee.</p>
+
               <h2>How does the Bastion Instance handle VPCs?</h2>
               <p>Opsee allows you to choose a VPC to install your Bastion Instance. Since Opsee can only support 1 Bastion Instance per customer right now, installation in multiple VPCs is not yet supported. If VPC support is important to you, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
 
