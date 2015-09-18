@@ -16,17 +16,18 @@ _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
     .set('Authorization', UserStore.getAuth())
     .send({
       target:{
-        id:data.group
+        id:data.group,
+        type:'sg'
       },
       check_spec:{
         type_url:'HttpCheck',
         value:{
           name:data.name,
           path:data.path,
-          protocol:data.protocol,
-          port:data.port,
+          protocol:data.protocol || 'http',
+          port:typeof data.port == "number" ? data.port : parseInt(data.port, 10),
           verb:data.method,
-          interval:'5m',
+          interval:1,
           headers:data.headers.map(h => {
             return {
               name:h.key,

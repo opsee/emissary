@@ -19,7 +19,10 @@ export default React.createClass({
   render(){
     return (
       <div className={`toggle-switch ${this.isActive()}`} onClick={this.onClick} onTouchEnd={this.handleTouch}>
-        <div className="knob"></div>
+      {
+        // <div className="knob"></div>
+      }
+        <button className="knob" id={this.props.id}/>
       </div>
     );
   }

@@ -47,10 +47,10 @@ const Survey = React.createClass({
     }
   },
   componentWillMount(){
-    UserActions.userGetData(UserStore.getUser().toJS());
+    UserActions.userGetUserData(UserStore.getUser().toJS());
   },
   dataHasChanged(){
-    UserActions.userPutData('bastionInstallSurvey', this.state.info.cleanedData);
+    UserActions.userPutUserData('bastionInstallSurvey', this.state.info.cleanedData);
   },
   dataComplete(){
     return false;

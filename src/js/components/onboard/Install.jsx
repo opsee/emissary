@@ -106,7 +106,7 @@ const Install = React.createClass({
     if(this.bastionsComplete()){
       if(!bastionErrors.length || bastionSuccesses.length){
         return(
-          <Link to="checks" className="btn btn-raised btn-block btn-primary">Create a Check&nbsp;<ChevronRight inline={true} fill="white"/></Link>
+          <Link to="checkCreate" className="btn btn-raised btn-block btn-primary">Create a Check&nbsp;<ChevronRight inline={true} fill="white"/></Link>
         )
       }else{
         return (

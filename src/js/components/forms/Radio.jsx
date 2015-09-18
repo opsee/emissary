@@ -11,7 +11,8 @@ export default React.createClass({
     e.preventDefault();
     this.onClick();
   },
-  onClick(){
+  onClick(e){
+    e.preventDefault();
     this.props.onChange.call(null, this.props.id, !this.props.on);
   },
   isActive(){
