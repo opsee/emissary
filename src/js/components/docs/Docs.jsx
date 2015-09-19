@@ -15,6 +15,7 @@ export default React.createClass({
               <ul>
                 <li><Link to="docsBastion">The Bastion Instance</Link></li>
                 <li><Link to="docsCloudformation">Our Cloudformation Template and Permissions</Link></li>
+                <li><Link to="docsIAM">IAM Profile for Bastion Installation</Link></li>
               </ul>
               </Col>
             </Row>
