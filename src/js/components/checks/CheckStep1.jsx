@@ -7,15 +7,13 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Link} from 'react-router';
 import {BoundField, Button} from '../forms';
-import {Toolbar, StepCounter} from '../global';
+import {Toolbar, StepCounter, Loader} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {UserActions} from '../../actions';
+import {UserActions, GroupActions} from '../../actions';
+import {GroupStore} from '../../stores';
 
-const groupOptions = [
-  ['group-1','Group 1'],
-  ['group-2','Group 2']
-]
+const groupOptions = []
 
 const methodOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
 
@@ -37,7 +35,9 @@ const HeaderFormSet = forms.FormSet.extend({
 });
 
 const InfoForm = forms.Form.extend({
-  group: forms.ChoiceField({choices:groupOptions}),
+  group: forms.ChoiceField({
+    choices:[]
+  }),
   port: forms.CharField({
     widgetAttrs:{
       placeholder:'e.g. 8080',
@@ -75,6 +75,16 @@ const InfoForm = forms.Form.extend({
 })
 
 const AllFields = React.createClass({
+  mixins:[GroupStore.mixin],
+  storeDidChange(){
+    const status = GroupStore.getGetGroupsSecurityStatus();
+    if(status == 'success'){
+      this.state.info.fields.group.setChoices(this.getGroupChoices());
+      this.setState({
+        groups:GroupStore.getGroupsSecurity()
+      });
+    }
+  },
   getInitialState() {
     const self = this;
     const obj = {
@@ -105,6 +115,14 @@ const AllFields = React.createClass({
   },
   dataComplete(){
     return _.chain(['group', 'port', 'method', 'path']).map(s => this.props.check[s]).every().value();
+  },
+  getGroupChoices(){
+    return GroupStore.getGroupsSecurity().toJS().map(g => {
+      return [g.id, g.name];
+    });
+  },
+  componentWillMount(){
+    GroupActions.getGroupsSecurity();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
@@ -208,14 +226,18 @@ const AllFields = React.createClass({
   },
   innerRender(){
     const nonFieldErrors = this.state.info.nonFieldErrors();
-    return (
-      <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
-        {this.renderHelperText()}
-        {this.state.info.render()}
-        {this.renderHeaderForm()}
-        {this.renderSubmitButton()}
-      </form>
-    )
+    // if(this.state.groups){
+      return (
+        <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
+          {this.renderHelperText()}
+          {this.state.info.render()}
+          {this.renderHeaderForm()}
+          {this.renderSubmitButton()}
+        </form>
+      )
+    // }else{
+      // return <Loader timeout={500}/>
+    // }
   },
   renderAsPage(){
     return (

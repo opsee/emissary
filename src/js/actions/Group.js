@@ -4,25 +4,66 @@ import request from '../modules/request';
 import {UserStore} from '../stores';
 import _ from 'lodash';
 
+let _actions = {};
 
-var getGroups = Flux.statics.addAsyncAction('getGroups',
+_actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
   () => {
     return request
-    .get(`${config.api}/groups`)
+    .get(`${config.api}/groups/security`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body && res.body.groups, 
   res => res && res.response
 );
 
-var getGroup = Flux.statics.addAsyncAction('getGroup', 
+_actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
   (id) => {
     return request
-    .get(`${config.api}/group/${id}`)
+    .get(`${config.api}/group/security/${id}`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,
   res => res && res.response
 );
 
-export default _.assign({}, getGroup, getGroups);
+_actions.getGroupsRDSSecurity = Flux.statics.addAsyncAction('getGroupsRDSSecurity',
+  () => {
+    return request
+    .get(`${config.api}/groups/rds-security`)
+    .set('Authorization', UserStore.getAuth())
+  },
+  res => res.body && res.body.groups, 
+  res => res && res.response
+);
+
+_actions.getGroupRDSSecurity = Flux.statics.addAsyncAction('getGroupRDSSecurity',
+  (id) => {
+    return request
+    .get(`${config.api}/group/rds-security/${id}`)
+    .set('Authorization', UserStore.getAuth())
+  },
+  res => res.body,
+  res => res && res.response
+);
+
+_actions.getGroupsELB = Flux.statics.addAsyncAction('getGroupsELB',
+  () => {
+    return request
+    .get(`${config.api}/groups/elb`)
+    .set('Authorization', UserStore.getAuth())
+  },
+  res => res.body && res.body.groups, 
+  res => res && res.response
+);
+
+_actions.getGroupELB = Flux.statics.addAsyncAction('getGroupELB',
+  (id) => {
+    return request
+    .get(`${config.api}/group/elb/${id}`)
+    .set('Authorization', UserStore.getAuth())
+  },
+  res => res.body,
+  res => res && res.response
+);
+
+export default _.assign({}, ..._.values(_actions));

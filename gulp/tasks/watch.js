@@ -17,7 +17,7 @@ gulp.task('watchImg', ['buildImg'], function() {
 });
 
 gulp.task('watchFiles', ['buildFiles'], function() {
-  gulp.watch(config.img.src, ['buildFiles']);
+  gulp.watch(config.files.src, ['buildFiles']);
 });
 
 gulp.task('watchHtml', ['html'], function() {

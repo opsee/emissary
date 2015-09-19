@@ -7,11 +7,9 @@ import DefaultRoute from 'react-router/lib/components/DefaultRoute';
 import Redirect from 'react-router/lib/components/Redirect';
 
 //pages
-import Home from '../pages/Home.jsx';
-import HomeInstances from '../pages/HomeInstances.jsx';
-import HomeGroups from '../pages/HomeGroups.jsx';
-import More from '../pages/More.jsx';
-import Styleguide from '../pages/Styleguide.jsx';
+import Home from '../home/Home.jsx';
+import HomeInstances from '../home/HomeInstances.jsx';
+import HomeGroups from '../home/HomeGroups.jsx';
 import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
@@ -25,8 +23,9 @@ import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
 
 import CheckNotFound from '../checks/NotFound.jsx';
-import Group from '../pages/Group.jsx';
-import Instance from '../pages/Instance.jsx';
+import GroupSecurity from '../groups/GroupSecurity.jsx';
+
+import InstanceEC2 from '../instances/InstanceEC2.jsx';
 
 import Login from '../user/Login.jsx';
 import PasswordForgot from '../user/PasswordForgot.jsx';
@@ -50,6 +49,8 @@ import OnboardInstall from '../onboard/Install.jsx';
 import AdminSignups from '../admin/Signups.jsx';
 import AdminSocket from '../admin/Socket.jsx';
 
+import More from '../pages/More.jsx';
+import Styleguide from '../pages/Styleguide.jsx';
 import NotFound from '../pages/NotFound.jsx';
 
 const RouteHandler = Router.RouteHandler;
@@ -61,7 +62,7 @@ const routes = (
       <Route path="/home/instances" name="homeInstances" handler={HomeInstances}/>
       <Route path="/home/groups" name="homeGroups" handler={HomeGroups}/>
     </Route>
-    <Route path="/instance/:id" name="instance" handler={Instance}/>
+    <Route path="/instance/ec2/:id" name="instanceEC2" handler={InstanceEC2}/>
 
     <Route path="/checks" name="checks" handler={CheckList}/>
     <Route path="/check-create" name="checkCreate" handler={CheckCreate}>
@@ -75,7 +76,7 @@ const routes = (
       <NotFoundRoute handler={CheckNotFound}/>
     </Route>
 
-    <Route path="/group/:id" name="group" handler={Group}/>
+    <Route path="/group/security/:id" name="groupSecurity" handler={GroupSecurity}/>
 
     <Route path="/start" name="start" handler={OnboardCreate}/>
     <Route path="/start/thanks" name="onboardThanks" handler={OnboardThanks}/>

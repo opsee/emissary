@@ -52,6 +52,9 @@ const _public = {
     return !!(_data.user.get('token') && _data.user.get('email'));
   },
   getUser(){
+    if(_data.user.get('email') == 'cliff@leaninto.it'){
+      config.demo = true;
+    }
     return _data.user;
   },
   getUserData(){

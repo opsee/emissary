@@ -16,7 +16,7 @@ export default React.createClass({
     return(
       <div className="step-counter">
         {_.range(this.props.steps).map((n, i) => {
-          return <div className={`step-bullet${this.props.active == i+1 ? ' active' : ''}`}></div>
+          return <div className={`step-bullet${this.props.active == i+1 ? ' active' : ''}`} key={`step-counter-${i}`}></div>
         })}
       </div>
     )

@@ -38,31 +38,53 @@ var Instance = Record({
     created:new Date(),
     instanceSize:'t2-micro'
   }),
-  status:Map({
-    health:100,
-    state:'running',
-    silence:Map({
-      startDate:null,
-      duration:null
-    })
-  }),
+  state:'running',
+  health:100,
+  silenceDate:null,
+  silenceDuration:null,
+  type:null,
   checks:List(),
-  groups:List()
+  groups:List(),
+  LaunchTime:null,
+  InstanceType:null
 })
 
+
+let _data = {
+  instanceECC:new Instance(),
+  instancesECC:new List(),
+  instanceRDS:new Instance(),
+  instancesRDS:new List(),
+}
+
+let _statuses = {
+  getInstanceECC:null,
+  getInstancesECC:null,
+  getInstanceRDS:null,
+  getInstancesRDS:null,
+}
+
 const statics = {
-  getInstanceSuccess(data){
-    _data.instance = statics.instanceFromJS(data);
-    Store.emitChange();
-  },
   getInstancePending(data){
     if(_data.instance.get('id') != data){
       _data.instance = new Instance();
       Store.emitChange();
     }
   },
-  getInstancesSuccess(data){
-    _data.instances = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
+  getInstanceECCSuccess(data){
+    if(data && data.instances){
+      data = data.instances;
+      data.type = 'EC2';
+      _data.instanceECC = statics.instanceFromJS(data);
+      Store.emitChange();
+    }
+  },
+  getInstancesECCSuccess(data){
+    data = data.map(i => {
+      i.type = 'EC2';
+      return i;
+    });
+    _data.instancesECC = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
     Store.emitChange();
   },
   instanceFromJS(data){
@@ -73,41 +95,57 @@ const statics = {
     if(data.groups && data.groups.length){
       data.groups = new List(data.groups.map(group => GroupStore.groupFromJS(group)));
     }
+    data.id = data.InstanceId;
+    let name = data.id;
+    if(data.Tags && data.Tags.length){
+      name = _.chain(data.Tags).findWhere({Key:'Name'}).get('Value').value() || name;
+    }
+    data.name = name;
+    const launchTime = Date.parse(data.LaunchTime);
+    if(typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
+      data.LaunchTime = new Date(launchTime);
+    }else{
+      data.LaunchTime = null;
+    }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
     return new Instance(data);
   }
 }
 
-let _data = {
-  instances:new List(),
-  instance:new Instance()
+const _public = {
+  getInstanceECC(){
+    return _data.instanceECC;
+  },
+  getInstancesECC(){
+    return _data.instancesECC;
+  },
+  instanceFromJS:statics.instanceFromJS
 }
 
-let _statuses = {
-  getInstances:null,
-  getInstance:null
-}
+let statusFunctions = {};
+let keys = _.chain(_statuses).keys().map(k => {
+  let arr = [k]
+  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  return arr;
+}).forEach(a => {
+  statusFunctions[a[1]] = function(){
+    return _statuses[a[0]]
+  }
+}).value();
 
 const Store = Flux.createStore(
-  {
-    getInstance(){
-      return _data.instance;
-    },
-    getInstances(){
-      return _data.instances;
-    },
-    instanceFromJS:statics.instanceFromJS
-  }, function(payload){
+  _.assign({}, _public, statusFunctions),
+  function(payload){
     switch(payload.actionType) {
-      case 'GET_data.INSTANCES_SUCCESS':
-        statics.getInstancesSuccess(payload.data);
+      case 'GET_INSTANCES_ECC_SUCCESS':
+        statics.getInstancesECCSuccess(payload.data);
       break;
-      case 'GET_data.INSTANCE_SUCCESS':
-        statics.getInstanceSuccess(payload.data);
+      case 'GET_INSTANCE_ECC_SUCCESS':
+        statics.getInstanceECCSuccess(payload.data);
       break;
-      case 'GET_data.INSTANCE_PENDING':
-        statics.getInstancePending(payload.data);
+      case 'GET_INSTANCE_ECC_PENDING':
+        // statics.getInstancePending(payload.data);
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

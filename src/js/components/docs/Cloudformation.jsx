@@ -15,7 +15,6 @@ export default React.createClass({
             <Col xs={12} sm={10} smOffset={1}>
               <div className="padding-tb">
                 <h2>The Opsee Bastion Instance CloudFormation Template</h2>
-                <CloudFormationTemplate/>
                 <HTMLFile path="/files/docs/cloudformation.html"/>
               </div>
             </Col>

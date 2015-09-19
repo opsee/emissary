@@ -19,6 +19,7 @@ _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
         id:data.group,
         type:'sg'
       },
+      interval:1,
       check_spec:{
         type_url:'HttpCheck',
         value:{
@@ -27,7 +28,6 @@ _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
           protocol:data.protocol || 'http',
           port:typeof data.port == "number" ? data.port : parseInt(data.port, 10),
           verb:data.method,
-          interval:1,
           headers:data.headers.map(h => {
             return {
               name:h.key,

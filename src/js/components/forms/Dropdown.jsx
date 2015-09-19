@@ -40,7 +40,7 @@ export default React.createClass({
       {
         this.props.bf.field._choices.map((choice, i) => {
           return (
-            <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]}>{choice[1]}</MenuItem>
+            <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]} style={{overflow:'hidden'}}>{choice[1]}</MenuItem>
           )
         })
       }

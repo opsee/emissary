@@ -6,11 +6,13 @@ import {UserStore} from '../../stores';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import _ from 'lodash';
-import router from '../../modules/router.js';
+import router from '../../modules/router';
+import storage from '../../modules/storage';
 import {Close, ChevronRight} from '../icons';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
+import config from '../../modules/config';
 
 const statics = {
   checkedInstallStatus:false
@@ -26,6 +28,8 @@ const Install = React.createClass({
     let reject = false;
     if(this.props.query.fail){
       reject = {instance_id:'1r6k6YRB3Uzh0Bk5vmZsFU'}
+    }else if(config.demo){
+      reject = {instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'}
     }else if(this.props.query.success){
       reject = {instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'}
     }
@@ -94,11 +98,15 @@ const Install = React.createClass({
     return _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
   },
   renderSurvey(){
-    return (
-      <div className="padding-tb">
-        <Survey/>
-      </div>
-    )
+    if(storage.get('showSurvey')){
+      return (
+        <div className="padding-tb">
+          <Survey/>
+        </div>
+      )
+    }else{
+
+    }
   },
   renderBtn(){
     const bastionErrors = this.getBastionErrors();

@@ -3,5 +3,5 @@ var config = require('../config').files;
 
 gulp.task('buildFiles', function() {
   return gulp.src(config.src)
-    .pipe(gulp.dest(config.dest));
+    .pipe(gulp.dest(config.dest))
 });

@@ -8,16 +8,22 @@ import {InstanceActions} from '../../actions';
 
 function getState(){
   return {
-    instances: InstanceStore.getInstances()
+    instances: InstanceStore.getInstancesECC()
   }
 }
 export default React.createClass({
   mixins: [InstanceStore.mixin],
   storeDidChange() {
     this.setState(getState());
+    const status = InstanceStore.getGetInstancesECCStatus();
+    if(status == 'success'){
+      this.setState({
+        instances:InstanceStore.getInstancesECC()
+      })
+    }
   },
   componentWillMount(){
-    InstanceActions.getInstances();
+    InstanceActions.getInstancesECC();
   },
   getInitialState(){
     return getState();
@@ -26,7 +32,6 @@ export default React.createClass({
     if(this.state.instances.size){
       return (
         <div>
-        <DocumentTitle title="Home - Instances"/>
           <ul className="list-unstyled">
             {this.state.instances.map((instance, i) => {
               return (

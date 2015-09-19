@@ -13,6 +13,8 @@ const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch
 
 const featureChoices = ['Better Alerts', 'AWS Actions', 'Peace of Mind', 'Historical Data'];
 
+const sucksChoices = ['Difficult Installation', 'Overwhelming', 'Not Enough Features', 'Shit Interface'];
+
 const InfoForm = forms.Form.extend({
   services: forms.MultipleChoiceField({
     choices:serviceChoices.map(s => [s, s]),
@@ -21,6 +23,11 @@ const InfoForm = forms.Form.extend({
   }),
   features: forms.MultipleChoiceField({
     choices:featureChoices.map(s => [s, s]),
+    widget: forms.CheckboxSelectMultiple(),
+    label:'buttonToggle'
+  }),
+  sucks: forms.MultipleChoiceField({
+    choices:sucksChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
     label:'buttonToggle'
   }),
@@ -59,13 +66,34 @@ const Survey = React.createClass({
   disabled(){
     return !this.state.info.isValid();
   },
+  getSteps(){
+    return [
+    (
+      <div>
+        <h3>Which services are you using?</h3>
+        <BoundField bf={this.state.info.boundField('services')}/>
+      </div>
+    ),
+    (
+      <div>
+        <h3>What are you looking forward to in using Opsee?</h3>
+        <BoundField bf={this.state.info.boundField('features')}/>
+      </div>
+    ),
+    (
+      <div>
+        <h3>What sucks most about your monitoring now?</h3>
+        <BoundField bf={this.state.info.boundField('sucks')}/>
+      </div>
+    )
+    ]
+  },
   render() {
     return (
       <form>
-        <h3>Which services are you using?</h3>
-        <BoundField bf={this.state.info.boundField('services')}/>
-        <h3>What are you looking forward to in using Opsee?</h3>
-        <BoundField bf={this.state.info.boundField('features')}/>
+        {this.getSteps().map(s => {
+          return s;
+        })}
       </form>
     );
   }

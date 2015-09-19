@@ -10,28 +10,30 @@ var Group = Record({
   name:null,
   customer_id:null,
   instances:List(),
-  status:Map({
-  health:100,
   state:'running',
-  silence:Map({
-    startDate:null,
-    duration:null
-    })
-  })
+  health:100,
+  silenceDate:null,
+  silenceDuration:null,
+  type:null
 });
 
 const statics = {
-  getGroupSuccess(data){
-    _data.group = statics.groupFromJS(data);
-    Store.emitChange();
-  },
   getGroupPending(data){
     if(_data.group.get('id') != data){
       _data.group = new Group();
     }
   },
-  getGroupsSuccess(data){
-    _data.groups = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : [];
+  getGroupSecuritySuccess(data){
+    data.type = 'security';
+    _data.group = statics.groupFromJS(data);
+    Store.emitChange();
+  },
+  getGroupsSecuritySuccess(data){
+    data = data.map(d => {
+      d.type = 'security';
+      return d;
+    });
+    _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : [];
     Store.emitChange();
   },
   groupFromJS(data){
@@ -44,36 +46,72 @@ const statics = {
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
+    data.id = data.GroupId;
+    data.name = data.GroupName;
     return new Group(data);
   }
 }
 
 let _data = {
-  group:new Group(),
-  groups:new List()
+  groupSecurity:new Group(),
+  groupsSecurity:new List(),
+  groupRDSSecurity:new Group(),
+  groupsRDSSecurity:new List(),
+  groupELB:new Group(),
+  groupsELB:new List(),
 }
 
 let _statuses = {
-  getGroups:null,
-  getGroup:null
+  getGroupsSecurity:null,
+  getGroupSecurity:null,
+  getGroupsRDSSecurity:null,
+  getGroupRDSSecurity:null,
+  getGroupsELB:null,
+  getGroupELB:null
 }
 
+const _public = {
+  getGroupSecurity(){
+    return _data.groupSecurity;
+  },
+  getGroupsSecurity(){
+    return _data.groupsSecurity;
+  },
+  getGroupRDSSecurity(){
+    return _data.groupRDSSecurity;
+  },
+  getGroupsRDSSecurity(){
+    return _data.groupsRDSSecurity;
+  },
+  getGroupELB(){
+    return _data.groupELB;
+  },
+  getGroupsELB(){
+    return _data.groupsELB;
+  },
+  groupFromJS:statics.groupFromJS
+}
+
+let statusFunctions = {};
+let keys = _.chain(_statuses).keys().map(k => {
+  let arr = [k]
+  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  return arr;
+}).forEach(a => {
+  statusFunctions[a[1]] = function(){
+    return _statuses[a[0]]
+  }
+}).value();
+
 const Store = Flux.createStore(
-  {
-    getGroup(){
-      return _data.group;
-    },
-    getGroups(){
-      return _data.groups;
-    },
-    groupFromJS:statics.groupFromJS
-  }, function(payload){
+   _.assign({}, _public, statusFunctions),
+  function(payload){
     switch(payload.actionType) {
-      case 'GET_GROUPS_SUCCESS':
-        statics.getGroupsSuccess(payload.data);
+      case 'GET_GROUPS_SECURITY_SUCCESS':
+        statics.getGroupsSecuritySuccess(payload.data);
       break;
-      case 'GET_GROUP_SUCCESS':
-        statics.getGroupSuccess(payload.data);
+      case 'GET_GROUP_SECURITY_SUCCESS':
+        statics.getGroupSecuritySuccess(payload.data);
       break;
       case 'GET_GROUP_PENDING':
         statics.getGroupPending(payload.data);

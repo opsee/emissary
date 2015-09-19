@@ -7,10 +7,11 @@ import {GroupStore} from '../../stores';
 import {GroupActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    group:GroupStore.getGroup()
+    group:GroupStore.getGroupSecurity()
   }
 }
 
@@ -23,7 +24,7 @@ export default React.createClass({
     return !Immutable.is(this.state.group, nextState.group);
   },
   getData(){
-    GroupActions.getGroup(this.props.params.id);
+    GroupActions.getGroupSecurity(this.props.params.id);
   },
   componentWillMount(){
     this.getData();
@@ -34,19 +35,17 @@ export default React.createClass({
   getInitialState(){
     return getState();
   },
-  silence(id){
-    Actions.silence(id);
-  },
   render() {
     return (
       <div>
         <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
-        <div className="container">
-          <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               <table className="table">
                 <tr>
                   <td><strong>State</strong></td>
-                  <td>{this.state.group.get('status').state}</td>
+                  <td>{this.state.group.get('state')}</td>
                 </tr>
                 <tr>
                   <td><strong>Id</strong></td>
@@ -64,8 +63,9 @@ export default React.createClass({
                     )
                 })}
               </ul>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

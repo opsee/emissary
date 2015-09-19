@@ -8,16 +8,22 @@ import {GroupActions} from '../../actions';
 
 function getState(){
   return {
-    groups: GroupStore.getGroups()
+    groups: GroupStore.getGroupsSecurity()
   }
 }
 export default React.createClass({
   mixins: [GroupStore.mixin],
   storeDidChange() {
     this.setState(getState());
+    const status = GroupStore.getGetGroupsSecurityStatus();
+    if(status == 'success'){
+      this.setState({
+        groups:GroupStore.getGroupsSecurity()
+      })
+    }
   },
   componentWillMount(){
-    GroupActions.getGroups();
+    GroupActions.getGroupsSecurity();
   },
   getInitialState(){
     return getState();

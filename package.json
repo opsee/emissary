@@ -55,6 +55,7 @@
     "eslint-plugin-react": "^2.7.0",
     "gulp-preprocess": "^1.2.0",
     "highlight.js": "^8.6.0",
+    "html-to-react": "^0.1.1",
     "immutable": "^3.7.4",
     "lodash": "^3.10.0",
     "mcfly": "0.0.10",

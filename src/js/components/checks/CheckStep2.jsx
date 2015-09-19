@@ -4,7 +4,6 @@ import {Link} from 'react-router';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
-import BottomButtonNav from '../global/BottomButtonNav.jsx';
 import {Toolbar} from '../global';
 import slate from 'slate';
 import assertionTypes from 'slate/src/types';
@@ -204,7 +203,7 @@ const AllFields = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next: Test This Request</Button>
+            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
           </div>
           <StepCounter active={2} steps={3}/>
         </div>
@@ -234,15 +233,6 @@ const AllFields = React.createClass({
         <Highlight>
           {this.state.response && JSON.stringify(this.state.response.data, null, ' ')}
         </Highlight>
-        {
-          // <pre>{this.state.response && JSON.stringify(this.state.response, null, ' ')}</pre>
-        }
-          {
-            // <pre>{this.cleanedData && JSON.stringify(this.cleanedData(), null, ' ')}</pre>
-          }
-          {
-            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
-          }
         {this.renderSubmitButton()}
       </form>
     )

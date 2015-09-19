@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import request from '../../modules/request';
 import Alert from './Alert.jsx';
+import {Highlight} from '../global';
+import HtmlToReact from 'html-to-react';
+const Parser = HtmlToReact.Parser(React);
 
 export default React.createClass({
   propTypes:{
@@ -19,6 +22,10 @@ export default React.createClass({
       this.setState({error:err && err.message});
     })
   },
+  getParsedHtml(){
+    return Parser.parse(this.state.html);
+    // return React.renderToStaticMarkup(component);
+  },
   render() {
     if(this.state.error){
       return (
@@ -27,6 +34,7 @@ export default React.createClass({
         </Alert>
       )
     }else if(this.state.html){
+      return this.getParsedHtml();
       return <div dangerouslySetInnerHTML={{__html:this.state.html}}/>
     }else{
       return <div/>;
