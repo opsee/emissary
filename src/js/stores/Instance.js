@@ -82,12 +82,13 @@ const statics = {
     }
   },
   getInstancesECCSuccess(data){
-    data = _.uniq(data, 'InstanceId');
-    data = data.map(i => {
-      i.type = 'EC2';
-      return i;
-    });
-    _data.instancesECC = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
+    data = _.chain(data)
+    .uniq('InstanceId')
+    .map(statics.instanceFromJS)
+    .sortBy(i => {
+      return i.name.toLowerCase();
+    }).value();
+    _data.instancesECC = data && data.length ? Immutable.fromJS(data) : [];
     Store.emitChange();
   },
   getCreatedTime(time){
@@ -119,6 +120,7 @@ const statics = {
     }
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
+    data.type = 'EC2';
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
     return new Instance(data);

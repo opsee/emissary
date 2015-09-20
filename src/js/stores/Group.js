@@ -48,10 +48,12 @@ const statics = {
     Store.emitChange();
   },
   getGroupsSecuritySuccess(data){
-    data = data.map(d => {
+    data = _.chain(data).map(d => {
       d.type = 'security';
       return d;
-    });
+    }).sortBy(d => {
+      return d.GroupName.toLowerCase();
+    }).value();
     _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : new List();
     Store.emitChange();
   },
