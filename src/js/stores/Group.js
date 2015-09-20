@@ -61,6 +61,9 @@ const statics = {
       data = {id:data}
     }
     if(data.instances && data.instances.length){
+      if(data.instances[0].InstanceId){
+        data.instances = _.uniq(data.instances, 'InstanceId');
+      }
       data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below

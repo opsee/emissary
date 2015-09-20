@@ -1,5 +1,5 @@
 import React from 'react';
-import {Toolbar} from '../global';
+import {Toolbar, Loader} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from './InstanceItem.jsx';
@@ -55,62 +55,66 @@ export default React.createClass({
     return this.state.instance.toJS();
   },
   render() {
-    return (
-      <div>
-        <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || ''}`}/>
-        <Grid>
-          <Row>
-            <Col xs={12} sm={10} smOffset={1}>
-              <table className="table">
-                <tr>
-                  <td><strong>State</strong></td>
-                  <td>{this.state.instance.get('state')}</td>
-                </tr>
-                <tr>
-                  <td><strong>Last Checked</strong></td>
-                  <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
-                    <TimeAgo date={this.state.instance.get('lastChecked')}/>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Launched</strong></td>
-                  <td>
-                    <TimeAgo date={this.state.instance.get('LaunchTime')}/>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Instance Type</strong></td>
-                  <td>{this.state.instance.get('InstanceType')}</td>
-                </tr>
-                {this.renderAvailabilityZone()}
-              </table>
+    if(this.state.instance.get('id')){
+      return (
+        <div>
+          <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || ''}`}/>
+          <Grid>
+            <Row>
+              <Col xs={12} sm={10} smOffset={1}>
+                <table className="table">
+                  <tr>
+                    <td><strong>State</strong></td>
+                    <td>{this.state.instance.get('state')}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Last Checked</strong></td>
+                    <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
+                      <TimeAgo date={this.state.instance.get('lastChecked')}/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Launched</strong></td>
+                    <td>
+                      <TimeAgo date={this.state.instance.get('LaunchTime')}/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Instance Type</strong></td>
+                    <td>{this.state.instance.get('InstanceType')}</td>
+                  </tr>
+                  {this.renderAvailabilityZone()}
+                </table>
 
-              <h2>Groups - ( {this.data().groups.length} )</h2>
-              <ul className="list-unstyled">
-                {this.state.instance.get('groups').map(g => {
-                  return (
-                    <li key={g.get('id')}>
-                      <GroupItem item={g}/>
-                    </li>
-                    )
-                })}
-              </ul>
-              {
-                // <h2>{this.data().checks.length} Checks</h2>
-                // <ul className="list-unstyled">
-                //   {this.state.instance.get('checks').map(i => {
-                //     return (
-                //       <li key={i.get('id')}>
-                //         <CheckItem item={i}/>
-                //       </li>
-                //       )
-                //   })}
-                // </ul>
-              }
-              </Col>
-            </Row>
-        </Grid>
-      </div>
-    );
+                <h2>Groups - ( {this.data().groups.length} )</h2>
+                <ul className="list-unstyled">
+                  {this.state.instance.get('groups').map(g => {
+                    return (
+                      <li key={g.get('id')}>
+                        <GroupItem item={g}/>
+                      </li>
+                      )
+                  })}
+                </ul>
+                {
+                  // <h2>{this.data().checks.length} Checks</h2>
+                  // <ul className="list-unstyled">
+                  //   {this.state.instance.get('checks').map(i => {
+                  //     return (
+                  //       <li key={i.get('id')}>
+                  //         <CheckItem item={i}/>
+                  //       </li>
+                  //       )
+                  //   })}
+                  // </ul>
+                }
+                </Col>
+              </Row>
+          </Grid>
+        </div>
+      );
+    }else{
+      return <Loader timeout={500}/>
+    }
   }
 });

@@ -82,6 +82,7 @@ const statics = {
     }
   },
   getInstancesECCSuccess(data){
+    data = _.uniq(data, 'InstanceId');
     data = data.map(i => {
       i.type = 'EC2';
       return i;
