@@ -26,6 +26,7 @@ export default React.createClass({
   render() {
     if(this.state.groups.size){
       return (
+        <h3>test</h3>
         <ul className="list-unstyled">
           {this.state.groups.map((group, i) => {
             return (
