@@ -18,6 +18,7 @@ const statics = {
     if(data && data.user){
       data.user.token = data.token;
     }
+    data.user.loginDate = data.user.loginDate || _data.user.get('loginDate');
     _data.user = Immutable.fromJS(data.user || data);
     storage.set('user',_data.user.toJS());
     Store.emitChange();
