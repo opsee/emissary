@@ -20,24 +20,20 @@ export default React.createClass({
   },
   render() {
     return (
-      <Row>
-        <Col className="display-flex flex-vertical-align">
-          <Link to={this.getGroupLink()} params={{id:this.props.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
-            <RadialGraph {...this.state.item.toJS()}/>
-            <div className="padding-tb line-height-1">
-              <div>{this.state.item.get('name')}</div>
-              {
-              // <div className="text-secondary">{this.state.item.get('getInfo')}</div>
-              }
-            </div>
-          </Link>
-          {
-          // <Button icon={true} flat={true} onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Group">
-          //   <MoreHoriz btn={true}/>
-          // </Button>
-          }
-        </Col>
-      </Row>
+      <div className="display-flex flex-vertical-align">
+        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
+          <RadialGraph {...this.state.item.toJS()}/>
+          <div className="padding-tb line-height-1 opsee-list-item">
+            <div className="opsee-list-item-line">{this.state.item.get('name')}</div>
+            <div className="text-secondary">X of Y passing (N instances)</div>
+          </div>
+        </Link>
+        {
+        // <Button icon={true} flat={true} onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Group">
+        //   <MoreHoriz btn={true}/>
+        // </Button>
+        }
+      </div>
     );
   }
 });
