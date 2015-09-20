@@ -57,6 +57,9 @@ const Credentials = React.createClass({
         }
       }
     }else if(vpcScanStatus && vpcScanStatus != 'pending'){
+      if(config.demo){
+        return router.transitionTo('onboardInstall');
+      }
       this.setState({
         error:vpcScanStatus && vpcScanStatus.body && vpcScanStatus.body.error
       })

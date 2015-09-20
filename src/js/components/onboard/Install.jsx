@@ -63,7 +63,7 @@ const Install = React.createClass({
     }
   },
   componentWillMount(){
-    if(this.props.path.match('example')){
+    if(config.demo || this.props.path.match('example')){
       OnboardActions.onboardExampleInstall();
     }else{
       OnboardStore.getBastionHasLaunchedPromise().then(function(started){
@@ -98,7 +98,7 @@ const Install = React.createClass({
     return _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
   },
   renderSurvey(){
-    if(storage.get('showSurvey')){
+    if(!config.demo){
       return (
         <div className="padding-tb">
           <Survey/>

@@ -1,8 +1,12 @@
-export default {
+import storage from './storage';
+
+const config = {
   api:window.apiDomain || 'https://api-beta.opsee.co',
   authApi:window.authApi || 'https://auth.opsee.co',
   revision:window.revision,
   apiDelay:0,
   auth0:'https://opsee.auth0.com',
-  demo:false
+  demo:storage.get('demo') || false
 }
+
+export default config;

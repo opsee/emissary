@@ -27,7 +27,7 @@ let _installData = {
 }
 
 let _data = {
-  bastionHasLaunched:false,
+  bastionHasLaunched:!!(config.demo) || false,
   bastionLaunchHasBeenChecked:false
 }
 

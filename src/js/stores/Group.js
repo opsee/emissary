@@ -52,7 +52,7 @@ const statics = {
       d.type = 'security';
       return d;
     });
-    _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : [];
+    _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : new List();
     Store.emitChange();
   },
   groupFromJS(data){

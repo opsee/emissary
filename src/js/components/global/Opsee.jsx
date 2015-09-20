@@ -2,20 +2,24 @@ import React from 'react/addons';
 const {CSSTransitionGroup} = React.addons;
 import {RouteHandler} from 'react-router';
 import router from '../../modules/router';
+import config from '../../modules/config';
 import {Header, MessageModal} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import GoogleAnalytics from 'react-g-analytics';
 
-function startSocket(){
+function initialize(){
   let user = UserStore.getUser();
   if(user.get('token') && !GlobalStore.getSocketStarted()){
     GlobalActions.globalSocketStart();
   }
+  if(config.demo){
+    console.info('In Demo Mode.');
+  }
 }
 
-startSocket();
+initialize();
 
 export default React.createClass({
   mixins: [UserStore.mixin, OnboardStore.mixin],
@@ -23,7 +27,7 @@ export default React.createClass({
     const status1 = OnboardStore.getSetPasswordStatus();
     const status2 = UserStore.getUserLoginStatus();
     if(status1 == 'success' || status2 == 'success'){
-      startSocket();
+      initialize();
     }
   },
   render() {
