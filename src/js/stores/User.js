@@ -3,12 +3,14 @@ import Flux from '../modules/flux';
 import storage from '../modules/storage';
 import Immutable, {Record, List, Map} from 'immutable';
 import _ from 'lodash';
+import moment from 'moment';
 
 var User = Record({
   name:null,
   email:null,
   id:null,
-  token:null
+  token:null,
+  loginDate:null
 })
 
 const statics = {
@@ -46,10 +48,18 @@ let _statuses = {
 
 const _public = {
   getAuth(){
+    const date = _data.user.get('loginDate');
+    const momentDate = moment(date);
+    const diff = moment().diff(momentDate, 'm');
+    // 720 minutes == 12 hours
+    const valid = !!(typeof diff == 'number' && diff < 720 && diff > -1);
+    if(!date || !valid){
+      return null;
+    }
     return _data.user.get('token') ? `Bearer ${_data.user.get('token')}` : null;
   },
   hasUser(){
-    return !!(_data.user.get('token') && _data.user.get('email'));
+    return !!(_public.getAuth() && _data.user.get('email'));
   },
   getUser(){
     if(_data.user.get('email') == 'cliff@leaninto.it'){
@@ -81,6 +91,9 @@ const Store = Flux.createStore(
       case 'USER_SET':
       case 'USER_LOGIN_SUCCESS':
       case 'USER_EDIT_SUCCESS':
+        if(payload.actionType == 'USER_LOGIN_SUCCESS'){
+          payload.data.user.loginDate = new Date();
+        }
         statics.setUser(payload.data);
         Store.emitChange();  
       break;

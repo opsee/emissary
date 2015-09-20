@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
-import {UserActions} from '../../actions';
+import {UserActions, GlobalActions} from '../../actions';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
@@ -14,7 +14,11 @@ export default React.createClass({
     this.setState({status})
     if(status == 'success'){
       router.transitionTo('home');
-    }else{
+    }else if(status && status != 'pending'){
+      GlobalActions.globalModalMessage({
+        html:status.message || 'Something went wrong.',
+        style:'danger'
+      })
     }
   },
   getInitialState(){

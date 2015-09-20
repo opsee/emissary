@@ -17,12 +17,15 @@ export default React.createClass({
       timeout:0
     }
   },
-  componentWillMount(){
+  componentDidMount(){
+    var self = this;
     setTimeout(() => {
-      this.setState({
-        show:true
-      })
-    },this.props.timeout)
+      if(self.isMounted()){
+        self.setState({
+          show:true
+        })
+      }
+    },self.props.timeout)
   },
   render(){
     if(this.state.show){

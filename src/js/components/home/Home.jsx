@@ -10,22 +10,9 @@ import {Link} from 'react-router';
 import {InstanceActions, GlobalActions} from '../../actions';
 import {PageAuth} from '../../modules/statics';
 
-function getState(){
-  return {
-    instances: HomeStore.getInstances(),
-    groups: HomeStore.getGroups()
-  }
-}
 export default React.createClass({
-  mixins: [HomeStore.mixin],
   statics:{
     willTransitionTo:PageAuth
-  },
-  storeDidChange() {
-    this.setState(getState());
-  },
-  getDefaultProps() {
-    return getState();
   },
   render() {
     return (
@@ -42,6 +29,7 @@ export default React.createClass({
                     <Link to="homeGroups">Groups</Link>
                   </li>
                 </ul>
+                <div><br/></div>
                 <RouteHandler/>
               </div>
             </div>

@@ -42,11 +42,12 @@ var Instance = Record({
   health:100,
   silenceDate:null,
   silenceDuration:null,
-  type:null,
+  type:'EC2',
   checks:List(),
   groups:List(),
   LaunchTime:null,
-  InstanceType:null
+  InstanceType:null,
+  Placement:null
 })
 
 
@@ -75,6 +76,7 @@ const statics = {
     if(data && data.instances){
       data = data.instances;
       data.type = 'EC2';
+      data.groups = data.SecurityGroups;
       _data.instanceECC = statics.instanceFromJS(data);
       Store.emitChange();
     }
@@ -87,10 +89,24 @@ const statics = {
     _data.instancesECC = data && data.length ? Immutable.fromJS(data.map(statics.instanceFromJS)) : [];
     Store.emitChange();
   },
+  getCreatedTime(time){
+    let launchTime = Date.parse(time);
+    if(typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
+    }else{
+      launchTime = null;
+    }
+    return launchTime;
+  },
+  instanceRDSFromJS(data){
+    data.id = data.DbiResourceId;
+    data.name = data.DBName;
+    data.LaunchTime = statics.getCreatedTime(data.InstanceCreateTime);
+    data.type = 'RDS';
+    return new Instance(data);
+  },
   instanceFromJS(data){
-    //just getting some id's back from server at the moment
-    if(typeof data == 'string'){
-      data = {id:data}
+    if(data.DBInstanceIdentifier){
+      return statics.instanceRDSFromJS(data);
     }
     if(data.groups && data.groups.length){
       data.groups = new List(data.groups.map(group => GroupStore.groupFromJS(group)));
@@ -101,12 +117,7 @@ const statics = {
       name = _.chain(data.Tags).findWhere({Key:'Name'}).get('Value').value() || name;
     }
     data.name = name;
-    const launchTime = Date.parse(data.LaunchTime);
-    if(typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
-      data.LaunchTime = new Date(launchTime);
-    }else{
-      data.LaunchTime = null;
-    }
+    data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
     return new Instance(data);

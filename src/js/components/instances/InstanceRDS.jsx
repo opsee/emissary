@@ -11,7 +11,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    instance:InstanceStore.getInstanceECC()
+    instance:InstanceStore.getInstanceRDS()
   }
 }
 
@@ -21,7 +21,7 @@ export default React.createClass({
     this.setState(getState());
   },
   getData(){
-    InstanceActions.getInstanceECC(this.props.params.id);
+    InstanceActions.getInstanceRDS(this.props.params.id);
   },
   shouldComponentUpdate(nextProps, nextState) {
     return !Immutable.is(this.state.instance, nextState.instance);
@@ -37,19 +37,6 @@ export default React.createClass({
   },
   silence(id){
     InstanceActions.silence(id);
-  },
-  renderAvailabilityZone(){
-    const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
-    if(az){
-      return (
-        <tr>
-          <td><strong>Availability Zone</strong></td>
-          <td>{az}</td>
-        </tr>
-      )
-    }else{
-      return <tr/>
-    }
   },
   data(){
     return this.state.instance.toJS();
@@ -82,7 +69,6 @@ export default React.createClass({
                   <td><strong>Instance Type</strong></td>
                   <td>{this.state.instance.get('InstanceType')}</td>
                 </tr>
-                {this.renderAvailabilityZone()}
               </table>
 
               <h2>Groups - ( {this.data().groups.length} )</h2>

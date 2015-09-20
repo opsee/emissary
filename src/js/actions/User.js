@@ -24,7 +24,7 @@ _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
     .send(data)
   },
   res => res && res.body,
-  res => res && res.response
+  res => res && res.response && res.response.body
 );
 
 _actions.userGetUser = Flux.statics.addAsyncAction('userGetUser',

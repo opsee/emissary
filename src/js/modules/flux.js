@@ -22,10 +22,10 @@ Flux.statics = {
   addAsyncAction(baseName, requestFn, successFn, errorFn){
     const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
     let obj = {};
-    obj[`${baseName}Success`] = function(res){
+    obj[`${baseName}Success`] = function(res, arg0){
       return {
         actionType:`${upperName}_SUCCESS`,
-        data:successFn(res)
+        data:successFn(res, arg0)
       }
     }
     obj[`${baseName}Error`] = function(res){
@@ -37,7 +37,9 @@ Flux.statics = {
     obj[baseName] = function(...args){
       setTimeout(function(){
         requestFn.call(null, ...args)
-        .then(Flux.actions[`${baseName}Success`])
+        .then((res) => {
+          Flux.actions[`${baseName}Success`].call(null, res, args[0]);
+        })
         .catch(Flux.actions[`${baseName}Error`]);
       }, config.apiDelay);
       return {

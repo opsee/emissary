@@ -43,7 +43,7 @@ export default React.createClass({
     const target = this.state.check.get('target');
     if(target.type == 'sg'){
       return (
-        <Link to="group" params={{id:target.id}}>{target.name || target.id}</Link>
+        <Link to="groupSecuriy" params={{id:target.id}}>{target.name || target.id}</Link>
       )
     }else{
       //elb

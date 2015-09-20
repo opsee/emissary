@@ -27,6 +27,7 @@ import CheckNotFound from '../checks/NotFound.jsx';
 import GroupSecurity from '../groups/GroupSecurity.jsx';
 
 import InstanceEC2 from '../instances/InstanceEC2.jsx';
+import InstanceRDS from '../instances/InstanceRDS.jsx';
 
 import Login from '../user/Login.jsx';
 import PasswordForgot from '../user/PasswordForgot.jsx';
@@ -64,6 +65,7 @@ const routes = (
       <Route path="/home/groups" name="homeGroups" handler={HomeGroups}/>
     </Route>
     <Route path="/instance/ec2/:id" name="instanceEC2" handler={InstanceEC2}/>
+    <Route path="/instance/rds/:id" name="instanceRDS" handler={InstanceRDS}/>
 
     <Route path="/checks" name="checks" handler={CheckList}/>
     <Route path="/check-create" name="checkCreate" handler={CheckCreate}>

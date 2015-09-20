@@ -3,6 +3,7 @@ import Flux from '../modules/flux';
 import request from '../modules/request';
 import {UserStore} from '../stores';
 import _ from 'lodash';
+import $q from 'q';
 
 let _actions = {};
 
@@ -18,11 +19,29 @@ _actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
 
 _actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
   (id) => {
+    return new Promise((resolve, reject) => {
+      request
+      .get(`${config.api}/groups/security`)
+      .set('Authorization', UserStore.getAuth()).then((res) => {
+        let group = res.body && res.body.groups && _.findWhere(res.body.groups, {GroupId:id});
+        request
+        .get(`${config.api}/group/security/${id}`)
+        .set('Authorization', UserStore.getAuth()).then((res2) => {
+          group.instances = res2.body && res2.body.instances;
+          resolve(group);
+        });
+      })
+    });
+
     return request
-    .get(`${config.api}/group/security/${id}`)
+    // .get(`${config.api}/group/security/${id}`)
+    .get(`${config.api}/groups/security`)
     .set('Authorization', UserStore.getAuth())
   },
-  res => res.body,
+  (res, id) => {
+    return res;
+    // return res.body && res.body.groups && _.findWhere(res.body.groups, {GroupId:id})
+  },
   res => res && res.response
 );
 

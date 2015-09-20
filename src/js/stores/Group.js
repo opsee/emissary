@@ -14,8 +14,27 @@ var Group = Record({
   health:100,
   silenceDate:null,
   silenceDuration:null,
-  type:null
+  type:'security',
+  Description:null
 });
+
+let _data = {
+  groupSecurity:new Group(),
+  groupsSecurity:new List(),
+  groupRDSSecurity:new Group(),
+  groupsRDSSecurity:new List(),
+  groupELB:new Group(),
+  groupsELB:new List(),
+}
+
+let _statuses = {
+  getGroupsSecurity:null,
+  getGroupSecurity:null,
+  getGroupsRDSSecurity:null,
+  getGroupRDSSecurity:null,
+  getGroupsELB:null,
+  getGroupELB:null
+}
 
 const statics = {
   getGroupPending(data){
@@ -25,7 +44,7 @@ const statics = {
   },
   getGroupSecuritySuccess(data){
     data.type = 'security';
-    _data.group = statics.groupFromJS(data);
+    _data.groupSecurity = statics.groupFromJS(data);
     Store.emitChange();
   },
   getGroupsSecuritySuccess(data){
@@ -52,23 +71,6 @@ const statics = {
   }
 }
 
-let _data = {
-  groupSecurity:new Group(),
-  groupsSecurity:new List(),
-  groupRDSSecurity:new Group(),
-  groupsRDSSecurity:new List(),
-  groupELB:new Group(),
-  groupsELB:new List(),
-}
-
-let _statuses = {
-  getGroupsSecurity:null,
-  getGroupSecurity:null,
-  getGroupsRDSSecurity:null,
-  getGroupRDSSecurity:null,
-  getGroupsELB:null,
-  getGroupELB:null
-}
 
 const _public = {
   getGroupSecurity(){

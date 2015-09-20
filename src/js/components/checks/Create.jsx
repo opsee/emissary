@@ -1,22 +1,34 @@
 import React from 'react';
-import {CheckActions} from '../../actions';
+import _ from 'lodash';
+
+import {CheckActions, GlobalActions} from '../../actions';
 import {Toolbar} from '../global';
 import {CheckStore} from '../../stores';
-import InstanceItem from '../instances/InstanceItem.jsx';
+import {InstanceItem} from '../instances';
 import {Link} from 'react-router';
-import Router, {RouteHandler} from 'react-router';
-import _ from 'lodash';
+import {RouteHandler} from 'react-router';
+import router from '../../modules/router';
 
 function getState(){
   return {
     check:CheckStore.newCheck().toJS(),
-    response:CheckStore.getResponse()
+    response:CheckStore.getResponse(),
+    createStatus:CheckStore.getCheckCreateStatus()
   }
 }
 
 export default React.createClass({
   mixins: [CheckStore.mixin],
   storeDidChange() {
+    const state = getState();
+    if(state.createStatus == 'success'){
+      router.transitionTo('checks');
+    }else if(state.createStatus && state.createStatus != 'pending'){
+      GlobalActions.globalModalMessage({
+        html:status.body && status.body.message || 'Something went wrong.',
+        style:'danger'
+      });
+    }
     this.setState(getState());
   },
   getInitialState:getState,

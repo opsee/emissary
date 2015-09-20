@@ -1,28 +1,26 @@
 import React, {PropTypes} from 'react';
 import {Button} from '../../modules/bootstrap';
 import {RadialGraph} from '../global';
-import {Toolbar} from '../global';
+import {Toolbar, Loader} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 
 function getState(){
   return {
-    instances: InstanceStore.getInstancesECC()
+    instances: InstanceStore.getInstancesECC(),
+    status:InstanceStore.getGetInstancesECCStatus()
   }
 }
+
 export default React.createClass({
   mixins: [InstanceStore.mixin],
   storeDidChange() {
-    this.setState(getState());
-    const status = InstanceStore.getGetInstancesECCStatus();
-    if(status == 'success'){
-      this.setState({
-        instances:InstanceStore.getInstancesECC()
-      })
+    if(this.isMounted()){
+      this.setState(getState());
     }
   },
-  componentWillMount(){
+  componentDidMount(){
     InstanceActions.getInstancesECC();
   },
   getInitialState(){
@@ -43,10 +41,12 @@ export default React.createClass({
           </ul>
         </div>
     );
-    }else{
+    }else if(this.state.status && this.state.status == 'success'){
       return (
         <div>No Instances found.</div>
       )
+    }else{
+      return <Loader timeout={500}/>
     }
   }
 });

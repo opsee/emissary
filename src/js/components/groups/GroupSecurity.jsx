@@ -35,6 +35,36 @@ export default React.createClass({
   getInitialState(){
     return getState();
   },
+  renderDescription(){
+    const desc = this.state.group.get('Description');
+    if(desc && desc != ''){
+      return (
+        <p>{desc}</p>
+      )
+    }else{
+      return <div/>
+    }
+  },
+  getInstances(){
+    if(this.state.group.get('instances').size){
+      return (
+        <div>
+          <h2>Instances - ( {this.state.group.get('instances').size} )</h2>
+          <ul className="list-unstyled">
+            {this.state.group.get('instances').map(i => {
+              return (
+                <li key={i.get('id')}>
+                  <InstanceItem item={i}/>
+                </li>
+                )
+            })}
+          </ul>
+        </div>
+      )
+    }else{
+      return <h2>No Instances</h2>
+    }
+  },
   render() {
     return (
       <div>
@@ -42,6 +72,7 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
+              {this.renderDescription()}
               <table className="table">
                 <tr>
                   <td><strong>State</strong></td>
@@ -52,17 +83,7 @@ export default React.createClass({
                   <td>{this.state.group.get('id')}</td>
                 </tr>
               </table>
-
-              <h2>Instances - ( {this.state.group.get('instances').size} )</h2>
-              <ul className="list-unstyled">
-                {this.state.group.get('instances').map(i => {
-                  return (
-                    <li key={i.get('id')}>
-                      <InstanceItem item={i}/>
-                    </li>
-                    )
-                })}
-              </ul>
+              {this.getInstances()}
             </Col>
           </Row>
         </Grid>

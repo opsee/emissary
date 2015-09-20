@@ -1,26 +1,21 @@
 import React, {PropTypes} from 'react';
 import {Button} from '../../modules/bootstrap';
 import {RadialGraph} from '../global';
-import {Toolbar} from '../global';
+import {Toolbar, Loader} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import {GroupStore} from '../../stores';
 import {GroupActions} from '../../actions';
 
 function getState(){
   return {
-    groups: GroupStore.getGroupsSecurity()
+    groups: GroupStore.getGroupsSecurity(),
+    status:GroupStore.getGetGroupsSecurityStatus()
   }
 }
 export default React.createClass({
   mixins: [GroupStore.mixin],
   storeDidChange() {
     this.setState(getState());
-    const status = GroupStore.getGetGroupsSecurityStatus();
-    if(status == 'success'){
-      this.setState({
-        groups:GroupStore.getGroupsSecurity()
-      })
-    }
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
@@ -41,10 +36,12 @@ export default React.createClass({
           })}
         </ul>
       );
-    }else{
+    }else if(this.state.status && this.state.status == 'success'){
       return (
         <div>No Groups found.</div>
       )
+    }else{
+      return <Loader timeout={500}/>
     }
   }
 });
