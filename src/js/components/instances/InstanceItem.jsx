@@ -25,21 +25,19 @@ export default React.createClass({
   },
   render() {
     return (
-      <Row>
-        <Col className="display-flex flex-vertical-align">
-          <Link to={this.getInstanceLink()} params={{id:this.state.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
-            <RadialGraph {...this.state.item.toJS()}/>
-            <div className="padding-tb line-height-1">
-              <div>{this.state.item.get('name')}</div>
-              <div className="text-secondary">{this.state.item.get('getInfo')}</div>
-            </div>
-          </Link>{
-          //   <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
-          //   <MoreHoriz btn={true}/>
-          // </button>
-          }
-        </Col>
-      </Row>
+      <div className="display-flex flex-vertical-align">
+        <Link to={this.getInstanceLink()} params={{id:this.state.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
+          <RadialGraph {...this.state.item.toJS()}/>
+          <div className="padding-tb line-height-1">
+            <div className="opsee-list-item-line">{this.state.item.get('name')}</div>
+            <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
+          </div>
+        </Link>{
+        //   <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
+        //   <MoreHoriz btn={true}/>
+        // </button>
+        }
+      </div>
     );
   }
 });
