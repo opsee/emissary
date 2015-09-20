@@ -52,6 +52,16 @@ _actions.getCheck = Flux.statics.addAsyncAction('getCheck',
   res => res && res.body || res
 );
 
+_actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
+  (id) => {
+    return request
+    .del(`${config.api}/checks/${id}`)
+    .set('Authorization', UserStore.getAuth())
+  },
+  res => res.body,
+  res => res && res.body || res
+);
+
 _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
   (id) => {
     return request

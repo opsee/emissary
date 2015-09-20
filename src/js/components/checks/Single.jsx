@@ -1,12 +1,13 @@
 import React, {PropTypes} from 'react';
 import {CheckActions} from '../../actions';
-import {Alert, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
+import {Button} from '../forms';
 
 function getState(){
   return {
@@ -38,6 +39,9 @@ export default React.createClass({
   },
   silence(id){
     CheckActions.silence(id);
+  },
+  removeCheck(){
+    CheckActions.deleteCheck(this.props.params.id);
   },
   getLink(){
     const target = this.state.check.get('target');
@@ -122,6 +126,7 @@ export default React.createClass({
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
               {this.innerRender()}
+              <Button onClick={this.removeCheck} bsStyle="danger">Delete Check</Button>
             </Col>
           </Row>
         </Grid>

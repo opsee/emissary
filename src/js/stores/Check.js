@@ -223,33 +223,39 @@ let _data = {
 let _statuses = {
   getCheck:null,
   getChecks:null,
-  checkCreate:null
+  checkCreate:null,
+  deleteCheck:null
 }
 
+const _public = {
+  getCheck(){
+    return _data.check;
+  },
+  getChecks(){
+    return _data.checks;
+  },
+  newCheck(){
+    return new Check();
+  },
+  getResponse(){
+    return _data.response;
+  }
+}
+
+let statusFunctions = {};
+let keys = _.chain(_statuses).keys().map(k => {
+  let arr = [k]
+  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  return arr;
+}).forEach(a => {
+  statusFunctions[a[1]] = function(){
+    return _statuses[a[0]]
+  }
+}).value();
+
 const Store = Flux.createStore(
-  {
-    getCheck(){
-      return _data.check;
-    },
-    getGetCheckStatus(){
-      return _statuses.getCheck;
-    },
-    getCheckCreateStatus(){
-      return _statuses.checkCreate;
-    },
-    getChecks(){
-      return _data.checks;
-    },
-    getChecksStatus(){
-      return _statuses.getChecks;
-    },
-    newCheck(){
-      return new Check();
-    },
-    getResponse(){
-      return _data.response;
-    }
-  }, function(payload){
+  _.assign({}, _public, statusFunctions),
+  function(payload){
     switch(payload.actionType) {
       case 'GET_CHECKS_SUCCESS':
         statics.getChecksSuccess(payload.data);
