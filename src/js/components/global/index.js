@@ -1,6 +1,7 @@
 import Alert from './Alert.jsx';
 import Header from './Header.jsx';
 import HTMLFile from './HTMLFile.jsx';
+import ListItem from './ListItem.jsx';
 import Loader from './Loader.jsx';
 import MessageModal from './MessageModal.jsx';
 import Opsee from './Opsee.jsx';
@@ -15,6 +16,7 @@ export default {
   Alert,
   Header,
   HTMLFile,
+  ListItem,
   Loader,
   MessageModal,
   Opsee,

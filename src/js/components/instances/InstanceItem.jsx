@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {RadialGraph} from '../global';
+import {RadialGraph, ListItem} from '../global';
 import {CheckActions} from '../../actions';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
@@ -26,12 +26,16 @@ export default React.createClass({
   render() {
     return (
       <div className="display-flex flex-vertical-align">
-        <Link to={this.getInstanceLink()} params={{id:this.state.item.get('id')}} className="flex-1 display-flex flex-vertical-align link-style-1">
-          <RadialGraph {...this.state.item.toJS()}/>
-          <div className="padding-tb line-height-1">
-            <div className="opsee-list-item-line">{this.state.item.get('name')}</div>
-            <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
-          </div>
+        <Link to={this.getInstanceLink()} params={{id:this.state.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
+          <ListItem>
+            <RadialGraph {...this.state.item.toJS()}/>
+            <div className="padding-tb line-height-1 flex-1">
+              <div className="list-item-line">{this.state.item.get('name')}</div>
+              {
+              // <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
+              }
+            </div>
+          </ListItem>
         </Link>{
         //   <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
         //   <MoreHoriz btn={true}/>

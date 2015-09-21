@@ -8,6 +8,7 @@ import {Edit} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
+import router from '../../modules/router.js';
 
 function getState(){
   return {
@@ -26,6 +27,10 @@ export default React.createClass({
       this.setState(getState());
     }else if(status != 'pending'){
       this.setState({error:status})
+    }
+    const delStatus = CheckStore.getDeleteCheckStatus();
+    if(delStatus == 'success'){
+      router.transitionTo('checks');
     }
   },
   getInitialState(){
