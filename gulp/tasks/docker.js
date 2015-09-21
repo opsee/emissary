@@ -7,3 +7,7 @@ gulp.task('docker', ['prod'], function() {
     'docker build -t quay.io/opsee/emissary:latest .'
     ]))
 });
+
+gulp.task('test', function() {
+  console.log('TEST HEY');
+});
