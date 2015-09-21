@@ -91,6 +91,25 @@ const statics = {
     _data.instancesECC = data && data.length ? Immutable.fromJS(data) : [];
     Store.emitChange();
   },
+  getInstanceRDSSuccess(data){
+    if(data && data.instances){
+      data = data.instances;
+      data.type = 'RDS';
+      data.groups = data.SecurityGroups;
+      _data.instanceRDS = statics.instanceRDSFromJS(data);
+      Store.emitChange();
+    }
+  },
+  getInstancesRDSSuccess(data){
+    data = _.chain(data)
+    .uniq('InstanceId')
+    .map(statics.instanceRDSFromJS)
+    .sortBy(i => {
+      return i.name.toLowerCase();
+    }).value();
+    _data.instancesRDS = data && data.length ? Immutable.fromJS(data) : [];
+    Store.emitChange();
+  },
   getCreatedTime(time){
     let launchTime = Date.parse(time);
     if(typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
@@ -121,6 +140,10 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
+    if(data.name == 'coreos5'){
+      data.health = 25;
+      data.state = 'stopped';
+    }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
     return new Instance(data);
@@ -133,6 +156,12 @@ const _public = {
   },
   getInstancesECC(){
     return _data.instancesECC;
+  },
+  getInstanceRDS(){
+    return _data.instanceRDS;
+  },
+  getInstancesRDS(){
+    return _data.instancesRDS;
   },
   instanceFromJS:statics.instanceFromJS
 }

@@ -30,7 +30,13 @@ export default React.createClass({
       initialize();
     }
   },
+  componentWillMount(){
+    if(this.props.query.err){
+      config.error = true;
+    }
+  },
   render() {
+    console.log(this.props.query);
     return (
       <div>
         <DocumentTitle title="Opsee"/>
