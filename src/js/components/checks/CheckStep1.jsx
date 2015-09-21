@@ -98,7 +98,8 @@ const AllFields = React.createClass({
         emptyPermitted:false,
         extra:0,
         validation:{
-          on:'blur change'
+          on:'blur change',
+          onChangeDelay:150
         }
       }),
       check:this.props.check
