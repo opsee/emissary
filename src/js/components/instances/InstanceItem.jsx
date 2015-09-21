@@ -37,9 +37,9 @@ export default React.createClass({
             </div>
           </ListItem>
         </Link>{
-        //   <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
-        //   <MoreHoriz btn={true}/>
-        // </button>
+          <Button icon={true} flat={true} onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
+            <MoreHoriz btn={true}/>
+          </Button>
         }
       </div>
     );

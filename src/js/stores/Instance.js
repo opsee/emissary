@@ -142,6 +142,7 @@ const statics = {
     data.type = 'EC2';
     if(data.name == 'coreos3' && config.error){
       data.health = 25;
+      data.state = 'stopped';
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
