@@ -10,15 +10,23 @@
 <p>IAM Users allow you to delegate access to AWS services to third parties.  Opsee will utilize the IAM User you provide during the installation of the bastion. IAM Users are created via the IAM section of the AWS console.</p>
 <p>If you have trouble creating an IAM User for the onboarding process, refer to the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html">AWS Guide on IAM User setup</a>.</p>
 
+<h3>Create and attach and Access Policy to the IAM User</h3>
 
-<h3>Attach an Access Policy to the  IAM User</h3>
-<p>First, login to the <a href="https://console.aws.amazon.com/iam/home?#groups">AWS IAM Management Console</a></p>
-<p>The Access Policy you attach to the previously created IAM User limits what resources the User (in this case, Opsee) has access to. For more information on this Policy Element, refer to the Access Policy section of the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html">AWS Policy Elements Documentation</a>.</p>
+<p>The Access Policy you attach to the previously created IAM User limits what resources the User (in this case, Opsee) has access to. For more information on this Policy Element, refer to the section entitled Access Policy in the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html">AWS Policy Elements Documentation</a>. Follow the steps listed below to apply the policy to the user you created in the previous section.</p>
 
-<p>To ensure proper instalation of the bastion, attach the following policy the IAM User you created in the last section.</p>
+<ol>
+  <li>If for some reason you are not already signed in, sign in to the AWS Management Console and open the IAM console at https://console.aws.amazon.com/iam/</li>
+  <li>In the navigation pane, click Users.</li>
+  <li>Click the name of the IAM user you created for the onboarding process, then scroll down to the section labled Permissions.</li>
+  <li>In the section entitled, Inline Policies, Click the button labled Create User Policy</li>
+  <li>Select Custom Policy and click Select</li>   
+  <li>Enter a name for your policy in the input area labled Policy Name</li>
+  <li>Copy and Paste the policy listed below into the  and click validate policy.</li>
+  <li>If an error has occured, please verify that you have copied the entire Policy from the listing below. </li>
+  <li>If no errors have occurred, click the button labled Apply Policy</li>
+</ol>
 
 <pre>{
-  "Version": "2015-09-17",
   "Statement": [
     {
       "Effect": "Allow",
