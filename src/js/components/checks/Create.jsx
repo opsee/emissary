@@ -13,6 +13,7 @@ function getState(){
   return {
     check:CheckStore.newCheck().toJS(),
     response:CheckStore.getResponse(),
+    formattedResponse:CheckStore.getFormattedResponse(),
     createStatus:CheckStore.getCheckCreateStatus()
   }
 }

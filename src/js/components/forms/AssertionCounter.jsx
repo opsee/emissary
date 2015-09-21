@@ -18,21 +18,31 @@ const AssertionCounter = React.createClass({
   getInitialState(){
     return this.props;
   },
+  getField(fieldName){
+    const field = _.find(this.state.fields, field => field.name == fieldName);
+    if(field){
+      return field.value();
+    }else{
+      return false;
+    }
+  },
   setAssertionPassing(){
     /* 
       this.state.fields should be an array of BoundFields
     */
     let obj = {
-      key:_.find(this.state.fields, field => field.name == 'type').value(),
-      relationship:_.find(this.state.fields, field => field.name == 'relationship').value(),
-      operand:_.find(this.state.fields, field => field.name == 'operand').value()
+      key:this.getField('type'),
+      relationship:this.getField('relationship'),
+      operand:this.getField('operand'),
+      value:this.getField('value')
     }
     var test = slate.testAssertion({
       assertion:obj,
       response:this.state.response
     })
     this.setState({
-      passing:test && test.success
+      passing:test && test.success,
+      error:!test || test.error
     });
   },
   componentWillReceiveProps(){

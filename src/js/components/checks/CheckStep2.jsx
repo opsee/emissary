@@ -37,8 +37,9 @@ const AssertionsForm = forms.Form.extend({
     required:false
   }),
   value: forms.CharField({
+    label:'Header Key',
     widgetAttrs:{
-      placeholder:'operand'
+      placeholder:'i.e. Content-Type'
     },
     required:false
   }),
@@ -49,7 +50,7 @@ const AssertionsForm = forms.Form.extend({
       }
     }
     switch(this.cleanedData.type){
-      case 'statusCode':
+      case 'code':
       break;
       case 'header':
       if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
@@ -77,7 +78,8 @@ const AllFields = React.createClass({
         minNum:!this.props.check.assertions.length ? 1 : 0,
         extra:0
       }),
-      response:this.props.response
+      response:this.props.response,
+      formattedResponse:this.props.formattedResponse
     };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
@@ -94,29 +96,30 @@ const AllFields = React.createClass({
   changeAndUpdate(){
     this.props.onChange(this.getCleanedData(), this.disabled(), 2)
   },
-  operandInputNeeded(form, bf, assertionIndex, bfi){
+  renderOperand(form, key){
     const data = form.cleanedData;
     if(data && data.relationship){
       if(data.type == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
-          <div className="col-xs-10 col-xs-offset-2" key={`assertion-${assertionIndex}-field-${bfi}`}>
-            <BoundField bf={bf}/>
+          <div className="col-xs-10 col-xs-offset-2" key={key}>
+            <BoundField bf={form.boundField('operand')}/>
           </div>
         )
       }
     }
   },
-  valueInputNeeded(form, bf, assertionIndex, bfi){
+  renderValue(form, key){
     const data = form.cleanedData;
     if(data && data.relationship && data.type == 'header'){
       if(!data.relationship.match('empty|notEmpty')){
-        return(
-          <div className="col-xs-10 col-xs-offset-2" key={`assertion-${assertionIndex}-field-${bfi}`}>
-            <BoundField bf={bf}/>
+        return (
+          <div className="col-xs-10 col-xs-offset-2" key={key}>
+            <BoundField bf={form.boundField('value')}/>
           </div>
         )
       }
     }
+    return <div/>
   },
   renderRemoveAssertionButton(index){
     if(index > 0){
@@ -169,14 +172,10 @@ const AllFields = React.createClass({
                             </Col>
                           );
                           break;
-                          case 'operand':
-                          return this.operandInputNeeded(form, bf, index, bfi);
-                          break;
-                          case 'value':
-                          return this.valueInputNeeded(form, bf, index, bfi);
-                          break;
                         }
                       })}
+                      {this.renderValue(form, `assertion-${index}-value-field`)}
+                      {this.renderOperand(form, `assertion-${index}-operand-field`)}
                     </Row>
                   </Grid>
                 </div>
@@ -231,7 +230,7 @@ const AllFields = React.createClass({
         <h2>Your Response &amp; Request</h2>
         <p>We are including the content of your response and your request to help you define assertions.</p>
         <Highlight>
-          {this.state.response && JSON.stringify(this.state.response.data, null, ' ')}
+          {this.state.formattedResponse && JSON.stringify(this.state.formattedResponse, null, ' ')}
         </Highlight>
         {this.renderSubmitButton()}
       </form>
