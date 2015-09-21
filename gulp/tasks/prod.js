@@ -9,6 +9,6 @@ gulp.task('preProd', function(cb){
   runSequence(['html', 'styles', 'buildImg'], 'buildFiles', 'uglify', cb);
 });
 
-gulp.task('prod', ['preProd'], function(cb){
-  runSequence('docker', 'prodNotify', cb);
+gulp.task('prod', function(cb){
+  runSequence('preProd', 'docker', 'prodNotify', cb);
 });
