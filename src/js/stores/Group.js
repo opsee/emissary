@@ -37,9 +37,9 @@ let _statuses = {
 }
 
 const statics = {
-  getGroupPending(data){
-    if(_data.group.get('id') != data){
-      _data.group = new Group();
+  getGroupSecurityPending(data){
+    if(_data.groupSecurity.get('id') != data){
+      _data.groupSecurity = new Group();
     }
   },
   getGroupSecuritySuccess(data){
@@ -120,8 +120,8 @@ const Store = Flux.createStore(
       case 'GET_GROUP_SECURITY_SUCCESS':
         statics.getGroupSecuritySuccess(payload.data);
       break;
-      case 'GET_GROUP_PENDING':
-        statics.getGroupPending(payload.data);
+      case 'GET_GROUP_SECURITY_PENDING':
+        statics.getGroupSecurityPending(payload.data);
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

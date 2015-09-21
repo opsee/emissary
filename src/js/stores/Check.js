@@ -256,7 +256,12 @@ const _public = {
   getCheck(){
     return _data.check;
   },
-  getChecks(){
+  getChecks(targetId){
+    if(targetId){
+      return _data.checks.filter(c => {
+        return c.get('target').id == targetId;
+      });
+    }
     return _data.checks;
   },
   newCheck(){
@@ -281,8 +286,6 @@ const _public = {
     return response;
   }
 }
-
-console.log(_public.getResponse());
 
 let statusFunctions = {};
 let keys = _.chain(_statuses).keys().map(k => {
