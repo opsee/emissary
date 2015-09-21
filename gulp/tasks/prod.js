@@ -1,4 +1,9 @@
 var gulp = require('gulp');
-gulp.task('prod', ['uglify', 'html', 'styles', 'buildImg'], function(){
+
+gulp.task('preProd', ['html', 'styles', 'buildImg'], function(){
   gulp.start('buildFiles');
+});
+
+gulp.task('prod', ['preProd'], function(){
+  gulp.start('uglify');
 });
