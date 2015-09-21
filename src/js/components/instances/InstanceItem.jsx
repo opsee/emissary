@@ -23,6 +23,9 @@ export default React.createClass({
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `instance${suffix}`;
   },
+  openMenu(){
+
+  },
   render() {
     return (
       <div className="display-flex flex-vertical-align">
@@ -37,7 +40,7 @@ export default React.createClass({
             </div>
           </ListItem>
         </Link>{
-          <Button icon={true} flat={true} onClick={this.silence.bind(this,this.state.item.get('id'))} title="Silence Instance">
+          <Button icon={true} flat={true} onClick={this.openMenu} title="Silence Instance">
             <MoreHoriz btn={true}/>
           </Button>
         }

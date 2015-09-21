@@ -9,6 +9,8 @@ let socket;
 
 _actions.globalModalMessage = Flux.statics.addAction('globalModalMessage');
 
+_actions.globalContextMenu = Flux.statics.addAction('globalContextMenu');
+
 _actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageConsume');
 
 _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', function(){
