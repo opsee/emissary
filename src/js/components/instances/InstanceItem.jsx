@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {RadialGraph, ListItem} from '../global';
-import {CheckActions} from '../../actions';
+import {CheckActions, GlobalActions} from '../../actions';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import colors from 'seedling/colors';
@@ -24,7 +24,9 @@ export default React.createClass({
     return `instance${suffix}`;
   },
   openMenu(){
-
+    GlobalActions.globalContextMenu({
+      html:'foo'
+    })
   },
   render() {
     return (

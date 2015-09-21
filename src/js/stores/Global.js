@@ -22,7 +22,6 @@ let statics = {
       used:false,
       options:{
         html:kwargs.html,
-        style:kwargs.style,
         type:'context'
       }
     };

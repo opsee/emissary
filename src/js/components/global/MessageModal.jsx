@@ -22,7 +22,7 @@ export default React.createClass({
         },
         showModal:true,
         style:obj.options.style,
-        type:options.type
+        type:obj.options.type
       });
       GlobalActions.globalModalMessageConsume();
     }
