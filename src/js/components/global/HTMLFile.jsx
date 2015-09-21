@@ -19,7 +19,8 @@ export default React.createClass({
     request.get(this.props.path).then(res => {
       this.setState({html:res.text});
     }).catch(err => {
-      this.setState({error:err && err.message});
+      err = err.message || err;
+      this.setState({error:err.toString()});
     })
   },
   getParsedHtml(){
@@ -34,7 +35,7 @@ export default React.createClass({
         </Alert>
       )
     }else if(this.state.html){
-      return this.getParsedHtml();
+      // return this.getParsedHtml();
       return <div dangerouslySetInnerHTML={{__html:this.state.html}}/>
     }else{
       return <div/>;
