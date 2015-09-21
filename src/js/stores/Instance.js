@@ -140,7 +140,8 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
-    if(data.name == 'coreos5'){
+    console.log(config);
+    if(data.name == 'coreos5' && config.error){
       data.health = 25;
       data.state = 'stopped';
     }
