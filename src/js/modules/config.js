@@ -1,6 +1,6 @@
 import storage from './storage';
 
-const config = {
+let config = {
   api:window.apiDomain || 'https://api-beta.opsee.co',
   authApi:window.authApi || 'https://auth.opsee.co',
   revision:window.revision,

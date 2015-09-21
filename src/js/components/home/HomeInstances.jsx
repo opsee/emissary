@@ -26,12 +26,43 @@ export default React.createClass({
   getInitialState(){
     return getState();
   },
+  getFailingInstances(){
+    return this.state.instances.filter(i => {
+      return i.get('health') < 100;
+    });
+  },
+  getPassingInstances(){
+    return this.state.instances.filter(i => {
+      return i.get('health') == 100;
+    });
+  },
+  renderFailingInstances(){
+    const instances = this.getFailingInstances();
+    if(instances.size){
+      return (
+        <div>
+          <h3>Failing Instances</h3>
+          <ul className="list-unstyled">
+            {instances.map((instance, i) => {
+              return (
+                <li key={i}>
+                  <InstanceItem item={instance}/>
+                </li>
+                )
+            })}
+          </ul>
+        </div>
+      )
+    }
+  },
   render() {
     if(this.state.instances.size){
       return (
         <div>
+          {this.renderFailingInstances()}
+          <h3>Passing Instances</h3>
           <ul className="list-unstyled">
-            {this.state.instances.map((instance, i) => {
+            {this.getPassingInstances().map((instance, i) => {
               return (
                 <li key={i}>
                   <InstanceItem item={instance}/>

@@ -71,9 +71,6 @@ export default React.createClass({
       return <h2>No Instances</h2>
     }
   },
-  renderToolbar(){
-
-  },
   render() {
     if(this.state.group.get('id')){
       return (

@@ -3,6 +3,7 @@ const {CSSTransitionGroup} = React.addons;
 import {RouteHandler} from 'react-router';
 import router from '../../modules/router';
 import config from '../../modules/config';
+import storage from '../../modules/storage';
 import {Header, MessageModal} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions} from '../../actions';
@@ -31,7 +32,7 @@ export default React.createClass({
     }
   },
   componentWillMount(){
-    if(this.props.query.err){
+    if(this.props.query.err || storage.get('err')){
       config.error = true;
     }
   },

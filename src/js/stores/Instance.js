@@ -140,10 +140,8 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
-    console.log(config);
-    if(data.name == 'coreos5' && config.error){
+    if(data.name == 'coreos3' && config.error){
       data.health = 25;
-      data.state = 'stopped';
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
