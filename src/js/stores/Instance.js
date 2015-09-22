@@ -125,15 +125,16 @@ const statics = {
     return new Instance(data);
   },
   runInstanceAction(data){
-    _data.instancesECC = _data.instancesECC.map(instance => {
-      if(instance.get('id') == data.id){
-        let changed = instance.toJS();
-        changed.state = 'running';
-        changed.health = 100;
-        return Immutable.fromJS(changed);
-      }
-      return instance;
-    });
+    config.error = false;
+    // _data.instancesECC = _data.instancesECC.map(instance => {
+    //   if(instance.get('id') == data.id){
+    //     let changed = instance.toJS();
+    //     changed.state = 'running';
+    //     changed.health = 100;
+    //     return Immutable.fromJS(changed);
+    //   }
+    //   return instance;
+    // });
   }
 }
 

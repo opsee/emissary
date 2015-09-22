@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {RadialGraph, ListItem, Modal} from '../global';
-import {CheckActions, GlobalActions, InstanceActions} from '../../actions';
+import {CheckActions, GlobalActions, InstanceActions, GroupActions} from '../../actions';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import colors from 'seedling/colors';
@@ -26,7 +26,6 @@ export default React.createClass({
     return `instance${suffix}`;
   },
   openMenu(){
-    console.log('openmenu');
     this.setState({
       showModal:true
     });
@@ -46,6 +45,8 @@ export default React.createClass({
           action:action,
           id:self.state.item.get('id')
         });
+        InstanceActions.getInstancesECC();
+        GroupActions.getGroupsSecurity();
         self.setState({
           statusText:null
         })

@@ -16,11 +16,10 @@ function getState(){
 export default React.createClass({
   mixins: [InstanceStore.mixin],
   storeDidChange() {
-    if(this.isMounted()){
-      this.setState(getState());
-    }
+    const state = getState();
+    this.setState(state);
   },
-  componentDidMount(){
+  componentWillMount(){
     InstanceActions.getInstancesECC();
   },
   getInitialState(){
@@ -45,7 +44,7 @@ export default React.createClass({
           <ul className="list-unstyled">
             {instances.map((instance, i) => {
               return (
-                <li key={i}>
+                <li key={instance.get('id')}>
                   <InstanceItem item={instance}/>
                 </li>
                 )
@@ -64,7 +63,7 @@ export default React.createClass({
           <ul className="list-unstyled">
             {this.getPassingInstances().map((instance, i) => {
               return (
-                <li key={i}>
+                <li key={instance.get('id')}>
                   <InstanceItem item={instance}/>
                 </li>
                 )

@@ -15,7 +15,8 @@ function getState(){
 export default React.createClass({
   mixins: [GroupStore.mixin],
   storeDidChange() {
-    this.setState(getState());
+    const state = getState();
+    this.setState(state);
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
@@ -42,7 +43,7 @@ export default React.createClass({
           <ul className="list-unstyled">
             {groups.map((group, i) => {
               return (
-                <li key={i}>
+                <li key={group.get('id')}>
                   <GroupItem item={group}/>
                 </li>
                 )
@@ -61,7 +62,7 @@ export default React.createClass({
           <ul className="list-unstyled">
             {this.getPassingGroups().map((group, i) => {
               return (
-                <li key={i}>
+                <li key={group.get('id')}>
                   <GroupItem item={group}/>
                 </li>
                 )

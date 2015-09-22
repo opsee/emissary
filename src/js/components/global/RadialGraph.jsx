@@ -33,7 +33,8 @@ const RadialGraph = React.createClass({
           color = colors.success;
           break;
           case 'stopped':
-          color = 'gray'//gray-700
+          // color = 'gray'//gray-700
+          color = colors.danger//gray-700
           break;
           case 'stopped':
           break;
@@ -79,7 +80,8 @@ const RadialGraph = React.createClass({
         let color = colors.success;
         switch(state){
           case 'stopped':
-          color = 'gray'//gray-700
+          color = colors.success;
+          // color = 'gray'//gray-700
           break;
           case 'restarting':
           color = colors.info
