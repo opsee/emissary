@@ -3,8 +3,13 @@ var config = require('../config');
 var preprocess = require('gulp-preprocess'); 
 
 gulp.task('html', ['revision'], function() {
-  console.log(config.revision);
+  if(!process.env.Revision){
+    throw new gutil.PluginError({
+      plugin: 'html',
+      message: 'No revision found'
+    });
+  }
   return gulp.src(config.html.src)
-  .pipe(preprocess({context: { ENV: config.env, API:config.api, REV:config.revision}}))
+  .pipe(preprocess({context: { ENV: config.env, API:config.api, REV:process.env.Revision}}))
   .pipe(gulp.dest(config.html.dest));
 });
