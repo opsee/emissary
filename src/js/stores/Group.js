@@ -72,6 +72,9 @@ const statics = {
     data.meta = Immutable.fromJS(data.meta);
     data.id = data.GroupId;
     data.name = data.GroupName;
+    if(data.name == 'c1-us-west-1' && config.error){
+      data.health = 75;
+    }
     return new Group(data);
   }
 }

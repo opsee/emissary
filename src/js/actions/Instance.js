@@ -46,4 +46,6 @@ _actions.getInstanceECC = Flux.statics.addAsyncAction('getInstanceECC',
   res => res && res.response
 );
 
+_actions.runInstanceAction = Flux.statics.addAction('runInstanceAction');
+
 export default _.assign({}, ..._.values(_actions));

@@ -65,10 +65,11 @@ const RadialGraph = React.createClass({
       },
       innerStatus:() => {
         let state = this.getRadialState();
+        const health = this.state.health;
         switch(state){
           case 'running':
           return {
-            backgroundColor:colors.success
+            backgroundColor:health < 100 ? colors.danger : colors.success
           }
           break;
         }

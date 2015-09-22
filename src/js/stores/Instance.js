@@ -5,30 +5,6 @@ import moment from 'moment';
 import Immutable, {Record, List, Map} from 'immutable';
 import GroupStore from './Group';
 
-// data storage
-let _testInstance = {
-  name:'a-q8r-309fo (US-West-1)',
-  lastChecked:new Date(),
-  info:'Fun info here.',
-  id:'foo',
-  meta:{
-    created:new Date(),
-    instanceSize:'t2-micro'
-  },
-  status:{
-    health:25,
-    state:'running',
-    silence:{
-      startDate:null,
-      duration:null
-    }
-  },
-  checks:[
-  ],
-  groups:[
-  ]
-}
-
 var Instance = Record({
   name:null,
   lastChecked:new Date(),
@@ -91,6 +67,25 @@ const statics = {
     _data.instancesECC = data && data.length ? Immutable.fromJS(data) : [];
     Store.emitChange();
   },
+  getInstanceRDSSuccess(data){
+    if(data && data.instances){
+      data = data.instances;
+      data.type = 'RDS';
+      data.groups = data.SecurityGroups;
+      _data.instanceRDS = statics.instanceRDSFromJS(data);
+      Store.emitChange();
+    }
+  },
+  getInstancesRDSSuccess(data){
+    data = _.chain(data)
+    .uniq('InstanceId')
+    .map(statics.instanceRDSFromJS)
+    .sortBy(i => {
+      return i.name.toLowerCase();
+    }).value();
+    _data.instancesRDS = data && data.length ? Immutable.fromJS(data) : [];
+    Store.emitChange();
+  },
   getCreatedTime(time){
     let launchTime = Date.parse(time);
     if(typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
@@ -121,9 +116,24 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
+    if(data.name == 'coreos3' && config.error){
+      data.health = 25;
+      data.state = 'stopped';
+    }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
     return new Instance(data);
+  },
+  runInstanceAction(data){
+    _data.instancesECC = _data.instancesECC.map(instance => {
+      if(instance.get('id') == data.id){
+        let changed = instance.toJS();
+        changed.state = 'running';
+        changed.health = 100;
+        return Immutable.fromJS(changed);
+      }
+      return instance;
+    });
   }
 }
 
@@ -133,6 +143,12 @@ const _public = {
   },
   getInstancesECC(){
     return _data.instancesECC;
+  },
+  getInstanceRDS(){
+    return _data.instanceRDS;
+  },
+  getInstancesRDS(){
+    return _data.instancesRDS;
   },
   instanceFromJS:statics.instanceFromJS
 }
@@ -160,6 +176,11 @@ const Store = Flux.createStore(
       break;
       case 'GET_INSTANCE_ECC_PENDING':
         // statics.getInstancePending(payload.data);
+      break;
+      case 'RUN_INSTANCE_ACTION':
+        statics.runInstanceAction(payload.data);
+        config.error = false;
+        Store.emitChange();
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

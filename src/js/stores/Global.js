@@ -17,6 +17,19 @@ let statics = {
   globalModalMessageConsume(){
     _data.modalMessage.used = true;
   },
+  globalContextMenu(kwargs){
+    _data.modalMessage = {
+      used:false,
+      options:{
+        html:kwargs.html,
+        type:'context'
+      }
+    };
+    Store.emitChange();
+  },
+  globalContextMenuConsume(){
+    _data.modalMessage.used = true;
+  },
   globalSocketStart(){
     _data.socketStarted = true;
     Store.emitChange();
@@ -64,6 +77,12 @@ const Store = Flux.createStore(
       break;
       case 'GLOBAL_MODAL_MESSAGE_CONSUME':
         statics.globalModalMessageConsume(payload.data);
+      break;
+      case 'GLOBAL_CONTEXT_MENU':
+        statics.globalContextMenu(payload.data);
+      break;
+      case 'GLOBAL_CONTEXT_MENU_CONSUME':
+        statics.globalContextMenuConsume(payload.data);
       break;
       case 'GLOBAL_SOCKET_START':
         statics.globalSocketStart(payload.data);

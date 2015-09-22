@@ -21,7 +21,8 @@ export default React.createClass({
           __html:obj.options.html
         },
         showModal:true,
-        style:obj.options.style
+        style:obj.options.style,
+        type:obj.options.type
       });
       GlobalActions.globalModalMessageConsume();
     }
@@ -38,10 +39,13 @@ export default React.createClass({
       background:this.state.style ? colors[this.state.style] : colors.warning
     }
   },
+  getClassName(){
+    return this.state.type || 'notify';
+  },
   render() {
     return (
       <div>
-        <Modal show={this.state.showModal} onHide={this.close} className="notify">
+        <Modal show={this.state.showModal} onHide={this.close} className={this.getClassName()}>
         {
           // <Modal.Header closeButton>
           //   <Modal.Title>Modal heading</Modal.Title>
