@@ -67,6 +67,10 @@ const config = {
     src: 'src/files/**/*.*',
     dest: dest+'/files'
   },
+  fonts: {
+    src: 'src/fonts/**/*.*',
+    dest: dest+'/fonts'
+  },
   watch: {
     js: src+'/js/**/*.*',
     sass: src+'/styles/**/*.*',
