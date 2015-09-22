@@ -39,6 +39,7 @@ const RadialGraph = React.createClass({
           case 'stopped':
           break;
           case 'restarting':
+          color = colors.info;
           break;
           case 'unmonitored':
           break;
@@ -66,11 +67,16 @@ const RadialGraph = React.createClass({
       },
       innerStatus:() => {
         let state = this.getRadialState();
-        const health = this.state.health;
+        const health = this.props.health;
         switch(state){
           case 'running':
           return {
             backgroundColor:health < 100 ? colors.danger : colors.success
+          }
+          break;
+          case 'restarting':
+          return {
+            backgroundColor:colors.info
           }
           break;
         }
@@ -118,8 +124,8 @@ const RadialGraph = React.createClass({
     });
   },
   getRadialState(){
-    let state = this.state.state;
-    const health = this.state.health;
+    let state = this.props.state;
+    const health = this.props.health;
     state = health == 100 ? 'perfect' : state;
     state = this.state.silenceRemaining ? 'silenced' : state;
     return state;
@@ -160,7 +166,7 @@ const RadialGraph = React.createClass({
   getText(){
     const millis = this.state.silenceRemaining;
     if(!millis || millis < 0){
-      return this.state.health;
+      return this.props.health;
     }
     const duration = moment.duration(millis);
     let unit = 'h';
@@ -177,7 +183,7 @@ const RadialGraph = React.createClass({
     return (time,10)+unit;
   },
   getPath(){
-    const health = this.state.health;
+    const health = this.props.health;
     if(!health){return '';}
     let percentage;
     if(this.state.silenceRemaining){

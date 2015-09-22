@@ -1,9 +1,9 @@
 import React from 'react';
 import {Toolbar} from '../global';
 import {CheckItemList} from '../checks';
-import InstanceItem from '../instances/InstanceItem.jsx';
+import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
-import GroupItem from '../groups/GroupItem.jsx';
+import GroupItem from './GroupItem.jsx';
 import {GroupStore} from '../../stores';
 import {GroupActions, CheckActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -23,9 +23,9 @@ export default React.createClass({
     const state = getState();
     this.setState(state);
   },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !Immutable.is(this.state.group, nextState.group);
-  },
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !Immutable.is(this.state.group, nextState.group);
+  // },
   getData(){
     GroupActions.getGroupSecurity(this.props.params.id);
   },
@@ -57,10 +57,10 @@ export default React.createClass({
         <div>
           <h2>Instances - ( {this.state.group.get('instances').size} )</h2>
           <ul className="list-unstyled">
-            {this.state.group.get('instances').map(i => {
+            {this.state.group.get('instances').map(instance => {
               return (
-                <li key={i.get('id')}>
-                  <InstanceItem item={i}/>
+                <li key={instance.get('id')}>
+                  <InstanceItem item={instance}/>
                 </li>
                 )
             })}
@@ -90,7 +90,10 @@ export default React.createClass({
                     <td>{this.state.group.get('id')}</td>
                   </tr>
                 </table>
-                {this.getInstances()}
+                <InstanceItemList id={this.state.group.get('id')} type={'security'}/>
+                {
+                  // this.getInstances()
+                }
                 <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
               </Col>
             </Row>

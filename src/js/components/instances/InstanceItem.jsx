@@ -40,25 +40,25 @@ export default React.createClass({
       })
       this.hideContextMenu();
       const self = this;
+      InstanceActions.runInstanceAction({
+        action:action,
+        id:self.state.item.get('id')
+      });
       setTimeout(() => {
-        InstanceActions.runInstanceAction({
-          action:action,
-          id:self.state.item.get('id')
-        });
         InstanceActions.getInstancesECC();
         GroupActions.getGroupsSecurity();
-        self.setState({
-          statusText:null
-        })
-      }, 30000);
+        // self.setState({
+        //   statusText:null
+        // })
+      }, 5000);
     }
   },
   hideContextMenu(){
     this.setState({showModal:false});
   },
   renderStatusText(){
-    if(this.state.statusText){
-      return <span>:&nbsp;({this.state.statusText})</span>
+    if(this.props.item.get('state') == 'restarting'){
+      return <span>:&nbsp;(Restarting)</span>
     }else{
       return <span/>
     }
@@ -68,17 +68,17 @@ export default React.createClass({
       <div className="display-flex flex-vertical-align">
       <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
         <Grid fluid={true}>
-          <h2 class="h3">{this.state.item.get('name')} Actions</h2>
+          <h2 class="h3">{this.props.item.get('name')} Actions</h2>
         </Grid>
         {this.getActions().map(a => {
           return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
         })}
       </Modal>
-        <Link to={this.getInstanceLink()} params={{id:this.state.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
+        <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
           <ListItem>
-            <RadialGraph {...this.state.item.toJS()}/>
+            <RadialGraph {...this.props.item.toJS()}/>
             <div className="padding-tb line-height-1 flex-1">
-              <div className="list-item-line">{this.state.item.get('name')}{this.renderStatusText()}</div>
+              <div className="list-item-line">{this.props.item.get('name')}{this.renderStatusText()}</div>
               {
               // <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
               }

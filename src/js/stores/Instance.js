@@ -23,7 +23,8 @@ var Instance = Record({
   groups:List(),
   LaunchTime:null,
   InstanceType:null,
-  Placement:null
+  Placement:null,
+  SecurityGroups:List()
 })
 
 
@@ -52,7 +53,6 @@ const statics = {
     if(data && data.instances){
       data = data.instances;
       data.type = 'EC2';
-      data.groups = data.SecurityGroups;
       _data.instanceECC = statics.instanceFromJS(data);
       Store.emitChange();
     }
@@ -64,7 +64,7 @@ const statics = {
     .sortBy(i => {
       return i.name.toLowerCase();
     }).value();
-    _data.instancesECC = data && data.length ? Immutable.fromJS(data) : [];
+    _data.instancesECC = data && data.length ? Immutable.fromJS(data) : List();
     Store.emitChange();
   },
   getInstanceRDSSuccess(data){
@@ -105,9 +105,6 @@ const statics = {
     if(data.DBInstanceIdentifier){
       return statics.instanceRDSFromJS(data);
     }
-    if(data.groups && data.groups.length){
-      data.groups = new List(data.groups.map(group => GroupStore.groupFromJS(group)));
-    }
     data.id = data.InstanceId;
     let name = data.id;
     if(data.Tags && data.Tags.length){
@@ -116,6 +113,9 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
+    if(data.SecurityGroups && data.SecurityGroups.length){
+      data.groups = new List(data.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
+    }
     if(data.name == 'coreos3' && config.error){
       data.health = 25;
       data.state = 'stopped';
@@ -126,15 +126,14 @@ const statics = {
   },
   runInstanceAction(data){
     config.error = false;
-    // _data.instancesECC = _data.instancesECC.map(instance => {
-    //   if(instance.get('id') == data.id){
-    //     let changed = instance.toJS();
-    //     changed.state = 'running';
-    //     changed.health = 100;
-    //     return Immutable.fromJS(changed);
-    //   }
-    //   return instance;
-    // });
+    _data.instancesECC = _data.instancesECC.map(instance => {
+      if(instance.get('id') == data.id){
+        let changed = instance.toJS();
+        changed.state = 'restarting';
+        return Immutable.fromJS(changed);
+      }
+      return instance;
+    });
   }
 }
 
@@ -142,7 +141,13 @@ const _public = {
   getInstanceECC(){
     return _data.instanceECC;
   },
-  getInstancesECC(){
+  getInstancesECC(groupId){
+    if(groupId){
+      return _data.instancesECC.filter(instance => {
+        const groups = instance.get('groups');
+        return _.findWhere(groups.toJS(), {id:groupId});
+      })
+    }
     return _data.instancesECC;
   },
   getInstanceRDS(){
