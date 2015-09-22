@@ -50,7 +50,7 @@ export default React.createClass({
         // self.setState({
         //   statusText:null
         // })
-      }, 30000);
+      }, 15000);
     }
   },
   hideContextMenu(){

@@ -15,7 +15,9 @@ export default React.createClass({
     const data = bool ? [id] : [];
     var obj = {};
     obj[this.props.bf.name] = data;
-    return this.props.bf.form.setData(obj);
+    return this.props.bf.form.updateData(obj, {
+      clearValidation:false
+    });
   },
   widgetIsActive(w){
     return _.findWhere(this.props.bf.value(), w.choiceValue);

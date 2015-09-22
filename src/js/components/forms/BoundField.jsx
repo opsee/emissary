@@ -5,6 +5,7 @@ import InputWithLabel from './InputWithLabel.jsx';
 import Dropdown from './Dropdown.jsx';
 import RadioSelect from './RadioSelect.jsx';
 import MultiButtonToggle from './MultiButtonToggle.jsx';
+import InlineRadioSelect from './InlineRadioSelect.jsx';
 
 export default React.createClass({
   output(){
@@ -15,7 +16,11 @@ export default React.createClass({
           renderer = this.props.bf.field.widget.renderer().constructor.name;
         }catch(err){}
         if(renderer && renderer == 'RadioFieldRenderer'){
-          return <RadioSelect bf={this.props.bf}/>
+          if(this.props.bf.field.label == 'InlineRadioSelect'){
+            return <InlineRadioSelect bf={this.props.bf}/>
+          }else{
+            return <RadioSelect bf={this.props.bf}/>
+          }
         }else{
           return(
             <div className="form-group">
