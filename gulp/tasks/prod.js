@@ -6,7 +6,7 @@ gulp.task('prodNotify', function(){
 });
 
 gulp.task('preProd', function(cb){
-  runSequence(['html', 'styles', 'buildImg'], 'buildFiles', 'uglify', cb);
+  runSequence(['html', 'styles', 'buildImg'], ['buildFiles', 'buildFonts'], 'uglify', cb);
 });
 
 gulp.task('prod', function(cb){

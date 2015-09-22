@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var config = require('../config');
 
-gulp.task('watch', ['watchJs','watchSass', 'watchImg', 'watchHtml', 'watchFiles'], function(){
+gulp.task('watch', ['watchJs','watchSass', 'watchImg', 'watchHtml', 'watchFiles', 'buildFonts'], function(){
 })
 
 gulp.task('watchJs', ['buildJs'], function() {
