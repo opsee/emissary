@@ -4,6 +4,7 @@ import router from '../../modules/router';
 import forms from 'newforms';
 import colors from 'seedling/colors';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import config from '../../modules/config';
 
 import {Link} from 'react-router';
 import {BoundField, Button} from '../forms';
@@ -44,7 +45,12 @@ const InfoForm = forms.Form.extend({
     },
     widget:forms.NumberInput
   }),
-  method: forms.ChoiceField({choices:methodOptions}),
+  method: forms.ChoiceField({
+    choices:methodOptions,
+    widget:forms.RadioSelect,
+    label:'InlineRadioSelect',
+    initial:['GET']
+  }),
   path: forms.CharField({
     widgetAttrs:{
       placeholder:'e.g. /healthcheck'
@@ -58,17 +64,9 @@ const InfoForm = forms.Form.extend({
         <h2>Choose an AWS Group</h2>
         <BoundField bf={this.boundField('group')}/>
         <h2>Define an HTTP Request</h2>
-        {this.boundFields((field, fieldName) => {
-          if(fieldName.match('protocol|port|method|path')){
-            return true;
-          }
-          return false;
-        }).map((bf, i) => {
-          return (
-            <BoundField bf={bf} key={`bound-field-${i}`}/>
-          );
-        })
-      }
+        <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
+        <BoundField bf={this.boundField('method')} key={`bound-field-method`}/>
+        <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
       </div>
     )
   }
@@ -118,7 +116,13 @@ const AllFields = React.createClass({
     return _.chain(['group', 'port', 'method', 'path']).map(s => this.props.check[s]).every().value();
   },
   getGroupChoices(){
-    return GroupStore.getGroupsSecurity().toJS().map(g => {
+    let groups = GroupStore.getGroupsSecurity().toJS();
+    if(config.demo){
+      groups = _.filter(groups, g => {
+        return g.name.match('api-opsee-com|auth tier|c1-us-west-1|nsqadmin-lb|staging');
+      });
+    }
+    return groups.map(g => {
       return [g.id, g.name];
     });
   },

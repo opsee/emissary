@@ -8,6 +8,7 @@ import {InstanceItem} from '../instances';
 import {Link} from 'react-router';
 import {RouteHandler} from 'react-router';
 import router from '../../modules/router';
+import {PageAuth} from '../../modules/statics';
 
 function getState(){
   return {
@@ -20,6 +21,9 @@ function getState(){
 
 export default React.createClass({
   mixins: [CheckStore.mixin],
+  statics:{
+    willTransitionTo:PageAuth
+  },
   storeDidChange() {
     const state = getState();
     if(state.createStatus == 'success'){

@@ -6,24 +6,25 @@
   background: none;
   border: 3px solid $gray-500;
   cursor: pointer;
-  height: 1.3em;
+  height: 26px;
   font-size: 1.2em;
   padding: 0 0;
   position: relative;
-  margin: 0 1.2em 0 0;
-  width: 1.3em;
+  margin: 0 0.5em 0 0;
+  width: 26px;
   &:after {
+    $width:12px;
     @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
     background-color: transparent;
     border-radius:100%;
     content: "";
     display: block;
-    height: 0.5em;
+    height: $width;
+    width: $width;
     left: 50%;
-    margin: -0.25em 0 0 -0.25em;
-    position: absolute;
     top: 50%;
-    width: 0.5em;
+    margin: -1*($width/2) 0 0 -1*($width/2);
+    position: absolute;
   }
   &.active:after{
     background-color: $brand-primary;

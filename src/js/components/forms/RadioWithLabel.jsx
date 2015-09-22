@@ -3,8 +3,9 @@ import _ from 'lodash';
 React.initializeTouchEvents(true);
 import Radio from './Radio.jsx';
 import colors from 'seedling/colors';
+import Radium from 'radium';
 
-export default React.createClass({
+const RadioWithLabel = React.createClass({
   propTypes:{
     on:PropTypes.bool.isRequired,
     onChange:PropTypes.func.isRequired,
@@ -15,7 +16,9 @@ export default React.createClass({
     label:PropTypes.string.isRequired
   },
   getStyle(){
-    let style = {};
+    let style = {
+       marginTop:'0.1em'
+    }
     if(this.props.on){
       style.color = colors.primary;
     }
@@ -26,7 +29,7 @@ export default React.createClass({
       <div className="display-flex flex-wrap">
         <Radio on={this.props.on} onChange={this.props.onChange} id={this.props.id} />
         <div className="flex-1">
-          <label className={`user-select-none padding-tb-sm`} style={this.getStyle()} htmlFor={this.props.id}>
+          <label className={`user-select-none padding-tb-sm`} style={[this.getStyle(), this.props.labelStyle]} htmlFor={this.props.id}>
             {this.props.label}
           </label>
         </div>
@@ -34,3 +37,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Radium(RadioWithLabel);
