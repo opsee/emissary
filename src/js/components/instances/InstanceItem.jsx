@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import {RadialGraph, ListItem} from '../global';
-import {CheckActions, GlobalActions} from '../../actions';
+import {RadialGraph, ListItem, Modal} from '../global';
+import {CheckActions, GlobalActions, InstanceActions} from '../../actions';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import colors from 'seedling/colors';
@@ -13,7 +13,9 @@ export default React.createClass({
     item:React.PropTypes.instanceOf(Record).isRequired,
   },
   getInitialState() {
-    return this.props;
+    return _.assign({},this.props, {
+      showModal:false
+    });
   },
   silence(id){
     return console.log('silence');
@@ -24,18 +26,58 @@ export default React.createClass({
     return `instance${suffix}`;
   },
   openMenu(){
-    GlobalActions.globalContextMenu({
-      html:'foo'
-    })
+    console.log('openmenu');
+    this.setState({
+      showModal:true
+    });
+  },
+  getActions(){
+    return ['Restart', 'Stop', 'Start', 'Terminate'];
+  },
+  runAction(action){
+    if(action == 'Restart'){
+      this.setState({
+        statusText:'Restarting'
+      })
+      this.hideContextMenu();
+      const self = this;
+      setTimeout(() => {
+        InstanceActions.runInstanceAction({
+          action:action,
+          id:self.state.item.get('id')
+        });
+        self.setState({
+          statusText:null
+        })
+      }, 30000);
+    }
+  },
+  hideContextMenu(){
+    this.setState({showModal:false});
+  },
+  renderStatusText(){
+    if(this.state.statusText){
+      return <span>:&nbsp;({this.state.statusText})</span>
+    }else{
+      return <span/>
+    }
   },
   render() {
     return (
       <div className="display-flex flex-vertical-align">
+      <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
+        <Grid fluid={true}>
+          <h2 class="h3">{this.state.item.get('name')} Actions</h2>
+        </Grid>
+        {this.getActions().map(a => {
+          return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
+        })}
+      </Modal>
         <Link to={this.getInstanceLink()} params={{id:this.state.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
           <ListItem>
             <RadialGraph {...this.state.item.toJS()}/>
             <div className="padding-tb line-height-1 flex-1">
-              <div className="list-item-line">{this.state.item.get('name')}</div>
+              <div className="list-item-line">{this.state.item.get('name')}{this.renderStatusText()}</div>
               {
               // <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
               }

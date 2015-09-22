@@ -4,6 +4,7 @@ import HTMLFile from './HTMLFile.jsx';
 import ListItem from './ListItem.jsx';
 import Loader from './Loader.jsx';
 import MessageModal from './MessageModal.jsx';
+import Modal from './Modal.jsx';
 import Opsee from './Opsee.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import RadialGraph from './RadialGraph.jsx';
@@ -19,6 +20,7 @@ export default {
   ListItem,
   Loader,
   MessageModal,
+  Modal,
   Opsee,
   ProgressBar,
   RadialGraph,
