@@ -121,7 +121,7 @@ const Credentials = React.createClass({
                 <BoundField bf={this.state.info.boundField('access-key')}/>
                 <BoundField bf={this.state.info.boundField('secret-key')}/>
 
-                <p className="text-serif text-secondary text-sm padding-bx2">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
+                <p className="text-secondary text-sm padding-bx2">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
 
                 <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron={true}>Next</Button>
               </form>
