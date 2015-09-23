@@ -7,7 +7,8 @@ let config = {
   apiDelay:0,
   auth0:'https://opsee.auth0.com',
   demo:storage.get('demo') || false,
-  error:false
+  error:false,
+  slackClientSecret:window.slackClientSecret
 }
 
 export default config;
