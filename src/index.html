@@ -23,6 +23,9 @@
     <!-- @ifdef API -->
     <script>window.apiDomain = '<!-- @echo API -->';</script>
     <!-- @endif -->
+    <!-- @ifdef SLACK_CLIENT_SECRET -->
+    <script>window.slackClientSecret = '<!-- @echo SLACK_CLIENT_SECRET -->';</script>
+    <!-- @endif -->
     <!-- @ifdef REV -->
     <script>window.revision = '<!-- @echo REV -->';</script>
     <!-- @endif -->

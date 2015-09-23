@@ -10,6 +10,11 @@ gulp.task('html', ['revision'], function() {
     });
   }
   return gulp.src(config.html.src)
-  .pipe(preprocess({context: { ENV: config.env, API:config.api, REV:process.env.Revision}}))
+  .pipe(preprocess({context: {
+    ENV: config.env, 
+    API:config.api, 
+    REV:process.env.Revision,
+    SLACK_CLIENT_SECRET:process.env.SLACK_CLIENT_SECRET
+  }}))
   .pipe(gulp.dest(config.html.dest));
 });
