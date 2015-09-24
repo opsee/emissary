@@ -11,9 +11,9 @@ import config from '../../modules/config';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper']
 
-const featureChoices = ['Better Alerts', 'AWS Actions', 'Peace of Mind', 'Historical Data'];
+const featureChoices = ['AWS Integration', 'Simpler Monitoring', 'No Software', 'Actions, like restarts'];
 
-const sucksChoices = ['Difficult Installation', 'Overwhelming', 'Not Enough Features', 'Shit Interface'];
+const sucksChoices = ['Hard to maintain', 'Too Complicated', 'Requires Config Management', 'Bad UI'];
 
 const InfoForm = forms.Form.extend({
   services: forms.MultipleChoiceField({
@@ -76,13 +76,13 @@ const Survey = React.createClass({
     ),
     (
       <div>
-        <h3>What are you looking forward to in using Opsee?</h3>
+        <h3>What are you looking forward to most in Opsee?</h3>
         <BoundField bf={this.state.info.boundField('features')}/>
       </div>
     ),
     (
       <div>
-        <h3>What sucks most about your monitoring now?</h3>
+        <h3>What do you hate about monitoring today?</h3>
         <BoundField bf={this.state.info.boundField('sucks')}/>
       </div>
     )
