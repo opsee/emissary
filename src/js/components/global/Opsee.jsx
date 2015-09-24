@@ -12,8 +12,8 @@ import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col, Row} from '../../modules/bootstrap';
 
 function initialize(){
-  let user = UserStore.getUser();
-  if(user.get('token') && !GlobalStore.getSocketStarted()){
+  if(UserStore.hasUser() && !GlobalStore.getSocketStarted()){
+    config.intercom('boot', {app_id:'mrw1z4dm', email: UserStore.getUser().get('email')});
     GlobalActions.globalSocketStart();
   }
   if(config.demo){

@@ -8,7 +8,8 @@ let config = {
   auth0:'https://opsee.auth0.com',
   demo:storage.get('demo') || false,
   error:false,
-  slackClientSecret:window.slackClientSecret
+  slackClientSecret:window.slackClientSecret,
+  intercom:window.Intercom
 }
 
 export default config;
