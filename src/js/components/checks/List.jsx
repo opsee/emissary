@@ -58,7 +58,7 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="All Checks">
-          <Link to="checkCreate" className="btn btn-primary btn-fab" title="Create New Check">
+          <Link to="checkCreate" className="btn btn-fab" title="Create New Check">
             <Add btn={true}/>
           </Link>
         </Toolbar>
