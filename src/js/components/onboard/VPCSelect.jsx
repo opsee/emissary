@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
-import {Alert} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {Link} from 'react-router';
@@ -9,7 +8,7 @@ import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 import router from '../../modules/router';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 const regions = AWSStore.getRegions();
 

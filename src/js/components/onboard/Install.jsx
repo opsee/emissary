@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Alert, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {UserStore} from '../../stores';
@@ -10,7 +10,7 @@ import router from '../../modules/router';
 import storage from '../../modules/storage';
 import {Close, ChevronRight} from '../icons';
 import BastionInstaller from './BastionInstaller.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
 

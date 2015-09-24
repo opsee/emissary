@@ -220,6 +220,11 @@ function setSilence(opts){
 }
 
 const statics = {
+  getCheckPending(id){
+    if(_data.check.get('id') != id){
+      _data.check = new Check();
+    }
+  },
   getCheckSuccess(data){
     _data.check = statics.checkFromJS(data);
     Store.emitChange();
@@ -310,6 +315,9 @@ const Store = Flux.createStore(
       break;
       case 'CHECK_CREATE_ERROR':
         console.error(payload.data);
+      break;
+      case 'GET_CHECK_PENDING':
+        statics.getCheckPending(payload.data);
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../modules/bootstrap';
+import {Alert, Button} from '../../modules/bootstrap';
 import {RadialGraph} from '../global';
-import {Toolbar, Loader} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
@@ -71,12 +71,12 @@ export default React.createClass({
           </ul>
         </div>
     );
-    }else if(this.state.status && this.state.status == 'success'){
-      return (
-        <div>No Instances found.</div>
-      )
     }else{
-      return <Loader timeout={500}/>
+      return (
+        <StatusHandler status={this.state.status}>
+          No Instances found.
+        </StatusHandler>
+      );
     }
   }
 });

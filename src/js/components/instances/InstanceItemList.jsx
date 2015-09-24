@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {RadialGraph, ListItem} from '../global';
+import {RadialGraph, ListItem, StatusHandler} from '../global';
 import {InstanceActions} from '../../actions';
 import {InstanceStore} from '../../stores';
 import InstanceItem from './InstanceItem.jsx';
@@ -50,12 +50,12 @@ export default React.createClass({
           </ul>
         </div>
       )
-    }else if(this.state.status != 'pending' && !this.state.error){
-      return (
-        <h2>No Instances</h2>
-      );
     }else{
-      return <div/>
+      return (
+        <StatusHandler status={this.state.status}>
+          <h2>No Instances</h2>
+        </StatusHandler>
+      );
     }
   },
   render() {

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {RadialGraph, ListItem} from '../global';
+import {RadialGraph, ListItem, StatusHandler} from '../global';
 import {CheckActions} from '../../actions';
 import {CheckStore} from '../../stores';
 import CheckItem from './CheckItem.jsx';
@@ -50,12 +50,12 @@ export default React.createClass({
           </ul>
         </div>
       )
-    }else if(this.state.status != 'pending' && !this.state.error){
-      return (
-        <h2>No Checks Applied</h2>
-      );
     }else{
-      return <div/>
+      return (
+        <StatusHandler status={this.state.status}>
+          <h2>No Checks Applied</h2>
+        </StatusHandler>
+      );
     }
   },
   render() {

@@ -19,7 +19,7 @@ _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
         id:data.group,
         type:'sg'
       },
-      interval:1,
+      interval:30,
       check_spec:{
         type_url:'HttpCheck',
         value:{
@@ -49,7 +49,7 @@ _actions.getCheck = Flux.statics.addAsyncAction('getCheck',
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,
-  res => res && res.body || res
+  res => res && res.body
 );
 
 _actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
@@ -59,7 +59,7 @@ _actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,
-  res => res && res.body || res
+  res => res && res.body
 );
 
 _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
@@ -69,7 +69,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,
-  res => res && res.body || res
+  res => res && res.body
 );
 
 // _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',

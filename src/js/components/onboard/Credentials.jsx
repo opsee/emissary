@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Alert, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
 import {Link} from 'react-router';
@@ -7,7 +7,7 @@ import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import router from '../../modules/router';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
 import config from '../../modules/config';
 import storage from '../../modules/storage';

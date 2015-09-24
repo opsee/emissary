@@ -3,6 +3,7 @@ import Header from './Header.jsx';
 import HTMLFile from './HTMLFile.jsx';
 import ListItem from './ListItem.jsx';
 import Loader from './Loader.jsx';
+import StatusHandler from './StatusHandler.jsx';
 import MessageModal from './MessageModal.jsx';
 import Modal from './Modal.jsx';
 import Opsee from './Opsee.jsx';
@@ -26,6 +27,7 @@ export default {
   RadialGraph,
   Routes,
   SearchBox,
+  StatusHandler,
   StepCounter,
   Toolbar
 }

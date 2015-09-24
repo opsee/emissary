@@ -1,6 +1,6 @@
 import React from 'react';
 import {CheckActions} from '../../actions';
-import {Toolbar} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import CheckItem from '../checks/CheckItem.jsx';
@@ -11,7 +11,8 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    checks:CheckStore.getChecks()
+    checks:CheckStore.getChecks(),
+    status:CheckStore.getGetChecksStatus()
   }
 }
 
@@ -21,7 +22,11 @@ export default React.createClass({
     willTransitionTo:PageAuth
   },
   storeDidChange() {
-    this.setState(getState());
+    let state = getState();
+    if(state.status && state.status != 'success' && state.status != 'pending'){
+      state.error = state.status;
+    }
+    this.setState(state);
   },
   getInitialState(){
     return getState();
@@ -50,7 +55,9 @@ export default React.createClass({
       )
     }else{
       return (
-        <p>No Checks - <Link to="checkCreate" title="Create New Check">Create One</Link></p>
+        <StatusHandler status={this.state.status}>
+          <p>No Checks - <Link to="checkCreate" title="Create New Check">Create One</Link></p>
+        </StatusHandler>
       );
     }
   },

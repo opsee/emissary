@@ -12,11 +12,6 @@ export default React.createClass({
       show:false
     }
   },
-  getDefaultProps(){
-    return {
-      timeout:0
-    }
-  },
   componentDidMount(){
     var self = this;
     setTimeout(() => {
@@ -25,12 +20,14 @@ export default React.createClass({
           show:true
         })
       }
-    },self.props.timeout)
+    },self.props.timeout || 700)
   },
   render(){
     if(this.state.show){
       return(
-        <div className="opsee-loader"></div>
+        <div className="display-flex justify-content-center">
+          <div className="opsee-loader"></div>
+        </div>
       )
     }else{
       return <div/>

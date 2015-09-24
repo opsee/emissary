@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {CheckActions} from '../../actions';
-import {Toolbar} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
@@ -12,7 +12,8 @@ import router from '../../modules/router.js';
 
 function getState(){
   return {
-    check:CheckStore.getCheck()
+    check:CheckStore.getCheck(),
+    status:CheckStore.getGetCheckStatus()
   }
 }
 
@@ -22,16 +23,11 @@ export default React.createClass({
     willTransitionTo:PageAuth
   },
   storeDidChange() {
-    const status = CheckStore.getGetCheckStatus();
-    if(status == 'success'){
-      this.setState(getState());
-    }else if(status != 'pending'){
-      this.setState({error:status})
-    }
     const delStatus = CheckStore.getDeleteCheckStatus();
     if(delStatus == 'success'){
       router.transitionTo('checks');
     }
+    this.setState(getState());
   },
   getInitialState(){
     return getState();
@@ -62,7 +58,7 @@ export default React.createClass({
     }
   },
   innerRender(){
-    if(!this.state.error && this.state.check && this.state.check.get('id')){
+    if(!this.state.error && this.state.check.get('id')){
       return(
         <div>
           <h2>Check Information</h2>
@@ -102,12 +98,12 @@ export default React.createClass({
           }
         </div>
       )
-    }else if(this.state.error){
+    }else{
       return (
-        <Alert type="danger">
-          Something went wrong trying to get Check {this.props.params.id}.
-        </Alert>
-      )
+        <StatusHandler status={this.state.status}>
+          <h2>No Checks Applied</h2>
+        </StatusHandler>
+      );
     }
   },
   outputLink(){
@@ -131,6 +127,7 @@ export default React.createClass({
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
               {this.innerRender()}
+              <div><br/></div>
               <Button onClick={this.removeCheck} bsStyle="danger">Delete Check</Button>
             </Col>
           </Row>
