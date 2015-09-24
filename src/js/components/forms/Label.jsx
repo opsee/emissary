@@ -22,13 +22,25 @@ export default React.createClass({
       return errors;
     }
   },
+  renderChildren(){
+    if(this.props.children){
+      return(
+        <div style={{marginRight:'0.7em'}}>
+          {this.props.children}
+        </div>
+      );
+    }
+  },
   render(){
     return(
-      <label htmlFor={this.props.bf.idForLabel()}>
-        <span className="form-label">{this.props.bf.label}</span>
-        <span className="form-message">
-          {this.errors()}
-        </span>
+      <label className="label" htmlFor={this.props.bf.idForLabel()}>
+        <div className="display-flex flex-vertical-align">
+          {this.renderChildren()}
+          <span className="form-label">{this.props.bf.label}</span>
+          <span className="form-message">
+            {this.errors()}
+          </span>
+        </div>
       </label>
     )
   }

@@ -42,7 +42,9 @@ export default React.createClass({
       default:
       return(
         <div className="form-group">
-          <InputWithLabel bf={this.props.bf}/>
+          <InputWithLabel bf={this.props.bf}>
+            {this.props.children}
+          </InputWithLabel>
         </div>
       );
       break;

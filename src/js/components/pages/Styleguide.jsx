@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import forms from 'newforms';
 
 import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
 import {Toolbar, Loader} from '../global';
@@ -8,8 +9,8 @@ import CheckItem from '../checks/CheckItem.jsx';
 import {CheckStore} from '../../stores';
 import {StyleguideActions, GlobalActions} from '../../actions';
 
-import {Add} from '../icons';
-import {Button, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Add, Key} from '../icons';
+import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
 
 function getState(){
   return {
@@ -23,16 +24,41 @@ function getState(){
     })
   }
 }
+
+const InfoForm = forms.Form.extend({
+  name: forms.CharField({
+    widgetAttrs:{
+      placeholder:'Name',
+      autocomplete:'off',
+      title:'foo'
+    }
+  }),
+  password: forms.CharField({
+    widgetAttrs:{
+      placeholder:'Password',
+    }
+  }),
+  validation:'auto'
+});
+
 export default React.createClass({
   mixins: [CheckStore.mixin],
   getInitialState(){
-    return getState();
+    const self = this;
+    return _.extend(getState(), {
+      info:new InfoForm({
+        onChange:self.changeAndUpdate
+      })
+    })
   },
   storeDidChange() {
     this.setState(getState());
   },
   getDefaultProps() {
     return getState();
+  },
+  changeAndUpdate(){
+    this.forceUpdate();
   },
   triggerToggle(index, bool){
     let toggles = this.state.toggles;
@@ -241,21 +267,11 @@ export default React.createClass({
             <h3>Forms</h3>
 
             <form name="testform" id="testform">
-              <div className="form-group display-flex flex-wrap">
-                <input id="testinput1" name="testinput1" type="text" ng-model="user.account.team_name" placeholder="input placeholder" className="form-control flex-order-1" ng-required="true" ng-minlength="3"/>
-                <label htmlFor="testinput1">
-                  <span>Text Input Label</span>
-                  <default-messages ng-model="testform.testinput1"></default-messages>
-                </label>
-              </div>
 
-              <div className="form-group display-flex flex-wrap">
-                <input id="testinput2" name="testinput2" type="text" placeholder="email@domain.com" className="form-control has-icon flex-order-1" ng-required="true" ng-pattern="regex.email" ng-model="testinput2"/>
-                <label htmlFor="testinput2">
-                  <span>Email (w/icon)</span>
-                  <default-messages ng-model="testform.testinput2"></default-messages>
-                </label>
-              </div>
+              <BoundField bf={this.state.info.boundField('name')}/>
+              <BoundField bf={this.state.info.boundField('password')}>
+                <Key className="icon"/>
+              </BoundField>
 
               <div className="form-group">
                 <div dropdown>

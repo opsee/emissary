@@ -128,13 +128,6 @@ $button-fab-padding: 1.60rem !default;
   display: block;
   border-radius:0;
 }
-.icon {
-  display: inline-block;
-  fill: white;
-  height:1.3em;
-  width:1.3em;
-  vertical-align: text-bottom;
-}
 .btn-fab {
   @include transition(transform $swift-ease-out-duration $swift-ease-out-timing-function, background-color $swift-ease-out-duration $swift-ease-out-timing-function);
   z-index: $z-index-fab;

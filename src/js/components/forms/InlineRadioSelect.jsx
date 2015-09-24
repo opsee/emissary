@@ -31,7 +31,7 @@ export default React.createClass({
   render(){
     return(
       <div className="form-group">
-        <label>Method</label>
+        <label className="label">Method</label>
         <ul className="list-unstyled display-flex flex-wrap padding-sm">
           {this.props.bf.subWidgets().map((w, i) => {
             return (

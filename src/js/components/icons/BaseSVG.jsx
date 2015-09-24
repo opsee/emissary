@@ -12,7 +12,8 @@ const Base = React.createClass({
       fill:props.fill || 'white',
       path:props.path || '',
       viewBox:props.viewBox || [0, 0, width, height].join(' '),
-      style:props.style || {}
+      style:props.style || {},
+      className:props.className
     }
   },
   componentWillReceiveProps(newProps){
@@ -30,6 +31,7 @@ const Base = React.createClass({
         height={this.state.height}
         fill={this.state.fill}
         style={[style, this.state.style]}
+        className={this.state.className}
         >
         <path d={this.state.path} />
       </svg>

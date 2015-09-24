@@ -47,7 +47,7 @@ export default React.createClass({
     }
   },
   renderInner(){
-    if(this.state.socketError){
+    if(this.state.socketError && !config.debug){
       return (
         <Grid>
           <Col xs={12}>

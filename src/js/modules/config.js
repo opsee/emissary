@@ -9,7 +9,8 @@ let config = {
   demo:storage.get('demo') || false,
   error:false,
   slackClientSecret:window.slackClientSecret,
-  intercom:window.Intercom
+  intercom:window.Intercom,
+  debug:storage.get('debug')
 }
 
 export default config;
