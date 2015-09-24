@@ -36,6 +36,9 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
         Flux.actions.globalSocketMessage(data);
       }
     }
+    socket.onerror = function(event){
+      Flux.actions.globalSocketError(event);
+    }
   }
 });
 
@@ -64,6 +67,8 @@ _actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe',
 });
 
 _actions.globalSocketMessage = Flux.statics.addAction('globalSocketMessage');
+
+_actions.globalSocketError = Flux.statics.addAction('globalSocketError');
 
 _actions.globalSetNav = Flux.statics.addAction('globalSetNav');
 

@@ -49,7 +49,8 @@ let _data = {
     used:false,
     options:null
   },
-  showNav:true
+  showNav:true,
+  globalSocketError:null
 }
 
 let _statuses = {
@@ -69,6 +70,9 @@ const Store = Flux.createStore(
     },
     getShowNav(){
       return _data.showNav;
+    },
+    getGlobalSocketError(){
+      return _data.globalSocketError;
     }
   }, function(payload){
     switch(payload.actionType) {
@@ -103,6 +107,10 @@ const Store = Flux.createStore(
       break;
       case 'GLOBAL_SET_NAV':
         _data.showNav = payload.data;
+        Store.emitChange();
+      break;
+      case 'GLOBAL_SOCKET_ERROR':
+        _data.globalSocketError = payload.data;
         Store.emitChange();
       break;
     }
