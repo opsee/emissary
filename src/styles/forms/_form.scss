@@ -1,8 +1,8 @@
 .form-group {
-  border: none;
-  margin-bottom: 32px;
+  // border: none;
+  // background-color: $gray-900;
+  // margin-bottom: 32px;
   position: relative;
-  background-color: $gray-900;
   &.search-group {
     margin-top: 4em;
   }
@@ -72,6 +72,7 @@
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
   background-color: transparent;
   border: none;
+  border-bottom: 1px solid $gray_600;
   color: $text-color;
   padding: 0.5em;
   width:100%;
@@ -84,11 +85,8 @@
     @include box-shadow(none);
   }
   &:focus {
-    background-color: black; //blue-gray-800
-    ~ label {
-      background-color: black; //blue-gray-800
-    }
-    ~ .icon {
+    outline: none;
+    ~ .input-icon {
       fill: $brand-info;
     }
   }
