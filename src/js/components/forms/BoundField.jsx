@@ -2,12 +2,22 @@ import React from 'react';
 
 import MultiToggle from './MultiToggle.jsx';
 import InputWithLabel from './InputWithLabel.jsx';
+import DeleteFormButton from './DeleteFormButton.jsx';
 import Dropdown from './Dropdown.jsx';
 import RadioSelect from './RadioSelect.jsx';
 import MultiButtonToggle from './MultiButtonToggle.jsx';
 import InlineRadioSelect from './InlineRadioSelect.jsx';
 
 export default React.createClass({
+  fallback(){
+    return(
+    <div className="form-group">
+      <InputWithLabel bf={this.props.bf}>
+        {this.props.children}
+      </InputWithLabel>
+    </div>
+    );
+  },
   output(){
     switch(this.props.bf.field.constructor.name){
       case 'ChoiceField':
@@ -29,6 +39,13 @@ export default React.createClass({
           );
         }
       break;
+      case 'BooleanField':
+        if(this.props.bf.field.label == 'Delete'){
+          return <DeleteFormButton bf={this.props.bf}/>
+        }else{
+          return this.fallback();
+        }
+      break;
       case 'MultipleChoiceField':
         if(this.props.bf.field.label == 'buttonToggle'){
           return <MultiButtonToggle bf={this.props.bf}/>
@@ -40,13 +57,7 @@ export default React.createClass({
         return <RadioSelect bf={this.props.bf}/>
       break;
       default:
-      return(
-        <div className="form-group">
-          <InputWithLabel bf={this.props.bf}>
-            {this.props.children}
-          </InputWithLabel>
-        </div>
-      );
+      return this.fallback();
       break;
     }
   },
