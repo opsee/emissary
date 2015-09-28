@@ -1,6 +1,6 @@
 .form-group {
-  // border: none;
-  // background-color: $gray-900;
+  border: none;
+  background-color: $gray-900;
   // margin-bottom: 32px;
   position: relative;
   &.search-group {
@@ -16,6 +16,14 @@
     margin-bottom: 0;
     padding: 0.5em;
     width: 100%;
+  }
+  .icon {
+    bottom: 0.75em;
+    left: 0.5em;
+    position: absolute;
+  }
+  .has-icon input {
+    text-indent: 2em;
   }
   .dropdown-toggle, [dropdown-toggle]{
     @include box-shadow(none);
@@ -66,54 +74,41 @@
   }
 }//.form-group
 
-.form-control, input{
-  box-shadow:none;
-  @include placeholder($text-color-secondary);
-  @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid $gray_600;
-  color: $text-color;
-  padding: 0.5em;
-  width:100%;
-  &:hover {
-    & ~ .icon {
-      fill: $gray-400;
+.input-container {
+  &:hover, &:active {
+    ~ label {
+      color: $gray-200;
+    }
+    ~ .icon {
+      fill: $gray-200;
     }
   }
   &:focus, &.has-content, &.error {
     @include box-shadow(none);
   }
   &:focus {
-    outline: none;
-    ~ .input-icon {
+    & ~ label {
+      color: $brand-info;
+    }
+    & ~ .icon {
       fill: $brand-info;
     }
   }
-  &.ng-invalid.ng-touched {
-      ~ label {
-        @include opacity(100);
-        @include transform(translate(0,0));
-        color: $brand-danger;
-        visibility: visible;
-      }
-      ~ .icon { fill: $brand-danger; }
-      ~ .input-error-text {
-        @include opacity(100);
-        @include transform(translate(0,0));
-        visibility: visible;
-      }
+}
+
+.form-control, input[type='text'], input[type='number'], input[type='email'], input[type='password'] {
+  &:focus {
+    outline: none;
   }
-  &.ng-valid.ng-touched {
-    ~ label {
-      @include opacity(100);
-      @include transform(translate(0,0));
-      visibility: visible;
-    }
-  }
-  &.has-icon {
-    text-indent: 32px;
-  }
+  box-shadow:none;
+  @include placeholder($text-color-secondary);
+  @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
+  background-color: transparent;
+  border: none;
+  // border-bottom: 1px solid $gray_600;
+  color: $text-color;
+  padding: 0.5em;
+  width:100%;
 }
 
 .form-message{
@@ -124,20 +119,12 @@
   &.form-message-good{
     color:$brand-success;
   }
-  &.ng-enter, &.ng-leave.ng-leave-active{
-    @include transform(translate(32px,0));
-    opacity:0;
-  }
-  &.ng-enter.ng-enter-active,&.ng-leave{
-    @include transform(none);
-    opacity:1;
-  }
 }
 .icon {
   @include transition(fill $swift-ease-out-duration $swift-ease-out-timing-function);
   fill: $text-color-secondary;
-  height: 20px;
-  width: 20px;
+  height: 1.25em;
+  width: 1.25em;
 }
 .input-group-addon {
   background-color: black;

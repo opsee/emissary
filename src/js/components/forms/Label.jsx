@@ -33,11 +33,12 @@ export default React.createClass({
   },
   render(){
     return(
-      <label className="flex-order-1" htmlFor={this.props.bf.idForLabel()}>
-        <span className="form-label">{this.props.bf.label}</span>
-        <span className="form-message">
-          {this.errors()}
-        </span>
+      <label className="flex-order-1 label" htmlFor={this.props.bf.idForLabel()}>
+        <div className="display-flex flex-vertical-align">
+          {this.renderChildren()}
+          <span className="form-label">{this.props.bf.label}</span>
+          <span className="form-message">{this.errors()}</span>
+        </div>
       </label>
     )
   }

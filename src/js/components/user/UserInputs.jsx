@@ -2,24 +2,28 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
+import {Add, Key} from '../icons';
 
 let include = [];
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
     widgetAttrs:{
-      placeholder:'address@domain.com'
+      placeholder:'address@domain.com',
+      icon: '<Mail className="icon"/>'
     }
   }),
   name: forms.CharField({
     widgetAttrs:{
-      placeholder:'Your Name'
+      placeholder:'Your Name',
+      icon: '<Person className="icon"/>'
     }
   }),
   password: forms.CharField({
     widget: forms.PasswordInput,
     widgetAttrs:{
-      placeholder:'Your Password'
+      placeholder:'Your Password',
+      icon: '<Lock className="icon"/>'
     }
   }),
   render() {
@@ -27,7 +31,7 @@ const InfoForm = forms.Form.extend({
       <div>
       {
         include.map(field => {
-          return <BoundField bf={this.boundField(field)} key={field}/>
+          return <BoundField bf={this.boundField(field)} key={field}>{this.icon}</BoundField>
         })
       }
       </div>
