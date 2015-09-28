@@ -17,6 +17,11 @@ import AssertionCounter from '../forms/AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
+<<<<<<< HEAD
+=======
+import {StepCounter} from '../global';
+import {CheckStore} from '../../stores';
+>>>>>>> mo
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
