@@ -7,7 +7,7 @@ import {Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
 import {CheckStore} from '../../stores';
-import {StyleguideActions, GlobalActions} from '../../actions';
+import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
 import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
