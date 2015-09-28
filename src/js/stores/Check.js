@@ -203,7 +203,7 @@ var Check = Record({
     value:Map({
       name:null,
       path:null,
-      protocol:null,
+      protocol:'http',
       port:null,
       verb:null,
       headers:List()
@@ -281,8 +281,8 @@ const _public = {
     let response = _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
     return response;
   },
-  getFormattedResponse(){
-    let response = _public.getResponse();
+  getFormattedResponse(data){
+    let response = _.cloneDeep(data);
     response.headers = response.headers.map(h => {
       h.values = h.values.join(', ');
       return h;

@@ -60,7 +60,7 @@ const data = {
   port:80
 }
 
-const AllFields = React.createClass({
+const CheckStep3 = React.createClass({
   getInitialState() {
     const self = this;
     
@@ -233,4 +233,4 @@ const AllFields = React.createClass({
   }
 })
 
-export default AllFields;
+export default CheckStep3;

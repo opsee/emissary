@@ -14,6 +14,7 @@ import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 import {StepCounter} from '../global';
+import {CheckStore} from '../../stores';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -66,7 +67,7 @@ const AssertionsFormSet = forms.FormSet.extend({
   form:AssertionsForm
 });
 
-const AllFields = React.createClass({
+const CheckStep2 = React.createClass({
   getInitialState() {
     const self = this;
     console.log(this.props.check);
@@ -196,6 +197,9 @@ const AllFields = React.createClass({
     }
     return _.assign({}, obj);
   },
+  getFormattedResponse(){
+    return CheckStore.getFormattedResponse(this.props.response);
+  },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){
       return(
@@ -230,7 +234,7 @@ const AllFields = React.createClass({
         <h2>Your Response &amp; Request</h2>
         <p>We are including the content of your response and your request to help you define assertions.</p>
         <Highlight>
-          {this.state.formattedResponse && JSON.stringify(this.state.formattedResponse, null, ' ')}
+          {JSON.stringify(this.getFormattedResponse(this.state.response), null, ' ')}
         </Highlight>
         {this.renderSubmitButton()}
       </form>
@@ -255,4 +259,4 @@ const AllFields = React.createClass({
   }
 })
 
-export default AllFields;
+export default CheckStep2;
