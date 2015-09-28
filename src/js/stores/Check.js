@@ -214,7 +214,6 @@ var Check = Record({
   id:undefined,
   name:null,
   info:null,
-  id:null,
   target:Map({
     name:undefined,
     type:'sg',

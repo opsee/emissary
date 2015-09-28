@@ -87,6 +87,9 @@ const CheckEdit = React.createClass({
   getCheckTitle(){
     return this.state.check.check_spec.value.name || this.state.check.id;
   },
+  getCheckTitle(){
+    return this.state.check.check_spec.value.name || this.state.check.id;
+  },
   renderLink(){
     return this.state.check.id ?
     (
