@@ -128,12 +128,17 @@ const CheckStep1 = React.createClass({
         labelSuffix:'',
         emptyPermitted:false,
 <<<<<<< HEAD
+<<<<<<< HEAD
         initial:initialHeaders.length ? initialHeaders : null,
         // minNum:!initialHeaders.length ? 1 : 0,
 =======
         initial:initialHeaders,
         minNum:!initialHeaders.length ? 1 : 0,
 >>>>>>> refactor check schema to match cliff's shet
+=======
+        initial:initialHeaders.length ? initialHeaders : null,
+        // minNum:!initialHeaders.length ? 1 : 0,
+>>>>>>> and mo
         extra:0,
         validation:{
           on:'blur change',
@@ -144,11 +149,16 @@ const CheckStep1 = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
 <<<<<<< HEAD
+<<<<<<< HEAD
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
       groups:List()
 =======
       }, self.dataComplete() ? {data:{id:[self.props.check.target.id]}} : null)),
+=======
+        label:'Target',
+      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
+>>>>>>> and mo
       check:this.props.check
 >>>>>>> refactor check schema to match cliff's shet
     }
@@ -269,8 +279,11 @@ const CheckStep1 = React.createClass({
       this.state.info.cleanedData
     );
     return check;
+<<<<<<< HEAD
     // return _.assign(data, this.state.info.cleanedData, {group:this.state.group.cleanedData});
 >>>>>>> refactor check schema to match cliff's shet
+=======
+>>>>>>> and mo
   },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){

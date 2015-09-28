@@ -68,8 +68,10 @@ const CheckEdit = React.createClass({
   updateData(data, disabled, num){
     // this.setState({check:_.extend(this.state.check,data)});
     var obj = {};
-    obj[`step${num}`] = {disabled:disabled};
-    stepData[`step${num}`] = data;
+    obj[`step${num}`] = {
+      disabled,
+      data
+    };
     this.setState(obj);
   },
   disabled(){

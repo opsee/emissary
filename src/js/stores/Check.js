@@ -220,7 +220,6 @@ var Check = Record({
     id:undefined,
   }),
   assertions:List(),
-  interval:null,
   notifications:List(),
   instances:List(),
   health:100,
@@ -239,13 +238,14 @@ var Check = Record({
       headers:new List()
   silenceDate:null,
   silenceDuration:null,
+  interval:30,
   check_spec:Map({
     value:Map({
       name:null,
       path:null,
       protocol:'http',
       port:null,
-      verb:null,
+      verb:'GET',
       headers:List()
     })
   })
