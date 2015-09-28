@@ -14,7 +14,7 @@ function getState(){
   return {
     check:CheckStore.newCheck().toJS(),
     response:CheckStore.getResponse(),
-    formattedResponse:CheckStore.getFormattedResponse(),
+    formattedResponse:CheckStore.getFormattedResponse(CheckStore.getResponse()),
     createStatus:CheckStore.getCheckCreateStatus()
   }
 }

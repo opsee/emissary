@@ -15,7 +15,7 @@ import {PageAuth} from '../../modules/statics';
 
 function getState(){
   const rawCheck = CheckStore.getCheck().toJS();
-  let check = {};
+  let check = rawCheck;
   return {
     check:check,
     response:CheckStore.getResponse(),
