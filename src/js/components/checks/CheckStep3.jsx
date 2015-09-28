@@ -101,7 +101,12 @@ const CheckStep3 = React.createClass({
     return this.props.check.check_spec.value.name;
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData(), this.disabled(), 3)
+    this.props.onChange(this.getFinalData(), this.disabled(), 3)
+  },
+  componentDidMount(){
+    if(this.props.renderAsInclude){
+      this.changeAndUpdate();
+    }
   },
   renderRemoveNotificationButton(index){
     if(index > 0){
@@ -160,6 +165,15 @@ const CheckStep3 = React.createClass({
         <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
       </div>
     )
+  },
+  getFinalData(){
+    return {
+      check_spec:{
+        value:{
+          name:this.state.info.cleanedData.name
+        }
+      }
+    }
   },
   getCleanedData(){
     let notificationData = this.state.notifications.cleanedData();

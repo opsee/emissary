@@ -45,7 +45,7 @@ export default React.createClass({
   },
   updateData(data){
     this.setState({
-      check:_.extend(this.state.check, data)
+      check:_.merge(this.state.check, data)
     });
   },
   submit(){

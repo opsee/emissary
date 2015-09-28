@@ -61,7 +61,7 @@ const InfoForm = forms.Form.extend({
     choices:verbOptions,
     widget:forms.RadioSelect,
     label:'InlineRadioSelect',
-    initial:['GET']
+    // initial:['GET']
   }),
   path: forms.CharField({
     widgetAttrs:{
@@ -105,8 +105,8 @@ const CheckStep1 = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         emptyPermitted:false,
-        initial:initialHeaders,
-        minNum:!initialHeaders.length ? 1 : 0,
+        initial:initialHeaders.length ? initialHeaders : null,
+        // minNum:!initialHeaders.length ? 1 : 0,
         extra:0,
         validation:{
           on:'blur change',
@@ -116,7 +116,8 @@ const CheckStep1 = React.createClass({
       group: new GroupForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-      }, self.dataComplete() ? {data:{id:[self.props.check.target.id]}} : null)),
+        label:'Target',
+      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check
     }
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -215,7 +216,6 @@ const CheckStep1 = React.createClass({
       this.state.info.cleanedData
     );
     return check;
-    // return _.assign(data, this.state.info.cleanedData, {group:this.state.group.cleanedData});
   },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){

@@ -186,24 +186,24 @@ var Check = Record({
   id:null,
   target:Map({
     name:null,
-    type:null,
+    type:'sg',
     id:null,
   }),
   assertions:List(),
-  interval:null,
   notifications:List(),
   instances:List(),
   health:100,
   state:'running',
   silenceDate:null,
   silenceDuration:null,
+  interval:30,
   check_spec:Map({
     value:Map({
       name:null,
       path:null,
       protocol:'http',
       port:null,
-      verb:null,
+      verb:'GET',
       headers:List()
     })
   })

@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 export default React.createClass({
   getState(){
-    let label = _.clone(this.props.bf.value());
+    let label = this.props.bf.value();
     if(label){
       label = this.getLabelFromChoice(label);
     }else{

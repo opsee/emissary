@@ -52,13 +52,15 @@ export default React.createClass({
     return getState();
   },
   getCleanData(){
-    return _.assign({}, stepData.step1, stepData.step2, stepData.step3);
+    return _.merge(this.state.step1.data, this.state.step2.data, this.state.step3.data);
   },
   updateData(data, disabled, num){
     // this.setState({check:_.extend(this.state.check,data)});
     var obj = {};
-    obj[`step${num}`] = {disabled:disabled};
-    stepData[`step${num}`] = data;
+    obj[`step${num}`] = {
+      disabled,
+      data
+    };
     this.setState(obj);
   },
   disabled(){
