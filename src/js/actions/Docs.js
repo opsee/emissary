@@ -2,7 +2,6 @@ import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';
-import {auth} from '../swagger';
 import {UserStore} from '../stores';
 
 let _actions = {};

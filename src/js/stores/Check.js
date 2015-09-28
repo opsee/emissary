@@ -183,8 +183,6 @@ var TestCheck = Record({
 })
 
 var Check = Record({
-  name:null,
-  info:null,
   id:null,
   target:Map({
     name:null,

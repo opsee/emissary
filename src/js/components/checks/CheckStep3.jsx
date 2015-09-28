@@ -76,7 +76,7 @@ const CheckStep3 = React.createClass({
       info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-      }, self.dataComplete() ? {data:this.props.check} : null)),
+      }, self.dataComplete() ? {data:this.props.check.check_spec.value} : null)),
       notifications: new NotificationFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
@@ -98,7 +98,7 @@ const CheckStep3 = React.createClass({
     return obj;
   },
   dataComplete(){
-    return _.chain(['name']).map(s => this.props.check[s]).every().value();
+    return this.props.check.check_spec.value.name;
   },
   changeAndUpdate(){
     this.props.onChange(this.getCleanedData(), this.disabled(), 3)

@@ -73,6 +73,9 @@ export default React.createClass({
   submit(){
     console.log(this.getCleanData());
   },
+  getCheckTitle(){
+    return this.state.check.check_spec.value.name || this.state.check.id;
+  },
   renderLink(){
     return this.state.check.id ? 
     (
@@ -86,7 +89,7 @@ export default React.createClass({
     if(this.state.check.id){
       return (
         <div>
-          <Toolbar btnPosition="midRight" title={`Edit ${this.state.check.name || this.state.check.id}`}>
+          <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`}>
             {this.renderLink()}
           </Toolbar>
           <Grid>
