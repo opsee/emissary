@@ -3,7 +3,6 @@ import Flux from '../modules/flux';
 import request from '../modules/request';
 import {UserStore} from '../stores';
 import _ from 'lodash';
-import {auth} from '../swagger';
 
 let _actions = {};
 

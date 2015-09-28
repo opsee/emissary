@@ -2,20 +2,9 @@ import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';
-import {auth} from '../swagger';
 import {UserStore} from '../stores';
 
 let _actions = {};
-
-// _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
-//   (data) => {
-//     return request
-//     .post(`${config.api}/authenticate/password`)
-//     .send(data)
-//   },
-//   res => res.body && res.body,
-//   res => res && res.response
-// );
 
 _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
   (data) => {

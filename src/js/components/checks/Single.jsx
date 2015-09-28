@@ -41,6 +41,12 @@ export default React.createClass({
   silence(id){
     CheckActions.silence(id);
   },
+  getCheckJS(){
+    return this.state.check.toJS();
+  },
+  getTitle(){
+    return this.getCheckJS().check_spec.value.name || this.getCheckJS().id;
+  },
   removeCheck(){
     CheckActions.deleteCheck(this.props.params.id);
   },
@@ -69,19 +75,19 @@ export default React.createClass({
             </tr>
             <tr>
               <td><strong>Path</strong></td>
-              <td>{this.state.check.get('path')}</td>
+              <td>{this.getCheckJS().check_spec.value.path}</td>
             </tr>
             <tr>
               <td><strong>Port</strong></td>
-              <td>{this.state.check.get('port')}</td>
+              <td>{this.getCheckJS().check_spec.value.port}</td>
             </tr>
             <tr>
               <td><strong>Protocol</strong></td>
-              <td>{this.state.check.get('protocol')}</td>
+              <td>{this.getCheckJS().check_spec.value.protocol}</td>
             </tr>
             <tr>
               <td><strong>Method</strong></td>
-              <td>{this.state.check.get('verb')}</td>
+              <td>{this.getCheckJS().check_spec.value.verb}</td>
             </tr>
           </table>
           {
@@ -109,7 +115,7 @@ export default React.createClass({
   outputLink(){
     if(this.state.check && this.state.check.get('id')){
       return (
-        <Link to="checkEdit" params={{id:this.props.params.id}} className="btn btn-primary btn-fab" title={`Edit ${this.state.check.get('name') || this.props.params.id}`}>
+        <Link to="checkEdit" params={{id:this.props.params.id}} className="btn btn-primary btn-fab" title={`Edit ${this.getTitle()}`}>
           <Edit btn={true}/>
         </Link>
       )
@@ -120,7 +126,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Check ${this.state.check.get('name') || this.props.params.id}`}>
+        <Toolbar title={`Check ${this.getTitle()}`}>
           {this.outputLink()}
         </Toolbar>
         <Grid>

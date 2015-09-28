@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import config from '../modules/config';
 import Flux from '../modules/flux';
-import {api} from '../swagger';
 import request from '../modules/request';
 import {UserStore} from '../stores';
 
