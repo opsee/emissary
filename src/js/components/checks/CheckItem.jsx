@@ -5,13 +5,8 @@ import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 
 export default React.createClass({
-  getInitialState(){
-    return {
-      item:this.props.item
-    }
-  },
-  silence(id){
-    CheckActions.silence(id);
+  silence(){
+    CheckActions.silence(this.props.item.get('id'));
   },
   render() {
     return (
@@ -20,14 +15,14 @@ export default React.createClass({
           <ListItem>
             <RadialGraph {...this.props.item.toJS()}/>
             <div className="padding-tb line-height-1 flex-1">
-              <div className="list-item-line">{this.state.item.get('name')}</div>
+              <div className="list-item-line">{this.props.item.get('check_spec').value.name}</div>
               {
               // <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
               }
             </div>
           </ListItem>
         </Link>
-        <button type="button" className="btn btn-icon btn-flat" onClick={this.silence.bind(this,this.props.item.get('id'))} title="Check Actions">
+        <button type="button" className="btn btn-icon btn-flat" onClick={this.silence} title="Check Actions">
           <MoreHoriz inline={true}/>
         </button>
       </div>
