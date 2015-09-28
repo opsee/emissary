@@ -12,11 +12,11 @@ import {Toolbar, StepCounter, Loader} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
-import {GroupStore} from '../../stores';
+import {GroupStore, CheckStore} from '../../stores';
 
 const groupOptions = []
 
-const methodOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
+const verbOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
 
 const HeaderForm = forms.Form.extend({
   key: forms.CharField({
@@ -28,25 +28,37 @@ const HeaderForm = forms.Form.extend({
     widgetAttrs:{
       placeholder:'e.g. application/json'
     },
-  }),
+  })
 });
 
 const HeaderFormSet = forms.FormSet.extend({
   form:HeaderForm,
+  canDelete:true
+});
+
+const GroupForm = forms.Form.extend({
+  id: forms.ChoiceField({
+    choices:[]
+  }),
+  render() {
+    return(
+      <div>
+        <h2>Choose an AWS Group</h2>
+        <BoundField bf={this.boundField('id')}/>
+      </div>
+    )
+  }
 });
 
 const InfoForm = forms.Form.extend({
-  group: forms.ChoiceField({
-    choices:[]
-  }),
   port: forms.CharField({
     widgetAttrs:{
       placeholder:'e.g. 8080',
     },
     widget:forms.NumberInput
   }),
-  method: forms.ChoiceField({
-    choices:methodOptions,
+  verb: forms.ChoiceField({
+    choices:verbOptions,
     widget:forms.RadioSelect,
     label:'InlineRadioSelect',
     initial:['GET']
@@ -61,23 +73,21 @@ const InfoForm = forms.Form.extend({
   render() {
     return(
       <div>
-        <h2>Choose an AWS Group</h2>
-        <BoundField bf={this.boundField('group')}/>
         <h2>Define an HTTP Request</h2>
         <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
-        <BoundField bf={this.boundField('method')} key={`bound-field-method`}/>
+        <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
         <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
       </div>
     )
   }
 })
 
-const AllFields = React.createClass({
+const CheckStep1 = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
     const status = GroupStore.getGetGroupsSecurityStatus();
     if(status == 'success'){
-      this.state.info.fields.group.setChoices(this.getGroupChoices());
+      this.state.group.fields.id.setChoices(this.getGroupChoices());
       this.setState({
         groups:GroupStore.getGroupsSecurity()
       });
@@ -85,27 +95,34 @@ const AllFields = React.createClass({
   },
   getInitialState() {
     const self = this;
+    const initialHeaders = this.props.check.check_spec.value.headers;
     const obj = {
       info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-      }, self.dataComplete() ? {data:self.props.check} : null)),
+      }, self.dataComplete() ? {data:self.props.check.check_spec.value} : null)),
       headers: new HeaderFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         emptyPermitted:false,
+        initial:initialHeaders,
+        minNum:!initialHeaders.length ? 1 : 0,
         extra:0,
         validation:{
           on:'blur change',
           onChangeDelay:150
         }
       }),
+      group: new GroupForm(_.extend({
+        onChange:self.changeAndUpdate,
+        labelSuffix:'',
+      }, self.dataComplete() ? {data:{id:[self.props.check.target.id]}} : null)),
       check:this.props.check
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
-      self.state.headers.forms().forEach((form,i) => {
-        form.setData(self.props.check.headers[i]);
+      self.state.headers.forms().forEach((form, i) => {
+        form.setData(self.props.check.check_spec.value.headers[i]);
       });
     },10);
     return _.extend(obj, {
@@ -113,7 +130,9 @@ const AllFields = React.createClass({
     });
   },
   dataComplete(){
-    return _.chain(['group', 'port', 'method', 'path']).map(s => this.props.check[s]).every().value();
+    const condition1 = this.props.check.target.id;
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
+    return condition1 && condition2;
   },
   getGroupChoices(){
     let groups = GroupStore.getGroupsSecurity().toJS();
@@ -128,6 +147,7 @@ const AllFields = React.createClass({
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
+    // this.changeAndUpdate();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
@@ -135,15 +155,22 @@ const AllFields = React.createClass({
     }
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData(), this.disabled(), 1);
-    this.setState({cleanedData:this.getCleanedData()});
-    // this.forceUpdate();
+    let data = this.getFinalData();
+    this.props.onChange(data, this.disabled(), 1);
+  },
+  removeHeader(index){
+    this.state.headers.removeForm(index);
+  },
+  getHeaderForms(){
+    return _.reject(this.state.headers.forms(), f => {
+      return f.cleanedData.DELETE;
+    })
   },
   renderHeaderForm(){
     return(
       <div>
         <h2>Request Headers</h2>
-        {this.state.headers.forms().map((form, index) => {
+        {this.getHeaderForms().map((form, index) => {
           return (
             <div key={`header-form-${index}`}>
               <Row>
@@ -153,23 +180,18 @@ const AllFields = React.createClass({
               </Row>
               <div className="display-flex">
                 <div className="row flex-1">
-                <Grid fluid={true}>
-                  <Row>
-                    {form.boundFields().map((bf, i) => {
-                      return(
-                        <Col xs={12} sm={6} key={`header-field-${index}-${i}`}>
-                          <BoundField bf={bf}/>
-                        </Col>
-                      )
-                    })}
+                  <Grid fluid={true}>
+                    <Row>
+                      <Col xs={12} sm={6} key={`header-field-${index}-key`}>
+                        <BoundField bf={form.boundField('key')}/>
+                      </Col>
+                      <Col xs={12} sm={6} key={`header-field-${index}-value`}>
+                        <BoundField bf={form.boundField('value')}/>
+                      </Col>
                     </Row>
                   </Grid>
                 </div>
-                <div className="padding-lr">
-                  <Button icon={true} flat={true} onClick={this.state.headers.removeForm.bind(this.state.headers,index)} title="Remove this Header">
-                      <Close btn={true}/>
-                  </Button>
-                </div>
+                <BoundField bf={form.boundField('DELETE')}/>
               </div>
             </div>
           )
@@ -181,12 +203,19 @@ const AllFields = React.createClass({
       </div>
     )
   },
-  getCleanedData(){
-    let headerData = this.state.headers.cleanedData();
-    const data = {
-      headers:headerData
-    }
-    return _.assign(data, this.state.info.cleanedData);
+  getFinalData(){
+    let check = CheckStore.newCheck().toJS();
+    let val = check.check_spec.value;
+    val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
+      return _.omit(h, 'DELETE');
+    }).value();
+    check.target = this.state.group.cleanedData;
+    val = _.assign(
+      val, 
+      this.state.info.cleanedData
+    );
+    return check;
+    // return _.assign(data, this.state.info.cleanedData, {group:this.state.group.cleanedData});
   },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){
@@ -235,6 +264,7 @@ const AllFields = React.createClass({
       return (
         <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
           {this.renderHelperText()}
+          {this.state.group.render()}
           {this.state.info.render()}
           {this.renderHeaderForm()}
           {this.renderSubmitButton()}
@@ -267,4 +297,4 @@ const AllFields = React.createClass({
   },
 })
 
-export default AllFields;
+export default CheckStep1;

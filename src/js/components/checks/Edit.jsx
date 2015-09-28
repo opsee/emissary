@@ -11,10 +11,13 @@ import {Checkmark, Close} from '../icons';
 import colors from 'seedling/colors';
 import {CheckActions} from '../../actions';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {PageAuth} from '../../modules/statics';
 
 function getState(){
+  const rawCheck = CheckStore.getCheck().toJS();
+  let check = {};
   return {
-    check:CheckStore.getCheck().toJS(),
+    check:check,
     response:CheckStore.getResponse(),
     step1:{
       disabled:false
@@ -36,6 +39,9 @@ let stepData = {
 
 export default React.createClass({
   mixins: [CheckStore.mixin],
+  statics:{
+    willTransitionTo:PageAuth
+  },
   getInitialState() {
     return getState()
   },

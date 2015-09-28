@@ -186,28 +186,29 @@ var Check = Record({
   name:null,
   info:null,
   id:null,
-  method:null,
-  verb:null,
   target:Map({
     name:null,
     type:null,
     id:null,
   }),
-  path:null,
-  port:80,
-  meta:List(),
-  group:null,
-  headers:List(),
   assertions:List(),
-  protocol:null,
-  // interval:null,
-  // message:null,
+  interval:null,
   notifications:List(),
   instances:List(),
   health:100,
   state:'running',
   silenceDate:null,
-  silenceDuration:null
+  silenceDuration:null,
+  check_spec:Map({
+    value:Map({
+      name:null,
+      path:null,
+      protocol:null,
+      port:null,
+      verb:null,
+      headers:List()
+    })
+  })
 })
 
 
@@ -238,8 +239,12 @@ const statics = {
   checkFromJS(data){
     data = _.extend(data, data.check_spec.value);
     data.name = data.check_spec.value.name;
-    data.method = data.verb;
-    data.group = data.target.id;
+    data.check_spec.value.headers = data.check_spec.value.headers.map(h => {
+      return {
+        key:h.name,
+        value:h.values.join(', ')
+      }
+    })
     return new Check(data);
   }
 }

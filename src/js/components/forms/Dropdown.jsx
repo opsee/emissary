@@ -4,7 +4,7 @@ import {DropdownButton, MenuItem, Dropdown} from '../../modules/bootstrap';
 import _ from 'lodash';
 
 export default React.createClass({
-  getInitialState(){
+  getState(){
     let label = _.clone(this.props.bf.value());
     if(label){
       label = this.getLabelFromChoice(label);
@@ -13,7 +13,10 @@ export default React.createClass({
     }
     return _.extend({}, this.props, {
       label:label
-    })
+    });
+  },
+  getInitialState(){
+    return this.getState();
   },
   getLabelFromChoice(key){
     let bf = this.state && this.state.bf || this.props.bf;
@@ -34,6 +37,9 @@ export default React.createClass({
         label:label
       })
     }
+  },
+  componentWillReceiveProps(nextProps){
+    this.setState(this.getState());
   },
   render(){
     return(
