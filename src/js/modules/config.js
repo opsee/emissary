@@ -5,7 +5,6 @@ let config = {
   authApi:window.authApi || 'https://auth.opsee.co',
   revision:window.revision,
   apiDelay:0,
-  auth0:'https://opsee.auth0.com',
   demo:storage.get('demo') || false,
   error:false,
   slackClientSecret:window.slackClientSecret,
@@ -13,4 +12,5 @@ let config = {
   debug:storage.get('debug')
 }
 
+window.config = config;
 export default config;

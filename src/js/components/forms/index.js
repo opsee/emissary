@@ -3,6 +3,7 @@ import Autosuggest from './Autosuggest.jsx';
 import BoundField from './BoundField.jsx';
 import Button from './Button.jsx';
 import ButtonToggle from './ButtonToggle.jsx';
+import DeleteFormButton from './DeleteFormButton.jsx';
 import Dropdown from './Dropdown.jsx';
 import InputWithLabel from './InputWithLabel.jsx';
 import Label from './Label.jsx';
@@ -17,6 +18,7 @@ export default {
   Button,
   ButtonToggle,
   BoundField,
+  DeleteFormButton,
   Dropdown,
   InputWithLabel,
   Label,
