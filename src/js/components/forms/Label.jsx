@@ -24,7 +24,7 @@ export default React.createClass({
   },
   render(){
     return(
-      <label htmlFor={this.props.bf.idForLabel()}>
+      <label className="flex-order-1" htmlFor={this.props.bf.idForLabel()}>
         <span className="form-label">{this.props.bf.label}</span>
         <span className="form-message">
           {this.errors()}
