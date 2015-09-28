@@ -14,7 +14,10 @@ import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
+<<<<<<< HEAD
 import CheckResponse from './CheckResponse.jsx';
+=======
+>>>>>>> refactor check schema to match cliff's shet
 
 const groupOptions = []
 
@@ -40,13 +43,20 @@ const HeaderFormSet = forms.FormSet.extend({
 
 const GroupForm = forms.Form.extend({
   id: forms.ChoiceField({
+<<<<<<< HEAD
     label:'Target',
+=======
+>>>>>>> refactor check schema to match cliff's shet
     choices:[]
   }),
   render() {
     return(
       <div>
+<<<<<<< HEAD
         <h2>Choose a Check Target</h2>
+=======
+        <h2>Choose an AWS Group</h2>
+>>>>>>> refactor check schema to match cliff's shet
         <BoundField bf={this.boundField('id')}/>
       </div>
     )
@@ -88,11 +98,20 @@ const InfoForm = forms.Form.extend({
 const CheckStep1 = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
+<<<<<<< HEAD
     const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
     let stateObj = {};
     if(getGroupsStatus == 'success'){
       this.state.group.fields.id.setChoices(this.getGroupChoices());
       stateObj.groups = GroupStore.getGroupsSecurity();
+=======
+    const status = GroupStore.getGetGroupsSecurityStatus();
+    if(status == 'success'){
+      this.state.group.fields.id.setChoices(this.getGroupChoices());
+      this.setState({
+        groups:GroupStore.getGroupsSecurity()
+      });
+>>>>>>> refactor check schema to match cliff's shet
     }
     this.setState(_.assign(stateObj,{getGroupsStatus}));
   },
@@ -108,8 +127,13 @@ const CheckStep1 = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         emptyPermitted:false,
+<<<<<<< HEAD
         initial:initialHeaders.length ? initialHeaders : null,
         // minNum:!initialHeaders.length ? 1 : 0,
+=======
+        initial:initialHeaders,
+        minNum:!initialHeaders.length ? 1 : 0,
+>>>>>>> refactor check schema to match cliff's shet
         extra:0,
         validation:{
           on:'blur change',
@@ -119,19 +143,28 @@ const CheckStep1 = React.createClass({
       group: new GroupForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
+<<<<<<< HEAD
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
       groups:List()
+=======
+      }, self.dataComplete() ? {data:{id:[self.props.check.target.id]}} : null)),
+      check:this.props.check
+>>>>>>> refactor check schema to match cliff's shet
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.headers.forms().forEach((form, i) => {
+<<<<<<< HEAD
         const h = self.props.check.check_spec.value.headers[i];
         const data = {
           key:h.name,
           value:h.values.join(', ')
         }
         form.setData(data);
+=======
+        form.setData(self.props.check.check_spec.value.headers[i]);
+>>>>>>> refactor check schema to match cliff's shet
       });
     },10);
     return _.extend(obj, {
@@ -156,6 +189,7 @@ const CheckStep1 = React.createClass({
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
+    // this.changeAndUpdate();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
@@ -215,6 +249,7 @@ const CheckStep1 = React.createClass({
     let check = CheckStore.newCheck().toJS();
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
+<<<<<<< HEAD
       return {
         name:h.key,
         values:h.value ? h.value.split(', ') : undefined
@@ -225,6 +260,17 @@ const CheckStep1 = React.createClass({
     cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
     val = _.assign(val, cleaned);
     return check;
+=======
+      return _.omit(h, 'DELETE');
+    }).value();
+    check.target = this.state.group.cleanedData;
+    val = _.assign(
+      val, 
+      this.state.info.cleanedData
+    );
+    return check;
+    // return _.assign(data, this.state.info.cleanedData, {group:this.state.group.cleanedData});
+>>>>>>> refactor check schema to match cliff's shet
   },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){

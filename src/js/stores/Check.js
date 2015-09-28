@@ -212,12 +212,16 @@ var TestCheck = Record({
 
 var Check = Record({
   id:undefined,
+  name:null,
+  info:null,
+  id:null,
   target:Map({
     name:undefined,
     type:'sg',
     id:undefined,
   }),
   assertions:List(),
+  interval:null,
   notifications:List(),
   instances:List(),
   health:100,
@@ -234,6 +238,16 @@ var Check = Record({
       port:undefined,
       verb:'GET',
       headers:new List()
+  silenceDate:null,
+  silenceDuration:null,
+  check_spec:Map({
+    value:Map({
+      name:null,
+      path:null,
+      protocol:null,
+      port:null,
+      verb:null,
+      headers:List()
     })
   })
 })
@@ -266,7 +280,12 @@ const statics = {
   checkFromJS(data){
     data = _.merge(data, data.check_spec.value);
     data.name = data.check_spec.value.name;
-    data.check_spec.value.headers = data.check_spec.value.headers || [];
+    data.check_spec.value.headers = data.check_spec.value.headers.map(h => {
+      return {
+        key:h.name,
+        value:h.values.join(', ')
+      }
+    })
     return new Check(data);
   }
 }
