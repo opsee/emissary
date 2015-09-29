@@ -8,17 +8,12 @@ const statics = {
 }
 
 let _data = {
-  cloudFormationTemplate:null
 }
 
 let _statuses = {
-  docsGetCloudFormationTemplate:null,
 };
 
 const _public = {
-  getCloudFormationTemplate(){
-    return _data.docsGetCloudFormationTemplate;
-  },
 }
 
 let statusFunctions = {};
@@ -36,9 +31,6 @@ const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
   function(payload){
     switch(payload.actionType) {
-      case 'DOCS_GET_CLOUD_FORMATION_TEMPLATE_SUCCESS':
-        _data.docsGetCloudFormationTemplate = payload.data;
-      break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;

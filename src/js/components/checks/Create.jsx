@@ -14,12 +14,11 @@ function getState(){
   return {
     check:CheckStore.newCheck().toJS(),
     response:CheckStore.getResponse(),
-    formattedResponse:CheckStore.getFormattedResponse(CheckStore.getResponse()),
     createStatus:CheckStore.getCheckCreateStatus()
   }
 }
 
-export default React.createClass({
+const CheckCreate = React.createClass({
   mixins: [CheckStore.mixin],
   statics:{
     willTransitionTo:PageAuth
@@ -62,3 +61,5 @@ export default React.createClass({
     );
   }
 });
+
+export default CheckCreate;

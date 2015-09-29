@@ -5,14 +5,16 @@ import forms from 'newforms';
 import colors from 'seedling/colors';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
+import Immutable, {Record, List, Map} from 'immutable';
 
 import {Link} from 'react-router';
 import {BoundField, Button} from '../forms';
-import {Toolbar, StepCounter, Loader} from '../global';
+import {Toolbar, StepCounter, Loader, StatusHandler} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
+import CheckResponse from './CheckResponse.jsx';
 
 const groupOptions = []
 
@@ -38,12 +40,13 @@ const HeaderFormSet = forms.FormSet.extend({
 
 const GroupForm = forms.Form.extend({
   id: forms.ChoiceField({
+    label:'Target',
     choices:[]
   }),
   render() {
     return(
       <div>
-        <h2>Choose an AWS Group</h2>
+        <h2>Choose a Check Target</h2>
         <BoundField bf={this.boundField('id')}/>
       </div>
     )
@@ -85,13 +88,13 @@ const InfoForm = forms.Form.extend({
 const CheckStep1 = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
-    const status = GroupStore.getGetGroupsSecurityStatus();
-    if(status == 'success'){
+    const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
+    let stateObj = {};
+    if(getGroupsStatus == 'success'){
       this.state.group.fields.id.setChoices(this.getGroupChoices());
-      this.setState({
-        groups:GroupStore.getGroupsSecurity()
-      });
+      stateObj.groups = GroupStore.getGroupsSecurity();
     }
+    this.setState(_.assign(stateObj,getGroupsStatus));
   },
   getInitialState() {
     const self = this;
@@ -116,14 +119,19 @@ const CheckStep1 = React.createClass({
       group: new GroupForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-        label:'Target',
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
-      check:this.props.check
+      check:this.props.check,
+      groups:List()
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.headers.forms().forEach((form, i) => {
-        form.setData(self.props.check.check_spec.value.headers[i]);
+        const h = self.props.check.check_spec.value.headers[i];
+        const data = {
+          key:h.name,
+          value:h.values.join(', ')
+        }
+        form.setData(data);
       });
     },10);
     return _.extend(obj, {
@@ -148,7 +156,6 @@ const CheckStep1 = React.createClass({
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
-    // this.changeAndUpdate();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
@@ -208,13 +215,15 @@ const CheckStep1 = React.createClass({
     let check = CheckStore.newCheck().toJS();
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
-      return _.omit(h, 'DELETE');
+      return {
+        name:h.key,
+        values:h.value ? h.value.split(', ') : undefined
+      }
     }).value();
-    check.target = this.state.group.cleanedData;
-    val = _.assign(
-      val, 
-      this.state.info.cleanedData
-    );
+    check.target = _.merge({}, check.target, this.state.group.cleanedData);
+    let cleaned = this.state.info.cleanedData;
+    cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
+    val = _.assign(val, cleaned);
     return check;
   },
   renderSubmitButton(){
@@ -260,7 +269,7 @@ const CheckStep1 = React.createClass({
   },
   innerRender(){
     const nonFieldErrors = this.state.info.nonFieldErrors();
-    // if(this.state.groups){
+    if(this.state.groups.size){
       return (
         <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
           {this.renderHelperText()}
@@ -268,11 +277,16 @@ const CheckStep1 = React.createClass({
           {this.state.info.render()}
           {this.renderHeaderForm()}
           {this.renderSubmitButton()}
+          <CheckResponse check={this.getFinalData()}/>
         </form>
       )
-    // }else{
-      // return <Loader timeout={500}/>
-    // }
+    }else{
+      return(
+        <StatusHandler status={this.state.getGroupsStatus}>
+          <p>No Groups Available</p>
+        </StatusHandler>
+      );
+    }
   },
   renderAsPage(){
     return (

@@ -13,7 +13,7 @@ _actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
     .get(`${config.api}/groups/security`)
     .set('Authorization', UserStore.getAuth())
   },
-  res => res.body && res.body.groups, 
+  res => res.body && res.body.group, 
   res => res && res.response
 );
 
