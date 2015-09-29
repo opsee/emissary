@@ -68,9 +68,9 @@ export default React.createClass({
     console.log(this.getCleanData());
   },
   renderLink(){
-    return this.state.check.id ? 
+    return this.state.check.id ?
     (
-      <Link to="check" params={{id:this.state.check.id}} className="btn btn-deafult btn-fab" title="Return to Check">
+      <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Return to Check">
         <Close btn={true}/>
       </Link>
     )

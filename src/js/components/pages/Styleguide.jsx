@@ -101,7 +101,7 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="Opsee Styleguide">
-          <a className="btn btn-fab" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
+          <a className="btn btn-fab btn-primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
             <Add btn={true}/>
           </a>
         </Toolbar>
