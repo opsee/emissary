@@ -13,13 +13,44 @@ function formatCheckData(data){
   return _.omit(data, disallowed);
 }
 
+function saveNotifications(data, checkId){
+  return request
+  .post(`${config.eventsApi}/notifications`)
+  .set('Authorization', UserStore.getAuth())
+  .send({
+    'check-id':checkId,
+    notifications:data.notifications
+  })
+}
+
+function saveAssertions(data, checkId){
+  return request
+  .post(`${config.eventsApi}/notifications`)
+  .set('Authorization', UserStore.getAuth())
+  .send({
+    'check-id':checkId,
+    notifications:data.notifications
+  })
+}
+
 _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
   (data) => {
-    const d = formatCheckData(data);
-    return request
-    .post(`${config.api}/checks`)
-    .set('Authorization', UserStore.getAuth())
-    .send(d);
+    return new Promise((resolve, reject) => {
+      const d = formatCheckData(data);
+      request
+      .post(`${config.api}/checks`)
+      .set('Authorization', UserStore.getAuth())
+      .send(d).then(checkRes =>{
+        if(checkRes && checkRes.body){
+          saveNotifications(data, checkRes.body.check.id)
+          .then(saveAssertions().then(() => {
+            resolve(checkRes);
+          }))
+        }else{
+          reject(checkRes);
+        }
+      })
+    });
   },
   res => res.body,
   res => res && res.body || res
