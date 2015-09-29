@@ -27,15 +27,18 @@ const statics = {
    storage.remove('user');
    _data.user = new User();
    Store.emitChange();
+  },
+  getInitialUser(){
+    let initialUser = storage.get('user');
+    initialUser = initialUser ? new User(initialUser) : null;
+    return initialUser || new User();
   }
 }
 
-let initialUser = storage.get('user');
-initialUser = initialUser ? new User(initialUser) : null;
-
 let _data = {
-  user:initialUser || new User(),
-  userData:null
+  user:statics.getInitialUser(),
+  userData:null,
+  refreshInterval:undefined
 }
 
 let _statuses = {
@@ -44,7 +47,8 @@ let _statuses = {
   userEdit:null,
   userGetUser:null,
   userPutUserData:null,
-  userGetUserData:null
+  userGetUserData:null,
+  userRefreshToken:null
 };
 
 const _public = {
@@ -94,9 +98,16 @@ const Store = Flux.createStore(
       case 'USER_EDIT_SUCCESS':
         if(payload.actionType == 'USER_LOGIN_SUCCESS'){
           payload.data.user.loginDate = new Date();
+          clearInterval(_data.refreshInterval);
+          _data.refreshInterval = function(){
+
+          }
         }
         statics.setUser(payload.data);
         Store.emitChange();  
+      break;
+      case 'USER_REFRESH_TOKEN_SUCESS':
+        console.log(payload.data);
       break;
       case 'USER_LOG_OUT':
         statics.logout();

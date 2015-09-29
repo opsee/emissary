@@ -183,28 +183,29 @@ var TestCheck = Record({
 })
 
 var Check = Record({
-  id:null,
+  id:undefined,
   target:Map({
-    name:null,
+    name:undefined,
     type:'sg',
-    id:null,
+    id:undefined,
   }),
   assertions:List(),
   notifications:List(),
   instances:List(),
   health:100,
   state:'running',
-  silenceDate:null,
-  silenceDuration:null,
+  silenceDate:undefined,
+  silenceDuration:undefined,
   interval:30,
   check_spec:Map({
+    type_url:'HttpCheck',
     value:Map({
-      name:null,
-      path:null,
+      name:undefined,
+      path:undefined,
       protocol:'http',
-      port:null,
+      port:undefined,
       verb:'GET',
-      headers:List()
+      headers:new List()
     })
   })
 })
@@ -235,14 +236,9 @@ const statics = {
     Store.emitChange();
   },
   checkFromJS(data){
-    data = _.extend(data, data.check_spec.value);
+    data = _.merge(data, data.check_spec.value);
     data.name = data.check_spec.value.name;
-    data.check_spec.value.headers = data.check_spec.value.headers.map(h => {
-      return {
-        key:h.name,
-        value:h.values.join(', ')
-      }
-    })
+    data.check_spec.value.headers = data.check_spec.value.headers || [];
     return new Check(data);
   }
 }
@@ -250,14 +246,16 @@ const statics = {
 let _data = {
   checks:new List(),
   check:new Check(),
-  response:response
+  response:undefined
 }
 
 let _statuses = {
   getCheck:null,
   getChecks:null,
   checkCreate:null,
-  deleteCheck:null
+  deleteCheck:null,
+  checkEdit:null,
+  testCheck:null
 }
 
 const _public = {
@@ -276,22 +274,28 @@ const _public = {
     return new Check();
   },
   getResponse(){
-    let response = _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
+    let response;
+    if(_data.response){
+      response = _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
+    }
     return response;
   },
   getFormattedResponse(data){
-    let response = _.cloneDeep(data);
-    response.headers = response.headers.map(h => {
-      h.values = h.values.join(', ');
-      return h;
-    });
-    let headerObj = {};
-    response.headers.forEach(h => {
-      headerObj[h.name] = h.values;
-    });
-    response.headers = headerObj;
-    delete response.metrics;
-    return response;
+    if(data){
+      let response = _.cloneDeep(data);
+      if(response.headers){
+        response.headers = response.headers.map(h => {
+          h.values = h.values.join(', ');
+          return h;
+        });
+        let headerObj = {};
+        response.headers.forEach(h => {
+          headerObj[h.name] = h.values;
+        });
+        response.headers = headerObj;
+      }
+      return _.omit(response, 'metrics');
+    }
   }
 }
 
@@ -321,6 +325,10 @@ const Store = Flux.createStore(
       break;
       case 'GET_CHECK_PENDING':
         statics.getCheckPending(payload.data);
+      break;
+      case 'TEST_CHECK_SUCCESS':
+        _data.response = payload.data;
+        Store.emitChange();
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

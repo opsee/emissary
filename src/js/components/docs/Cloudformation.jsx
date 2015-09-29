@@ -3,7 +3,6 @@ import {Button} from '../../modules/bootstrap';
 import {Toolbar, HTMLFile} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import CloudFormationTemplate from './CloudFormationTemplate.jsx';
 
 export default React.createClass({
   render() {
