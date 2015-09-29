@@ -85,16 +85,8 @@
       fill: $gray-200;
     }
   }
-  &:focus, &.has-content, &.error {
+  &.has-content, &.error {
     @include box-shadow(none);
-  }
-  &:focus {
-    & ~ label {
-      color: $brand-info;
-    }
-    & ~ .icon {
-      fill: $brand-info;
-    }
   }
 }
 
