@@ -10,6 +10,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
+import {Lock} from '../icons';
 
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
@@ -22,7 +23,9 @@ const PasswordForm = forms.Form.extend({
   }),
   render(){
     return (
-      <BoundField bf={this.boundField('password')}/>
+      <BoundField bf={this.boundField('password')}>
+        <Lock className="icon"/>
+      </BoundField>
     )
   }
 });

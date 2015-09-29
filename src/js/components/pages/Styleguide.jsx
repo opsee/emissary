@@ -101,7 +101,7 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="Opsee Styleguide">
-          <a className="btn btn-success btn-fab" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
+          <a className="btn btn-fab btn-primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
             <Add btn={true}/>
           </a>
         </Toolbar>
@@ -139,7 +139,7 @@ export default React.createClass({
             <h2 className="h3">Unordered List</h2>
             <ul>
             {[1,2,3,4].map(i => {
-              return( 
+              return(
                 <li key={`unordered-item-${i}`}>List Item {i}</li>
               );
             })}
@@ -150,7 +150,7 @@ export default React.createClass({
             <h2 className="h3">Ordered List</h2>
             <ol>
               {[1,2,3,4].map(i => {
-              return( 
+              return(
                 <li key={`ordered-item-${i}`}>List Item {i}</li>
                 );
               })}

@@ -3,21 +3,15 @@ import Label from './Label.jsx';
 
 export default React.createClass({
   render(){
+    var classString = 'display-flex flex-column';
+    if (this.props.children) {
+      classString += ' has-icon';
+    }
     return(
-      <div>
-        <Label bf={this.props.bf}>
-          {this.props.children}
-        </Label>
-        <div className="display-flex flex-vertical-align">
-          {
-          // <label htmlFor={this.props.bf.idForLabel()}>
-          //   {this.props.children}
-          // </label>
-          }
-          <div className="flex-1">
-            {this.props.bf.render()}
-          </div>
-        </div>
+      <div className={classString}>
+        <div className="input-container flex-order-2">{this.props.bf.render()}</div>
+        <Label className="flex-order-1" bf={this.props.bf} />
+        {this.props.children}
       </div>
     )
   }
