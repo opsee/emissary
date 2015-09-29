@@ -36,7 +36,7 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title="Your Profile">
-          <Link className="btn btn-primary btn-fab" to="profileEdit" title="Edit Your Profile">
+          <Link className="btn btn-fab btn-primary" to="profileEdit" title="Edit Your Profile">
             <Edit btn={true}/>
           </Link>
         </Toolbar>
