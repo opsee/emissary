@@ -1,6 +1,5 @@
 .form-group {
   border: none;
-  // background-color: #000;
   margin-bottom: 2em;
   position: relative;
   &.search-group {
@@ -22,11 +21,6 @@
     right: 0.5em;
     position: absolute;
   }
-  // .has-icon {
-  //   input, label {
-  //     text-indent: 2em;
-  //   }
-  // }
   .dropdown-toggle, [dropdown-toggle]{
     @include box-shadow(none);
     background-color: $gray_900;
@@ -85,9 +79,6 @@
       fill: $gray-200;
     }
   }
-  &.has-content, &.error {
-    @include box-shadow(none);
-  }
 }
 
 .form-control, input[type='text'], input[type='number'], input[type='email'], input[type='password'] {
@@ -103,6 +94,9 @@
   &:focus {
     background-color: black;
     outline: none;
+  }
+  &.has-content, &.error {
+    @include box-shadow(none);
   }
 }
 
