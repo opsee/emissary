@@ -7,7 +7,7 @@
     margin-top: 4em;
   }
   .label {
-    @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
+    @include transition(color $swift-ease-out-duration $swift-ease-out-timing-function);
     color: $text-color-secondary;
     display: block;
     font-size: 0.875em;
@@ -18,7 +18,7 @@
     width: 100%;
   }
   .icon {
-    bottom: 0.5em;
+    bottom: 0.625em;
     right: 0.5em;
     position: absolute;
   }
@@ -109,6 +109,7 @@
   padding: 0.5em;
   width:100%;
   &:focus {
+    background-color: black;
     outline: none;
   }
 }
