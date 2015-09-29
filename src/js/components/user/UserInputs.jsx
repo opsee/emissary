@@ -2,28 +2,27 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
-import {Add, Key} from '../icons';
+import {Mail, Person, Lock} from '../icons';
 
 let include = [];
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
     widgetAttrs:{
-      placeholder:'address@domain.com',
-      icon: '<Mail className="icon"/>'
+      placeholder:'address@domain.com'
     }
   }),
   name: forms.CharField({
     widgetAttrs:{
       placeholder:'Your Name',
-      icon: '<Person className="icon"/>'
+      icon: 'Person'
     }
   }),
   password: forms.CharField({
     widget: forms.PasswordInput,
     widgetAttrs:{
       placeholder:'Your Password',
-      icon: '<Lock className="icon"/>'
+      icon: 'Lock'
     }
   }),
   render() {
@@ -31,7 +30,7 @@ const InfoForm = forms.Form.extend({
       <div>
       {
         include.map(field => {
-          return <BoundField bf={this.boundField(field)} key={field}>{this.icon}</BoundField>
+          return <BoundField bf={this.boundField(field)} key={field}></BoundField>
         })
       }
       </div>
@@ -70,10 +69,33 @@ export default React.createClass({
       }
     }
   },
+  renderEmail(){
+    return (
+       <BoundField bf={this.state.info.boundField('email')}>
+        <Mail className="icon"/>
+       </BoundField>
+    )
+  },
+  renderPassword(){
+    return (
+       <BoundField bf={this.state.info.boundField('password')}>
+        <Lock className="icon"/>
+       </BoundField>
+    )
+  },
+  renderName(){
+    return (
+       <BoundField bf={this.state.info.boundField('name')}>
+        <Person className="icon"/>
+       </BoundField>
+    )
+  },
   render() {
     return (
       <div>
-        {this.state.info.render()}
+        {this.props.include.map(i => {
+          return this[`render${_.capitalize(i)}`]()
+        })}
       </div>
     );
   }

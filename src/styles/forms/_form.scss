@@ -1,7 +1,7 @@
 .form-group {
   border: none;
-  background-color: $gray-900;
-  // margin-bottom: 32px;
+  // background-color: #000;
+  margin-bottom: 2em;
   position: relative;
   &.search-group {
     margin-top: 4em;
@@ -14,32 +14,34 @@
     font-weight: $body-font-weight;
     left: 0;
     margin-bottom: 0;
-    padding: 0.5em;
+    padding: 0.5em 0;
     width: 100%;
   }
   .icon {
-    bottom: 0.75em;
-    left: 0.5em;
+    bottom: 0.5em;
+    right: 0.5em;
     position: absolute;
   }
-  .has-icon input {
-    text-indent: 2em;
-  }
+  // .has-icon {
+  //   input, label {
+  //     text-indent: 2em;
+  //   }
+  // }
   .dropdown-toggle, [dropdown-toggle]{
     @include box-shadow(none);
+    background-color: $gray_900;
     border-radius:0;
-    background-color: transparent;
     font-weight: $body-font-weight;
     text-align: left;
     text-transform: none;
     position: relative;
     overflow-x:hidden;
     &:hover {
-      background-color: transparent;
+      background-color: black;
     }
     &:active, &:focus {
       @include box-shadow(none);
-      background-color: black; //blue-gray-800
+      background-color: black;
       outline: none;
     }
     .icon {
@@ -97,18 +99,18 @@
 }
 
 .form-control, input[type='text'], input[type='number'], input[type='email'], input[type='password'] {
-  &:focus {
-    outline: none;
-  }
   box-shadow:none;
   @include placeholder($text-color-secondary);
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
-  background-color: transparent;
+  background-color: $gray_900;
   border: none;
   // border-bottom: 1px solid $gray_600;
   color: $text-color;
   padding: 0.5em;
   width:100%;
+  &:focus {
+    outline: none;
+  }
 }
 
 .form-message{
