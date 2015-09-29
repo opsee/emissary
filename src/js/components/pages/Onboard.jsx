@@ -9,7 +9,7 @@ export default React.createClass({
     const status = Store.getStatus();
     this.setState({status})
     if(status.success){
-      router.transitionTo('home');
+      router.transitionTo('env');
     }else{
     }
   },

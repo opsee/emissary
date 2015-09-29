@@ -7,9 +7,9 @@ import DefaultRoute from 'react-router/lib/components/DefaultRoute';
 import Redirect from 'react-router/lib/components/Redirect';
 
 //pages
-import Home from '../home/Home.jsx';
-import HomeInstances from '../home/HomeInstances.jsx';
-import HomeGroups from '../home/HomeGroups.jsx';
+import Env from '../env/Env.jsx';
+import EnvInstances from '../env/EnvInstances.jsx';
+import EnvGroups from '../env/EnvGroups.jsx';
 import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
@@ -59,15 +59,16 @@ const RouteHandler = Router.RouteHandler;
 const routes = (
   <Route handler={Opsee}>
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
-    <Route path="/" name="home" handler={Home}>
-      <Redirect from="/" to="/home/instances" />
-      <Route path="/home/instances" name="homeInstances" handler={HomeInstances}/>
-      <Route path="/home/groups" name="homeGroups" handler={HomeGroups}/>
+    <Route path="/env" name="env" handler={Env}>
+      <Redirect from="/env" to="/env/instances" />
+      <Route path="/env/instances" name="envInstances" handler={EnvInstances}/>
+      <Route path="/env/groups" name="envGroups" handler={EnvGroups}/>
     </Route>
     <Route path="/instance/ec2/:id" name="instanceEC2" handler={InstanceEC2}/>
     <Route path="/instance/rds/:id" name="instanceRDS" handler={InstanceRDS}/>
 
-    <Route path="/checks" name="checks" handler={CheckList}/>
+    <Route path="/" name="checks" handler={CheckList}/>
+    <Redirect from="/checks" to="/" />
     <Route path="/check-create" name="checkCreate" handler={CheckCreate}>
       <Redirect from="/check-create" to="/check-create-step-1" />
       <Route path="/check-create-step-1" name="checkCreateStep1" handler={CheckStep1}/>

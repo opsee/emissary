@@ -40,15 +40,15 @@ export default React.createClass({
     return (
       <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
         <li>
-         <Link to="home" className="md-navbar-link">
-           <Cloud nav={true}/>&nbsp;
-           <span className="md-navbar-title">Environment</span>
-         </Link>
-       </li>
-        <li>
          <Link to="checks" className="md-navbar-link">
            <Checkmark nav={true}/>&nbsp;
            <span className="md-navbar-title">Checks</span>
+         </Link>
+       </li>
+        <li>
+         <Link to="env" className="md-navbar-link">
+           <Cloud nav={true}/>&nbsp;
+           <span className="md-navbar-title">Environment</span>
          </Link>
        </li>
         <li>
@@ -66,7 +66,7 @@ export default React.createClass({
       return (
         <ul className="md-navbar-list list-unstyled display-flex">
           <li>
-           <Link to="home" className="md-navbar-link" style={{padding:'.4em'}}>
+           <Link to="env" className="md-navbar-link" style={{padding:'.4em'}}>
              <Opsee viewBox="0 0 24 12" style={{width:'70px',height:'46px'}} nav={true}/>
            </Link>
          </li>

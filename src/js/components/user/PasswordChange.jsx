@@ -20,7 +20,7 @@ export default React.createClass({
     const status = UserStore.getUserEditStatus();
     this.setState({status})
     if(status == 'success'){
-      router.transitionTo('home');
+      router.transitionTo('env');
     }else if(status && status != 'pending'){
       console.error(status);
     }
