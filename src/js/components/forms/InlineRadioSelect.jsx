@@ -21,12 +21,18 @@ export default React.createClass({
     });
   },
   componentDidMount(){
-    if(this.props.bf.field.initial && Array.isArray(this.props.bf.field.initial)){
-      this.onChange(this.props.bf.field.initial[0], true);
+   const val = this.props.bf.value();
+    if(val){
+      const obj = {};
+      obj[this.props.bf.name] = val;
+      this.props.bf.form.updateData(obj);
     }
+    // if(this.props.bf.field.initial && Array.isArray(this.props.bf.field.initial)){
+    //   this.onChange(this.props.bf.field.initial[0], true);
+    // }
   },
   widgetIsActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
+    return this.props.bf.value() == w.choiceValue;
   },
   render(){
     return(

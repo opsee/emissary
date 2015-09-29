@@ -6,7 +6,7 @@ import config from '../../modules/config';
 import storage from '../../modules/storage';
 import {Header, MessageModal} from '../global';
 import DocumentTitle from 'react-document-title';
-import {GlobalActions} from '../../actions';
+import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col, Row} from '../../modules/bootstrap';
@@ -22,6 +22,8 @@ function initialize(){
 }
 
 initialize();
+
+let refreshInterval;
 
 export default React.createClass({
   mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin],
@@ -45,6 +47,13 @@ export default React.createClass({
     if(this.props.query.err || storage.get('err')){
       config.error = true;
     }
+  },
+  componentDidMount(){
+    //refresh user token every 20 minutes
+    refreshInterval = setInterval(UserActions.userRefreshToken, (
+      // 60*1000*20
+      5000
+      ));
   },
   renderInner(){
     if(this.state.socketError && !config.debug){

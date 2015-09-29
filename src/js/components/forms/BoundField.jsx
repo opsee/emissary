@@ -53,9 +53,6 @@ export default React.createClass({
           return <MultiToggle bf={this.props.bf}/>
         }
       break;
-      case 'ChoiceField':
-        return <RadioSelect bf={this.props.bf}/>
-      break;
       default:
       return this.fallback();
       break;

@@ -37,6 +37,14 @@ export default React.createClass({
       })
     }
   },
+  componentDidMount(){
+    const val = this.props.bf.value();
+    if(val){
+      const obj = {};
+      obj[this.state.bf.name] = val;
+      this.state.bf.form.updateData(obj);
+    }
+  },
   componentWillReceiveProps(nextProps){
     this.setState(this.getState());
   },

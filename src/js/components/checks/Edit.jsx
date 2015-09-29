@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import {Toolbar} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
@@ -9,16 +9,17 @@ import CheckStep2 from '../checks/CheckStep2.jsx';
 import CheckStep3 from '../checks/CheckStep3.jsx';
 import {Checkmark, Close} from '../icons';
 import colors from 'seedling/colors';
-import {CheckActions} from '../../actions';
+import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
+import router from '../../modules/router';
 
 function getState(){
-  const rawCheck = CheckStore.getCheck().toJS();
-  let check = rawCheck;
   return {
-    check:check,
+    status:CheckStore.getGetCheckStatus(),
+    check:CheckStore.getCheck().toJS(),
     response:CheckStore.getResponse(),
+    editStatus:CheckStore.getCheckEditStatus(),
     step1:{
       disabled:false
     },
@@ -37,30 +38,38 @@ let stepData = {
   step3:{}
 }
 
-export default React.createClass({
+const CheckEdit = React.createClass({
   mixins: [CheckStore.mixin],
+  storeDidChange(){
+    const state = getState();
+    if(state.editStatus == 'success'){
+      router.transitionTo('checks');
+    }else if(state.editStatus && state.editStatus != 'pending'){
+      GlobalActions.globalModalMessage({
+        html:status.body && status.body.message || 'Something went wrong.',
+        style:'danger'
+      });
+    }
+    this.setState(state);
+  },
   statics:{
     willTransitionTo:PageAuth
   },
   getInitialState() {
     return getState()
   },
-  storeDidChange() {
-    this.setState(getState());
-  },
   getDefaultProps() {
     return getState();
   },
-  getCleanData(){
-    return _.merge(this.state.step1.data, this.state.step2.data, this.state.step3.data);
+  getFinalData(){
+    let merged = _.merge({}, stepData.step1, stepData.step2, stepData.step3);
+    return _.defaultsDeep({}, merged, this.state.check);
   },
   updateData(data, disabled, num){
     // this.setState({check:_.extend(this.state.check,data)});
     var obj = {};
-    obj[`step${num}`] = {
-      disabled,
-      data
-    };
+    obj[`step${num}`] = {disabled:disabled};
+    stepData[`step${num}`] = data;
     this.setState(obj);
   },
   disabled(){
@@ -73,7 +82,7 @@ export default React.createClass({
     this.getData();
   },
   submit(){
-    console.log(this.getCleanData());
+    CheckActions.checkEdit(this.getFinalData());
   },
   getCheckTitle(){
     return this.state.check.check_spec.value.name || this.state.check.id;
@@ -107,7 +116,7 @@ export default React.createClass({
                   <CheckStep3 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </div>
                 {
-                  <pre>{this.getCleanData() && JSON.stringify(this.getCleanData(), null, ' ')}</pre>
+                  <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>
                 }
                 <div><br/></div>
                 <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
@@ -121,7 +130,13 @@ export default React.createClass({
         </div>
       );
     }else{
-      return <div/>
+      return (
+        <StatusHandler status={this.state.status}>
+          <h2>Check not found.</h2>
+        </StatusHandler>
+      )
     }
   }
 });
+
+export default CheckEdit;
