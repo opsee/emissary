@@ -98,16 +98,12 @@ const Store = Flux.createStore(
       case 'USER_EDIT_SUCCESS':
         if(payload.actionType == 'USER_LOGIN_SUCCESS'){
           payload.data.user.loginDate = new Date();
-          clearInterval(_data.refreshInterval);
-          _data.refreshInterval = function(){
-
-          }
         }
         statics.setUser(payload.data);
         Store.emitChange();  
       break;
-      case 'USER_REFRESH_TOKEN_SUCESS':
-        console.log(payload.data);
+      case 'USER_REFRESH_TOKEN_SUCCESS':
+        payload.data.user.loginDate = new Date();
       break;
       case 'USER_LOG_OUT':
         statics.logout();
