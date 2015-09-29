@@ -14,7 +14,6 @@ function getState(noCheck){
   const obj = {
     check:CheckStore.newCheck().toJS(),
     response:CheckStore.getResponse(),
-    formattedResponse:CheckStore.getFormattedResponse(CheckStore.getResponse()),
     createStatus:CheckStore.getCheckCreateStatus()
   }
   return _.omit(obj, noCheck ? 'check' : null)

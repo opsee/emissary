@@ -240,13 +240,14 @@ var Check = Record({
   silenceDuration:null,
   interval:30,
   check_spec:Map({
+    type_url:'HttpCheck',
     value:Map({
-      name:null,
-      path:null,
+      name:undefined,
+      path:undefined,
       protocol:'http',
-      port:null,
+      port:undefined,
       verb:'GET',
-      headers:List()
+      headers:new List()
     })
   })
 })
@@ -279,12 +280,7 @@ const statics = {
   checkFromJS(data){
     data = _.merge(data, data.check_spec.value);
     data.name = data.check_spec.value.name;
-    data.check_spec.value.headers = data.check_spec.value.headers.map(h => {
-      return {
-        key:h.name,
-        value:h.values.join(', ')
-      }
-    })
+    data.check_spec.value.headers = data.check_spec.value.headers || [];
     return new Check(data);
   }
 }

@@ -68,10 +68,8 @@ const CheckEdit = React.createClass({
   updateData(data, disabled, num){
     // this.setState({check:_.extend(this.state.check,data)});
     var obj = {};
-    obj[`step${num}`] = {
-      disabled,
-      data
-    };
+    obj[`step${num}`] = {disabled:disabled};
+    stepData[`step${num}`] = data;
     this.setState(obj);
   },
   disabled(){
@@ -85,9 +83,6 @@ const CheckEdit = React.createClass({
   },
   submit(){
     CheckActions.checkEdit(this.getFinalData());
-  },
-  getCheckTitle(){
-    return this.state.check.check_spec.value.name || this.state.check.id;
   },
   getCheckTitle(){
     return this.state.check.check_spec.value.name || this.state.check.id;

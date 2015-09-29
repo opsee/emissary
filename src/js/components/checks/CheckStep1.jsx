@@ -15,9 +15,13 @@ import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import CheckResponse from './CheckResponse.jsx';
 =======
 >>>>>>> refactor check schema to match cliff's shet
+=======
+import CheckResponse from './CheckResponse.jsx';
+>>>>>>> a lot
 
 const groupOptions = []
 
@@ -44,19 +48,27 @@ const HeaderFormSet = forms.FormSet.extend({
 const GroupForm = forms.Form.extend({
   id: forms.ChoiceField({
 <<<<<<< HEAD
+<<<<<<< HEAD
     label:'Target',
 =======
 >>>>>>> refactor check schema to match cliff's shet
+=======
+    label:'Target',
+>>>>>>> a lot
     choices:[]
   }),
   render() {
     return(
       <div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <h2>Choose a Check Target</h2>
 =======
         <h2>Choose an AWS Group</h2>
 >>>>>>> refactor check schema to match cliff's shet
+=======
+        <h2>Choose a Check Target</h2>
+>>>>>>> a lot
         <BoundField bf={this.boundField('id')}/>
       </div>
     )
@@ -99,6 +111,7 @@ const CheckStep1 = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
 <<<<<<< HEAD
+<<<<<<< HEAD
     const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
     let stateObj = {};
     if(getGroupsStatus == 'success'){
@@ -114,6 +127,15 @@ const CheckStep1 = React.createClass({
 >>>>>>> refactor check schema to match cliff's shet
     }
     this.setState(_.assign(stateObj,{getGroupsStatus}));
+=======
+    const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
+    let stateObj = {};
+    if(getGroupsStatus == 'success'){
+      this.state.group.fields.id.setChoices(this.getGroupChoices());
+      stateObj.groups = GroupStore.getGroupsSecurity();
+    }
+    this.setState(_.assign(stateObj,getGroupsStatus));
+>>>>>>> a lot
   },
   getInitialState() {
     const self = this;
@@ -150,6 +172,7 @@ const CheckStep1 = React.createClass({
         labelSuffix:'',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
       groups:List()
@@ -161,20 +184,31 @@ const CheckStep1 = React.createClass({
 >>>>>>> and mo
       check:this.props.check
 >>>>>>> refactor check schema to match cliff's shet
+=======
+      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
+      check:this.props.check,
+      groups:List()
+>>>>>>> a lot
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.headers.forms().forEach((form, i) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a lot
         const h = self.props.check.check_spec.value.headers[i];
         const data = {
           key:h.name,
           value:h.values.join(', ')
         }
         form.setData(data);
+<<<<<<< HEAD
 =======
         form.setData(self.props.check.check_spec.value.headers[i]);
 >>>>>>> refactor check schema to match cliff's shet
+=======
+>>>>>>> a lot
       });
     },10);
     return _.extend(obj, {
@@ -199,7 +233,6 @@ const CheckStep1 = React.createClass({
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
-    // this.changeAndUpdate();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
@@ -260,10 +293,14 @@ const CheckStep1 = React.createClass({
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a lot
       return {
         name:h.key,
         values:h.value ? h.value.split(', ') : undefined
       }
+<<<<<<< HEAD
     }).value();
     check.target = _.merge({}, check.target, this.state.group.cleanedData);
     let cleaned = this.state.info.cleanedData;
@@ -272,12 +309,13 @@ const CheckStep1 = React.createClass({
     return check;
 =======
       return _.omit(h, 'DELETE');
+=======
+>>>>>>> a lot
     }).value();
-    check.target = this.state.group.cleanedData;
-    val = _.assign(
-      val, 
-      this.state.info.cleanedData
-    );
+    check.target = _.merge({}, check.target, this.state.group.cleanedData);
+    let cleaned = this.state.info.cleanedData;
+    cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
+    val = _.assign(val, cleaned);
     return check;
 <<<<<<< HEAD
     // return _.assign(data, this.state.info.cleanedData, {group:this.state.group.cleanedData});
@@ -336,14 +374,21 @@ const CheckStep1 = React.createClass({
           {this.state.info.render()}
           {this.renderHeaderForm()}
           {this.renderSubmitButton()}
+<<<<<<< HEAD
           <h2>Your Response</h2>
+=======
+>>>>>>> a lot
           <CheckResponse check={this.getFinalData()}/>
         </form>
       )
     }else{
       return(
         <StatusHandler status={this.state.getGroupsStatus}>
+<<<<<<< HEAD
           <p>No Groups available to create a Check against.</p>
+=======
+          <p>No Groups Available</p>
+>>>>>>> a lot
         </StatusHandler>
       );
     }
