@@ -8,8 +8,26 @@ Dark style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Or
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #444;
+  background: $gray-900;
   -webkit-text-size-adjust: none;
+  font-size: 14px;
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-corner {
+    background: black;
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: black;
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    border-radius:3px;
+    background: $gray-600;
+    cursor: pointer;
+  }
 }
 
 .hljs-keyword,
@@ -22,12 +40,21 @@ Dark style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Or
   color: white;
 }
 
+.hljs-literal{
+  color:$brand-warning;
+}
+.hljs-string{
+  color:$brand-primary;
+}
+.hljs-number{
+  color:$brand-info;
+}
+
 .hljs,
 .hljs-subst {
   color: #ddd;
 }
 
-.hljs-string,
 .hljs-title,
 .hljs-type,
 .ini .hljs-title,
@@ -89,7 +116,7 @@ Dark style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Or
 .tex .hljs-special,
 .hljs-request,
 .hljs-status {
-  font-weight: bold;
+  // font-weight: bold;
 }
 
 .coffeescript .javascript,
@@ -100,30 +127,4 @@ Dark style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Or
 .xml .css,
 .xml .hljs-cdata {
   opacity: 0.5;
-}
-
-
-.hljs {
-  background-color: $body-bg;
-  font-size: 14px;
-  padding: 8px;
-  overflow: auto;
-
-  &::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-  }
-  &::-webkit-scrollbar-corner {
-    background: black;
-  }
-  /* Track */
-  &::-webkit-scrollbar-track {
-    background: black;
-  }
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    border-radius:3px;
-    background: $gray-600;
-    cursor: pointer;
-  }
 }

@@ -11,10 +11,9 @@ pre, code {
   font-family: $font-family-monospace;
 }
 pre {
-  background-color: $gray-900;
-  padding: 0.25em;
   white-space: pre;
   width: 100%;
+  margin:0;
 }
 .text-serif {
   font-family: $font-family-serif;
