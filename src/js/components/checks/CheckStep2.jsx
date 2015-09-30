@@ -4,17 +4,19 @@ import {Link} from 'react-router';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
-import {Toolbar} from '../global';
+import {Toolbar, StepCounter} from '../global';
+
+import {CheckStore} from '../../stores';
+
 import slate from 'slate';
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
-import AssertionCounter from '../forms/AssertionCounter.jsx';
 import {Close, Add} from '../icons';
+import AssertionCounter from '../forms/AssertionCounter.jsx';
+import CheckResponse from './CheckResponse.jsx';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
-import {StepCounter} from '../global';
-import {CheckStore} from '../../stores';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -247,6 +249,7 @@ const CheckStep2 = React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
+              <CheckResponse check={this.props.check}/>
               {this.innerRender()}
             </Col>
           </Row>

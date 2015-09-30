@@ -109,7 +109,7 @@ _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
     .send({check:d})
   },
   res => res.body,
-  res => res && res.body
+  res => _.get(res.body) || res
 );
 
 export default _.assign({}, ..._.values(_actions));
