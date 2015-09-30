@@ -18,10 +18,13 @@ import CheckResponse from './CheckResponse.jsx';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import {StepCounter} from '../global';
 import {CheckStore} from '../../stores';
 >>>>>>> mo
+=======
+>>>>>>> yo gabba gabba
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);

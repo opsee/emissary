@@ -134,8 +134,12 @@ const CheckStep1 = React.createClass({
       this.state.group.fields.id.setChoices(this.getGroupChoices());
       stateObj.groups = GroupStore.getGroupsSecurity();
     }
+<<<<<<< HEAD
     this.setState(_.assign(stateObj,getGroupsStatus));
 >>>>>>> a lot
+=======
+    this.setState(_.assign(stateObj,{getGroupsStatus}));
+>>>>>>> yo gabba gabba
   },
   getInitialState() {
     const self = this;
@@ -385,10 +389,14 @@ const CheckStep1 = React.createClass({
       return(
         <StatusHandler status={this.state.getGroupsStatus}>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <p>No Groups available to create a Check against.</p>
 =======
           <p>No Groups Available</p>
 >>>>>>> a lot
+=======
+          <p>No Groups available to create a Check against.</p>
+>>>>>>> yo gabba gabba
         </StatusHandler>
       );
     }
