@@ -274,7 +274,7 @@ const statics = {
 let _data = {
   checks:new List(),
   check:new Check(),
-  response:response
+  response:undefined
 }
 
 let _statuses = {

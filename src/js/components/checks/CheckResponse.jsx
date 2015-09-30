@@ -1,13 +1,14 @@
 import React, {PropTypes} from 'react';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
-import {Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col, Button} from '../../modules/bootstrap';
 import _ from 'lodash';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 import {CheckStore} from '../../stores';
 import {CheckActions} from '../../actions';
 import {ChevronUp, ChevronDown} from '../icons';
+import {StatusHandler} from '../global';
 
 function getState(){
   return {
@@ -22,6 +23,11 @@ const CheckResponse = React.createClass({
   mixins:[CheckStore.mixin],
   storeDidChange(){
     let state = getState();
+    if(state.status && typeof state.status != 'string'){
+      state.error = true;
+    }else if(state.status){
+      state.error = false;
+    }
     this.setState(state);
   },
   propTypes:{
@@ -36,22 +42,29 @@ const CheckResponse = React.createClass({
     return arr;
   },
   componentWillReceiveProps(nextProps){
-    const complete = this.checkIsComplete(nextProps);
+    const complete = this.checkIsComplete(nextProps.check);
     if(complete){
       const old = this.arrayFromData(this.props.check);
       const data = this.arrayFromData(nextProps.check);
       if(!_.isEqual(old,data)){
-        // CheckActions.testCheck(nextProps.check);
+        CheckActions.testCheck(nextProps.check);
       }
+    }
+    this.setState({complete});
+  },
+  componentDidMount(){
+    const complete = this.checkIsComplete(this.props.check);
+    if(complete){
+      CheckActions.testCheck(this.props.check);
     }
     this.setState({complete});
   },
   getFormattedResponse(){
     return CheckStore.getFormattedResponse(this.state.response);
   },
-  checkIsComplete(props){
-    const condition1 = props.check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => props.check.check_spec.value[s]).every().value();
+  checkIsComplete(check){
+    const condition1 = check.target.id;
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
     return condition1 && condition2;
   },
   toggle(){
@@ -86,9 +99,24 @@ const CheckResponse = React.createClass({
       zIndex:2
     }
   },
+  renderWaitingResponse(){
+    if(this.state.status && this.state.status == 'pending'){
+      return (
+        <div>Sending request...</div>  
+      )
+    }else if(this.state.error){
+      return (
+        <Alert bsStyle="danger">There was an error sending your request.</Alert>
+      )
+    }else{
+      return(
+        <div>Your response will appear here</div>  
+      )
+    }
+  },
   render() {
-    // if(this.state.response && this.state.complete){
-    if(true){
+    if(this.state.response && this.state.complete){
+    // if(true){
       return(
         <div style={this.getStyle()} className={`check-response ${this.state.expanded ? 'expanded' : ''}`}>
           <Highlight>
@@ -99,7 +127,9 @@ const CheckResponse = React.createClass({
       )
     }else{
       return (
-        <div>waiting</div>
+        <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
+          {this.renderWaitingResponse()}
+        </div>
       )
     }
   }

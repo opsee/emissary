@@ -10,12 +10,13 @@ import {RouteHandler} from 'react-router';
 import router from '../../modules/router';
 import {PageAuth} from '../../modules/statics';
 
-function getState(){
-  return {
+function getState(noCheck){
+  const obj = {
     check:CheckStore.newCheck().toJS(),
     response:CheckStore.getResponse(),
     createStatus:CheckStore.getCheckCreateStatus()
   }
+  return _.omit(obj, noCheck ? 'check' : null)
 }
 
 const CheckCreate = React.createClass({
@@ -24,7 +25,7 @@ const CheckCreate = React.createClass({
     willTransitionTo:PageAuth
   },
   storeDidChange() {
-    const state = getState();
+    const state = getState(true);
     if(state.createStatus == 'success'){
       router.transitionTo('checks');
     }else if(state.createStatus && state.createStatus != 'pending'){
@@ -33,7 +34,7 @@ const CheckCreate = React.createClass({
         style:'danger'
       });
     }
-    this.setState(getState());
+    this.setState(state);
   },
   getInitialState:getState,
   silence(id){
@@ -53,9 +54,6 @@ const CheckCreate = React.createClass({
   render() {
     return (
       <div>
-      {
-        //<pre>{JSON.stringify(this.state.check, null, ' ')}</pre>
-      }
         <RouteHandler {...this.state}  onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus}/>
       </div>
     );
