@@ -35,8 +35,8 @@ $button-fab-padding: 1.60rem !default;
 .btn {
   border: none;
   border-radius: $border-radius-large;
-  line-height: 1.2em;
-  padding:$grid-gutter-width/4 $grid-gutter-width/2;
+  // line-height: 1.2em;
+  // padding:$grid-gutter-width/4 $grid-gutter-width/2;
   text-transform: uppercase;
   @extend .md-shadow-bottom-z-1;
   @include transition(box-shadow $swift-ease-out-duration $swift-ease-out-timing-function,
@@ -64,6 +64,10 @@ $button-fab-padding: 1.60rem !default;
     height: 32px;
     width: 32px;
   }
+}
+
+.btn-sm{
+  line-height:1em;
 }
 
 .btn-nopad {
