@@ -94,7 +94,7 @@ const CheckStep1 = React.createClass({
       this.state.group.fields.id.setChoices(this.getGroupChoices());
       stateObj.groups = GroupStore.getGroupsSecurity();
     }
-    this.setState(_.assign(stateObj,getGroupsStatus));
+    this.setState(_.assign(stateObj,{getGroupsStatus}));
   },
   getInitialState() {
     const self = this;
@@ -284,7 +284,7 @@ const CheckStep1 = React.createClass({
     }else{
       return(
         <StatusHandler status={this.state.getGroupsStatus}>
-          <p>No Groups Available</p>
+          <p>No Groups available to create a Check against.</p>
         </StatusHandler>
       );
     }
