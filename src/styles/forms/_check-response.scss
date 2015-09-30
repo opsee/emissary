@@ -1,0 +1,20 @@
+.check-response{
+  border:2px solid $gray-900;
+  position: relative;
+  background:$gray-900;
+  &:after{
+    content:'';
+    display: block;
+    position: absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:60px;
+    @include background-image(linear-gradient(to bottom, transparent, $gray-900));
+  }
+  &.expanded{
+    &:after{
+      display: none;
+    }
+  }
+}

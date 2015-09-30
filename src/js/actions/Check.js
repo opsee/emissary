@@ -8,12 +8,14 @@ let _actions = {};
 
 _actions.checkSilence = Flux.statics.addAction('checkSilence');
 
-function formatCheckData(data){
+let _statics = {};
+
+_statics.formatCheckData = function(data){
   const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id'];
   return _.omit(data, disallowed);
 }
 
-function saveNotifications(data, checkId){
+_statics.saveNotifications = function(data, checkId){
   return request
   .post(`${config.eventsApi}/notifications`)
   .set('Authorization', UserStore.getAuth())
@@ -23,7 +25,7 @@ function saveNotifications(data, checkId){
   })
 }
 
-function saveAssertions(data, checkId){
+_statics.saveAssertions = function(data, checkId){
   return request
   .post(`${config.eventsApi}/notifications`)
   .set('Authorization', UserStore.getAuth())
@@ -31,26 +33,30 @@ function saveAssertions(data, checkId){
     'check-id':checkId,
     notifications:data.notifications
   })
+}
+
+_statics.checkCreateOrEdit = function(data, isEditing){
+  return new Promise((resolve, reject) => {
+    const d = _statics.formatCheckData(data);
+    request
+    [isEditing ? 'put' : 'post'](`${config.api}/checks`)
+    .set('Authorization', UserStore.getAuth())
+    .send(d).then(checkRes =>{
+      if(checkRes && checkRes.body){
+        _statics.saveNotifications(data, checkRes.body.check.id)
+        .then(_statics.saveAssertions().then(() => {
+          resolve(checkRes);
+        }))
+      }else{
+        reject(checkRes);
+      }
+    })
+  });
 }
 
 _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
   (data) => {
-    return new Promise((resolve, reject) => {
-      const d = formatCheckData(data);
-      request
-      .post(`${config.api}/checks`)
-      .set('Authorization', UserStore.getAuth())
-      .send(d).then(checkRes =>{
-        if(checkRes && checkRes.body){
-          saveNotifications(data, checkRes.body.check.id)
-          .then(saveAssertions().then(() => {
-            resolve(checkRes);
-          }))
-        }else{
-          reject(checkRes);
-        }
-      })
-    });
+    return _statics.checkCreateOrEdit(data);
   },
   res => res.body,
   res => res && res.body || res
@@ -58,11 +64,7 @@ _actions.checkCreate = Flux.statics.addAsyncAction('checkCreate',
 
 _actions.checkEdit = Flux.statics.addAsyncAction('checkEdit',
   (data) => {
-    const d = formatCheckData(data);
-    return request
-    .put(`${config.api}/checks/${data.id}`)
-    .set('Authorization', UserStore.getAuth())
-    .send(d);
+    return _statics.checkCreateOrEdit(data, true);
   },
   res => res.body,
   res => res && res.body || res
@@ -100,7 +102,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
 
 _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
   (data) => {
-    const d = formatCheckData(data);
+    const d = _statics.formatCheckData(data);
     return request
     .post(`${config.api}/bastions/test-check`)
     .set('Authorization', UserStore.getAuth())

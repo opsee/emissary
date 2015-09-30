@@ -111,7 +111,35 @@ const response = Immutable.fromJS({
         "type_url": "HttpResponse",
         "value": {
           "code": 200,
-          "body": "A ok",
+          "body": {
+            "metadata": {},
+            "saved_search": {
+              "saved_search_id": "224v333g",
+              "hash_user_id": "1b8c236ef38a9b92391c9b0feeafeflk3j43rar",
+              "search_params": {
+                "location": "San Francisco, CA, United States",
+                "checkin": "2015-09-27T07:00:00.000Z",
+                "checkout": "2015-10-03T07:00:00.000Z",
+                "price_min": 120,
+                "price_max": 215,
+                "room_types": [
+                  "Entire home/apt"
+                ],
+                "search_by_map": true,
+                "sw_lng": -122.43045874435649,
+                "sw_lat": 37.77507952087628,
+                "ne_lng": -122.39556856949076,
+                "ne_lat": 37.8077186642931,
+                "zoom": 15,
+                "initial_sw_lng": -122.62259570942877,
+                "initial_sw_lat": 37.58761195180962,
+                "initial_ne_lng": -122.28167621479986,
+                "initial_ne_lat": 37.96047848170684
+              },
+              "modified_at": 1443569968560,
+              "source": "web"
+            }
+          },
           "headers": [
             {
               "name": "Content-Type",
@@ -246,7 +274,7 @@ const statics = {
 let _data = {
   checks:new List(),
   check:new Check(),
-  response:undefined
+  response:response
 }
 
 let _statuses = {

@@ -277,6 +277,7 @@ const CheckStep1 = React.createClass({
           {this.state.info.render()}
           {this.renderHeaderForm()}
           {this.renderSubmitButton()}
+          <h2>Your Response</h2>
           <CheckResponse check={this.getFinalData()}/>
         </form>
       )
