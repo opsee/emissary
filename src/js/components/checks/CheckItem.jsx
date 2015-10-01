@@ -15,7 +15,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="display-flex flex-vertical-align">
+      <div className="display-flex">
         <Link to="check" params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
           <ListItem>
             <RadialGraph {...this.props.item.toJS()}/>

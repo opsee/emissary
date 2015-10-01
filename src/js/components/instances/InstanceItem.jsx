@@ -65,7 +65,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="display-flex flex-vertical-align">
+      <div className="display-flex">
       <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
         <Grid fluid={true}>
           <h2 class="h3">{this.props.item.get('name')} Actions</h2>

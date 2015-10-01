@@ -24,21 +24,27 @@
   @include flex(1);
 }
 .flex-column{
+  @extend .display-flex;
   @include flex-direction(column);
 }
 .flex-wrap{
+  @extend .display-flex;
   @include flex-wrap(wrap);
 }
 .justify-content-between{
+  @extend .display-flex;
   @include justify-content(space-between);
 }
 .justify-content-around{
+  @extend .display-flex;
   @include justify-content(space-around);
 }
 .justify-content-end{
+  @extend .display-flex;
   @include justify-content(flex-end);
 }
 .justify-content-center{
+  @extend .display-flex;
   @include justify-content(center);
 }
 .flex-75{

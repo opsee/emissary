@@ -3,7 +3,7 @@ import Label from './Label.jsx';
 
 export default React.createClass({
   render(){
-    var classString = 'display-flex flex-column';
+    var classString = 'flex-column';
     if (this.props.children) {
       classString += ' has-icon';
     }

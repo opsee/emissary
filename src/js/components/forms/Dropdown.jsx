@@ -1,6 +1,6 @@
 import React from 'react';
-import {OpseeLabel} from '../forms';
-import {DropdownButton, MenuItem} from '../../modules/bootstrap';
+import Label from './Label.jsx';
+import {DropdownButton, MenuItem, Dropdown} from '../../modules/bootstrap';
 import _ from 'lodash';
 
 export default React.createClass({
@@ -23,7 +23,8 @@ export default React.createClass({
     }
     return choice;
   },
-  onSelect(event, key){
+  onSelect(e, key){
+    e.preventDefault();
     const obj = {};
     obj[this.state.bf.name] = key;
     this.state.bf.form.updateData(obj);
@@ -36,15 +37,19 @@ export default React.createClass({
   },
   render(){
     return(
-      <DropdownButton title={this.state.label} key={this.props.bf.idForLabel()} id={this.props.bf.idForLabel()} onSelect={this.onSelect}>
-      {
-        this.props.bf.field._choices.map((choice, i) => {
-          return (
-            <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]} style={{overflow:'hidden'}}>{choice[1]}</MenuItem>
-          )
-        })
-      }
-      </DropdownButton>
+      <Dropdown id={this.props.bf.idForLabel()} className="flex-column">
+          <Label bf={this.props.bf}/>
+          <Dropdown.Toggle bsRole="toggle" onClick={this.labelClick} id={this.props.bf.idForLabel()} className="flex-order-2">{this.state.label}</Dropdown.Toggle>
+          <Dropdown.Menu className="flex-order-3">
+            {
+              this.props.bf.field._choices.map((choice, i) => {
+                return (
+                  <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]} style={{overflow:'hidden'}} onSelect={this.onSelect}>{choice[1]}</MenuItem>
+                )
+              })
+            }
+        </Dropdown.Menu>
+      </Dropdown>
     )
   }
 });

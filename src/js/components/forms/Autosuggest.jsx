@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {OpseeLabel} from '../forms';
+import {Label} from '../forms';
 import DropdownButton from '../../modules/bootstrap';
 import {MenuItem} from '../../modules/bootstrap';
 import _ from 'lodash';

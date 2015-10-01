@@ -26,7 +26,7 @@ const RadioWithLabel = React.createClass({
   },
   render(){
     return (
-      <div className="display-flex flex-wrap">
+      <div className="display-flex">
         <Radio on={this.props.on} onChange={this.props.onChange} id={this.props.id} />
         <div className="flex-1">
           <label className={`label user-select-none padding-tb-sm`} style={[this.getStyle(), this.props.labelStyle]} htmlFor={this.props.id}>
