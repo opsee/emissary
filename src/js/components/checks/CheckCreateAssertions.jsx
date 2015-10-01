@@ -69,7 +69,7 @@ const AssertionsFormSet = forms.FormSet.extend({
   form:AssertionsForm
 });
 
-const CheckStep2 = React.createClass({
+const CheckCreateAssertions = React.createClass({
   getInitialState() {
     const self = this;
     console.log(this.props.check);
@@ -262,4 +262,4 @@ const CheckStep2 = React.createClass({
   }
 })
 
-export default CheckStep2;
+export default CheckCreateAssertions;

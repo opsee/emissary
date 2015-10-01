@@ -19,9 +19,10 @@ import DocsBastion from '../docs/Bastion.jsx';
 import DocsCloudformation from '../docs/Cloudformation.jsx';
 import DocsIAM from '../docs/IAM.jsx';
 
-import CheckStep1 from '../checks/CheckStep1.jsx';
-import CheckStep2 from '../checks/CheckStep2.jsx';
-import CheckStep3 from '../checks/CheckStep3.jsx';
+import CheckCreateTarget from '../checks/CheckCreateTarget.jsx';
+import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
+import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
+import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 
 import CheckNotFound from '../checks/NotFound.jsx';
 import GroupSecurity from '../groups/GroupSecurity.jsx';
@@ -59,6 +60,7 @@ const RouteHandler = Router.RouteHandler;
 const routes = (
   <Route handler={Opsee}>
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
+
     <Route path="/env" name="env" handler={Env}>
       <Redirect from="/env" to="/env/instances" />
       <Route path="/env/instances" name="envInstances" handler={EnvInstances}/>
@@ -69,11 +71,13 @@ const routes = (
 
     <Route path="/" name="checks" handler={CheckList}/>
     <Redirect from="/checks" to="/" />
+
     <Route path="/check-create" name="checkCreate" handler={CheckCreate}>
-      <Redirect from="/check-create" to="/check-create-step-1" />
-      <Route path="/check-create-step-1" name="checkCreateStep1" handler={CheckStep1}/>
-      <Route path="/check-create-step-2" name="checkCreateStep2" handler={CheckStep2}/>
-      <Route path="/check-create-step-3" name="checkCreateStep3" handler={CheckStep3}/>
+      <Redirect from="/check-create" to="/check-create/target" />
+      <Route path="/check-create/target" name="checkCreateTarget" handler={CheckCreateTarget}/>
+      <Route path="/check-create/request" name="checkCreateRequest" handler={CheckCreateRequest}/>
+      <Route path="/check-create/assertions" name="checkCreateAssertions" handler={CheckCreateAssertions}/>
+      <Route path="/check-create/info" name="checkCreateInfo" handler={CheckCreateInfo}/>
     </Route>
     <Route path="/check/edit/:id" name="checkEdit" handler={CheckEdit}/>
     <Route path="/check/:id" name="check" handler={CheckSingle}>

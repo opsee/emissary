@@ -63,8 +63,7 @@ const InfoForm = forms.Form.extend({
   verb: forms.ChoiceField({
     choices:verbOptions,
     widget:forms.RadioSelect,
-    label:'InlineRadioSelect',
-    // initial:['GET']
+    label:'InlineRadioSelect'
   }),
   path: forms.CharField({
     widgetAttrs:{
@@ -85,7 +84,7 @@ const InfoForm = forms.Form.extend({
   }
 })
 
-const CheckStep1 = React.createClass({
+const CheckCreateRequest = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
     const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
@@ -271,7 +270,7 @@ const CheckStep1 = React.createClass({
     const nonFieldErrors = this.state.info.nonFieldErrors();
     if(this.state.groups.size){
       return (
-        <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
+        <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
           {this.renderHelperText()}
           {this.state.group.render()}
           {this.state.info.render()}
@@ -312,4 +311,4 @@ const CheckStep1 = React.createClass({
   },
 })
 
-export default CheckStep1;
+export default CheckCreateRequest;

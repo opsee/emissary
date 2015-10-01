@@ -4,9 +4,9 @@ import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
-import CheckStep1 from '../checks/CheckStep1.jsx';
-import CheckStep2 from '../checks/CheckStep2.jsx';
-import CheckStep3 from '../checks/CheckStep3.jsx';
+import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
+import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
+import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import {Checkmark, Close} from '../icons';
 import colors from 'seedling/colors';
 import {CheckActions, GlobalActions} from '../../actions';
@@ -107,13 +107,13 @@ const CheckEdit = React.createClass({
             <Row>
               <Col xs={12} sm={10} smOffset={1}>
                 <div className="padding-tb">
-                  <CheckStep1 check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateRequest check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
                 </div>
                 <div className="padding-tb">
-                  <CheckStep2 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </div>
                 <div className="padding-tb">
-                  <CheckStep3 {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </div>
                 {
                   <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>

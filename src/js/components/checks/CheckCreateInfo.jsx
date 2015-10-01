@@ -60,7 +60,7 @@ const data = {
   port:80
 }
 
-const CheckStep3 = React.createClass({
+const CheckCreateInfo = React.createClass({
   getInitialState() {
     const self = this;
     
@@ -247,4 +247,4 @@ const CheckStep3 = React.createClass({
   }
 })
 
-export default CheckStep3;
+export default CheckCreateInfo;
