@@ -236,18 +236,6 @@ var Check = Record({
       port:undefined,
       verb:'GET',
       headers:new List()
-  silenceDate:null,
-  silenceDuration:null,
-  interval:30,
-  check_spec:Map({
-    type_url:'HttpCheck',
-    value:Map({
-      name:undefined,
-      path:undefined,
-      protocol:'http',
-      port:undefined,
-      verb:'GET',
-      headers:new List()
     })
   })
 })

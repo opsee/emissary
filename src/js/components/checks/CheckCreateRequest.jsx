@@ -14,14 +14,7 @@ import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import CheckResponse from './CheckResponse.jsx';
-=======
->>>>>>> refactor check schema to match cliff's shet
-=======
-import CheckResponse from './CheckResponse.jsx';
->>>>>>> a lot
 
 const groupOptions = []
 
@@ -47,28 +40,13 @@ const HeaderFormSet = forms.FormSet.extend({
 
 const GroupForm = forms.Form.extend({
   id: forms.ChoiceField({
-<<<<<<< HEAD
-<<<<<<< HEAD
     label:'Target',
-=======
->>>>>>> refactor check schema to match cliff's shet
-=======
-    label:'Target',
->>>>>>> a lot
     choices:[]
   }),
   render() {
     return(
       <div>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <h2>Choose a Check Target</h2>
-=======
-        <h2>Choose an AWS Group</h2>
->>>>>>> refactor check schema to match cliff's shet
-=======
-        <h2>Choose a Check Target</h2>
->>>>>>> a lot
         <BoundField bf={this.boundField('id')}/>
       </div>
     )
@@ -109,36 +87,13 @@ const InfoForm = forms.Form.extend({
 const CheckCreateRequest = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
-<<<<<<< HEAD
-<<<<<<< HEAD
-    const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
-    let stateObj = {};
-    if(getGroupsStatus == 'success'){
-      this.state.group.fields.id.setChoices(this.getGroupChoices());
-      stateObj.groups = GroupStore.getGroupsSecurity();
-=======
-    const status = GroupStore.getGetGroupsSecurityStatus();
-    if(status == 'success'){
-      this.state.group.fields.id.setChoices(this.getGroupChoices());
-      this.setState({
-        groups:GroupStore.getGroupsSecurity()
-      });
->>>>>>> refactor check schema to match cliff's shet
-    }
-    this.setState(_.assign(stateObj,{getGroupsStatus}));
-=======
     const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
     let stateObj = {};
     if(getGroupsStatus == 'success'){
       this.state.group.fields.id.setChoices(this.getGroupChoices());
       stateObj.groups = GroupStore.getGroupsSecurity();
     }
-<<<<<<< HEAD
-    this.setState(_.assign(stateObj,getGroupsStatus));
->>>>>>> a lot
-=======
     this.setState(_.assign(stateObj,{getGroupsStatus}));
->>>>>>> yo gabba gabba
   },
   getInitialState() {
     const self = this;
@@ -152,18 +107,8 @@ const CheckCreateRequest = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         emptyPermitted:false,
-<<<<<<< HEAD
-<<<<<<< HEAD
         initial:initialHeaders.length ? initialHeaders : null,
         // minNum:!initialHeaders.length ? 1 : 0,
-=======
-        initial:initialHeaders,
-        minNum:!initialHeaders.length ? 1 : 0,
->>>>>>> refactor check schema to match cliff's shet
-=======
-        initial:initialHeaders.length ? initialHeaders : null,
-        // minNum:!initialHeaders.length ? 1 : 0,
->>>>>>> and mo
         extra:0,
         validation:{
           on:'blur change',
@@ -173,45 +118,19 @@ const CheckCreateRequest = React.createClass({
       group: new GroupForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
       groups:List()
-=======
-      }, self.dataComplete() ? {data:{id:[self.props.check.target.id]}} : null)),
-=======
-        label:'Target',
-      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
->>>>>>> and mo
-      check:this.props.check
->>>>>>> refactor check schema to match cliff's shet
-=======
-      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
-      check:this.props.check,
-      groups:List()
->>>>>>> a lot
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.headers.forms().forEach((form, i) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a lot
         const h = self.props.check.check_spec.value.headers[i];
         const data = {
           key:h.name,
           value:h.values.join(', ')
         }
         form.setData(data);
-<<<<<<< HEAD
-=======
-        form.setData(self.props.check.check_spec.value.headers[i]);
->>>>>>> refactor check schema to match cliff's shet
-=======
->>>>>>> a lot
       });
     },10);
     return _.extend(obj, {
@@ -295,36 +214,16 @@ const CheckCreateRequest = React.createClass({
     let check = CheckStore.newCheck().toJS();
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a lot
       return {
         name:h.key,
         values:h.value ? h.value.split(', ') : undefined
       }
-<<<<<<< HEAD
     }).value();
     check.target = _.merge({}, check.target, this.state.group.cleanedData);
     let cleaned = this.state.info.cleanedData;
     cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
     val = _.assign(val, cleaned);
     return check;
-=======
-      return _.omit(h, 'DELETE');
-=======
->>>>>>> a lot
-    }).value();
-    check.target = _.merge({}, check.target, this.state.group.cleanedData);
-    let cleaned = this.state.info.cleanedData;
-    cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
-    val = _.assign(val, cleaned);
-    return check;
-<<<<<<< HEAD
-    // return _.assign(data, this.state.info.cleanedData, {group:this.state.group.cleanedData});
->>>>>>> refactor check schema to match cliff's shet
-=======
->>>>>>> and mo
   },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){
@@ -377,25 +276,14 @@ const CheckCreateRequest = React.createClass({
           {this.state.info.render()}
           {this.renderHeaderForm()}
           {this.renderSubmitButton()}
-<<<<<<< HEAD
           <h2>Your Response</h2>
-=======
->>>>>>> a lot
           <CheckResponse check={this.getFinalData()}/>
         </form>
       )
     }else{
       return(
         <StatusHandler status={this.state.getGroupsStatus}>
-<<<<<<< HEAD
-<<<<<<< HEAD
           <p>No Groups available to create a Check against.</p>
-=======
-          <p>No Groups Available</p>
->>>>>>> a lot
-=======
-          <p>No Groups available to create a Check against.</p>
->>>>>>> yo gabba gabba
         </StatusHandler>
       );
     }
