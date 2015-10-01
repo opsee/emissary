@@ -5,8 +5,9 @@ import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
-import router from '../../modules/router.js';
+import router from '../../modules/router';
 import {Opsee} from '../icons';
+import {Button, Grid, Col, Row} from '../../modules/bootstrap';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -51,30 +52,22 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title="Login to Your Account"/>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1">
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1}>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
-                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>
+                <Button type="submit" className="btn-raised" bsStyle="success" block={true} disabled={this.disabled()}>
                     {this.loginBtnText()}
-                  </span>
-                </button>
-
-                <div className="row padding-t-md">
-                  <div className="col-xs-12">
+                </Button>
+                <div className="padding-t-md">
                     <Link to="passwordForgot" className="btn btn-default btn-flat btn-nopad">Forgot Password?</Link>
                     <Link to="start" className="btn btn-flat btn-primary btn-nopad pull-right">Signup</Link>
-                  </div>
                 </div>
               </form>
-              <div className="padding-tb-xlg text-center">
-                <Opsee viewBox="0 0 24 12" style={{width:'140px',height:'92px'}} nav={true}/>
-              </div>
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
