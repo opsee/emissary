@@ -27,6 +27,7 @@ const CheckCreate = React.createClass({
   storeDidChange() {
     const state = getState(true);
     if(state.createStatus == 'success'){
+      UserActions.userPutUserData('hasDismissedCheckCreationHelp');
       router.transitionTo('checks');
     }else if(state.createStatus && state.createStatus != 'pending'){
       GlobalActions.globalModalMessage({
