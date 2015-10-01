@@ -43,10 +43,12 @@ _statics.checkCreateOrEdit = function(data, isEditing){
     .set('Authorization', UserStore.getAuth())
     .send(d).then(checkRes =>{
       if(checkRes && checkRes.body){
-        _statics.saveNotifications(data, checkRes.body.check.id)
-        .then(_statics.saveAssertions().then(() => {
-          resolve(checkRes);
-        }))
+        _statics.saveNotifications(data, checkRes.body.id)
+        .then(() => {
+          _statics.saveAssertions().then(() => {
+            resolve(checkRes);
+          })
+        })
       }else{
         reject(checkRes);
       }
