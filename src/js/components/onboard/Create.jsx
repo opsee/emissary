@@ -11,7 +11,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 export default React.createClass({
    mixins: [UserStore.mixin, OnboardStore.mixin],
   storeDidChange(){
-    const status = OnboardStore.getSignupCreateStatus();
+    const status = OnboardStore.getOnboardSignupCreateStatus();
     this.setState({status})
     if(status == 'success'){
       router.transitionTo('onboardThanks');
@@ -24,7 +24,7 @@ export default React.createClass({
   getInitialState(){
     return {
       data:UserStore.getUser().toJS(),
-      status:OnboardStore.getSignupCreateStatus()
+      status:OnboardStore.getOnboardSignupCreateStatus()
     }
   },
   updateUserData(data){

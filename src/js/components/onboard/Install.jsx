@@ -46,17 +46,6 @@ const Install = React.createClass({
     }).value();
     this.setState({bastions});
   },
-  statics:{
-    willTransitionTo(transition, params, query){
-      if(!transition.path.match('example')){
-        // const data = OnboardStore.getInstallData();
-        // const dataHasValues = _.chain(data).values().every(_.identity).value();
-        // if(!dataHasValues || !data.regions.length){
-        //   transition.redirect('onboardRegionSelect');
-        // }
-      }
-    }
-  },
   getInitialState() {
     return {
       bastions:[]

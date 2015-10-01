@@ -50,7 +50,8 @@ const Survey = React.createClass({
           on:'blur change',
           onChangeDelay:100
         },
-      })
+      }),
+      step:0
     }
   },
   componentWillMount(){
@@ -85,15 +86,33 @@ const Survey = React.createClass({
         <h3>What do you hate about monitoring today?</h3>
         <BoundField bf={this.state.info.boundField('sucks')}/>
       </div>
+    ),
+    (
+      <div>
+        <h3>Thanks for the feedback!</h3>
+      </div>
     )
     ]
+  },
+  next(){
+    this.setState({
+      step:this.state.step+1
+    })
+  },
+  renderButton(){
+    if(this.state.step != (this.getSteps().length - 1)){
+      return (
+        <Button bsStyle="info" block={true} className="pull-right" onClick={this.next}>Next</Button>
+      )
+    }else{
+      return <div/>
+    }
   },
   render() {
     return (
       <form>
-        {this.getSteps().map(s => {
-          return s;
-        })}
+        {this.getSteps()[this.state.step]}
+        {this.renderButton()}
       </form>
     );
   }
