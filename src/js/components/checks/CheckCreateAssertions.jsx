@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
+import {Toolbar, StepCounter} from '../global';
 
 import slate from 'slate';
 import assertionTypes from 'slate/src/types';
@@ -14,7 +15,6 @@ import AssertionCounter from '../forms/AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
-import {StepCounter} from '../global';
 import {CheckStore} from '../../stores';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);

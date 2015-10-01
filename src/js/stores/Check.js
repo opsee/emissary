@@ -326,18 +326,6 @@ const _public = {
       }
       return _.omit(response, 'metrics');
     }
-    let response = _.cloneDeep(data);
-    response.headers = response.headers.map(h => {
-      h.values = h.values.join(', ');
-      return h;
-    });
-    let headerObj = {};
-    response.headers.forEach(h => {
-      headerObj[h.name] = h.values;
-    });
-    response.headers = headerObj;
-    delete response.metrics;
-    return response;
   }
 }
 
