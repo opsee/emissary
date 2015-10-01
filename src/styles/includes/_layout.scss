@@ -31,6 +31,10 @@
   @extend .display-flex;
   @include flex-wrap(wrap);
 }
+.align-items-center{
+  @extend .display-flex;
+  @include align-items(center);
+}
 .justify-content-between{
   @extend .display-flex;
   @include justify-content(space-between);

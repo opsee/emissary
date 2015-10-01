@@ -12,7 +12,7 @@ const ListItem = React.createClass({
   },
   render() {
     return (
-      <div style={this.getStyle()} className="flex-1 display-flex link-style-1 list-item">
+      <div style={this.getStyle()} className="flex-1 link-style-1 list-item align-items-center">
         {this.props.children}
       </div>
     );
