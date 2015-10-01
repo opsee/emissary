@@ -32,7 +32,8 @@ let _data = {
   bastionLaunchHasBeenChecked:false,
   availableVpcs:[],
   domainPromisesArray:[],
-  subdomainAvailable:null
+  subdomainAvailable:null,
+  bastions:[]
 }
 
 const _public = {
@@ -63,6 +64,9 @@ const _public = {
   },
   getAvailableVpcs(){
     return _data.availableVpcs;
+  },
+  getBastions(){
+    return _data.bastions;
   },
   getFinalInstallData(){
     let relation = _installData.vpcs.map(function(v){
@@ -155,6 +159,9 @@ const Store = Flux.createStore(
         _data.bastionHasLaunched = true;
         console.info('Launching Bastion');
         Store.emitChange();
+      break;
+      case 'GET_BASTIONS_SUCCESS':
+        _data.bastions = payload.data;
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

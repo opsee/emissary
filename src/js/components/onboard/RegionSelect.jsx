@@ -9,7 +9,7 @@ import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 import router from '../../modules/router.js';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import colors from 'seedling/colors';
 
@@ -35,6 +35,11 @@ const Team = React.createClass({
     if(data && data.regions && data.regions.length){
       router.transitionTo('onboardCredentials');
     }
+    const bastionStatus = OnboardStore.getGetBastionsStatus();
+    if(bastionStatus == 'success'){
+      const bastions = OnboardStore.getBastions();
+      this.setState({bastions})
+    }
   },
   getInitialState() {
     var self = this;
@@ -52,7 +57,8 @@ const Team = React.createClass({
           on:'blur change',
           onChangeDelay:100
         },
-      })
+      }),
+      bastions:[]
     }
     setTimeout(function(){
       obj.info.validate();
@@ -81,7 +87,8 @@ const Team = React.createClass({
     }
   },
   render() {
-    return (
+    if(!this.state.bastions.length){
+      return (
        <div>
         <Toolbar title="Choose a Region"/>
         <Grid>
@@ -104,6 +111,19 @@ const Team = React.createClass({
         </Grid>
       </div>
     );
+    }else{
+      return (
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1} className="padding-tb">
+              <Alert bsStyle="info">
+                It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
+              </Alert>
+            </Col>
+          </Row>
+        </Grid>
+      )
+    }
   }
 });
 
