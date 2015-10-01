@@ -6,6 +6,7 @@ import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
+import {Opsee} from '../icons';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -60,12 +61,17 @@ export default React.createClass({
                     {this.loginBtnText()}
                   </span>
                 </button>
-                <div className="clearfix"><br/></div>
-                <div className="clearfix">
-                  <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
-                  <Link to="start" className="btn btn-flat btn-info pull-right">Need an Account?</Link>
+
+                <div className="row padding-t-md">
+                  <div className="col-xs-12">
+                    <Link to="passwordForgot" className="btn btn-default btn-flat btn-nopad">Forgot Password?</Link>
+                    <Link to="start" className="btn btn-flat btn-primary btn-nopad pull-right">Signup</Link>
+                  </div>
                 </div>
               </form>
+              <div className="padding-tb-xlg text-center">
+                <Opsee viewBox="0 0 24 12" style={{width:'140px',height:'92px'}} nav={true}/>
+              </div>
             </div>
           </div>
         </div>

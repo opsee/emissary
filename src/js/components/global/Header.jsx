@@ -62,17 +62,18 @@ export default React.createClass({
        </li>
       </ul>
       );
-    }else{
-      return (
-        <ul className="md-navbar-list list-unstyled display-flex">
-          <li>
-           <Link to="env" className="md-navbar-link" style={{padding:'.4em'}}>
-             <Opsee viewBox="0 0 24 12" style={{width:'70px',height:'46px'}} nav={true}/>
-           </Link>
-         </li>
-        </ul>
-      )
     }
+    // else{
+    //   return (
+    //     <ul className="md-navbar-list list-unstyled display-flex">
+    //       <li>
+    //        <Link to="env" className="md-navbar-link" style={{padding:'.4em'}}>
+    //          <Opsee viewBox="0 0 24 12" style={{width:'70px',height:'46px'}} nav={true}/>
+    //        </Link>
+    //      </li>
+    //     </ul>
+    //   )
+    // }
   },
   render(){
     return(
