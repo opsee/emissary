@@ -13,7 +13,7 @@ import router from '../../modules/router';
 export default React.createClass({
   mixins: [State, OnboardStore.mixin],
   storeDidChange(){
-    const status = OnboardStore.getSetPasswordStatus();
+    const status = OnboardStore.getOnboardSetPasswordStatus();
     this.setState({status})
     if(status == 'success'){
       router.transitionTo('tutorial');

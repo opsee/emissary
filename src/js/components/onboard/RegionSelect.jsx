@@ -59,6 +59,9 @@ const Team = React.createClass({
     },10);
     return obj;
   },
+  componentWillMount(){
+    OnboardActions.getBastions();
+  },
   submit(e){
     e.preventDefault();
     OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);

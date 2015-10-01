@@ -40,7 +40,7 @@ const Credentials = React.createClass({
     }
   },
   storeDidChange(){
-    const vpcScanStatus = OnboardStore.getVpcScanStatus();
+    const vpcScanStatus = OnboardStore.getOnboardVpcScanStatus();
     if(vpcScanStatus == 'success'){
       const regionsWithVpcs = OnboardStore.getAvailableVpcs();
       let vpcs = _.chain(regionsWithVpcs).map(r => {

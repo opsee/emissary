@@ -26,7 +26,7 @@ initialize();
 export default React.createClass({
   mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin],
   storeDidChange(){
-    const status1 = OnboardStore.getSetPasswordStatus();
+    const status1 = OnboardStore.getOnboardSetPasswordStatus();
     const status2 = UserStore.getUserLoginStatus();
     if(status1 == 'success' || status2 == 'success'){
       initialize();
