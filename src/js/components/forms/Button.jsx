@@ -3,6 +3,7 @@ import {Button} from '../../modules/bootstrap';
 import {ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 const OpseeButton = React.createClass({
   getDefaultProps(){
@@ -37,12 +38,21 @@ const OpseeButton = React.createClass({
     return this.props.icon ? ' btn-icon' : ''
   },
   render(){
-    return (
-      <Button {...this.props} className={this.props.className + this.getFlat() + this.getIcon()} style={this.getStyle()}>
-        {this.props.children}
-        {this.renderChevron()}
-      </Button>
-    )
+    if(!this.props.to){
+      return (
+        <Button {...this.props} className={this.props.className + this.getFlat() + this.getIcon()} style={this.getStyle()}>
+          {this.props.children}
+          {this.renderChevron()}
+        </Button>
+      )
+    }else{
+      return (
+        <Link className={`btn ${this.props.className}${this.getFlat()}${this.getIcon()}`} style={this.getStyle()} to={this.props.to} params={this.props.params}>
+          {this.props.children}
+          {this.renderChevron()}
+        </Link>
+      )
+    }
   }
 });
 

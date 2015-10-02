@@ -122,11 +122,14 @@ const CheckStepTargetSelect = React.createClass({
       return this.state.groupsSecurity;
     }
   },
+  clickedGroup(id){
+    console.log(id);
+  },
   renderGroupsSecurity(){
     return (
       <div>
         <h3>Security Groups</h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={true}/>
+        <GroupItemList groups={this.getGroupsSecurity()} noLink={true} onClick={this.clickedGroup}/>
       </div>
     )  
   },
