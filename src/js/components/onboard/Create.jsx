@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Toolbar} from '../global';
+import {Toolbar, LogoColor} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
 import {OnboardActions, GlobalActions} from '../../actions';
@@ -53,9 +53,7 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-              <div className="padding-tb-md text-center">
-                <img src="/img/logo-color-border-light.svg" alt="Opsee logo" width="150"/>
-              </div>
+              <LogoColor/>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <div className="form-group">
