@@ -65,7 +65,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="display-flex">
+      <div className="display-flex list-item">
       <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
         <Grid fluid={true}>
           <h2 class="h3">{this.props.item.get('name')} Actions</h2>
@@ -74,10 +74,10 @@ export default React.createClass({
           return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
         })}
       </Modal>
-        <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
+        <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} className="link-style-1 flex-1 padding-tb-sm" style={{maxWidth:'100%'}}>
           <ListItem>
             <RadialGraph {...this.props.item.toJS()}/>
-            <div className="padding-tb line-height-1 flex-1">
+            <div className="line-height-1 flex-1">
               <div className="list-item-line">{this.props.item.get('name')}{this.renderStatusText()}</div>
               {
               // <div className="opsee-list-item-line text-secondary">X of Y passing (N instances)</div>
@@ -85,7 +85,7 @@ export default React.createClass({
             </div>
           </ListItem>
         </Link>{
-          <Button icon={true} flat={true} onClick={this.openMenu} title="Silence Instance">
+          <Button className="btn btn-icon btn-flat btn-secondary" onClick={this.openMenu} title="Silence Instance">
             <MoreHoriz btn={true}/>
           </Button>
         }

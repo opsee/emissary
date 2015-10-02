@@ -8,6 +8,7 @@ import {Link} from 'react-router';
 import {Add} from '../icons';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import CheckItemList from './CheckItemList.jsx';
 
 function getState(){
   return {
@@ -42,17 +43,7 @@ export default React.createClass({
   },
   renderChecks(){
     if(this.state.checks.size){
-      return(
-        <ul className="list-unstyled">
-        {this.state.checks.map(c => {
-          return (
-            <li key={c.get('id')}>
-              <CheckItem item={c}/>
-            </li>
-            )
-        })}
-      </ul>
-      )
+      return <CheckItemList checks={this.state.checks}/>
     }else{
       return (
         <StatusHandler status={this.state.status}>

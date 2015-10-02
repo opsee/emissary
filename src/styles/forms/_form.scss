@@ -23,7 +23,7 @@
   }
   .dropdown-toggle, [dropdown-toggle]{
     @include box-shadow(none);
-    background-color: $gray_900;
+    background-color: $gray-900;
     border-radius:0;
     font-weight: $body-font-weight;
     text-align: left;
@@ -85,9 +85,9 @@
   box-shadow:none;
   @include placeholder($text-color-secondary);
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function);
-  background-color: $gray_900;
+  background-color: $gray-900;
   border: none;
-  // border-bottom: 1px solid $gray_600;
+  // border-bottom: 1px solid $gray-600;
   color: $text-color;
   padding: 0.5em;
   width:100%;

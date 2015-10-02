@@ -8,3 +8,4 @@
 /temp/
 Gemfile.lock
 .DS_Store
+*.ruby-version
