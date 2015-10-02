@@ -40,15 +40,9 @@ export default React.createClass({
       return (
         <div>
         <h3>Failing Groups</h3>
-          <ul className="list-unstyled">
             {groups.map((group, i) => {
-              return (
-                <li key={group.get('id')}>
-                  <GroupItem item={group}/>
-                </li>
-                )
+              return <GroupItem item={group}/>
             })}
-          </ul>
         </div>
       )
     }
@@ -59,15 +53,10 @@ export default React.createClass({
         <div>
           {this.renderFailingGroups()}
           <h3>Passing Groups</h3>
-          <ul className="list-unstyled">
+
             {this.getPassingGroups().map((group, i) => {
-              return (
-                <li key={group.get('id')}>
-                  <GroupItem item={group}/>
-                </li>
-                )
+              return <GroupItem item={group}/>
             })}
-          </ul>
         </div>
       );
     }else{

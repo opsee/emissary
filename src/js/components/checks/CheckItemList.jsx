@@ -33,21 +33,15 @@ export default React.createClass({
   },
   componentWillMount(){
     CheckActions.getChecks();
+    console.log('foo')
   },
   renderChecks(){
     if(this.state.checks.size){
       return(
         <div>
-          <h2>Checks Applied</h2>
-          <ul className="list-unstyled">
-            {this.state.checks.map(c => {
-              return (
-                <li key={c.get('id')}>
-                  <CheckItem item={c}/>
-                </li>
-                )
-            })}
-          </ul>
+          {this.state.checks.map(c => {
+            return <CheckItem item={c}/>
+          })}
         </div>
       )
     }else{

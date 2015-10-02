@@ -152,11 +152,11 @@ $button-fab-padding: 1.60rem !default;
 .btn-icon{
   background-color: transparent;
   border: none;
-  line-height: 48px;
+  line-height: 40px;
   min-width: 0;
   padding: 0 0;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   vertical-align: middle;
   border-radius: 50%;
   background-clip: padding-box;
@@ -168,6 +168,9 @@ $button-fab-padding: 1.60rem !default;
   .btn-fab-icon {
     fill: $text-color-secondary;
   }
+}
+.btn-secondary {
+  margin: 8px 6px 0 0;
 }
 .btn-fab-icon {
   // .transition(fill 400ms cubic-bezier(0.23, 1, 0.32, 1));
