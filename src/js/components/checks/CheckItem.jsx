@@ -10,8 +10,8 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="display-flex">
-        <Link to="check" params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
+      <div className="display-flex list-item">
+        <Link to="check" params={{id:this.props.item.get('id')}} className="link-style-1 flex-1 padding-tb-sm" style={{maxWidth:'100%'}}>
           <ListItem>
             <RadialGraph {...this.props.item.toJS()}/>
             <div className="padding-tb line-height-1 flex-1">

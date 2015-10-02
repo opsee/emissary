@@ -41,15 +41,9 @@ export default React.createClass({
       return (
         <div>
           <h3>Failing Instances</h3>
-          <ul className="list-unstyled">
             {instances.map((instance, i) => {
-              return (
-                <li key={instance.get('id')}>
-                  <InstanceItem item={instance}/>
-                </li>
-                )
+              return <InstanceItem item={instance}/>
             })}
-          </ul>
         </div>
       )
     }
@@ -62,11 +56,7 @@ export default React.createClass({
           <h3>Passing Instances</h3>
           <ul className="list-unstyled">
             {this.getPassingInstances().map((instance, i) => {
-              return (
-                <li key={instance.get('id')}>
-                  <InstanceItem item={instance}/>
-                </li>
-                )
+              return <InstanceItem item={instance}/>
             })}
           </ul>
         </div>

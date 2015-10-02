@@ -54,7 +54,7 @@ const RadialGraph = React.createClass({
       inner:{
         backgroundColor:"transparent",
         borderRadius:"100%",
-        border:"3px solid black",
+        border:"3px solid #303030",
         height: radialWidth - 4,
         width: radialWidth - 4,
         left:"50%",
@@ -142,7 +142,7 @@ const RadialGraph = React.createClass({
   getTitle(){
     switch(this.state.state){
       case 'running':
-      return this.state.silenceRemaining ? 
+      return this.state.silenceRemaining ?
       `This check is running, but is ` :
       `This check is running and has a health of %`;
       break;

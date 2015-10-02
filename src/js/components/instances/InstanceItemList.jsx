@@ -39,15 +39,9 @@ export default React.createClass({
       return(
         <div>
           <h2>Instances ({this.state.instances.size})</h2>
-          <ul className="list-unstyled">
             {this.state.instances.map(instance => {
-              return (
-                <li key={instance.get('id')}>
-                  <InstanceItem item={instance}/>
-                </li>
-                )
+              return <InstanceItem item={instance}/>
             })}
-          </ul>
         </div>
       )
     }else{

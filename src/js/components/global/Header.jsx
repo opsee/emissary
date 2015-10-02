@@ -36,40 +36,29 @@ export default React.createClass({
     }
   },
   renderNavItems(){
-  if(this.state.showNav){
-    return (
-      <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
-        <li>
-         <Link to="checks" className="md-navbar-link">
-           <Checkmark nav={true}/>&nbsp;
-           <span className="md-navbar-title">Checks</span>
-         </Link>
-       </li>
-        <li>
-         <Link to="env" className="md-navbar-link">
-           <Cloud nav={true}/>&nbsp;
-           <span className="md-navbar-title">Environment</span>
-         </Link>
-       </li>
-        <li>
-         <Link to="more" className="md-navbar-link">
-           <MoreHoriz nav={true}/>&nbsp;
-           <span className="md-navbar-title">More</span>
-         </Link>
-       </li>
-       <li>
-         {this.renderLoginLink()}
-       </li>
-      </ul>
-      );
-    }
-    else{
+    if(this.state.showNav){
       return (
-        <ul className="md-navbar-list list-unstyled display-flex">
+        <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
           <li>
-           <Link to="env" className="md-navbar-link" style={{padding:'.4em'}}>
-             <Opsee viewBox="0 0 24 12" style={{width:'70px',height:'46px'}} nav={true}/>
+           <Link to="checks" className="md-navbar-link">
+             <Checkmark nav={true}/>&nbsp;
+             <span className="md-navbar-title">Checks</span>
            </Link>
+         </li>
+          <li>
+           <Link to="env" className="md-navbar-link">
+             <Cloud nav={true}/>&nbsp;
+             <span className="md-navbar-title">Environment</span>
+           </Link>
+         </li>
+          <li>
+           <Link to="more" className="md-navbar-link">
+             <MoreHoriz nav={true}/>&nbsp;
+             <span className="md-navbar-title">More</span>
+           </Link>
+         </li>
+         <li>
+           {this.renderLoginLink()}
          </li>
         </ul>
       )
