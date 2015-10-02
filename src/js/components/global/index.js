@@ -3,6 +3,7 @@ import Header from './Header.jsx';
 import HTMLFile from './HTMLFile.jsx';
 import ListItem from './ListItem.jsx';
 import Loader from './Loader.jsx';
+import LogoColor from './LogoColor.jsx';
 import StatusHandler from './StatusHandler.jsx';
 import MessageModal from './MessageModal.jsx';
 import Modal from './Modal.jsx';
@@ -20,6 +21,7 @@ export default {
   HTMLFile,
   ListItem,
   Loader,
+  LogoColor,
   MessageModal,
   Modal,
   Opsee,

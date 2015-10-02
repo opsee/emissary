@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
 import {UserActions, GlobalActions} from '../../actions';
-import {Toolbar} from '../global';
+import {Toolbar, LogoColor} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
@@ -55,14 +55,17 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
+              <LogoColor/>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
-                <Button type="submit" className="btn-raised" bsStyle="success" block={true} disabled={this.disabled()}>
-                    {this.loginBtnText()}
-                </Button>
-                <div className="padding-t-md">
-                    <Link to="passwordForgot" className="btn btn-default btn-flat btn-nopad">Forgot Password?</Link>
-                    <Link to="start" className="btn btn-flat btn-primary btn-nopad pull-right">Signup</Link>
+                <div className="form-group">
+                  <Button type="submit" className="btn-raised" bsStyle="success" block={true} disabled={this.disabled()}>
+                      {this.loginBtnText()}
+                  </Button>
+                </div>
+                <div className="form-group">
+                    <p><Link to="passwordForgot">Forgot your password?</Link></p>
+                    <p>Need an account? <Link to="start">Sign up!</Link></p>
                 </div>
               </form>
             </Col>
