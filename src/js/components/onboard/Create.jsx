@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Toolbar} from '../global';
+import {Toolbar, LogoColor} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
 import {OnboardActions, GlobalActions} from '../../actions';
@@ -53,16 +53,19 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
+              <LogoColor/>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
-                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>
-                    {this.btnText()}
-                  </span>
-                </button>
-                <div className="clearfix"><br/></div>
-                <div className="clearfix">
-                  <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
+                <div className="form-group">
+                  <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
+                    <span>
+                      {this.btnText()}
+                    </span>
+                  </button>
+                </div>
+                <div className="form-group">
+                    <p><Link to="passwordForgot">Forgot your password?</Link></p>
+                    <p>Already have an account? <Link to="login">Log in</Link>.</p>
                 </div>
               </form>
             </Col>
