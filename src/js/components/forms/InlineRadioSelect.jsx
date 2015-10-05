@@ -38,7 +38,7 @@ export default React.createClass({
     return(
       <div className="form-group">
         <label className="label">Method</label>
-        <ul className="list-unstyled display-flex padding-sm">
+        <ul className="list-unstyled flex-wrap padding-sm">
           {this.props.bf.subWidgets().map((w, i) => {
             return (
               <li key={i} style={{marginRight:'1.8em'}}>

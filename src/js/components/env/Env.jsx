@@ -23,10 +23,10 @@ export default React.createClass({
               <div className="col-xs-12 col-sm-10 col-sm-offset-1">
                 <ul className="nav nav-tabs">
                   <li>
-                    <Link to="envInstances">Instances</Link>
+                    <Link to="envGroups">Groups</Link>
                   </li>
                   <li>
-                    <Link to="envGroups">Groups</Link>
+                    <Link to="envInstances">Instances</Link>
                   </li>
                 </ul>
                 <div><br/></div>

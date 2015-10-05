@@ -8,25 +8,32 @@ import {State} from 'react-router';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import router from '../../modules/router';
+import {Button} from '../forms';
 
 
 export default React.createClass({
   mixins: [State, OnboardStore.mixin],
   storeDidChange(){
     const status = OnboardStore.getOnboardSetPasswordStatus();
-    this.setState({status})
+    let error;
     if(status == 'success'){
       router.transitionTo('tutorial');
-    }else if(status != 'pending'){
-      console.error(status);
+      error = false;
+    }else if(status && status != 'pending'){
+      error = status;
     }
+    this.setState({
+      status,
+      error
+    });
   },
   getInitialState(){
     return {
       status:null,
       token:this.props.query.token,
       id:this.props.query.id,
-      password:null
+      password:null,
+      error:null
     }
   },
   updateUserData(data){
@@ -46,28 +53,30 @@ export default React.createClass({
     return this.state.status == 'pending' ? 'Setting...' : 'Set';
   },
   render() {
-    return (
-       <div>
-        <Toolbar title="Set Your Password"/>
-        <Grid>
-          <Row>
-            <Col xs={12} sm={10} smOffset={1}>
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
-                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>
-                    {this.btnText()}
-                  </span>
-                </button>
-                <div className="clearfix"><br/></div>
-                <div className="clearfix">
-                  <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
-                </div>
-              </form>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
+    if(!this.state.error){
+      return (
+         <div>
+          <Toolbar title="Set Your Password"/>
+          <Grid>
+            <Row>
+              <Col xs={12} sm={10} smOffset={1}>
+                <form name="loginForm" onSubmit={this.submit}>
+                  <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
+                  <Button type="submit" block={true} bsStyle="success" disabled={this.disabled()}>{this.btnText()}</Button>
+                  <div className="clearfix"><br/></div>
+                  <div className="clearfix">
+                    <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
+                  </div>
+                </form>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      );
+    }else{
+      return (
+        <StatusHandler status={this.state.status}/>
+      )
+    }
   }
 });

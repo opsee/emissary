@@ -67,7 +67,7 @@ const _public = {
     return !!(_public.getAuth() && _data.user.get('email'));
   },
   getUser(){
-    if(_data.user.get('email') == 'cliff@leaninto.it'){
+    if(_data.user.get('email') == 'cliff@leaninto.it' && storage.get('demo') != false){
       config.demo = true;
     }
     return _data.user;

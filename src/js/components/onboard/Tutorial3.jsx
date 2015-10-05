@@ -7,7 +7,7 @@ export default React.createClass({
   statics:{
     willTransitionTo(transition, params, query, cb){
       const newImg = new Image();
-      newImg.src = '/img/tut-checks3.svg';
+      newImg.src = '/img/tut-checks.svg';
       newImg.onload = () => cb();
     }
   },
@@ -17,7 +17,7 @@ export default React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12">
-              <img className="step-image" src="/img/tut-checks3.svg"/>
+              <img className="step-image" src="/img/tut-checks.svg"/>
               <h2>Create Health Checks, but Don't Maintain Them</h2>
               <p>In Opsee you can create health checks for security groups, ELBs, and soon other entities like EC2 Tags, Regions, or Availability Zones. Opsee applies these checks to the right instances for you, and knows when new instances come online.</p>
               <div className="clearfix"><br/></div>

@@ -62,7 +62,7 @@ const routes = (
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
 
     <Route path="/env" name="env" handler={Env}>
-      <Redirect from="/env" to="/env/instances" />
+      <Redirect from="/env" to="/env/groups" />
       <Route path="/env/instances" name="envInstances" handler={EnvInstances}/>
       <Route path="/env/groups" name="envGroups" handler={EnvGroups}/>
     </Route>

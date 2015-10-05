@@ -8,7 +8,7 @@ export default React.createClass({
   statics:{
       willTransitionTo(transition, params, query, cb){
         const newImg = new Image();
-        newImg.src = '/img/tut-bastion2.svg';
+        newImg.src = '/img/tut-bastion.svg';
         newImg.onload = () => cb();
     }
   },
@@ -18,7 +18,7 @@ export default React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12">
-              <img className="step-image" src="/img/tut-bastion2.svg"/>
+              <img className="step-image" src="/img/tut-bastion.svg"/>
               <h2>First, Add the Bastion Instance</h2>
               <p>The first thing we do is add the Bastion Instance to your AWS environment. <a href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>
               <div className="clearfix"><br/></div>
