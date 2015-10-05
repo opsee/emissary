@@ -14,6 +14,7 @@ function getState(){
   return {
     status:CheckStore.getTestCheckStatus(),
     response:CheckStore.getResponse(),
+    check:CheckStore.newCheck().toJS(),
     complete:false,
     expanded:false
   }

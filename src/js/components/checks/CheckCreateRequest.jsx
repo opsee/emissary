@@ -15,6 +15,7 @@ import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
+import {GroupItem} from '../groups';
 
 const groupOptions = []
 
@@ -87,13 +88,7 @@ const InfoForm = forms.Form.extend({
 const CheckCreateRequest = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
-    const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
-    let stateObj = {};
-    if(getGroupsStatus == 'success'){
-      this.state.group.fields.id.setChoices(this.getGroupChoices());
-      stateObj.groups = GroupStore.getGroupsSecurity();
-    }
-    this.setState(_.assign(stateObj,{getGroupsStatus}));
+    this.forceUpdate();
   },
   getInitialState() {
     const self = this;
@@ -115,12 +110,7 @@ const CheckCreateRequest = React.createClass({
           onChangeDelay:150
         }
       }),
-      group: new GroupForm(_.extend({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
-      groups:List()
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
@@ -142,19 +132,11 @@ const CheckCreateRequest = React.createClass({
     const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
     return condition1 && condition2;
   },
-  getGroupChoices(){
-    let groups = GroupStore.getGroupsSecurity().toJS();
-    if(config.demo){
-      groups = _.filter(groups, g => {
-        return g.name.match('api-opsee-com|auth tier|c1-us-west-1|nsqadmin-lb|staging');
-      });
-    }
-    return groups.map(g => {
-      return [g.id, g.name];
-    });
-  },
   componentWillMount(){
-    GroupActions.getGroupsSecurity();
+    const groups = GroupStore.getGroupsSecurity();
+    if(!groups.size){
+      GroupActions.getGroupsSecurity();
+    }
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
@@ -211,7 +193,7 @@ const CheckCreateRequest = React.createClass({
     )
   },
   getFinalData(){
-    let check = CheckStore.newCheck().toJS();
+    let check = _.cloneDeep(this.props.check);
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
       return {
@@ -219,7 +201,6 @@ const CheckCreateRequest = React.createClass({
         values:h.value ? h.value.split(', ') : undefined
       }
     }).value();
-    check.target = _.merge({}, check.target, this.state.group.cleanedData);
     let cleaned = this.state.info.cleanedData;
     cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
     val = _.assign(val, cleaned);
@@ -242,6 +223,19 @@ const CheckCreateRequest = React.createClass({
   },
   renderLink(){
     return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
+  },
+  renderTargetSelection(){
+    const selection = GroupStore.getGroupsSecurity().filter(group => group.get('id') == this.props.check.target.id).get(0);
+    if(selection){
+      return (
+        <div>
+          <h2>Target</h2>
+          <GroupItem item={selection}/>
+        </div>
+      )
+    }else{
+      return <div/>
+    }
   },
   submit(e){
     e.preventDefault();
@@ -267,31 +261,23 @@ const CheckCreateRequest = React.createClass({
       )
   },
   innerRender(){
-    const nonFieldErrors = this.state.info.nonFieldErrors();
-    if(this.state.groups.size){
-      return (
-        <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
-          {this.renderHelperText()}
-          {this.state.group.render()}
-          {this.state.info.render()}
-          {this.renderHeaderForm()}
-          {this.renderSubmitButton()}
-          <h2>Your Response</h2>
-          <CheckResponse check={this.getFinalData()}/>
-        </form>
-      )
-    }else{
-      return(
-        <StatusHandler status={this.state.getGroupsStatus}>
-          <p>No Groups available to create a Check against.</p>
-        </StatusHandler>
-      );
-    }
+    return (
+      <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
+        {this.renderHelperText()}
+        {this.renderTargetSelection()}
+        <div><br/></div>
+        {this.state.info.render()}
+        {this.renderHeaderForm()}
+        {this.renderSubmitButton()}
+        <h2>Your Response</h2>
+        <CheckResponse check={this.getFinalData()}/>
+      </form>
+    );
   },
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create a Check: Step 1">
+        <Toolbar btnPosition="midRight" title="Create a Check: Define Request">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>
@@ -299,7 +285,7 @@ const CheckCreateRequest = React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-                {this.innerRender()}
+              {this.innerRender()}
             </Col>
           </Row>
         </Grid>

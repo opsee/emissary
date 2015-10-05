@@ -4,102 +4,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import Immutable, {Record, List, Map} from 'immutable';
 
-// data storage
-let _testCheck = Immutable.fromJS({
-  name:'My great check2',
-  info:'Fun info here2.',
-  id:'foo',
-  method:'POST',
-  path:'/foodog',
-  port:8080,
-  meta:[
-    {
-      key:'State',
-      value:'Failing'
-    },
-    {
-      key:'Port',
-      value:80
-    },
-    {
-      key:'Protocol',
-      value:'HTTP'
-    }
-  ],
-  group:'group-1',
-  headers:[
-    {
-      'key':'testkey',
-      'value':'testvalue'
-    },
-    {
-      'key':'testkey222',
-      'value':'testvalue2222'
-    },
-    {
-      'key':'testkey3333',
-      'value':'testvalue3333'
-    }
-  ],
-  assertions:[
-    {
-      type:'code',
-      relationship:'equal',
-      operand:200
-    },
-    {
-      type:'code',
-      relationship:'equal',
-      operand:200
-    },
-    {
-      type:'code',
-      relationship:'equal',
-      operand:401
-    }
-  ],
-  interval:'15m',
-  message:'This is a great message',
-  notifications:[
-    {
-     channel:'email',
-     value:'great@mygreatthing.com' 
-    }
-  ],
-  instances:[
-  {
-    name:'a-q8r-309fo (US-West-1)',
-    lastChecked:new Date(),
-    info:'Fun info here.',
-    id:'foo',
-    health:25,
-    state:'running',
-    silenceDate:null,
-    silenceDuration:null
-  },
-  {
-    name:'aefiljea-fae-fe (US-West-2)',
-    lastChecked:new Date(),
-    info:'Secondary info.',
-    id:'foo-2',
-    health:45,
-    state:'running',
-    silenceDate:null,
-    silenceDuration:null
-  },
-  {
-    name:'popfaef-eefff-f (US-West-3)',
-    lastChecked:new Date(),
-    info:'Great info here.',
-    id:'foo-3',
-    health:100,
-    state:'running',
-    silenceDate:null,
-    silenceDuration:null
-  },
-  ]
-});
-
 const response = Immutable.fromJS({
   "responses": [
     {
@@ -178,47 +82,15 @@ const response = Immutable.fromJS({
   ]
 });
 
-var Header = Record({
-  key:'TestKey',
-  value:'TestValue'
-});
-
-var TestCheck = Record({
-  name:'Test Check',
-  info:null,
-  id:null,
-  method:'GET',
-  target:Map({
-    name:'coreos',
-    type:'sg',
-    id:'sg-c852dbad'
-  }),
-  path:'/',
-  port:80,
-  meta:List(),
-  group:'sg-c852dbad',
-  headers:List([new Header()]),
-  assertions:List(),
-  protocol:'http',
-  // interval:null,
-  // message:null,
-  notifications:List(),
-  instances:List(),
-  health:100,
-  state:'running',
-  silenceDate:null,
-  silenceDuration:null
+var Target = Record({
+  name:undefined,
+  type:'sg',
+  id:undefined
 })
 
 var Check = Record({
   id:undefined,
-  name:null,
-  info:null,
-  target:Map({
-    name:undefined,
-    type:'sg',
-    id:undefined,
-  }),
+  target:Target(),
   assertions:List(),
   notifications:List(),
   instances:List(),
@@ -300,8 +172,8 @@ const _public = {
     }
     return _data.checks;
   },
-  newCheck(){
-    return new Check();
+  newCheck(data){
+    return new Check(data);
   },
   getResponse(){
     let response;

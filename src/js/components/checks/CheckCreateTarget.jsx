@@ -48,14 +48,14 @@ const CheckStepTargetSelect = React.createClass({
   },
   getInitialState() {
     const self = this;
-    const initialHeaders = this.props.check.check_spec.value.headers;
     const obj = {
       filter: new FilterForm(_.extend({
         onChange:self.filterHasChanged,
         labelSuffix:'',
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
-      groupsSecurity:GroupStore.getGroupsSecurity()
+      groupsSecurity:GroupStore.getGroupsSecurity(),
+      selected:this.props.check.target.id
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     return _.extend(obj, {
@@ -82,6 +82,7 @@ const CheckStepTargetSelect = React.createClass({
   },
   getFinalData(){
     let check = CheckStore.newCheck().toJS();
+    check.target.id = this.state.selected;
     return check;
   },
   renderSubmitButton(){
@@ -123,13 +124,19 @@ const CheckStepTargetSelect = React.createClass({
     }
   },
   clickedGroup(id){
-    console.log(id);
+    this.setState({
+      selected:id
+    });
+    let check = CheckStore.newCheck().toJS();
+    check.target.id = id;
+    this.props.onChange(check, this.disabled(), 1);
+    router.transitionTo('checkCreateRequest');
   },
   renderGroupsSecurity(){
     return (
       <div>
-        <h3>Security Groups</h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={true} onClick={this.clickedGroup}/>
+        <h3><Link to="envGroups">Security Groups</Link></h3>
+        <GroupItemList groups={this.getGroupsSecurity()} noLink={true} onClick={this.clickedGroup} selected={this.state.selected} noGraph={true}/>
       </div>
     )  
   },

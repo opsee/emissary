@@ -24,8 +24,16 @@ const CheckCreate = React.createClass({
   statics:{
     willTransitionTo:PageAuth
   },
+  getState(noCheck){
+    const obj = {
+      check:CheckStore.newCheck(this.props.query).toJS(),
+      response:CheckStore.getResponse(),
+      createStatus:CheckStore.getCheckCreateStatus()
+    }
+    return _.omit(obj, noCheck ? 'check' : null)
+  },
   storeDidChange() {
-    const state = getState(true);
+    const state = this.getState(true);
     if(state.createStatus == 'success'){
       UserActions.userPutUserData('hasDismissedCheckCreationHelp');
       router.transitionTo('checks');
@@ -37,7 +45,9 @@ const CheckCreate = React.createClass({
     }
     this.setState(state);
   },
-  getInitialState:getState,
+  getInitialState(){
+    return this.getState();
+  },
   silence(id){
     CheckActions.silence(id);
   },
@@ -55,7 +65,7 @@ const CheckCreate = React.createClass({
   render() {
     return (
       <div>
-        <RouteHandler {...this.state}  onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus}/>
+        <RouteHandler {...this.state} onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus}/>
       </div>
     );
   }

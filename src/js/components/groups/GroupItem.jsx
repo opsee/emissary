@@ -1,57 +1,115 @@
-import React from 'react';
-import {RadialGraph, ListItem} from '../global';
-import {CheckActions} from '../../actions';
+import React, {PropTypes} from 'react';
+import Radium from 'radium';
 import {Link} from 'react-router';
-import {MoreHoriz, NewWindow} from '../icons';
 import colors from 'seedling/colors';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Button} from '../forms';
-import router from '../../modules/router';
+import Immutable, {Record} from 'immutable';
 
-export default React.createClass({
-  silence(id){
-    CheckActions.silence(id);
+import router from '../../modules/router';
+import {Grid, Row, Col} from '../../modules/bootstrap';
+import {RadialGraph, ListItem, Modal} from '../global';
+import {CheckActions} from '../../actions';
+import {MoreHoriz, NewWindow} from '../icons';
+import {Button} from '../forms';
+
+const styles = {
+  listItem:{
+    cursor:'pointer',
+    overflow:'hidden',
+    transition:'300ms background',
+    borderBottom:`1px solid ${colors.gray800}`,
+    ':hover':{
+      background:colors.gray800
+    }
+  },
+  listItemNotSelected:{
+    opacity:.2
+  }
+}
+
+const GroupItem = React.createClass({
+  propTypes:{
+    item:React.PropTypes.instanceOf(Record).isRequired,
+  },
+  getInitialState(){
+    return _.assign({},{
+      showModal:false
+    });
+  },
+  actions(e, id){
+    e.preventDefault();
+    console.log(this.props.item.get('id'));
   },
   getGroupLink(){
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `group${suffix}`;
   },
+  isSelected(){
+    return this.props.selected && this.props.selected == this.props.item.get('id');
+  },
+  openMenu(e){
+    e.preventDefault();
+    this.setState({
+      showModal:true
+    });
+  },
+  getActions(){
+    return ['Create Check'];
+  },
+  runAction(action){
+  },
+  hideContextMenu(){
+    this.setState({showModal:false});
+  },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.silence.bind(this,this.props.item.get('id'))} title="Silence Group">
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu">
         <MoreHoriz btn={true}/>
       </Button>
     );
   },
-  linkClick(e){
-    e.preventDefault();
-    window.open(router.makeHref('groupSecurity', {id:this.props.item.get('id')}))
-  },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} onClick={this.linkClick} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true}>
-        <NewWindow btn={true} fill={colors.gray700}/>
+    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank">
+        <NewWindow btn={true} fill={Radium.getState(this.state, 'listItem', ':hover') ? colors.gray900 : colors.gray700}/>
     </Button>
     );
   },
+  renderGraph(){
+    if(!this.props.noGraph){
+      return <RadialGraph {...this.props.item.toJS()}/>
+    }else{
+      return <div/>
+    }
+  },
   innerRender(link){
     return (
-      <ListItem>
-        <RadialGraph {...this.props.item.toJS()}/>
-        <div className="padding-tb-sm line-height-1 flex-1 align-items-center">
+      <div className="align-items-center">
+        <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
+          <Grid fluid={true}>
+            <h2 class="h3">{this.props.item.get('name')} Actions</h2>
+          </Grid>
+          <Button to="checkCreateRequest" block={true} flat={true} className="text-left" style={{margin:0}} query={{target:{id:this.props.item.get('id')}}}>Create Check</Button>
+          {
+            // this.getActions().map(a => {
+            //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
+            // })
+          }
+        </Modal>
+        {this.renderGraph()}
+        <div className="line-height-1 flex-1 align-items-center">
           <div className="list-item-line flex-1">{this.props.item.get('name')}</div>
-          {link ? this.renderLinkButton() : null}
+          {link ? this.renderLinkButton() : this.renderButton()}
           {
           // <div className="text-secondary">X of Y passing (N instances)</div>
           }
         </div>
-      </ListItem>
+      </div>
     );
   },
   render() {
     if(!this.props.noLink){
       return(
-        <div className="display-flex">
+        <div key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]}>
           <Link to={this.getGroupLink()} params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
             {this.innerRender()}
           </Link>
@@ -59,7 +117,7 @@ export default React.createClass({
       )
     }else{
       return (
-        <div className="display-flex" style={{cursor:'pointer'}} onClick={this.props.onClick.bind(null, this.props.item.get('id'))}>
+        <div onClick={this.props.onClick.bind(null, this.props.item.get('id'))} key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]} className="flex-1 link-style-1 align-items-center">
           <div className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
             {this.innerRender(true)}
           </div>
@@ -68,3 +126,5 @@ export default React.createClass({
     }
   }
 });
+
+export default Radium(GroupItem);
