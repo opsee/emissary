@@ -86,6 +86,11 @@ var Target = Record({
   name:undefined,
   type:'sg',
   id:undefined
+});
+
+var Notification = Record({
+  type:undefined,
+  value:undefined
 })
 
 var Check = Record({
@@ -140,6 +145,9 @@ const statics = {
   checkFromJS(data){
     data = _.merge(data, data.check_spec.value);
     data.name = data.check_spec.value.name;
+    // data.notifications = data.notifications.map(n => {
+    //   return new Notification(n);
+    // });
     data.check_spec.value.headers = data.check_spec.value.headers || [];
     return new Check(data);
   }

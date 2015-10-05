@@ -20,9 +20,8 @@ const intervalOptions = [
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
-
 const NotificationForm = forms.Form.extend({
-  channel: forms.ChoiceField({
+  type: forms.ChoiceField({
     choices:notificationOptions
   }),
   value: forms.CharField({
@@ -67,7 +66,7 @@ const CheckCreateInfo = React.createClass({
     let initialNotifs = self.props.check.notifications;
     if(!initialNotifs.length){
       initialNotifs.push({
-        channel:'email',
+        type:'email',
         value:UserStore.getUser().get('email')
       })
     }

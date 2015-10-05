@@ -27,11 +27,11 @@ _statics.saveNotifications = function(data, checkId){
 
 _statics.saveAssertions = function(data, checkId){
   return request
-  .post(`${config.eventsApi}/notifications`)
+  .post(`${config.eventsApi}/assertions`)
   .set('Authorization', UserStore.getAuth())
   .send({
     'check-id':checkId,
-    notifications:data.notifications
+    assertions:data.assertions
   })
 }
 
@@ -42,10 +42,12 @@ _statics.checkCreateOrEdit = function(data, isEditing){
     [isEditing ? 'put' : 'post'](`${config.api}/checks`)
     .set('Authorization', UserStore.getAuth())
     .send(d).then(checkRes =>{
-      if(checkRes && checkRes.body){
+      //REMOVE and go back to this when bartnet is better
+      if(true){
+      // if(checkRes && checkRes.body){
         _statics.saveNotifications(data, checkRes.body.id)
-        .then(() => {
-          _statics.saveAssertions().then(() => {
+        .then(notifRes => {
+          _statics.saveAssertions(data, checkRes.body.id).then(assertionRes => {
             resolve(checkRes);
           })
         })
@@ -74,13 +76,34 @@ _actions.checkEdit = Flux.statics.addAsyncAction('checkEdit',
 
 _actions.getCheck = Flux.statics.addAsyncAction('getCheck',
   (id) => {
-    return request
-    .get(`${config.api}/checks/${id}`)
-    .set('Authorization', UserStore.getAuth())
+    return new Promise((resolve, reject) => {
+      request
+      .get(`${config.api}/checks/${id}`)
+      .set('Authorization', UserStore.getAuth())
+      .then((checkRes) => {
+        let check = checkRes.body;
+        request
+        .get(`${config.eventsApi}/notifications/${id}`)
+        .set('Authorization', UserStore.getAuth())
+        .then(notifRes => {
+          check.notifications = notifRes.body.notifications;
+          request
+          .get(`${config.eventsApi}/assertions/${id}`)
+          .set('Authorization', UserStore.getAuth())
+          .then(assertionRes => {
+            check.assertions = assertionRes.body.assertions;
+            resolve(check);
+          })
+        })
+        .catch(notifRes => {
+          reject(_.get(notifRes.body || notifRes));
+        })
+      })
+    })
   },
-  res => res.body,
+  res => res,
   res => _.get(res.body) || res
-);
+)
 
 _actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
   (id) => {

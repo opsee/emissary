@@ -4,7 +4,7 @@ import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
-import {Edit} from '../icons';
+import {Edit, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
@@ -90,6 +90,20 @@ export default React.createClass({
               <td>{this.getCheckJS().check_spec.value.verb}</td>
             </tr>
           </table>
+          <h2>Notifications</h2>
+          {this.state.check.get('notifications').map(n => {
+            return(
+              <div>
+                <Mail inline={true}/>&nbsp;{n.value}
+              </div>
+            )
+          })}
+          <h2>Assertions</h2>
+          {this.state.check.get('assertions').map(a => {
+            return(
+              <div>{JSON.stringify(a, null, ' ')}</div>
+            )
+          })}
           {
           // <h2>Check Instances</h2>
           // <ul className="list-unstyled">

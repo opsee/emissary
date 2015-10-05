@@ -239,7 +239,7 @@ const CheckCreateRequest = React.createClass({
   },
   submit(e){
     e.preventDefault();
-    router.transitionTo('checkCreateStep2');
+    router.transitionTo('checkCreateAssertions');
   },
   disabled(){
     //TODO validate header form as well

@@ -10,8 +10,8 @@ import Immutable, {Record, List, Map} from 'immutable';
 export default React.createClass({
   mixins:[CheckStore.mixin],
   propTypes:{
-    type:PropTypes.string.isRequired,
-    id:PropTypes.string.isRequired
+    type:PropTypes.string,
+    id:PropTypes.string
   },
   getState(){
     return {

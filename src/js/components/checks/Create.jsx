@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-import {CheckActions, GlobalActions} from '../../actions';
+import {CheckActions, GlobalActions, UserActions} from '../../actions';
 import {Toolbar} from '../global';
 import {CheckStore} from '../../stores';
 import {InstanceItem} from '../instances';

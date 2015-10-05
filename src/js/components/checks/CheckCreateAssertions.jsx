@@ -28,7 +28,7 @@ function relationshipConcernsEmpty(relationship){
 }
 
 const AssertionsForm = forms.Form.extend({
-  type: forms.ChoiceField({choices:assertionTypeOptions}),
+  key: forms.ChoiceField({choices:assertionTypeOptions}),
   relationship: forms.ChoiceField({
     choices:relationshipOptions,
   }),
@@ -51,7 +51,7 @@ const AssertionsForm = forms.Form.extend({
         throw forms.ValidationError('Assertion must have operand.');
       }
     }
-    switch(this.cleanedData.type){
+    switch(this.cleanedData.key){
       case 'code':
       break;
       case 'header':
@@ -101,7 +101,7 @@ const CheckCreateAssertions = React.createClass({
   renderOperand(form, key){
     const data = form.cleanedData;
     if(data && data.relationship){
-      if(data.type == 'header' || !data.relationship.match('empty|notEmpty')){
+      if(data.key == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
           <div className="col-xs-10 col-xs-offset-2" key={key}>
             <BoundField bf={form.boundField('operand')}/>
@@ -112,7 +112,7 @@ const CheckCreateAssertions = React.createClass({
   },
   renderValue(form, key){
     const data = form.cleanedData;
-    if(data && data.relationship && data.type == 'header'){
+    if(data && data.relationship && data.key == 'header'){
       if(!data.relationship.match('empty|notEmpty')){
         return (
           <div className="col-xs-10 col-xs-offset-2" key={key}>
@@ -160,7 +160,7 @@ const CheckCreateAssertions = React.createClass({
                       </Col>
                       {form.boundFields().map((bf, bfi) => {
                         switch(bf.name){
-                          case 'type':
+                          case 'key':
                           return(
                             <Col xs={10} sm={4} key={`assertion-${index}-field-${bfi}`}>
                               <BoundField bf={bf}/>
@@ -222,7 +222,7 @@ const CheckCreateAssertions = React.createClass({
   },
   submit(e){
     e.preventDefault();
-    router.transitionTo('checkCreateStep3');
+    router.transitionTo('checkCreateInfo');
   },
   innerRender() {
     return (
