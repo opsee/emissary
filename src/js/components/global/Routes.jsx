@@ -23,9 +23,10 @@ import CheckCreateTarget from '../checks/CheckCreateTarget.jsx';
 import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
 import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
 import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
-
 import CheckNotFound from '../checks/NotFound.jsx';
+
 import GroupSecurity from '../groups/GroupSecurity.jsx';
+import GroupElb from '../groups/GroupElb.jsx';
 
 import InstanceEC2 from '../instances/InstanceEC2.jsx';
 import InstanceRDS from '../instances/InstanceRDS.jsx';
@@ -85,6 +86,7 @@ const routes = (
     </Route>
 
     <Route path="/group/security/:id" name="groupSecurity" handler={GroupSecurity}/>
+    <Route path="/group/elb/:id" name="groupElb" handler={GroupElb}/>
 
     <Route path="/start" name="start" handler={OnboardCreate}/>
     <Route path="/start/thanks" name="onboardThanks" handler={OnboardThanks}/>

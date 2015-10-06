@@ -36,15 +36,21 @@ const FilterForm = forms.Form.extend({
   }
 });
 
+let start;
+
 const CheckStepTargetSelect = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
-    const getGroupsStatus = GroupStore.getGetGroupsSecurityStatus();
+    const getGroupsSecurityStatus = GroupStore.getGetGroupsSecurityStatus();
+    const getGroupsELBStatus = GroupStore.getGetGroupsELBStatus();
     let stateObj = {};
-    if(getGroupsStatus == 'success'){
+    if(getGroupsSecurityStatus == 'success'){
       stateObj.groupsSecurity = GroupStore.getGroupsSecurity();
     }
-    this.setState(_.assign(stateObj,{getGroupsStatus}));
+    if(getGroupsELBStatus == 'success'){
+      stateObj.groupsELB = GroupStore.getGroupsELB();
+    }
+    this.setState(_.assign(stateObj,{getGroupsSecurityStatus, getGroupsELBStatus}));
   },
   getInitialState() {
     const self = this;
@@ -55,6 +61,7 @@ const CheckStepTargetSelect = React.createClass({
       }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
       check:this.props.check,
       groupsSecurity:GroupStore.getGroupsSecurity(),
+      groupsELB:GroupStore.getGroupsELB(),
       selected:this.props.check.target.id
     }
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -70,11 +77,14 @@ const CheckStepTargetSelect = React.createClass({
   },
   componentWillMount(){
     GroupActions.getGroupsSecurity();
+    GroupActions.getGroupsELB();
+    start = performance.now();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
       this.changeAndUpdate();
     }
+    console.log(`createTarget Did Mount ${performance.now() - start}`);
   },
   changeAndUpdate(){
     let data = this.getFinalData();
@@ -116,19 +126,31 @@ const CheckStepTargetSelect = React.createClass({
   getGroupsSecurity(){
     const string = this.state.filter.cleanedData.filter;
     if(string){
-      return this.state.groupsSecurity.filter(sg => {
+      const data = this.state.groupsSecurity.filter(sg => {
         return fuzzy.filter(string, [sg.get('name')]).length;
       });
+      return data;
     }else{
       return this.state.groupsSecurity;
     }
   },
-  clickedGroup(id){
+  getGroupsELB(){
+    const string = this.state.filter.cleanedData.filter;
+    if(string){
+      return this.state.groupsELB.filter(elb => {
+        return fuzzy.filter(string, [elb.get('name')]).length;
+      });
+    }else{
+      return this.state.groupsELB;
+    }
+  },
+  clickedGroup(id, type){
     this.setState({
       selected:id
     });
     let check = CheckStore.newCheck().toJS();
     check.target.id = id;
+    check.target.type = type || 'sg';
     this.props.onChange(check, this.disabled(), 1);
     router.transitionTo('checkCreateRequest');
   },
@@ -136,7 +158,15 @@ const CheckStepTargetSelect = React.createClass({
     return (
       <div>
         <h3><Link to="envGroups">Security Groups</Link></h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={true} onClick={this.clickedGroup} selected={this.state.selected} noGraph={true}/>
+        <GroupItemList groups={this.getGroupsSecurity()} noLink={true} onClick={this.clickedGroup} selected={this.state.selected} noModal={true}/>
+      </div>
+    )  
+  },
+  renderGroupsELB(){
+    return (
+      <div>
+        <h3><Link to="envGroups">ELB Groups</Link></h3>
+        <GroupItemList groups={this.getGroupsELB()} noLink={true} onClick={this.clickedGroup} selected={this.state.selected} noModal={true}/>
       </div>
     )  
   },
@@ -144,7 +174,7 @@ const CheckStepTargetSelect = React.createClass({
       return (
         <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
           <Alert type="info" onDismiss={this.dismissHelperText}>
-            <p>Let’s create your first health check! Tell us which security group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
+            <p>Let’s create your first health check! Tell us which group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
           </Alert>
           <div><br/></div>
         </UserDataRequirement>
@@ -156,6 +186,7 @@ const CheckStepTargetSelect = React.createClass({
         {this.renderHelperText()}
         {this.state.filter.render()}
         {this.renderGroupsSecurity()}
+        {this.renderGroupsELB()}
         {this.renderSubmitButton()}
       </form>
     )

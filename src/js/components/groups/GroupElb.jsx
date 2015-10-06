@@ -13,7 +13,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 function getState(){
   return {
     group:GroupStore.getGroup({
-      type:'sg'
+      type:'elb'
     }),
     getGroupStatus:GroupStore.getGetGroupSecurityStatus()
   }

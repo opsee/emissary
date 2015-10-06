@@ -6,16 +6,29 @@ import Immutable, {Record, List, Map} from 'immutable';
 import InstanceStore from './Instance';
 
 var Group = Record({
-  id:null,
-  name:null,
-  customer_id:null,
+  id:undefined,
+  name:undefined,
+  customer_id:undefined,
   instances:List(),
   state:'running',
   health:100,
-  silenceDate:null,
-  silenceDuration:null,
+  silenceDate:undefined,
+  silenceDuration:undefined,
   type:'security',
-  Description:null
+  Description:undefined
+});
+
+var GroupELB = Record({
+  id:undefined,
+  name:undefined,
+  instances:List(),
+  state:'running',
+  health:100,
+  silenceDate:undefined,
+  silenceDuration:undefined,
+  type:'elb',
+  Description:undefined,
+  CreatedTime:undefined
 });
 
 let _data = {
@@ -57,11 +70,29 @@ const statics = {
     _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : new List();
     Store.emitChange();
   },
-  groupFromJS(data){
-    //just getting some id's back from server at the moment
-    if(typeof data == 'string'){
-      data = {id:data}
+  getGroupsELBSuccess(data){
+    data = _.chain(data)
+    .sortBy(d => {
+      return d.LoadBalancerName.toLowerCase();
+    }).value();
+    _data.groupsELB = data && data.length ? Immutable.fromJS(data.map(statics.groupELBFromJS)) : new List();
+    Store.emitChange();
+  },
+  groupELBFromJS(data){
+    if(data.Instances && data.Instances.length){
+      if(data.Instances[0].InstanceId){
+        data.instances = _.uniq(data.Instances, 'InstanceId');
+      }
+      data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
+    data.id = data.LoadBalancerName;
+    data.name = data.LoadBalancerName;
+    if(data.name == 'c1-us-west-1' && config.error){
+      data.health = 75;
+    }
+    return new GroupELB(data);
+  },
+  groupFromJS(data){
     if(data.instances && data.instances.length){
       if(data.instances[0].InstanceId){
         data.instances = _.uniq(data.instances, 'InstanceId');
@@ -81,9 +112,6 @@ const statics = {
 
 
 const _public = {
-  getGroupSecurity(){
-    return _data.groupSecurity;
-  },
   getGroupsSecurity(){
     return _data.groupsSecurity;
   },
@@ -93,11 +121,29 @@ const _public = {
   getGroupsRDSSecurity(){
     return _data.groupsRDSSecurity;
   },
-  getGroupELB(){
-    return _data.groupELB;
-  },
   getGroupsELB(){
     return _data.groupsELB;
+  },
+  getGroup(target){
+    if(target && target.type){
+      switch(target.type){
+        case 'security':
+          if(_data.groupSecurity && _data.groupSecurity.get('id')){
+            return _data.groupSecurity;
+          }else{
+            return _public.getGroupsSecurity().filter(group => group.get('id') == target.id).get(0);
+          }
+        break;
+        case 'elb':
+          if(_data.groupELB && _data.groupELB.get('id')){
+            return _data.groupELB;
+          }else{
+            return _public.getGroupsELB().filter(group => group.get('id') == target.id).get(0);
+          }
+        break;
+      }
+    }
+    return _data.groupSecurity;
   },
   groupFromJS:statics.groupFromJS
 }
@@ -125,6 +171,9 @@ const Store = Flux.createStore(
       break;
       case 'GET_GROUP_SECURITY_PENDING':
         statics.getGroupSecurityPending(payload.data);
+      break;
+      case 'GET_GROUPS_ELB_SUCCESS':
+        statics.getGroupsELBSuccess(payload.data);
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

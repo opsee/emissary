@@ -22,7 +22,7 @@ const styles = {
     }
   },
   listItemNotSelected:{
-    opacity:.2
+    // opacity:.2
   }
 }
 
@@ -60,6 +60,12 @@ const GroupItem = React.createClass({
   hideContextMenu(){
     this.setState({showModal:false});
   },
+  onClick(e){
+    if(typeof this.props.onClick == 'function'){
+      e.preventDefault();
+      this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
+    }
+  },
   renderButton(){
     return (
     <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu">
@@ -81,9 +87,9 @@ const GroupItem = React.createClass({
       return <div/>
     }
   },
-  innerRender(link){
-    return (
-      <div className="align-items-center">
+  renderModal(){
+    if(!this.props.noModal){
+      return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <h2 class="h3">{this.props.item.get('name')} Actions</h2>
@@ -95,7 +101,18 @@ const GroupItem = React.createClass({
             // })
           }
         </Modal>
-        {this.renderGraph()}
+      )
+    }
+  },
+  innerRender(link){
+    return (
+      <div className="align-items-center">
+        {
+          this.renderModal()
+        }
+        {
+          this.renderGraph()
+        }
         <div className="line-height-1 flex-1 align-items-center">
           <div className="list-item-line flex-1">{this.props.item.get('name')}</div>
           {link ? this.renderLinkButton() : this.renderButton()}
@@ -117,7 +134,7 @@ const GroupItem = React.createClass({
       )
     }else{
       return (
-        <div onClick={this.props.onClick.bind(null, this.props.item.get('id'))} key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]} className="flex-1 link-style-1 align-items-center">
+        <div onClick={this.onClick} key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]} className="flex-1 link-style-1 align-items-center">
           <div className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
             {this.innerRender(true)}
           </div>

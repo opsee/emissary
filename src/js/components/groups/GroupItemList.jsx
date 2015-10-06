@@ -21,7 +21,7 @@ export default React.createClass({
       return(
         <div>
           {this.getGroups().map((group, i) => {
-            return <GroupItem item={group} tabIndex={i} {...self.props} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))}/>
+            return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props}/>
           })}
         </div>
       )
