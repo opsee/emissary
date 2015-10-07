@@ -62,11 +62,7 @@ const routes = (
   <Route handler={Opsee}>
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
 
-    <Route path="/env" name="env" handler={Env}>
-      <Redirect from="/env" to="/env/groups" />
-      <Route path="/env/instances" name="envInstances" handler={EnvInstances}/>
-      <Route path="/env/groups" name="envGroups" handler={EnvGroups}/>
-    </Route>
+    <Route path="/env" name="env" handler={Env}/>
     <Route path="/instance/ec2/:id" name="instanceEC2" handler={InstanceEC2}/>
     <Route path="/instance/rds/:id" name="instanceRDS" handler={InstanceRDS}/>
 

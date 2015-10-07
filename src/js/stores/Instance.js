@@ -50,8 +50,8 @@ const statics = {
     }
   },
   getInstanceECCSuccess(data){
-    if(data && data.instances){
-      data = data.instances;
+    if(data && data.instance){
+      data = data.instance;
       data.type = 'EC2';
       _data.instanceECC = statics.instanceFromJS(data);
       Store.emitChange();

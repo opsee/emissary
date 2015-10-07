@@ -33,7 +33,6 @@ export default React.createClass({
   },
   componentWillMount(){
     CheckActions.getChecks();
-    console.log('foo')
   },
   renderChecks(){
     if(this.state.checks.size){
@@ -47,7 +46,7 @@ export default React.createClass({
     }else{
       return (
         <StatusHandler status={this.state.status}>
-          <h2>No Checks Applied</h2>
+          <p>No Checks Applied</p>
         </StatusHandler>
       );
     }

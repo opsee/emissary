@@ -11,13 +11,13 @@ _actions.checkSilence = Flux.statics.addAction('checkSilence');
 let _statics = {};
 
 _statics.formatCheckData = function(data){
-  const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id'];
+  const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id', 'name'];
   return _.omit(data, disallowed);
 }
 
-_statics.saveNotifications = function(data, checkId){
+_statics.saveNotifications = function(data, checkId, isEditing){
   return request
-  .post(`${config.eventsApi}/notifications`)
+  [isEditing ? 'put' : 'post'](`${config.eventsApi}/notifications${isEditing ? '/'+checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
   .send({
     'check-id':checkId,
@@ -25,9 +25,9 @@ _statics.saveNotifications = function(data, checkId){
   })
 }
 
-_statics.saveAssertions = function(data, checkId){
+_statics.saveAssertions = function(data, checkId, isEditing){
   return request
-  .post(`${config.eventsApi}/assertions`)
+  [isEditing ? 'put' : 'post'](`${config.eventsApi}/assertions${isEditing ? '/'+checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
   .send({
     'check-id':checkId,
@@ -39,15 +39,15 @@ _statics.checkCreateOrEdit = function(data, isEditing){
   return new Promise((resolve, reject) => {
     const d = _statics.formatCheckData(data);
     request
-    [isEditing ? 'put' : 'post'](`${config.api}/checks`)
+    [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/'+data.id : ''}`)
     .set('Authorization', UserStore.getAuth())
     .send(d).then(checkRes =>{
       //REMOVE and go back to this when bartnet is better
       if(true){
       // if(checkRes && checkRes.body){
-        _statics.saveNotifications(data, checkRes.body.id)
+        _statics.saveNotifications(data, _.get(checkRes, 'body.id') || data.id, isEditing)
         .then(notifRes => {
-          _statics.saveAssertions(data, checkRes.body.id).then(assertionRes => {
+          _statics.saveAssertions(data, _.get(checkRes, 'body.id') || data.id, isEditing).then(assertionRes => {
             resolve(checkRes);
           })
         })

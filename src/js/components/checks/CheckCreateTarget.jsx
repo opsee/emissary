@@ -18,53 +18,18 @@ import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItemList} from '../groups';
+import {EnvWithFilter} from '../env';
 
 const groupOptions = []
 
 const verbOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
 
-const FilterForm = forms.Form.extend({
-  filter: forms.CharField({
-    label:'Filter',
-    widgetAttrs:{
-      placeholder:'group:target-group'
-    },
-    required:false
-  }),
-  render() {
-    return <BoundField bf={this.boundField('filter')}/>
-  }
-});
-
-let start;
-
 const CheckStepTargetSelect = React.createClass({
-  mixins:[GroupStore.mixin],
-  storeDidChange(){
-    const getGroupsSecurityStatus = GroupStore.getGetGroupsSecurityStatus();
-    const getGroupsELBStatus = GroupStore.getGetGroupsELBStatus();
-    let stateObj = {};
-    if(getGroupsSecurityStatus == 'success'){
-      stateObj.groupsSecurity = GroupStore.getGroupsSecurity();
-    }
-    if(getGroupsELBStatus == 'success'){
-      stateObj.groupsELB = GroupStore.getGroupsELB();
-    }
-    this.setState(_.assign(stateObj,{getGroupsSecurityStatus, getGroupsELBStatus}));
-  },
   getInitialState() {
     const self = this;
     const obj = {
-      filter: new FilterForm(_.extend({
-        onChange:self.filterHasChanged,
-        labelSuffix:'',
-      }, self.dataComplete() ? {data:{id:self.props.check.target.id}} : null)),
-      check:this.props.check,
-      groupsSecurity:GroupStore.getGroupsSecurity(),
-      groupsELB:GroupStore.getGroupsELB(),
       selected:this.props.check.target.id
     }
-    //this is a workaround because the library is not working correctly with initial + data formset
     return _.extend(obj, {
       cleanedData:null
     });
@@ -78,13 +43,11 @@ const CheckStepTargetSelect = React.createClass({
   componentWillMount(){
     GroupActions.getGroupsSecurity();
     GroupActions.getGroupsELB();
-    start = performance.now();
   },
   componentDidMount(){
     if(this.props.renderAsInclude){
       this.changeAndUpdate();
     }
-    console.log(`createTarget Did Mount ${performance.now() - start}`);
   },
   changeAndUpdate(){
     let data = this.getFinalData();
@@ -111,7 +74,7 @@ const CheckStepTargetSelect = React.createClass({
     }
   },
   renderLink(){
-    return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
+    return this.props.check.id ? <Link to="check" params={{id:this.props.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
   },
   submit(e){
     e.preventDefault();
@@ -144,31 +107,12 @@ const CheckStepTargetSelect = React.createClass({
       return this.state.groupsELB;
     }
   },
-  clickedGroup(id, type){
+  onSelect(check){
     this.setState({
-      selected:id
+      selected:check.target.id
     });
-    let check = CheckStore.newCheck().toJS();
-    check.target.id = id;
-    check.target.type = type || 'sg';
     this.props.onChange(check, this.disabled(), 1);
     router.transitionTo('checkCreateRequest');
-  },
-  renderGroupsSecurity(){
-    return (
-      <div>
-        <h3><Link to="envGroups">Security Groups</Link></h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={true} onClick={this.clickedGroup} selected={this.state.selected} noModal={true}/>
-      </div>
-    )  
-  },
-  renderGroupsELB(){
-    return (
-      <div>
-        <h3><Link to="envGroups">ELB Groups</Link></h3>
-        <GroupItemList groups={this.getGroupsELB()} noLink={true} onClick={this.clickedGroup} selected={this.state.selected} noModal={true}/>
-      </div>
-    )  
   },
   renderHelperText(){
       return (
@@ -182,13 +126,11 @@ const CheckStepTargetSelect = React.createClass({
   },
   innerRender(){
     return (
-      <form name="checkStep1Form" ref="form" onSubmit={this.submit}>
+      <div>
         {this.renderHelperText()}
-        {this.state.filter.render()}
-        {this.renderGroupsSecurity()}
-        {this.renderGroupsELB()}
+        <EnvWithFilter onSelect={this.onSelect}/>
         {this.renderSubmitButton()}
-      </form>
+      </div>
     )
   },
   renderAsPage(){

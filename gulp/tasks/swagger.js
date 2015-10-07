@@ -4,7 +4,6 @@ var shell = require('gulp-shell');
 var request = require('request');
 var fs = require('fs');
 var source = require('vinyl-source-stream');
-var CodeGen = require('swagger-js-codegen').CodeGen;
 var stream = require('event-stream');
 var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');

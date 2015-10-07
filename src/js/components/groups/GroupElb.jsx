@@ -4,32 +4,41 @@ import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
 import GroupItem from './GroupItem.jsx';
-import {GroupStore} from '../../stores';
-import {GroupActions, CheckActions} from '../../actions';
+import {GroupStore, InstanceStore} from '../../stores';
+import {GroupActions, CheckActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-function getState(){
-  return {
-    group:GroupStore.getGroup({
-      type:'elb'
-    }),
-    getGroupStatus:GroupStore.getGetGroupSecurityStatus()
-  }
-}
-
 export default React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
   storeDidChange() {
-    const state = getState();
+    const state = this.getState();
     this.setState(state);
   },
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !Immutable.is(this.state.group, nextState.group);
   // },
   getData(){
-    GroupActions.getGroupSecurity(this.props.params.id);
+    GroupActions.getGroupELB(this.props.params.id);
+    InstanceActions.getInstancesECC({
+      id:this.props.params.id,
+      type:'elb'
+    })
+  },
+  getState(){
+    return {
+      group:GroupStore.getGroup({
+        type:'elb',
+        id:this.props.params.id
+      }),
+      instances:InstanceStore.getInstancesECC({
+        type:'elb',
+        id:this.props.params.id
+      }),
+      getGroupStatus:GroupStore.getGetGroupELBStatus(),
+      getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
+    }
   },
   componentWillMount(){
     this.getData();
@@ -37,11 +46,8 @@ export default React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  componentWillUnmount(){
-    this.setState(getState());
-  },
   getInitialState(){
-    return getState();
+    return this.getState();
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
@@ -92,11 +98,9 @@ export default React.createClass({
                     <td>{this.state.group.get('id')}</td>
                   </tr>
                 </table>
-                <InstanceItemList id={this.state.group.get('id')} type={'security'}/>
-                {
-                  // this.getInstances()
-                }
-                <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
+                <h2>Instances</h2>
+                <InstanceItemList instances={this.state.group.get('instances')}/>
+                <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
               </Col>
             </Row>
           </Grid>

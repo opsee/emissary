@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../modules/bootstrap';
+import {BoundField, Button} from '../forms';
+import forms from 'newforms';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph} from '../global';
 import {HomeStore} from '../../stores';
 import {Toolbar} from '../global';
@@ -9,31 +11,47 @@ import {RouteHandler} from 'react-router';
 import {Link} from 'react-router';
 import {InstanceActions, GlobalActions} from '../../actions';
 import {PageAuth} from '../../modules/statics';
+import EnvWithFilter from './EnvWithFilter.jsx';
+
+const FilterForm = forms.Form.extend({
+  filter: forms.CharField({
+    label:'Filter',
+    widgetAttrs:{
+      placeholder:'group:target-group'
+    },
+    required:false
+  }),
+  render() {
+    return <BoundField bf={this.boundField('filter')}/>
+  }
+});
 
 export default React.createClass({
   statics:{
     willTransitionTo:PageAuth
   },
+  getInitialState(){
+    return {
+      filter: new FilterForm({
+        onChange:self.filterHasChanged,
+        labelSuffix:''
+      })
+    }
+  },
+  filterHasChanged(){
+    this.forceUpdate();
+  },
   render() {
     return (
       <div>
         <Toolbar title="Environment"/>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-                <ul className="nav nav-tabs">
-                  <li>
-                    <Link to="envGroups">Groups</Link>
-                  </li>
-                  <li>
-                    <Link to="envInstances">Instances</Link>
-                  </li>
-                </ul>
-                <div><br/></div>
-                <RouteHandler/>
-              </div>
-            </div>
-          </div>
+          <Grid>
+            <Row>
+              <Col xs={12} sm={10} smOffset={1}>
+                <EnvWithFilter/>
+              </Col>
+            </Row>
+          </Grid>
       </div>
     );
   }

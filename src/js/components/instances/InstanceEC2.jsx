@@ -1,5 +1,5 @@
 import React from 'react';
-import {Toolbar, Loader} from '../global';
+import {Toolbar, Loader, StatusHandler} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from './InstanceItem.jsx';
@@ -11,14 +11,16 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    instance:InstanceStore.getInstanceECC()
+    instance:InstanceStore.getInstanceECC(),
+    status:InstanceStore.getGetInstanceECCStatus()
   }
 }
 
 export default React.createClass({
   mixins: [InstanceStore.mixin, SetInterval],
   storeDidChange() {
-    this.setState(getState());
+    const state = getState();
+    this.setState(state);
   },
   getData(){
     InstanceActions.getInstanceECC(this.props.params.id);
@@ -114,7 +116,7 @@ export default React.createClass({
         </div>
       );
     }else{
-      return <Loader timeout={500}/>
+      return <StatusHandler status={this.state.status}/>
     }
   }
 });

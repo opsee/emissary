@@ -225,12 +225,12 @@ const CheckCreateRequest = React.createClass({
     return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
   },
   renderTargetSelection(){
-    const selection = GroupStore.getGroup(this.props.check.target);
+    const selection = GroupStore.getGroupFromFilter(this.props.check.target);
     if(selection && selection.get('id')){
       return (
         <div>
           <h2>Target</h2>
-          <GroupItem item={selection}/>
+          <GroupItem item={selection} noBorder={true}/>
         </div>
       )
     }else{

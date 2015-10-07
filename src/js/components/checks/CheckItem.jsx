@@ -11,21 +11,6 @@ import {CheckActions} from '../../actions';
 import {MoreHoriz, NewWindow} from '../icons';
 import {Button} from '../forms';
 
-const styles = {
-  listItem:{
-    cursor:'pointer',
-    overflow:'hidden',
-    transition:'300ms background',
-    borderBottom:`1px solid ${colors.gray800}`,
-    ':hover':{
-      background:colors.gray800
-    }
-  },
-  listItemNotSelected:{
-    opacity:.2
-  }
-}
-
 const CheckItem = React.createClass({
   propTypes:{
     item:React.PropTypes.instanceOf(Record).isRequired,
@@ -38,6 +23,12 @@ const CheckItem = React.createClass({
   actions(e, id){
     e.preventDefault();
     console.log(this.props.item.get('id'));
+  },
+  getLink(){
+    return 'check';
+  },
+  isSelected(){
+    return this.props.selected && this.props.selected == this.props.item.get('id');
   },
   openMenu(e){
     e.preventDefault();
@@ -53,16 +44,22 @@ const CheckItem = React.createClass({
   hideContextMenu(){
     this.setState({showModal:false});
   },
+  onClick(e){
+    if(typeof this.props.onClick == 'function'){
+      e.preventDefault();
+      this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
+    }
+  },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu">
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu" className="list-item-btn">
         <MoreHoriz btn={true}/>
       </Button>
     );
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank">
+    <Button to={this.getLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('check_spec').value.name} in a New Window`} icon={true} flat={true} target="_blank" className="list-item-btn">
         <NewWindow btn={true} fill={Radium.getState(this.state, 'listItem', ':hover') ? colors.gray900 : colors.gray700}/>
     </Button>
     );
@@ -74,12 +71,12 @@ const CheckItem = React.createClass({
       return <div/>
     }
   },
-  innerRender(link){
-    return (
-      <div className="align-items-center">
+  renderModal(){
+    if(!this.props.noModal){
+      return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h2 class="h3">{this.props.item.get('name')} Actions</h2>
+            <h2 class="h3">{this.props.item.get('check_spec').value.name} Actions</h2>
           </Grid>
           {
             this.getActions().map(a => {
@@ -87,37 +84,25 @@ const CheckItem = React.createClass({
             })
           }
         </Modal>
+      )
+    }
+  },
+  render(){
+    return (
+      <div key="listItem" className="list-item" onClick={this.onClick}>
+        {this.renderModal()}
         {this.renderGraph()}
-        <div className="line-height-1 flex-1 align-items-center">
-          <div className="list-item-line flex-1">
-            {this.props.item.get('check_spec').value.name}
-          </div>
-          {link ? this.renderLinkButton() : this.renderButton()}
+        <div className="line-height-1 flex-1 align-self-stretch display-flex">
+          <Link to={this.getLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('check_spec').value.name}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
+            <div>{this.props.item.get('check_spec').value.name}</div>
+          </Link>
+          {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
           {
           // <div className="text-secondary">X of Y passing (N instances)</div>
           }
         </div>
       </div>
     );
-  },
-  render() {
-    if(!this.props.noLink){
-      return(
-        <div key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]}>
-          <Link to="check" params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
-            {this.innerRender()}
-          </Link>
-        </div>
-      )
-    }else{
-      return (
-        <div onClick={this.props.onClick.bind(null, this.props.item.get('id'))} key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]} className="flex-1 link-style-1 align-items-center">
-          <div className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
-            {this.innerRender(true)}
-          </div>
-        </div>
-      )
-    }
   }
 });
 

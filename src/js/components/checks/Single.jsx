@@ -44,9 +44,6 @@ export default React.createClass({
   getCheckJS(){
     return this.state.check.toJS();
   },
-  getTitle(){
-    return this.getCheckJS().check_spec.value.name || this.getCheckJS().id;
-  },
   removeCheck(){
     CheckActions.deleteCheck(this.props.params.id);
   },
@@ -129,7 +126,7 @@ export default React.createClass({
   outputLink(){
     if(this.state.check && this.state.check.get('id')){
       return (
-        <Link to="checkEdit" params={{id:this.props.params.id}} className="btn btn-primary btn-fab" title={`Edit ${this.getTitle()}`}>
+        <Link to="checkEdit" params={{id:this.props.params.id}} className="btn btn-primary btn-fab" title={`Edit ${this.state.check.name}`}>
           <Edit btn={true}/>
         </Link>
       )
@@ -140,7 +137,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Check ${this.getTitle()}`}>
+        <Toolbar title={`Check ${this.state.check.name}`}>
           {this.outputLink()}
         </Toolbar>
         <Grid>

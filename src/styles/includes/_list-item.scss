@@ -1,0 +1,15 @@
+.list-item{
+  cursor: pointer;
+  overflow: hidden;
+  transition:300ms background;
+  border-bottom:1px solid $gray-800;
+  min-height:50px;
+  @extend .align-items-center;
+  &:hover{
+    background:$gray-800
+  }
+}
+
+.list-item-btn{
+  @include align-self(stretch);
+}

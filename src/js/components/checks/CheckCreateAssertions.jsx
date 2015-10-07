@@ -65,7 +65,8 @@ const AssertionsForm = forms.Form.extend({
 });
 
 const AssertionsFormSet = forms.FormSet.extend({
-  form:AssertionsForm
+  form:AssertionsForm,
+  canDelete:true
 });
 
 const CheckCreateAssertions = React.createClass({
@@ -77,7 +78,7 @@ const CheckCreateAssertions = React.createClass({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.assertions,
-        minNum:!this.props.check.assertions.length ? 1 : 0,
+        minNum:1,//!this.props.check.assertions.length ? 1 : 0,
         extra:0
       }),
       response:this.props.response,
@@ -145,10 +146,15 @@ const CheckCreateAssertions = React.createClass({
       this.state.assertions.removeForm(index);
     }
   },
+  getAssertionsForms(){
+    return _.reject(this.state.assertions.forms(), f => {
+      return f.cleanedData.DELETE;
+    });
+  },
   renderAssertionsForm(){
     return(
       <div>
-        {this.state.assertions.forms().map((form, index) => {
+        {this.getAssertionsForms().map((form, index) => {
           return (
             <div key={`assertion-${index}`}>
               <div className="display-flex">
@@ -181,7 +187,10 @@ const CheckCreateAssertions = React.createClass({
                     </Row>
                   </Grid>
                 </div>
-                {this.renderRemoveAssertionButton(index)}
+                <BoundField bf={form.boundField('DELETE')}/>
+                {
+                  // this.renderRemoveAssertionButton(index)
+                }
               </div>
             </div>
           )

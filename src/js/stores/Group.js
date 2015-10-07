@@ -70,6 +70,10 @@ const statics = {
     _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : new List();
     Store.emitChange();
   },
+  getGroupELBSuccess(data){
+    _data.groupELB = statics.groupELBFromJS(data);
+    Store.emitChange();
+  },
   getGroupsELBSuccess(data){
     data = _.chain(data)
     .sortBy(d => {
@@ -128,18 +132,23 @@ const _public = {
     if(target && target.type){
       switch(target.type){
         case 'security':
-          if(_data.groupSecurity && _data.groupSecurity.get('id')){
-            return _data.groupSecurity;
-          }else{
-            return _public.getGroupsSecurity().filter(group => group.get('id') == target.id).get(0);
-          }
+          return _data.groupSecurity; 
         break;
         case 'elb':
-          if(_data.groupELB && _data.groupELB.get('id')){
-            return _data.groupELB;
-          }else{
-            return _public.getGroupsELB().filter(group => group.get('id') == target.id).get(0);
-          }
+          return _data.groupELB;
+        break;
+      }
+    }
+    return _data.groupSecurity;
+  },
+  getGroupFromFilter(target){
+    if(target && target.id){
+      switch(target.type){
+        case 'elb':
+          return _public.getGroupsELB().filter(group => group.get('id') == target.id).get(0);
+        break;
+        default:
+          return _public.getGroupsSecurity().filter(group => group.get('id') == target.id).get(0);
         break;
       }
     }
@@ -174,6 +183,9 @@ const Store = Flux.createStore(
       break;
       case 'GET_GROUPS_ELB_SUCCESS':
         statics.getGroupsELBSuccess(payload.data);
+      break;
+      case 'GET_GROUP_ELB_SUCCESS':
+        statics.getGroupELBSuccess(payload.data);
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

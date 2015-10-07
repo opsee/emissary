@@ -95,6 +95,7 @@ var Notification = Record({
 
 var Check = Record({
   id:undefined,
+  name:'',
   target:Target(),
   assertions:List(),
   notifications:List(),

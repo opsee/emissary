@@ -13,6 +13,7 @@ export default React.createClass({
     }
   },
   componentDidMount(){
+    console.log('mounted');
     var self = this;
     setTimeout(() => {
       if(self.isMounted()){

@@ -6,53 +6,52 @@ import InstanceItem from './InstanceItem.jsx';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import Immutable, {Record, List, Map} from 'immutable';
+import {Button} from '../forms';
 
 export default React.createClass({
-  mixins:[InstanceStore.mixin],
   propTypes:{
-    type:PropTypes.string.isRequired,
-    id:PropTypes.string.isRequired
+    instances:React.PropTypes.instanceOf(List),
+    offset:React.PropTypes.number,
+    limit:React.PropTypes.number
   },
-  getState(){
-    return {
-      status:InstanceStore.getGetInstancesECCStatus(),
-      instances:InstanceStore.getInstancesECC(this.props.id)
-    }
-  },
-  storeDidChange(){
-    let state = this.getState();
-    let error = false;
-    if(state.status == 'error'){
-      error = state.status;
-    }
-    state.error = error;
-    this.setState(state);
+  shouldComponentUpdate(nextProps, nextState){
+    return !Immutable.is(this.props.instances, nextProps.instances) || nextState != this.state;
   },
   getInitialState(){
-    return this.getState();
+    return {
+      offset:this.props.offset || 0,
+      limit:this.props.limit || 6
+    }
   },
-  componentWillMount(){
-    InstanceActions.getInstancesECC();
+  getMore(){
+    this.setState({
+      limit:1000
+    });
   },
-  renderInstances(){
-    if(this.state.instances.size){
+  getInstances(){
+    return this.props.instances.slice(this.state.offset, this.state.limit);
+  },
+  renderMoreButton(){
+    if(this.state.limit < this.props.instances.size){
+      return <Button onClick={this.getMore} className="pull-right">Show All</Button>
+    }
+  },
+  render(){
+    if(this.props.instances.size){
       return(
         <div>
-          <h2>Instances ({this.state.instances.size})</h2>
-            {this.state.instances.map(instance => {
-              return <InstanceItem item={instance}/>
-            })}
+          {this.getInstances().map(instance => {
+            return <InstanceItem item={instance} key={instance.get('id')}/>
+          })}
+          {this.renderMoreButton()}
         </div>
       )
     }else{
       return (
-        <StatusHandler status={this.state.status}>
-          <h2>No Instances</h2>
-        </StatusHandler>
-      );
+        <div>
+          <p>No Instances</p>
+        </div>
+      )
     }
-  },
-  render() {
-    return this.renderInstances();
   }
 });

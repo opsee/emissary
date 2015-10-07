@@ -11,21 +11,6 @@ import {CheckActions} from '../../actions';
 import {MoreHoriz, NewWindow} from '../icons';
 import {Button} from '../forms';
 
-const styles = {
-  listItem:{
-    cursor:'pointer',
-    overflow:'hidden',
-    transition:'300ms background',
-    borderBottom:`1px solid ${colors.gray800}`,
-    ':hover':{
-      background:colors.gray800
-    }
-  },
-  listItemNotSelected:{
-    // opacity:.2
-  }
-}
-
 const GroupItem = React.createClass({
   propTypes:{
     item:React.PropTypes.instanceOf(Record).isRequired,
@@ -60,6 +45,13 @@ const GroupItem = React.createClass({
   hideContextMenu(){
     this.setState({showModal:false});
   },
+  getStyle(){
+    let obj = {};
+    if(this.props.noBorder){
+      obj.border = 0;
+    }
+    return obj;
+  },
   onClick(e){
     if(typeof this.props.onClick == 'function'){
       e.preventDefault();
@@ -68,14 +60,14 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu">
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu" className="list-item-btn">
         <MoreHoriz btn={true}/>
       </Button>
     );
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank">
+    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="list-item-btn">
         <NewWindow btn={true} fill={Radium.getState(this.state, 'listItem', ':hover') ? colors.gray900 : colors.gray700}/>
     </Button>
     );
@@ -104,43 +96,35 @@ const GroupItem = React.createClass({
       )
     }
   },
-  innerRender(link){
+  renderLink(){
+    if(!this.props.onClick){
+      return(
+        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
+          <div>{this.props.item.get('name')}</div>
+        </Link>
+        );
+      }else{
+        return (
+          <div className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
+            <div>{this.props.item.get('name')}</div>
+          </div>
+        )
+      }
+  },
+  render(){
     return (
-      <div className="align-items-center">
-        {
-          this.renderModal()
-        }
-        {
-          this.renderGraph()
-        }
-        <div className="line-height-1 flex-1 align-items-center">
-          <div className="list-item-line flex-1">{this.props.item.get('name')}</div>
-          {link ? this.renderLinkButton() : this.renderButton()}
+      <div key="listItem" className="list-item" onClick={this.onClick} style={[this.getStyle()]}>
+        {this.renderModal()}
+        {this.renderGraph()}
+        <div className="line-height-1 flex-1 align-self-stretch display-flex">
+          {this.renderLink()}
+          {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
           {
           // <div className="text-secondary">X of Y passing (N instances)</div>
           }
         </div>
       </div>
     );
-  },
-  render() {
-    if(!this.props.noLink){
-      return(
-        <div key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]}>
-          <Link to={this.getGroupLink()} params={{id:this.props.item.get('id')}} className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
-            {this.innerRender()}
-          </Link>
-        </div>
-      )
-    }else{
-      return (
-        <div onClick={this.onClick} key="listItem" style={[styles.listItem, this.props.selected ? styles.listItemSelected : null, this.props.notSelected ? styles.listItemNotSelected : null]} className="flex-1 link-style-1 align-items-center">
-          <div className="link-style-1 flex-1" style={{maxWidth:'100%'}}>
-            {this.innerRender(true)}
-          </div>
-        </div>
-      )
-    }
   }
 });
 

@@ -4,25 +4,16 @@ import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
 import GroupItem from './GroupItem.jsx';
-import {GroupStore} from '../../stores';
-import {GroupActions, CheckActions} from '../../actions';
+import {GroupStore, InstanceStore} from '../../stores';
+import {GroupActions, CheckActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-function getState(){
-  return {
-    group:GroupStore.getGroup({
-      type:'sg'
-    }),
-    getGroupStatus:GroupStore.getGetGroupSecurityStatus()
-  }
-}
-
 export default React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
   storeDidChange() {
-    const state = getState();
+    const state = this.getState();
     this.setState(state);
   },
   // shouldComponentUpdate(nextProps, nextState) {
@@ -30,6 +21,24 @@ export default React.createClass({
   // },
   getData(){
     GroupActions.getGroupSecurity(this.props.params.id);
+    InstanceActions.getInstancesECC({
+      id:this.props.params.id,
+      type:'security'
+    })
+  },
+  getState(){
+    return {
+      group:GroupStore.getGroup({
+        type:'security',
+        id:this.props.params.id
+      }),
+      instances:InstanceStore.getInstancesECC({
+        type:'security',
+        id:this.props.params.id
+      }),
+      getGroupStatus:GroupStore.getGetGroupSecurityStatus(),
+      getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
+    }
   },
   componentWillMount(){
     this.getData();
@@ -37,11 +46,8 @@ export default React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  componentWillUnmount(){
-    this.setState(getState());
-  },
   getInitialState(){
-    return getState();
+    return this.getState();
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
@@ -51,26 +57,6 @@ export default React.createClass({
       )
     }else{
       return <div/>
-    }
-  },
-  getInstances(){
-    if(this.state.group.get('instances').size){
-      return (
-        <div>
-          <h2>Instances - ( {this.state.group.get('instances').size} )</h2>
-          <ul className="list-unstyled">
-            {this.state.group.get('instances').map(instance => {
-              return (
-                <li key={instance.get('id')}>
-                  <InstanceItem item={instance}/>
-                </li>
-                )
-            })}
-          </ul>
-        </div>
-      )
-    }else{
-      return <h2>No Instances</h2>
     }
   },
   render() {
@@ -92,10 +78,9 @@ export default React.createClass({
                     <td>{this.state.group.get('id')}</td>
                   </tr>
                 </table>
-                <InstanceItemList id={this.state.group.get('id')} type={'security'}/>
-                {
-                  // this.getInstances()
-                }
+                <h2>Instances</h2>
+                <InstanceItemList instances={this.state.group.get('instances')}/>
+                <h2>Checks</h2>
                 <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
               </Col>
             </Row>
