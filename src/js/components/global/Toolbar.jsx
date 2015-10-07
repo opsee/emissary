@@ -3,6 +3,7 @@ import SearchBox from './SearchBox.jsx';
 import Radium from 'radium';
 import colors from 'seedling/colors';
 import DocumentTitle from 'react-document-title';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
 var outer = {
   backgroundColor:colors.gray900,
@@ -15,10 +16,6 @@ var inner = {
   paddingTop:'1em',
   paddingBottom:'1.2em',
   position:'relative'
-  // @include breakpoint($screen-sm){
-  //   paddingTop:'1.5em'
-  //   paddingBottom:'1.7em'
-  // }
 }
 
 var btnPositions = {
@@ -38,7 +35,8 @@ var btnPositions = {
 
 var Toolbar = React.createClass({
   propTypes:{
-    title:PropTypes.string.isRequired
+    title:PropTypes.string.isRequired,
+    btnPosition:PropTypes.string
   },
   outputTitle(){
     return (
@@ -50,16 +48,16 @@ var Toolbar = React.createClass({
     return(
       <div style={outer}>
         {this.outputTitle()}
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-10 col-sm-offset-1" style={inner}>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={10} smOffset={1} style={inner}>
               <h1 className="margin-none">{this.props.title}</h1>
                 <div style={childStyle}>
                 {this.props.children}
-              </div>
-            </div>
-          </div>
-        </div>
+                </div>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     )
   }
