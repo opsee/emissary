@@ -107,7 +107,10 @@ const CheckStepTargetSelect = React.createClass({
       return this.state.groupsELB;
     }
   },
-  onSelect(check){
+  onSelect(id, type){
+    let check = CheckStore.newCheck().toJS();
+    check.target.id = id;
+    check.target.type = type || 'sg';
     this.setState({
       selected:check.target.id
     });

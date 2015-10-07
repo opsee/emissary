@@ -130,24 +130,12 @@ const EnvWithFilter = React.createClass({
       return this.state.instancesECC;
     }
   },
-  clickedGroup(id, type){
-    if(typeof this.props.onSelect == 'function'){
-      this.setState({
-        selected:id
-      });
-      let check = CheckStore.newCheck().toJS();
-      check.target.id = id;
-      check.target.type = type || 'sg';
-      const disabled = typeof this.disabled == 'function' ? this.disabled() : null;
-      this.props.onSelect(check, disabled, 1);
-    }
-  },
   renderGroupsSecurity(){
     if(this.state.groupsSecurity.size){
     return (
       <div>
         <h3>Security Groups</h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.clickedGroup} selected={this.state.selected} noModal={this.props.noModal}/>
+        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
       </div>
       )
     }
@@ -157,7 +145,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>ELB Groups</h3>
-          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.clickedGroup} selected={this.state.selected} noModal={this.props.noModal}/>
+          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
     }
@@ -167,7 +155,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>Instances</h3>
-          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.clickedGroup} selected={this.state.selected} noModal={this.props.noModal}/>
+          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
     }
