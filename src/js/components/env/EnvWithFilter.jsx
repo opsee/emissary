@@ -156,7 +156,7 @@ const EnvWithFilter = React.createClass({
     if(InstanceStore.getInstancesECC().size){
       return (
         <div>
-          <h3>Instances ({this.state.instancesECC.size})</h3>
+          <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
           <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
@@ -167,10 +167,14 @@ const EnvWithFilter = React.createClass({
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {this.state.filter.render()}
-          {this.props.include.map(i => {
-            return self[`render${_.capitalize(i)}`]();
-          })}
+          {
+            //{this.state.filter.render()}
+          }
+          {this.renderGroupsSecurity()}
+          <hr/>
+          {this.renderGroupsELB()}
+          <hr/>
+          {this.renderInstancesECC()}
         </form>
       )
     }else{
