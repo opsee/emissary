@@ -71,8 +71,6 @@ const InfoForm = forms.Form.extend({
       placeholder:'e.g. /healthcheck'
     }
   }),
-  clean() {
-  },
   render() {
     return(
       <div>
@@ -262,6 +260,9 @@ const CheckCreateRequest = React.createClass({
         </UserDataRequirement>
       )
   },
+  getCheck(){
+    return _.cloneDeep(this.props.check);
+  },
   innerRender(){
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
@@ -272,7 +273,7 @@ const CheckCreateRequest = React.createClass({
         {this.renderHeaderForm()}
         {this.renderSubmitButton()}
         <h2>Your Response</h2>
-        <CheckResponse check={this.getFinalData()}/>
+        <CheckResponse check={this.getCheck()}/>
       </form>
     );
   },
@@ -295,6 +296,7 @@ const CheckCreateRequest = React.createClass({
     )
   },
   render() {
+    console.log('rendering');
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
 })

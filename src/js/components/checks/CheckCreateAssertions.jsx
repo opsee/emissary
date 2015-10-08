@@ -103,9 +103,9 @@ const CheckCreateAssertions = React.createClass({
     if(data && data.relationship){
       if(data.key == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
-          <div className="col-xs-10 col-xs-offset-2" key={key}>
+          <Col xs={10} xsOffset={2}>
             <BoundField bf={form.boundField('operand')}/>
-          </div>
+          </Col>
         )
       }
     }
@@ -115,9 +115,9 @@ const CheckCreateAssertions = React.createClass({
     if(data && data.relationship && data.key == 'header'){
       if(!data.relationship.match('empty|notEmpty')){
         return (
-          <div className="col-xs-10 col-xs-offset-2" key={key}>
+          <Col xs={10} xsOffset={2} key={key}>
             <BoundField bf={form.boundField('value')}/>
-          </div>
+          </Col>
         )
       }
     }

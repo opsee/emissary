@@ -14,7 +14,6 @@ function getState(){
   return {
     status:CheckStore.getTestCheckStatus(),
     response:CheckStore.getResponse(),
-    check:CheckStore.newCheck().toJS(),
     complete:false,
     expanded:false
   }
@@ -35,21 +34,25 @@ const CheckResponse = React.createClass({
     check:PropTypes.object.isRequired
   },
   getInitialState() {
-    return getState();
+    return _.assign(getState(), {check:CheckStore.newCheck().toJS()});
   },
   arrayFromData(data){
     let arr = _.map(['port', 'verb', 'path'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
     return arr;
   },
-  componentWillReceiveProps(nextProps){
+  shouldComponentUpdate(nextProps, nextState){
+    const old = this.arrayFromData(this.props.check);
+    const data = this.arrayFromData(nextProps.check);
+    if(!_.isEqual(old,data)){
+      return true;
+    }
+    return false;
+  },
+  componentWillUpdate(nextProps){
     const complete = this.checkIsComplete(nextProps.check);
     if(complete){
-      const old = this.arrayFromData(this.props.check);
-      const data = this.arrayFromData(nextProps.check);
-      if(!_.isEqual(old,data)){
-        CheckActions.testCheck(nextProps.check);
-      }
+      CheckActions.testCheck(nextProps.check);
     }
     this.setState({complete});
   },
@@ -117,7 +120,6 @@ const CheckResponse = React.createClass({
   },
   render() {
     if(this.state.response && this.state.complete){
-    // if(true){
       return(
         <div style={this.getStyle()} className={`check-response ${this.state.expanded ? 'expanded' : ''}`}>
           <Highlight>

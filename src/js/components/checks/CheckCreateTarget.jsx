@@ -56,6 +56,7 @@ const CheckStepTargetSelect = React.createClass({
   getFinalData(){
     let check = CheckStore.newCheck().toJS();
     check.target.id = this.state.selected;
+    check.target.type = this.state.selectedType;
     return check;
   },
   renderSubmitButton(){
@@ -112,7 +113,8 @@ const CheckStepTargetSelect = React.createClass({
     check.target.id = id;
     check.target.type = type || 'sg';
     this.setState({
-      selected:check.target.id
+      selected:check.target.id,
+      selectedType:type
     });
     this.props.onChange(check, this.disabled(), 1);
     router.transitionTo('checkCreateRequest');

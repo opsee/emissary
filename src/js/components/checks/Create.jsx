@@ -56,7 +56,7 @@ const CheckCreate = React.createClass({
   },
   updateData(data){
     this.setState({
-      check:_.merge(this.state.check, data)
+      check:_.cloneDeep(data)
     });
   },
   submit(){

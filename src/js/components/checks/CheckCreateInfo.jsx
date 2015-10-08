@@ -136,11 +136,11 @@ const CheckCreateInfo = React.createClass({
         {this.getNotificationsForms().map((form, index) => {
           return (
             <div>
-              <div className="row">
-                <div className="col-xs-12">
+              <Row>
+                <Col>
                   <h3>Notification {index+1}</h3>
-                </div>
-              </div>
+                </Col>
+              </Row>
               <div className="display-flex">
                 <div className="row flex-1">
                   <Grid fluid={true}>
