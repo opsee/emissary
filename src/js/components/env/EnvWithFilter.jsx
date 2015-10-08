@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
 import colors from 'seedling/colors';
@@ -33,21 +33,21 @@ const FilterForm = forms.Form.extend({
 
 const EnvWithFilter = React.createClass({
   mixins:[GroupStore.mixin, InstanceStore.mixin],
+  propTypes:{
+    include:PropTypes.array
+  },
   storeDidChange(){
     const getGroupsSecurityStatus = GroupStore.getGetGroupsSecurityStatus();
     const getGroupsELBStatus = GroupStore.getGetGroupsELBStatus();
     const getInstancesECCStatus = InstanceStore.getGetInstancesECCStatus();
     let stateObj = {};
     if(getGroupsSecurityStatus == 'success'){
-      stateObj.groupsSecurity = GroupStore.getGroupsSecurity();
       stateObj.attemptedGroupsSecurity = true;
     }
     if(getGroupsELBStatus == 'success'){
-      stateObj.groupsELB = GroupStore.getGroupsELB();
       stateObj.attemptedGroupsELB = true;
     }
     if(getInstancesECCStatus == 'success'){
-      stateObj.instancesECC = InstanceStore.getInstancesECC();
       stateObj.attemptedInstancesECC = true;
     }
     this.setState(_.assign(stateObj,{
@@ -55,6 +55,11 @@ const EnvWithFilter = React.createClass({
       getGroupsELBStatus,
       getInstancesECCStatus
     }));
+  },
+  getDefaultProps(){
+    return {
+      include:['groupsSecurity', 'groupsELB', 'instancesECC']
+    }
   },
   getInitialState() {
     const self = this;
@@ -67,9 +72,6 @@ const EnvWithFilter = React.createClass({
           onChangeDelay:50
         },
       }),
-      groupsSecurity:GroupStore.getGroupsSecurity(),
-      groupsELB:GroupStore.getGroupsELB(),
-      instancesECC:InstanceStore.getInstancesECC(),
       attemptedGroupsSecurity:false,
       attemptedGroupsELB:false,
       attemptedInstancesECC:false,
@@ -96,42 +98,42 @@ const EnvWithFilter = React.createClass({
     const case1 = !!(this.state.attemptedGroupsSecurity &&
       this.state.attemptedGroupsELB &&
       this.state.attemptedInstancesECC);
-    const case2 = !!this.state.groupsSecurity.size;
+    const case2 = !!GroupStore.getGroupsSecurity().size;
     return case1 || case2;
   },
   getGroupsSecurity(){
     const string = this.state.filter.cleanedData.filter;
     if(string){
-      const data = this.state.groupsSecurity.filter(sg => {
+      const data = GroupStore.getGroupsSecurity().filter(sg => {
         return fuzzy.filter(string, [sg.get('name')]).length;
       });
       return data;
     }else{
-      return this.state.groupsSecurity;
+      return GroupStore.getGroupsSecurity();
     }
   },
   getGroupsELB(){
     const string = this.state.filter.cleanedData.filter;
     if(string){
-      return this.state.groupsELB.filter(elb => {
+      return GroupStore.getGroupsELB().filter(elb => {
         return fuzzy.filter(string, [elb.get('name')]).length;
       });
     }else{
-      return this.state.groupsELB;
+      return GroupStore.getGroupsELB();
     }
   },
   getInstances(){
     const string = this.state.filter.cleanedData.filter;
     if(string){
-      return this.state.instancesECC.filter(instance => {
+      return InstanceStore.getInstancesECC().filter(instance => {
         return fuzzy.filter(string, [instance.get('name')]).length;
       });
     }else{
-      return this.state.instancesECC;
+      return InstanceStore.getInstancesECC();
     }
   },
   renderGroupsSecurity(){
-    if(this.state.groupsSecurity.size){
+    if(GroupStore.getGroupsSecurity().size){
     return (
       <div>
         <h3>Security Groups</h3>
@@ -141,7 +143,7 @@ const EnvWithFilter = React.createClass({
     }
   },
   renderGroupsELB(){
-    if(this.state.groupsELB.size){
+    if(GroupStore.getGroupsELB().size){
       return (
         <div>
           <h3>ELB Groups</h3>
@@ -150,8 +152,8 @@ const EnvWithFilter = React.createClass({
       )
     }
   },
-  renderInstances(){
-    if(this.state.instancesECC.size){
+  renderInstancesECC(){
+    if(InstanceStore.getInstancesECC().size){
       return (
         <div>
           <h3>Instances</h3>
@@ -161,13 +163,14 @@ const EnvWithFilter = React.createClass({
     }
   },
   render(){
+    const self = this;
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
           {this.state.filter.render()}
-          {this.renderGroupsSecurity()}
-          {this.renderGroupsELB()}
-          {this.renderInstances()}
+          {this.props.include.map(i => {
+            return self[`render${_.capitalize(i)}`]();
+          })}
         </form>
       )
     }else{

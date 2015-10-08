@@ -133,7 +133,7 @@ const CheckStepTargetSelect = React.createClass({
     return (
       <div>
         {this.renderHelperText()}
-        <EnvWithFilter onSelect={this.onSelect}/>
+        <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']}/>
         <div className="padding-t-lg">
           <p>Tap an environment target to continue.</p>
         </div>
