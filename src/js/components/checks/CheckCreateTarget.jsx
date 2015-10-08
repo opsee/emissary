@@ -134,7 +134,9 @@ const CheckStepTargetSelect = React.createClass({
       <div>
         {this.renderHelperText()}
         <EnvWithFilter onSelect={this.onSelect}/>
-        {this.renderSubmitButton()}
+        <div className="padding-t-lg">
+          <p>Tap an environment target to continue.</p>
+        </div>
       </div>
     )
   },

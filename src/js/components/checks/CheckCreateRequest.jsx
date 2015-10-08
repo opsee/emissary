@@ -86,7 +86,11 @@ const InfoForm = forms.Form.extend({
 const CheckCreateRequest = React.createClass({
   mixins:[GroupStore.mixin],
   storeDidChange(){
-    this.forceUpdate();
+    const cond1 = GroupStore.getGetGroupsSecurityStatus() == 'success';
+    const cond2 = GroupStore.getGetGroupsELBStatus() == 'success';
+    if(cond1 || cond2){
+      this.forceUpdate();
+    }
   },
   getInitialState() {
     const self = this;
@@ -134,6 +138,10 @@ const CheckCreateRequest = React.createClass({
     const groups = GroupStore.getGroupsSecurity();
     if(!groups.size){
       GroupActions.getGroupsSecurity();
+    }
+    const groupsELB = GroupStore.getGroupsELB();
+    if(!groupsELB.size){
+      GroupActions.getGroupsELB();
     }
   },
   componentDidMount(){
