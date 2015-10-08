@@ -84,7 +84,7 @@ const InstanceItem = React.createClass({
       return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h2 class="h3">{this.props.item.get('name')} Actions</h2>
+            <h3>{this.props.item.get('name')} Actions</h3>
           </Grid>
           {
             this.getActions().map(a => {
