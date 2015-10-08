@@ -60,9 +60,9 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu" className="list-item-btn">
-        <MoreHoriz btn={true}/>
-      </Button>
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu" className="btn btn-icon btn-secondary">
+      <MoreHoriz btn={true}/>
+    </Button>
     );
   },
   renderLinkButton(){
@@ -99,13 +99,17 @@ const GroupItem = React.createClass({
   renderLink(){
     if(!this.props.onClick){
       return(
-        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
-          <div>{this.props.item.get('name')}</div>
+        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-center" style={{maxWidth:'100%'}}>
+          <div>
+            {this.props.item.get('name')}
+            <br/>
+            <span className="text-secondary">X of Y passing</span>
+          </div>
         </Link>
         );
       }else{
         return (
-          <div className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
+          <div className="list-item-link" style={{maxWidth:'100%'}}>
             <div>{this.props.item.get('name')}</div>
           </div>
         )
@@ -116,12 +120,9 @@ const GroupItem = React.createClass({
       <div key="listItem" className="list-item" onClick={this.onClick} style={[this.getStyle()]}>
         {this.renderModal()}
         {this.renderGraph()}
-        <div className="line-height-1 flex-1 align-self-stretch display-flex">
+        <div className="line-height-1 flex-1 display-flex">
           {this.renderLink()}
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
-          {
-          // <div className="text-secondary">X of Y passing (N instances)</div>
-          }
         </div>
       </div>
     );

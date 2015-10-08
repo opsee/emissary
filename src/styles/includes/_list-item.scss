@@ -1,15 +1,28 @@
-.list-item{
+.list-item {
+  align-items: flex-start;
+  color: white;
   cursor: pointer;
   overflow: hidden;
+  padding: 0.5em 0;
+  text-decoration: none;
   transition:300ms background;
-  border-bottom:1px solid $gray-800;
-  min-height:50px;
   @extend .align-items-center;
   &:hover{
-    background:$gray-800
+    color: white;
   }
-  &:last-of-type{
-    border:0;
+}
+
+.list-item-link {
+  @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function, color $swift-ease-out-duration $swift-ease-out-timing-function);
+  color: $text-color;
+  text-decoration: none;
+  &:active, &:focus {
+    color: $text-color;
+    text-decoration: none;
+  }
+  &:hover {
+    color: $brand-primary;
+    text-decoration: none;
   }
 }
 

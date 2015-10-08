@@ -25,27 +25,22 @@ pre {
   font-size:.8em;
 }
 
-.md-title {
-  font-size: $font-size-small;
-  font-weight: 500;
-  letter-spacing: 0.005em;
-}
-
 h1, .h1{
   font-family:$headings-font-family;
 }
 
 h2, .h2{
   color: $text-color-secondary;
-  margin:0 0 .5em 0;
+  margin:0 0 0.5em 0;
   font-family:$headings-font-family;
 }
 
 h3,.h3{
+  color: $text-color-secondary;
   font-family: $font-family-sans-serif;
-  font-size: 1.25em;
+  font-size: 1.125em;
   font-weight: $body-font-weight-med;
-  line-height: 1.4em;
+  text-indent: 0.5em;
 }
 
 em {

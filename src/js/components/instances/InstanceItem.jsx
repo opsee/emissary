@@ -60,9 +60,9 @@ const InstanceItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="list-item-btn">
-        <MoreHoriz btn={true}/>
-      </Button>
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="btn btn-icon btn-secondary">
+      <MoreHoriz btn={true}/>
+    </Button>
     );
   },
   renderLinkButton(){
@@ -105,7 +105,7 @@ const InstanceItem = React.createClass({
           this.renderGraph()
         }
         <div className="line-height-1 flex-1 align-self-stretch display-flex">
-          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
+          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-center" style={{maxWidth:'100%'}}>
             <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
           </Link>
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}

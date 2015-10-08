@@ -51,7 +51,7 @@ const EnvWithFilter = React.createClass({
       stateObj.attemptedInstancesECC = true;
     }
     this.setState(_.assign(stateObj,{
-      getGroupsSecurityStatus, 
+      getGroupsSecurityStatus,
       getGroupsELBStatus,
       getInstancesECCStatus
     }));
@@ -134,7 +134,7 @@ const EnvWithFilter = React.createClass({
     if(this.state.groupsSecurity.size){
     return (
       <div>
-        <h3>Security Groups</h3>
+        <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
         <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
       </div>
       )
@@ -144,7 +144,7 @@ const EnvWithFilter = React.createClass({
     if(this.state.groupsELB.size){
       return (
         <div>
-          <h3>ELB Groups</h3>
+          <h3>ELB Groups ({this.getGroupsELB().size})</h3>
           <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
@@ -154,7 +154,7 @@ const EnvWithFilter = React.createClass({
     if(this.state.instancesECC.size){
       return (
         <div>
-          <h3>Instances</h3>
+          <h3>Instances ({this.state.instancesECC.size})</h3>
           <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
@@ -164,9 +164,13 @@ const EnvWithFilter = React.createClass({
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {this.state.filter.render()}
+          {
+            //{this.state.filter.render()}
+          }
           {this.renderGroupsSecurity()}
+          <hr/>
           {this.renderGroupsELB()}
+          <hr/>
           {this.renderInstances()}
         </form>
       )
