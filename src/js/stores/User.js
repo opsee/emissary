@@ -10,7 +10,9 @@ var User = Record({
   email:null,
   id:null,
   token:null,
-  loginDate:null
+  loginDate:null,
+  admin:false,
+  admin_id:0
 })
 
 const statics = {

@@ -50,7 +50,7 @@ let _data = {
     options:null
   },
   showNav:true,
-  globalSocketError:null
+  globalSocketError:null,
 }
 
 let _statuses = {

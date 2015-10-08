@@ -39,7 +39,11 @@ export default React.createClass({
     this.setState({
       submitting:true
     });
-    UserActions.userLogin(this.state.data);
+    let data = this.state.data;
+    if(this.props.query.as){
+      data.as = _.parseInt(this.props.query.as, 10);
+    }
+    UserActions.userLogin(data);
   },
   disabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);

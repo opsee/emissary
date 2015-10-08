@@ -1,13 +1,16 @@
 import React from 'react';
+import router from '../../modules/router';
+import colors from 'seedling/colors';
+import _ from 'lodash';
+
 import {Toolbar} from '../global';
-import {AdminActions, GlobalActions} from '../../actions';
+import {AdminActions, GlobalActions, UserActions} from '../../actions';
 import {AdminStore} from '../../stores';
 import {Link} from 'react-router';
-import _ from 'lodash';
 import {Checkmark} from '../icons';
-import colors from 'seedling/colors';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
 
 function getState(){
   return {
@@ -66,6 +69,11 @@ export default React.createClass({
     return _.filter(this.state.signups, this.isUser);
   },
   activateSignup:AdminActions.adminActivateSignup,
+  ghostAccount(signup){
+    UserActions.userLogOut();
+    //revisit this, params isn't working so using query atm
+    router.transitionTo('login', null, {as:signup.id});
+  },
   outputCheckmark(signup){
     if(this.isUser(signup)){
       return <Checkmark fill={colors.success}/>
@@ -77,10 +85,12 @@ export default React.createClass({
     if(this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
       const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
       return (
-        <button type="button" className="btn btn-flat btn-primary" onClick={this.activateSignup.bind(null, signup)}>{text}</button>
+        <Button flat={true} bsStyle="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
       )
     }else{
-      return <span/>;
+      return(
+        <Button flat={true} bsStyle="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
+      )
     }
   },
   output(signup){

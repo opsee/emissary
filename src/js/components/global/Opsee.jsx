@@ -20,7 +20,6 @@ function initialize(){
     console.info('In Demo Mode.');
   }
 }
-
 initialize();
 
 let refreshInterval;
@@ -33,10 +32,12 @@ export default React.createClass({
     if(status1 == 'success' || status2 == 'success'){
       initialize();
     }
+    let stateObj = {};
     const socketError = GlobalStore.getGlobalSocketError();
     if(socketError){
-      this.setState({socketError});
+      stateObj.socketError = socketError;
     }
+    this.setState(stateObj);
   },
   getInitialState(){
     return {

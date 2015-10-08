@@ -4,14 +4,17 @@ import {Link} from 'react-router';
 import {Person, Checkmark, MoreHoriz, Cloud, Login, Opsee} from '../icons';
 import {UserStore, GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import config from '../../modules/config';
+import colors from 'seedling/colors';
 
 export default React.createClass({
   mixins: [UserStore.mixin, GlobalStore.mixin],
   storeDidChange(){
-    this.forceUpdate();
     this.setState({
-      showNav:GlobalStore.getShowNav()
+      showNav:GlobalStore.getShowNav(),
+      ghosting:UserStore.getUser().get('admin_id') > 0
     });
+    this.forceUpdate();
   },
   getInitialState(){
     return {
@@ -64,9 +67,16 @@ export default React.createClass({
       );
     }
   },
+  getHeaderStyle(){
+    let obj = {};
+    if(this.state.ghosting){
+      obj.background = colors.danger;
+    }
+    return obj;
+  },
   render(){
     return(
-      <header id="header" className="user-select-none">
+      <header id="header" className="user-select-none" style={this.getHeaderStyle()}>
         <nav className="md-navbar" role="navigation">
           <Grid>
             <Row>
