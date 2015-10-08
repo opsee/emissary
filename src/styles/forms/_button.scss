@@ -35,8 +35,7 @@ $button-fab-padding: 1.60rem !default;
 .btn {
   border: none;
   border-radius: $border-radius-large;
-  // line-height: 1.2em;
-  // padding:$grid-gutter-width/4 $grid-gutter-width/2;
+  padding: 0.25em 0.5em;
   text-transform: uppercase;
   @extend .md-shadow-bottom-z-1;
   @include transition(box-shadow $swift-ease-out-duration $swift-ease-out-timing-function,
@@ -84,6 +83,9 @@ $button-fab-padding: 1.60rem !default;
 
 .btn-flat {
   background-color: transparent;
+  .icon {
+    vertical-align: text-bottom;
+  }
   &[disabled]{
     .icon {
       fill: $text-color-secondary;
@@ -154,26 +156,23 @@ $button-fab-padding: 1.60rem !default;
   }
 }
 .btn-icon{
+  @include border-radius(100%);
   background-color: transparent;
   border: none;
   line-height: 40px;
   min-width: 0;
   padding: 0 0;
-  min-width: 40px;
-  min-height: 40px;
-  vertical-align: middle;
+  width: 40px;
+  height: 40px;
   background-clip: padding-box;
   overflow: hidden;
   position: relative;
   &:hover, &:active, &:focus {
     background-color: $gray-800;
   }
-  .btn-fab-icon {
-    fill: $text-color-secondary;
-  }
 }
 .btn-secondary {
-  margin: 8px 6px 0 0;
+  margin-right: 0.375em;
 }
 .btn-fab-icon {
   // .transition(fill 400ms cubic-bezier(0.23, 1, 0.32, 1));

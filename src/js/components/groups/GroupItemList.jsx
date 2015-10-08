@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable, {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
 import {Button} from '../forms';
+import {ChevronDown} from '../icons';
 
 export default React.createClass({
   propTypes:{
@@ -38,7 +39,7 @@ export default React.createClass({
   },
   renderMoreButton(){
     if(this.state.limit < this.props.groups.size){
-      return <Button onClick={this.getMore} className="pull-right">Show All</Button>
+      return <Button onClick={this.getMore} className="margin-t btn btn-flat btn-primary">Show {this.props.groups.size - this.state.limit} more <ChevronDown className="icon"/></Button>
     }
   },
   render() {
@@ -55,7 +56,7 @@ export default React.createClass({
     }else{
       return (
         <div>
-          <p>No Groups</p> 
+          <p>No Groups</p>
         </div>
       )
     }
