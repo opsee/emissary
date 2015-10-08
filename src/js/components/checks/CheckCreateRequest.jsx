@@ -296,7 +296,6 @@ const CheckCreateRequest = React.createClass({
     )
   },
   render() {
-    console.log('rendering');
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
 })

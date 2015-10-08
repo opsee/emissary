@@ -86,7 +86,7 @@ const GroupItem = React.createClass({
           <Grid fluid={true}>
             <h2 class="h3">{this.props.item.get('name')} Actions</h2>
           </Grid>
-          <Button to="checkCreateRequest" block={true} flat={true} className="text-left" style={{margin:0}} query={{target:{id:this.props.item.get('id')}}}>Create Check</Button>
+          <Button to="checkCreateRequest" block={true} flat={true} className="text-left" style={{margin:0}} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>Create Check</Button>
           {
             // this.getActions().map(a => {
             //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
