@@ -32,7 +32,8 @@ const NotificationForm = forms.Form.extend({
 });
 
 const NotificationFormSet = forms.FormSet.extend({
-  form:NotificationForm
+  form:NotificationForm,
+  canDelete:true
 });
 
 
@@ -107,15 +108,9 @@ const CheckCreateInfo = React.createClass({
       this.changeAndUpdate();
     }
   },
-  renderRemoveNotificationButton(index){
+  renderRemoveNotificationButton(form, index){
     if(index > 0){
-      return (
-        <div className="padding-lr">
-            <button type="button" className="btn btn-icon btn-flat" onClick={this.removeNotification.bind(null,index)} title="Remove this Notification">
-              <Close btn={true}/>
-          </button>
-        </div>
-      )
+      return <BoundField bf={form.boundField('DELETE')}/>
     }else{
       return (
        <div className="padding-lr">
@@ -129,11 +124,16 @@ const CheckCreateInfo = React.createClass({
       this.state.notifications.removeForm(index);
     }
   },
+  getNotificationsForms(){
+    return _.reject(this.state.notifications.forms(), f => {
+      return f.cleanedData.DELETE;
+    });
+  },
   renderNotificationForm(){
     return(
       <div>
         <h2>Notifications</h2>
-        {this.state.notifications.forms().map((form, index) => {
+        {this.getNotificationsForms().map((form, index) => {
           return (
             <div>
               <div className="row">
@@ -145,17 +145,16 @@ const CheckCreateInfo = React.createClass({
                 <div className="row flex-1">
                   <Grid fluid={true}>
                     <Row>
-                      {form.boundFields().map(bf => {
-                        return(
-                          <Col xs={12} sm={6}>
-                           <BoundField bf={bf}/>
-                         </Col>
-                        )
-                      })}
+                      <Col xs={12} sm={6}>
+                        <BoundField bf={form.boundField('type')}/>
+                     </Col>
+                      <Col xs={12} sm={6}>
+                        <BoundField bf={form.boundField('value')}/>
+                     </Col>
                     </Row>
                   </Grid>
                 </div>
-                {this.renderRemoveNotificationButton(index)}
+                {this.renderRemoveNotificationButton(form, index)}
               </div>
             </div>
           )
@@ -166,13 +165,12 @@ const CheckCreateInfo = React.createClass({
     )
   },
   getFinalData(){
-    return {
-      check_spec:{
-        value:{
-          name:this.state.info.cleanedData.name
-        }
-      }
-    }
+    let check = _.clone(this.props.check);
+    check.check_spec.value.name = this.state.info.cleanedData.name;
+    check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
+      return _.omit(n, 'DELETE');
+    });
+    return check;
   },
   getCleanedData(){
     let notificationData = this.state.notifications.cleanedData();
@@ -182,7 +180,7 @@ const CheckCreateInfo = React.createClass({
     return _.assign(data, this.state.info.cleanedData);
   },
   disabled(){
-    let notifsComplete = _.chain(this.state.notifications.forms()).map(n => n.isComplete()).every().value();
+    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
     return !(this.state.info.isComplete() && notifsComplete);
   },
   renderSubmitButton(){

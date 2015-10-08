@@ -8,6 +8,9 @@
   &:hover{
     background:$gray-800
   }
+  &:last-of-type{
+    border:0;
+  }
 }
 
 .list-item-btn{

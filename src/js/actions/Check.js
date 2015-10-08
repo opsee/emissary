@@ -127,11 +127,11 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
 
 _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
   (data) => {
-    const d = _statics.formatCheckData(data);
+    let newData = _statics.formatCheckData(data);
     return request
     .post(`${config.api}/bastions/test-check`)
     .set('Authorization', UserStore.getAuth())
-    .send({check:d})
+    .send({check:newData, max_hosts:3, deadline:'30s'})
   },
   res => res.body,
   res => _.get(res.body) || res

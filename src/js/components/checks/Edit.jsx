@@ -32,12 +32,6 @@ function getState(){
   }
 }
 
-let stepData = {
-  step1:{},
-  step2:{},
-  step3:{}
-}
-
 const CheckEdit = React.createClass({
   mixins: [CheckStore.mixin],
   storeDidChange(){
@@ -62,14 +56,12 @@ const CheckEdit = React.createClass({
     return getState();
   },
   getFinalData(){
-    let merged = _.merge({}, stepData.step1, stepData.step2, stepData.step3);
-    return _.defaultsDeep({}, merged, this.state.check);
+    return this.state.check;
   },
   updateData(data, disabled, num){
-    // this.setState({check:_.extend(this.state.check,data)});
     var obj = {};
     obj[`step${num}`] = {disabled:disabled};
-    stepData[`step${num}`] = data;
+    obj.check = data;
     this.setState(obj);
   },
   disabled(){
@@ -116,7 +108,7 @@ const CheckEdit = React.createClass({
                   <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </div>
                 {
-                  <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>
+                  // <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>
                 }
                 <div><br/></div>
                 <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>

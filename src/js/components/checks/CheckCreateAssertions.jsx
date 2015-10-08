@@ -72,13 +72,12 @@ const AssertionsFormSet = forms.FormSet.extend({
 const CheckCreateAssertions = React.createClass({
   getInitialState() {
     const self = this;
-    console.log(this.props.check);
     var obj = {
       assertions: new AssertionsFormSet({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
         initial:this.props.check.assertions,
-        minNum:1,//!this.props.check.assertions.length ? 1 : 0,
+        minNum:!this.props.check.assertions.length ? 1 : 0,
         extra:0
       }),
       response:this.props.response,
@@ -97,7 +96,7 @@ const CheckCreateAssertions = React.createClass({
     return obj;
   },
   changeAndUpdate(){
-    this.props.onChange(this.getCleanedData(), this.disabled(), 2)
+    this.props.onChange(this.getFinalData(), this.disabled(), 2)
   },
   renderOperand(form, key){
     const data = form.cleanedData;
@@ -151,6 +150,13 @@ const CheckCreateAssertions = React.createClass({
       return f.cleanedData.DELETE;
     });
   },
+  renderDeleteAssertionButton(form, index){
+    if(index > 0){
+      return <BoundField bf={form.boundField('DELETE')}/>
+    }else{
+      return <span/>
+    }
+  },
   renderAssertionsForm(){
     return(
       <div>
@@ -187,7 +193,7 @@ const CheckCreateAssertions = React.createClass({
                     </Row>
                   </Grid>
                 </div>
-                <BoundField bf={form.boundField('DELETE')}/>
+                {this.renderDeleteAssertionButton(form, index)}
                 {
                   // this.renderRemoveAssertionButton(index)
                 }
@@ -201,11 +207,12 @@ const CheckCreateAssertions = React.createClass({
       </div>
     )
   },
-  getCleanedData(){
-    const obj = {
-      assertions:this.state.assertions.cleanedData()
-    }
-    return _.assign({}, obj);
+  getFinalData(){
+    let check = _.clone(this.props.check);
+    check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
+      return _.omit(a, 'DELETE');
+    })
+    return check;
   },
   getFormattedResponse(){
     return CheckStore.getFormattedResponse(this.props.response);
@@ -226,8 +233,7 @@ const CheckCreateAssertions = React.createClass({
     }
   },
   disabled(){
-    return !_.chain(this.state.assertions.forms()).map(a => a.isComplete()).every().value();
-    return !this.state.assertions.isValid();
+    return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
   },
   submit(e){
     e.preventDefault();
@@ -241,11 +247,6 @@ const CheckCreateAssertions = React.createClass({
         <br />
         {this.renderAssertionsForm()}
         <div><br/></div>
-        <h2>Your Response &amp; Request</h2>
-        <p>We are including the content of your response and your request to help you define assertions.</p>
-        <Highlight>
-          {JSON.stringify(this.getFormattedResponse(this.state.response), null, ' ')}
-        </Highlight>
         {this.renderSubmitButton()}
       </form>
     )

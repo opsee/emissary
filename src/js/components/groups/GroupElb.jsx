@@ -98,8 +98,11 @@ export default React.createClass({
                     <td>{this.state.group.get('id')}</td>
                   </tr>
                 </table>
-                <h2>Instances</h2>
-                <InstanceItemList instances={this.state.group.get('instances')}/>
+                <div className="padding-b">
+                  <h2>Instances</h2>
+                  <InstanceItemList instances={this.state.group.get('instances')}/>
+                </div>
+                <h2>Checks</h2>
                 <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
               </Col>
             </Row>

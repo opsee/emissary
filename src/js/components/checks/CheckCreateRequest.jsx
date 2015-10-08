@@ -193,7 +193,7 @@ const CheckCreateRequest = React.createClass({
     )
   },
   getFinalData(){
-    let check = _.cloneDeep(this.props.check);
+    let check = _.clone(this.props.check);
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
       return {
@@ -202,7 +202,9 @@ const CheckCreateRequest = React.createClass({
       }
     }).value();
     let cleaned = this.state.info.cleanedData;
-    cleaned.port = cleaned.port ? parseInt(cleaned.port, 10) : null;
+    if(cleaned.port){
+     cleaned.port = parseInt(cleaned.port, 10); 
+    }
     val = _.assign(val, cleaned);
     return check;
   },
