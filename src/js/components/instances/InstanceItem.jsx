@@ -85,13 +85,13 @@ const InstanceItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col>
+              <Col className="padding-b-md">
                 <h3>{this.props.item.get('name')} Actions</h3>
 
                 {
                   this.getActions().map(a => {
                     return (
-                      <Button className="text-left" block={true} flat={true} onClick={this.runAction.bind(null, a)}>
+                      <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, a)}>
                         <Add className="icon"/> {a}
                       </Button>
                     )
@@ -115,12 +115,13 @@ const InstanceItem = React.createClass({
         }
         <div className="line-height-1 flex-1 align-self-stretch display-flex">
           <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-center" style={{maxWidth:'100%'}}>
-            <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+            <div>
+              <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+              <div className="text-secondary">X of Y passing</div>
+
+            </div>
           </Link>
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
-          {
-          // <div className="text-secondary">X of Y passing (N instances)</div>
-          }
         </div>
       </div>
     );

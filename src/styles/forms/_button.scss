@@ -35,7 +35,7 @@ $button-fab-padding: 1.60rem !default;
 .btn {
   border: none;
   border-radius: $border-radius-large;
-  padding: 0.25em 0.5em;
+  padding: 0.5em;
   text-transform: uppercase;
   @extend .md-shadow-bottom-z-1;
   @include transition(box-shadow $swift-ease-out-duration $swift-ease-out-timing-function,

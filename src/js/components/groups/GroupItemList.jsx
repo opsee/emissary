@@ -56,7 +56,7 @@ export default React.createClass({
     }else{
       return (
         <div>
-          <p>No Groups</p>
+          <pre className="pre">No groups</pre>
         </div>
       )
     }

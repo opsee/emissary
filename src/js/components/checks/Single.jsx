@@ -90,8 +90,11 @@ export default React.createClass({
           <h2>Notifications</h2>
           {this.state.check.get('notifications').map(n => {
             return(
-              <div>
-                <Mail inline={true}/>&nbsp;{n.value}
+              <div className="list-item">
+                <div className="list-item-avatar">
+                  <Mail inline={true}/>
+                </div>
+                {n.value}
               </div>
             )
           })}

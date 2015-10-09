@@ -1,5 +1,5 @@
 <div>
-<Highlight>
+<pre class="pre">
   {
    "AWSTemplateFormatVersion": "2010-09-09",
    "Description": "The Opsee Bastion Host",
@@ -201,14 +201,14 @@
     }
    }
   }
-</Highlight>
+</pre>
 
   <h2>The IAM Role and Permissions</h2>
 
   <p>Here is a summary of the role and permissions for the Opsee Bastion Instance.</p>
 
   <div class="padding-tb">
-    <pre>elasticbeanstalk:RetrieveEnvironmentInfo</pre>
+    <pre class="pre">elasticbeanstalk:RetrieveEnvironmentInfo</pre>
     <p>Initiates a request to compile the specified type of information of the deployed environment.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -217,7 +217,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>ec2:Describe*</pre>
+    <pre class="pre">ec2:Describe*</pre>
     <p>See ec2 Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -278,7 +278,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elasticache:Describe*</pre>
+    <pre class="pre">elasticache:Describe*</pre>
     <p>See elasticache Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -298,7 +298,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sqs:GetQueueAttributes</pre>
+    <pre class="pre">sqs:GetQueueAttributes</pre>
     <p>Gets attributes for the specified queue. </p>
     <p>Reference URL(s):</p>
     <ul>
@@ -307,7 +307,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>kinesis:Describe*</pre>
+    <pre class="pre">kinesis:Describe*</pre>
     <p>Describes the specified stream.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -316,7 +316,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudformation:DescribeStackResources</pre>
+    <pre class="pre">cloudformation:DescribeStackResources</pre>
     <p>Returns AWS resource descriptions for running and deleted stacks. If StackName is specified, all the associated resources that are part of the stack are returned. If PhysicalResourceId is specified, the associated resources of the stack that the resource belongs to are returned.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -325,7 +325,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>appstream:Get*</pre>
+    <pre class="pre">appstream:Get*</pre>
     <p>The following policy grants users read-only access to Amazon AppStream.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -334,7 +334,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elasticbeanstalk:Describe*</pre>
+    <pre class="pre">elasticbeanstalk:Describe*</pre>
     <p>See elasticbeanstalk Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -351,7 +351,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudfront:List*</pre>
+    <pre class="pre">cloudfront:List*</pre>
     <p>See cloudfront documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -360,7 +360,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>route53:Get*</pre>
+    <pre class="pre">route53:Get*</pre>
     <p>See route53 api documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -369,7 +369,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudformation:DescribeStackResource</pre>
+    <pre class="pre">cloudformation:DescribeStackResource</pre>
     <p>Returns a description of the specified resource in the specified stack.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -378,7 +378,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>dynamodb:DescribeTable</pre>
+    <pre class="pre">dynamodb:DescribeTable</pre>
     <p>Returns information about the table, including the current status of the table, when it was created, the primary key schema, and any indexes on the table.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -387,7 +387,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>ses:List*</pre>
+    <pre class="pre">ses:List*</pre>
     <p>See ses List*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -398,7 +398,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>opsworks:Get*</pre>
+    <pre class="pre">opsworks:Get*</pre>
     <p>Gets a generated host name for the specified layer, based on the current host name theme.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -407,7 +407,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudwatch:Describe*</pre>
+    <pre class="pre">cloudwatch:Describe*</pre>
     <p>See cloudwatch DescribeAlarmsHistory, DescribeAlarms, DescribeAlarmsForMetric, DescribeAlarmActions</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -418,7 +418,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elastictranscoder:Read*</pre>
+    <pre class="pre">elastictranscoder:Read*</pre>
     <p>See elastictranscoder documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -427,7 +427,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sns:List*</pre>
+    <pre class="pre">sns:List*</pre>
     <p>See sns List*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -440,7 +440,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>rds:ListTagsForResource</pre>
+    <pre class="pre">rds:ListTagsForResource</pre>
     <p>Lists all tags on an Amazon RDS resource.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -449,7 +449,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>opsworks:Describe*</pre>
+    <pre class="pre">opsworks:Describe*</pre>
     <p>See opsworks Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -478,7 +478,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>redshift:ViewQueriesInConsole</pre>
+    <pre class="pre">redshift:ViewQueriesInConsole</pre>
     <p>action controls whether a user can see queries in the Amazon Redshift console in the Queries tab of the Cluster section</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -487,7 +487,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>directconnect:Describe*</pre>
+    <pre class="pre">directconnect:Describe*</pre>
     <p>See directconnect Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -502,7 +502,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudformation:GetTemplate</pre>
+    <pre class="pre">cloudformation:GetTemplate</pre>
     <p>Returns the template body for a specified stack. You can get the template for running or deleted stacks. For deleted stacks, GetTemplate returns the template for up to 90 days after the stack has been deleted.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -511,7 +511,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>iam:Get*</pre>
+    <pre class="pre">iam:Get*</pre>
     <p>See iam Get*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -540,7 +540,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elasticbeanstalk:List*</pre>
+    <pre class="pre">elasticbeanstalk:List*</pre>
     <p>Returns a list of the available solution stack names.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -549,7 +549,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>dynamodb:GetItem</pre>
+    <pre class="pre">dynamodb:GetItem</pre>
     <p>The GetItem operation returns a set of attributes for the item with the given primary key. If there is no matching item, GetItem does not return any data.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -558,7 +558,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudwatch:List*</pre>
+    <pre class="pre">cloudwatch:List*</pre>
     <p>See cloudwatch ListMetrics</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -567,7 +567,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>dynamodb:ListTables</pre>
+    <pre class="pre">dynamodb:ListTables</pre>
     <p>Returns an array of table names associated with the current account and endpoint. The output from ListTables is paginated, with each page returning a maximum of 100 table names.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -576,7 +576,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>trustedadvisor:Describe*</pre>
+    <pre class="pre">trustedadvisor:Describe*</pre>
     <p>See support api documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -585,7 +585,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>kinesis:List*</pre>
+    <pre class="pre">kinesis:List*</pre>
     <p>See kinesis ListStreams,ListTagsForStream</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -596,7 +596,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>iam:List*</pre>
+    <pre class="pre">iam:List*</pre>
     <p>See iam List*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -628,7 +628,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>s3:Get*</pre>
+    <pre class="pre">s3:Get*</pre>
     <p>See s3 api documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -637,7 +637,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elastictranscoder:List*</pre>
+    <pre class="pre">elastictranscoder:List*</pre>
     <p>See elastictranscoder documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -646,7 +646,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudtrail:DescribeTrails</pre>
+    <pre class="pre">cloudtrail:DescribeTrails</pre>
     <p>Retrieves settings for the trail associated with the current region for your account.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -655,7 +655,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elasticloadbalancing:Describe*</pre>
+    <pre class="pre">elasticloadbalancing:Describe*</pre>
     <p>See elasticloadbalancing Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -669,7 +669,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sns:Get*</pre>
+    <pre class="pre">sns:Get*</pre>
     <p>See sns Get*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -681,7 +681,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elasticbeanstalk:RequestEnvironmentInfo</pre>
+    <pre class="pre">elasticbeanstalk:RequestEnvironmentInfo</pre>
     <p>See elasticbeanstalk Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -698,7 +698,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sqs:ListQueues</pre>
+    <pre class="pre">sqs:ListQueues</pre>
     <p>Returns a list of your queues.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -707,7 +707,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sdb:GetAttributes</pre>
+    <pre class="pre">sdb:GetAttributes</pre>
     <p>Returns all of the attributes associated with the item.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -716,7 +716,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sdb:List*</pre>
+    <pre class="pre">sdb:List*</pre>
     <p>The ListDomains operation lists all domains associated with the Access Key ID.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -725,7 +725,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>rds:Describe*</pre>
+    <pre class="pre">rds:Describe*</pre>
     <p>See rds Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -758,7 +758,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudformation:DescribeStacks</pre>
+    <pre class="pre">cloudformation:DescribeStacks</pre>
     <p>Returns the description for the specified stack; if no stack name was specified, then it returns the description for all the stacks created</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -767,7 +767,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>autoscaling:Describe*</pre>
+    <pre class="pre">autoscaling:Describe*</pre>
     <p>See autoscaling Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -792,7 +792,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>dynamodb:BatchGetItem</pre>
+    <pre class="pre">dynamodb:BatchGetItem</pre>
     <p>The BatchGetItem operation returns the attributes of one or more items from one or more tables. You identify requested items by primary key.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -801,7 +801,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudfront:Get*</pre>
+    <pre class="pre">cloudfront:Get*</pre>
     <p>See cloudfront documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -810,7 +810,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>route53:List*</pre>
+    <pre class="pre">route53:List*</pre>
     <p>See route53 api documentation</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -819,7 +819,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>dynamodb:Query</pre>
+    <pre class="pre">dynamodb:Query</pre>
     <p>A Query operation uses the primary key of a table or a secondary index to directly access items from that table or index.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -828,7 +828,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>storagegateway:Describe*</pre>
+    <pre class="pre">storagegateway:Describe*</pre>
     <p>See storagegateway Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -849,7 +849,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudtrail:GetTrailStatus</pre>
+    <pre class="pre">cloudtrail:GetTrailStatus</pre>
     <p>Returns a JSON-formatted list of information about the specified trail. Fields include information on delivery errors, Amazon SNS and Amazon S3 errors, and start and stop logging times for each trail.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -858,7 +858,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>s3:List*</pre>
+    <pre class="pre">s3:List*</pre>
     <p>See s3 api documentatin</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -867,7 +867,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>kinesis:Get*</pre>
+    <pre class="pre">kinesis:Get*</pre>
     <p>See kinesis GetRecords, GetShardIterator</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -877,7 +877,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>dynamodb:Scan</pre>
+    <pre class="pre">dynamodb:Scan</pre>
     <p>The Scan operation returns one or more items and item attributes by accessing every item in a table or a secondary index.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -886,7 +886,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>ses:Get*</pre>
+    <pre class="pre">ses:Get*</pre>
     <p>See ses Get*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -900,7 +900,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>elasticbeanstalk:Check*</pre>
+    <pre class="pre">elasticbeanstalk:Check*</pre>
     <p>Checks if the specified CNAME is available.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -909,7 +909,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>redshift:Describe*</pre>
+    <pre class="pre">redshift:Describe*</pre>
     <p>See redshift Describe*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -939,7 +939,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudformation:DescribeStackEvents</pre>
+    <pre class="pre">cloudformation:DescribeStackEvents</pre>
     <p>Returns all stack related events for a specified stack. For more information about a stack event history, go to Stacks in the AWS CloudFormation User Guide.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -948,7 +948,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudformation:List*</pre>
+    <pre class="pre">cloudformation:List*</pre>
     <p>See cloudformation ListStacks and ListResources</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -958,7 +958,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sqs:ReceiveMessage</pre>
+    <pre class="pre">sqs:ReceiveMessage</pre>
     <p>Retrieves one or more messages, with a maximum limit of 10 messages, from the specified queue. Long poll support is enabled by using the WaitTimeSeconds parameter.</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -967,7 +967,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>cloudwatch:Get*</pre>
+    <pre class="pre">cloudwatch:Get*</pre>
     <p>See cloudwatch GetMetricStatistics</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -976,7 +976,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>storagegateway:List*</pre>
+    <pre class="pre">storagegateway:List*</pre>
     <p>See storagegateway List*</p>
     <p>Reference URL(s):</p>
     <ul>
@@ -990,7 +990,7 @@
   </div>
 
   <div class="padding-tb">
-    <pre>sdb:Select*</pre>
+    <pre class="pre">sdb:Select*</pre>
     <p>The Select operation returns a set of Attributes for ItemNames that match the select expression. Select is similar to the standard SQL SELECT statement.</p>
     <p>Reference URL(s):</p>
     <ul>

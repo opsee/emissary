@@ -11,6 +11,12 @@
     color: white;
   }
 }
+.list-item-avatar {
+  height: 2.5em;
+  margin: 0 1em 0 0.5em;
+  position: relative;
+  width: 2.5em;
+}
 
 .list-item-link {
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function, color $swift-ease-out-duration $swift-ease-out-timing-function);

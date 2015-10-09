@@ -5,6 +5,7 @@ import colors from 'seedling/colors';
 import fuzzy from 'fuzzy';
 import Immutable, {Record, List, Map} from 'immutable';
 import {Link} from 'react-router';
+import {Search} from '../icons';
 
 import router from '../../modules/router';
 import config from '../../modules/config';
@@ -22,12 +23,16 @@ const FilterForm = forms.Form.extend({
   filter: forms.CharField({
     label:'Filter',
     widgetAttrs:{
-      placeholder:'group:target-group'
+      placeholder:'What are you looking for?'
     },
     required:false
   }),
   render() {
-    return <BoundField bf={this.boundField('filter')}/>
+    return (
+      <BoundField bf={this.boundField('filter')}>
+        <Search className="icon"/>
+      </BoundField>
+    )
   }
 });
 
@@ -167,9 +172,7 @@ const EnvWithFilter = React.createClass({
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {
-            //{this.state.filter.render()}
-          }
+          {this.state.filter.render()}
           {this.renderGroupsSecurity()}
           <hr/>
           {this.renderGroupsELB()}

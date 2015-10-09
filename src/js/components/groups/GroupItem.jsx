@@ -85,10 +85,10 @@ const GroupItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col>
+              <Col className="padding-b-md">
                 <h3>{this.props.item.get('name')} Actions</h3>
 
-                <Button className="text-left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
+                <Button className="text-left btn-primary" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
                   <Add className="icon"/> Create Check
                 </Button>
               </Col>
@@ -108,9 +108,8 @@ const GroupItem = React.createClass({
       return(
         <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-center" style={{maxWidth:'100%'}}>
           <div>
-            {this.props.item.get('name')}
-            <br/>
-            <span className="text-secondary">X of Y passing</span>
+            <div>{this.props.item.get('name')}</div>
+            <div className="text-secondary">X of Y passing</div>
           </div>
         </Link>
         );
