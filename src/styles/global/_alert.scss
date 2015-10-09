@@ -1,4 +1,7 @@
 .alert{
+  &.alert-default {
+    background-color: $gray-800;
+  }
   &.alert-success, &.alert-info, &.alert-warning, &.alert-danger{
     color:white;
   }

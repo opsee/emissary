@@ -1,6 +1,7 @@
 import React from 'react';
 import Immutable, {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
+import {Alert} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {ChevronDown} from '../icons';
 
@@ -56,7 +57,9 @@ export default React.createClass({
     }else{
       return (
         <div>
-          <pre className="pre">No groups</pre>
+          <Alert bsStyle="default">
+            No groups
+          </Alert>
         </div>
       )
     }

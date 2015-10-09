@@ -1,7 +1,6 @@
 .list-item {
   align-items: flex-start;
   color: white;
-  cursor: pointer;
   overflow: hidden;
   padding: 0.5em 0;
   text-decoration: none;
@@ -16,6 +15,9 @@
   margin: 0 1em 0 0.5em;
   position: relative;
   width: 2.5em;
+}
+.list-item-icon {
+  margin: 0.5em;
 }
 
 .list-item-link {
