@@ -13,7 +13,6 @@ import {StatusHandler} from '../global';
 function getState(){
   return {
     status:CheckStore.getTestCheckStatus(),
-    response:CheckStore.getResponse(),
     complete:false,
     expanded:false
   }
@@ -34,37 +33,48 @@ const CheckResponse = React.createClass({
     check:PropTypes.object.isRequired
   },
   getInitialState() {
-    return _.assign(getState(), {check:CheckStore.newCheck().toJS()});
+    return getState();
   },
   arrayFromData(data){
     let arr = _.map(['port', 'verb', 'path'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
+    let headers = _.get(data, 'check_spec.value.headers');
+    if(headers){
+      arr.push(headers.map(h => {
+        return h.name+h.values.join(', ');
+      }).join(':'));
+    }
     return arr;
   },
-  shouldComponentUpdate(nextProps, nextState){
-    const old = this.arrayFromData(this.props.check);
-    const data = this.arrayFromData(nextProps.check);
-    if(!_.isEqual(old,data)){
-      return true;
-    }
-    return false;
-  },
-  componentWillUpdate(nextProps){
-    const complete = this.checkIsComplete(nextProps.check);
+  // shouldComponentUpdate(nextProps, nextState){
+  //   const old = this.arrayFromData(this.props.check);
+  //   const data = this.arrayFromData(nextProps.check);
+  //   if(!_.isEqual(old,data)){
+  //     return true;
+  //   }
+  //   return false;
+  // },
+  fire(props){
+    const complete = this.checkIsComplete(props.check);
     if(complete){
-      CheckActions.testCheck(nextProps.check);
+      if(this.state.status != 'pending'){
+        CheckActions.testCheck(props.check);
+      }
     }
     this.setState({complete});
   },
   componentDidMount(){
-    const complete = this.checkIsComplete(this.props.check);
-    if(complete){
-      CheckActions.testCheck(this.props.check);
+    this.fire(this.props);
+  },
+  componentWillReceiveProps(nextProps){
+    const old = this.arrayFromData(this.props.check);
+    const data = this.arrayFromData(nextProps.check);
+    if(!_.isEqual(old,data)){
+      this.fire(nextProps);
     }
-    this.setState({complete});
   },
   getFormattedResponse(){
-    return CheckStore.getFormattedResponse(this.state.response);
+    return CheckStore.getFormattedResponse(CheckStore.getResponse());
   },
   checkIsComplete(check){
     const condition1 = check.target.id;
@@ -119,7 +129,7 @@ const CheckResponse = React.createClass({
     }
   },
   render() {
-    if(this.state.response && this.state.complete){
+    if(CheckStore.getResponse() && this.state.complete){
       return(
         <div style={this.getStyle()} className={`check-response ${this.state.expanded ? 'expanded' : ''}`}>
           <Highlight>

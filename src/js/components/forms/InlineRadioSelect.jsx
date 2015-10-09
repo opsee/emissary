@@ -27,9 +27,9 @@ export default React.createClass({
       obj[this.props.bf.name] = val;
       this.props.bf.form.updateData(obj);
     }
-    // if(this.props.bf.field.initial && Array.isArray(this.props.bf.field.initial)){
-    //   this.onChange(this.props.bf.field.initial[0], true);
-    // }
+    if(this.props.bf.field.initial && Array.isArray(this.props.bf.field.initial)){
+      this.onChange(this.props.bf.field.initial[0], true);
+    }
   },
   widgetIsActive(w){
     return this.props.bf.value() == w.choiceValue;

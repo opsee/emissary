@@ -80,7 +80,7 @@ const CheckItem = React.createClass({
           </Grid>
           {
             this.getActions().map(a => {
-              return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
+              return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}} bsStyle="primary">{a}</Button>
             })
           }
         </Modal>
