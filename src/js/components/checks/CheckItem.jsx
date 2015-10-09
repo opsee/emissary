@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow} from '../icons';
+import {MoreHoriz, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 
 const CheckItem = React.createClass({
@@ -76,13 +76,22 @@ const CheckItem = React.createClass({
       return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
+            <Row>
+              <Col>
+                <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
+
+                {
+                  this.getActions().map(a => {
+                    return (
+                      <Button className="text-left" block={true} flat={true} onClick={this.runAction.bind(null, a)}>
+                        <Add className="icon"/> {a}
+                      </Button>
+                    )
+                  })
+                }
+              </Col>
+            </Row>
           </Grid>
-          {
-            this.getActions().map(a => {
-              return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
-            })
-          }
         </Modal>
       )
     }

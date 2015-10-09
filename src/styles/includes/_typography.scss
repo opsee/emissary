@@ -31,15 +31,15 @@ h1, .h1{
 
 h2, .h2{
   color: $text-color-secondary;
-  margin:0 0 0.5em 0;
   font-family:$headings-font-family;
 }
 
 h3,.h3{
   color: $text-color-secondary;
   font-family: $font-family-sans-serif;
-  font-size: 1.125em;
+  font-size: 1em;
   font-weight: $body-font-weight-med;
+  margin: 1em 0;
   text-indent: 0.5em;
 }
 

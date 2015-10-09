@@ -11,9 +11,6 @@
   // }
   // background:$brand-warning;
   color:$gray-900;
-  a{
-    color:$brand-info;
-  }
 }
 .modal.notify{
   &.fade .modal-dialog { @include translate(0, 100px) }
@@ -30,7 +27,7 @@
       max-width: 500px;
       right: 32px;
     }
-  } 
+  }
 }
 
 .modal.context{

@@ -83,7 +83,9 @@ $button-fab-padding: 1.60rem !default;
 
 .btn-flat {
   background-color: transparent;
+  color: white;
   .icon {
+    fill: white;
     vertical-align: text-bottom;
   }
   &[disabled]{

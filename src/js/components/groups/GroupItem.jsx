@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow} from '../icons';
+import {MoreHoriz, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 
 const GroupItem = React.createClass({
@@ -84,9 +84,16 @@ const GroupItem = React.createClass({
       return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h3>{this.props.item.get('name')} Actions</h3>
+            <Row>
+              <Col>
+                <h3>{this.props.item.get('name')} Actions</h3>
+
+                <Button className="text-left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
+                  <Add className="icon"/> Create Check
+                </Button>
+              </Col>
+            </Row>
           </Grid>
-          <Button to="checkCreateRequest" block={true} flat={true} className="text-left" style={{margin:0}} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>Create Check</Button>
           {
             // this.getActions().map(a => {
             //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
