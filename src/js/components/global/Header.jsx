@@ -28,14 +28,14 @@ export default React.createClass({
       return (
         <Link to="profile" className={style.navbarLink}>
           <Person nav={true}/>&nbsp;
-          <span className="md-navbar-title">Profile</span>
+          <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
       )
     }else{
       return (
         <Link to="login" className={style.navbarLink}>
           <Login nav={true}/>&nbsp;
-          <span className="md-navbar-title">Login</span>
+          <span className={`${style.navbarTitle}`}>Login</span>
         </Link>
       )
     }
@@ -47,19 +47,19 @@ export default React.createClass({
         <li>
          <Link to="checks" className={style.navbarLink}>
            <Checkmark nav={true}/>&nbsp;
-           <span className="md-navbar-title">Checks</span>
+           <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
         <li>
          <Link to="env" className={style.navbarLink}>
            <Cloud nav={true}/>&nbsp;
-           <span className="md-navbar-title">Environment</span>
+           <span className={`${style.navbarTitle}`}>Environment</span>
          </Link>
        </li>
         <li>
          <Link to="more" className={style.navbarLink}>
            <MoreHoriz nav={true}/>&nbsp;
-           <span className="md-navbar-title">More</span>
+           <span className={`${style.navbarTitle}`}>More</span>
          </Link>
        </li>
        <li>
@@ -78,7 +78,7 @@ export default React.createClass({
   },
   render(){
     return(
-      <header id="header" className="user-select-none" style={this.getHeaderStyle()}>
+      <header id="header" className={`user-select-none ${style.header}`} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>

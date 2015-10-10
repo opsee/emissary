@@ -30,6 +30,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
+      { test: /\.cssGlobal$/, loader: ExtractTextPlugin.extract('css-loader') },
       { test: /\.js$|\.jsx$/, loaders: ['react-hot', 'babel-loader?optional[]=runtime&stage=0'], exclude: /node_modules/ },
       { test: /\.json$/, loaders: ['json']},
       {test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'}
