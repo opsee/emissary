@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html{% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>
   <head>
     <meta charset="UTF-8">
     <title>Opsee</title>
-    <link rel="stylesheet" href="/dist/style.css">
     <link rel="stylesheet" type="text/css" href="//cloud.typography.com/6076032/646208/css/fonts.css" />
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/favicon/apple-touch-icon-114x114.png" />
@@ -17,22 +16,19 @@
     <meta name="msapplication-TileColor" content="#00589B" />
     <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png" />
     <meta name="viewport" content="width=device-width">
+    {% if (o.htmlWebpackPlugin.files.favicon) { %}
+    <link rel="shortcut icon" href="{%=o.htmlWebpackPlugin.files.favicon%}">
+    {% } %}
+    {% for (var css in o.htmlWebpackPlugin.files.css) { %}
+    <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
+    {% } %}
     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/mrw1z4dm';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
     </script>
   </head>
   <body>
     <div id="main"></div>
-    <!-- @ifdef API -->
-    <!-- @echo API -->
-    <script>window.apiDomain = 'https://api-beta.opsee.co';</script>
-    <!-- @endif -->
-    <!-- @ifdef REV -->
-    <!-- @endif -->
-    <!-- @if ENV='prod' -->
-    <!--<script src="/js/index.@echo REV.min.js"></script>-->
-    <!-- @endif -->
-    <!-- @if ENV!='prod' -->
-    <script src="/dist/index.js"></script>
-    <!-- @endif -->
+    {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
+    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+    {% } %}
   </body>
 </html>
