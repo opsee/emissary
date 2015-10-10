@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Opsee</title>
-    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/dist/style.css">
     <link rel="stylesheet" type="text/css" href="//cloud.typography.com/6076032/646208/css/fonts.css" />
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/favicon/apple-touch-icon-114x114.png" />
@@ -23,19 +23,16 @@
   <body>
     <div id="main"></div>
     <!-- @ifdef API -->
-    <script>window.apiDomain = '<!-- @echo API -->';</script>
-    <!-- @endif -->
-    <!-- @ifdef SLACK_CLIENT_SECRET -->
-    <script>window.slackClientSecret = '<!-- @echo SLACK_CLIENT_SECRET -->';</script>
+    <!-- @echo API -->
+    <script>window.apiDomain = 'https://api-beta.opsee.co';</script>
     <!-- @endif -->
     <!-- @ifdef REV -->
-    <script>window.revision = '<!-- @echo REV -->';</script>
     <!-- @endif -->
     <!-- @if ENV='prod' -->
-    <script src="/js/index.<!-- @echo REV -->.min.js"></script>
+    <!--<script src="/js/index.@echo REV.min.js"></script>-->
     <!-- @endif -->
     <!-- @if ENV!='prod' -->
-    <script src="/js/index.js"></script>
+    <script src="/dist/index.js"></script>
     <!-- @endif -->
   </body>
 </html>

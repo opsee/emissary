@@ -10,7 +10,7 @@ let config = {
   error:false,
   slackClientSecret:window.slackClientSecret,
   intercom:window.Intercom,
-  debug:storage.get('debug'),
+  debug:storage.get('debug') || false,
   ghosting:false
 }
 

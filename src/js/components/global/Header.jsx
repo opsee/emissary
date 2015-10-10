@@ -7,6 +7,8 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
 import colors from 'seedling/colors';
 
+import style from './header.css';
+
 export default React.createClass({
   mixins: [UserStore.mixin, GlobalStore.mixin],
   storeDidChange(){
@@ -24,14 +26,14 @@ export default React.createClass({
   renderLoginLink(){
     if(UserStore.hasUser()){
       return (
-        <Link to="profile" className="md-navbar-link">
+        <Link to="profile" className={style.navbarLink}>
           <Person nav={true}/>&nbsp;
           <span className="md-navbar-title">Profile</span>
         </Link>
       )
     }else{
       return (
-        <Link to="login" className="md-navbar-link">
+        <Link to="login" className={style.navbarLink}>
           <Login nav={true}/>&nbsp;
           <span className="md-navbar-title">Login</span>
         </Link>
@@ -41,21 +43,21 @@ export default React.createClass({
   renderNavItems(){
   if(this.state.showNav){
     return (
-      <ul className="md-navbar-list list-unstyled display-flex justify-content-around">
+      <ul className={`list-unstyled display-flex justify-content-around`}>
         <li>
-         <Link to="checks" className="md-navbar-link">
+         <Link to="checks" className={style.navbarLink}>
            <Checkmark nav={true}/>&nbsp;
            <span className="md-navbar-title">Checks</span>
          </Link>
        </li>
         <li>
-         <Link to="env" className="md-navbar-link">
+         <Link to="env" className={style.navbarLink}>
            <Cloud nav={true}/>&nbsp;
            <span className="md-navbar-title">Environment</span>
          </Link>
        </li>
         <li>
-         <Link to="more" className="md-navbar-link">
+         <Link to="more" className={style.navbarLink}>
            <MoreHoriz nav={true}/>&nbsp;
            <span className="md-navbar-title">More</span>
          </Link>
@@ -77,7 +79,7 @@ export default React.createClass({
   render(){
     return(
       <header id="header" className="user-select-none" style={this.getHeaderStyle()}>
-        <nav className="md-navbar" role="navigation">
+        <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>
               <Col xs={12} sm={10} smOffset={1}>
