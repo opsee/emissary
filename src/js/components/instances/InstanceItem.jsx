@@ -107,18 +107,13 @@ const InstanceItem = React.createClass({
   render(){
     return (
       <div key="listItem" className="list-item" onClick={this.onClick}>
-        {
-          this.renderModal()
-        }
-        {
-          this.renderGraph()
-        }
+        {this.renderModal()}
         <div className="line-height-1 flex-1 align-self-stretch display-flex">
-          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-center" style={{maxWidth:'100%'}}>
+          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+            {this.renderGraph()}
             <div>
               <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
               <div className="text-secondary">X of Y passing</div>
-
             </div>
           </Link>
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}

@@ -35,6 +35,10 @@
   @extend .display-flex;
   @include align-items(center);
 }
+.align-items-start{
+  @extend .display-flex;
+  @include align-items(flex-start);
+}
 .align-self-stretch{
   @include align-self(stretch);
 }

@@ -2,7 +2,6 @@
   align-items: flex-start;
   color: white;
   overflow: hidden;
-  padding: 0.5em 0;
   text-decoration: none;
   transition:300ms background;
   @extend .align-items-center;
@@ -23,18 +22,15 @@
 .list-item-link {
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function, color $swift-ease-out-duration $swift-ease-out-timing-function);
   color: $text-color;
+  padding: 0.5em 0;
   text-decoration: none;
   &:active, &:focus {
     background-color: $gray-800;
-    color: $text-color;
+    color: white;
     text-decoration: none;
   }
   &:hover {
     color: white;
     text-decoration: none;
   }
-}
-
-.list-item-btn{
-  @include align-self(stretch);
 }
