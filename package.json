@@ -19,6 +19,7 @@
     "cssnext-loader": "^1.0.1",
     "eslint": "^0.24.1",
     "event-stream": "^3.3.1",
+    "express": "^4.13.3",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
     "gulp": "^3.8.7",
@@ -35,22 +36,26 @@
     "html-webpack-plugin": "^1.6.2",
     "json-loader": "^0.5.3",
     "node-libs-browser": "^0.5.3",
+    "proxy-middleware": "^0.14.0",
     "react-hot-loader": "^1.3.0",
     "reactify": "^1.1.1",
     "request": "^2.61.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.3",
+    "url": "^0.11.0",
     "url-loader": "^0.5.6",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.4.0",
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.0"
+    "webpack-dev-server": "^1.12.0",
+    "xregexp-lookbehind": "^1.0.0"
   },
   "scripts": {
     "dev": "gulp --type dev",
     "start": "node server",
-    "build": "gulp build"
+    "build": "gulp build",
+    "deploy": "NODE_ENV=production webpack && cp -r src/fonts/ dist/fonts/ && docker build -t quay.io/opsee/emissary:latest ."
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
@@ -75,7 +80,6 @@
     "git-sha-webpack-plugin": "0.0.6",
     "gulp-preprocess": "^1.2.0",
     "highlight.js": "^8.6.0",
-    "html-to-react": "^0.1.1",
     "immutable": "^3.7.4",
     "lodash": "^3.10.0",
     "mcfly": "0.0.10",

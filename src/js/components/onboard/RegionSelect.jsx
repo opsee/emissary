@@ -24,7 +24,10 @@ const regionChoices = regions.map(r => {
 const InfoForm = forms.Form.extend({
   regions: forms.ChoiceField({
     choices: regionChoices,
-    widget: forms.RadioSelect
+    widget: forms.RadioSelect,
+    widgetAttrs:{
+      widgetType:'RadioSelect'
+    }
   }),
 });
 

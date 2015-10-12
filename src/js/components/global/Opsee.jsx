@@ -10,7 +10,7 @@ import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col, Row} from '../../modules/bootstrap';
-import style from 'file?name=style.css!./style.cssGlobal';
+import style from './style.global.css';
 
 function initialize(){
   if(UserStore.hasUser() && !GlobalStore.getSocketStarted()){

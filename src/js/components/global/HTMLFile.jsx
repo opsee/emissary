@@ -2,8 +2,6 @@ import React, {PropTypes} from 'react';
 import request from '../../modules/request';
 import Alert from './Alert.jsx';
 import {Highlight} from '../global';
-import HtmlToReact from 'html-to-react';
-const Parser = HtmlToReact.Parser(React);
 
 export default React.createClass({
   propTypes:{
