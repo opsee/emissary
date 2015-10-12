@@ -7,6 +7,8 @@ dependencies:
 machine:
   services:
     - docker
+  node:
+    version: 4.1.2
 test:
   override:
     - docker run -d -p 9000:80 quay.io/opsee/emissary:latest; sleep 10;
