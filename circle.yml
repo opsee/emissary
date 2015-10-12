@@ -2,7 +2,7 @@ dependencies:
   override:
     - npm install -g webpack
     - npm install
-    - npm deploy
+    - npm run-script deploy
     - docker info
 machine:
   services:
