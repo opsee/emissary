@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {Settings, NewWindow, Add} from '../icons';
+import {Settings, NewWindow, Refresh} from '../icons';
 import {Button} from '../forms';
 
 const CheckItem = React.createClass({
@@ -53,7 +53,7 @@ const CheckItem = React.createClass({
   renderButton(){
     return (
     <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu" className="btn btn-icon btn-secondary">
-      <Settings btn={true}/>
+      <Settings fill={colors.textColorSecondary} btn={true}/>
     </Button>
     );
   },
@@ -79,16 +79,9 @@ const CheckItem = React.createClass({
             <Row>
               <Col className="padding-b-md">
                 <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
-
-                {
-                  this.getActions().map(a => {
-                    return (
-                      <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, a)}>
-                        <Add className="icon"/> {a}
-                      </Button>
-                    )
-                  })
-                }
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
+                  <Refresh className="icon"/> Test
+                </Button>
               </Col>
             </Row>
           </Grid>

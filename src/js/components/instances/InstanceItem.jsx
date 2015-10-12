@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {Settings, NewWindow, Add} from '../icons';
+import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
 import {Button} from '../forms';
 
 const InstanceItem = React.createClass({
@@ -37,9 +37,6 @@ const InstanceItem = React.createClass({
       showModal:true
     });
   },
-  getActions(){
-    return ['Restart', 'Stop', 'Start', 'Terminate'];
-  },
   runAction(action){
   },
   hideContextMenu(){
@@ -61,7 +58,7 @@ const InstanceItem = React.createClass({
   renderButton(){
     return (
     <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="btn-secondary">
-      <Settings btn={true}/>
+      <Settings fill={colors.textColorSecondary} btn={true}/>
     </Button>
     );
   },
@@ -87,16 +84,18 @@ const InstanceItem = React.createClass({
             <Row>
               <Col className="padding-b-md">
                 <h3>{this.props.item.get('name')} Actions</h3>
-
-                {
-                  this.getActions().map(a => {
-                    return (
-                      <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, a)}>
-                        <Add className="icon"/> {a}
-                      </Button>
-                    )
-                  })
-                }
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart')}>
+                  <Refresh className="icon"/> Restart
+                </Button>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Stop')}>
+                  <Stop className="icon"/> Stop
+                </Button>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
+                  <Play className="icon"/> Start
+                </Button>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
+                  <Delete className="icon"/> Terminate
+                </Button>
               </Col>
             </Row>
           </Grid>

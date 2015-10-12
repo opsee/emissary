@@ -40,9 +40,6 @@ $button-fab-padding: 1.60rem !default;
   @extend .md-shadow-bottom-z-1;
   @include transition(box-shadow $swift-ease-out-duration $swift-ease-out-timing-function,
     background-color $swift-ease-out-duration $swift-ease-out-timing-function, width $swift-ease-out-duration $swift-ease-out-timing-function);
-  &.btn-flat{
-    box-shadow:none;
-  }
   &[disabled]{
     @include opacity(100);
     color: $text-color-secondary !important;
@@ -82,6 +79,7 @@ $button-fab-padding: 1.60rem !default;
 }
 
 .btn-flat {
+  @include box-shadow(none);
   background-color: transparent;
   color: white;
   &:hover, &:active {

@@ -37,7 +37,7 @@ function SVG(path){
       }else if(this.props.nav){
         return 'rgba(255, 255, 255, 0.54)';
       }
-      return this.props.fill || colors.textColor;
+      return this.props.fill || 'white';
     },
     render(){
       return (

@@ -23,7 +23,8 @@ const FilterForm = forms.Form.extend({
   filter: forms.CharField({
     label:'Filter',
     widgetAttrs:{
-      placeholder:'What are you looking for?'
+      placeholder:'What are you looking for?',
+      noLabel: true
     },
     required:false
   }),
