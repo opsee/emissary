@@ -1,6 +1,7 @@
 import React from 'react';
 import BaseSVG from './BaseSVG.jsx';
 import Radium from 'radium';
+import colors from 'seedling/colors';
 
 function SVG(path){
   return Radium(React.createClass({
@@ -36,7 +37,7 @@ function SVG(path){
       }else if(this.props.nav){
         return 'rgba(255, 255, 255, 0.54)';
       }
-      return this.props.fill || null;
+      return this.props.fill || colors.textColor;
     },
     render(){
       return (

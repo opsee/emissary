@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow, Add} from '../icons';
+import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 
 const CheckItem = React.createClass({
@@ -53,7 +53,7 @@ const CheckItem = React.createClass({
   renderButton(){
     return (
     <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu" className="btn btn-icon btn-secondary">
-      <MoreHoriz btn={true}/>
+      <Settings btn={true}/>
     </Button>
     );
   },

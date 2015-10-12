@@ -25,6 +25,7 @@
   color: $text-color;
   text-decoration: none;
   &:active, &:focus {
+    background-color: $gray-800;
     color: $text-color;
     text-decoration: none;
   }

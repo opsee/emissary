@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow, Add} from '../icons';
+import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 
 const InstanceItem = React.createClass({
@@ -60,8 +60,8 @@ const InstanceItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="btn btn-icon btn-secondary">
-      <MoreHoriz btn={true}/>
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="btn-secondary">
+      <Settings btn={true}/>
     </Button>
     );
   },

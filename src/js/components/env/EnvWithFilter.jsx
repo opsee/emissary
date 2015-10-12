@@ -151,7 +151,7 @@ const EnvWithFilter = React.createClass({
     if(GroupStore.getGroupsELB().size){
       return (
         <div>
-          <h3>ELB Groups ({this.getGroupsELB().size})</h3>
+          <h3>ELBs ({this.getGroupsELB().size})</h3>
           <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )

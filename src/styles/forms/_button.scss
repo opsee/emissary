@@ -84,8 +84,11 @@ $button-fab-padding: 1.60rem !default;
 .btn-flat {
   background-color: transparent;
   color: white;
+  &:hover, &:active {
+    background-color: $gray-800;
+  }
   .icon {
-    fill: white;
+    fill: $text-color;
     vertical-align: text-bottom;
   }
   &[disabled]{
@@ -128,9 +131,6 @@ $button-fab-padding: 1.60rem !default;
       fill: $brand-info;
     }
   }
-  &:hover {
-    background-color: $gray-800;
-  }
 }
 .btn-block {
   display: block;
@@ -169,9 +169,6 @@ $button-fab-padding: 1.60rem !default;
   background-clip: padding-box;
   overflow: hidden;
   position: relative;
-  &:hover, &:active, &:focus {
-    background-color: $gray-800;
-  }
 }
 .btn-secondary {
   margin-right: 0.375em;
@@ -185,11 +182,6 @@ $button-fab-padding: 1.60rem !default;
   position: absolute;
   top: 50%;
   width: 24px;
-}
-.btn-default{
-  &:hover{
-    background:$gray-800;
-  }
 }
 .dropdown-menu {
   @extend .md-shadow-bottom-z-1;
