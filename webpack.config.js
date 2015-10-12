@@ -16,7 +16,7 @@ var uglify = new webpack.optimize.UglifyJsPlugin({
   mangle: false,
   compress:false
 })
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
 module.exports = {
   cache:true,
@@ -24,7 +24,8 @@ module.exports = {
   entry: {
     'index': [
       './js/index.jsx'
-    ]
+    ],
+    vendor:['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'radium', 'superagent', 'fuzzy', 'highlight.js', 'react-document-title', 'react-g-analytics', 'react-router-bootstrap', 'react-timeago']
   },
   output: {
     path: path.join(__dirname, "dist"),
@@ -64,7 +65,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       hash:true,
       template:'src/index.html'
-    })
-    // commonsPlugin
+    }),
+    commonsPlugin
   ]
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Toolbar} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
@@ -36,7 +36,7 @@ export default React.createClass({
         type:'elb',
         id:this.props.params.id
       }),
-      getGroupStatus:GroupStore.getGetGroupELBStatus(),
+      status:GroupStore.getGetGroupELBStatus(),
       getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
     }
   },
@@ -110,11 +110,7 @@ export default React.createClass({
         </div>
       );
     }else{
-      return (
-        <div>
-          <Toolbar title="Group"/>
-        </div>
-      )
+      return <StatusHandler status={this.state.status}/>
     }
   }
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Toolbar} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
@@ -36,7 +36,7 @@ export default React.createClass({
         type:'security',
         id:this.props.params.id
       }),
-      getGroupStatus:GroupStore.getGetGroupSecurityStatus(),
+      status:GroupStore.getGetGroupSecurityStatus(),
       getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
     }
   },
@@ -60,7 +60,7 @@ export default React.createClass({
     }
   },
   render() {
-    if(this.state.group.get('id')){
+    if(this.state.group.get('name')){
       return (
         <div>
           <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
@@ -90,11 +90,7 @@ export default React.createClass({
         </div>
       );
     }else{
-      return (
-        <div>
-          <Toolbar title="Group"/>
-        </div>
-      )
+      return <StatusHandler status={this.state.status}/>
     }
   }
 });

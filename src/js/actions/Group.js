@@ -29,12 +29,16 @@ _actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
         .set('Authorization', UserStore.getAuth()).then((res2) => {
           group.instances = res2.body && res2.body.instances;
           resolve(group);
+        }, errRes2 => {
+          reject(errRes2);
         });
-      })
+      }, errRes => {
+        reject(errRes);
+      });
     });
   },
   res => res,
-  res => res && res.response
+  res => _.get(res,'response') || res
 );
 
 _actions.getGroupsRDSSecurity = Flux.statics.addAsyncAction('getGroupsRDSSecurity',
@@ -79,12 +83,12 @@ _actions.getGroupELB = Flux.statics.addAsyncAction('getGroupELB',
         .set('Authorization', UserStore.getAuth()).then((res2) => {
           group.instances = res2.body && res2.body.instances;
           resolve(group);
-        });
-      })
+        }, res2 => reject(res2));
+      }, res => reject(res))
     });
   },
   res => res,
-  res => res && res.response
+  res => _.get(res, 'response') || res
 );
 
 export default _.assign({}, ..._.values(_actions));
