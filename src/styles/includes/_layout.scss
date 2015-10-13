@@ -35,6 +35,10 @@
   @extend .display-flex;
   @include align-items(center);
 }
+.align-items-start{
+  @extend .display-flex;
+  @include align-items(flex-start);
+}
 .align-self-stretch{
   @include align-self(stretch);
 }
@@ -75,6 +79,69 @@
 
 .margin-none{
   margin:0 !important;
+}
+
+.margin-b-sm {
+  margin-bottom:0.5em;
+}
+.margin-b {
+  margin-bottom:1em;
+}
+.margin-b-md {
+  margin-bottom:2em;
+}
+.margin-b-lg {
+  margin-bottom:3em;
+}
+.margin-b-xlg {
+  margin-bottom:4em;
+  @include breakpoint($screen-sm){
+    margin-bottom:5em;
+  }
+}
+
+.margin-t-sm {
+  margin-top:0.5em;
+}
+.margin-t {
+  margin-top:1em;
+}
+.margin-t-md {
+  margin-top:2em;
+}
+.margin-t-lg {
+  margin-top:3em;
+}
+.margin-t-xlg {
+  margin-top:4em;
+  @include breakpoint($screen-sm){
+    margin-top:5em;
+  }
+}
+
+.margin-tb-sm {
+  margin-top:0.5em;
+  margin-bottom:0.5em;
+}
+.margin-tb {
+  margin-top:1em;
+  margin-bottom:1em;
+}
+.margin-tb-md {
+  margin-top:2em;
+  margin-bottom:2em;
+}
+.margin-tb-lg {
+  margin-top:3em;
+  margin-bottom:3em;
+}
+.margin-tb-xlg {
+  margin-top:4em;
+  margin-bottom:4em;
+  @include breakpoint($screen-sm){
+    margin-top:5em;
+    margin-bottom:5em;
+  }
 }
 
 .padding-none {

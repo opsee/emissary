@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow} from '../icons';
+import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 
 const GroupItem = React.createClass({
@@ -60,9 +60,9 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu" className="list-item-btn">
-        <MoreHoriz btn={true}/>
-      </Button>
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu" className="btn btn-icon btn-secondary">
+      <Settings fill={colors.textColorSecondary} btn={true}/>
+    </Button>
     );
   },
   renderLinkButton(){
@@ -84,9 +84,16 @@ const GroupItem = React.createClass({
       return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h2 class="h3">{this.props.item.get('name')} Actions</h2>
+            <Row>
+              <Col className="padding-b-md">
+                <h3>{this.props.item.get('name')} Actions</h3>
+
+                <Button className="text-left btn-primary" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
+                  <Add className="icon"/> Create Check
+                </Button>
+              </Col>
+            </Row>
           </Grid>
-          <Button to="checkCreateRequest" block={true} flat={true} className="text-left" style={{margin:0}} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>Create Check</Button>
           {
             // this.getActions().map(a => {
             //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
@@ -99,13 +106,17 @@ const GroupItem = React.createClass({
   renderLink(){
     if(!this.props.onClick){
       return(
-        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
-          <div>{this.props.item.get('name')}</div>
+        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+          {this.renderGraph()}
+          <div>
+            <div>{this.props.item.get('name')}</div>
+            <div className="text-secondary">X of Y passing</div>
+          </div>
         </Link>
         );
       }else{
         return (
-          <div className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
+          <div className="list-item-link" style={{maxWidth:'100%'}}>
             <div>{this.props.item.get('name')}</div>
           </div>
         )
@@ -115,13 +126,9 @@ const GroupItem = React.createClass({
     return (
       <div key="listItem" className="list-item" onClick={this.onClick} style={[this.getStyle()]}>
         {this.renderModal()}
-        {this.renderGraph()}
-        <div className="line-height-1 flex-1 align-self-stretch display-flex">
+        <div className="line-height-1 flex-1 display-flex">
           {this.renderLink()}
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
-          {
-          // <div className="text-secondary">X of Y passing (N instances)</div>
-          }
         </div>
       </div>
     );

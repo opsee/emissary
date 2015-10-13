@@ -7,6 +7,7 @@ import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import Immutable, {Record, List, Map} from 'immutable';
 import {Button} from '../forms';
+import {ChevronDown} from '../icons';
 
 export default React.createClass({
   propTypes:{
@@ -33,7 +34,7 @@ export default React.createClass({
   },
   renderMoreButton(){
     if(this.state.limit < this.props.instances.size){
-      return <Button onClick={this.getMore} className="pull-right">Show All</Button>
+      return <Button bsStyle="primary" flat={true} onClick={this.getMore} className="margin-t">Show {this.props.instances.size - this.state.limit} more <ChevronDown className="icon"/></Button>
     }
   },
   render(){

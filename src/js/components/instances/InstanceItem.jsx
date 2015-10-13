@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow} from '../icons';
+import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
 import {Button} from '../forms';
 
 const InstanceItem = React.createClass({
@@ -37,9 +37,6 @@ const InstanceItem = React.createClass({
       showModal:true
     });
   },
-  getActions(){
-    return ['Restart', 'Stop', 'Start', 'Terminate'];
-  },
   runAction(action){
   },
   hideContextMenu(){
@@ -60,9 +57,9 @@ const InstanceItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="list-item-btn">
-        <MoreHoriz btn={true}/>
-      </Button>
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="btn-secondary">
+      <Settings fill={colors.textColorSecondary} btn={true}/>
+    </Button>
     );
   },
   renderLinkButton(){
@@ -84,13 +81,24 @@ const InstanceItem = React.createClass({
       return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h2 class="h3">{this.props.item.get('name')} Actions</h2>
+            <Row>
+              <Col className="padding-b-md">
+                <h3>{this.props.item.get('name')} Actions</h3>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart')}>
+                  <Refresh className="icon"/> Restart
+                </Button>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Stop')}>
+                  <Stop className="icon"/> Stop
+                </Button>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
+                  <Play className="icon"/> Start
+                </Button>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
+                  <Delete className="icon"/> Terminate
+                </Button>
+              </Col>
+            </Row>
           </Grid>
-          {
-            this.getActions().map(a => {
-              return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
-            })
-          }
         </Modal>
       )
     }
@@ -98,20 +106,16 @@ const InstanceItem = React.createClass({
   render(){
     return (
       <div key="listItem" className="list-item" onClick={this.onClick}>
-        {
-          this.renderModal()
-        }
-        {
-          this.renderGraph()
-        }
+        {this.renderModal()}
         <div className="line-height-1 flex-1 align-self-stretch display-flex">
-          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
-            <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+            {this.renderGraph()}
+            <div>
+              <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+              <div className="text-secondary">X of Y passing</div>
+            </div>
           </Link>
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
-          {
-          // <div className="text-secondary">X of Y passing (N instances)</div>
-          }
         </div>
       </div>
     );

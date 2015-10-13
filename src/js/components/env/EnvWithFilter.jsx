@@ -5,6 +5,7 @@ import colors from 'seedling/colors';
 import fuzzy from 'fuzzy';
 import Immutable, {Record, List, Map} from 'immutable';
 import {Link} from 'react-router';
+import {Search} from '../icons';
 
 import router from '../../modules/router';
 import config from '../../modules/config';
@@ -22,12 +23,17 @@ const FilterForm = forms.Form.extend({
   filter: forms.CharField({
     label:'Filter',
     widgetAttrs:{
-      placeholder:'group:target-group'
+      placeholder:'What are you looking for?',
+      noLabel: true
     },
     required:false
   }),
   render() {
-    return <BoundField bf={this.boundField('filter')}/>
+    return (
+      <BoundField bf={this.boundField('filter')}>
+        <Search className="icon"/>
+      </BoundField>
+    )
   }
 });
 
@@ -51,7 +57,7 @@ const EnvWithFilter = React.createClass({
       stateObj.attemptedInstancesECC = true;
     }
     this.setState(_.assign(stateObj,{
-      getGroupsSecurityStatus, 
+      getGroupsSecurityStatus,
       getGroupsELBStatus,
       getInstancesECCStatus
     }));
@@ -136,7 +142,7 @@ const EnvWithFilter = React.createClass({
     if(GroupStore.getGroupsSecurity().size){
     return (
       <div>
-        <h3>Security Groups</h3>
+        <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
         <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
       </div>
       )
@@ -146,7 +152,7 @@ const EnvWithFilter = React.createClass({
     if(GroupStore.getGroupsELB().size){
       return (
         <div>
-          <h3>ELB Groups</h3>
+          <h3>ELBs ({this.getGroupsELB().size})</h3>
           <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
@@ -156,7 +162,7 @@ const EnvWithFilter = React.createClass({
     if(InstanceStore.getInstancesECC().size){
       return (
         <div>
-          <h3>Instances</h3>
+          <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
           <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
         </div>
       )
@@ -168,9 +174,11 @@ const EnvWithFilter = React.createClass({
       return (
         <form name="envWithFilterForm">
           {this.state.filter.render()}
-          {this.props.include.map(i => {
-            return self[`render${_.capitalize(i)}`]();
-          })}
+          {this.renderGroupsSecurity()}
+          <hr/>
+          {this.renderGroupsELB()}
+          <hr/>
+          {this.renderInstancesECC()}
         </form>
       )
     }else{
