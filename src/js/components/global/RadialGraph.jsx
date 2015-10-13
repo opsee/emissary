@@ -21,7 +21,7 @@ const RadialGraph = React.createClass({
         width:radialWidth,
         minHeight:radialWidth,
         minWidth:radialWidth,
-        margin:'0 1em 0 0',
+        margin:'0 1em 0 0.5em',
         fontFamily:"Tungsten Rounded A, Tungsten Rounded B, sans-serif",
         fontSize:'16px'
       },

@@ -1,10 +1,11 @@
 .md-navbar{
-  @extend .md-shadow-bottom-z-2;
+  @include box-shadow(0 -2px 5px 0 rgba(0, 0, 0, 0.26));
   background:none;
   bottom: 0;
   margin: 0;
   width: 100%;
   @include breakpoint($screen-sm) {
+    @include box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.26));
     .md-navbar-item {
       width: auto;
     }

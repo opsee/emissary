@@ -14,7 +14,7 @@ const OpseeButton = React.createClass({
   },
   renderChevron(){
     if(this.props.chevron){
-      let fill = 'white';
+      let fill = colors.textColor;
       if(this.props.disabled){
         fill = colors.textColorSecondary;
       }

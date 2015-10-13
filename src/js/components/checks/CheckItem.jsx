@@ -8,7 +8,7 @@ import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
-import {MoreHoriz, NewWindow} from '../icons';
+import {Settings, NewWindow, Refresh} from '../icons';
 import {Button} from '../forms';
 
 const CheckItem = React.createClass({
@@ -52,9 +52,9 @@ const CheckItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu" className="list-item-btn">
-        <MoreHoriz btn={true}/>
-      </Button>
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu" className="btn btn-icon btn-secondary">
+      <Settings fill={colors.textColorSecondary} btn={true}/>
+    </Button>
     );
   },
   renderLinkButton(){
@@ -76,13 +76,15 @@ const CheckItem = React.createClass({
       return(
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
-            <h2 class="h3">{this.props.item.get('check_spec').value.name} Actions</h2>
+            <Row>
+              <Col className="padding-b-md">
+                <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
+                  <Refresh className="icon"/> Test
+                </Button>
+              </Col>
+            </Row>
           </Grid>
-          {
-            this.getActions().map(a => {
-              return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}} bsStyle="primary">{a}</Button>
-            })
-          }
         </Modal>
       )
     }
@@ -91,15 +93,15 @@ const CheckItem = React.createClass({
     return (
       <div key="listItem" className="list-item" onClick={this.onClick}>
         {this.renderModal()}
-        {this.renderGraph()}
-        <div className="line-height-1 flex-1 align-self-stretch display-flex">
-          <Link to={this.getLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('check_spec').value.name}} className="link-style-1 flex-1 align-items-center" style={{maxWidth:'100%'}}>
-            <div>{this.props.item.get('check_spec').value.name}</div>
+        <div className="line-height-1 flex-1 display-flex">
+          <Link to={this.getLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('check_spec').value.name}} className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+            {this.renderGraph()}
+            <div>
+              <div>{this.props.item.get('check_spec').value.name}</div>
+              <div className="text-secondary">X of Y passing</div>
+            </div>
           </Link>
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
-          {
-          // <div className="text-secondary">X of Y passing (N instances)</div>
-          }
         </div>
       </div>
     );

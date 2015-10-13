@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 var outer = {
-  backgroundColor:colors.gray900,
+  backgroundColor: '#424242',
   fontSize:'2.0rem',
   width:'100%',
   marginBottom:'2em'

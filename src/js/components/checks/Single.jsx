@@ -9,6 +9,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
+import {Delete} from '../icons';
 
 function getState(){
   return {
@@ -64,61 +65,78 @@ export default React.createClass({
     if(!this.state.error && this.state.check.get('id')){
       return(
         <div>
-          <h2>Check Information</h2>
-          <table className="table">
-            <tr>
-              <td><strong>Group</strong></td>
-              <td>{this.getLink()}</td>
-            </tr>
-            <tr>
-              <td><strong>Path</strong></td>
-              <td>{this.getCheckJS().check_spec.value.path}</td>
-            </tr>
-            <tr>
-              <td><strong>Port</strong></td>
-              <td>{this.getCheckJS().check_spec.value.port}</td>
-            </tr>
-            <tr>
-              <td><strong>Protocol</strong></td>
-              <td>{this.getCheckJS().check_spec.value.protocol}</td>
-            </tr>
-            <tr>
-              <td><strong>Method</strong></td>
-              <td>{this.getCheckJS().check_spec.value.verb}</td>
-            </tr>
-          </table>
-          <h2>Notifications</h2>
-          {this.state.check.get('notifications').map(n => {
-            return(
-              <div>
-                <Mail inline={true}/>&nbsp;{n.value}
-              </div>
-            )
-          })}
-          <h2>Assertions</h2>
-          {this.state.check.get('assertions').map(a => {
-            return(
-              <div>{JSON.stringify(a, null, ' ')}</div>
-            )
-          })}
-          {
-          // <h2>Check Instances</h2>
-          // <ul className="list-unstyled">
-          //   {this.state.check.get('instances').map(i => {
-          //     return (
-          //       <li key={i.get('id')}>
-          //         <InstanceItem item={i}/>
-          //       </li>
-          //       )
-          //   })}
-          // </ul>
-          }
+          <div className="padding-b">
+            <h3>Check Information</h3>
+            <table className="table">
+              <tr>
+                <td><strong>Group</strong></td>
+                <td>{this.getLink()}</td>
+              </tr>
+              <tr>
+                <td><strong>Path</strong></td>
+                <td>{this.getCheckJS().check_spec.value.path}</td>
+              </tr>
+              <tr>
+                <td><strong>Port</strong></td>
+                <td>{this.getCheckJS().check_spec.value.port}</td>
+              </tr>
+              <tr>
+                <td><strong>Protocol</strong></td>
+                <td>{this.getCheckJS().check_spec.value.protocol}</td>
+              </tr>
+              <tr>
+                <td><strong>Method</strong></td>
+                <td>{this.getCheckJS().check_spec.value.verb}</td>
+              </tr>
+            </table>
+          </div>
+          <div className="padding-b">
+            <h3>Notifications</h3>
+            {this.state.check.get('notifications').map(n => {
+              return(
+                <div className="list-item">
+                  <div className="list-item-avatar">
+                    <Mail className="list-item-icon"/>
+                  </div>
+                  <div>
+                    <span className="text-secondary">Mail:</span><br/>
+                    {n.value}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="padding-b">
+            <h3>Assertions</h3>
+            {this.state.check.get('assertions').map(a => {
+              return(
+                <div>
+                  <table className="table">
+                    <tbody>
+                      <tr>
+                        <td><strong>Key</strong></td>
+                        <td>{a.key}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Relationship</strong></td>
+                        <td>{a.relationship}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Value</strong></td>
+                        <td>{a.operand}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )
     }else{
       return (
         <StatusHandler status={this.state.status}>
-          <h2>No Checks Applied</h2>
+          <h3>No Checks Applied</h3>
         </StatusHandler>
       );
     }
@@ -143,9 +161,13 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-              {this.innerRender()}
-              <div><br/></div>
-              <Button onClick={this.removeCheck} bsStyle="danger">Delete Check</Button>
+              <div className="padding-tb">
+                {this.innerRender()}
+              </div>
+              <hr/>
+              <div className="padding-b-md">
+                <Button className="pull-right" onClick={this.removeCheck} flat={true} bsStyle="danger"><Delete className="icon"/> Delete Check</Button>
+              </div>
             </Col>
           </Row>
         </Grid>
