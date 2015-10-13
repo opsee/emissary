@@ -98,7 +98,9 @@ const CheckItem = React.createClass({
             {this.renderGraph()}
             <div>
               <div>{this.props.item.get('check_spec').value.name}</div>
-              <div className="text-secondary">X of Y passing</div>
+              {
+              // <div className="text-secondary">X of Y passing</div>
+              }
             </div>
           </Link>
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}

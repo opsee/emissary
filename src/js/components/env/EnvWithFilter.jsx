@@ -229,7 +229,9 @@ const EnvWithFilter = React.createClass({
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {this.renderStatusTable()}
+          {
+            // this.renderStatusTable()
+          }
           {this.state.filter.render()}
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();
