@@ -255,10 +255,8 @@ const CheckCreateRequest = React.createClass({
     router.transitionTo('checkCreateAssertions');
   },
   disabled(){
-    //TODO validate header form as well
-    let headersComplete = _.chain(this.state.headers.forms()).map(h => h.isComplete()).every().value();
+    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
     return !(this.state.info.isComplete() && headersComplete);
-    return !this.state.info.isComplete();
   },
   dismissHelperText(){
     UserActions.userPutUserData('hasDismissedCheckCreationHelp');

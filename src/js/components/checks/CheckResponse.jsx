@@ -62,7 +62,6 @@ const CheckResponse = React.createClass({
         CheckActions.testCheck(props.check);
       }
     }
-    console.log(props.check, complete);
     this.setState({complete:true});
   },
   componentDidMount(){

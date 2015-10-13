@@ -3,6 +3,7 @@ import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';
 import {UserStore} from '../stores';
+import example from '../../files/bastion-install-messages-example.json';
 
 let _actions = {};
 
@@ -97,12 +98,12 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
 
 _actions.onboardExampleInstall = Flux.statics.addAsyncAction('onboardExampleInstall',
   (data) => {
-    return request
-    .get(`/img/bastion-install-messages-example.json`)
-    .send(data)
+    return new Promise((resolve, reject) => {
+      return resolve(example);
+    })
   },
-  res => res && res.body,
-  res => res && res.response
+  res => res,
+  res => res
 );
 
 export default _.assign({}, ..._.values(_actions));
