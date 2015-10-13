@@ -64,7 +64,9 @@ const InfoForm = forms.Form.extend({
   verb: forms.ChoiceField({
     choices:verbOptions,
     widget:forms.RadioSelect,
-    label:'InlineRadioSelect',
+    widgetAttrs:{
+      widgetType:'InlineRadioSelect'
+    },
     initial:['GET']
   }),
   path: forms.CharField({

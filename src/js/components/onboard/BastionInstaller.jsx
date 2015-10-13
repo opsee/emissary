@@ -49,8 +49,6 @@ const BastionInstaller = React.createClass({
       }
     }
     return 'AWS::IAM::Role';
-    // return index > -1 ? items[index+1].ResourceType : 'Group';
-    // return (index > 0 && index < items.length) ? items[index+1].ResourceType : '';
   },
   getPercentComplete(){
     const num = this.getText().num;
@@ -119,41 +117,16 @@ const BastionInstaller = React.createClass({
     }
     return {string, num};
   },
-  // getItemStatuses(){
-  //   return this.getItems().map(i => {
-  //     return _.last(i) || {ResourceStatus:'CREATE_IN_PROGRESS', ResourceType:i.id};
-  //   })
-  // },
-  // getLatestItem(){
-  //   return _.last(this.props.messages) || {
-  //     ResourceType:'CloudFormation'
-  //   }
-  // },
   isComplete(){
     return false;
   },
-  // getInProgressItem(){
-  //   return {
-  //     ResourceType:'hey'
-  //   }
-  // },
   render() {
     return (
       <div className="padding-bx2">
         <h2>{this.id}</h2>
         <ProgressBar percentage={this.getPercentComplete()} steps={7}/>
         <div style={{textAlign:'center'}}>
-        {
-          // <div ng-if="bastion.getStatus() == 'progress'"><img style={{height:'24px',width:'24px',marginRight:'12px'}} src="/public/img/tailspin_icon.svg" className="status_icon tailspin" alt="loading icon"/> 
-          // Setting up {this.getInProgressItem()}.</div>
-          // <div ng-if="bastion.getStatus() == 'deleting'"><img style={{height:'24px',width:'24px',marginRight:'12px'}} src="/public/img/tailspin_icon.svg" className="status_icon tailspin" alt="loading icon"/>Failed, cleaning up.</div>
-          // <div ng-if="bastion.getStatus() == 'rollback'">Failed. Cleanup complete.</div>
-          // <div ng-if="bastion.getStatus() == 'complete'"><Checkmark/>Complete.</div>
-        }
         {this.getText().string}
-          <div>{
-            // this.getStatus()
-          }</div>
         </div>
       </div>
     );

@@ -4,12 +4,13 @@ import {ChevronRight} from '../icons';
 import statics from '../../modules/statics';
 import {StepCounter} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import img from '../../../img/tut-bastion';
 
 export default React.createClass({
   statics:{
       willTransitionTo(transition, params, query, cb){
         const newImg = new Image();
-        newImg.src = '/img/tut-bastion.svg';
+        newImg.src = img;
         newImg.onload = () => cb();
     }
   },
@@ -18,7 +19,7 @@ export default React.createClass({
      <Grid>
       <Row>
         <Col>
-          <img className="step-image" src="/img/tut-bastion.svg"/>
+          <img className="step-image" src={img}/>
           <h2>First, Add the Bastion Instance</h2>
           <p>The first thing we do is add the Bastion Instance to your AWS environment. <a href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>
           <div className="clearfix"><br/></div>

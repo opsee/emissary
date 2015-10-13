@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import _ from 'lodash';
+import style from './loader.css';
 
 export default React.createClass({
   propTypes:{
@@ -13,7 +14,6 @@ export default React.createClass({
     }
   },
   componentDidMount(){
-    console.log('mounted');
     var self = this;
     setTimeout(() => {
       if(self.isMounted()){
@@ -27,7 +27,7 @@ export default React.createClass({
     if(this.state.show){
       return(
         <div className="display-flex justify-content-center">
-          <div className="opsee-loader"></div>
+          <div className={style.loader}></div>
         </div>
       )
     }else{

@@ -1,5 +1,6 @@
 import Alert from './Alert.jsx';
 import Header from './Header.jsx';
+import Highlight from './Highlight.jsx';
 import HTMLFile from './HTMLFile.jsx';
 import ListItem from './ListItem.jsx';
 import Loader from './Loader.jsx';
@@ -18,6 +19,7 @@ import Toolbar from './Toolbar.jsx';
 export default {
   Alert,
   Header,
+  Highlight,
   HTMLFile,
   ListItem,
   Loader,

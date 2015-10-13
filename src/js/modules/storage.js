@@ -1,7 +1,12 @@
 export default {
   get(item){
     var item = window.localStorage[item];
-    return item ? JSON.parse(item) : null;
+    try{
+      item = JSON.parse(item);
+    }catch(err){
+      item = null;
+    }
+    return item;
   },
   set(item, data){
     return window.localStorage.setItem(item, JSON.stringify(data));

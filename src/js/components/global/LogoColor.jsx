@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-
+import img from '../../../img/logo-color-border-light.svg';
 
 const LogoColor = React.createClass({
   getStyle(){
@@ -14,7 +14,7 @@ const LogoColor = React.createClass({
   render() {
     return (
        <div className="padding-tb text-center">
-         <img src="/img/logo-color-border-light.svg" alt="Opsee logo" style={this.getStyle()}/>
+         <img src={img} alt="Opsee logo" style={this.getStyle()}/>
        </div>
     );
   }

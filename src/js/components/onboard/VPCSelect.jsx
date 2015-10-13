@@ -15,7 +15,10 @@ const regions = AWSStore.getRegions();
 const InfoForm = forms.Form.extend({
   vpcs: forms.ChoiceField({
     choices:[],
-    widget: forms.RadioSelect
+    widget: forms.RadioSelect,
+    widgetAttrs:{
+      widgetType:'RadioSelect'
+    },
   }),
 });
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 import MultiToggle from './MultiToggle.jsx';
 import InputWithLabel from './InputWithLabel.jsx';
@@ -21,16 +22,11 @@ export default React.createClass({
   output(){
     switch(this.props.bf.field.constructor.name){
       case 'ChoiceField':
-        let renderer;
-        try{
-          renderer = this.props.bf.field.widget.renderer().constructor.name;
-        }catch(err){}
-        if(renderer && renderer == 'RadioFieldRenderer'){
-          if(this.props.bf.field.label == 'InlineRadioSelect'){
-            return <InlineRadioSelect bf={this.props.bf}/>
-          }else{
-            return <RadioSelect bf={this.props.bf}/>
-          }
+        const type = _.get(this.props.bf, 'field.widget.attrs.widgetType');
+        if(type && type == 'InlineRadioSelect'){
+          return <InlineRadioSelect bf={this.props.bf}/>
+        }else if(type && type == 'RadioSelect'){
+          return <RadioSelect bf={this.props.bf}/>
         }else{
           return(
             <div className="form-group">

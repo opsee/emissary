@@ -1,0 +1,133 @@
+.header{
+  position: fixed;
+  z-index: 10;
+  bottom:0;
+  left:0;
+  width:100%;
+  background-color: #37474F; //$blue-gray-800
+  /*@include transition(all $swift-ease-in-out-duration $swift-ease-in-out-timing-function 100ms);*/
+  @include breakpoint($screen-sm) {
+    bottom:auto;
+    position:relative;
+  }
+}
+
+.mdNavbar{
+  @extend .md-shadow-bottom-z-2;
+  background:none;
+  bottom: 0;
+  margin: 0;
+  width: 100%;
+  @include breakpoint($screen-sm) {
+    .mdNavbar-item {
+      width: auto;
+    }
+    .mdNavbar-icon {
+      display: inline-block;
+      height: 18px;
+      vertical-align: text-bottom;
+      width: 18px;
+    }
+    .mdNavbar-title {
+      display: inline;
+    }
+  }
+  &.mdNavbar-sm{
+    font-size:.8em;
+  }
+}
+.mdNavbar-icon {
+  @include transition(fill $swift-ease-out-duration $swift-ease-out-timing-function);
+  display: block;
+  fill: $text-color-secondary;
+  height: 24px;
+  margin: 0 auto;
+  width: 24px;
+}
+.mdNavbar-list {
+  margin: 0 0;
+  padding: 0 0;
+}
+.mdNavbar-item {
+  display: inline-block;
+  width: 25%;
+}
+.mdNavbar-title {
+  display: block;
+  margin-top: 0.25em;
+}
+.mdNavbar-link {
+  @include transition(color $swift-ease-out-duration $swift-ease-out-timing-function);
+  color: $text-color-secondary;
+  display: block;
+  font-size: 0.75em;
+  overflow: hidden;
+  padding: 0.5em;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  svg{
+    fill:$text-color-secondary;
+  }
+  &:hover, &:active, &:focus {
+    color: $text-color;
+    background-color: transparent !important;
+    text-decoration: none;
+    svg {
+      fill: $text-color;
+    }
+  }
+  &:active, &.active {
+    color: white;
+    svg {
+      fill:white !important;
+    }
+  }
+  @include breakpoint($screen-sm){
+    font-size: 1em;
+    padding: 1em;
+    text-align: left;
+  }
+}
+
+.nav-tabs {
+  border-bottom: 0;
+  @include display-flex;
+  > li {
+    @extend .flex-1;
+    > a {
+      @include transition(color $swift-ease-out-duration $swift-ease-out-timing-function, border-color $swift-ease-out-duration $swift-ease-out-timing-function);
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: $text-color-secondary;
+      font-weight: $body-font-weight-med;
+      text-transform: uppercase;
+      display: block;
+      @extend .text-cutoff;
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: transparent;
+        border-color: transparent;
+        color: $text-color;
+        text-decoration: none;
+      }
+    }
+
+    // Active state, and its :hover to override normal :hover
+    a.active {
+      &,
+      &:hover,
+      &:active,
+      &:focus {
+        color: $brand-primary;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid $brand-primary;
+        color: $text-color;
+        cursor: default;
+        outline: none;
+      }
+    }
+  }
+}

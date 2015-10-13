@@ -1,6 +1,5 @@
 import McFly from 'mcfly';
 import config from './config';
-import assign from 'object-assign';
 import _ from 'lodash';
 
 const Flux = new McFly();

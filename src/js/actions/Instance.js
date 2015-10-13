@@ -39,7 +39,7 @@ _actions.getInstancesECC = Flux.statics.addAsyncAction('getInstancesECC',
 _actions.getInstanceECC = Flux.statics.addAsyncAction('getInstanceECC', 
   (id) => {
     return request
-    .get(`${config.api}/instance/ec2/${id}`)
+    .get(`${config.api}/instances/ec2/${id}`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,
