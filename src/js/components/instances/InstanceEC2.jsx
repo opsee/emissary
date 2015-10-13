@@ -64,40 +64,45 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12} sm={10} smOffset={1}>
-                <table className="table">
-                  <tr>
-                    <td><strong>State</strong></td>
-                    <td>{this.state.instance.get('state')}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Last Checked</strong></td>
-                    <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
-                      <TimeAgo date={this.state.instance.get('lastChecked')}/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Launched</strong></td>
-                    <td>
-                      <TimeAgo date={this.state.instance.get('LaunchTime')}/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Instance Type</strong></td>
-                    <td>{this.state.instance.get('InstanceType')}</td>
-                  </tr>
-                  {this.renderAvailabilityZone()}
-                </table>
+                <div className="padding-b">
+                  <h3>Instance Information</h3>
+                  <table className="table">
+                    <tr>
+                      <td><strong>State</strong></td>
+                      <td>{this.state.instance.get('state')}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Last Checked</strong></td>
+                      <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
+                        <TimeAgo date={this.state.instance.get('lastChecked')}/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Launched</strong></td>
+                      <td>
+                        <TimeAgo date={this.state.instance.get('LaunchTime')}/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Instance Type</strong></td>
+                      <td>{this.state.instance.get('InstanceType')}</td>
+                    </tr>
+                    {this.renderAvailabilityZone()}
+                  </table>
+                </div>
 
-                <h2>Groups - ( {this.data().groups.length} )</h2>
-                <ul className="list-unstyled">
-                  {this.state.instance.get('groups').map(g => {
-                    return (
-                      <li key={g.get('id')}>
-                        <GroupItem item={g}/>
-                      </li>
-                      )
-                  })}
-                </ul>
+                <div className="padding-b">
+                  <h3>Groups ({this.data().groups.length})</h3>
+                  <ul className="list-unstyled">
+                    {this.state.instance.get('groups').map(g => {
+                      return (
+                        <li key={g.get('id')}>
+                          <GroupItem item={g}/>
+                        </li>
+                        )
+                    })}
+                  </ul>
+                </div>
                 {
                   // <h2>{this.data().checks.length} Checks</h2>
                   // <ul className="list-unstyled">

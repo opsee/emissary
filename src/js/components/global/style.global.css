@@ -5563,7 +5563,8 @@ label {
 
 .btn-container {
   background-color: #303030;
-  padding: 0.75em 0;
+  margin-top: 2em;
+  padding: 0.75em 0.5em;
 }
 .btn-container.btn-container-righty {
   text-align: right;
@@ -6325,15 +6326,13 @@ to prevent collapsing during animation*/
 
 .table {
   border-collapse: collapse;
+  margin-bottom: 0;
 }
 .table > thead > tr > th {
   line-height: 40px;
 }
 .table > tbody > tr td {
   line-height: 32px;
-}
-.table > tbody > tr td:first-child {
-  padding-left: 24px;
 }
 
 .modal-content {

@@ -6,6 +6,7 @@ $button-fab-padding: 1.60rem !default;
 
 .btn-container {
   background-color: $body-bg;
+  border-top: 1px solid $gray-800;
   padding: 0.75em 0; //padding takes place of button margin when in container
   &.btn-container-righty {
     text-align: right;

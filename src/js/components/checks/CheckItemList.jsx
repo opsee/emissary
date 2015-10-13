@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {RadialGraph, ListItem, StatusHandler} from '../global';
 import {CheckActions} from '../../actions';
 import {CheckStore} from '../../stores';
+import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
@@ -46,7 +47,7 @@ export default React.createClass({
     }else{
       return (
         <StatusHandler status={this.state.status}>
-          <p>No Checks Applied</p>
+          <Alert bsStyle="default">No checks applied</Alert>
         </StatusHandler>
       );
     }

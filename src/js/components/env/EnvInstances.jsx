@@ -64,7 +64,7 @@ export default React.createClass({
     }else{
       return (
         <StatusHandler status={this.state.status}>
-          No Instances found.
+          <Alert bsStyle="default">No instances found</Alert>
         </StatusHandler>
       );
     }

@@ -9,7 +9,7 @@ import router from '../../modules/router.js';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Edit} from '../icons';
+import {Edit, Logout} from '../icons';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -35,7 +35,7 @@ export default React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Your Profile">
+        <Toolbar title={this.state.user.name}>
           <Link className="btn btn-fab btn-primary" to="profileEdit" title="Edit Your Profile">
             <Edit btn={true}/>
           </Link>
@@ -43,11 +43,26 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-              <h2>{this.state.user.name}</h2>
-              <div>Email: {this.state.user.email}</div>
-              <div>
-                <div><br/><br/></div>
-                <Button bsStyle="default" onClick={this.logOut}>Log Out</Button>
+              <div className="padding-b">
+                <h3>Your Profile Information</h3>
+                <table className="table">
+                  <tbody>
+                    <tr>
+                      <td><strong>Name</strong></td>
+                      <td>{this.state.user.name}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>{this.state.user.email}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="btn-container btn-container-righty">
+                <Button bsStyle="danger" flat={true} onClick={this.logOut}>
+                  <Logout className="icon"/> Log Out
+                </Button>
               </div>
             </Col>
           </Row>

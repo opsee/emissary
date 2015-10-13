@@ -91,22 +91,6 @@ export default React.createClass({
             </table>
           </div>
           <div className="padding-b">
-            <h3>Notifications</h3>
-            {this.state.check.get('notifications').map(n => {
-              return(
-                <div className="list-item">
-                  <div className="list-item-avatar">
-                    <Mail className="list-item-icon"/>
-                  </div>
-                  <div>
-                    <span className="text-secondary">Mail:</span><br/>
-                    {n.value}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div className="padding-b">
             <h3>Assertions</h3>
             {this.state.check.get('assertions').map(a => {
               return(
@@ -128,6 +112,25 @@ export default React.createClass({
                     </tbody>
                   </table>
                 </div>
+              )
+            })}
+          </div>
+          <div className="padding-b">
+            <h3>Notifications</h3>
+            {this.state.check.get('notifications').map(n => {
+              return(
+                <table className="table">
+                  <tbody>
+                    <tr>
+                      <td><strong>Type</strong></td>
+                      <td>Email</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Recipient</strong></td>
+                      <td>{n.value}</td>
+                    </tr>
+                  </tbody>
+                </table>
               )
             })}
           </div>
@@ -161,12 +164,12 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-              <div className="padding-tb">
+              <div>
                 {this.innerRender()}
               </div>
-              <hr/>
-              <div className="padding-b-md">
-                <Button className="pull-right" onClick={this.removeCheck} flat={true} bsStyle="danger"><Delete className="icon"/> Delete Check</Button>
+
+              <div className="btn-container btn-container-righty">
+                <Button onClick={this.removeCheck} flat={true} bsStyle="danger"><Delete className="icon"/> Delete Check</Button>
               </div>
             </Col>
           </Row>
