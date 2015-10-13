@@ -41,9 +41,6 @@ export default React.createClass({
                 <UserInputs include={["name","email"]}/>
                 <button type="submit" className="btn btn-success btn-raised btn-block" disabled={this.disabled()}>
                   {this.loginBtnText()}
-                  {
-                  // <img ng-show="state == options.inProgress" src="/public/img/tailspin_icon.svg" className="status_icon tailspin" alt="loading icon"/>
-                  }
                 </button>
               </form>
               <div className="padding-tb">

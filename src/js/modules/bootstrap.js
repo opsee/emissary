@@ -14,6 +14,9 @@ import Row from 'react-bootstrap/lib/Row';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 
+// import {GridRow as Row} from 'react-flexboxgrid';
+// import {GridColumn as Col} from 'react-flexboxgrid';
+
 export default {
   Alert,
   Button,
