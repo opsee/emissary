@@ -59,7 +59,12 @@ const _public = {
     const momentDate = moment(date);
     const diff = moment().diff(momentDate, 'm');
     // 720 minutes == 12 hours
-    const valid = !!(typeof diff == 'number' && diff < 720 && diff > -1);
+    let minutes = 720;
+    // 15 minutes for ghosting
+    if(_data.user.get('admin_id') > 0){
+      minutes = 15;
+    }
+    const valid = !!(typeof diff == 'number' && diff < minutes && diff > -1);
     if(!date || !valid){
       return null;
     }

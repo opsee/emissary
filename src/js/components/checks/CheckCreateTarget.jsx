@@ -16,7 +16,6 @@ import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
-import CheckResponse from './CheckResponse.jsx';
 import {GroupItemList} from '../groups';
 import {EnvWithFilter} from '../env';
 

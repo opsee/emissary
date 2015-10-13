@@ -64,7 +64,8 @@ const InfoForm = forms.Form.extend({
   verb: forms.ChoiceField({
     choices:verbOptions,
     widget:forms.RadioSelect,
-    label:'InlineRadioSelect'
+    label:'InlineRadioSelect',
+    initial:['GET']
   }),
   path: forms.CharField({
     widgetAttrs:{
@@ -99,6 +100,10 @@ const CheckCreateRequest = React.createClass({
       info: new InfoForm(_.extend({
         onChange:self.changeAndUpdate,
         labelSuffix:'',
+        validation:{
+          on:'blur change',
+          onChangeDelay:700
+        }
       }, self.dataComplete() ? {data:self.props.check.check_spec.value} : null)),
       headers: new HeaderFormSet({
         onChange:self.changeAndUpdate,
@@ -109,7 +114,7 @@ const CheckCreateRequest = React.createClass({
         extra:0,
         validation:{
           on:'blur change',
-          onChangeDelay:150
+          onChangeDelay:700
         }
       }),
       check:this.props.check,

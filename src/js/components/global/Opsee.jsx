@@ -50,8 +50,8 @@ export default React.createClass({
     }
   },
   componentDidMount(){
-    //refresh user token every 20 minutes
-    refreshInterval = setInterval(UserActions.userRefreshToken, (60*1000*20));
+    //refresh user token every 14 minutes
+    refreshInterval = setInterval(UserActions.userRefreshToken, (60*1000*14));
   },
   renderInner(){
     if(this.state.socketError && !config.debug){

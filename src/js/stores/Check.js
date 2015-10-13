@@ -112,7 +112,7 @@ var Check = Record({
       path:undefined,
       protocol:'http',
       port:undefined,
-      verb:'GET',
+      verb:undefined,
       headers:new List()
     })
   })
