@@ -63,7 +63,7 @@ const data = {
 const CheckCreateInfo = React.createClass({
   getInitialState() {
     const self = this;
-    
+
     let initialNotifs = self.props.check.notifications;
     if(!initialNotifs.length){
       initialNotifs.push({
@@ -219,7 +219,7 @@ const CheckCreateInfo = React.createClass({
     return (
       <div>
         <div>
-          <Toolbar btnleft={true} title={`Create a Check: Step 3`}>
+          <Toolbar btnleft={true} title={`Create Check (4 of 4)`}>
             {
               // this.renderLink()
             }

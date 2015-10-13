@@ -77,7 +77,7 @@ const InfoForm = forms.Form.extend({
   render() {
     return(
       <div>
-        <h2>Define an HTTP Request</h2>
+        <h2>Define HTTP Request</h2>
         <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
         <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
         <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
@@ -216,7 +216,7 @@ const CheckCreateRequest = React.createClass({
     }).value();
     let cleaned = this.state.info.cleanedData;
     if(cleaned.port){
-     cleaned.port = parseInt(cleaned.port, 10); 
+     cleaned.port = parseInt(cleaned.port, 10);
     }
     val = _.assign(val, cleaned);
     return check;
@@ -295,7 +295,7 @@ const CheckCreateRequest = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create a Check: Define Request">
+        <Toolbar btnPosition="midRight" title="Create Check (2 of 4)">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>
