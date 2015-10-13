@@ -140,11 +140,6 @@ const CheckCreateInfo = React.createClass({
         {this.getNotificationsForms().map((form, index) => {
           return (
             <div>
-              <Row>
-                <Col>
-                  <h3>Notification {index+1}</h3>
-                </Col>
-              </Row>
               <div className="display-flex">
                 <div className="row flex-1">
                   <Grid fluid={true}>
@@ -195,7 +190,7 @@ const CheckCreateInfo = React.createClass({
           <div>
             <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
           </div>
-          <StepCounter active={3} steps={3}/>
+          <StepCounter active={4} steps={4}/>
         </div>
       )
     }else{
@@ -223,10 +218,10 @@ const CheckCreateInfo = React.createClass({
     return (
       <div>
         <div>
-          <Toolbar btnleft={true} title={`Create Check (4 of 4)`}>
-            {
-              // this.renderLink()
-            }
+          <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`}>
+            <Link to="checks" className="btn btn-icon btn-flat">
+              <Close btn={true}/>
+            </Link>
           </Toolbar>
           <Grid>
             <Row>

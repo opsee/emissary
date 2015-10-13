@@ -28,11 +28,20 @@ function relationshipConcernsEmpty(relationship){
 }
 
 const AssertionsForm = forms.Form.extend({
-  key: forms.ChoiceField({choices:assertionTypeOptions}),
+  key: forms.ChoiceField({
+    widgetAttrs:{
+      noLabel: true
+    },
+    choices:assertionTypeOptions
+  }),
   relationship: forms.ChoiceField({
+    widgetAttrs:{
+      noLabel: true
+    },
     choices:relationshipOptions,
   }),
   operand: forms.CharField({
+    label: 'Value',
     widgetAttrs:{
       placeholder:'Value'
     },
@@ -225,7 +234,7 @@ const CheckCreateAssertions = React.createClass({
           <div>
             <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
           </div>
-          <StepCounter active={2} steps={3}/>
+          <StepCounter active={3} steps={4}/>
         </div>
       )
     }else{
@@ -243,9 +252,9 @@ const CheckCreateAssertions = React.createClass({
     return (
       <form ref="form" onSubmit={this.submit}>
         <div className="padding-t">
-          <h2>Add Assertions</h2>
+          <h2>Assertions</h2>
         </div>
-        <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion per check.</p>
+        <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
         <br />
         {this.renderAssertionsForm()}
         <div><br/></div>
@@ -256,12 +265,24 @@ const CheckCreateAssertions = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnleft={true} title={`Create Check (3 of 4)`}/>
+        <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`}>
+          <Link to="checks" className="btn btn-icon btn-flat">
+            <Close btn={true}/>
+          </Link>
+        </Toolbar>
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>
-              <CheckResponse check={this.props.check}/>
-              {this.innerRender()}
+              <div className="padding-b">
+                <h2>Response to Your Request</h2>
+                <p>The complete response that came back from your request.</p>
+                <div className="padding-tb">
+                  <CheckResponse check={this.props.check}/>
+                </div>
+              </div>
+              <div className="padding-tb">
+                {this.innerRender()}
+              </div>
             </Col>
           </Row>
         </Grid>

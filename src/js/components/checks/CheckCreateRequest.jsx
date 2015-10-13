@@ -175,32 +175,30 @@ const CheckCreateRequest = React.createClass({
         {this.getHeaderForms().map((form, index) => {
           return (
             <div key={`header-form-${index}`}>
-              <Row>
-                <Col xs={12}>
-                  <h3>Header {index+1}</h3>
-                </Col>
-              </Row>
               <div className="display-flex">
                 <div className="row flex-1">
                   <Grid fluid={true}>
                     <Row>
-                      <Col xs={12} sm={6} key={`header-field-${index}-key`}>
+                      <Col xs={12} sm={5} key={`header-field-${index}-key`}>
                         <BoundField bf={form.boundField('key')}/>
                       </Col>
-                      <Col xs={12} sm={6} key={`header-field-${index}-value`}>
+                      <Col xs={10} sm={5} key={`header-field-${index}-value`}>
                         <BoundField bf={form.boundField('value')}/>
+                      </Col>
+                      <Col xs={2} className="padding-t-md">
+                        <BoundField bf={form.boundField('DELETE')}/>
                       </Col>
                     </Row>
                   </Grid>
                 </div>
-                <BoundField bf={form.boundField('DELETE')}/>
+
               </div>
             </div>
           )
         })
         }
-        <Button flat={true} bsStyle="primary" noPad={true} onClick={this.state.headers.addAnother.bind(this.state.headers)}>
-            <Add fill={colors.primary} inline={true}/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+        <Button flat={true} bsStyle="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
+          <Add fill={colors.primary} inline={true}/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     )
@@ -229,7 +227,7 @@ const CheckCreateRequest = React.createClass({
           <div>
             <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
           </div>
-          <StepCounter active={1} steps={3}/>
+          <StepCounter active={2} steps={4}/>
         </div>
       )
     }else{
@@ -244,7 +242,7 @@ const CheckCreateRequest = React.createClass({
     if(selection && selection.get('id')){
       return (
         <div>
-          <h2>Target</h2>
+          <h2>Your Target</h2>
           <GroupItem item={selection} noBorder={true}/>
         </div>
       )
@@ -282,13 +280,20 @@ const CheckCreateRequest = React.createClass({
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
         {this.renderHelperText()}
-        {this.renderTargetSelection()}
-        <div><br/></div>
-        {this.state.info.render()}
-        {this.renderHeaderForm()}
-        {this.renderSubmitButton()}
-        <h2>Your Response</h2>
-        <CheckResponse check={this.getCheck()}/>
+        <div className="padding-b">
+          {this.renderTargetSelection()}
+        </div>
+        <div className="padding-tb">
+          {this.state.info.render()}
+          {this.renderHeaderForm()}
+        </div>
+        <div className="padding-tb">
+          <h2>Your Response</h2>
+          <CheckResponse check={this.getCheck()}/>
+        </div>
+        <div className="padding-tb">
+          {this.renderSubmitButton()}
+        </div>
       </form>
     );
   },

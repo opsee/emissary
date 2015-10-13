@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import RadioWithLabel from './RadioWithLabel.jsx';
 import _ from 'lodash';
+import Button from './Button.jsx';
 import {Close} from '../icons';
 
 export default React.createClass({
@@ -21,9 +22,9 @@ export default React.createClass({
   render(){
     return(
       <div className="padding-lr">
-        <button type="button" className="btn btn-icon btn-flat" title="Remove this Header" onClick={this.onChange}>
-          <Close btn={true}/>
-        </button>
+        <Button flat={true} icon={true} className="btn-danger pull-right" title="Remove this Header" onClick={this.onChange}>
+          <Close className="icon" />
+        </Button>
       </div>
     )
   }
