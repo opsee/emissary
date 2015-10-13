@@ -10,6 +10,7 @@ import {Search} from '../icons';
 import router from '../../modules/router';
 import config from '../../modules/config';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
 import {StatusHandler} from '../global';
@@ -38,7 +39,7 @@ const FilterForm = forms.Form.extend({
 });
 
 const EnvWithFilter = React.createClass({
-  mixins:[GroupStore.mixin, InstanceStore.mixin],
+  mixins:[GroupStore.mixin, InstanceStore.mixin, SetInterval],
   propTypes:{
     include:PropTypes.array
   },
@@ -91,10 +92,14 @@ const EnvWithFilter = React.createClass({
   filterHasChanged(){
     this.forceUpdate();
   },
-  componentWillMount(){
+  getData(){
     GroupActions.getGroupsSecurity();
     GroupActions.getGroupsELB();
     InstanceActions.getInstancesECC();
+  },
+  componentWillMount(){
+    this.getData();
+    this.setInterval(this.getData,15000);
   },
   submit(e){
     e.preventDefault();

@@ -7,7 +7,7 @@ import Immutable, {Record} from 'immutable';
 import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, ListItem, Modal} from '../global';
-import {CheckActions} from '../../actions';
+import {CheckActions, InstanceActions} from '../../actions';
 import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
 import {Button} from '../forms';
 
@@ -37,7 +37,8 @@ const InstanceItem = React.createClass({
       showModal:true
     });
   },
-  runAction(action){
+  runAction(action, id){
+    InstanceActions.runInstanceAction({id});
   },
   hideContextMenu(){
     this.setState({showModal:false});
@@ -84,7 +85,7 @@ const InstanceItem = React.createClass({
             <Row>
               <Col className="padding-b-md">
                 <h3>{this.props.item.get('name')} Actions</h3>
-                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart')}>
+                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
                   <Refresh className="icon"/> Restart
                 </Button>
                 <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Stop')}>

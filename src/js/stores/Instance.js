@@ -125,7 +125,6 @@ const statics = {
     return new Instance(data);
   },
   runInstanceAction(data){
-    config.error = false;
     _data.instancesECC = _data.instancesECC.map(instance => {
       if(instance.get('id') == data.id){
         let changed = instance.toJS();
