@@ -116,9 +116,13 @@ const GroupItem = React.createClass({
         );
       }else{
         return (
-          <div className="list-item-link" style={{maxWidth:'100%'}}>
+          <div className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+          {this.renderGraph()}
+          <div>
             <div>{this.props.item.get('name')}</div>
+            <div className="text-secondary">X of Y passing</div>
           </div>
+        </div>
         )
       }
   },

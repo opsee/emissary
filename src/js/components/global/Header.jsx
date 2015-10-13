@@ -43,7 +43,7 @@ export default React.createClass({
   renderNavItems(){
   if(this.state.showNav){
     return (
-      <ul className={`list-unstyled display-flex justify-content-around`}>
+      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin:0}}>
         <li>
          <Link to="checks" className={style.navbarLink}>
            <Checkmark nav={true}/>&nbsp;

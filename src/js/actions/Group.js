@@ -54,7 +54,7 @@ _actions.getGroupsRDSSecurity = Flux.statics.addAsyncAction('getGroupsRDSSecurit
 _actions.getGroupRDSSecurity = Flux.statics.addAsyncAction('getGroupRDSSecurity',
   (id) => {
     return request
-    .get(`${config.api}/group/rds-security/${id}`)
+    .get(`${config.api}/groups/rds-security/${id}`)
     .set('Authorization', UserStore.getAuth())
   },
   res => res.body,
@@ -75,7 +75,7 @@ _actions.getGroupELB = Flux.statics.addAsyncAction('getGroupELB',
   (id) => {
     return new Promise((resolve, reject) => {
       request
-      .get(`${config.api}/groups/elb`)
+      .get(`${config.api}/groups/elb/${id}`)
       .set('Authorization', UserStore.getAuth()).then((res) => {
         let group = res.body && res.body.groups && _.findWhere(res.body.groups, {LoadBalancerName:id});
         request

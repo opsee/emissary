@@ -1,5 +1,11 @@
 .header{
-  background:#37474F
+  background:#37474F;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.26);
+  z-index:10;
+  position: fixed;
+  bottom:0;
+  left:0;
+  width:100%;
 }
 .navbar{
   background: none;
@@ -59,6 +65,11 @@
   fill: white !important;
 }
 @media (min-width: 768px) {
+  .header{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    bottom:auto;
+    position: relative;
+  }
   .navbarItem {
     width: auto;
   }
