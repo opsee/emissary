@@ -34,7 +34,7 @@ const AssertionsForm = forms.Form.extend({
   }),
   operand: forms.CharField({
     widgetAttrs:{
-      placeholder:'operand'
+      placeholder:'Value'
     },
     required:false
   }),
@@ -256,7 +256,7 @@ const CheckCreateAssertions = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnleft={true} title={`Create a Check: Step 2`}/>
+        <Toolbar btnleft={true} title={`Create Check (3 of 4)`}/>
         <Grid>
           <Row>
             <Col xs={12} sm={10} smOffset={1}>

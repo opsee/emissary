@@ -131,18 +131,19 @@ const CheckStepTargetSelect = React.createClass({
   innerRender(){
     return (
       <div>
-        {this.renderHelperText()}
-        <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']}/>
-        <div className="padding-t-lg">
+        <div className="padding-b-md">
+          <h2>Select a Target</h2>
           <p>Tap an environment target to continue.</p>
         </div>
+        {this.renderHelperText()}
+        <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']}/>
       </div>
     )
   },
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check: Select A Target">
+        <Toolbar btnPosition="midRight" title="Create Check (1 of 4)">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>

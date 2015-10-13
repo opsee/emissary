@@ -22,6 +22,7 @@
 .list-item-link {
   @include transition(background-color $swift-ease-out-duration $swift-ease-out-timing-function, color $swift-ease-out-duration $swift-ease-out-timing-function);
   color: $text-color;
+  cursor: pointer;
   padding: 0.5em 0;
   text-decoration: none;
   &:active, &:focus {
