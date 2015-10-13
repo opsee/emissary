@@ -3,8 +3,9 @@
   transition:transform 300ms;
 }
 
-.meatUp{
-  composes: meat;
-  transform:translateY(-54px);
-  z-index:20;
+@media (min-width: 768px) {
+  .meatUp{
+    composes: meat;
+    transform:translateY(-54px);
+  }
 }

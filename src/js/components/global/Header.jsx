@@ -76,7 +76,7 @@ export default React.createClass({
   },
   render(){
     return(
-      <header id="header" className={style.header} style={this.getHeaderStyle()}>
+      <header id="header" className={this.state.showNav ? style.header : style.headerHide} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>

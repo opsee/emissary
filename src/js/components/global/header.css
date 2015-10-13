@@ -6,10 +6,18 @@
   width:100%;
   user-select:none;
   transition: margin .4s;
+  z-index:10;
 }
-.headerHidden{
-  composes: header;
-  margin:-54px 0 0 0;
+@media (min-width: 768px) {
+  .header{
+    z-index:0;
+  }    
+}
+@media (max-width: 768px){
+  .headerHide{
+    composes:header;
+    transform:translateY(105%);
+  }
 }
 .navbar{
   background: none;
