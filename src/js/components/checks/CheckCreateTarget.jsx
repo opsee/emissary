@@ -132,11 +132,12 @@ const CheckStepTargetSelect = React.createClass({
     return (
       <div>
         <div className="padding-b-md">
-          <h2>Select a Target</h2>
-          <p>Tap an environment target to continue.</p>
+          <h2>Choose a Target for your Health Check</h2>
+          <p>What would you like to check? When targeting a group or ELB, your check will automatically run on all of its instances. Note: only groups and ELBs are currently supported as targets.</p>
         </div>
         {this.renderHelperText()}
         <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']}/>
+        <StepCounter active={1} steps={4}/>
       </div>
     )
   },

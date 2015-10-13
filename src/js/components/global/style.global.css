@@ -5416,6 +5416,7 @@ opsee-footer {
 .form-group {
   border: none;
   margin-bottom: 2em;
+  padding: 0 0.5em;
   position: relative;
 }
 .form-group.search-group {
@@ -5434,7 +5435,7 @@ opsee-footer {
 }
 .form-group .icon {
   bottom: 0.75em;
-  right: 0.75em;
+  right: 1.25em;
   position: absolute;
 }
 .form-group .dropdown-toggle, .form-group [dropdown-toggle] {
