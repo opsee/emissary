@@ -180,11 +180,56 @@ const EnvWithFilter = React.createClass({
       )
     }
   },
+  getItemTypeFromSlug(slug){
+    switch(slug){
+      case 'groupsSecurity':
+        return {
+          name:'Security Groups',
+          fn:GroupStore.getGroupsSecurity
+        }
+      break;
+      case 'groupsELB':
+        return {
+          name:'ELB Groups',
+          fn:GroupStore.getGroupsELB
+        }
+        return 'ELB Groups'
+      break;
+      case 'instancesECC':
+        return {
+          name:'Instances',
+          fn:InstanceStore.getInstancesECC
+        }
+        return 'Instances'
+      break;
+    }
+  },
+  renderTableItem(i){
+    const num = this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size;
+    if(num > 0){
+      return (
+        <tr>
+          <td><strong>Failing {this.getItemTypeFromSlug(i).name}</strong></td>
+          <td>{this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size}</td>
+        </tr>
+      )
+    }else{
+      return (<tr/>)
+    }
+  },
+  renderStatusTable(){
+    return (
+      <table className="table">
+        {this.props.include.map(i => this.renderTableItem(i))}
+      </table>
+    )
+  },
   render(){
     const self = this;
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
+          {this.renderStatusTable()}
           {this.state.filter.render()}
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();

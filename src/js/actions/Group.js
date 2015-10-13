@@ -25,7 +25,7 @@ _actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
       .set('Authorization', UserStore.getAuth()).then((res) => {
         let group = res.body && res.body.groups && _.findWhere(res.body.groups, {GroupId:id});
         request
-        .get(`${config.api}/group/security/${id}`)
+        .get(`${config.api}/groups/security/${id}`)
         .set('Authorization', UserStore.getAuth()).then((res2) => {
           group.instances = res2.body && res2.body.instances;
           resolve(group);
@@ -75,11 +75,11 @@ _actions.getGroupELB = Flux.statics.addAsyncAction('getGroupELB',
   (id) => {
     return new Promise((resolve, reject) => {
       request
-      .get(`${config.api}/groups/elb/${id}`)
+      .get(`${config.api}/groups/elb`)
       .set('Authorization', UserStore.getAuth()).then((res) => {
         let group = res.body && res.body.groups && _.findWhere(res.body.groups, {LoadBalancerName:id});
         request
-        .get(`${config.api}/group/elb/${id}`)
+        .get(`${config.api}/groups/elb/${id}`)
         .set('Authorization', UserStore.getAuth()).then((res2) => {
           group.instances = res2.body && res2.body.instances;
           resolve(group);

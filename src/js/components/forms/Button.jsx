@@ -45,7 +45,7 @@ const OpseeButton = React.createClass({
     if(this.props.target && this.props.target == '_blank'){
       e.preventDefault();
       e.stopPropagation();
-      window.open(router.makeHref('groupSecurity', this.props.params))
+      window.open(router.makeHref(this.props.to, this.props.params))
     }
   },
   render(){

@@ -59,28 +59,8 @@ export default React.createClass({
       return <div/>
     }
   },
-  getInstances(){
-    if(this.state.group.get('instances').size){
-      return (
-        <div>
-          <h2>Instances - ( {this.state.group.get('instances').size} )</h2>
-          <ul className="list-unstyled">
-            {this.state.group.get('instances').map(instance => {
-              return (
-                <li key={instance.get('id')}>
-                  <InstanceItem item={instance}/>
-                </li>
-                )
-            })}
-          </ul>
-        </div>
-      )
-    }else{
-      return <h2>No Instances</h2>
-    }
-  },
   render() {
-    if(this.state.group.get('id')){
+    if(this.state.group.get('name')){
       return (
         <div>
           <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
