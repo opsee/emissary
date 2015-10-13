@@ -1,0 +1,10 @@
+.meat{
+  position: relative;
+  transition:transform 300ms;
+}
+
+.meatUp{
+  composes: meat;
+  transform:translateY(-54px);
+  z-index:20;
+}

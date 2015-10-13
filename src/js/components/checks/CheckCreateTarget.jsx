@@ -144,7 +144,7 @@ const CheckStepTargetSelect = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (1 of 4)">
+        <Toolbar btnPosition="midRight" title="Create Check (1 of 4)" bg="info">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>

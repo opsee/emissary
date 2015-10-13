@@ -1,11 +1,15 @@
 .header{
   background:#37474F;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.26);
-  z-index:10;
   position: fixed;
   bottom:0;
   left:0;
   width:100%;
+  user-select:none;
+  transition: margin .4s;
+}
+.headerHidden{
+  composes: header;
+  margin:-54px 0 0 0;
 }
 .navbar{
   background: none;

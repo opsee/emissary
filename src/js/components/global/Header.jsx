@@ -41,7 +41,6 @@ export default React.createClass({
     }
   },
   renderNavItems(){
-  if(this.state.showNav){
     return (
       <ul className={`list-unstyled display-flex justify-content-around`} style={{margin:0}}>
         <li>
@@ -67,7 +66,6 @@ export default React.createClass({
        </li>
       </ul>
       );
-    }
   },
   getHeaderStyle(){
     let obj = {};
@@ -78,7 +76,7 @@ export default React.createClass({
   },
   render(){
     return(
-      <header id="header" className={`user-select-none ${style.header}`} style={this.getHeaderStyle()}>
+      <header id="header" className={style.header} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>
