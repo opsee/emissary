@@ -112,10 +112,14 @@ const EnvWithFilter = React.createClass({
     if(string){
       const data = GroupStore.getGroupsSecurity().filter(sg => {
         return fuzzy.filter(string, [sg.get('name')]).length;
-      });
+      }).sortBy(sg => {
+        return sg.get('health');
+      })
       return data;
     }else{
-      return GroupStore.getGroupsSecurity();
+      return GroupStore.getGroupsSecurity().sortBy(sg => {
+        return sg.get('health');
+      })
     }
   },
   getGroupsELB(){
@@ -143,7 +147,7 @@ const EnvWithFilter = React.createClass({
     return (
       <div>
         <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
+        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onSelect}/>
       </div>
       )
     }
@@ -153,7 +157,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
+          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onSelect}/>
         </div>
       )
     }
@@ -163,7 +167,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
-          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
+          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onSelect}/>
         </div>
       )
     }
