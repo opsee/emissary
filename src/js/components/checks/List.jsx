@@ -43,7 +43,12 @@ export default React.createClass({
   },
   renderChecks(){
     if(this.state.checks.size){
-      return <CheckItemList checks={this.state.checks}/>
+      return(
+        <div>
+          <h3>All Checks ({this.state.checks.size})</h3>
+          <CheckItemList checks={this.state.checks}/>
+        </div>
+      )
     }else{
       return (
         <StatusHandler status={this.state.status}>

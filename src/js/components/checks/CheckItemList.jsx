@@ -38,7 +38,6 @@ export default React.createClass({
     if(this.state.checks.size){
       return(
         <div>
-          <h3>All Checks ({this.state.checks.size})</h3>
           {this.state.checks.map(c => {
             return <CheckItem item={c}/>
           })}
