@@ -286,9 +286,11 @@ const CheckCreateRequest = React.createClass({
         <div><br/></div>
         {this.state.info.render()}
         {this.renderHeaderForm()}
+        <div className="padding-t">
+          <h2>Your Response</h2>
+          <CheckResponse check={this.getCheck()}/>
+        </div>
         {this.renderSubmitButton()}
-        <h2>Your Response</h2>
-        <CheckResponse check={this.getCheck()}/>
       </form>
     );
   },

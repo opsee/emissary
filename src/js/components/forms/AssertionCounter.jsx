@@ -5,7 +5,6 @@ import {Close, Checkmark} from '../icons';
 import colors from 'seedling/colors';
 import Radium from 'radium';
 import style from './assertionCounter.css';
-console.log(style);
 
 const AssertionCounter = React.createClass({
   getInitialState(){
