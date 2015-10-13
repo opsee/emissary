@@ -242,7 +242,9 @@ const CheckCreateAssertions = React.createClass({
   innerRender() {
     return (
       <form ref="form" onSubmit={this.submit}>
-        <h2>Add Assertions</h2>
+        <div className="padding-t">
+          <h2>Add Assertions</h2>
+        </div>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion per check.</p>
         <br />
         {this.renderAssertionsForm()}

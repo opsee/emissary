@@ -6571,3 +6571,7 @@ body ::-moz-selection {
   color: white;
   text-decoration: none;
 }
+
+.dropdown-toggle{
+  min-height:46px;
+}

@@ -144,6 +144,7 @@ const EnvWithFilter = React.createClass({
       <div>
         <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
         <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
+        <hr/>
       </div>
       )
     }
@@ -154,6 +155,7 @@ const EnvWithFilter = React.createClass({
         <div>
           <h3>ELBs ({this.getGroupsELB().size})</h3>
           <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
+          <hr/>
         </div>
       )
     }
@@ -164,6 +166,7 @@ const EnvWithFilter = React.createClass({
         <div>
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
           <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal}/>
+          <hr/>
         </div>
       )
     }
@@ -174,11 +177,9 @@ const EnvWithFilter = React.createClass({
       return (
         <form name="envWithFilterForm">
           {this.state.filter.render()}
-          {this.renderGroupsSecurity()}
-          <hr/>
-          {this.renderGroupsELB()}
-          <hr/>
-          {this.renderInstancesECC()}
+          {this.props.include.map(i => {
+            return self[`render${_.capitalize(i)}`]();
+          })}
         </form>
       )
     }else{

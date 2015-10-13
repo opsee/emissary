@@ -13,8 +13,6 @@ import {StatusHandler} from '../global';
 function getState(){
   return {
     status:CheckStore.getTestCheckStatus(),
-    complete:false,
-    expanded:false
   }
 }
 
@@ -33,7 +31,10 @@ const CheckResponse = React.createClass({
     check:PropTypes.object.isRequired
   },
   getInitialState() {
-    return getState();
+    return _.assign(getState(),{
+      complete:false,
+      expanded:false
+    });
   },
   arrayFromData(data){
     let arr = _.map(['port', 'verb', 'path'], s => data.check_spec.value[s]);
@@ -61,7 +62,8 @@ const CheckResponse = React.createClass({
         CheckActions.testCheck(props.check);
       }
     }
-    this.setState({complete});
+    console.log(props.check, complete);
+    this.setState({complete:true});
   },
   componentDidMount(){
     this.fire(this.props);

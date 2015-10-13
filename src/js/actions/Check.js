@@ -2,7 +2,7 @@ import _ from 'lodash';
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
-import {UserStore} from '../stores';
+import {UserStore, CheckStore} from '../stores';
 
 let _actions = {};
 
@@ -125,16 +125,27 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
   res => res && res.body
 );
 
+//REMOVE, UNCOMMENT
+// _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
+//   (data) => {
+//     let newData = _statics.formatCheckData(data);
+//     return request
+//     .post(`${config.api}/bastions/test-check`)
+//     .set('Authorization', UserStore.getAuth())
+//     .send({check:newData, max_hosts:3, deadline:'30s'})
+//   },
+//   res => res.body,
+//   res => _.get(res.body) || res
+// );
+
 _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
   (data) => {
-    let newData = _statics.formatCheckData(data);
-    return request
-    .post(`${config.api}/bastions/test-check`)
-    .set('Authorization', UserStore.getAuth())
-    .send({check:newData, max_hosts:3, deadline:'30s'})
+    return new Promise((resolve, reject) => {
+      resolve(CheckStore.getFakeResponse().toJS());
+    });
   },
-  res => res.body,
-  res => _.get(res.body) || res
+  res => res,
+  res => res
 );
 
 export default _.assign({}, ..._.values(_actions));

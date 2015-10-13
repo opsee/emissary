@@ -22,11 +22,15 @@ const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
 const NotificationForm = forms.Form.extend({
   type: forms.ChoiceField({
-    choices:notificationOptions
+    choices:notificationOptions,
+    widgetAttrs:{
+      noLabel:true
+    }
   }),
   value: forms.CharField({
     widgetAttrs:{
-      placeholder:'test@testing.com'
+      placeholder:'test@testing.com',
+      noLabel:true
     },
   }),
 });
