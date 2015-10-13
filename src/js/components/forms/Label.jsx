@@ -34,7 +34,7 @@ export default React.createClass({
   },
   render(){
     if(_.get(this.props.bf, 'field.widgetAttrs.noLabel')){
-      return <span/>
+      return <div/>
     }else{
       return(
         <label className="flex-order-1 label user-select-none" htmlFor={this.props.bf.idForLabel()}>

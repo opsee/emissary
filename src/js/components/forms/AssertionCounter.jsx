@@ -23,16 +23,13 @@ const AssertionCounter = React.createClass({
     /* 
       this.state.fields should be an array of BoundFields
     */
-    let obj = {
-      key:this.getField('type'),
+    const assertion = {
+      key:this.getField('key'),
       relationship:this.getField('relationship'),
       operand:this.getField('operand'),
       value:this.getField('value')
     }
-    var test = slate({
-      assertion:obj,
-      response:this.state.response
-    });
+    var test = slate(assertion, this.state.response);
     this.setState({
       passing:test && test.success,
       error:!test || test.error

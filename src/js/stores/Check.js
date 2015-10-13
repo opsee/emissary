@@ -191,6 +191,9 @@ const _public = {
     }
     return response;
   },
+  getFakeResponse(){
+    return response;
+  },
   getFormattedResponse(data){
     if(data){
       let response = _.cloneDeep(data);
@@ -238,7 +241,7 @@ const Store = Flux.createStore(
         statics.getCheckPending(payload.data);
       break;
       case 'TEST_CHECK_SUCCESS':
-        _data.response = payload.data;
+        _data.response = Immutable.fromJS(payload.data);
         Store.emitChange();
       break;
     }
