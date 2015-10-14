@@ -1,7 +1,7 @@
 # Emissary
 React front-end
 
-## Running your project
+## Running
 
 The generated project includes a live-reloading static server on port `8080` which will build, launch, and rebuild the app whenever you change application code. To start the server, run:
 
