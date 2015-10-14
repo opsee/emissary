@@ -12,6 +12,10 @@ var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
   __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false'))
 });
+var uglify = new webpack.optimize.UglifyJsPlugin({
+  mangle: false,
+  compress:false
+})
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
 module.exports = {
@@ -27,11 +31,12 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
+    // chunkFilename: "[id].[hash].bundle.js"
   },
   module: {
     loaders: [
       { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('css-loader'), include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module!cssnext-loader'},
+      { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('css-loader?localIdentName=[path][name]-[local]-[hash:base64:5]&module!cssnext-loader')},
       { test: /\.js$|\.jsx$/, loaders: ['react-hot', 'babel-loader?optional[]=runtime&stage=0'], include: [context_dir] },
       { test: /\.json$/, loaders: ['json'], include: [context_dir]},
       {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
@@ -55,8 +60,10 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     definePlugin,
+    // uglify,
+    // new AssetsPlugin(),
     new HtmlWebpackPlugin({
-      hash:false,
+      hash:true,
       template:'src/index.html'
     }),
     commonsPlugin
