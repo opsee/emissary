@@ -22,6 +22,10 @@
     {% for (var css in o.htmlWebpackPlugin.files.css) { %}
     <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
     {% } %}
+    <script>
+    //Make sure browser is up-to-snuff
+    (function(){function h(){var e=["webkit","moz","ms","o"];if("hidden"in document)return"hidden";for(var r=0;r<e.length;r++)if(e[r]+"Hidden"in document)return e[r]+"Hidden";return null}h()||alert("Your browser is not supported at this time. Try a fresh version of Chrome, Firefox, or Safari.")})();
+    </script>
     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/mrw1z4dm';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
     </script>
   </head>
