@@ -43,11 +43,28 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <h2>{this.state.user.name}</h2>
-              <div>Email: {this.state.user.email}</div>
-              <div>
-                <div><br/><br/></div>
-                <Button bsStyle="default" onClick={this.logOut}>Log Out</Button>
+              <div className="padding-b">
+                <h3>Your Profile Information</h3>
+                <table className="table">
+                  <tbody>
+                    <tr>
+                      <td><strong>Name</strong></td>
+                      <td>{this.state.user.name}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>{this.state.user.email}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="padding-b">
+                <Link className="btn btn-flat btn-primary" to="profileEdit" >Change Your Password</Link>
+              </div>
+              <div className="btn-container btn-container-righty">
+                <Button flat={true} bsStyle="danger" onClick={this.logOut}>
+                  <Logout className="icon"/> Log Out
+                </Button>
               </div>
             </Col>
           </Row>
