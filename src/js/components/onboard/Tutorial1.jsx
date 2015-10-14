@@ -18,7 +18,7 @@ export default React.createClass({
     return (
      <Grid>
       <Row>
-        <Col>
+        <Col xs={12}>
           <img className="step-image" src={img}/>
           <h2>First, Add the Bastion Instance</h2>
           <p>The first thing we do is add the Bastion Instance to your AWS environment. <a href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>

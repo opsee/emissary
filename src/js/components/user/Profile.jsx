@@ -42,7 +42,7 @@ export default React.createClass({
         </Toolbar>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <h2>{this.state.user.name}</h2>
               <div>Email: {this.state.user.email}</div>
               <div>

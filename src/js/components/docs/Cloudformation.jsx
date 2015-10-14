@@ -12,7 +12,7 @@ export default React.createClass({
         <Toolbar title="Docs: Cloudformation"/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <div className="padding-tb">
                 <h2>The Opsee Bastion Instance CloudFormation Template</h2>
                 <Highlight>

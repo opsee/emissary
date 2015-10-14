@@ -272,7 +272,7 @@ const CheckCreateAssertions = React.createClass({
         </Toolbar>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <div className="padding-b">
                 <h2>Response to Your Request</h2>
                 <p>The complete response that came back from your request.</p>

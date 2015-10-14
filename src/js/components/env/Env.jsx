@@ -47,7 +47,7 @@ export default React.createClass({
         <Toolbar title="Environment"/>
           <Grid>
             <Row>
-              <Col xs={12} display-flex>
+              <Col xs={12}>
                 <EnvWithFilter/>
               </Col>
             </Row>

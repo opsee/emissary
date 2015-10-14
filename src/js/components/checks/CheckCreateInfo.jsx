@@ -225,7 +225,7 @@ const CheckCreateInfo = React.createClass({
           </Toolbar>
           <Grid>
             <Row>
-              <Col xs={12} display-flex>
+              <Col xs={12}>
               {this.innerRender()}
               </Col>
             </Row>

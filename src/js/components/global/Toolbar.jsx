@@ -35,7 +35,7 @@ var Toolbar = React.createClass({
         {this.outputTitle()}
         <Grid>
           <Row>
-            <Col xs={12} display-flex className={style.inner}>
+            <Col xs={12} className={style.inner}>
               <h1 className="margin-none">{this.props.title}</h1>
                 <div className={this.getChildrenClass()}>
                 {this.props.children}

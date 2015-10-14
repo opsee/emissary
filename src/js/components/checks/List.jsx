@@ -67,7 +67,7 @@ export default React.createClass({
         </Toolbar>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               {this.renderChecks()}
             </Col>
           </Row>

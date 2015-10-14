@@ -11,7 +11,7 @@ export default React.createClass({
         <Toolbar title="Other Pages"/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <ul>
                 <li><Link to="tutorial">Tutorial</Link></li>
                 <li><Link to="onboardPassword">Set Password</Link></li>

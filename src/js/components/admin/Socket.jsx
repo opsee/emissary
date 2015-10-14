@@ -26,7 +26,7 @@ export default React.createClass({
        <Toolbar title="Socket Messages"/>
        <Grid>
          <Row>
-           <Col xs={12} display-flex>
+           <Col xs={12}>
                {this.state.messages.map((m, i) => {
                   return (
                     <div key={i}>

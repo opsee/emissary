@@ -59,7 +59,7 @@ export default React.createClass({
           <Toolbar title="Set Your Password"/>
           <Grid>
             <Row>
-              <Col xs={12} display-flex>
+              <Col xs={12}>
                 <form name="loginForm" onSubmit={this.submit}>
                   <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
                   <Button type="submit" block={true} bsStyle="success" disabled={this.disabled()}>{this.btnText()}</Button>

@@ -11,7 +11,7 @@ export default React.createClass({
         <Toolbar title="Docs: IAM Profile for Bastion Installation"/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <div>
                 <h2>Overview</h2>
                 <p>The Opsee onboarding process requires <em>temporary access to your AWS resources</em>. This access will be used to install and start the Opsee Bastion EC2 Instance.  The Bastion is responsible for discovering and monitoring your AWS services.</p>

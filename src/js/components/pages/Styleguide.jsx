@@ -107,7 +107,7 @@ export default React.createClass({
         </Toolbar>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
             <Tabs defaultActiveKey={2}>
               <Tab eventKey={1} tab='Tab 1'>Tab 1 content</Tab>
               <Tab eventKey={2} tab='Tab 2'>Tab 2 content</Tab>
@@ -118,7 +118,7 @@ export default React.createClass({
 
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
             <div><br/></div>
             {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
               return (

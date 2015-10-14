@@ -47,7 +47,7 @@ export default React.createClass({
         <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || ''}`}/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <table className="table">
                 <tr>
                   <td><strong>State</strong></td>

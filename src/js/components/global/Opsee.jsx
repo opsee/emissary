@@ -10,8 +10,9 @@ import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col, Row} from '../../modules/bootstrap';
-import style from './style.global.css';
+import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
+import style from './opsee.css';
 
 function initialize(){
   if(UserStore.hasUser() && !GlobalStore.getSocketStarted()){
@@ -34,7 +35,9 @@ export default React.createClass({
     if(status1 == 'success' || status2 == 'success'){
       initialize();
     }
-    let stateObj = {};
+    let stateObj = {
+      showNav:GlobalStore.getShowNav()
+    };
     const socketError = GlobalStore.getGlobalSocketError();
     if(socketError){
       stateObj.socketError = socketError;
@@ -43,7 +46,8 @@ export default React.createClass({
   },
   getInitialState(){
     return {
-      socketError:null
+      socketError:null,
+      showNav:GlobalStore.getShowNav()
     }
   },
   componentWillMount(){
@@ -79,12 +83,14 @@ export default React.createClass({
         <DocumentTitle title="Opsee"/>
         <GoogleAnalytics id="UA-59205908-2"/>
         <Header/>
-        <div style={{position:'relative'}}>
-          {this.renderInner()}
+        <div className={this.state.showNav ? style.meat : style.meatUp}>
         {
           // <CSSTransitionGroup component="div" transitionName="page">
-          // <RouteHandler {...this.props} key={this.props.pathname}/>
         }
+          {this.renderInner()}
+          {
+            // <RouteHandler {...this.props} key={this.props.pathname}/>
+          }
         {
           // </CSSTransitionGroup>
         }

@@ -11,7 +11,7 @@ export default React.createClass({
         <Toolbar title="Opsee Documentation"/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <ul>
                 <li><Link to="docsBastion">The Bastion Instance</Link></li>
                 <li><Link to="docsCloudformation">Our Cloudformation Template and Permissions</Link></li>

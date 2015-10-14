@@ -80,7 +80,7 @@ export default React.createClass({
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>
-              <Col xs={12} display-flex>
+              <Col xs={12}>
                 {this.renderNavItems()}
               </Col>
             </Row>

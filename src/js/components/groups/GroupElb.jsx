@@ -66,7 +66,7 @@ export default React.createClass({
           <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
           <Grid>
             <Row>
-              <Col xs={12} display-flex>
+              <Col xs={12}>
                 {this.renderDescription()}
                 <table className="table">
                   <tr>

@@ -203,11 +203,10 @@
   order: 1;
 }
 
-@media only screen and (min-width: 48rem) {
+@media (min-width: 700px) {
   .container {
-    width: 46rem;
+    width: 680px;
   }
-
   .col-sm,
   .col-sm-1,
   .col-sm-2,
@@ -381,11 +380,10 @@
   }
 }
 
-@media only screen and (min-width: 62rem) {
+@media (min-width: 992px) {
   .container {
-    width: 61rem;
+    width: 770px;
   }
-
   .col-md,
   .col-md-1,
   .col-md-2,
@@ -559,11 +557,10 @@
   }
 }
 
-@media only screen and (min-width: 75rem) {
+@media (min-width: 1200px) {
   .container {
-    width: 71rem;
+    width: 900px;
   }
-
   .col-lg,
   .col-lg-1,
   .col-lg-2,

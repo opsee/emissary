@@ -1,11 +1,23 @@
 .header{
   background:#37474F;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.26);
-  z-index:10;
   position: fixed;
   bottom:0;
   left:0;
   width:100%;
+  user-select:none;
+  transition: margin .4s;
+  z-index:10;
+}
+@media (min-width: 768px) {
+  .header{
+    z-index:0;
+  }    
+}
+@media (max-width: 768px){
+  .headerHide{
+    composes:header;
+    transform:translateY(105%);
+  }
 }
 .navbar{
   background: none;

@@ -11,7 +11,7 @@ export default React.createClass({
         <Toolbar title="Docs: The Bastion Instance"/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               <p>Here are some frequently asked questions and answers about the Opsee Bastion Instance:</p>
 
               <h2>What is the Opsee Bastion Instance?</h2>

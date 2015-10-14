@@ -9,7 +9,7 @@ export default React.createClass({
         <Toolbar title="404"/>
         <Grid>
           <Row>
-            <Col xs={12} display-flex>
+            <Col xs={12}>
               Whoa boy. Page not found.
             </Col>
           </Row>
