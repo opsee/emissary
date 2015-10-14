@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import {Link} from 'react-router';
 import colors from 'seedling/colors';
 import Immutable, {Record} from 'immutable';
@@ -66,7 +65,7 @@ const InstanceItem = React.createClass({
   renderLinkButton(){
     return (
     <Button to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="list-item-btn">
-        <NewWindow btn={true} fill={Radium.getState(this.state, 'listItem', ':hover') ? colors.gray900 : colors.gray700}/>
+        <NewWindow btn={true} fill={colors.gray900}/>
     </Button>
     );
   },
@@ -125,4 +124,4 @@ const InstanceItem = React.createClass({
   }
 });
 
-export default Radium(InstanceItem);
+export default InstanceItem;

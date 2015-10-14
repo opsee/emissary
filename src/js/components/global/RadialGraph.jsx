@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import Radium from 'radium';
 import colors from 'seedling/colors';
 import {SetInterval} from '../../modules/mixins';
 import _ from 'lodash';
@@ -220,14 +219,14 @@ const RadialGraph = React.createClass({
       )
     }
     return (
-      <div style={[this.styles().base, this.styles().parentStatus()]} title={this.getTitle()}>
+      <div style={_.assign({}, this.styles().base, this.styles().parentStatus())} title={this.getTitle()}>
         <svg style={{width:radialWidth, height:radialWidth, overflow:'hidden'}}>
           <path className="loader" transform={this.getTranslate()} d={this.getPath()} style={this.styles().loader()}/>
         </svg>
-        <div style={[this.styles().inner, this.styles().parentStatus(), this.styles().innerStatus()]}>{this.getText()}</div>
+        <div style={_.assign({}, this.styles().inner, this.styles().parentStatus(), this.styles().innerStatus())}>{this.getText()}</div>
     </div>
     );
   }
 });
 
-export default Radium(RadialGraph);
+export default RadialGraph;

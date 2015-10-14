@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import img from '../../../img/logo-color-border-light.svg';
 
 const LogoColor = React.createClass({
@@ -20,4 +19,4 @@ const LogoColor = React.createClass({
   }
 });
 
-export default Radium(LogoColor);
+export default LogoColor;
