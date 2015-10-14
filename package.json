@@ -22,17 +22,6 @@
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
-    "gulp": "^3.8.7",
-    "gulp-autoprefixer": "^2.3.1",
-    "gulp-compass": "^2.1.0",
-    "gulp-connect": "^2.2.0",
-    "gulp-git": "^1.4.0",
-    "gulp-notify": "^2.2.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.0.3",
-    "gulp-shell": "^0.4.2",
-    "gulp-uglify": "^1.2.0",
-    "gulp-util": "^3.0.6",
     "html-webpack-plugin": "^1.6.2",
     "json-loader": "^0.5.3",
     "node-libs-browser": "^0.5.3",
@@ -53,9 +42,8 @@
     "xregexp-lookbehind": "^1.0.0"
   },
   "scripts": {
-    "dev": "gulp --type dev",
     "start": "node server",
-    "build": "gulp build",
+    "build": "webpack",
     "deploy": "NODE_ENV=production webpack --config webpack.config.prod.js && cp -r src/fonts/ dist/fonts/ && docker build -t quay.io/opsee/emissary:latest ."
   },
   "jest": {
@@ -73,7 +61,6 @@
   "dependencies": {
     "babel-eslint": "^3.1.23",
     "bootstrap-sass": "git+http://github.com/twbs/bootstrap-sass",
-    "connect-modrewrite": "^0.8.1",
     "es6-promise": "^3.0.2",
     "eslint": "^0.24.1",
     "eslint-plugin-react": "^2.7.0",
