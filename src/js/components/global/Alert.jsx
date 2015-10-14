@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
-import Radium from 'radium';
 import colors from 'seedling/colors';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
@@ -32,4 +31,4 @@ var OpseeAlert = React.createClass({
   }
 })
 
-export default Radium(OpseeAlert);
+export default OpseeAlert;

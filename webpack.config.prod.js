@@ -25,7 +25,7 @@ module.exports = {
     'index': [
       './js/index.jsx'
     ],
-    vendor:['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'radium', 'superagent', 'fuzzy', 'highlight.js', 'react-document-title', 'react-g-analytics', 'react-router-bootstrap', 'react-timeago']
+    vendor:['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'highlight.js', 'react-document-title', 'react-g-analytics', 'react-router-bootstrap', 'react-timeago']
   },
   output: {
     path: path.join(__dirname, "dist"),

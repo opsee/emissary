@@ -75,7 +75,6 @@
     "newforms": "^0.12.1",
     "path": "^0.11.14",
     "q": "^1.4.1",
-    "radium": "^0.13.4",
     "react": "^0.13.3",
     "react-autosuggest": "^1.18.3",
     "react-bootstrap": "^0.25.1",

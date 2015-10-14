@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import {Link} from 'react-router';
 import colors from 'seedling/colors';
 import Immutable, {Record} from 'immutable';
@@ -68,7 +67,7 @@ const GroupItem = React.createClass({
   renderLinkButton(){
     return (
     <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="list-item-btn">
-        <NewWindow btn={true} fill={Radium.getState(this.state, 'listItem', ':hover') ? colors.gray900 : colors.gray700}/>
+        <NewWindow btn={true} fill={colors.gray900}/>
     </Button>
     );
   },
@@ -143,4 +142,4 @@ const GroupItem = React.createClass({
   }
 });
 
-export default Radium(GroupItem);
+export default GroupItem;

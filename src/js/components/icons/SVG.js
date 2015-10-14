@@ -1,10 +1,9 @@
 import React from 'react';
 import BaseSVG from './BaseSVG.jsx';
-import Radium from 'radium';
 import colors from 'seedling/colors';
 
 function SVG(path){
-  return Radium(React.createClass({
+  return React.createClass({
     generateStyle(){
       let style;
       if(this.props.btn){
@@ -44,7 +43,7 @@ function SVG(path){
         <BaseSVG path={path} {...this.props} style={this.generateStyle()} fill={this.getFill()}/>
       )
     }
-  }));
+  });
 }
 
 export default SVG;

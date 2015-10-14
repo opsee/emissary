@@ -2,7 +2,6 @@ import React from 'react';
 import {Button} from '../../modules/bootstrap';
 import {ChevronRight} from '../icons';
 import colors from 'seedling/colors';
-import Radium from 'radium';
 import {Link} from 'react-router';
 import router from '../../modules/router';
 
@@ -67,4 +66,4 @@ const OpseeButton = React.createClass({
   }
 });
 
-export default Radium(OpseeButton);
+export default OpseeButton;

@@ -3,7 +3,6 @@ import _ from 'lodash';
 import slate from 'slate';
 import {Close, Checkmark} from '../icons';
 import colors from 'seedling/colors';
-import Radium from 'radium';
 import style from './assertionCounter.css';
 
 const AssertionCounter = React.createClass({
@@ -65,4 +64,4 @@ const AssertionCounter = React.createClass({
   }
 });
 
-export default Radium(AssertionCounter);
+export default AssertionCounter;
