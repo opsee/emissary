@@ -67,17 +67,6 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                {this.renderDescription()}
-                <table className="table">
-                  <tr>
-                    <td><strong>State</strong></td>
-                    <td>{this.state.group.get('state')}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Id</strong></td>
-                    <td>{this.state.group.get('id')}</td>
-                  </tr>
-                </table>
                 <div className="padding-b">
                   <h3>ELB Information</h3>
                   <table className="table">
