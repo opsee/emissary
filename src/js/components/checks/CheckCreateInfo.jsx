@@ -22,15 +22,12 @@ const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
 const NotificationForm = forms.Form.extend({
   type: forms.ChoiceField({
-    choices:notificationOptions,
-    widgetAttrs:{
-      noLabel:true,
-    }
+    choices:notificationOptions
   }),
   value: forms.CharField({
+    label: 'Recipient',
     widgetAttrs:{
-      placeholder:'test@testing.com',
-      noLabel:true
+      placeholder:'test@testing.com'
     },
   }),
 });
@@ -43,6 +40,7 @@ const NotificationFormSet = forms.FormSet.extend({
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
+    label: 'Check name',
     widgetAttrs:{
       placeholder:'My Service 404 Check'
     }
@@ -51,7 +49,6 @@ const InfoForm = forms.Form.extend({
   render() {
     return(
       <div>
-        <h2>Check Name</h2>
         {this.boundFields().map(bf => {
           return <BoundField bf={bf}/>
         })}
@@ -114,7 +111,11 @@ const CheckCreateInfo = React.createClass({
   },
   renderRemoveNotificationButton(form, index){
     if(index > 0){
-      return <BoundField bf={form.boundField('DELETE')}/>
+      return (
+        <div className="padding-t-md">
+          <BoundField bf={form.boundField('DELETE')}/>
+        </div>
+      )
     }else{
       return (
        <div className="padding-lr">
@@ -136,7 +137,7 @@ const CheckCreateInfo = React.createClass({
   renderNotificationForm(){
     return(
       <div>
-        <h2>Notifications</h2>
+        <h3>Notifications</h3>
         {this.getNotificationsForms().map((form, index) => {
           return (
             <div>

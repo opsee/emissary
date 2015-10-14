@@ -4799,6 +4799,7 @@ h6, .h6 {
 
 p {
   margin: 0 0 11px;
+  padding: 0 0.5em;
 }
 
 .lead {

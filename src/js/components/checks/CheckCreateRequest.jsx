@@ -47,7 +47,7 @@ const GroupForm = forms.Form.extend({
   render() {
     return(
       <div>
-        <h2>Choose a Check Target</h2>
+        <h3>Choose a Check Target</h3>
         <BoundField bf={this.boundField('id')}/>
       </div>
     )
@@ -77,7 +77,7 @@ const InfoForm = forms.Form.extend({
   render() {
     return(
       <div>
-        <h2>Define HTTP Request</h2>
+        <h3>Define HTTP Request</h3>
         <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
         <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
         <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
@@ -171,7 +171,7 @@ const CheckCreateRequest = React.createClass({
   renderHeaderForm(){
     return(
       <div>
-        <h2>Request Headers</h2>
+        <h3>Request Headers</h3>
         {this.getHeaderForms().map((form, index) => {
           return (
             <div key={`header-form-${index}`}>
@@ -242,8 +242,9 @@ const CheckCreateRequest = React.createClass({
     if(selection && selection.get('id')){
       return (
         <div>
-          <h2>Your Target</h2>
+          <h3>Your Target</h3>
           <GroupItem item={selection} noBorder={true}/>
+          <hr/>
         </div>
       )
     }else{
@@ -281,15 +282,16 @@ const CheckCreateRequest = React.createClass({
         <div className="padding-b">
           {this.renderTargetSelection()}
         </div>
-        <div className="padding-tb">
+        <div className="padding-b">
           {this.state.info.render()}
           {this.renderHeaderForm()}
         </div>
-        <div className="padding-tb">
-          <h2>Your Response</h2>
+        <hr/>
+        <div className="padding-b">
+          <h3>Your Response</h3>
           <CheckResponse check={this.getCheck()}/>
         </div>
-        <div className="padding-tb">
+        <div className="padding-b">
           {this.renderSubmitButton()}
         </div>
       </form>
