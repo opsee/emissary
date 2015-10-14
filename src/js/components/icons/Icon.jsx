@@ -1,17 +1,30 @@
 import React, {PropTypes} from 'react';
-import SVG from './SVG';
-import paths from './paths';
+import BaseSVG from './BaseSVG.jsx';
+import colors from 'seedling/colors';
+import style from './icon.css';
 
-export default React.createClass({
+const Icon = React.createClass({
   propTypes:{
-    name:PropTypes.string.isRequired
+    path:PropTypes.string.isRequired
+  },
+  getClass(){
+    if(this.props.btn){
+      return style.btn;
+    }else if(this.props.inline){
+      return style.inline;
+    }else if(this.props.nav){
+      if(this.props.active){
+        return style.navActive;
+      }
+      return style.nav;
+    }
+    return '';
   },
   render(){
-    const path = paths[this.props.name];
-    if(path){
-      return SVG(path);
-    }else{
-      return <span>Bad Icon Name.</span>
-    }
+    return (
+      <BaseSVG className={this.getClass()} {...this.props} style={this.props.style}/>
+    )
   }
 });
+
+export default Icon;

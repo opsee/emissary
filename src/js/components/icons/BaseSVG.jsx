@@ -1,7 +1,6 @@
 import React from 'react';
-import Radium from 'radium';
 
-const Base = React.createClass({
+const BaseSVG = React.createClass({
   getState(props){
     props = props || this.props;
     let width = props.width || 24;
@@ -30,7 +29,7 @@ const Base = React.createClass({
         width={this.state.width}
         height={this.state.height}
         fill={this.state.fill}
-        style={[style, this.state.style]}
+        style={this.state.style}
         className={this.state.className}
         >
         <path d={this.state.path} />
@@ -39,4 +38,4 @@ const Base = React.createClass({
   }
 });
 
-export default Radium(Base);
+export default BaseSVG;

@@ -70,10 +70,10 @@
 .navbarLink:hover svg, .navbarLink:active svg, .navbarLink:focus svg {
   fill: rgba(255, 255, 255, 0.85);
 }
-.navbarLink:active, .navbarLink.active {
+.navbarLink:active, .navbarLink:global(.active) {
   color: white;
 }
-.navbarLink:active svg, .navbarLink.active svg {
+.navbarLink:active svg, .navbarLink:global(.active) svg{
   fill: white !important;
 }
 @media (min-width: 768px) {

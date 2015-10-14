@@ -1,6 +1,5 @@
 import React, {Children} from 'react';
 import moment from 'moment';
-import Radium from 'radium';
 import colors from 'seedling/colors';
 import _ from 'lodash';
 
@@ -19,8 +18,6 @@ const ListItem = React.createClass({
   children(){
     const self = this;
     return Children.map(this.props.children, c => {
-      c.props.hovered = Radium.getState(self.state, null, ':hover');
-      c.props.foo = 'true';
       return c;
     })
   },
@@ -33,4 +30,4 @@ const ListItem = React.createClass({
   }
 });
 
-export default Radium(ListItem);
+export default ListItem;

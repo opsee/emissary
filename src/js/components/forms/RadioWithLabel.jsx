@@ -3,7 +3,6 @@ import _ from 'lodash';
 React.initializeTouchEvents(true);
 import Radio from './Radio.jsx';
 import colors from 'seedling/colors';
-import Radium from 'radium';
 
 const RadioWithLabel = React.createClass({
   propTypes:{
@@ -38,4 +37,4 @@ const RadioWithLabel = React.createClass({
   }
 });
 
-export default Radium(RadioWithLabel);
+export default RadioWithLabel;
