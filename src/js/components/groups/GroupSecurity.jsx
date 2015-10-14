@@ -79,11 +79,32 @@ export default React.createClass({
                   </tr>
                 </table>
                 <div className="padding-b">
-                  <h2>Instances</h2>
+                  <h3>Group Information</h3>
+                  <table className="table">
+                    <tbody>
+                      <tr>
+                        <td><strong>Id</strong></td>
+                        <td>{this.state.group.get('id')}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>State</strong></td>
+                        <td>{this.state.group.get('state')}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Description</strong></td>
+                        <td>{this.renderDescription()}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="padding-b">
+                  <h3>Instances ({this.state.group.get('instances').length})</h3>
                   <InstanceItemList instances={this.state.group.get('instances')}/>
                 </div>
-                <h2>Checks</h2>
-                <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
+                <div className="padding-b">
+                  <h3>Checks</h3>
+                  <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
+                </div>
               </Col>
             </Row>
           </Grid>

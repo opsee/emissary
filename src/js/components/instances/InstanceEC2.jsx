@@ -87,17 +87,18 @@ export default React.createClass({
                   </tr>
                   {this.renderAvailabilityZone()}
                 </table>
-
-                <h2>Groups - ( {this.data().groups.length} )</h2>
-                <ul className="list-unstyled">
-                  {this.state.instance.get('groups').map(g => {
-                    return (
-                      <li key={g.get('id')}>
-                        <GroupItem item={g}/>
-                      </li>
-                      )
-                  })}
-                </ul>
+                <div className="padding-b">
+                  <h3>Groups ({this.data().groups.length})</h3>
+                  <ul className="list-unstyled">
+                    {this.state.instance.get('groups').map(g => {
+                      return (
+                        <li key={g.get('id')}>
+                          <GroupItem item={g}/>
+                        </li>
+                        )
+                    })}
+                  </ul>
+                </div>
                 {
                   // <h2>{this.data().checks.length} Checks</h2>
                   // <ul className="list-unstyled">

@@ -3,6 +3,7 @@ import {RadialGraph, ListItem, StatusHandler} from '../global';
 import {InstanceActions} from '../../actions';
 import {InstanceStore} from '../../stores';
 import InstanceItem from './InstanceItem.jsx';
+import {Alert} from '../../modules/bootstrap';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import Immutable, {Record, List, Map} from 'immutable';
@@ -50,7 +51,7 @@ export default React.createClass({
     }else{
       return (
         <div>
-          <p>No Instances</p>
+          <Alert bsStyle="default">No instances found</Alert>
         </div>
       )
     }

@@ -115,7 +115,9 @@ export default React.createClass({
             <form onSubmit={this.submit}>
               <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
-              <Button bsStyle="primary" type="submit" disabled={this.disabled()}>Submit</Button>
+              <div className="btn-container">
+                <Button bsStyle="primary" type="submit" disabled={this.disabled()}>Update Profile</Button>
+              </div>
             </form>
             </Col>
           </Row>

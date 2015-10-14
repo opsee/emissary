@@ -9,7 +9,7 @@ import router from '../../modules/router.js';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Edit} from '../icons';
+import {Edit, Logout} from '../icons';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -35,7 +35,7 @@ export default React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Your Profile">
+        <Toolbar title={this.state.user.name}>
           <Link className="btn btn-fab btn-primary" to="profileEdit" title="Edit Your Profile">
             <Edit btn={true}/>
           </Link>

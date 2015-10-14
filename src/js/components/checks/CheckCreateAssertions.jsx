@@ -211,7 +211,8 @@ const CheckCreateAssertions = React.createClass({
           )
         })
         }
-        <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}><Add fill={colors.primary} inline={true}/> Add Another Assertion
+        <Button bsStyle="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+          <Add className="icon"/> Add Assertion
         </Button>
       </div>
     )
@@ -252,7 +253,7 @@ const CheckCreateAssertions = React.createClass({
     return (
       <form ref="form" onSubmit={this.submit}>
         <div className="padding-t">
-          <h2>Assertions</h2>
+          <h3>Assertions</h3>
         </div>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
         <br />
@@ -274,7 +275,7 @@ const CheckCreateAssertions = React.createClass({
           <Row>
             <Col xs={12}>
               <div className="padding-b">
-                <h2>Response to Your Request</h2>
+                <h3>Response to Your Request</h3>
                 <p>The complete response that came back from your request.</p>
                 <div className="padding-tb">
                   <CheckResponse check={this.props.check}/>

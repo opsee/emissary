@@ -82,7 +82,7 @@ const CheckEdit = React.createClass({
   renderLink(){
     return this.state.check.id ?
     (
-      <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Return to Check">
+      <Link to="check" params={{id:this.state.check.id}} className="btn btn-icon btn-flat" title="Return to Check">
         <Close btn={true}/>
       </Link>
     )
