@@ -120,24 +120,22 @@ export default React.createClass({
         <Toolbar title="Signups"/>
         <Grid>
           <Col xs={12}>
-            <Row>
-              <h2 className="text-danger">Unapproved</h2>
-              <div className="display-flex-sm flex-wrap">
-                {this.getUnapproved().map(this.output)}
-              </div>
-            </Row>
-            <Row>
-              <h2 className="text-warning">Approved</h2>
-              <div className="display-flex-sm flex-wrap">
-                {this.getApproved().map(this.output)}
-              </div>
-            </Row>
-            <Row>
-              <h2 className="text-success">Users</h2>
-              <div className="display-flex-sm flex-wrap">
-                {this.getUsers().map(this.output)}
-              </div>
-            </Row>
+            <h2 className="text-danger">Unapproved</h2>
+            <div className="display-flex-sm flex-wrap">
+              {this.getUnapproved().map(this.output)}
+            </div>
+          </Col>
+          <Col xs={12}>
+            <h2 className="text-warning">Approved</h2>
+            <div className="display-flex-sm flex-wrap">
+              {this.getApproved().map(this.output)}
+            </div>
+          </Col>
+          <Col xs={12}>
+            <h2 className="text-success">Users</h2>
+            <div className="display-flex-sm flex-wrap">
+              {this.getUsers().map(this.output)}
+            </div>
           </Col>
         </Grid>
       </div>

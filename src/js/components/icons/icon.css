@@ -1,0 +1,26 @@
+.btn{
+  position: absolute;
+  left:50%;
+  top:50%;
+  margin:-12px 0 0 -12px;
+}
+
+.inline{
+  display: inline-block;
+  height:1.3em;
+  width:1.3em;
+  vertical-align: text-bottom;
+}
+
+.nav{
+  display: inline-block;
+  height:18px;
+  width: 18px;
+  vertical-align: text-bottom;
+  fill:white;
+}
+
+.navActive{
+  composes: nav;
+  fill:rgba(255, 255, 255, 0.54);
+}
