@@ -94,7 +94,11 @@ export default React.createClass({
     return (
       <div>
         {this.props.include.map(i => {
-          return this[`render${_.capitalize(i)}`]()
+          return (
+            <div className="padding-b">
+              {this[`render${_.capitalize(i)}`]()}
+            </div>
+          )
         })}
       </div>
     );

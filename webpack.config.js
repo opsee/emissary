@@ -31,7 +31,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('css-loader'), include: [context_dir]},
+      { test: /\.global\.css$/, loader: 'style-loader!css-loader!cssnext-loader', include: [context_dir]},
       { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]-[hash:base64:5]!cssnext-loader'},
       { test: /\.js$|\.jsx$/, loaders: ['react-hot', 'babel-loader?optional[]=runtime&stage=0'], include: [context_dir] },
       { test: /\.json$/, loaders: ['json'], include: [context_dir]},

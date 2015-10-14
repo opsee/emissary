@@ -78,9 +78,9 @@ const InfoForm = forms.Form.extend({
     return(
       <div>
         <h3>Define HTTP Request</h3>
-        <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
-        <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
-        <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
+        <BoundField bf={this.boundField('port')} key={`bound-field-port`} className="padding-b"/>
+        <BoundField bf={this.boundField('verb')} key={`bound-field-verb`} className="padding-b"/>
+        <BoundField bf={this.boundField('path')} key={`bound-field-path`} className="padding-b"/>
       </div>
     )
   }
@@ -175,24 +175,19 @@ const CheckCreateRequest = React.createClass({
         {this.getHeaderForms().map((form, index) => {
           return (
             <div key={`header-form-${index}`}>
-              <div className="display-flex">
-                <div className="row flex-1">
-                  <Grid fluid={true}>
-                    <Row>
-                      <Col xs={12} sm={5} key={`header-field-${index}-key`}>
-                        <BoundField bf={form.boundField('key')}/>
-                      </Col>
-                      <Col xs={10} sm={5} key={`header-field-${index}-value`}>
-                        <BoundField bf={form.boundField('value')}/>
-                      </Col>
-                      <Col xs={2} className="padding-t-md">
-                        <BoundField bf={form.boundField('DELETE')}/>
-                      </Col>
-                    </Row>
-                  </Grid>
-                </div>
-
-              </div>
+                <Grid fluid={true}>
+                  <Row>
+                    <Col xs={12} sm={5} key={`header-field-${index}-key`}>
+                      <BoundField bf={form.boundField('key')}/>
+                    </Col>
+                    <Col xs={10} sm={5} key={`header-field-${index}-value`}>
+                      <BoundField bf={form.boundField('value')}/>
+                    </Col>
+                    <Col xs={2} className="padding-t-md">
+                      <BoundField bf={form.boundField('DELETE')}/>
+                    </Col>
+                  </Row>
+                </Grid>
             </div>
           )
         })
@@ -300,7 +295,7 @@ const CheckCreateRequest = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (2 of 4)">
+        <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>

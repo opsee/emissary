@@ -3902,7 +3902,6 @@ h6, .h6 {
 
 p {
   margin: 0 0 11px;
-  padding: 0 0.5em;
 }
 
 .lead {
@@ -4519,9 +4518,9 @@ opsee-footer {
 
 .form-group {
   border: none;
-  margin-bottom: 2em;
-  padding: 0 0.5em;
   position: relative;
+  padding:0;
+  margin:0;
 }
 .form-group.search-group {
   margin-top: 4em;
@@ -4668,7 +4667,7 @@ label {
 .btn-container {
   background-color: #303030;
   margin-top: 2em;
-  padding: 0.75em 0.5em;
+  padding: 0.75em 0;
 }
 .btn-container.btn-container-righty {
   text-align: right;
@@ -5033,7 +5032,6 @@ h3, .h3 {
   font-size: 1em;
   font-weight: 500;
   margin: 1em 0;
-  text-indent: 0.5em;
 }
 
 em {
@@ -5349,10 +5347,6 @@ to prevent collapsing during animation*/
   opacity: 0;
 }
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
-
 .ng-hide {
   display: none;
 }
@@ -5635,47 +5629,6 @@ body ::selection {
 }
 body ::-moz-selection {
   background: #90CAF9;
-}
-
-.list-item {
-  align-items: flex-start;
-  color: white;
-  overflow: hidden;
-  text-decoration: none;
-  transition: 300ms background;
-  display:flex;
-}
-.list-item:hover {
-  color: white;
-}
-
-.list-item-avatar {
-  height: 2.5em;
-  margin: 0 1em 0 0.5em;
-  position: relative;
-  width: 2.5em;
-}
-
-.list-item-icon {
-  margin: 0.5em;
-}
-
-.list-item-link {
-  transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  padding: 0.5em 0;
-  text-decoration: none;
-  display:flex;
-}
-.list-item-link:active, .list-item-link:focus {
-  background-color: #424242;
-  color: white;
-  text-decoration: none;
-}
-.list-item-link:hover {
-  color: white;
-  text-decoration: none;
 }
 
 .dropdown-toggle{

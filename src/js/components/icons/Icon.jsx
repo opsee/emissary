@@ -13,16 +13,13 @@ const Icon = React.createClass({
     }else if(this.props.inline){
       return style.inline;
     }else if(this.props.nav){
-      if(this.props.active){
-        return style.navActive;
-      }
       return style.nav;
     }
     return '';
   },
   render(){
     return (
-      <BaseSVG className={this.getClass()} {...this.props} style={this.props.style}/>
+      <BaseSVG className={this.getClass()} {...this.props}/>
     )
   }
 });

@@ -62,12 +62,12 @@ export default React.createClass({
               <LogoColor/>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
-                <div className="form-group">
+                <div className="padding-t">
                   <Button type="submit" className="btn-raised" bsStyle="success" block={true} disabled={this.disabled()}>
                       {this.loginBtnText()}
                   </Button>
                 </div>
-                <div className="form-group">
+                <div className="padding-t-md">
                     <p><Link to="passwordForgot">Forgot your password?</Link></p>
                     <p>Need an account? <Link to="start">Sign up!</Link></p>
                 </div>

@@ -112,9 +112,11 @@ const CheckCreateAssertions = React.createClass({
     if(data && data.relationship){
       if(data.key == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
-          <Col xs={10} xsOffset={2}>
-            <BoundField bf={form.boundField('operand')}/>
-          </Col>
+          <Row className="padding-t">
+            <Col xs={12}>
+              <BoundField bf={form.boundField('operand')}/>
+            </Col>
+          </Row>
         )
       }
     }
@@ -124,30 +126,15 @@ const CheckCreateAssertions = React.createClass({
     if(data && data.relationship && data.key == 'header'){
       if(!data.relationship.match('empty|notEmpty')){
         return (
-          <Col xs={10} xsOffset={2} key={key}>
-            <BoundField bf={form.boundField('value')}/>
-          </Col>
+          <Row className="padding-t">
+            <Col xs={12} key={key}>
+              <BoundField bf={form.boundField('value')}/>
+            </Col>
+          </Row>
         )
       }
     }
     return <div/>
-  },
-  renderRemoveAssertionButton(index){
-    if(index > 0){
-      return (
-        <div className="padding-lr">
-            <button type="button" className="btn btn-icon btn-flat" onClick={this.removeAssertion.bind(null,index)} title="Remove this Assertion">
-              <Close btn={true}/>
-          </button>
-        </div>
-      )
-    }else{
-      return (
-       <div className="padding-lr">
-         <div style={{width:'48px'}}/>
-       </div>
-      )
-    }
   },
   removeAssertion(index){
     if(index > 0){
@@ -161,7 +148,11 @@ const CheckCreateAssertions = React.createClass({
   },
   renderDeleteAssertionButton(form, index){
     if(index > 0){
-      return <BoundField bf={form.boundField('DELETE')}/>
+      return (
+        <Col xs={2} sm={1}>
+          <BoundField bf={form.boundField('DELETE')}/>
+        </Col>
+      )
     }else{
       return <span/>
     }
@@ -171,49 +162,43 @@ const CheckCreateAssertions = React.createClass({
       <div>
         {this.getAssertionsForms().map((form, index) => {
           return (
-            <div key={`assertion-${index}`}>
-              <div className="display-flex">
-                <div className="row flex-1">
-                  <Grid fluid={true}>
+            <Grid fluid={true} key={`assertion-${index}`} className="padding-tb">
+              <Row>
+                <Col xs={2} sm={1}>
+                  <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
+                </Col>
+                <Col xs={8} sm={10}>
+                  <Row>
+                    <Col xs={12}>
+                      <Row>
+                        <Col xs={12} sm={6} key={`assertion-key-${index}`}>
+                          <BoundField bf={form.boundField('key')}/>
+                          <div className="padding-t visible-xs"></div>
+                        </Col>
+                        <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
+                          <BoundField bf={form.boundField('relationship')}/>
+                        </Col>
+                      </Row>
+                    </Col>
+                    </Row>
                     <Row>
-                      <Col xs={2}>
-                        <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
-                      </Col>
-                      {form.boundFields().map((bf, bfi) => {
-                        switch(bf.name){
-                          case 'key':
-                          return(
-                            <Col xs={10} sm={4} key={`assertion-${index}-field-${bfi}`}>
-                              <BoundField bf={bf}/>
-                            </Col>
-                          );
-                          break;
-                          case 'relationship':
-                          return(
-                            <Col xs={10} xsOffset={2} sm={6} smOffset={0} key={`assertion-${index}-field-${bfi}`}>
-                              <BoundField bf={bf}/>
-                            </Col>
-                          );
-                          break;
-                        }
-                      })}
+                      <Col xs={12}>
                       {this.renderValue(form, `assertion-${index}-value-field`)}
                       {this.renderOperand(form, `assertion-${index}-operand-field`)}
+                      </Col>
                     </Row>
-                  </Grid>
-                </div>
-                {this.renderDeleteAssertionButton(form, index)}
-                {
-                  // this.renderRemoveAssertionButton(index)
-                }
-              </div>
-            </div>
+                  </Col>
+                  {this.renderDeleteAssertionButton(form, index)}
+                </Row>
+            </Grid>
           )
         })
         }
-        <Button bsStyle="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
-          <Add className="icon"/> Add Assertion
-        </Button>
+        <div className="padding-t">
+          <Button bsStyle="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+            <Add className="icon"/> Add Assertion
+          </Button>
+        </div>
       </div>
     )
   },
@@ -266,7 +251,7 @@ const CheckCreateAssertions = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`}>
+        <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>

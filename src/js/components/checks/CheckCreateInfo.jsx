@@ -47,13 +47,7 @@ const InfoForm = forms.Form.extend({
   }),
   validation:'auto',
   render() {
-    return(
-      <div>
-        {this.boundFields().map(bf => {
-          return <BoundField bf={bf}/>
-        })}
-      </div>
-    )
+    return <BoundField bf={this.boundField('name')} className="padding-b"/>
   }
 })
 
@@ -140,27 +134,28 @@ const CheckCreateInfo = React.createClass({
         <h3>Notifications</h3>
         {this.getNotificationsForms().map((form, index) => {
           return (
-            <div>
-              <div className="display-flex">
-                <div className="row flex-1">
-                  <Grid fluid={true}>
-                    <Row>
-                      <Col xs={12} sm={6}>
-                        <BoundField bf={form.boundField('type')}/>
-                     </Col>
-                      <Col xs={12} sm={6}>
-                        <BoundField bf={form.boundField('value')}/>
-                     </Col>
-                    </Row>
-                  </Grid>
-                </div>
-                {this.renderRemoveNotificationButton(form, index)}
-              </div>
-            </div>
+              <Row className="padding-b-md">
+                <Col xs={10} sm={11}>
+                  <Row>
+                   <Col xs={12} sm={6}>
+                      <BoundField bf={form.boundField('type')}/>
+                      <div className="padding-b visible-xs"/>
+                   </Col>
+                    <Col xs={12} sm={6}>
+                      <BoundField bf={form.boundField('value')}/>
+                   </Col>
+                  </Row>
+                </Col>
+                <Col xs={2} sm={1}>
+                  {this.renderRemoveNotificationButton(form, index)}
+                </Col>
+              </Row>
           )
         })
         }
-        <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
+        <div className="padding-t-md">
+          <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
+        </div>
       </div>
     )
   },
@@ -219,7 +214,7 @@ const CheckCreateInfo = React.createClass({
     return (
       <div>
         <div>
-          <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`}>
+          <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`} bg="info">
             <Link to="checks" className="btn btn-icon btn-flat">
               <Close btn={true}/>
             </Link>

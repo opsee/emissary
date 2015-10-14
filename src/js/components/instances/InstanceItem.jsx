@@ -9,6 +9,7 @@ import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions, InstanceActions} from '../../actions';
 import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
 import {Button} from '../forms';
+import listItem from '../global/listItem.css';
 
 const InstanceItem = React.createClass({
   propTypes:{
@@ -64,7 +65,7 @@ const InstanceItem = React.createClass({
   },
   renderLinkButton(){
     return (
-    <Button to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="list-item-btn">
+    <Button to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
         <NewWindow btn={true} fill={colors.gray900}/>
     </Button>
     );
@@ -105,10 +106,10 @@ const InstanceItem = React.createClass({
   },
   render(){
     return (
-      <div key="listItem" className="list-item" onClick={this.onClick}>
+      <div key="listItem" className={listItem.item} onClick={this.onClick}>
         {this.renderModal()}
         <div className="line-height-1 flex-1 align-self-stretch display-flex">
-          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link} style={{maxWidth:'100%'}}>
             {this.renderGraph()}
             <div className="flex-vertical-align">
               <div>{this.props.item.get('name')}{this.renderStatusText()}</div>

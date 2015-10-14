@@ -9,6 +9,7 @@ import {RadialGraph, ListItem, Modal} from '../global';
 import {CheckActions} from '../../actions';
 import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
+import listItem from '../global/listItem.css';
 
 const GroupItem = React.createClass({
   propTypes:{
@@ -66,7 +67,7 @@ const GroupItem = React.createClass({
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="list-item-btn">
+    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
         <NewWindow btn={true} fill={colors.gray900}/>
     </Button>
     );
@@ -84,7 +85,7 @@ const GroupItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col className="padding-b-md">
+              <Col xs={12} className="padding-b-md">
                 <h3>{this.props.item.get('name')} Actions</h3>
 
                 <Button className="text-left btn-primary" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
@@ -105,7 +106,7 @@ const GroupItem = React.createClass({
   renderLink(){
     if(!this.props.onClick){
       return(
-        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+        <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link} style={{maxWidth:'100%'}}>
           {this.renderGraph()}
           <div className="flex-vertical-align">
             <div>{this.props.item.get('name')}</div>
@@ -117,7 +118,7 @@ const GroupItem = React.createClass({
         );
       }else{
         return (
-          <div className="list-item-link flex-1 align-items-start" style={{maxWidth:'100%'}}>
+          <div className={listItem.link} style={{maxWidth:'100%'}}>
           {this.renderGraph()}
           <div className="flex-vertical-align">
             <div>{this.props.item.get('name')}</div>
@@ -131,7 +132,7 @@ const GroupItem = React.createClass({
   },
   render(){
     return (
-      <div key="listItem" className="list-item" onClick={this.onClick} style={[this.getStyle()]}>
+      <div key="listItem" className={listItem.item} onClick={this.onClick} style={[this.getStyle()]}>
         {this.renderModal()}
         <div className="line-height-1 flex-1 display-flex">
           {this.renderLink()}

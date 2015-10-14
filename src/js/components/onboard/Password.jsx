@@ -62,9 +62,10 @@ export default React.createClass({
               <Col xs={12}>
                 <form name="loginForm" onSubmit={this.submit}>
                   <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
-                  <Button type="submit" block={true} bsStyle="success" disabled={this.disabled()}>{this.btnText()}</Button>
-                  <div className="clearfix"><br/></div>
-                  <div className="clearfix">
+                  <div className="padding-t">
+                    <Button type="submit" block={true} bsStyle="success" disabled={this.disabled()}>{this.btnText()}</Button>
+                  </div>
+                  <div className="padding-t">
                     <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
                   </div>
                 </form>

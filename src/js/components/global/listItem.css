@@ -1,0 +1,42 @@
+.item {
+  align-items: flex-start;
+  color: white;
+  overflow: hidden;
+  text-decoration: none;
+  transition: 300ms background;
+  display:flex;
+}
+.item:hover {
+  color: white;
+}
+
+.avatar {
+  height: 2.5em;
+  margin: 0 1em 0 0.5em;
+  position: relative;
+  width: 2.5em;
+}
+
+.icon {
+  margin: 0.5em;
+}
+
+.link {
+  transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0.5em 0;
+  text-decoration: none;
+  display:flex;
+  /*align-items:flex-start;*/
+  flex:1;
+}
+.link:active, .link:focus {
+  background-color: #424242;
+  color: white;
+  text-decoration: none;
+}
+.link:hover {
+  color: white;
+  text-decoration: none;
+}
