@@ -48,12 +48,12 @@ export default React.createClass({
                 <table className="table">
                   <tbody>
                     <tr>
-                      <td><strong>Name</strong></td>
-                      <td>{this.state.user.name}</td>
-                    </tr>
-                    <tr>
                       <td><strong>Email</strong></td>
                       <td>{this.state.user.email}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Name</strong></td>
+                      <td>{this.state.user.name}</td>
                     </tr>
                   </tbody>
                 </table>
