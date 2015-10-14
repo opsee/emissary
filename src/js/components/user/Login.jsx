@@ -58,7 +58,7 @@ export default React.createClass({
         <Toolbar title="Login to Your Account"/>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
               <LogoColor/>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>

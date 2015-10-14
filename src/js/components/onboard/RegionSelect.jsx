@@ -96,7 +96,7 @@ const Team = React.createClass({
         <Toolbar title="Choose a Region"/>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
                {
@@ -118,7 +118,7 @@ const Team = React.createClass({
       return (
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1} className="padding-tb">
+            <Col xs={12} display-flex className="padding-tb">
               <Alert bsStyle="info">
                 It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
               </Alert>

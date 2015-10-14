@@ -4,55 +4,40 @@ import Radium from 'radium';
 import colors from 'seedling/colors';
 import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-
-var outer = {
-  backgroundColor: '#424242',
-  fontSize:'2.0rem',
-  width:'100%',
-  marginBottom:'2em'
-}
-
-var inner = {
-  paddingTop:'1em',
-  paddingBottom:'1.2em',
-  position:'relative'
-}
-
-var btnPositions = {
-  default:{
-    position:'absolute',
-    bottom:'-1.4em',
-    right:'0.6em'
-  },
-  midRight:{
-    position:'absolute',
-    top:'50%',
-    marginTop:'-24px',
-    right:'0.6em'
-  }
-}
-
+import style from './toolbar.css';
 
 var Toolbar = React.createClass({
   propTypes:{
     title:PropTypes.string.isRequired,
-    btnPosition:PropTypes.string
+    btnPosition:PropTypes.string,
+    bg:PropTypes.string
   },
   outputTitle(){
     return (
       <DocumentTitle title={this.props.documentTitle || this.props.title}/>
     );
   },
+  getChildrenClass(){
+    let key = this.props.btnPosition || 'default';
+    key = _.startCase(key).split(' ').join('');
+    return style[`btn${key}`];
+  },
+  getOuterStyle(){
+    let obj = {};
+    if(this.props.bg){
+      obj.background = colors[this.props.bg];
+    }
+    return obj;
+  },
   render(){
-    var childStyle = this.props.btnPosition ? btnPositions[this.props.btnPosition] : btnPositions.default;
     return(
-      <div style={outer}>
+      <div className={style.outer} style={this.getOuterStyle()}>
         {this.outputTitle()}
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1} style={inner}>
+            <Col xs={12} display-flex className={style.inner}>
               <h1 className="margin-none">{this.props.title}</h1>
-                <div style={childStyle}>
+                <div className={this.getChildrenClass()}>
                 {this.props.children}
                 </div>
             </Col>

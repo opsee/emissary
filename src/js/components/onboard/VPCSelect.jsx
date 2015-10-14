@@ -123,7 +123,7 @@ const Team = React.createClass({
         <Toolbar title="Select a VPC"/>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
               <form name="loginForm" onSubmit={this.submit}>
               {this.innerRender()}
               </form>

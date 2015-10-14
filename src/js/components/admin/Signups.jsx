@@ -119,7 +119,7 @@ export default React.createClass({
       <div>
         <Toolbar title="Signups"/>
         <Grid>
-          <Col xs={12} sm={10} smOffset={1}>
+          <Col xs={12} display-flex>
             <Row>
               <h2 className="text-danger">Unapproved</h2>
               <div className="display-flex-sm flex-wrap">

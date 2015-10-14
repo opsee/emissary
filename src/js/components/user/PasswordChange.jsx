@@ -72,7 +72,7 @@ export default React.createClass({
         <Toolbar title="Change Your Password"/>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
               {this.innerRender()}
             </Col>
           </Row>

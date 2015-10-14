@@ -144,14 +144,14 @@ const CheckStepTargetSelect = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (1 of 4)">
+        <Toolbar btnPosition="midRight" title="Create Check (1 of 4)" bg="info">
           <Link to="checks" className="btn btn-icon btn-flat">
             <Close btn={true}/>
           </Link>
         </Toolbar>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
                 {this.innerRender()}
             </Col>
           </Row>

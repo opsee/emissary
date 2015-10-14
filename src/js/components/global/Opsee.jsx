@@ -11,6 +11,7 @@ import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col, Row} from '../../modules/bootstrap';
 import style from './style.global.css';
+import grid from './grid.global.css';
 
 function initialize(){
   if(UserStore.hasUser() && !GlobalStore.getSocketStarted()){

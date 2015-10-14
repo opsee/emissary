@@ -97,7 +97,7 @@ const CheckEdit = React.createClass({
           </Toolbar>
           <Grid>
             <Row>
-              <Col xs={12} sm={10} smOffset={1}>
+              <Col xs={12} display-flex>
                 <div className="padding-tb">
                   <CheckCreateRequest check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
                 </div>

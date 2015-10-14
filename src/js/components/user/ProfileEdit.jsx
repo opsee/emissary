@@ -111,7 +111,7 @@ export default React.createClass({
         <Toolbar title="Edit Your Profile"/>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
             <form onSubmit={this.submit}>
               <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}

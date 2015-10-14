@@ -150,7 +150,7 @@ const Install = React.createClass({
         <Toolbar title="Bastion Installation"/>
         <Grid>
           <Row>
-            <Col xs={12} sm={10} smOffset={1}>
+            <Col xs={12} display-flex>
               {this.renderText()}
               {this.state.bastions.map(b => {
                 return (
