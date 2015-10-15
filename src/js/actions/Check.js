@@ -125,27 +125,28 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
   res => res && res.body
 );
 
-//REMOVE, UNCOMMENT
-// _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
-//   (data) => {
-//     let newData = _statics.formatCheckData(data);
-//     return request
-//     .post(`${config.api}/bastions/test-check`)
-//     .set('Authorization', UserStore.getAuth())
-//     .send({check:newData, max_hosts:3, deadline:'30s'})
-//   },
-//   res => res.body,
-//   res => _.get(res.body) || res
-// );
-
-_actions.testCheck = Flux.statics.addAsyncAction('testCheck',
-  (data) => {
-    return new Promise((resolve, reject) => {
-      resolve(CheckStore.getFakeResponse().toJS());
-    });
-  },
-  res => res,
-  res => res
-);
+if(config.demo){
+  _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
+    (data) => {
+      return new Promise((resolve, reject) => {
+        resolve(CheckStore.getFakeResponse().toJS());
+      });
+    },
+    res => res,
+    res => res
+  );
+}else{
+  _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
+    (data) => {
+      let newData = _statics.formatCheckData(data);
+      return request
+      .post(`${config.api}/bastions/test-check`)
+      .set('Authorization', UserStore.getAuth())
+      .send({check:newData, max_hosts:3, deadline:'30s'})
+    },
+    res => res.body,
+    res => _.get(res.body) || res
+  );
+}
 
 export default _.assign({}, ..._.values(_actions));

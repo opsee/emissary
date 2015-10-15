@@ -108,11 +108,9 @@ const GroupItem = React.createClass({
       return(
         <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link} style={{maxWidth:'100%'}}>
           {this.renderGraph()}
-          <div className="flex-vertical-align">
+          <div>
             <div>{this.props.item.get('name')}</div>
-            {
-            // <div className="text-secondary">X of Y passing</div>
-            }
+            <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
           </div>
         </Link>
         );
@@ -120,11 +118,9 @@ const GroupItem = React.createClass({
         return (
           <div className={listItem.link} style={{maxWidth:'100%'}}>
           {this.renderGraph()}
-          <div className="flex-vertical-align">
+          <div>
             <div>{this.props.item.get('name')}</div>
-            {
-            // <div className="text-secondary">X of Y passing</div>
-            }
+            <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
           </div>
         </div>
         )

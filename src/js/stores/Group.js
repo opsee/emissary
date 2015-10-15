@@ -83,9 +83,15 @@ const statics = {
     Store.emitChange();
   },
   groupELBFromJS(data){
-    if(data.Instances && data.Instances.length){
-      if(data.Instances[0].InstanceId){
-        data.instances = _.uniq(data.Instances, 'InstanceId');
+    let instances = data.Instances;
+    if(!instances){
+      instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
+        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
+      });
+    }
+    if(instances.length){
+      if(instances[0].InstanceId){
+        data.instances = _.uniq(instances, 'InstanceId');
       }
       data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
@@ -97,9 +103,15 @@ const statics = {
     return new GroupELB(data);
   },
   groupFromJS(data){
-    if(data.instances && data.instances.length){
-      if(data.instances[0].InstanceId){
-        data.instances = _.uniq(data.instances, 'InstanceId');
+    let instances = data.instances;
+    if(!instances){
+      instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
+        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
+      });
+    }
+    if(instances.length){
+      if(instances[0].InstanceId){
+        data.instances = _.uniq(instances, 'InstanceId');
       }
       data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
@@ -111,6 +123,16 @@ const statics = {
       data.health = 75;
     }
     return new Group(data);
+  },
+  populateGroupInstances(){
+    let groupsSecurity = _data.groupsSecurity;
+    _data.groupsSecurity = groupsSecurity.map(sg => {
+      const instances = InstanceStore.getInstancesECC().filter(instance => {
+        return _.findWhere(instance.SecurityGroups, {GroupId:sg.id})
+      });
+      const newSg = sg.set('instances', new List(instances));
+      return newSg;
+    })
   }
 }
 
@@ -174,6 +196,7 @@ const Store = Flux.createStore(
     switch(payload.actionType) {
       case 'GET_GROUPS_SECURITY_SUCCESS':
         statics.getGroupsSecuritySuccess(payload.data);
+        statics.populateGroupInstances();
       break;
       case 'GET_GROUP_SECURITY_SUCCESS':
         statics.getGroupSecuritySuccess(payload.data);
@@ -186,6 +209,10 @@ const Store = Flux.createStore(
       break;
       case 'GET_GROUP_ELB_SUCCESS':
         statics.getGroupELBSuccess(payload.data);
+      break;
+      case 'GET_INSTANCES_ECC_SUCCESS':
+        statics.populateGroupInstances();
+        Store.emitChange();
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
