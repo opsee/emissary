@@ -3,6 +3,7 @@ dependencies:
     - npm install -g webpack casperjs
     - npm install
     - docker info
+    - npm run-script deploy
 machine:
   services:
     - docker
@@ -10,10 +11,9 @@ machine:
     version: 4.1.2
 test:
   override:
-    - npm run-script deploy
+    - docker run -d -p 9000:80 quay.io/opsee/emissary:latest; sleep 10;
     - curl http://localhost:9000/
     - casperjs test test-deploy.js
-    - docker run -d -p 9000:80 quay.io/opsee/emissary:latest; sleep 10;
 deployment:
   hub:
     branch: master
