@@ -217,21 +217,30 @@ const EnvWithFilter = React.createClass({
       return (<tr/>)
     }
   },
+  shouldRenderTable(){
+    return _.chain(this.props.include).map(i => {
+      return this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size;
+    }).compact().value().length;
+  },
   renderStatusTable(){
-    return (
-      <table className="table">
-        {this.props.include.map(i => this.renderTableItem(i))}
-      </table>
-    )
+    if(this.shouldRenderTable()){
+      return (
+        <div className="padding-b">
+          <table className="table">
+            {this.props.include.map(i => this.renderTableItem(i))}
+          </table>
+        </div>
+      )
+    }else{
+      return <div/>
+    }
   },
   render(){
     const self = this;
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {
-            // this.renderStatusTable()
-          }
+          {this.renderStatusTable()}
           {this.state.filter.render()}
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();
