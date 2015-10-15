@@ -41,7 +41,9 @@ const FilterForm = forms.Form.extend({
 const EnvWithFilter = React.createClass({
   mixins:[GroupStore.mixin, InstanceStore.mixin, SetInterval],
   propTypes:{
-    include:PropTypes.array
+    include:PropTypes.array,
+    filter:PropTypes.string,
+    onFilterChange:PropTypes.func
   },
   storeDidChange(){
     const getGroupsSecurityStatus = GroupStore.getGetGroupsSecurityStatus();
@@ -71,26 +73,34 @@ const EnvWithFilter = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      filter: new FilterForm({
+      filter: new FilterForm(_.assign({
         onChange:self.filterHasChanged,
         labelSuffix:'',
         validation:{
           on:'blur change',
           onChangeDelay:50
-        },
-      }),
+        }
+      }, this.props.filter ? {data:{filter:this.props.filter}} : null)),
       attemptedGroupsSecurity:false,
       attemptedGroupsELB:false,
       attemptedInstancesECC:false,
       selected:_.get(this.props, 'check.target.id') || null
     }
     //this is a workaround because the library is not working correctly with initial + data formset
+    if(this.props.filter){
+      setTimeout(() => {
+        this.state.filter.setData({filter:this.props.filter});
+      },50);
+    }
     return _.extend(obj, {
       cleanedData:null
     });
   },
   filterHasChanged(){
     this.forceUpdate();
+    if(this.props.onFilterChange){
+      this.props.onFilterChange.call(null, this.state.filter.cleanedData.filter);
+    }
   },
   getData(){
     GroupActions.getGroupsSecurity();

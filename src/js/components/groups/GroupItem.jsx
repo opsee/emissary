@@ -132,7 +132,7 @@ const GroupItem = React.createClass({
   },
   render(){
     return (
-      <div key="listItem" className={listItem.item} onClick={this.onClick} style={[this.getStyle()]}>
+      <div key="listItem" className={listItem.item} onClick={this.onClick} style={[this.getStyle()]} title={this.props.title || this.props.item.get('name')}>
         {this.renderModal()}
         <div className="line-height-1 flex-1 display-flex">
           {this.renderLink()}

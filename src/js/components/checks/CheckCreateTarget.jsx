@@ -23,7 +23,7 @@ const groupOptions = []
 
 const verbOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
 
-const CheckStepTargetSelect = React.createClass({
+const CheckCreateTarget = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
@@ -136,7 +136,7 @@ const CheckStepTargetSelect = React.createClass({
           <p>What would you like to check? When targeting a group or ELB, your check will automatically run on all of its instances. Note: only groups and ELBs are currently supported as targets.</p>
         </div>
         {this.renderHelperText()}
-        <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']}/>
+        <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         <StepCounter active={1} steps={4}/>
       </div>
     )
@@ -164,4 +164,4 @@ const CheckStepTargetSelect = React.createClass({
   },
 })
 
-export default CheckStepTargetSelect;
+export default CheckCreateTarget;

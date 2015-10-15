@@ -28,7 +28,8 @@ const CheckCreate = React.createClass({
     const obj = {
       check:CheckStore.newCheck(this.props.query).toJS(),
       response:CheckStore.getResponse(),
-      createStatus:CheckStore.getCheckCreateStatus()
+      createStatus:CheckStore.getCheckCreateStatus(),
+      filter:null
     }
     return _.omit(obj, noCheck ? 'check' : null)
   },
@@ -59,13 +60,18 @@ const CheckCreate = React.createClass({
       check:_.cloneDeep(data)
     });
   },
+  updateFilter(data){
+    this.setState({
+      filter:data
+    });
+  },
   submit(){
     CheckActions.checkCreate(this.state.check);
   },
   render() {
     return (
       <div>
-        <RouteHandler {...this.state} onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus}/>
+        <RouteHandler {...this.state} onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus} onFilterChange={this.updateFilter}/>
       </div>
     );
   }
