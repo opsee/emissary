@@ -23,6 +23,10 @@
     <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
     {% } %}
     <script>
+    //prototype.bind shim (mostly for capserjs CI testing)
+    !function(){var a=Array.prototype,b=a.slice,c=Function.prototype;c.bind||(c.bind=function(a){function e(){var e=c.prototype&&this instanceof c;return c.apply(!e&&a||this,d.concat(b.call(arguments)))}var c=this,d=b.call(arguments,1);return e.prototype=c.prototype,e})}();
+    </script>
+    <script>
     //Make sure browser is up-to-snuff
     (function(){function h(){var e=["webkit","moz","ms","o"];if("hidden"in document)return"hidden";for(var r=0;r<e.length;r++)if(e[r]+"Hidden"in document)return e[r]+"Hidden";return null}h()||alert("Your browser is not supported at this time. Try a fresh version of Chrome, Firefox, or Safari.")})();
     </script>
