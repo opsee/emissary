@@ -10,7 +10,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
-import {Lock} from '../icons';
+import {Lock, Close} from '../icons';
 
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
@@ -108,7 +108,11 @@ export default React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Edit Your Profile"/>
+        <Toolbar title="Edit Your Profile" bg="info" btnPosition="midRight">
+          <Button to="profile" icon={true} flat={true}>
+            <Close btn={true}/>
+          </Button>
+        </Toolbar>
         <Grid>
           <Row>
             <Col xs={12}>
