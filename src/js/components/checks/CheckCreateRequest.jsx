@@ -16,6 +16,7 @@ import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
+import {Padding} from '../layout';
 
 const groupOptions = []
 
@@ -78,9 +79,15 @@ const InfoForm = forms.Form.extend({
     return(
       <div>
         <h3>Define HTTP Request</h3>
-        <BoundField bf={this.boundField('port')} key={`bound-field-port`} className="padding-b"/>
-        <BoundField bf={this.boundField('verb')} key={`bound-field-verb`} className="padding-b"/>
-        <BoundField bf={this.boundField('path')} key={`bound-field-path`} className="padding-b"/>
+        <Padding b={1}>
+          <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
+        </Padding>
+        <Padding b={1}>
+          <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
+        </Padding>
+        <Padding b={1}>
+          <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
+        </Padding>
       </div>
     )
   }
@@ -174,7 +181,7 @@ const CheckCreateRequest = React.createClass({
         <h3>Request Headers</h3>
         {this.getHeaderForms().map((form, index) => {
           return (
-            <div key={`header-form-${index}`}>
+            <Padding b={2} key={`header-form-${index}`}>
                 <Grid fluid={true}>
                   <Row>
                     <Col xs={12} sm={5} key={`header-field-${index}-key`}>
@@ -183,12 +190,14 @@ const CheckCreateRequest = React.createClass({
                     <Col xs={10} sm={5} key={`header-field-${index}-value`}>
                       <BoundField bf={form.boundField('value')}/>
                     </Col>
-                    <Col xs={2} className="padding-t-md">
-                      <BoundField bf={form.boundField('DELETE')}/>
+                    <Col xs={2}>
+                      <Padding t={2}>
+                        <BoundField bf={form.boundField('DELETE')}/>
+                      </Padding>
                     </Col>
                   </Row>
                 </Grid>
-            </div>
+            </Padding>
           )
         })
         }
@@ -274,21 +283,21 @@ const CheckCreateRequest = React.createClass({
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
         {this.renderHelperText()}
-        <div className="padding-b">
+        <Padding b={1}>
           {this.renderTargetSelection()}
-        </div>
-        <div className="padding-b">
+        </Padding>
+        <Padding b={1}>
           {this.state.info.render()}
           {this.renderHeaderForm()}
-        </div>
+        </Padding>
         <hr/>
-        <div className="padding-b">
+        <Padding b={1}>
           <h3>Your Response</h3>
           <CheckResponse check={this.getCheck()}/>
-        </div>
-        <div className="padding-b">
+        </Padding>
+        <Padding b={1}>
           {this.renderSubmitButton()}
-        </div>
+        </Padding>
       </form>
     );
   },

@@ -83,7 +83,7 @@ const InstanceItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col className="padding-b-md">
+              <Col xs={12} className="padding-b-md">
                 <h3>{this.props.item.get('name')} Actions</h3>
                 <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
                   <Refresh className="icon"/> Restart

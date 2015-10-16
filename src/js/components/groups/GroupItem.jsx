@@ -10,6 +10,7 @@ import {CheckActions} from '../../actions';
 import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
+import {Padding} from '../layout';
 
 const GroupItem = React.createClass({
   propTypes:{
@@ -85,12 +86,13 @@ const GroupItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col xs={12} className="padding-b-md">
+              <Col xs={12}>
+              <Padding b={2}>
                 <h3>{this.props.item.get('name')} Actions</h3>
-
                 <Button className="text-left btn-primary" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
                   <Add className="icon"/> Create Check
                 </Button>
+                </Padding>
               </Col>
             </Row>
           </Grid>

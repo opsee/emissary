@@ -25,7 +25,7 @@
   transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
-  padding: 0.5em 0;
+  composes: ptbhalf from '../layout/padding.css';
   text-decoration: none;
   display:flex;
   /*align-items:flex-start;*/

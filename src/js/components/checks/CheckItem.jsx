@@ -10,6 +10,7 @@ import {CheckActions} from '../../actions';
 import {Settings, NewWindow, Refresh} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
+import {Padding} from '../layout';
 
 const CheckItem = React.createClass({
   propTypes:{
@@ -77,12 +78,14 @@ const CheckItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col className="padding-b-md">
-                <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
+              <div className="flex-1">
+                <Padding>
+                  <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
+                </Padding>
                 <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
                   <Refresh className="icon"/> Test
                 </Button>
-              </Col>
+              </div>
             </Row>
           </Grid>
         </Modal>

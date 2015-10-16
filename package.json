@@ -61,6 +61,7 @@
   "dependencies": {
     "babel-eslint": "^3.1.23",
     "bootstrap-sass": "git+http://github.com/twbs/bootstrap-sass",
+    "classnames": "^2.1.5",
     "es6-promise": "^3.0.2",
     "eslint": "^0.24.1",
     "eslint-plugin-react": "^2.7.0",
