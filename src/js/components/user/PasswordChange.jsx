@@ -39,7 +39,12 @@ export default React.createClass({
     UserActions.userEdit({password:this.state.password, id:this.props.query.id});
   },
   componentWillMount(){
-    UserActions.userSet(this.props.query);
+    UserActions.userSet({
+      token:this.props.query.token, 
+      user:_.assign(this.props.query, {
+        loginDate:new Date()
+      })
+    });
   },
   disabled(){
     return !this.state.password || this.state.status == 'pending';

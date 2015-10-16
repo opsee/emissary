@@ -93,7 +93,7 @@ const CheckEdit = React.createClass({
     if(this.state.check.id){
       return (
         <div>
-          <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`}>
+          <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`} bg="info">
             {this.renderLink()}
           </Toolbar>
           <Grid>
