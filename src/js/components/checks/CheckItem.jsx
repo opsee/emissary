@@ -79,7 +79,7 @@ const CheckItem = React.createClass({
           <Grid fluid={true}>
             <Row>
               <div className="flex-1">
-                <Padding>
+                <Padding lr={1}>
                   <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
                 </Padding>
                 <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>

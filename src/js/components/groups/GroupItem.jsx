@@ -86,14 +86,14 @@ const GroupItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col xs={12}>
-              <Padding b={2}>
-                <h3>{this.props.item.get('name')} Actions</h3>
+              <div className="flex-1">
+                <Padding lr={1}>
+                  <h3>{this.props.item.get('name')} Actions</h3>
+                </Padding>
                 <Button className="text-left btn-primary" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
                   <Add className="icon"/> Create Check
                 </Button>
-                </Padding>
-              </Col>
+              </div>
             </Row>
           </Grid>
           {

@@ -182,21 +182,21 @@ const CheckCreateRequest = React.createClass({
         {this.getHeaderForms().map((form, index) => {
           return (
             <Padding b={2} key={`header-form-${index}`}>
-                <Grid fluid={true}>
-                  <Row>
-                    <Col xs={12} sm={5} key={`header-field-${index}-key`}>
-                      <BoundField bf={form.boundField('key')}/>
-                    </Col>
-                    <Col xs={10} sm={5} key={`header-field-${index}-value`}>
-                      <BoundField bf={form.boundField('value')}/>
-                    </Col>
-                    <Col xs={2}>
-                      <Padding t={2}>
-                        <BoundField bf={form.boundField('DELETE')}/>
-                      </Padding>
-                    </Col>
-                  </Row>
-                </Grid>
+              <Grid fluid={true}>
+                <Row>
+                  <Col xs={12} sm={5} key={`header-field-${index}-key`}>
+                    <BoundField bf={form.boundField('key')}/>
+                  </Col>
+                  <Col xs={10} sm={5} key={`header-field-${index}-value`}>
+                    <BoundField bf={form.boundField('value')}/>
+                  </Col>
+                  <Col xs={2}>
+                    <Padding t={2}>
+                      <BoundField bf={form.boundField('DELETE')}/>
+                    </Padding>
+                  </Col>
+                </Row>
+              </Grid>
             </Padding>
           )
         })

@@ -10,6 +10,7 @@ import {CheckActions, InstanceActions} from '../../actions';
 import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
+import {Padding} from '../layout';
 
 const InstanceItem = React.createClass({
   propTypes:{
@@ -83,8 +84,10 @@ const InstanceItem = React.createClass({
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
-              <Col xs={12} className="padding-b-md">
-                <h3>{this.props.item.get('name')} Actions</h3>
+              <div className="flex-1">
+                <Padding lr={1}>
+                  <h3>{this.props.item.get('name')} Actions</h3>
+                </Padding>
                 <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
                   <Refresh className="icon"/> Restart
                 </Button>
@@ -97,7 +100,7 @@ const InstanceItem = React.createClass({
                 <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
                   <Delete className="icon"/> Terminate
                 </Button>
-              </Col>
+              </div>
             </Row>
           </Grid>
         </Modal>
