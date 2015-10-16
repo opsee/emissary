@@ -18,6 +18,7 @@ import {UserActions, GroupActions} from '../../actions';
 import {GroupStore, CheckStore} from '../../stores';
 import {GroupItemList} from '../groups';
 import {EnvWithFilter} from '../env';
+import {Padding} from '../layout';
 
 const groupOptions = []
 
@@ -131,10 +132,10 @@ const CheckCreateTarget = React.createClass({
   innerRender(){
     return (
       <div>
-        <div className="padding-b-md">
+        <Padding b={2}>
           <h2>Choose a Target for your Health Check</h2>
           <p>What would you like to check? When targeting a group or ELB, your check will automatically run on all of its instances. Note: only groups and ELBs are currently supported as targets.</p>
-        </div>
+        </Padding>
         {this.renderHelperText()}
         <EnvWithFilter onSelect={this.onSelect} include={['groupsSecurity','groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         <StepCounter active={1} steps={4}/>

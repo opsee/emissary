@@ -10,6 +10,7 @@ import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
 import {StepCounter} from '../global';
 import {UserStore} from '../../stores';
+import {Padding} from '../layout';
 
 const intervalOptions = [
   ['5m','5min'],
@@ -47,7 +48,11 @@ const InfoForm = forms.Form.extend({
   }),
   validation:'auto',
   render() {
-    return <BoundField bf={this.boundField('name')} className="padding-b"/>
+    return (
+      <Padding b={1}>
+        <BoundField bf={this.boundField('name')}/>
+      </Padding>
+    );
   }
 })
 
@@ -106,15 +111,15 @@ const CheckCreateInfo = React.createClass({
   renderRemoveNotificationButton(form, index){
     if(index > 0){
       return (
-        <div className="padding-t-md">
+        <Padding t={2}>
           <BoundField bf={form.boundField('DELETE')}/>
-        </div>
+        </Padding>
       )
     }else{
       return (
-       <div className="padding-lr">
+        <Padding lr={1}>
          <div style={{width:'48px'}}/>
-       </div>
+       </Padding>
       )
     }
   },
@@ -134,12 +139,13 @@ const CheckCreateInfo = React.createClass({
         <h3>Notifications</h3>
         {this.getNotificationsForms().map((form, index) => {
           return (
-              <Row className="padding-b-md">
+            <Padding b={2}>
+              <Row>
                 <Col xs={10} sm={11}>
                   <Row>
                    <Col xs={12} sm={6}>
                       <BoundField bf={form.boundField('type')}/>
-                      <div className="padding-b visible-xs"/>
+                      <Padding b={1} className="visible-xs"/>
                    </Col>
                     <Col xs={12} sm={6}>
                       <BoundField bf={form.boundField('value')}/>
@@ -150,12 +156,13 @@ const CheckCreateInfo = React.createClass({
                   {this.renderRemoveNotificationButton(form, index)}
                 </Col>
               </Row>
+            </Padding>
           )
         })
         }
-        <div className="padding-t-md">
+        <Padding t={2}>
           <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
-        </div>
+        </Padding>
       </div>
     )
   },

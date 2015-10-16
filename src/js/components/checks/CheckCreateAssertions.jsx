@@ -16,6 +16,7 @@ import CheckResponse from './CheckResponse.jsx';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 import {CheckStore} from '../../stores';
+import {Padding} from '../layout';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -112,10 +113,12 @@ const CheckCreateAssertions = React.createClass({
     if(data && data.relationship){
       if(data.key == 'header' || !data.relationship.match('empty|notEmpty')){
         return(
-          <Row className="padding-t">
-            <Col xs={12}>
-              <BoundField bf={form.boundField('operand')}/>
-            </Col>
+          <Row>
+            <Padding t={1}>
+              <Col xs={12}>
+                <BoundField bf={form.boundField('operand')}/>
+              </Col>
+            </Padding>
           </Row>
         )
       }
@@ -126,10 +129,12 @@ const CheckCreateAssertions = React.createClass({
     if(data && data.relationship && data.key == 'header'){
       if(!data.relationship.match('empty|notEmpty')){
         return (
-          <Row className="padding-t">
-            <Col xs={12} key={key}>
-              <BoundField bf={form.boundField('value')}/>
-            </Col>
+          <Row>
+            <Padding t={1}>
+              <Col xs={12} key={key}>
+                <BoundField bf={form.boundField('value')}/>
+              </Col>
+            </Padding>
           </Row>
         )
       }
@@ -162,7 +167,8 @@ const CheckCreateAssertions = React.createClass({
       <div>
         {this.getAssertionsForms().map((form, index) => {
           return (
-            <Grid fluid={true} key={`assertion-${index}`} className="padding-tb">
+            <Grid fluid={true} key={`assertion-${index}`}>
+              <Padding tb={1}>
               <Row>
                 <Col xs={2} sm={1}>
                   <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
@@ -173,7 +179,7 @@ const CheckCreateAssertions = React.createClass({
                       <Row>
                         <Col xs={12} sm={6} key={`assertion-key-${index}`}>
                           <BoundField bf={form.boundField('key')}/>
-                          <div className="padding-t visible-xs"></div>
+                          <Padding t={1} className="visible-xs"/>
                         </Col>
                         <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
                           <BoundField bf={form.boundField('relationship')}/>
@@ -190,15 +196,16 @@ const CheckCreateAssertions = React.createClass({
                   </Col>
                   {this.renderDeleteAssertionButton(form, index)}
                 </Row>
+              </Padding>
             </Grid>
           )
         })
         }
-        <div className="padding-t">
+        <Padding t={1}>
           <Button bsStyle="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
             <Add className="icon"/> Add Assertion
           </Button>
-        </div>
+        </Padding>
       </div>
     )
   },
@@ -237,9 +244,9 @@ const CheckCreateAssertions = React.createClass({
   innerRender() {
     return (
       <form ref="form" onSubmit={this.submit}>
-        <div className="padding-t">
+        <Padding t={1}>
           <h3>Assertions</h3>
-        </div>
+        </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
         <br />
         {this.renderAssertionsForm()}
@@ -259,16 +266,16 @@ const CheckCreateAssertions = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <div className="padding-b">
+              <Padding b={1}>
                 <h3>Response to Your Request</h3>
                 <p>The complete response that came back from your request.</p>
-                <div className="padding-tb">
+                <Padding tb={1}>
                   <CheckResponse check={this.props.check}/>
-                </div>
-              </div>
-              <div className="padding-tb">
+                </Padding>
+              </Padding>
+              <Padding tb={1}>
                 {this.innerRender()}
-              </div>
+              </Padding>
             </Col>
           </Row>
         </Grid>

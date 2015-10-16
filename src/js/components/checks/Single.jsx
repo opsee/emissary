@@ -10,6 +10,7 @@ import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
 import {Delete} from '../icons';
+import {Padding} from '../layout';
 
 function getState(){
   return {
@@ -65,7 +66,7 @@ export default React.createClass({
     if(!this.state.error && this.state.check.get('id')){
       return(
         <div>
-          <div className="padding-b">
+          <Padding b={1}>
             <h3>Check Information</h3>
             <table className="table">
               <tr>
@@ -89,8 +90,8 @@ export default React.createClass({
                 <td>{this.getCheckJS().check_spec.value.verb}</td>
               </tr>
             </table>
-          </div>
-          <div className="padding-b">
+          </Padding>
+          <Padding b={1}>
             <h3>Assertions</h3>
             {this.state.check.get('assertions').map(a => {
               return(
@@ -114,8 +115,8 @@ export default React.createClass({
                 </div>
               )
             })}
-          </div>
-          <div className="padding-b">
+          </Padding>
+          <Padding b={1}>
             <h3>Notifications</h3>
             {this.state.check.get('notifications').map(n => {
               return(
@@ -133,7 +134,7 @@ export default React.createClass({
                 </table>
               )
             })}
-          </div>
+          </Padding>
         </div>
       )
     }else{
@@ -164,10 +165,9 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <div className="padding-tb">
+              <Padding tb={1}>
                 {this.innerRender()}
-              </div>
-
+              </Padding>
               <div className="btn-container btn-container-righty">
                 <Button onClick={this.removeCheck} flat={true} bsStyle="danger"><Delete className="icon"/> Delete Check</Button>
               </div>

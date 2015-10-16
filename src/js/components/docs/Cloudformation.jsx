@@ -4,6 +4,7 @@ import {Toolbar, HTMLFile} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Highlight} from '../global';
+import {Padding} from '../layout';
 
 export default React.createClass({
   render() {
@@ -13,7 +14,7 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <div className="padding-tb">
+              <Padding tb={1}>
                 <h2>The Opsee Bastion Instance CloudFormation Template</h2>
                 <Highlight>
                 {JSON.stringify({
@@ -224,16 +225,16 @@ export default React.createClass({
 
                   <p>Here is a summary of the role and permissions for the Opsee Bastion Instance.</p>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticbeanstalk:RetrieveEnvironmentInfo</pre>
                     <p>Initiates a request to compile the specified type of information of the deployed environment.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_RequestEnvironmentInfo.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_RequestEnvironmentInfo.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>ec2:Describe*</pre>
                     <p>See ec2 Describe*</p>
                     <p>Reference URL(s):</p>
@@ -292,9 +293,9 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnConnections.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnConnections.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnGateways.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnGateways.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticache:Describe*</pre>
                     <p>See elasticache Describe*</p>
                     <p>Reference URL(s):</p>
@@ -312,45 +313,45 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodesOfferings.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodesOfferings.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeSnapshots.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeSnapshots.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sqs:GetQueueAttributes</pre>
                     <p>Gets attributes for the specified queue. </p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_GetQueueAttributes.html">http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_GetQueueAttributes.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>kinesis:Describe*</pre>
                     <p>Describes the specified stream.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_DescribeStream.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_DescribeStream.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudformation:DescribeStackResources</pre>
                     <p>Returns AWS resource descriptions for running and deleted stacks. If StackName is specified, all the associated resources that are part of the stack are returned. If PhysicalResourceId is specified, the associated resources of the stack that the resource belongs to are returned.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResources.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResources.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>appstream:Get*</pre>
                     <p>The following policy grants users read-only access to Amazon AppStream.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/appstream/latest/developerguide/appstream-advanced-build-streaming-app.html">http://docs.aws.amazon.com/appstream/latest/developerguide/appstream-advanced-build-streaming-app.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticbeanstalk:Describe*</pre>
                     <p>See elasticbeanstalk Describe*</p>
                     <p>Reference URL(s):</p>
@@ -365,45 +366,45 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudfront:List*</pre>
                     <p>See cloudfront documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>route53:Get*</pre>
                     <p>See route53 api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudformation:DescribeStackResource</pre>
                     <p>Returns a description of the specified resource in the specified stack.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResource.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResource.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>dynamodb:DescribeTable</pre>
                     <p>Returns information about the table, including the current status of the table, when it was created, the primary key schema, and any indexes on the table.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DescribeTable.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DescribeTable.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>ses:List*</pre>
                     <p>See ses List*</p>
                     <p>Reference URL(s):</p>
@@ -412,18 +413,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentityPolicies.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentityPolicies.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListVerifiedEmailAddresses.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_ListVerifiedEmailAddresses.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>opsworks:Get*</pre>
                     <p>Gets a generated host name for the specified layer, based on the current host name theme.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_GetHostnameSuggestion.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_GetHostnameSuggestion.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudwatch:Describe*</pre>
                     <p>See cloudwatch DescribeAlarmsHistory, DescribeAlarms, DescribeAlarmsForMetric, DescribeAlarmActions</p>
                     <p>Reference URL(s):</p>
@@ -432,18 +433,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmsForMetric.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmsForMetric.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elastictranscoder:Read*</pre>
                     <p>See elastictranscoder documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html">http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sns:List*</pre>
                     <p>See sns List*</p>
                     <p>Reference URL(s):</p>
@@ -454,18 +455,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html">http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html">http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>rds:ListTagsForResource</pre>
                     <p>Lists all tags on an Amazon RDS resource.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_ListTagsForResource.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_ListTagsForResource.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>opsworks:Describe*</pre>
                     <p>See opsworks Describe*</p>
                     <p>Reference URL(s):</p>
@@ -492,18 +493,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeUserProfiles.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeUserProfiles.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeVolumes.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeVolumes.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>redshift:ViewQueriesInConsole</pre>
                     <p>action controls whether a user can see queries in the Amazon Redshift console in the Queries tab of the Cluster section</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/redshift/latest/mgmt/redshift-policy-elements.html">http://docs.aws.amazon.com/redshift/latest/mgmt/redshift-policy-elements.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>directconnect:Describe*</pre>
                     <p>See directconnect Describe*</p>
                     <p>Reference URL(s):</p>
@@ -516,18 +517,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualGateways.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualGateways.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualInterfaces.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualInterfaces.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudformation:GetTemplate</pre>
                     <p>Returns the template body for a specified stack. You can get the template for running or deleted stacks. For deleted stacks, GetTemplate returns the template for up to 90 days after the stack has been deleted.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_GetTemplate.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_GetTemplate.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>iam:Get*</pre>
                     <p>See iam Get*</p>
                     <p>Reference URL(s):</p>
@@ -554,54 +555,54 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUserPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUserPolicy.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticbeanstalk:List*</pre>
                     <p>Returns a list of the available solution stack names.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_ListAvailableSolutionStacks.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_ListAvailableSolutionStacks.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>dynamodb:GetItem</pre>
                     <p>The GetItem operation returns a set of attributes for the item with the given primary key. If there is no matching item, GetItem does not return any data.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudwatch:List*</pre>
                     <p>See cloudwatch ListMetrics</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>dynamodb:ListTables</pre>
                     <p>Returns an array of table names associated with the current account and endpoint. The output from ListTables is paginated, with each page returning a maximum of 100 table names.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ListTables.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ListTables.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>trustedadvisor:Describe*</pre>
                     <p>See support api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/awssupport/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/awssupport/latest/APIReference/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>kinesis:List*</pre>
                     <p>See kinesis ListStreams,ListTagsForStream</p>
                     <p>Reference URL(s):</p>
@@ -610,9 +611,9 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListTagsForStream.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListTagsForStream.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>iam:List*</pre>
                     <p>See iam List*</p>
                     <p>Reference URL(s):</p>
@@ -642,36 +643,36 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListVirtualMFADevices.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListVirtualMFADevices.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>s3:Get*</pre>
                     <p>See s3 api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html">http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elastictranscoder:List*</pre>
                     <p>See elastictranscoder documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html">http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudtrail:DescribeTrails</pre>
                     <p>Retrieves settings for the trail associated with the current region for your account.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DescribeTrails.html">http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DescribeTrails.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticloadbalancing:Describe*</pre>
                     <p>See elasticloadbalancing Describe*</p>
                     <p>Reference URL(s):</p>
@@ -683,9 +684,9 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancers.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancers.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeTags.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sns:Get*</pre>
                     <p>See sns Get*</p>
                     <p>Reference URL(s):</p>
@@ -695,9 +696,9 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetSubscriptionAttributes.html">http://docs.aws.amazon.com/sns/latest/api/API_GetSubscriptionAttributes.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetTopicAttributes.html">http://docs.aws.amazon.com/sns/latest/api/API_GetTopicAttributes.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticbeanstalk:RequestEnvironmentInfo</pre>
                     <p>See elasticbeanstalk Describe*</p>
                     <p>Reference URL(s):</p>
@@ -712,36 +713,36 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sqs:ListQueues</pre>
                     <p>Returns a list of your queues.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html">http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sdb:GetAttributes</pre>
                     <p>Returns all of the attributes associated with the item.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_GetAttributes.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_GetAttributes.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sdb:List*</pre>
                     <p>The ListDomains operation lists all domains associated with the Access Key ID.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_ListDomains.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_ListDomains.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>rds:Describe*</pre>
                     <p>See rds Describe*</p>
                     <p>Reference URL(s):</p>
@@ -772,18 +773,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstances.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstances.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstancesOfferings.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstancesOfferings.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudformation:DescribeStacks</pre>
                     <p>Returns the description for the specified stack; if no stack name was specified, then it returns the description for all the stacks created</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStacks.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStacks.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>autoscaling:Describe*</pre>
                     <p>See autoscaling Describe*</p>
                     <p>Reference URL(s):</p>
@@ -806,45 +807,45 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTags.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTerminationPolicyTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTerminationPolicyTypes.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>dynamodb:BatchGetItem</pre>
                     <p>The BatchGetItem operation returns the attributes of one or more items from one or more tables. You identify requested items by primary key.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchGetItem.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchGetItem.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudfront:Get*</pre>
                     <p>See cloudfront documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>route53:List*</pre>
                     <p>See route53 api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>dynamodb:Query</pre>
                     <p>A Query operation uses the primary key of a table or a secondary index to directly access items from that table or index.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>storagegateway:Describe*</pre>
                     <p>See storagegateway Describe*</p>
                     <p>Reference URL(s):</p>
@@ -863,27 +864,27 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeVTLDevices.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeVTLDevices.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeWorkingStorage.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeWorkingStorage.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudtrail:GetTrailStatus</pre>
                     <p>Returns a JSON-formatted list of information about the specified trail. Fields include information on delivery errors, Amazon SNS and Amazon S3 errors, and start and stop logging times for each trail.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_GetTrailStatus.html">http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_GetTrailStatus.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>s3:List*</pre>
                     <p>See s3 api documentatin</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html">http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>kinesis:Get*</pre>
                     <p>See kinesis GetRecords, GetShardIterator</p>
                     <p>Reference URL(s):</p>
@@ -891,18 +892,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetRecords.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetRecords.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>dynamodb:Scan</pre>
                     <p>The Scan operation returns one or more items and item attributes by accessing every item in a table or a secondary index.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>ses:Get*</pre>
                     <p>See ses Get*</p>
                     <p>Reference URL(s):</p>
@@ -914,18 +915,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendQuota.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendQuota.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendStatistics.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendStatistics.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>elasticbeanstalk:Check*</pre>
                     <p>Checks if the specified CNAME is available.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CheckDNSAvailability.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CheckDNSAvailability.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>redshift:Describe*</pre>
                     <p>See redshift Describe*</p>
                     <p>Reference URL(s):</p>
@@ -953,18 +954,18 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeSnapshotCopyGrants.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeSnapshotCopyGrants.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeTags.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudformation:DescribeStackEvents</pre>
                     <p>Returns all stack related events for a specified stack. For more information about a stack event history, go to Stacks in the AWS CloudFormation User Guide.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackEvents.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackEvents.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudformation:List*</pre>
                     <p>See cloudformation ListStacks and ListResources</p>
                     <p>Reference URL(s):</p>
@@ -972,27 +973,27 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStacks.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStacks.html</a></li>
                       <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStackResources.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStackResources.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sqs:ReceiveMessage</pre>
                     <p>Retrieves one or more messages, with a maximum limit of 10 messages, from the specified queue. Long poll support is enabled by using the WaitTimeSeconds parameter.</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html">http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>cloudwatch:Get*</pre>
                     <p>See cloudwatch GetMetricStatistics</p>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html</a></li>
                     </ul>
-                  </div>
+                  </Padding>
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>storagegateway:List*</pre>
                     <p>See storagegateway List*</p>
                     <p>Reference URL(s):</p>
@@ -1004,17 +1005,20 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints</a></li>
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes</a></li>
                     </ul>
-                  </div>
+                  </Padding>  
 
-                  <div class="padding-tb">
+                  <Padding tb={1}>
                     <pre>sdb:Select*</pre>
                     <p>The Select operation returns a set of Attributes for ItemNames that match the select expression. Select is similar to the standard SQL SELECT statement.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html</a></li>
+                      <li>
+                        <a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html
+                        </a>
+                      </li>
                     </ul>
-                  </div>
-              </div>
+                  </Padding>
+              </Padding>
             </Col>
           </Row>
         </Grid>

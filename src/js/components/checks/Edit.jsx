@@ -13,6 +13,7 @@ import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import router from '../../modules/router';
+import {Padding} from '../layout';
 
 function getState(){
   return {
@@ -98,15 +99,15 @@ const CheckEdit = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <div className="padding-tb">
+                <Padding tb={1}>
                   <CheckCreateRequest check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
-                </div>
-                <div className="padding-tb">
+                </Padding>
+                <Padding tb={1}>
                   <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude={true}/>
-                </div>
-                <div className="padding-tb">
+                </Padding>
+                <Padding tb={1}>
                   <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
-                </div>
+                </Padding>
                 {
                   // <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>
                 }

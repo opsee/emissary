@@ -11,6 +11,7 @@ import {Checkmark} from '../icons';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
+import {Padding} from '../layout';
 
 function getState(){
   return {
@@ -95,22 +96,24 @@ export default React.createClass({
   },
   output(signup){
     return (
-      <Col xs={12} sm={6} className="padding-tb">
-        <div className="bg-gray-900 md-shadow-bottom-z-1">
-          <div className="padding">
-            <h2 className="margin-none">
-                {signup.name}
-                {this.outputCheckmark(signup)}
-            </h2>
+      <Col xs={12} sm={6}>
+        <Padding tb={1}>
+          <div className="bg-gray-900 md-shadow-bottom-z-1">
+            <div className="padding">
+              <h2 className="margin-none">
+                  {signup.name}
+                  {this.outputCheckmark(signup)}
+              </h2>
+              <div>
+                <div><a href="mailto:{{::signup.email}}">{signup.email}</a></div>
+                <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
+              </div>
+            </div>
             <div>
-              <div><a href="mailto:{{::signup.email}}">{signup.email}</a></div>
-              <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
+              {this.outputButton(signup)}
             </div>
           </div>
-          <div>
-            {this.outputButton(signup)}
-          </div>
-        </div>
+        </Padding>
       </Col>
     )
   },
