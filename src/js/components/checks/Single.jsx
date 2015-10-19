@@ -1,15 +1,15 @@
 import React, {PropTypes} from 'react';
 import {CheckActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
+import GroupItem from '../groups/GroupItem.jsx';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
-import {Edit, Mail} from '../icons';
+import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
-import {Delete} from '../icons';
 import {Padding} from '../layout';
 
 function getState(){
@@ -67,12 +67,15 @@ export default React.createClass({
       return(
         <div>
           <Padding b={1}>
-            <h3>Check Information</h3>
+            <h3>Target</h3>
+            <ul className="list-unstyled">
+              <li>{this.getLink()}</li>
+            </ul>
+          </Padding>
+
+          <Padding b={1}>
+            <h3>Request</h3>
             <table className="table">
-              <tr>
-                <td><strong>Group</strong></td>
-                <td>{this.getLink()}</td>
-              </tr>
               <tr>
                 <td><strong>Path</strong></td>
                 <td>{this.getCheckJS().check_spec.value.path}</td>
@@ -95,45 +98,25 @@ export default React.createClass({
             <h3>Assertions</h3>
             {this.state.check.get('assertions').map(a => {
               return(
-                <div>
-                  <table className="table">
-                    <tbody>
-                      <tr>
-                        <td><strong>Key</strong></td>
-                        <td>{a.key}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Relationship</strong></td>
-                        <td>{a.relationship}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Value</strong></td>
-                        <td>{a.operand}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <ol>
+                  <li>
+                    <span>{a.key}</span>&nbsp;
+                    <span className="text-secondary">{a.relationship}</span>&nbsp;
+                    <strong>{a.operand}</strong>
+                  </li>
+                </ol>
               )
             })}
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>
+            <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
               return(
-                <table className="table">
-                  <tbody>
-                    <tr>
-                      <td><strong>Type</strong></td>
-                      <td>Email</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Recipient</strong></td>
-                      <td>{n.value}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <li><Mail inline={true}/> {n.value}</li>
               )
             })}
+            </ul>
           </Padding>
         </div>
       )
