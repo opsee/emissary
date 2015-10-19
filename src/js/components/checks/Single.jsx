@@ -142,7 +142,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Check ${this.state.check.name}`}>
+        <Toolbar title={`${this.state.check.name}`}>
           {this.outputLink()}
         </Toolbar>
         <Grid>
