@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
-import {CheckActions} from '../../actions';
+import {CheckActions, GroupActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
-import GroupItem from '../groups/GroupItem.jsx';
+import {GroupItem} from '../groups';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import {CheckStore} from '../../stores';
+import {CheckStore, GroupStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
@@ -16,21 +16,41 @@ import {Padding} from '../layout';
 function getState(){
   return {
     check:CheckStore.getCheck(),
-    status:CheckStore.getGetCheckStatus()
+    status:CheckStore.getGetCheckStatus(),
+    delStatus:CheckStore.getDeleteCheckStatus(),
+    sgStatus:GroupStore.getGetGroupSecurityStatus(),
+    elbStatus:GroupStore.getGetGroupELBStatus(),
+    group:GroupStore.getNewGroup()
   }
 }
 
 export default React.createClass({
-  mixins: [CheckStore.mixin],
+  mixins: [CheckStore.mixin, GroupStore.mixin],
   statics:{
     willTransitionTo:PageAuth
   },
   storeDidChange() {
-    const delStatus = CheckStore.getDeleteCheckStatus();
-    if(delStatus == 'success'){
+    let state = getState();
+    if(state.delStatus == 'success'){
       router.transitionTo('checks');
     }
-    this.setState(getState());
+    if(state.status == 'success'){
+      const target = state.check.get('target');
+      if(target){
+        switch(target.type){
+          case 'sg':
+            GroupActions.getGroupSecurity(target.id);
+          break;
+          case 'elb':
+            GroupActions.getGroupELB(target.id);
+          break;
+        }
+      }
+    }
+    if(state.sgStatus == 'success' || state.elbStatus == 'success'){
+      state.group = GroupStore.getGroup(this.state.check.get('target'));
+    }
+    this.setState(state);
   },
   getInitialState(){
     return getState();
@@ -63,15 +83,16 @@ export default React.createClass({
       )
     }
   },
+  getTarget(){
+    GroupStore.getGroupFromFilter()
+  },
   innerRender(){
     if(!this.state.error && this.state.check.get('id')){
       return(
         <div>
           <Padding b={1}>
             <h3>Target</h3>
-            <ul className="list-unstyled">
-              <li>{this.getLink()}</li>
-            </ul>
+            <GroupItem item={this.state.group}/>
           </Padding>
 
           <Padding b={1}>
