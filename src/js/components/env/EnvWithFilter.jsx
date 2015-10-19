@@ -19,6 +19,7 @@ import {UserActions, GroupActions, InstanceActions} from '../../actions';
 import {GroupStore, CheckStore, InstanceStore} from '../../stores';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
+import {Padding} from '../layout';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
@@ -214,6 +215,15 @@ const EnvWithFilter = React.createClass({
       break;
     }
   },
+  renderFilterButtons(){
+    return (
+      <Padding>
+        <Button bsStyle="success">Passing</Button>
+        <Button bsStyle="alert">Failing</Button>
+        <Button bsStyle="primary">Unmonitored</Button>
+      </Padding>
+    )
+  },
   renderTableItem(i){
     const num = this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size;
     if(num > 0){
@@ -252,6 +262,7 @@ const EnvWithFilter = React.createClass({
         <form name="envWithFilterForm">
           {this.renderStatusTable()}
           {this.state.filter.render()}
+          {this.renderFilterButtons()}
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();
           })}
