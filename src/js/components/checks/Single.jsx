@@ -7,6 +7,7 @@ import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import AssertionCounter from '../forms/AssertionCounter.jsx';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
@@ -98,7 +99,7 @@ export default React.createClass({
             <h3>Assertions</h3>
             {this.state.check.get('assertions').map(a => {
               return(
-                <ol>
+                <ol className="list-unstyled">
                   <li>
                     <span>{a.key}</span>&nbsp;
                     <span className="text-secondary">{a.relationship}</span>&nbsp;
