@@ -113,6 +113,8 @@ const Store = Flux.createStore(
         payload.data.user.loginDate = new Date();
       break;
       case 'USER_LOG_OUT':
+      case 'USER_REFRESH_TOKEN_ERROR':
+        config.intercom('shutdown');
         statics.logout();
         Store.emitChange();  
       break;
