@@ -12,6 +12,9 @@ let _statics = {};
 
 _statics.formatCheckData = function(data){
   const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id', 'name'];
+  if(data.target.type == 'security'){
+    data.target.type = 'sg';
+  }
   return _.omit(data, disallowed);
 }
 
