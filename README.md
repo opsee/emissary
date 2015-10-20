@@ -14,3 +14,16 @@ If you prefer to just build without the live reload and build-on-each-change wat
 ```bash
 $ npm run build
 ```
+
+There are a few configurable environment parameters:
+
+Configure bartnet URL:
+```CONFIG_API=http://localhost:9000 npm start```
+
+Configure fieri URL:
+```CONFIG_AUTH=http://localhost:9000 npm start```
+
+Configure events URL:
+```CONFIG_EVENTS=http://localhost:9000 npm start```
+
+Or any combination.
