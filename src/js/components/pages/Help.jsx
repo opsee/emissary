@@ -11,44 +11,33 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="More"/>
+        <Toolbar title="Documentation and Support"/>
         <Grid>
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-              <h3>Other Pages</h3>
+              <h3>Documentation</h3>
               <ul className="list-unstyled">
-                <li><Link to="docs"><Docs fill={colors.primary} inline={true}/> Docs</Link></li>
+                <li><Link to="docsBastion">The Bastion Instance</Link></li>
+                <li><Link to="docsCloudformation">Our Cloudformation Template and Permissions</Link></li>
+                <li><Link to="docsIAM">IAM Profile for Bastion Installation</Link></li>
               </ul>
               </Padding>
 
-              <Padding b={1}><hr/></Padding>
-
               <Padding b={1}>
-                <h3>Help and Support</h3>
+                <h3>Support</h3>
                 <p>Get in touch with us any time with questions or feature requests:</p>
 
-                <table className="table">
-                  <tbody>
-                  <tr>
-                    <td><Mail inline={true} /> Email</td>
-                    <td><a href="mailto:support@opsee.com">support@opsee.com</a></td>
-                  </tr>
-                  <tr>
-                    <td><Chat inline={true} /> IRC</td>
-                    <td><a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></td>
-                  </tr>
-                  <tr>
-                    <td><Slack inline={true} /> Slack</td>
-                    <td><a href="https://opsee-support.slack.com">opsee-support.slack.com</a></td>
-                  </tr>
-                  </tbody>
-                </table>
+                <p><span className="text-secondary"><Mail fill={colors.textColorSecondary} inline={true} /> Email:</span> <a href="mailto:support@opsee.com">support@opsee.com</a></p>
+
+                <p><span className="text-secondary"><Chat fill={colors.textColorSecondary} inline={true} /> IRC:</span> <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></p>
+
+                <p><span className="text-secondary"><Slack fill={colors.textColorSecondary} inline={true} /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></p>
               </Padding>
 
               <Padding b={1}>
                 <h3>Admin Pages (Hide these!)</h3>
-                <ul>
+                <ul className="list-unstyled">
                   <li><Link to="tutorial">Tutorial</Link></li>
                   <li><Link to="onboardPassword">Set Password</Link></li>
                   <li><Link to="onboardTeam">Create Team</Link></li>

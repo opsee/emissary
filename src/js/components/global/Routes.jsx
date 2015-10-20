@@ -53,7 +53,7 @@ import OnboardInstall from '../onboard/Install.jsx';
 import AdminSignups from '../admin/Signups.jsx';
 import AdminSocket from '../admin/Socket.jsx';
 
-import More from '../pages/More.jsx';
+import Help from '../pages/Help.jsx';
 import Styleguide from '../pages/Styleguide.jsx';
 import NotFound from '../pages/NotFound.jsx';
 
@@ -93,7 +93,7 @@ const routes = (
       <Route path="/start/tutorial/2" name="tutorial2" handler={OnboardTutorial2}/>
       <Route path="/start/tutorial/3" name="tutorial3" handler={OnboardTutorial3}/>
     </Route>
-    <Route path="/start/profile" name="onboardProfile" handler={More}/>
+    <Route path="/start/profile" name="onboardProfile" handler={Help}/>
     <Route path="/start/team" name="onboardTeam" handler={OnboardTeam}/>
     <Route path="/start/region-select" name="onboardRegionSelect" handler={OnboardRegionSelect}/>
     <Route path="/start/credentials" name="onboardCredentials" handler={OnboardCredentials}/>
@@ -103,7 +103,7 @@ const routes = (
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/admin/socket" name="adminSocket" handler={AdminSocket}/>
-    <Route path="/system-status" name="systemStatus" handler={More}/>
+    <Route path="/system-status" name="systemStatus" handler={Help}/>
 
     <Route path="/profile" name="profile" handler={Profile}/>
     <Route path="/profile/edit" name="profileEdit" handler={ProfileEdit}/>
@@ -111,7 +111,7 @@ const routes = (
     <Route path="/password-forgot" name="passwordForgot" handler={PasswordForgot}/>
     <Route path="/password-change" name="passwordChange" handler={PasswordChange}/>
 
-    <Route path="/more" name="more" handler={More}/>
+    <Route path="/help" name="help" handler={Help}/>
 
     <Route path="/docs" name="docs" handler={Docs}/>
     <Route path="/docs/bastion" name="docsBastion" handler={DocsBastion}/>
