@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checkmark, MoreHoriz, Cloud, Login, Opsee} from '../icons';
+import {Person, Checkmark, Help, Cloud, Login, Opsee} from '../icons';
 import {UserStore, GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
@@ -56,9 +56,9 @@ export default React.createClass({
          </Link>
        </li>
         <li>
-         <Link to="more" className={style.navbarLink}>
-           <MoreHoriz nav={true}/>&nbsp;
-           <span className={`${style.navbarTitle}`}>More</span>
+         <Link to="help" className={style.navbarLink}>
+           <Help nav={true}/>&nbsp;
+           <span className={`${style.navbarTitle}`}>Help</span>
          </Link>
        </li>
        <li>
