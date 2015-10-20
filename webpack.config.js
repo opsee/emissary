@@ -42,7 +42,7 @@ module.exports = {
       {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
     ]
   },
-  noParse:vendors.map(v => path.join(__dirname, 'node_modules/'+v)),
+  noParse:vendors.map(function(v){ return path.join(__dirname, 'node_modules/'+v)}),
   resolve: {
     extensions: ['', '.jsx', '.js', '.json', '.svg', '.png', '.jpg'],
     modulesDirectories: ['node_modules']
