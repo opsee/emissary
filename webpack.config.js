@@ -10,10 +10,14 @@ var context_dir = path.join(__dirname, '/src');
 
 var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-  __API__: JSON.stringify(JSON.parse(process.env.API || 'true')),
-  __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false'))
+  __API__: JSON.stringify(process.env.CONFIG_API),
+  __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
+  __EVENTS__: JSON.stringify(process.env.CONFIG_EVENTS),
+  'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)}
 });
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
+
+var vendors = ['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'react-document-title', 'react-g-analytics', 'react-router-bootstrap', 'react-timeago'];
 
 module.exports = {
   cache:true,
@@ -22,7 +26,7 @@ module.exports = {
     'index': [
       './js/index.jsx'
     ],
-    vendor:['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'highlight.js', 'react-document-title', 'react-g-analytics', 'react-router-bootstrap', 'react-timeago']
+    vendor:vendors
   },
   output: {
     path: path.join(__dirname, "dist"),
@@ -38,13 +42,7 @@ module.exports = {
       {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
     ]
   },
-  noParse:[
-    path.join(__dirname, 'node_modules/react'),
-    path.join(__dirname, 'node_modules/slate'),
-    path.join(__dirname, 'node_modules/newforms'),
-    path.join(__dirname, 'node_modules/moment'),
-    path.join(__dirname, 'node_modules/lodash')
-  ],
+  noParse:vendors.map(v => path.join(__dirname, 'node_modules/'+v)),
   resolve: {
     extensions: ['', '.jsx', '.js', '.json', '.svg', '.png', '.jpg'],
     modulesDirectories: ['node_modules']
