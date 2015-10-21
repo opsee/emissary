@@ -7,11 +7,12 @@ import {CheckStore, GroupStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import AssertionCounter from '../forms/AssertionCounter.jsx';
+import AssertionCounter from './AssertionCounter.jsx';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
 import {Padding} from '../layout';
+import AssertionItemList from './AssertionItemList.jsx';
 
 function getState(){
   return {
@@ -20,7 +21,8 @@ function getState(){
     delStatus:CheckStore.getDeleteCheckStatus(),
     sgStatus:GroupStore.getGetGroupSecurityStatus(),
     elbStatus:GroupStore.getGetGroupELBStatus(),
-    group:GroupStore.getNewGroup()
+    group:GroupStore.getNewGroup(),
+    responseStatus:CheckStore.getTestCheckStatus()
   }
 }
 
@@ -50,13 +52,19 @@ export default React.createClass({
     if(state.sgStatus == 'success' || state.elbStatus == 'success'){
       state.group = GroupStore.getGroup(this.state.check.get('target'));
     }
+    if(state.responseStatus == 'success'){
+      state.response = CheckStore.getResponse();
+    }
     this.setState(state);
   },
   getInitialState(){
-    return getState();
+    return _.assign(getState(), {
+      response:null
+    })
   },
   getData(){
     CheckActions.getCheck(this.props.params.id);
+    CheckActions.testCheck();
   },
   componentWillMount(){
     this.getData();
@@ -118,17 +126,7 @@ export default React.createClass({
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>
-            {this.state.check.get('assertions').map(a => {
-              return(
-                <ol className="list-unstyled">
-                  <li>
-                    <span>{a.key}</span>&nbsp;
-                    <span className="text-secondary">{a.relationship}</span>&nbsp;
-                    <strong>{a.operand}</strong>
-                  </li>
-                </ol>
-              )
-            })}
+            <AssertionItemList assertions={this.state.check.get('assertions')} response={this.state.response}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>

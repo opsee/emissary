@@ -1,4 +1,3 @@
-import AssertionCounter from './AssertionCounter.jsx';
 import Autosuggest from './Autosuggest.jsx';
 import BoundField from './BoundField.jsx';
 import Button from './Button.jsx';
@@ -13,7 +12,6 @@ import Toggle from './Toggle.jsx';
 import ToggleWithLabel from './ToggleWithLabel.jsx';
 
 export default {
-  AssertionCounter,
   Autosuggest,
   Button,
   ButtonToggle,

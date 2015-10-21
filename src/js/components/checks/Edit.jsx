@@ -100,7 +100,7 @@ const CheckEdit = React.createClass({
             <Row>
               <Col xs={12}>
                 <Padding tb={1}>
-                  <CheckCreateRequest check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateRequest {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </Padding>
                 <Padding tb={1}>
                   <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude={true}/>
@@ -108,15 +108,11 @@ const CheckEdit = React.createClass({
                 <Padding tb={1}>
                   <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </Padding>
-                {
-                  // <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>
-                }
-                <div><br/></div>
+                <Padding t={1}>
                 <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                  <span>Finish
-                    <Checkmark inline={true} fill={colors.success}/>
-                  </span>
-              </Button>
+                  Finish <Checkmark inline={true} fill={colors.success}/>
+                </Button>
+                </Padding>
               </Col>
             </Row>
           </Grid>
