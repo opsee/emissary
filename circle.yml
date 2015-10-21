@@ -11,8 +11,8 @@ machine:
     version: 4.1.2
 test:
   override:
-    - docker run -d -p 9000:80 quay.io/opsee/emissary:latest; sleep 10;
-    - curl http://localhost:9000/
+    - docker run -d -p 8080:80 quay.io/opsee/emissary:latest; sleep 10;
+    - curl http://localhost:8080/
     - casperjs test test-deploy.js
 deployment:
   hub:

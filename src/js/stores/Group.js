@@ -153,9 +153,6 @@ const _public = {
   getGroupsELB(){
     return _data.groupsELB;
   },
-  getNewGroup(){
-    return new Group();
-  },
   getGroup(target){
     if(target && target.type){
       switch(target.type){
