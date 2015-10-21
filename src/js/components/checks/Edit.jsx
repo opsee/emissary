@@ -1,14 +1,17 @@
 import React from 'react';
 import _ from 'lodash';
+import scrollTo from 'animated-scrollto';
+import offset from 'document-offset';
+import {Link} from 'react-router';
+import colors from 'seedling/colors';
+
 import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
-import {Link} from 'react-router';
 import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
 import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
 import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import {Checkmark, Close} from '../icons';
-import colors from 'seedling/colors';
 import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
@@ -94,7 +97,17 @@ const CheckEdit = React.createClass({
     this.toggleEnv();
   },
   toggleEnv(){
-    this.setState({showEnv:!this.state.showEnv});
+    const bool = this.state.showEnv;
+    this.setState({showEnv:!bool});
+    if(!bool){
+      // setTimeout(function(){
+      //   scrollTo(document.body, 0, 0);
+      // },50);
+    }else{
+      // setTimeout(function(){
+      //   scrollTo(document.body, 0, 0);
+      // },50);
+    }
   },
   renderEnv(){
     if(this.state.showEnv){

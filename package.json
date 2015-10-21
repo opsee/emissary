@@ -63,8 +63,10 @@
     ]
   },
   "dependencies": {
+    "animated-scrollto": "^1.1.0",
     "babel-eslint": "^3.1.23",
     "classnames": "^2.1.5",
+    "document-offset": "^1.0.4",
     "es6-promise": "^3.0.2",
     "flexboxgrid": "^6.3.0",
     "fuzzy": "^0.1.1",
