@@ -247,7 +247,7 @@ const CheckCreateRequest = React.createClass({
       return (
         <div>
           <h3>Your Target</h3>
-          <GroupItem item={selection} noBorder={true} linkInsteadOfMenu={true} onClick={() => router.transitionTo('checkCreateTarget')} title="Return to target selection"/>
+          <GroupItem item={selection} noBorder={true} linkInsteadOfMenu={true} onClick={this.props.onTargetClick} title="Return to target selection"/>
           <hr/>
         </div>
       )
