@@ -64,7 +64,6 @@ export default React.createClass({
   },
   getData(){
     CheckActions.getCheck(this.props.params.id);
-    CheckActions.testCheck();
   },
   componentWillMount(){
     this.getData();
