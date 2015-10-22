@@ -80,7 +80,8 @@ const Credentials = React.createClass({
           on:'blur change',
           onChangeDelay:100
         },
-      }, self.dataComplete() ? {data:data} :  null))
+      }, self.dataComplete() ? {data:data} :  null)),
+      submitting:false  
     }
   },
   dataComplete(){
@@ -89,14 +90,14 @@ const Credentials = React.createClass({
   submit(e){
     e.preventDefault();
     this.setState({
-      error:null
+      error:null,
+      submitting:true
     });
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
     OnboardActions.onboardVpcScan(OnboardStore.getVpcScanData());
-    // router.transitionTo('onboardVpcSelect')
   },
   disabled(){
-    return !this.state.info.isValid();
+    return !this.state.info.isValid() || this.state.submitting;
   },
   renderError(){
     if(this.state.error){
@@ -130,7 +131,7 @@ const Credentials = React.createClass({
                 <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
                 </Padding>
 
-                <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron={true}>Next</Button>
+                <Button bsStyle="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron={true}>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
               </form>
               {this.renderError()}
             </Col>
