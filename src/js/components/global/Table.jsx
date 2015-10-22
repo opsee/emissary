@@ -6,27 +6,6 @@ var Table = React.createClass({
     bordered:PropTypes.bool,
     striped:PropTypes.bool
   },
-  // outputTableHead(){
-  //   let key = this.props.btnPosition || 'default';
-  //   key = _.startCase(key).split(' ').join('');
-  //   return style[`btn${key}`];
-  // },
-  // getOuterClass(){
-  //   let c = {};
-  //   if(this.props.bg == "info"){
-  //     c = style.outerInfo;
-  //   } else {
-  //     c = style.outer;
-  //   }
-  //   return c;
-  // },
-  // getOuterStyle(){
-  //   let obj = {};
-  //   if(this.props.bg){
-  //     obj.background = colors[this.props.bg];
-  //   }
-  //   return obj;
-  // },
   getTableClass(){
     let c = {};
     if (this.props.bordered && !this.props.striped) {
