@@ -69,10 +69,6 @@ export default React.createClass({
                   <h3>Group Information</h3>
                   <Table>
                     <tr>
-                      <th>Test</th>
-                      <th>Test</th>
-                    </tr>
-                    <tr>
                       <td><strong>Id</strong></td>
                       <td>{this.state.group.get('id')}</td>
                     </tr>
