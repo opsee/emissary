@@ -12,8 +12,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
-import Table from '../global/Table.jsx';
-import {StatusHandler} from '../global';
+import {StatusHandler, Table} from '../global';
 import {Close, Add, Search} from '../icons';
 import {UserActions, GroupActions, InstanceActions} from '../../actions';
 import {GroupStore, CheckStore, InstanceStore} from '../../stores';

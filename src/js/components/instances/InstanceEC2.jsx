@@ -1,9 +1,8 @@
 import React from 'react';
-import {Toolbar, Loader, StatusHandler} from '../global';
+import {StatusHandler, Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from './InstanceItem.jsx';
-import Table from '../global/Table.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';

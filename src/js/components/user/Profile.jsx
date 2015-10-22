@@ -1,10 +1,9 @@
 import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
-import {Toolbar} from '../global';
+import {Table, Toolbar} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
-import Table from '../global/Table.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
 import {PageAuth} from '../../modules/statics';
@@ -47,16 +46,14 @@ export default React.createClass({
               <div className="padding-b">
                 <h3>Your Profile Information</h3>
                 <Table>
-                  <tbody>
-                    <tr>
-                      <td><strong>Email</strong></td>
-                      <td>{this.state.user.email}</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Name</strong></td>
-                      <td>{this.state.user.name}</td>
-                    </tr>
-                  </tbody>
+                  <tr>
+                    <td><strong>Email</strong></td>
+                    <td>{this.state.user.email}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Name</strong></td>
+                    <td>{this.state.user.name}</td>
+                  </tr>
                 </Table>
               </div>
               <div className="padding-b">

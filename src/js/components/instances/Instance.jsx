@@ -1,9 +1,8 @@
 import React from 'react';
-import {Toolbar} from '../global';
+import {Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Table from '../global/Table.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -50,28 +49,26 @@ export default React.createClass({
             <div className="padding-b">
               <h3>Instance Information</h3>
               <Table>
-                <tbody>
-                  <tr>
-                    <td><strong>State</strong></td>
-                    <td>{this.data().status.state}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Last Checked</strong></td>
-                    <td title={`Last Checked: ${this.data().lastChecked.toISOString()}`}>
-                      <TimeAgo date={this.data().lastChecked}/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Created</strong></td>
-                    <td>
-                      <TimeAgo date={this.data().meta.created}/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Instance Size</strong></td>
-                    <td>{this.data().meta.instanceSize}</td>
-                  </tr>
-                </tbody>
+                <tr>
+                  <td><strong>State</strong></td>
+                  <td>{this.data().status.state}</td>
+                </tr>
+                <tr>
+                  <td><strong>Last Checked</strong></td>
+                  <td title={`Last Checked: ${this.data().lastChecked.toISOString()}`}>
+                    <TimeAgo date={this.data().lastChecked}/>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Created</strong></td>
+                  <td>
+                    <TimeAgo date={this.data().meta.created}/>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Instance Size</strong></td>
+                  <td>{this.data().meta.instanceSize}</td>
+                </tr>
               </Table>
             </div>
 

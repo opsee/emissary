@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import {CheckActions} from '../../actions';
-import {Toolbar, StatusHandler} from '../global';
+import {Table, Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
-import Table from '../global/Table.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit, Mail} from '../icons';
@@ -98,20 +97,18 @@ export default React.createClass({
               return(
                 <div>
                   <Table>
-                    <tbody>
-                      <tr>
-                        <td><strong>Key</strong></td>
-                        <td>{a.key}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Relationship</strong></td>
-                        <td>{a.relationship}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Value</strong></td>
-                        <td>{a.operand}</td>
-                      </tr>
-                    </tbody>
+                    <tr>
+                      <td><strong>Key</strong></td>
+                      <td>{a.key}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Relationship</strong></td>
+                      <td>{a.relationship}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Value</strong></td>
+                      <td>{a.operand}</td>
+                    </tr>
                   </Table>
                 </div>
               )
@@ -122,16 +119,14 @@ export default React.createClass({
             {this.state.check.get('notifications').map(n => {
               return(
                 <Table>
-                  <tbody>
-                    <tr>
-                      <td><strong>Type</strong></td>
-                      <td>Email</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Recipient</strong></td>
-                      <td>{n.value}</td>
-                    </tr>
-                  </tbody>
+                  <tr>
+                    <td><strong>Type</strong></td>
+                    <td>Email</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Recipient</strong></td>
+                    <td>{n.value}</td>
+                  </tr>
                 </Table>
               )
             })}

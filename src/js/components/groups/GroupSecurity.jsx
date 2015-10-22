@@ -1,10 +1,9 @@
 import React from 'react';
-import {Toolbar, StatusHandler} from '../global';
+import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
 import GroupItem from './GroupItem.jsx';
-import Table from '../global/Table.jsx';
 import {GroupStore, InstanceStore} from '../../stores';
 import {GroupActions, CheckActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -69,26 +68,22 @@ export default React.createClass({
                 <div className="padding-b">
                   <h3>Group Information</h3>
                   <Table>
-                    <thead>
-                      <tr>
-                        <th>Test</th>
-                        <th>Test</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><strong>Id</strong></td>
-                        <td>{this.state.group.get('id')}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>State</strong></td>
-                        <td>{this.state.group.get('state')}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Description</strong></td>
-                        <td>{this.renderDescription()}</td>
-                      </tr>
-                    </tbody>
+                    <tr>
+                      <th>Test</th>
+                      <th>Test</th>
+                    </tr>
+                    <tr>
+                      <td><strong>Id</strong></td>
+                      <td>{this.state.group.get('id')}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>State</strong></td>
+                      <td>{this.state.group.get('state')}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Description</strong></td>
+                      <td>{this.renderDescription()}</td>
+                    </tr>
                   </Table>
                 </div>
                 <div className="padding-b">
