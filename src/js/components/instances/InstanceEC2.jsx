@@ -3,6 +3,7 @@ import {Toolbar, Loader, StatusHandler} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from './InstanceItem.jsx';
+import Table from '../global/Table.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -64,7 +65,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <table className="table">
+                <Table>
                   <tr>
                     <td><strong>State</strong></td>
                     <td>{this.state.instance.get('state')}</td>
@@ -86,7 +87,7 @@ export default React.createClass({
                     <td>{this.state.instance.get('InstanceType')}</td>
                   </tr>
                   {this.renderAvailabilityZone()}
-                </table>
+                </Table>
                 <div className="padding-b">
                   <h3>Groups ({this.data().groups.length})</h3>
                   <ul className="list-unstyled">

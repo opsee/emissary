@@ -3,6 +3,7 @@ import {Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
+import Table from '../global/Table.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -48,7 +49,7 @@ export default React.createClass({
           <div className="col-xs-12 col-sm-10 col-sm-offset-1">
             <div className="padding-b">
               <h3>Instance Information</h3>
-              <table className="table">
+              <Table>
                 <tbody>
                   <tr>
                     <td><strong>State</strong></td>
@@ -71,7 +72,7 @@ export default React.createClass({
                     <td>{this.data().meta.instanceSize}</td>
                   </tr>
                 </tbody>
-              </table>
+              </Table>
             </div>
 
             <h2>Groups - ( {this.data().groups.length} )</h2>

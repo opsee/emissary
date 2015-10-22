@@ -11,6 +11,7 @@ import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
 import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+import Table from '../global/Table.jsx';
 
 function getState(){
   return {
@@ -197,7 +198,7 @@ export default React.createClass({
 
             <h3>Data Tables</h3>
 
-            <table className="table">
+            <Table>
               <thead>
                 <tr>
                   <th>Head1</th>
@@ -218,7 +219,7 @@ export default React.createClass({
                   <td>Col 2</td>
                 </tr>
               </tbody>
-            </table>
+            </Table>
 
             <hr/>
 

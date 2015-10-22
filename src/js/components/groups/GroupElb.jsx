@@ -4,6 +4,7 @@ import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import TimeAgo from 'react-components/timeago';
 import GroupItem from './GroupItem.jsx';
+import Table from '../global/Table.jsx';
 import {GroupStore, InstanceStore} from '../../stores';
 import {GroupActions, CheckActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -52,9 +53,7 @@ export default React.createClass({
   renderDescription(){
     const desc = this.state.group.get('Description');
     if(desc && desc != ''){
-      return (
-        <p>{desc}</p>
-      )
+      return {desc}
     }else{
       return <div/>
     }
@@ -69,7 +68,7 @@ export default React.createClass({
               <Col xs={12}>
                 <div className="padding-b">
                   <h3>ELB Information</h3>
-                  <table className="table">
+                  <Table>
                     <tbody>
                       <tr>
                         <td><strong>Id</strong></td>
@@ -84,7 +83,7 @@ export default React.createClass({
                         <td>{this.renderDescription()}</td>
                       </tr>
                     </tbody>
-                  </table>
+                  </Table>
                 </div>
                 <div className="padding-b">
                   <h3>Instances ({this.state.group.get('instances').length})</h3>

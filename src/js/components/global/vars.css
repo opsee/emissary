@@ -17,8 +17,8 @@
   --gray700:#616161;
   --gray800:#424242;
   --gray900:#212121;
-  --colorText:rgb(255, 255, 255);
-  --colorTextSecondary:rgba(255, 255, 255, 0.70);
+  --colorText:rgba(255, 255, 255,0.85);
+  --colorTextSecondary:rgba(255, 255, 255, 0.56);
   --colorHeader:#37474f;
 }
 

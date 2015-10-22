@@ -4,6 +4,7 @@ import {UserActions} from '../../actions';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
+import Table from '../global/Table.jsx';
 import _ from 'lodash';
 import router from '../../modules/router.js';
 import {PageAuth} from '../../modules/statics';
@@ -45,7 +46,7 @@ export default React.createClass({
             <Col xs={12}>
               <div className="padding-b">
                 <h3>Your Profile Information</h3>
-                <table className="table">
+                <Table>
                   <tbody>
                     <tr>
                       <td><strong>Email</strong></td>
@@ -56,7 +57,7 @@ export default React.createClass({
                       <td>{this.state.user.name}</td>
                     </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
               <div className="padding-b">
                 <Link className="btn btn-flat btn-primary" to="profileEdit" >Change Your Password</Link>

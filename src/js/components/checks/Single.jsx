@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {CheckActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
+import Table from '../global/Table.jsx';
 import {CheckStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit, Mail} from '../icons';
@@ -68,7 +69,7 @@ export default React.createClass({
         <div>
           <Padding b={1}>
             <h3>Check Information</h3>
-            <table className="table">
+            <Table>
               <tr>
                 <td><strong>Group</strong></td>
                 <td>{this.getLink()}</td>
@@ -89,14 +90,14 @@ export default React.createClass({
                 <td><strong>Method</strong></td>
                 <td>{this.getCheckJS().check_spec.value.verb}</td>
               </tr>
-            </table>
+            </Table>
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>
             {this.state.check.get('assertions').map(a => {
               return(
                 <div>
-                  <table className="table">
+                  <Table>
                     <tbody>
                       <tr>
                         <td><strong>Key</strong></td>
@@ -111,7 +112,7 @@ export default React.createClass({
                         <td>{a.operand}</td>
                       </tr>
                     </tbody>
-                  </table>
+                  </Table>
                 </div>
               )
             })}
@@ -120,7 +121,7 @@ export default React.createClass({
             <h3>Notifications</h3>
             {this.state.check.get('notifications').map(n => {
               return(
-                <table className="table">
+                <Table>
                   <tbody>
                     <tr>
                       <td><strong>Type</strong></td>
@@ -131,7 +132,7 @@ export default React.createClass({
                       <td>{n.value}</td>
                     </tr>
                   </tbody>
-                </table>
+                </Table>
               )
             })}
           </Padding>
