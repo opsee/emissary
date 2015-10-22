@@ -7,7 +7,7 @@ import {Toolbar} from '../global';
 import {AdminActions, GlobalActions, UserActions} from '../../actions';
 import {AdminStore} from '../../stores';
 import {Link} from 'react-router';
-import {Checkmark} from '../icons';
+import {Checkmark, Person} from '../icons';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -75,9 +75,11 @@ export default React.createClass({
     //revisit this, params isn't working so using query atm
     router.transitionTo('login', null, {as:signup.id});
   },
-  outputCheckmark(signup){
+  outputIcon(signup){
     if(this.isUser(signup)){
-      return <Checkmark fill={colors.success}/>
+      return <Person fill={colors.textColorSecondary} inline={true}/>
+    } else if (this.isApprovedSignup(signup)){
+      return <Checkmark fill={colors.textColorSecondary} inline={true}/>
     }else{
       return <span/>
     }
@@ -99,19 +101,18 @@ export default React.createClass({
       <Col xs={12} sm={6}>
         <Padding tb={1}>
           <div className="bg-gray-900 md-shadow-bottom-z-1">
-            <div className="padding">
-              <h2 className="margin-none">
-                  {signup.name}
-                  {this.outputCheckmark(signup)}
-              </h2>
+            <Padding a={1}>
+              <h3>
+                {this.outputIcon(signup)} {signup.name}
+              </h3>
               <div>
-                <div><a href="mailto:{{::signup.email}}">{signup.email}</a></div>
+                <div><a href={'mailto:' + signup.email}>{signup.email}</a></div>
                 <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
+                </div>
+              <div>
+                {this.outputButton(signup)}
               </div>
-            </div>
-            <div>
-              {this.outputButton(signup)}
-            </div>
+            </Padding>
           </div>
         </Padding>
       </Col>
@@ -122,24 +123,38 @@ export default React.createClass({
       <div>
         <Toolbar title="Signups"/>
         <Grid>
-          <Col xs={12}>
-            <h2 className="text-danger">Unapproved</h2>
-            <div className="display-flex-sm flex-wrap">
-              {this.getUnapproved().map(this.output)}
-            </div>
-          </Col>
-          <Col xs={12}>
-            <h2 className="text-warning">Approved</h2>
-            <div className="display-flex-sm flex-wrap">
-              {this.getApproved().map(this.output)}
-            </div>
-          </Col>
-          <Col xs={12}>
-            <h2 className="text-success">Users</h2>
-            <div className="display-flex-sm flex-wrap">
-              {this.getUsers().map(this.output)}
-            </div>
-          </Col>
+          <Row>
+            <Col xs={12}>
+              <Padding b={1}>
+                <h3>Unapproved</h3>
+                <div className="display-flex-sm flex-wrap">
+                  {this.getUnapproved().map(this.output)}
+                </div>
+              </Padding>
+            </Col>
+          </Row>
+          <hr/>
+          <Row>
+            <Col xs={12}>
+              <Padding b={1}>
+                <h3><Checkmark fill={colors.textColorSecondary} inline={true}/> Approved</h3>
+                <div className="display-flex-sm flex-wrap">
+                  {this.getApproved().map(this.output)}
+                </div>
+              </Padding>
+            </Col>
+          </Row>
+          <hr/>
+          <Row>
+            <Col xs={12}>
+              <Padding b={1}>
+                <h3><Person fill={colors.textColorSecondary} inline={true}/> Users</h3>
+                <div className="display-flex-sm flex-wrap">
+                  {this.getUsers().map(this.output)}
+                </div>
+              </Padding>
+            </Col>
+          </Row>
         </Grid>
       </div>
     );

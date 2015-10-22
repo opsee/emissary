@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import {CheckActions, GroupActions} from '../../actions';
-import {Toolbar, StatusHandler} from '../global';
+import {Table, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
-import InstanceItem from '../instances/InstanceItem.jsx';
+import {InstanceItem} from '../instances';
 import {CheckStore, GroupStore} from '../../stores';
 import {Link} from 'react-router';
 import {Edit, Delete, Mail} from '../icons';
@@ -101,10 +101,9 @@ export default React.createClass({
             <h3>Target</h3>
             <GroupItem item={this.state.group}/>
           </Padding>
-
           <Padding b={1}>
-            <h3>Request</h3>
-            <table className="table">
+            <h3>Check Information</h3>
+            <Table>
               <tr>
                 <td><strong>Path</strong></td>
                 <td>{this.getCheckJS().check_spec.value.path}</td>
@@ -121,7 +120,7 @@ export default React.createClass({
                 <td><strong>Method</strong></td>
                 <td>{this.getCheckJS().check_spec.value.verb}</td>
               </tr>
-            </table>
+            </Table>
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>

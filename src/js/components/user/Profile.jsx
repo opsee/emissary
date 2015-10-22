@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
-import {Toolbar} from '../global';
+import {Table, Toolbar} from '../global';
 import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
@@ -45,18 +45,16 @@ export default React.createClass({
             <Col xs={12}>
               <div className="padding-b">
                 <h3>Your Profile Information</h3>
-                <table className="table">
-                  <tbody>
-                    <tr>
-                      <td><strong>Email</strong></td>
-                      <td>{this.state.user.email}</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Name</strong></td>
-                      <td>{this.state.user.name}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <Table>
+                  <tr>
+                    <td><strong>Email</strong></td>
+                    <td>{this.state.user.email}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Name</strong></td>
+                    <td>{this.state.user.name}</td>
+                  </tr>
+                </Table>
               </div>
               <div className="padding-b">
                 <Link className="btn btn-flat btn-primary" to="profileEdit" >Change Your Password</Link>

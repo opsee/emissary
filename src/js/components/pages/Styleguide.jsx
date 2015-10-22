@@ -3,7 +3,7 @@ import _ from 'lodash';
 import forms from 'newforms';
 
 import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
-import {Toolbar, Loader} from '../global';
+import {Table, Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
 import {CheckStore} from '../../stores';
@@ -197,28 +197,24 @@ export default React.createClass({
 
             <h3>Data Tables</h3>
 
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Head1</th>
-                  <th>Head1</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Col 1</td>
-                  <td>Col 2</td>
-                </tr>
-                <tr>
-                  <td>Col 1</td>
-                  <td>Col 2</td>
-                </tr>
-                <tr>
-                  <td>Col 1</td>
-                  <td>Col 2</td>
-                </tr>
-              </tbody>
-            </table>
+            <Table>
+              <tr>
+                <th>Head1</th>
+                <th>Head1</th>
+              </tr>
+              <tr>
+                <td>Col 1</td>
+                <td>Col 2</td>
+              </tr>
+              <tr>
+                <td>Col 1</td>
+                <td>Col 2</td>
+              </tr>
+              <tr>
+                <td>Col 1</td>
+                <td>Col 2</td>
+              </tr>
+            </Table>
 
             <hr/>
 

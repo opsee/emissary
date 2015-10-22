@@ -1,17 +1,18 @@
+@import './vars.css';
+
 .header{
-  background:#37474F;
+  background:var(--colorHeader);
   position: fixed;
   bottom:0;
   left:0;
   width:100%;
   user-select:none;
-  transition: margin .4s;
   z-index:10;
 }
 @media (min-width: 768px) {
   .header{
     z-index:0;
-  }    
+  }
 }
 @media (max-width: 768px){
   .headerHide{
@@ -33,9 +34,9 @@
   font-size: .8em;
 }
 .navbarIcon {
-  transition: fill 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: fill var(--transitionEaseOut);
   display: block;
-  fill: rgba(255, 255, 255, 0.54);
+  fill: var(--colorTextSecondary);
   height: 24px;
   margin: 0 auto;
   width: 24px;
@@ -49,8 +50,8 @@
   width: 25%;
 }
 .navbarLink {
-  transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  color: rgba(255, 255, 255, 0.54);
+  transition: color var(--transitionEaseOut);
+  color: var(--colorTextSecondary);
   display: block;
   font-size: 0.75em;
   overflow: hidden;
@@ -60,15 +61,16 @@
   white-space: nowrap;
 }
 .navbarLink svg {
-  fill: rgba(255, 255, 255, 0.54);
+  transition: fill var(--transitionEaseOut);
+  fill: var(--colorTextSecondary);
 }
 .navbarLink:hover, .navbarLink:active, .navbarLink:focus {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--colorText);
   background-color: transparent !important;
   text-decoration: none;
 }
 .navbarLink:hover svg, .navbarLink:active svg, .navbarLink:focus svg {
-  fill: rgba(255, 255, 255, 0.85);
+  fill: var(--colorText);
 }
 .navbarLink:active, .navbarLink:global(.active) {
   color: white;
