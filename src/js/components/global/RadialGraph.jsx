@@ -42,9 +42,6 @@ const RadialGraph = React.createClass({
   },
   getRadialState(){
     let state = this.props.state;
-    const health = this.props.health;
-    state = health == 100 ? 'perfect' : state;
-    state = health < 100 ? 'running' : state;
     state = this.state.silenceRemaining ? 'silenced' : state;
     return state;
   },
@@ -64,7 +61,7 @@ const RadialGraph = React.createClass({
       `This check is running, but is ` :
       `This check is running and has a health of %`;
       break;
-      case 'unmonitored':
+      case 'running':
       return 'This check is currently unmonitored.';
       break;
       case 'stopped':

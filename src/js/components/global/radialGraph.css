@@ -18,12 +18,12 @@
   font-family:var(--fontTungsten);
   font-size:16px;
 }
-.baseRunning{
+
+.basePassing{
   composes: base;
 }
-.basePerfect{
-  composes: base;
-  background:var(--colorSuccess);
+.baseFailing{
+  composes: basePassing;
 }
 .baseStopped{
   composes: base;
@@ -32,7 +32,7 @@
   composes: base;
   background:var(--colorInfo);
 }
-.baseUnmonitored{
+.baseRunning{
   composes: base;
   background:var(--gray600);
 }
@@ -45,24 +45,25 @@
   width:var(--radialWidth);
   height:var(--radialWidth);
   overflow: hidden;
-  fill:var(--colorSuccess);
+  fill:var(--colorDanger);
 }
-.svgRunning{
-  composes: svg;
-}
+
 .svgStopped{
   composes: svg;
 }
-.svgPerfect{
+.svgPassing{
   composes: svg;
+}
+.svgFailing{
+  fill: var(--colorSuccess);
 }
 .svgRestarting{
   composes: svg;
   fill: var(--colorInfo);
 }
-.svgUnmonitored{
+.svgRunning{
   composes: svg;
-  fill: var(--colorWarning);
+  fill: var(--gray600);
 }
 .svgSilenced{
   composes: svg;
@@ -83,11 +84,15 @@
   position: absolute;
   text-align: center;
 }
+.innerFailing{
+  composes: inner;
+  background:var(--colorSuccess);
+}
 .innerRunning{
   composes: inner;
-  background:var(--colorDanger);
+  background:var(--gray600);
 }
-.innerPerfect{
+.innerPassing{
   composes: inner;
   background:var(--colorSuccess);
 }

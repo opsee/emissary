@@ -11,11 +11,12 @@ var Group = Record({
   customer_id:undefined,
   instances:List(),
   state:'running',
-  health:100,
+  health:undefined,
   silenceDate:undefined,
   silenceDuration:undefined,
   type:'security',
-  Description:undefined
+  Description:undefined,
+  checks:List()
 });
 
 var GroupELB = Record({
@@ -23,12 +24,13 @@ var GroupELB = Record({
   name:undefined,
   instances:List(),
   state:'running',
-  health:100,
+  health:undefined,
   silenceDate:undefined,
   silenceDuration:undefined,
   type:'elb',
   Description:undefined,
-  CreatedTime:undefined
+  CreatedTime:undefined,
+  checks:List()
 });
 
 let _data = {
@@ -50,6 +52,25 @@ let _statuses = {
 }
 
 const statics = {
+  getStateFromItem(item){
+    const checks = item.checks;
+    let string = 'running';
+    if(checks && checks.length){
+      const allPassing = _.chain(checks).pluck('assertions').pluck('passing').every().value();
+      string = allPassing ? 'passing' : 'failing';
+    }
+    return string;
+  },
+  getHealthFromItem(item){
+    let health;
+    if(item.checks && item.checks.length){
+      const boolArray = item.checks.map(check => {
+        return _.chain(check.assertions).pluck('passing').every().value();
+      });
+      health = Math.floor((_.compact(boolArray).length / boolArray.length)*100);
+    }
+    return health;
+  },
   getGroupSecurityPending(data){
     if(_data.groupSecurity.get('id') != data){
       _data.groupSecurity = new Group();
@@ -83,7 +104,7 @@ const statics = {
     Store.emitChange();
   },
   groupELBFromJS(data){
-    let instances = data.Instances;
+    let instances = data.instances;
     if(!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
@@ -95,11 +116,32 @@ const statics = {
       }
       data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
-    data.id = data.LoadBalancerName;
     data.name = data.LoadBalancerName;
-    if(data.name == 'c1-us-west-1' && config.error){
-      data.health = 75;
+    data.id = data.LoadBalancerName;
+    if(data.name == 'api-lb'){
+      data.checks = [{
+        assertions:[
+          {passing:true}
+        ]
+      }]
     }
+    if(data.name == 'api-lb-com'){
+      data.checks = [
+      {
+        assertions:[
+          {passing:false}
+        ]
+      },
+      {
+        assertions:[
+          {passing:true},
+          {passing:true},
+        ]
+      },
+      ]
+    }
+    data.state = statics.getStateFromItem(data);
+    data.health = statics.getHealthFromItem(data);
     return new GroupELB(data);
   },
   groupFromJS(data){
@@ -119,9 +161,32 @@ const statics = {
     data.meta = Immutable.fromJS(data.meta);
     data.id = data.GroupId;
     data.name = data.GroupName;
-    if(data.name == 'c1-us-west-1' && config.error){
-      data.health = 75;
+    if(data.name == 'api-lb'){
+      data.checks = [
+      {
+        assertions:[
+          {passing:false},
+          {passing:false}
+        ]
+      },
+      {
+        assertions:[
+          {passing:true},
+          {passing:true},
+          {passing:false}
+        ]
+      },
+      {
+        assertions:[
+          {passing:true},
+          {passing:true},
+          {passing:true}
+        ]
+      },
+      ]
     }
+    data.state = statics.getStateFromItem(data);
+    data.health = statics.getHealthFromItem(data);
     return new Group(data);
   },
   populateGroupInstances(){
