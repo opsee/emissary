@@ -19,7 +19,6 @@ var Instance = Record({
   silenceDate:null,
   silenceDuration:null,
   type:'EC2',
-  checks:List(),
   groups:List(),
   LaunchTime:null,
   InstanceType:null,
