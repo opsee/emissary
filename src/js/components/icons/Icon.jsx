@@ -9,7 +9,7 @@ import BaseSVG from './BaseSVG.jsx';
 const Icon = React.createClass({
   propTypes:{
     path:PropTypes.string.isRequired,
-    //fill is either a named opsee color, a css color, or a hex color
+    //fill is either a named opsee color, or any css color
     fill:PropTypes.string
   },
   colorClassFromProp(prop){
@@ -19,7 +19,7 @@ const Icon = React.createClass({
   getClass(){
     var arr = [];
     for(var prop in this.props){
-      if(prop == 'fill' && !prop.match('#')){
+      if(prop == 'fill'){
         arr.push(this.colorClassFromProp(prop));
       }else{
         arr.push(style[prop]);
