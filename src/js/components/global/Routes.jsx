@@ -56,6 +56,7 @@ import AdminSocket from '../admin/Socket.jsx';
 import Help from '../pages/Help.jsx';
 import Styleguide from '../pages/Styleguide.jsx';
 import NotFound from '../pages/NotFound.jsx';
+import SystemStatus from '../env/SystemStatus.jsx';
 
 const RouteHandler = Router.RouteHandler;
 const routes = (
@@ -103,7 +104,7 @@ const routes = (
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/admin/socket" name="adminSocket" handler={AdminSocket}/>
-    <Route path="/system-status" name="systemStatus" handler={Help}/>
+    <Route path="/system-status" name="systemStatus" handler={SystemStatus}/>
 
     <Route path="/profile" name="profile" handler={Profile}/>
     <Route path="/profile/edit" name="profileEdit" handler={ProfileEdit}/>

@@ -40,6 +40,9 @@ const OpseeButton = React.createClass({
   getBlock(){
     return this.props.block ? ' btn-block' : '';
   },
+  getBsStyle(){
+    return this.props.bsStyle ? ` btn-${this.props.bsStyle}` : '';
+  },
   onLinkClick(e){
     if(this.props.target && this.props.target == '_blank'){
       e.preventDefault();
@@ -57,7 +60,7 @@ const OpseeButton = React.createClass({
       )
     }else{
       return (
-        <Link className={`btn ${this.props.className}${this.getFlat()}${this.getIcon()}${this.getBlock()}`} style={this.getStyle()} to={this.props.to} params={this.props.params} query={this.props.query} onClick={this.onLinkClick}>
+        <Link className={`btn ${this.props.className}${this.getFlat()}${this.getIcon()}${this.getBlock()}${this.getBsStyle()}`} style={this.getStyle()} to={this.props.to} params={this.props.params} query={this.props.query} onClick={this.onLinkClick}>
           {this.props.children}
           {this.renderChevron()}
         </Link>

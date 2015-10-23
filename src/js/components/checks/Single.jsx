@@ -131,7 +131,7 @@ export default React.createClass({
             <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
               return(
-                <li><Mail inline={true}/> {n.value}</li>
+                <li><Mail inline={true} fill="primary"/> {n.value}</li>
               )
             })}
             </ul>

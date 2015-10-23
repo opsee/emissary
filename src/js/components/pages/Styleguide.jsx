@@ -11,7 +11,11 @@ import {CheckStore} from '../../stores';
 import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
+
+import icons from '../icons';
 import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+
+const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
 
 function getState(){
   return {
@@ -104,6 +108,11 @@ export default React.createClass({
       style:style
     });
   },
+  getColor(){
+    const length = opseeColors.length;
+    const num = Math.round(Math.random()*length);
+    return opseeColors[num];
+  },
   render() {
     return (
       <div>
@@ -138,28 +147,35 @@ export default React.createClass({
                 <h3>Header Level 3: Check Currently Unmonitored</h3>
 
                 <p>Paragraph. Wornall Homestead pork spare ribs maple mild BB's Lawnside smoked turkey Jack Stack mixed plate Crossroads hog heaven <span className="text-info">West Side strawberry soda</span> smoker drop. Entire loaf of white bread team Novel Restaurant chicken wings fun KC Strip chorizo Arthur Bryant's works ham River Market short end sandwiches baby back ribs rarely.</p>
-              </Padding>
 
+                <h3>Icons</h3>
+                <div>
+                  {Object.keys(icons).map(key => {
+                    return React.createElement(icons[key], {fill:this.getColor()});
+                  })}
+                </div>
               <hr/>
 
               <Padding b={1}>
-                <h3>Unordered List</h3>
-                <ul>
-                {[1,2,3,4].map(i => {
-                  return(
-                    <li key={`unordered-item-${i}`}>List Item {i}</li>
-                  );
-                })}
-                </ul>
 
-                <h3>Ordered List</h3>
-                <ol>
+                  <h3>Unordered List</h3>
+                  <ul>
                   {[1,2,3,4].map(i => {
-                  return(
-                    <li key={`ordered-item-${i}`}>List Item {i}</li>
+                    return(
+                      <li key={`unordered-item-${i}`}>List Item {i}</li>
                     );
                   })}
-                </ol>
+                  </ul>
+
+                  <h3>Ordered List</h3>
+                  <ol>
+                    {[1,2,3,4].map(i => {
+                    return(
+                      <li key={`ordered-item-${i}`}>List Item {i}</li>
+                      );
+                    })}
+                  </ol>
+                </Padding>
 
                 <h3>Toggle List</h3>
                 <ul className="list-unstyled">
@@ -224,7 +240,7 @@ export default React.createClass({
 
             <hr/>
 
-            <h2 className="h3">Checks</h2>
+            <h3>Checks</h3>
             {_.range(1).map((i, ci) => {
               return(
                 <ul className="list-unstyled" key={`check-list-${ci}`}>

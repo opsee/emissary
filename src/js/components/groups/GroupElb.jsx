@@ -1,4 +1,6 @@
 import React from 'react';
+import Immutable from 'immutable';
+
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
@@ -7,8 +9,10 @@ import GroupItem from './GroupItem.jsx';
 import {GroupStore, InstanceStore} from '../../stores';
 import {GroupActions, CheckActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
-import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
+import {Add} from '../icons';
+import {Padding} from '../layout';
 
 export default React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
@@ -89,6 +93,11 @@ export default React.createClass({
                 <div className="padding-b">
                   <h3>Checks</h3>
                   <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
+                  <Padding t={2}>
+                    <Button bsStyle="primary" className="text-left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'elb'}}}>
+                      <Add inline={true}/> Create Check
+                    </Button>
+                  </Padding>
                 </div>
               </Col>
             </Row>

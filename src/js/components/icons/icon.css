@@ -1,3 +1,5 @@
+@import '../global/vars.css';
+
 .btn{
   position: absolute;
   left:50%;
@@ -18,4 +20,41 @@
   width: 18px;
   vertical-align: text-bottom;
   fill:white;
+}
+
+.fillPrimary{
+  fill:var(--colorPrimary);
+}
+.fillSuccess{
+  fill:var(--colorSuccess);
+}
+.fillInfo{
+  fill:var(--colorInfo);
+}
+.fillWarning{
+  fill:var(--colorWarning);
+}
+.fillDanger{
+  fill:var(--colorDanger);
+}
+.fillError{
+  fill:var(--colorError);
+}
+.fillGray50{
+  fill:var(--gray50);
+}
+.fillGray100{
+  fill:var(--gray100);
+}
+.fillGray200{
+  fill:var(--gray200);
+}
+.fillText{
+  fill:var(--colorText);
+}
+.fillTextSecondary{
+  fill:var(--colorTextSecondary);
+}
+.fillHeader{
+  fill:var(--colorHeader);
 }
