@@ -1,3 +1,5 @@
+@import './vars.css';
+
 .item {
   align-items: flex-start;
   color: white;
@@ -22,8 +24,8 @@
 }
 
 .link {
-  transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  color: rgba(255, 255, 255, 0.85);
+  transition: background-color var(--transitionEaseOut), color var(--transitionEaseOut);
+  color: var(--colorText);
   cursor: pointer;
   composes: ptbhalf from '../layout/padding.css';
   text-decoration: none;
@@ -32,7 +34,7 @@
   flex:1;
 }
 .link:active, .link:focus {
-  background-color: #424242;
+  background-color: var(--gray800);
   color: white;
   text-decoration: none;
 }

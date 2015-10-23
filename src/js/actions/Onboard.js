@@ -92,7 +92,7 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
     .get(`${config.api}/bastions`)
     .set('Authorization', UserStore.getAuth())
   },
-  res => _.get(res, 'body.bastions') || res,
+  res => _.get(res, 'body.bastions') || [],
   res => res && res.response
 );
 

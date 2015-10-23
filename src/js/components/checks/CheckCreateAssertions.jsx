@@ -11,7 +11,7 @@ import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
-import AssertionCounter from '../forms/AssertionCounter.jsx';
+import AssertionCounter from './AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
@@ -171,7 +171,7 @@ const CheckCreateAssertions = React.createClass({
               <Padding tb={1}>
               <Row>
                 <Col xs={2} sm={1}>
-                  <AssertionCounter label={index} fields={form.boundFields()} response={this.state.response}/>
+                  <AssertionCounter label={index+1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.props.response}/>
                 </Col>
                 <Col xs={8} sm={10}>
                   <Row>

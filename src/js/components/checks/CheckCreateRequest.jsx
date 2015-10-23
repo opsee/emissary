@@ -70,6 +70,10 @@ const InfoForm = forms.Form.extend({
     },
     initial:['GET']
   }),
+  body:forms.CharField({
+    widget: forms.Textarea,
+    required:false
+  }),
   path: forms.CharField({
     widgetAttrs:{
       placeholder:'e.g. /healthcheck'
@@ -80,13 +84,16 @@ const InfoForm = forms.Form.extend({
       <div>
         <h3>Define HTTP Request</h3>
         <Padding b={1}>
-          <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
-        </Padding>
-        <Padding b={1}>
           <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
         </Padding>
         <Padding b={1}>
           <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
+        </Padding>
+        <Padding b={1}>
+          <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
+        </Padding>
+        <Padding b={1}>
+          <BoundField bf={this.boundField('body')} key={`bound-field-body`}/>
         </Padding>
       </div>
     )
@@ -247,7 +254,7 @@ const CheckCreateRequest = React.createClass({
       return (
         <div>
           <h3>Your Target</h3>
-          <GroupItem item={selection} noBorder={true} linkInsteadOfMenu={true} onClick={() => router.transitionTo('checkCreateTarget')} title="Return to target selection"/>
+          <GroupItem item={selection} noBorder={true} linkInsteadOfMenu={true} onClick={this.props.onTargetClick} title="Return to target selection"/>
           <hr/>
         </div>
       )
@@ -279,6 +286,34 @@ const CheckCreateRequest = React.createClass({
   getCheck(){
     return _.cloneDeep(this.props.check);
   },
+  renderBodyInput(){
+    if(this.state.info.cleanedData.verb != ['GET']){
+      return (
+        <Padding b={1}>
+          <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
+        </Padding>
+      )
+    }else{
+      return <div/>
+    }
+  },
+  renderInfoForm(){
+    return (
+      <div>
+        <h3>Define HTTP Request</h3>
+        <Padding b={1}>
+          <BoundField bf={this.state.info.boundField('verb')} key={`bound-field-verb`}/>
+        </Padding>
+        <Padding b={1}>
+          <BoundField bf={this.state.info.boundField('path')} key={`bound-field-path`}/>
+        </Padding>
+        <Padding b={1}>
+          <BoundField bf={this.state.info.boundField('port')} key={`bound-field-port`}/>
+        </Padding>
+        {this.renderBodyInput()}
+      </div>
+    )
+  },
   innerRender(){
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
@@ -287,7 +322,7 @@ const CheckCreateRequest = React.createClass({
           {this.renderTargetSelection()}
         </Padding>
         <Padding b={1}>
-          {this.state.info.render()}
+          {this.renderInfoForm()}
           {this.renderHeaderForm()}
         </Padding>
         <hr/>

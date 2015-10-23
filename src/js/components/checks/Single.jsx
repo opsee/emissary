@@ -1,38 +1,66 @@
 import React, {PropTypes} from 'react';
-import {CheckActions} from '../../actions';
-import {Toolbar, StatusHandler} from '../global';
-import InstanceItem from '../instances/InstanceItem.jsx';
-import {CheckStore} from '../../stores';
+import {CheckActions, GroupActions} from '../../actions';
+import {Table, Toolbar, StatusHandler} from '../global';
+import {GroupItem} from '../groups';
+import {InstanceItem} from '../instances';
+import {CheckStore, GroupStore} from '../../stores';
 import {Link} from 'react-router';
-import {Edit, Mail} from '../icons';
+import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import AssertionCounter from './AssertionCounter.jsx';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
-import {Delete} from '../icons';
 import {Padding} from '../layout';
+import AssertionItemList from './AssertionItemList.jsx';
 
 function getState(){
   return {
     check:CheckStore.getCheck(),
-    status:CheckStore.getGetCheckStatus()
+    status:CheckStore.getGetCheckStatus(),
+    delStatus:CheckStore.getDeleteCheckStatus(),
+    sgStatus:GroupStore.getGetGroupSecurityStatus(),
+    elbStatus:GroupStore.getGetGroupELBStatus(),
+    group:GroupStore.getNewGroup(),
+    responseStatus:CheckStore.getTestCheckStatus()
   }
 }
 
 export default React.createClass({
-  mixins: [CheckStore.mixin],
+  mixins: [CheckStore.mixin, GroupStore.mixin],
   statics:{
     willTransitionTo:PageAuth
   },
   storeDidChange() {
-    const delStatus = CheckStore.getDeleteCheckStatus();
-    if(delStatus == 'success'){
+    let state = getState();
+    if(state.delStatus == 'success'){
       router.transitionTo('checks');
     }
-    this.setState(getState());
+    if(state.status == 'success'){
+      const target = state.check.get('target');
+      if(target){
+        switch(target.type){
+          case 'sg':
+            GroupActions.getGroupSecurity(target.id);
+          break;
+          case 'elb':
+            GroupActions.getGroupELB(target.id);
+          break;
+        }
+      }
+    }
+    if(state.sgStatus == 'success' || state.elbStatus == 'success'){
+      state.group = GroupStore.getGroup(this.state.check.get('target'));
+    }
+    if(state.responseStatus == 'success'){
+      state.response = CheckStore.getResponse();
+    }
+    this.setState(state);
   },
   getInitialState(){
-    return getState();
+    return _.assign(getState(), {
+      response:null
+    })
   },
   getData(){
     CheckActions.getCheck(this.props.params.id);
@@ -62,17 +90,20 @@ export default React.createClass({
       )
     }
   },
+  getTarget(){
+    GroupStore.getGroupFromFilter()
+  },
   innerRender(){
     if(!this.state.error && this.state.check.get('id')){
       return(
         <div>
           <Padding b={1}>
+            <h3>Target</h3>
+            <GroupItem item={this.state.group}/>
+          </Padding>
+          <Padding b={1}>
             <h3>Check Information</h3>
-            <table className="table">
-              <tr>
-                <td><strong>Group</strong></td>
-                <td>{this.getLink()}</td>
-              </tr>
+            <Table>
               <tr>
                 <td><strong>Path</strong></td>
                 <td>{this.getCheckJS().check_spec.value.path}</td>
@@ -89,51 +120,21 @@ export default React.createClass({
                 <td><strong>Method</strong></td>
                 <td>{this.getCheckJS().check_spec.value.verb}</td>
               </tr>
-            </table>
+            </Table>
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>
-            {this.state.check.get('assertions').map(a => {
-              return(
-                <div>
-                  <table className="table">
-                    <tbody>
-                      <tr>
-                        <td><strong>Key</strong></td>
-                        <td>{a.key}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Relationship</strong></td>
-                        <td>{a.relationship}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Value</strong></td>
-                        <td>{a.operand}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )
-            })}
+            <AssertionItemList assertions={this.state.check.get('assertions')} response={this.state.response}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>
+            <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
               return(
-                <table className="table">
-                  <tbody>
-                    <tr>
-                      <td><strong>Type</strong></td>
-                      <td>Email</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Recipient</strong></td>
-                      <td>{n.value}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <li><Mail inline={true} fill="primary"/> {n.value}</li>
               )
             })}
+            </ul>
           </Padding>
         </div>
       )
@@ -159,7 +160,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Check ${this.state.check.name}`}>
+        <Toolbar title={`${this.state.check.name}`}>
           {this.outputLink()}
         </Toolbar>
         <Grid>

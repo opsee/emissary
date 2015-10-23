@@ -11,10 +11,16 @@ import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
+import {GroupStore} from '../../stores';
 
 const GroupItem = React.createClass({
   propTypes:{
     item:React.PropTypes.instanceOf(Record).isRequired,
+  },
+  getDefaultProps(){
+    return {
+      item:GroupStore.getNewGroup()
+    }
   },
   getInitialState(){
     return _.assign({},{
@@ -23,7 +29,6 @@ const GroupItem = React.createClass({
   },
   actions(e, id){
     e.preventDefault();
-    console.log(this.props.item.get('id'));
   },
   getGroupLink(){
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
@@ -69,7 +74,7 @@ const GroupItem = React.createClass({
   renderLinkButton(){
     return (
     <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
-        <NewWindow btn={true} fill={colors.gray900}/>
+        <NewWindow btn={true} fill={colors.textColorSecondary}/>
     </Button>
     );
   },
@@ -90,7 +95,7 @@ const GroupItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button className="text-left btn-primary" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
+                <Button bsStyle="primary" className="text-left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
                   <Add className="icon"/> Create Check
                 </Button>
               </div>
@@ -129,7 +134,8 @@ const GroupItem = React.createClass({
       }
   },
   render(){
-    return (
+    if(this.props.item.get('name')){
+      return (
       <div key="listItem" className={listItem.item} onClick={this.onClick} style={[this.getStyle()]} title={this.props.title || this.props.item.get('name')}>
         {this.renderModal()}
         <div className="line-height-1 flex-1 display-flex">
@@ -137,7 +143,10 @@ const GroupItem = React.createClass({
           {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
         </div>
       </div>
-    );
+      )
+    }else{
+      return <div/>
+    }
   }
 });
 

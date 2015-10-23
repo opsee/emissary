@@ -84,6 +84,7 @@ const CheckCreateInfo = React.createClass({
         minNum:!initialNotifs.length ? 1 : 0,
         extra:0
       }),
+      submitting:false
     }
 
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -183,7 +184,7 @@ const CheckCreateInfo = React.createClass({
   },
   disabled(){
     let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
-    return !(this.state.info.isComplete() && notifsComplete);
+    return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
   },
   renderSubmitButton(){
     if(!this.props.renderAsInclude){
@@ -202,38 +203,29 @@ const CheckCreateInfo = React.createClass({
   },
   innerRender() {
     const nonFieldErrors = this.state.info.nonFieldErrors();
-    // const notificationErrors = this.state.notifications.errors();
     return (
       <form ref="form" onSubmit={this.onSubmit}>
-          {this.state.info.render()}
-          {this.renderNotificationForm()}
-          {this.renderSubmitButton()}
-          {
-            // <pre>{this.getCleanedData && JSON.stringify(this.getCleanedData(), null, ' ')}</pre>
-          }
-          {
-            // <strong>Non field errors: {nonFieldErrors.render()}</strong>
-          }
+        {this.state.info.render()}
+        {this.renderNotificationForm()}
+        {this.renderSubmitButton()}
       </form>
     )
   },
   renderAsPage(){
     return (
       <div>
-        <div>
-          <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`} bg="info">
-            <Link to="checks" className="btn btn-icon btn-flat">
-              <Close btn={true}/>
-            </Link>
-          </Toolbar>
-          <Grid>
-            <Row>
-              <Col xs={12}>
-              {this.innerRender()}
-              </Col>
-            </Row>
-          </Grid>
-        </div>
+        <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`} bg="info">
+          <Link to="checks" className="btn btn-icon btn-flat">
+            <Close btn={true}/>
+          </Link>
+        </Toolbar>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+            {this.innerRender()}
+            </Col>
+          </Row>
+        </Grid>
       </div>
     )
   },
@@ -242,6 +234,9 @@ const CheckCreateInfo = React.createClass({
   },
   onSubmit(e) {
     e.preventDefault()
+    this.setState({
+      submitting:true
+    });
     this.props.onSubmit();
   }
 })

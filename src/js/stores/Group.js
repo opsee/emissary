@@ -147,6 +147,9 @@ const _public = {
   getGroupsRDSSecurity(){
     return _data.groupsRDSSecurity;
   },
+  getNewGroup(){
+    return new Group();
+  },
   getGroupsELB(){
     return _data.groupsELB;
   },

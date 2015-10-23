@@ -74,7 +74,7 @@ const _public = {
     return !!(_public.getAuth() && _data.user.get('email'));
   },
   getUser(){
-    if(_data.user.get('email') == 'cliff@leaninto.it' && storage.get('demo') != false){
+    if(_data.user.get('email') == 'cliff@leaninto.it' && storage.get('demo') !== false){
       config.demo = true;
     }
     return _data.user;
@@ -113,6 +113,8 @@ const Store = Flux.createStore(
         payload.data.user.loginDate = new Date();
       break;
       case 'USER_LOG_OUT':
+      case 'USER_REFRESH_TOKEN_ERROR':
+        config.intercom('shutdown');
         statics.logout();
         Store.emitChange();  
       break;

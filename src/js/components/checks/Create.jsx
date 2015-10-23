@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
-import {Toolbar} from '../global';
+import {Alert, StatusHandler, Toolbar} from '../global';
 import {CheckStore} from '../../stores';
 import {InstanceItem} from '../instances';
 import {Link} from 'react-router';
@@ -72,6 +72,9 @@ const CheckCreate = React.createClass({
     return (
       <div>
         <RouteHandler {...this.state} onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus} onFilterChange={this.updateFilter}/>
+        <StatusHandler status={this.state.createStatus}>
+          <Alert bsStyle="danger">Something went wrong.</Alert>
+        </StatusHandler>
       </div>
     );
   }

@@ -5,7 +5,6 @@ import colors from 'seedling/colors';
 import fuzzy from 'fuzzy';
 import Immutable, {Record, List, Map} from 'immutable';
 import {Link} from 'react-router';
-import {Search} from '../icons';
 
 import router from '../../modules/router';
 import config from '../../modules/config';
@@ -13,8 +12,8 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
-import {StatusHandler} from '../global';
-import {Close, Add} from '../icons';
+import {StatusHandler, Table} from '../global';
+import {Close, Add, Search} from '../icons';
 import {UserActions, GroupActions, InstanceActions} from '../../actions';
 import {GroupStore, CheckStore, InstanceStore} from '../../stores';
 import {GroupItemList} from '../groups';
@@ -163,7 +162,7 @@ const EnvWithFilter = React.createClass({
     return (
       <div>
         <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onSelect}/>
+        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
         <hr/>
       </div>
       )
@@ -174,7 +173,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onSelect}/>
+          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
           <hr/>
         </div>
       )
@@ -185,7 +184,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
-          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onSelect} onClick={this.props.onSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onSelect}/>
+          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
           <hr/>
         </div>
       )
@@ -246,9 +245,9 @@ const EnvWithFilter = React.createClass({
     if(this.shouldRenderTable()){
       return (
         <div className="padding-b">
-          <table className="table">
+          <Table>
             {this.props.include.map(i => this.renderTableItem(i))}
-          </table>
+          </Table>
         </div>
       )
     }else{

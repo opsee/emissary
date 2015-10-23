@@ -3,14 +3,18 @@ import _ from 'lodash';
 import forms from 'newforms';
 
 import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
-import {Toolbar, Loader} from '../global';
+import {Table, Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
 import {CheckStore} from '../../stores';
 import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
+
+import icons from '../icons';
 import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+
+const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
 
 function getState(){
   return {
@@ -97,6 +101,11 @@ export default React.createClass({
       style:style
     });
   },
+  getColor(){
+    const length = opseeColors.length;
+    const num = Math.round(Math.random()*length);
+    return opseeColors[num];
+  },
   render() {
     return (
       <div>
@@ -136,7 +145,14 @@ export default React.createClass({
 
             <hr/>
 
-            <h2 className="h3">Unordered List</h2>
+            <h3>Icons</h3>
+            <div>
+              {Object.keys(icons).map(key => {
+                return React.createElement(icons[key], {fill:this.getColor()});
+              })}
+            </div>
+
+            <h3>Unordered List</h3>
             <ul>
             {[1,2,3,4].map(i => {
               return(
@@ -147,7 +163,7 @@ export default React.createClass({
 
             <hr/>
 
-            <h2 className="h3">Ordered List</h2>
+            <h3>Ordered List</h3>
             <ol>
               {[1,2,3,4].map(i => {
               return(
@@ -197,32 +213,28 @@ export default React.createClass({
 
             <h3>Data Tables</h3>
 
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Head1</th>
-                  <th>Head1</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Col 1</td>
-                  <td>Col 2</td>
-                </tr>
-                <tr>
-                  <td>Col 1</td>
-                  <td>Col 2</td>
-                </tr>
-                <tr>
-                  <td>Col 1</td>
-                  <td>Col 2</td>
-                </tr>
-              </tbody>
-            </table>
+            <Table>
+              <tr>
+                <th>Head1</th>
+                <th>Head1</th>
+              </tr>
+              <tr>
+                <td>Col 1</td>
+                <td>Col 2</td>
+              </tr>
+              <tr>
+                <td>Col 1</td>
+                <td>Col 2</td>
+              </tr>
+              <tr>
+                <td>Col 1</td>
+                <td>Col 2</td>
+              </tr>
+            </Table>
 
             <hr/>
 
-            <h2 className="h3">Checks</h2>
+            <h3>Checks</h3>
             {_.range(1).map((i, ci) => {
               return(
                 <ul className="list-unstyled" key={`check-list-${ci}`}>

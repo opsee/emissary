@@ -1,6 +1,16 @@
+@import './vars.css';
+
+body {
+  font-family: var(--fontGotham);
+  font-size: 16px;
+  line-height: 1.42857;
+  color: var(--colorText);
+  background: var(--bodyBg);
+}
+
 .meat{
   position: relative;
-  transition:transform 300ms;
+  transition:transform var(--transitionEaseOut);
 }
 
 @media (min-width: 768px) {

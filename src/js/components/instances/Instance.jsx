@@ -1,5 +1,5 @@
 import React from 'react';
-import {Toolbar} from '../global';
+import {Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
 import InstanceItem from '../instances/InstanceItem.jsx';
@@ -48,30 +48,28 @@ export default React.createClass({
           <div className="col-xs-12 col-sm-10 col-sm-offset-1">
             <div className="padding-b">
               <h3>Instance Information</h3>
-              <table className="table">
-                <tbody>
-                  <tr>
-                    <td><strong>State</strong></td>
-                    <td>{this.data().status.state}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Last Checked</strong></td>
-                    <td title={`Last Checked: ${this.data().lastChecked.toISOString()}`}>
-                      <TimeAgo date={this.data().lastChecked}/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Created</strong></td>
-                    <td>
-                      <TimeAgo date={this.data().meta.created}/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Instance Size</strong></td>
-                    <td>{this.data().meta.instanceSize}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table>
+                <tr>
+                  <td><strong>State</strong></td>
+                  <td>{this.data().status.state}</td>
+                </tr>
+                <tr>
+                  <td><strong>Last Checked</strong></td>
+                  <td title={`Last Checked: ${this.data().lastChecked.toISOString()}`}>
+                    <TimeAgo date={this.data().lastChecked}/>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Created</strong></td>
+                  <td>
+                    <TimeAgo date={this.data().meta.created}/>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Instance Size</strong></td>
+                  <td>{this.data().meta.instanceSize}</td>
+                </tr>
+              </Table>
             </div>
 
             <h2>Groups - ( {this.data().groups.length} )</h2>

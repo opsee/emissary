@@ -1,24 +1,27 @@
 import React from 'react';
 import _ from 'lodash';
+import scrollTo from 'animated-scrollto';
+import offset from 'document-offset';
+import {Link} from 'react-router';
+import colors from 'seedling/colors';
+
 import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
-import {Link} from 'react-router';
 import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
 import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
 import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import {Checkmark, Close} from '../icons';
-import colors from 'seedling/colors';
 import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col, Button} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import router from '../../modules/router';
 import {Padding} from '../layout';
+import {EnvWithFilter} from '../env';
 
 function getState(){
   return {
     status:CheckStore.getGetCheckStatus(),
-    check:CheckStore.getCheck().toJS(),
     response:CheckStore.getResponse(),
     editStatus:CheckStore.getCheckEditStatus(),
     step1:{
@@ -36,7 +39,7 @@ function getState(){
 const CheckEdit = React.createClass({
   mixins: [CheckStore.mixin],
   storeDidChange(){
-    const state = getState();
+    let state = getState();
     if(state.editStatus == 'success'){
       router.transitionTo('checks');
     }else if(state.editStatus && state.editStatus != 'pending'){
@@ -45,13 +48,19 @@ const CheckEdit = React.createClass({
         style:'danger'
       });
     }
+    if(state.status == 'success'){
+      state.check = CheckStore.getCheck().toJS();
+    }
     this.setState(state);
   },
   statics:{
     willTransitionTo:PageAuth
   },
   getInitialState() {
-    return getState()
+    return _.assign(getState(), {
+      check:CheckStore.newCheck(),
+      showEnv:false
+    });
   },
   getDefaultProps() {
     return getState();
@@ -62,7 +71,7 @@ const CheckEdit = React.createClass({
   updateData(data, disabled, num){
     var obj = {};
     obj[`step${num}`] = {disabled:disabled};
-    obj.check = data;
+    obj.check = _.cloneDeep(data);
     this.setState(obj);
   },
   disabled(){
@@ -79,6 +88,37 @@ const CheckEdit = React.createClass({
   },
   getCheckTitle(){
     return this.state.check.check_spec.value.name || this.state.check.id;
+  },
+  handleTargetSelect(id, type){
+    let check = _.cloneDeep(this.state.check);
+    check.target.id = id;
+    check.target.type = type || 'sg';
+    this.updateData(check);
+    this.toggleEnv();
+  },
+  toggleEnv(){
+    const bool = this.state.showEnv;
+    this.setState({showEnv:!bool});
+    if(!bool){
+      // setTimeout(function(){
+      //   scrollTo(document.body, 0, 0);
+      // },50);
+    }else{
+      // setTimeout(function(){
+      //   scrollTo(document.body, 0, 0);
+      // },50);
+    }
+  },
+  renderEnv(){
+    if(this.state.showEnv){
+      return (
+        <Padding tb={1}>
+          <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity','groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
+        </Padding>
+      )
+    }else{
+      return <div/>
+    }
   },
   renderLink(){
     return this.state.check.id ?
@@ -99,8 +139,9 @@ const CheckEdit = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
+                {this.renderEnv()}
                 <Padding tb={1}>
-                  <CheckCreateRequest check={this.state.check} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateRequest {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </Padding>
                 <Padding tb={1}>
                   <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude={true}/>
@@ -108,15 +149,11 @@ const CheckEdit = React.createClass({
                 <Padding tb={1}>
                   <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </Padding>
-                {
-                  // <pre>{this.getFinalData() && JSON.stringify(this.getFinalData(), null, ' ')}</pre>
-                }
-                <div><br/></div>
+                <Padding t={1}>
                 <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                  <span>Finish
-                    <Checkmark inline={true} fill={colors.success}/>
-                  </span>
-              </Button>
+                  Finish <Checkmark inline={true} fill={colors.success}/>
+                </Button>
+                </Padding>
               </Col>
             </Row>
           </Grid>

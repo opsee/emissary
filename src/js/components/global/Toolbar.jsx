@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
-import colors from 'seedling/colors';
 import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './toolbar.css';
@@ -21,6 +20,15 @@ var Toolbar = React.createClass({
     key = _.startCase(key).split(' ').join('');
     return style[`btn${key}`];
   },
+  getOuterClass(){
+    let c = {};
+    if(this.props.bg == "info"){
+      c = style.outerInfo;
+    } else {
+      c = style.outer;
+    }
+    return c;
+  },
   getOuterStyle(){
     let obj = {};
     if(this.props.bg){
@@ -30,7 +38,7 @@ var Toolbar = React.createClass({
   },
   render(){
     return(
-      <div className={style.outer} style={this.getOuterStyle()}>
+      <div className={this.getOuterClass()}>
         {this.outputTitle()}
         <Grid>
           <Row>
