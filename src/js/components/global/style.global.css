@@ -1,16 +1,5 @@
 @import './vars.css';
 
-.md-shadow-bottom-z-1, .assertion-validation, .btn, .btn-fab, .dropdown-menu, .toggle-switch .knob {
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-}
-
-.md-shadow-bottom-z-2, .md-navbar {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
-}
-
-.md-shadow-animated.md-shadow {
-  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
@@ -1389,7 +1378,7 @@ input[type="button"].btn-block {
 }
 
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
-  color: #616161;
+  color: var(--gray700);
 }
 .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
   text-decoration: none;
@@ -4340,7 +4329,7 @@ opsee-footer {
   fill: var(--gray200);
 }
 
-.form-control, input[type='text'], input[type='number'], input[type='email'], input[type='password'] {
+.form-control, input[type='text'], input[type='number'], input[type='email'], input[type='password'], textarea {
   box-shadow: none;
   transition: background-color var(--transitionEaseOut);
   background-color: var(--gray900);
@@ -4436,6 +4425,7 @@ label {
 }
 
 .btn {
+  box-shadow: var(--shadowBottomZ1);
   border: none;
   border-radius: 3px;
   text-transform: uppercase;
@@ -4537,6 +4527,7 @@ label {
 }
 
 .btn-fab {
+  box-shadow: var(--shadowBottomZ1);
   transition: transform var(--transitionEaseOut), background-color var(--transitionEaseOut);
   z-index: 20;
   border: none;
@@ -4598,42 +4589,6 @@ label {
 
 .dropdown-menu {
   border: none;
-}
-
-.toggle-switch {
-  transition: background-color 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-  cursor: pointer;
-  display: inline-block;
-  height: 1.3em;
-  width: 2.5em;
-  border-radius: 2em;
-  background: #616161;
-  font-size: 1.2em;
-  user-select: none;
-  position: relative;
-  margin: 0 1.2em 0 0;
-}
-.toggle-switch.active {
-  background: var(--colorSuccess);
-}
-.toggle-switch.active .knob {
-  transform: scale(1.2) translateX(85%);
-}
-.toggle-switch .knob {
-  transition: transform var(--transitionEaseOut);
-  background: #e0e0e0;
-  border-radius: 100%;
-  width: 50%;
-  height: 0;
-  padding: 0;
-  border: 0;
-  padding-top: 50%;
-  top: 0;
-  left: 0;
-  -webkit-appearance: none;
-  display: block;
-  transform: scale(1.2) translateX(8%);
-  position: absolute;
 }
 
 .react-autosuggest__suggestion {
@@ -5088,14 +5043,6 @@ to prevent collapsing during animation*/
 
 .ng-hide {
   display: none;
-}
-
-.bg-gray-300 {
-  background-color: #e0e0e0;
-}
-
-.bg-gray-500 {
-  background-color: #9e9e9e;
 }
 
 .bg-gray-900 {

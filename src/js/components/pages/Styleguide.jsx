@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
+import {Padding} from '../layout';
 
 import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
@@ -36,6 +37,12 @@ const InfoForm = forms.Form.extend({
   password: forms.CharField({
     widgetAttrs:{
       placeholder:'Password',
+    }
+  }),
+  body: forms.CharField({
+    widget: forms.Textarea,
+    widgetAttrs:{
+      placeholder:'Body',
     }
   }),
   validation:'auto'
@@ -105,82 +112,81 @@ export default React.createClass({
             <Add btn={true}/>
           </a>
         </Toolbar>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-            <Tabs defaultActiveKey={2}>
-              <Tab eventKey={1} tab='Tab 1'>Tab 1 content</Tab>
-              <Tab eventKey={2} tab='Tab 2'>Tab 2 content</Tab>
-            </Tabs>
-            </Col>
-          </Row>
-        </Grid>
 
         <Grid>
           <Row>
             <Col xs={12}>
-            <div><br/></div>
-            {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
-              return (
-                <div className="clearfix" key={`color-${i}`}>
-                  <div className={`bg-${color} pull-left`} style={{width:"45px",height:"45px"}} type="button"></div>
-                  <div className="padding pull-left">{color}</div>
-                </div>
-              )
-            })}
-            <h1>Header Level 1: Instance Passing, Started Three Hours</h1>
-            <h2>Header Level 2: Resource Restarted, Checking Availability</h2>
-            <h3>Header Level 3: Check Currently Unmonitored</h3>
+              <Padding b={1}>
+                <h3>Colors</h3>
+                {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
+                  return (
+                    <div className="clearfix" key={`color-${i}`}>
+                      <div className={`bg-${color} pull-left`} style={{width:"45px",height:"45px"}} type="button"></div>
+                      <div className="padding pull-left">{color}</div>
+                    </div>
+                  )
+                })}
+              </Padding>
 
-            <p>Paragraph. Wornall Homestead pork spare ribs maple mild BB's Lawnside smoked turkey Jack Stack mixed plate Crossroads hog heaven <span className="text-info">West Side strawberry soda</span> smoker drop. Entire loaf of white bread team Novel Restaurant chicken wings fun KC Strip chorizo Arthur Bryant's works ham River Market short end sandwiches baby back ribs rarely.</p>
+              <hr/>
 
-            <hr/>
+              <Padding b={1}>
+                <h3>Typography</h3>
 
-            <h2 className="h3">Unordered List</h2>
-            <ul>
-            {[1,2,3,4].map(i => {
-              return(
-                <li key={`unordered-item-${i}`}>List Item {i}</li>
-              );
-            })}
-            </ul>
+                <h1>Header Level 1: Instance Passing, Started Three Hours</h1>
+                <h2>Header Level 2: Resource Restarted, Checking Availability</h2>
+                <h3>Header Level 3: Check Currently Unmonitored</h3>
 
-            <hr/>
+                <p>Paragraph. Wornall Homestead pork spare ribs maple mild BB's Lawnside smoked turkey Jack Stack mixed plate Crossroads hog heaven <span className="text-info">West Side strawberry soda</span> smoker drop. Entire loaf of white bread team Novel Restaurant chicken wings fun KC Strip chorizo Arthur Bryant's works ham River Market short end sandwiches baby back ribs rarely.</p>
+              </Padding>
 
-            <h2 className="h3">Ordered List</h2>
-            <ol>
-              {[1,2,3,4].map(i => {
-              return(
-                <li key={`ordered-item-${i}`}>List Item {i}</li>
-                );
+              <hr/>
+
+              <Padding b={1}>
+                <h3>Unordered List</h3>
+                <ul>
+                {[1,2,3,4].map(i => {
+                  return(
+                    <li key={`unordered-item-${i}`}>List Item {i}</li>
+                  );
+                })}
+                </ul>
+
+                <h3>Ordered List</h3>
+                <ol>
+                  {[1,2,3,4].map(i => {
+                  return(
+                    <li key={`ordered-item-${i}`}>List Item {i}</li>
+                    );
+                  })}
+                </ol>
+
+                <h3>Toggle List</h3>
+                <ul className="list-unstyled">
+                {this.state.toggles.map((t,i) => {
+                  return(
+                    <li key={`toggle-${i}`}>
+                      <ToggleWithLabel on={t.on} onChange={this.triggerToggle} id={i} label="Item"/>
+                    </li>
+                  )
+                })}
+                </ul>
+              </Padding>
+
+              <hr/>
+
+              <h3>Radio Select</h3>
+              <ul className="list-unstyled">
+              {this.state.radios.map((t,i) => {
+                return(
+                  <li className="" key={`radio-${i}`}>
+                    <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
+                  </li>
+                )
               })}
-            </ol>
+              </ul>
 
-            <h3>Toggle Switches</h3>
-            <ul className="list-unstyled">
-            {this.state.toggles.map((t,i) => {
-              return(
-                <li className="padding-tb" key={`toggle-${i}`}>
-                  <ToggleWithLabel on={t.on} onChange={this.triggerToggle} id={i} label="Item"/>
-                </li>
-              )
-            })}
-            </ul>
-
-            <hr/>
-
-            <h3>Radio Select</h3>
-            <ul className="list-unstyled">
-            {this.state.radios.map((t,i) => {
-              return(
-                <li className="" key={`radio-${i}`}>
-                  <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
-                </li>
-              )
-            })}
-            </ul>
-
-            <hr/>
+              <hr/>
 
           <h3>Button Toggles</h3>
             <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
@@ -264,22 +270,31 @@ export default React.createClass({
 
             <form name="testform" id="testform">
 
-              <BoundField bf={this.state.info.boundField('name')}/>
-              <BoundField bf={this.state.info.boundField('password')}>
-                <Key className="icon"/>
-              </BoundField>
+              <Padding b={1}>
+                <BoundField bf={this.state.info.boundField('name')}/>
+              </Padding>
+              <Padding b={1}>
+                <BoundField bf={this.state.info.boundField('password')}>
+                  <Key className="icon"/>
+                </BoundField>
+              </Padding>
+              <Padding b={1}>
+                <BoundField bf={this.state.info.boundField('body')}/>
+              </Padding>
 
-              <div className="form-group">
-                <div dropdown>
-                  <select id="test-group" className="sr-only" ng-required="true"></select>
-                  <button type="button" className="btn btn-block dropdown-toggle" dropdown-toggle></button>
-                  <ul className="dropdown-menu">
-                    <li ng-repeat="o in [1,2,3]">
-                      <button type="button" className="btn" dropdown-toggle ng-click="selectDropdown(o)">Option</button>
+              <Padding b={1}>
+                <div className="form-group">
+                  <div dropdown>
+                    <select id="test-group" className="sr-only" ng-required="true"></select>
+                    <button type="button" className="btn btn-block dropdown-toggle" dropdown-toggle></button>
+                    <ul className="dropdown-menu">
+                      <li ng-repeat="o in [1,2,3]">
+                        <button type="button" className="btn" dropdown-toggle ng-click="selectDropdown(o)">Option</button>
                       </li>
-                  </ul>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              </Padding>
 
               <h3>Buttons</h3>
 

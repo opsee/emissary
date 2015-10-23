@@ -28,6 +28,12 @@
   --fontTungsten:"Tungsten A", "Tungsten B", sans-serif;
 }
 
+/* shadows */
+:root{
+  --shadowBottomZ1: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  --shadowBottomZ2: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+}
+
 /* transitions */
 :root{
   --transitionEaseOut: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);

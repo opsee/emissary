@@ -73,7 +73,7 @@ const GroupItem = React.createClass({
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
+    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="btn btn-icon btn-secondary">
         <NewWindow btn={true} fill={colors.textColorSecondary}/>
     </Button>
     );

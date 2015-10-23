@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 React.initializeTouchEvents(true);
+import style from './toggle.css';
 
 export default React.createClass({
   propTypes:{
@@ -13,16 +14,17 @@ export default React.createClass({
   onClick(){
     this.props.onChange.call(null, this.props.id, !this.props.on);
   },
-  isActive(){
-    return this.props.on ? 'active' : '';
+  getToggleClass(){
+    let c = {};
+    return this.props.on ? style.toggleSwitchActive : style.toggleSwitch;
   },
   render(){
     return (
-      <div className={`toggle-switch ${this.isActive()}`} onClick={this.onClick} onTouchEnd={this.handleTouch}>
+      <div className={this.getToggleClass()} onClick={this.onClick} onTouchEnd={this.handleTouch}>
       {
         // <div className="knob"></div>
       }
-        <button className="knob" id={this.props.id}/>
+        <button className={style.knob} id={this.props.id}/>
       </div>
     );
   }
