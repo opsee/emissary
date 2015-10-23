@@ -18,21 +18,12 @@ export default React.createClass({
   getStyle(){
     return this.props.on ? 'success' : 'default';
   },
-  getIconStyle(){
-    return {
-      margin:'0 1px 0 -7px',
-      position: 'relative',
-      top: '2px',
-      width:'17px',
-      height:'17px'
-    }
-  },
   getIcon(){
-    return this.props.on ? <Checkmark style={this.getIconStyle()} inline={true}/> : <Add style={this.getIconStyle()} inline={true}/>
+    return this.props.on ? <Checkmark inline={true}/> : <Add inline={true}/>
   },
   render(){
     return (
-      <Button bsStyle={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)} style={{textTransform:'none'}}>{this.getIcon()}{this.props.label}</Button>
+      <Button bsStyle={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)} style={{textTransform:'none'}}>{this.getIcon()} {this.props.label}</Button>
     );
   }
 });
