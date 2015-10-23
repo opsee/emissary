@@ -15,16 +15,15 @@ export default React.createClass({
     this.props.onChange.call(null, this.props.id, !this.props.on);
   },
   getToggleClass(){
-    let c = {};
     return this.props.on ? style.toggleSwitchActive : style.toggleSwitch;
+  },
+  getKnobClass(){
+    return this.props.on ? style.toggleKnobActive : style.toggleKnob;
   },
   render(){
     return (
       <div className={this.getToggleClass()} onClick={this.onClick} onTouchEnd={this.handleTouch}>
-      {
-        // <div className="knob"></div>
-      }
-        <button className={style.knob} id={this.props.id}/>
+        <button className={this.getKnobClass()} id={this.props.id}/>
       </div>
     );
   }

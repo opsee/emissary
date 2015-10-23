@@ -16,7 +16,7 @@
   background-color: var(--colorSuccess);
 }
 
-.toggleSwitch .knob {
+.toggleKnob {
   box-shadow: var(--shadowBottomZ1);
   transition: transform var(--transitionEaseOut);
   background-color: var(--gray300);
@@ -33,6 +33,7 @@
   transform: scale(1.25) translateX(0);
   position: absolute;
 }
-.toggleSwitchActive .knob {
+.toggleKnobActive {
+  composes: toggleKnob;
   transform: scale(1.25) translateX(1em);
 }
