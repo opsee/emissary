@@ -1,109 +1,15 @@
 import React from 'react';
 import moment from 'moment';
 import colors from 'seedling/colors';
-import {SetInterval} from '../../modules/mixins';
 import _ from 'lodash';
+
+import {SetInterval} from '../../modules/mixins';
+import style from './radialGraph.css';
 
 const radialWidth = 40;
 
 const RadialGraph = React.createClass({
   mixins: [SetInterval],
-  styles(){
-    return {
-      base:{
-        backgroundColor:"black",
-        color:"#303030",
-        borderRadius:'100%',
-        fontWeight:500,
-        position:"relative",
-        height:radialWidth,
-        width:radialWidth,
-        minHeight:radialWidth,
-        minWidth:radialWidth,
-        margin:'0 1em 0 0.5em',
-        fontFamily:"Tungsten Rounded A, Tungsten Rounded B, sans-serif",
-        fontSize:'16px'
-      },
-      parentStatus:() => {
-        let state = this.getRadialState();
-        let color = colors.danger;
-        switch(state){
-          case 'perfect':
-          color = colors.success;
-          break;
-          case 'stopped':
-          // color = 'gray'//gray-700
-          color = colors.danger//gray-700
-          break;
-          case 'stopped':
-          break;
-          case 'restarting':
-          color = colors.info;
-          break;
-          case 'unmonitored':
-          break;
-          case 'silenced':
-          color = colors.primary;
-          break;
-        }
-        return {
-          backgroundColor:color
-        }
-      },
-      inner:{
-        backgroundColor:"transparent",
-        borderRadius:"100%",
-        border:"3px solid #303030",
-        height: radialWidth - 4,
-        width: radialWidth - 4,
-        left:"50%",
-        top:"50%",
-        marginTop:-((radialWidth - 4) / 2),
-        marginLeft:-((radialWidth - 4) / 2),
-        lineHeight: radialWidth - 10 + 'px',
-        position: "absolute",
-        textAlign: "center",
-      },
-      innerStatus:() => {
-        let state = this.getRadialState();
-        const health = this.props.health;
-        switch(state){
-          case 'running':
-          return {
-            backgroundColor:health < 100 ? colors.danger : colors.success
-          }
-          break;
-          case 'restarting':
-          return {
-            backgroundColor:colors.info
-          }
-          break;
-        }
-      },
-      loader:() => {
-        let state = this.getRadialState();
-        let color = colors.success;
-        switch(state){
-          case 'stopped':
-          color = colors.success;
-          // color = 'gray'//gray-700
-          break;
-          case 'restarting':
-          color = colors.info
-          break;
-          case 'unmonitored':
-          color = colors.warning
-          break;
-          case 'silenced':
-          color = colors.info
-          break;
-        }
-        return {
-          fill:color
-        }
-      }
-    }
-  },
   getInitialState() {
     return _.defaults({
       silenceRemaining:0
@@ -122,10 +28,20 @@ const RadialGraph = React.createClass({
       silenceRemaining:this.getSilenceRemaining()
     });
   },
+  getBaseClass(){
+    let state = this.getRadialState();
+    return style[`base${_.startCase(state)}`]
+  },
+  getInnerClass(){
+    let state = this.getRadialState();
+    return style[`inner${_.startCase(state)}`]
+  },
+  getSvgClass(){
+    let state = this.getRadialState();
+    return style[`svg${_.startCase(state)}`]
+  },
   getRadialState(){
     let state = this.props.state;
-    const health = this.props.health;
-    state = health == 100 ? 'perfect' : state;
     state = this.state.silenceRemaining ? 'silenced' : state;
     return state;
   },
@@ -145,7 +61,7 @@ const RadialGraph = React.createClass({
       `This check is running, but is ` :
       `This check is running and has a health of %`;
       break;
-      case 'unmonitored':
+      case 'running':
       return 'This check is currently unmonitored.';
       break;
       case 'stopped':
@@ -212,18 +128,14 @@ const RadialGraph = React.createClass({
   },
   render() {
     if(!this.state.state){
-      return(
-        <div>
-          No state defined.
-        </div>
-      )
+      return <div>No state defined.</div>
     }
     return (
-      <div style={_.assign({}, this.styles().base, this.styles().parentStatus())} title={this.getTitle()}>
-        <svg style={{width:radialWidth, height:radialWidth, overflow:'hidden'}}>
-          <path className="loader" transform={this.getTranslate()} d={this.getPath()} style={this.styles().loader()}/>
+      <div className={this.getBaseClass()} title={this.getTitle()}>
+        <svg className={this.getSvgClass()}>
+          <path transform={this.getTranslate()} d={this.getPath()}/>
         </svg>
-        <div style={_.assign({}, this.styles().inner, this.styles().parentStatus(), this.styles().innerStatus())}>{this.getText()}</div>
+        <div className={this.getInnerClass()}>{this.getText()}</div>
     </div>
     );
   }

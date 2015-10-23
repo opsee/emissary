@@ -18,6 +18,7 @@ import {UserActions, GroupActions, InstanceActions} from '../../actions';
 import {GroupStore, CheckStore, InstanceStore} from '../../stores';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
+import {Padding} from '../layout';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
@@ -121,40 +122,76 @@ const EnvWithFilter = React.createClass({
     const case2 = !!GroupStore.getGroupsSecurity().size;
     return case1 || case2;
   },
-  getGroupsSecurity(){
+  getAll(){
+    let arr = new List();
+    arr = arr.concat(this.getGroupsSecurity(true));
+    arr = arr.concat(this.getGroupsELB(true));
+    arr = arr.concat(this.getInstances(true));
+    return arr;
+  },
+  getNumberPassing(){
+    return this.getAll().filter(item => {
+      return item.get('state') == 'passing';
+    }).size;
+  },
+  getNumberFailing(){
+    return this.getAll().filter(item => {
+      return item.get('state') == 'failing';
+    }).size;
+  },
+  getNumberUnmonitored(){
+    return this.getAll().filter(item => {
+      return item.get('state') == 'running';
+    }).size;
+  },
+  getGroupsSecurity(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
+    let data = GroupStore.getGroupsSecurity().sortBy(sg => {
+      return sg.get('health');
+    });
+    if(this.state.buttonSelected && !ignoreButtonState){
+      data = data.filter(sg => {
+        return sg.get('state') == this.state.buttonSelected;
+      });
+    }
     if(string){
-      const data = GroupStore.getGroupsSecurity().filter(sg => {
+      return data.filter(sg => {
         return fuzzy.filter(string, [sg.get('name')]).length;
-      }).sortBy(sg => {
-        return sg.get('health');
-      })
-      return data;
-    }else{
-      return GroupStore.getGroupsSecurity().sortBy(sg => {
-        return sg.get('health');
       })
     }
+    return data;
   },
-  getGroupsELB(){
+  getGroupsELB(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
+    let data = GroupStore.getGroupsELB().sortBy(elb => {
+      return elb.get('health');
+    });
+    if(this.state.buttonSelected && !ignoreButtonState){
+      data = data.filter(elb => {
+        return elb.get('state') == this.state.buttonSelected;
+      });
+    }
     if(string){
-      return GroupStore.getGroupsELB().filter(elb => {
+      return data.filter(elb => {
         return fuzzy.filter(string, [elb.get('name')]).length;
       });
-    }else{
-      return GroupStore.getGroupsELB();
     }
+    return data;
   },
-  getInstances(){
+  getInstances(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
+    let data = InstanceStore.getInstancesECC();
+    if(this.state.buttonSelected && !ignoreButtonState){
+      data = data.filter(instance => {
+        return instance.get('state') == this.state.buttonSelected;
+      });
+    }
     if(string){
-      return InstanceStore.getInstancesECC().filter(instance => {
+      return data.filter(instance => {
         return fuzzy.filter(string, [instance.get('name')]).length;
       });
-    }else{
-      return InstanceStore.getInstancesECC();
     }
+    return data;
   },
   renderGroupsSecurity(){
     if(GroupStore.getGroupsSecurity().size){
@@ -213,44 +250,44 @@ const EnvWithFilter = React.createClass({
       break;
     }
   },
-  renderTableItem(i){
-    const num = this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size;
-    if(num > 0){
-      return (
-        <tr>
-          <td><strong>Failing {this.getItemTypeFromSlug(i).name}</strong></td>
-          <td>{this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size}</td>
-        </tr>
-      )
+  toggleButtonState(string){
+    const state = this.state.buttonSelected;
+    let obj = {};
+    if(state == string){
+      obj.buttonSelected = false;
     }else{
-      return (<tr/>)
+      obj.buttonSelected = string;
     }
+    this.setState(obj);
   },
-  shouldRenderTable(){
-    return _.chain(this.props.include).map(i => {
-      return this.getItemTypeFromSlug(i).fn().filter(item => item.health < 100).size;
-    }).compact().value().length;
-  },
-  renderStatusTable(){
-    if(this.shouldRenderTable()){
-      return (
-        <div className="padding-b">
-          <Table>
-            {this.props.include.map(i => this.renderTableItem(i))}
-          </Table>
-        </div>
-      )
-    }else{
-      return <div/>
-    }
+  renderFilterButtons(){
+    return (
+      <Row>
+        <Col className="col-xs">
+          <Padding b={1}>
+            <Button bsStyle={this.state.buttonSelected == 'passing' ? "success" : 'default'} onClick={this.toggleButtonState.bind(null, 'passing')}>Passing - {this.getNumberPassing()}</Button>
+          </Padding>
+        </Col>
+        <Col className="col-xs">
+          <Padding b={1}>
+            <Button bsStyle={this.state.buttonSelected == 'failing' ? "danger" : 'default'} onClick={this.toggleButtonState.bind(null, 'failing')}>Failing - {this.getNumberFailing()}</Button>
+          </Padding>
+        </Col>
+        <Col className="col-xs">
+          <Padding b={1}>
+            <Button bsStyle={this.state.buttonSelected == 'running' ? "primary" : 'default'} onClick={this.toggleButtonState.bind(null, 'running')}>Unmonitored - {this.getNumberUnmonitored()}</Button>
+          </Padding>
+        </Col>
+      </Row>
+    )
   },
   render(){
     const self = this;
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {this.renderStatusTable()}
           {this.state.filter.render()}
+          {this.renderFilterButtons()}
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();
           })}

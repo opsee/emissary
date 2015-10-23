@@ -1,0 +1,104 @@
+@import './vars.css';
+
+:root{
+  --radialWidth:40px;
+}
+
+.base{
+  background:var(--colorDanger);
+  color:var(--bodyBg);
+  border-radius:100%;
+  font-weight:500;
+  position: relative;
+  height:var(--radialWidth);
+  width:var(--radialWidth);
+  min-height:var(--radialWidth);
+  min-width:var(--radialWidth);
+  margin:0 1em 0 .5em;
+  font-family:var(--fontTungsten);
+  font-size:16px;
+}
+
+.basePassing{
+  composes: base;
+  background:var(--colorSuccess);
+}
+.baseFailing{
+  composes: base;
+}
+.baseStopped{
+  composes: base;
+}
+.baseRestarting{
+  composes: base;
+  background:var(--colorInfo);
+}
+.baseRunning{
+  composes: base;
+  background:var(--gray600);
+}
+.baseSilenced{
+  composes: base;
+  background:var(--colorPrimary);
+}
+
+.svg{
+  width:var(--radialWidth);
+  height:var(--radialWidth);
+  overflow: hidden;
+  fill:var(--colorDanger);
+}
+
+.svgStopped{
+  composes: svg;
+}
+.svgPassing{
+  composes: svg;
+  fill:var(--colorSuccess);
+}
+.svgFailing{
+  fill: var(--colorSuccess);
+}
+.svgRestarting{
+  composes: svg;
+  fill: var(--colorInfo);
+}
+.svgRunning{
+  composes: svg;
+  fill: var(--gray600);
+}
+.svgSilenced{
+  composes: svg;
+  fill: var(--colorInfo);
+}
+
+.inner{
+  background:transparent;
+  border-radius:100%;
+  border:3px solid var(--bodyBg);
+  height:calc(var(--radialWidth) - 4);
+  width:calc(var(--radialWidth) - 4);
+  left:50%;
+  top:50%;
+  margin-top:calc(-1*(var(--radialWidth) - 4) / 2);
+  margin-left:calc(-1*(var(--radialWidth) - 4) / 2);
+  line-height:calc(var(--radialWidth) - 10);
+  position: absolute;
+  text-align: center;
+}
+.innerFailing{
+  composes: inner;
+  background:var(--colorSuccess);
+}
+.innerRunning{
+  composes: inner;
+  background:var(--gray600);
+}
+.innerPassing{
+  composes: inner;
+  background:var(--colorSuccess);
+}
+.innerRestarting{
+  composes: inner;
+  background:var(--colorInfo);
+}

@@ -15,16 +15,16 @@ var Instance = Record({
     instanceSize:'t2-micro'
   }),
   state:'running',
-  health:100,
+  health:undefined,
   silenceDate:null,
   silenceDuration:null,
   type:'EC2',
-  checks:List(),
   groups:List(),
   LaunchTime:null,
   InstanceType:null,
   Placement:null,
-  SecurityGroups:List()
+  SecurityGroups:List(),
+  checks:List()
 })
 
 
@@ -43,6 +43,25 @@ let _statuses = {
 }
 
 const statics = {
+  getStateFromItem(item){
+    const checks = item.checks;
+    let string = 'running';
+    if(checks && checks.length){
+      const allPassing = _.chain(checks).pluck('assertions').pluck('passing').every().value();
+      string = allPassing ? 'passing' : 'failing';
+    }
+    return string;
+  },
+  getHealthFromItem(item){
+    let health;
+    if(item.checks && item.checks.length){
+      const boolArray = item.checks.map(check => {
+        return _.chain(check.assertions).pluck('passing').every().value();
+      });
+      health = Math.floor((_.compact(boolArray).length / boolArray.length)*100);
+    }
+    return health;
+  },
   getInstancePending(data){
     if(_data.instance.get('id') != data){
       _data.instance = new Instance();
@@ -113,12 +132,34 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
+    if(data.name == 'coreos4'){
+      data.checks = [
+      {
+        assertions:[
+          {passing:false},
+          {passing:false}
+        ]
+      },
+      {
+        assertions:[
+          {passing:true},
+          {passing:true},
+          {passing:false}
+        ]
+      },
+      {
+        assertions:[
+          {passing:true},
+          {passing:true},
+          {passing:true}
+        ]
+      },
+      ]
+    }
+    data.health = statics.getHealthFromItem(data);
+    data.state = statics.getStateFromItem(data);
     if(data.SecurityGroups && data.SecurityGroups.length){
       data.groups = new List(data.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
-    }
-    if(data.name == 'coreos3' && config.error){
-      data.health = 25;
-      data.state = 'stopped';
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     data.meta = Immutable.fromJS(data.meta);
