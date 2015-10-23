@@ -53,11 +53,9 @@ let _statuses = {
 
 const statics = {
   getStateFromItem(item){
-    const checks = item.checks;
     let string = 'running';
-    if(checks && checks.length){
-      const allPassing = _.chain(checks).pluck('assertions').pluck('passing').every().value();
-      string = allPassing ? 'passing' : 'failing';
+    if(typeof item.health == 'number'){
+      string = item.health == 100 ? 'passing' : 'failing';
     }
     return string;
   },
@@ -140,8 +138,8 @@ const statics = {
       },
       ]
     }
-    data.state = statics.getStateFromItem(data);
     data.health = statics.getHealthFromItem(data);
+    data.state = statics.getStateFromItem(data);
     return new GroupELB(data);
   },
   groupFromJS(data){
@@ -185,8 +183,8 @@ const statics = {
       },
       ]
     }
-    data.state = statics.getStateFromItem(data);
     data.health = statics.getHealthFromItem(data);
+    data.state = statics.getStateFromItem(data);
     return new Group(data);
   },
   populateGroupInstances(){

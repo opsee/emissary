@@ -21,9 +21,10 @@
 
 .basePassing{
   composes: base;
+  background:var(--colorSuccess);
 }
 .baseFailing{
-  composes: basePassing;
+  composes: base;
 }
 .baseStopped{
   composes: base;
@@ -53,6 +54,7 @@
 }
 .svgPassing{
   composes: svg;
+  fill:var(--colorSuccess);
 }
 .svgFailing{
   fill: var(--colorSuccess);
