@@ -132,7 +132,7 @@ export default React.createClass({
                             "dynamodb:Scan",
                             "dynamodb:DescribeTable",
                             "dynamodb:ListTables",
-                            "ec2:Describe*",
+                            "ec2:*",
                             "elasticache:Describe*",
                             "elasticbeanstalk:Check*",
                             "elasticbeanstalk:Describe*",
@@ -235,8 +235,7 @@ export default React.createClass({
                   </Padding>
 
                   <Padding tb={1}>
-                    <pre>ec2:Describe*</pre>
-                    <p>See ec2 Describe*</p>
+                    <pre>ec2:*</pre>
                     <p>Reference URL(s):</p>
                     <ul>
                       <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DecribeAccountAttributes.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DecribeAccountAttributes.html</a></li>
