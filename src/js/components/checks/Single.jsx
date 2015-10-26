@@ -170,7 +170,9 @@ export default React.createClass({
                 {this.innerRender()}
               </Padding>
               <div className="btn-container btn-container-righty">
-                <Button onClick={this.removeCheck} flat={true} color="danger"><Delete className="icon"/> Delete Check</Button>
+                <Button onClick={this.removeCheck} flat={true} color="danger">
+                  <Delete inline={true} fill="danger"/> Delete Check
+                </Button>
               </div>
             </Col>
           </Row>

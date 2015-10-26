@@ -1,7 +1,7 @@
 import React from 'react';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
-import {Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import {Toolbar, StepCounter} from '../global';
@@ -17,6 +17,7 @@ import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 import {CheckStore} from '../../stores';
 import {Padding} from '../layout';
+import {Button} from '../forms';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -202,8 +203,8 @@ const CheckCreateAssertions = React.createClass({
         })
         }
         <Padding t={1}>
-          <Button color="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
-            <Add className="icon"/> Add Assertion
+          <Button color="primary" flat={true} onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+            <Add inline={true} fill="primary"/> Add Assertion
           </Button>
         </Padding>
       </div>

@@ -22,8 +22,8 @@ export default React.createClass({
   render(){
     return(
       <div className="padding-lr">
-        <Button flat={true} icon={true} className="btn-danger pull-right" title="Remove this Header" onClick={this.onChange}>
-          <Close className="icon" />
+        <Button flat={true} icon={true} color="danger" className="pull-right" title="Remove this Header" onClick={this.onChange}>
+          <Close inline={true} fill="danger"/>
         </Button>
       </div>
     )
