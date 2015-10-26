@@ -1,17 +1,5 @@
 @import './vars.css';
 
-.item {
-  align-items: flex-start;
-  color: white;
-  overflow: hidden;
-  text-decoration: none;
-  transition: 300ms background;
-  display:flex;
-}
-.item:hover {
-  color: white;
-}
-
 .avatar {
   height: 2.5em;
   margin: 0 1em 0 0.5em;
@@ -27,11 +15,7 @@
   transition: background-color var(--transitionEaseOut), color var(--transitionEaseOut);
   color: var(--colorText);
   cursor: pointer;
-  composes: ptbhalf from '../layout/padding.css';
   text-decoration: none;
-  display:flex;
-  /*align-items:flex-start;*/
-  flex:1;
 }
 .link:active, .link:focus {
   background-color: var(--gray800);

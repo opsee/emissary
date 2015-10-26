@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import colors from 'seedling/colors';
 import Immutable, {Record} from 'immutable';
+import cx from 'classnames';
 
 import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -59,7 +60,7 @@ const InstanceItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu" className="btn-secondary">
+    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu">
       <Settings fill={colors.textColorSecondary} btn={true}/>
     </Button>
     );
@@ -107,24 +108,67 @@ const InstanceItem = React.createClass({
       )
     }
   },
-  render(){
-    return (
-      <div key="listItem" className={listItem.item} onClick={this.onClick}>
-        {this.renderModal()}
-        <div className="line-height-1 flex-1 align-self-stretch display-flex">
-          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link} style={{maxWidth:'100%'}}>
-            {this.renderGraph()}
-            <div className="flex-vertical-align">
-              <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
-              {
-              // <div className="text-secondary">X of Y passing</div>
-              }
-            </div>
+  renderGraph(){
+    if(!this.props.noGraph){
+      if(!this.props.onClick){
+        return (
+          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link}>
+            <RadialGraph {...this.props.item.toJS()}/>
           </Link>
-          {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
+        )
+      }else{
+        return (
+          <RadialGraph {...this.props.item.toJS()}/>
+        )
+      }
+    }else{
+      return <div/>
+    }
+  },
+  renderText(){
+    if(!this.props.onClick){
+      return (
+      <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
+        <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+      </Link>
+      )
+    }else{
+      return (
+        <div className="flex-vertical-align flex-1">
+          <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
         </div>
-      </div>
-    );
+      )
+    }
+  },
+  render(){
+    if(this.props.item.get('name')){
+      return (
+        <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
+          <Padding b={1}>
+            {this.renderModal()}
+            <Grid fluid={true}>
+              <Row>
+                <Col xs={2} sm={1}>
+                  {this.renderGraph()}
+                </Col>
+                <Col xs={8} sm={10} className="display-flex">
+                  {this.renderText()}
+                </Col>
+                <Col xs={2} sm={1}>
+                  <Row className="end-xs">
+                    <Col>
+                      {this.props.linkInsteadOfMenu ? this.renderLinkButton() : this.renderButton()}
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Grid>
+          </Padding>
+        </div>
+      );
+    }else{
+      return <div/>
+    }
   }
 });
 

@@ -14,9 +14,10 @@
   width:var(--radialWidth);
   min-height:var(--radialWidth);
   min-width:var(--radialWidth);
-  margin:0 1em 0 .5em;
+  margin:0;
   font-family:var(--fontTungsten);
   font-size:16px;
+  overflow: hidden;
 }
 
 .basePassing{
