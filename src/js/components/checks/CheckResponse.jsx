@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
-import {Alert, Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import _ from 'lodash';
 import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
@@ -9,6 +9,7 @@ import {CheckStore} from '../../stores';
 import {CheckActions} from '../../actions';
 import {ChevronUp, ChevronDown} from '../icons';
 import {StatusHandler} from '../global';
+import {Button} from '../forms';
 
 function getState(){
   return {

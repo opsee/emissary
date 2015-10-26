@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-// import {Button} from '../../modules/bootstrap';
 import {ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 import {Link} from 'react-router';

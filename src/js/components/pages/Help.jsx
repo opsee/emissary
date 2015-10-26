@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -7,6 +6,7 @@ import {Padding} from '../layout';
 import colors from 'seedling/colors';
 import {Mail, Slack, Docs, Chat} from '../icons';
 import {UserStore} from '../../stores';
+import {Button} from '../forms';
 
 export default React.createClass({
   renderAdminLinks(){
