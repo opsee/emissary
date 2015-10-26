@@ -12,9 +12,13 @@ import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
+import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 
 export default React.createClass({
+  statics:{
+    willTransitionTo:PageAuth
+  },
   mixins: [GroupStore.mixin, SetInterval],
   storeDidChange() {
     const state = this.getState();

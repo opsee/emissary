@@ -103,4 +103,6 @@ _actions.userLogOut = Flux.statics.addAction('userLogOut');
 
 _actions.userSet = Flux.statics.addAction('userSet');
 
+_actions.userLoginRedirect = Flux.statics.addAction('userLoginRedirect');
+
 export default _.assign({}, ..._.values(_actions));

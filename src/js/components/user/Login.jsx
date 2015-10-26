@@ -15,7 +15,12 @@ export default React.createClass({
     const status = UserStore.getUserLoginStatus();
     this.setState({status})
     if(status == 'success'){
-      router.transitionTo('env');
+      const redirect = UserStore.getUser().get('loginRedirect');
+      if(redirect){
+        router.transitionTo(redirect);
+      }else{
+        router.transitionTo('env');
+      }
     }else if(status && status != 'pending'){
       GlobalActions.globalModalMessage({
         html:status.message || 'Something went wrong.',

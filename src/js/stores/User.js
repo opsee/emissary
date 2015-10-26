@@ -12,7 +12,8 @@ var User = Record({
   token:null,
   loginDate:null,
   admin:false,
-  admin_id:0
+  admin_id:0,
+  loginRedirect:null
 })
 
 const statics = {
@@ -21,7 +22,10 @@ const statics = {
       data.user.token = data.token;
     }
     data.user.loginDate = data.user.loginDate || _data.user.get('loginDate');
-    _data.user = Immutable.fromJS(data.user || data);
+    let obj = data.user || data;
+    //don't overwrite properties that aren't coming from the api, like loginRedirect
+    obj = _.assign({}, _data.user.toJS(), obj);
+    _data.user = Immutable.fromJS(obj);
     storage.set('user',_data.user.toJS());
     Store.emitChange();
   },
@@ -121,6 +125,9 @@ const Store = Flux.createStore(
       case 'USER_PUT_USER_DATA_SUCCESS':
       case 'USER_GET_USER_DATA_SUCCESS':
         _data.userData = payload.data;
+      break;
+      case 'USER_LOGIN_REDIRECT':
+        _data.user = _data.user.set('loginRedirect', payload.data);
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
