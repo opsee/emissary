@@ -6,8 +6,33 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import colors from 'seedling/colors';
 import {Mail, Slack, Docs, Chat} from '../icons';
+import {UserStore} from '../../stores';
 
 export default React.createClass({
+  renderAdminLinks(){
+    if(UserStore.getUser().get('admin')){
+      return (
+        <Padding b={1}>
+          <h3>Onboarding Pages</h3>
+          <div><Link to="tutorial">Tutorial</Link></div>
+          <div><Link to="onboardPassword">Set Password</Link></div>
+          <div><Link to="onboardRegionSelect">Region Select</Link></div>
+          <div><Link to="onboardCredentials">Credentials</Link></div>
+          <div><Link to="onboardVpcSelect">VPC Scan + Select</Link></div>
+          <div><Link to="onboardInstall">Bastion Installation</Link></div>
+          {
+          //<div><Link to="onboardTeam">Create Team</Link></div>
+          }
+          <h3>Admin Pages</h3>
+          <div><Link to="adminSignups">Admin: Signups</Link></div>
+          <div><Link to="systemStatus">System Status</Link></div>
+          <div><Link to="styleguide">Style Guide</Link></div>
+        </Padding>
+      )
+    }else{
+      return <div/>
+    }
+  },
   render() {
     return (
       <div>
@@ -34,22 +59,7 @@ export default React.createClass({
 
                 <p><span className="text-secondary"><Slack fill={colors.textColorSecondary} inline={true} /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></p>
               </Padding>
-
-              <Padding b={1}>
-                <h3>Admin Pages (Hide these!)</h3>
-                <ul className="list-unstyled">
-                  <li><Link to="tutorial">Tutorial</Link></li>
-                  <li><Link to="onboardPassword">Set Password</Link></li>
-                  <li><Link to="onboardTeam">Create Team</Link></li>
-                  <li><Link to="onboardRegionSelect">Region Select</Link></li>
-                  <li><Link to="onboardCredentials">Credentials</Link></li>
-                  <li><Link to="onboardVpcSelect">VPC Scan + Select</Link></li>
-                  <li><Link to="onboardInstall">Bastion Installation</Link></li>
-                  <li><Link to="adminSignups">Admin: Signups</Link></li>
-                  <li><Link to="systemStatus">System Status</Link></li>
-                  <li><Link to="styleguide">Style Guide</Link></li>
-                </ul>
-              </Padding>
+              {this.renderAdminLinks()}
             </Col>
           </Row>
         </Grid>
