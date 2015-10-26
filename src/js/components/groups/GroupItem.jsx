@@ -96,7 +96,7 @@ const GroupItem = React.createClass({
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
                 <Button color="primary" className="text-left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
-                  <Add className="icon"/> Create Check
+                  <Add inline={true} fill="primary"/> Create Check
                 </Button>
               </div>
             </Row>

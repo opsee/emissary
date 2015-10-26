@@ -82,8 +82,8 @@ const CheckItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
                 </Padding>
-                <Button className="text-left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
-                  <Refresh className="icon"/> Test
+                <Button text="left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
+                  <Refresh inline={true} fill="primary"/> Test
                 </Button>
               </div>
             </Row>

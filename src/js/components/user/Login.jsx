@@ -7,7 +7,8 @@ import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router';
 import {Opsee} from '../icons';
-import {Button, Grid, Col, Row} from '../../modules/bootstrap';
+import {Grid, Col, Row} from '../../modules/bootstrap';
+import {Button} from '../forms';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -68,8 +69,8 @@ export default React.createClass({
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
                 <div className="padding-t">
-                  <Button type="submit" className="btn-raised" color="success" block={true} disabled={this.disabled()}>
-                      {this.loginBtnText()}
+                  <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+                    {this.loginBtnText()}
                   </Button>
                 </div>
                 <div className="padding-t-md">
