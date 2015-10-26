@@ -23,7 +23,7 @@ export default React.createClass({
   },
   render(){
     return (
-      <Button bsStyle={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)} style={{textTransform:'none'}}>{this.getIcon()} {this.props.label}</Button>
+      <Button color={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)} style={{textTransform:'none'}}>{this.getIcon()} {this.props.label}</Button>
     );
   }
 });

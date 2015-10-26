@@ -6,6 +6,7 @@ import {UserActions} from '../../actions';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -41,14 +42,12 @@ export default React.createClass({
       )
     }else{
       return (
-      <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+      <form name="loginForm" onSubmit={this.submit}>
         <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
         <UserInputs include={['email']}  onChange={this.updateUserData} email={this.state.data.email}/>
-        <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-          <span>
-            {this.btnText()}
-          </span>
-        </button>
+        <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+          {this.btnText()}
+        </Button>
       </form>
       );
     }

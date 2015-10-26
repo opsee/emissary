@@ -1,7 +1,7 @@
 import React from 'react';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
-import {Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import {Toolbar, StepCounter} from '../global';
@@ -17,6 +17,7 @@ import colors from 'seedling/colors';
 import Highlight from '../global/Highlight.jsx';
 import {CheckStore} from '../../stores';
 import {Padding} from '../layout';
+import {Button} from '../forms';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -202,8 +203,8 @@ const CheckCreateAssertions = React.createClass({
         })
         }
         <Padding t={1}>
-          <Button bsStyle="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
-            <Add className="icon"/> Add Assertion
+          <Button color="primary" flat={true} onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+            <Add inline={true} fill="primary"/> Add Assertion
           </Button>
         </Padding>
       </div>
@@ -225,7 +226,7 @@ const CheckCreateAssertions = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
+            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
           </div>
           <StepCounter active={3} steps={4}/>
         </div>
@@ -259,9 +260,9 @@ const CheckCreateAssertions = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
-          <Link to="checks" className="btn btn-icon btn-flat">
+          <Button to="checks" icon={true} flat={true}>
             <Close btn={true}/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>

@@ -1,6 +1,4 @@
 import Alert from 'react-bootstrap/lib/Alert';
-import Button from 'react-bootstrap/lib/Button';
-import ButtonLink from 'react-router-bootstrap/lib/ButtonLink';
 import Col from 'react-bootstrap/lib/Col';
 import Dropdown from 'react-bootstrap/lib/Dropdown';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
@@ -19,8 +17,6 @@ import Tab from 'react-bootstrap/lib/Tab';
 
 export default {
   Alert,
-  Button,
-  ButtonLink,
   Col,
   Dropdown,
   DropdownButton,

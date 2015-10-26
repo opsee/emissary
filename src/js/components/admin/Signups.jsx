@@ -88,11 +88,11 @@ export default React.createClass({
     if(this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
       const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
       return (
-        <Button flat={true} bsStyle="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
+        <Button flat={true} color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
       )
     }else{
       return(
-        <Button flat={true} bsStyle="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
+        <Button flat={true} color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
       )
     }
   },

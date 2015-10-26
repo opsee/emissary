@@ -117,9 +117,9 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="Opsee Styleguide">
-          <a className="btn btn-fab btn-primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
+          <Button fab={true} color="primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
             <Add btn={true}/>
-          </a>
+          </Button>
         </Toolbar>
 
         <Grid>
@@ -271,8 +271,8 @@ export default React.createClass({
                       </div>
                     </div>
                     <div>
-                      <Button bsStyle="default" flat={true}>Delete</Button>
-                      <Button bsStyle="primary" flat={true} className="pull-right">Activate</Button>
+                      <Button color="default" flat={true}>Delete</Button>
+                      <Button color="primary" flat={true} className="pull-right">Activate</Button>
                     </div>
                   </div>
                 </Col>
@@ -298,58 +298,42 @@ export default React.createClass({
                 <BoundField bf={this.state.info.boundField('body')}/>
               </Padding>
 
-              <Padding b={1}>
-                <div className="form-group">
-                  <div dropdown>
-                    <select id="test-group" className="sr-only" ng-required="true"></select>
-                    <button type="button" className="btn btn-block dropdown-toggle" dropdown-toggle></button>
-                    <ul className="dropdown-menu">
-                      <li ng-repeat="o in [1,2,3]">
-                        <button type="button" className="btn" dropdown-toggle ng-click="selectDropdown(o)">Option</button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </Padding>
-
               <h3>Buttons</h3>
-
-              <div className="padding-bx2">
-                <div className="padding pull-left">
+              <Padding b={2}>
+                <h4>Regular</h4>
+                  {['primary','success','warning','danger','info','default'].map(i => {
+                    return (
+                      <Button color={i} key={`btn-${i}`}>{i}</Button>
+                    )
+                  })}
+                <h4>Disabled</h4>
                 {['primary','success','warning','danger','info','default'].map(i => {
                   return (
-                    <button className={"btn btn-"+i} type="button" key={`btn-${i}`}>{i}</button>
+                    <Button color={i} disabled={true} key={`btn-${i}`}>{i}</Button>
                   )
                 })}
-                </div>
-                <div className="padding pull-left">
-                  <button className="btn btn-success" disabled={true}>Disabled</button>
-                </div>
-                <div><br/></div>
-                <button className="btn btn-default btn-block" type="submit">Block</button>
-              </div>
+                <Padding t={2}>
+                  <Button block={true}>Block</Button>
+                </Padding>
+              </Padding>
 
               <h3>Flat Buttons</h3>
 
-              <div className="padding-bx2">
+              <Padding b={2}>
                 {['primary','success','warning','danger','info','default'].map(i => {
                   return (
-                    <div className="padding pull-left" key={`btn-flat-${i}`}>
-                      <button className={"btn btn-flat btn-"+i} type="button">{i}</button>
-                    </div>
+                    <Padding className="pull-left" key={`btn-flat-${i}`}>
+                      <Button flat={true} color={i}>{i}</Button>
+                    </Padding>
                   )
                 })}
-                <div className="padding pull-left">
-                  <button className="btn btn-flat btn-success" disabled={true}>Disabled</button>
-                </div>
-                <div><br/></div>
-                <button className="btn btn-flat btn-default btn-block" type="submit">Block</button>
-              </div>
+                <Padding t={1}>
+                  <Button flat={true} color="success" disabled={true}>Disabled</Button>
+                </Padding>
+              </Padding>
 
               <div className="padding-bx2">
-                <button type="button" className="btn btn-flat btn-nopad btn-primary" ng-click="check.addItem('http.headers')">
-                  <span>NO PAD</span>
-                </button>
+                <Button flat={true} noPad={true} primary={true}>NO PAD</Button>
               </div>
             </form>
 
@@ -357,8 +341,12 @@ export default React.createClass({
             <Loader/>
 
             <h3>Notifcations</h3>
-            <Button bsStyle="danger" onClick={this.notify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
-            <Button bsStyle="success" onClick={this.notify.bind(null, 'success')}>Success NOTIFICATION</Button>
+            <Padding b={1}>
+              <Button color="danger" onClick={this.notify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
+            </Padding>
+            <Padding b={1}>
+              <Button color="success" onClick={this.notify.bind(null, 'success')}>Success NOTIFICATION</Button>
+            </Padding>
           </Col>
         </Row>
       </Grid>

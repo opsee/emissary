@@ -13,6 +13,8 @@ import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
+import {Button} from '../forms';
+import {Padding} from '../layout'
 
 const statics = {
   checkedInstallStatus:false
@@ -89,9 +91,9 @@ const Install = React.createClass({
   renderSurvey(){
     if(!config.demo){
       return (
-        <div className="padding-tb">
+        <Padding tb={1}>
           <Survey/>
-        </div>
+        </Padding>
       )
     }else{
 
@@ -103,9 +105,11 @@ const Install = React.createClass({
     if(this.bastionsComplete()){
       if(!bastionErrors.length || bastionSuccesses.length){
         return(
-          <div className="padding-t-md">
-            <Link to="checkCreate" className="btn btn-raised btn-block btn-primary">Create a Check&nbsp;<ChevronRight inline={true} fill="white"/></Link>
-          </div>
+          <Padding tb={3}>
+            <Button to="checkCreate" color="primary" block={true} chevron={true}>
+              Create a Check
+            </Button>
+          </Padding>
         )
       }else{
         return (
@@ -154,7 +158,9 @@ const Install = React.createClass({
               {this.renderText()}
               {this.state.bastions.map(b => {
                 return (
-                  <BastionInstaller {...b}/>
+                  <Padding tb={1}>
+                    <BastionInstaller {...b}/>
+                  </Padding>
                 )
               })}
               {this.renderBtn()}

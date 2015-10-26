@@ -5,6 +5,8 @@ import statics from '../../modules/statics';
 import {StepCounter} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import img from '../../../img/tut-bastion';
+import {Button} from '../forms';
+import {Padding} from '../layout';
 
 export default React.createClass({
   statics:{
@@ -22,12 +24,9 @@ export default React.createClass({
           <img className="step-image" src={img}/>
           <h2>First, Add the Bastion Instance</h2>
           <p>The first thing we do is add the Bastion Instance to your AWS environment. <a href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>
-          <div className="clearfix"><br/></div>
-          <div className="clearfix">
-            <Link to="tutorial2" className="btn btn-success btn-raised btn-block">
-              Next&nbsp;<ChevronRight inline={true}/>
-            </Link>
-          </div>
+          <Padding t={2}>
+            <Button to="tutorial2" color="success" block={true} chevron={true}>Next</Button>
+          </Padding>
           <StepCounter active={1} steps={3}/>
           </Col>
         </Row>

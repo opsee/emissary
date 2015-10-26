@@ -13,11 +13,12 @@ import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
 import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import {Checkmark, Close} from '../icons';
 import {CheckActions, GlobalActions} from '../../actions';
-import {Grid, Row, Col, Button} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import router from '../../modules/router';
 import {Padding} from '../layout';
 import {EnvWithFilter} from '../env';
+import {Button} from '../forms';
 
 function getState(){
   return {
@@ -123,9 +124,9 @@ const CheckEdit = React.createClass({
   renderLink(){
     return this.state.check.id ?
     (
-      <Link to="check" params={{id:this.state.check.id}} className="btn btn-icon btn-flat" title="Return to Check">
+      <Button to="check" params={{id:this.state.check.id}} icon={true} flat={true} title="Return to Check">
         <Close btn={true}/>
-      </Link>
+      </Button>
     )
      : <div/>;
   },
@@ -150,7 +151,7 @@ const CheckEdit = React.createClass({
                   <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
                 </Padding>
                 <Padding t={1}>
-                <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
+                <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
                   Finish <Checkmark inline={true} fill={colors.success}/>
                 </Button>
                 </Padding>

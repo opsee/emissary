@@ -149,9 +149,9 @@ export default React.createClass({
   outputLink(){
     if(this.state.check && this.state.check.get('id')){
       return (
-        <Link to="checkEdit" params={{id:this.props.params.id}} className="btn btn-primary btn-fab" title={`Edit ${this.state.check.name}`}>
+        <Button to="checkEdit" params={{id:this.props.params.id}} color="primary" fab={true} title={`Edit ${this.state.check.name}`}>
           <Edit btn={true}/>
-        </Link>
+        </Button>
       )
     }else{
       return <span/>
@@ -170,7 +170,9 @@ export default React.createClass({
                 {this.innerRender()}
               </Padding>
               <div className="btn-container btn-container-righty">
-                <Button onClick={this.removeCheck} flat={true} bsStyle="danger"><Delete className="icon"/> Delete Check</Button>
+                <Button onClick={this.removeCheck} flat={true} color="danger">
+                  <Delete inline={true} fill="danger"/> Delete Check
+                </Button>
               </div>
             </Col>
           </Row>

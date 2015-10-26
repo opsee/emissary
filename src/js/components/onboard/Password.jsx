@@ -9,6 +9,7 @@ import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import router from '../../modules/router';
 import {Button} from '../forms';
+import {Padding} from '../layout';
 
 
 export default React.createClass({
@@ -62,12 +63,12 @@ export default React.createClass({
               <Col xs={12}>
                 <form name="loginForm" onSubmit={this.submit}>
                   <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
-                  <div className="padding-t">
-                    <Button type="submit" block={true} bsStyle="success" disabled={this.disabled()}>{this.btnText()}</Button>
-                  </div>
-                  <div className="padding-t">
-                    <Link to="passwordForgot" className="btn btn-default btn-flat">Forgot Password?</Link>
-                  </div>
+                  <Padding t={1}>
+                    <Button type="submit" block={true} color="success" chevron={true} disabled={this.disabled()}>{this.btnText()}</Button>
+                  </Padding>
+                  <Padding t={1}>
+                    <Button to="passwordForgot" flat={true}>Forgot Password?</Button>
+                  </Padding>
                 </form>
               </Col>
             </Row>
