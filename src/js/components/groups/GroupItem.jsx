@@ -66,14 +66,14 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu" className="btn btn-icon btn-secondary">
+    <Button icon={true} flat={true} secondary={true} onClick={this.openMenu} title="Group Menu">
       <Settings fill={colors.textColorSecondary} btn={true}/>
     </Button>
     );
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className="btn btn-icon btn-secondary">
+    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} secondary={true} target="_blank">
         <NewWindow btn={true} fill={colors.textColorSecondary}/>
     </Button>
     );
@@ -95,7 +95,7 @@ const GroupItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button bsStyle="primary" className="text-left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
+                <Button color="primary" className="text-left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
                   <Add className="icon"/> Create Check
                 </Button>
               </div>

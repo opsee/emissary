@@ -11,6 +11,7 @@ import forms from 'newforms';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
+import {Padding} from '../layout';
 
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
@@ -119,9 +120,9 @@ export default React.createClass({
             <form onSubmit={this.submit}>
               <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
-              <div className="btn-container">
-                <Button bsStyle="primary" type="submit" disabled={this.disabled()}>Update Profile</Button>
-              </div>
+              <Padding t={2}>
+                <Button color="primary" type="submit" disabled={this.disabled()}>Update Profile</Button>
+              </Padding>
             </form>
             </Col>
           </Row>

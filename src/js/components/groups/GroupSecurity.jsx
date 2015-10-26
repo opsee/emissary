@@ -98,7 +98,7 @@ export default React.createClass({
                   <h3>Checks</h3>
                   <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
                   <Padding t={2}>
-                    <Button bsStyle="primary" className="text-left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'security'}}}>
+                    <Button color="primary" className="text-left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'security'}}}>
                       <Add inline={true}/> Create Check
                     </Button>
                   </Padding>

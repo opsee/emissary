@@ -202,7 +202,7 @@ const CheckCreateAssertions = React.createClass({
         })
         }
         <Padding t={1}>
-          <Button bsStyle="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+          <Button color="primary" className="btn-flat" onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
             <Add className="icon"/> Add Assertion
           </Button>
         </Padding>
@@ -225,7 +225,7 @@ const CheckCreateAssertions = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
+            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
           </div>
           <StepCounter active={3} steps={4}/>
         </div>
@@ -259,9 +259,9 @@ const CheckCreateAssertions = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
-          <Link to="checks" className="btn btn-icon btn-flat">
+          <Button to="checks" icon={true} flat={true}>
             <Close btn={true}/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>

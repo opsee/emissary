@@ -53,7 +53,7 @@ const CheckItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu" className="btn btn-icon btn-secondary">
+    <Button icon={true} flat={true} secondary={true} onClick={this.openMenu} title="Check Menu">
       <Settings fill={colors.textColorSecondary} btn={true}/>
     </Button>
     );
@@ -82,7 +82,7 @@ const CheckItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
                 </Padding>
-                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
+                <Button className="text-left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
                   <Refresh className="icon"/> Test
                 </Button>
               </div>

@@ -65,7 +65,7 @@ const CheckCreateTarget = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
+            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
           </div>
           <StepCounter active={1} steps={3}/>
         </div>
@@ -73,9 +73,6 @@ const CheckCreateTarget = React.createClass({
     }else{
       return <div/>
     }
-  },
-  renderLink(){
-    return this.props.check.id ? <Link to="check" params={{id:this.props.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
   },
   submit(e){
     e.preventDefault();
@@ -146,9 +143,9 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (1 of 4)" bg="info">
-          <Link to="checks" className="btn btn-icon btn-flat">
+          <Button icon={true} flat={true} to="checks">
             <Close btn={true}/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>

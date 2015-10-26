@@ -94,13 +94,13 @@ const CheckResponse = React.createClass({
   getButton(){
     if(this.state.expanded){
       return(
-        <Button bsStyle="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Close Reponse">
+        <Button color="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Close Reponse">
           <ChevronUp/>
         </Button>
       )
     }else{
       return (
-        <Button bsStyle="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Open Response">
+        <Button color="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Open Response">
           <ChevronDown/>
         </Button>
         )

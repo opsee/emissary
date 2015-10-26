@@ -40,7 +40,7 @@ export default React.createClass({
   },
   renderMoreButton(){
     if(this.state.limit < this.props.groups.size){
-      return <Button bsStyle="primary" flat={true} onClick={this.getMore} className="margin-t">Show {this.props.groups.size - this.state.limit} more <ChevronDown className="icon"/></Button>
+      return <Button color="primary" flat={true} onClick={this.getMore} className="margin-t">Show {this.props.groups.size - this.state.limit} more <ChevronDown className="icon"/></Button>
     }
   },
   render() {

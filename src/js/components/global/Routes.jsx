@@ -123,7 +123,7 @@ const routes = (
   </Route>
 );
 
-const hideNavList = ['start', 'onboardThanks', 'onboardPassword', 'tutorial', 'onboardRegionSelect', 'onboardCredentials', 'onboardVpcSelect', 'onboardInstall', 'onboardInstallExample', 'login', 'checkCreateTarget', 'checkCreateRequest', 'checkCreateAssertions', 'checkCreateInfo', 'checkEdit', 'profileEdit'];
+const hideNavList = ['start', 'onboardThanks', 'onboardPassword', 'tutorial', 'onboardRegionSelect', 'onboardCredentials', 'onboardVpcSelect', 'onboardInstall', 'onboardInstallExample', 'login', 'checkCreateTarget', 'checkCreateRequest', 'checkCreateAssertions', 'checkCreateInfo', 'checkEdit', 'profileEdit', 'passwordForgot'];
 
 export default {
   routes,

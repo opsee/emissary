@@ -2,6 +2,8 @@ import React from 'react';
 import Label from './Label.jsx';
 import {DropdownButton, MenuItem, Dropdown} from '../../modules/bootstrap';
 import _ from 'lodash';
+import Button from './Button';
+import {ChevronDown, ChevronUp} from '../icons';
 
 export default React.createClass({
   getState(){
@@ -12,7 +14,8 @@ export default React.createClass({
       label = _.clone(this.props.bf.label);
     }
     return _.extend({}, this.props, {
-      label:label
+      label:label,
+      open:false
     });
   },
   getInitialState(){
@@ -26,17 +29,14 @@ export default React.createClass({
     }
     return choice;
   },
-  onSelect(e, key){
+  onSelect(e, choice){
     e.preventDefault();
     const obj = {};
-    obj[this.state.bf.name] = key;
+    obj[this.state.bf.name] = choice[0];
     this.state.bf.form.updateData(obj);
-    let label = this.getLabelFromChoice(key);
-    if(label){
-      this.setState({
-        label:label
-      })
-    }
+    this.setState({
+      label:choice[1]
+    })
   },
   componentDidMount(){
     const val = this.props.bf.value();
@@ -49,20 +49,48 @@ export default React.createClass({
   componentWillReceiveProps(nextProps){
     this.setState(this.getState());
   },
+  toggleOpen(){
+    this.setState({open:!this.state.open});
+  },
+  renderChevron(){
+    if(this.state.open){
+      return (
+        <ChevronUp style={{position:'absolute',right:'10px',top:'10px'}}/>
+      )
+    }else{
+      return (
+        <ChevronDown style={{position:'absolute',right:'10px',top:'10px'}}/>
+      )
+    }
+  },
+  renderMenu(){
+    if(this.state.open){
+      return (
+        <div className="flex-order-3">
+          {
+            this.props.bf.field._choices.map((choice, i) => {
+              return (
+                <Button block={true} dropdown={true} key={`${this.props.bf.idForLabel}-menu-item-${i}`} onClick={this.onSelect.bind(null, event, choice)}>
+                {choice[1]}
+                </Button>
+              )
+            })
+          }
+        </div>
+      )
+    }else{
+      return <div/>
+    }
+  },
   render(){
     return(
       <Dropdown id={this.props.bf.idForLabel()} className="flex-column">
           <Label bf={this.props.bf}/>
-          <Dropdown.Toggle bsRole="toggle" onClick={this.labelClick} id={this.props.bf.idForLabel()} className="flex-order-2">{this.state.label}</Dropdown.Toggle>
-          <Dropdown.Menu className="flex-order-3">
-            {
-              this.props.bf.field._choices.map((choice, i) => {
-                return (
-                  <MenuItem key={`${this.props.bf.idForLabel}-menu-item-${i}`} eventKey={choice[0]} style={{overflow:'hidden'}} onSelect={this.onSelect}>{choice[1]}</MenuItem>
-                )
-              })
-            }
-        </Dropdown.Menu>
+          <Button id={this.props.bf.idForLabel()} dropdown={true} className="flex-order-2" onClick={this.toggleOpen} style={{position:'relative'}}>
+            {this.state.label}
+            {this.renderChevron()}
+          </Button>
+          {this.renderMenu()}
       </Dropdown>
     )
   }

@@ -9,6 +9,8 @@ import _ from 'lodash';
 import $q from 'q';
 import router from '../../modules/router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
+import {Padding} from '../layout';
 
 const regions = AWSStore.getRegions();
 
@@ -105,8 +107,9 @@ const Team = React.createClass({
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>
           <BoundField bf={this.state.info.boundField('vpcs')}/>
-          <div><br/></div>
-          <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>Install</button>
+          <Padding t={1}>
+            <Button type="submit" color="success" block={true} disabled={this.disabled()}>Install</Button>
+          </Padding>
         </div>
       )
     }else{

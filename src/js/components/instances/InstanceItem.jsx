@@ -88,16 +88,16 @@ const InstanceItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
+                <Button className="text-left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
                   <Refresh className="icon"/> Restart
                 </Button>
-                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Stop')}>
+                <Button className="text-left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Stop')}>
                   <Stop className="icon"/> Stop
                 </Button>
-                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
+                <Button className="text-left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
                   <Play className="icon"/> Start
                 </Button>
-                <Button className="text-left" bsStyle="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
+                <Button className="text-left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
                   <Delete className="icon"/> Terminate
                 </Button>
               </div>

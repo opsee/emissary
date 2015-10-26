@@ -7,6 +7,8 @@ import {UserStore} from '../../stores';
 import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
+import {Padding} from '../layout';
 
 export default React.createClass({
    mixins: [UserStore.mixin, OnboardStore.mixin],
@@ -57,16 +59,14 @@ export default React.createClass({
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <div className="form-group">
-                  <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                    <span>
-                      {this.btnText()}
-                    </span>
-                  </button>
+                  <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+                    {this.btnText()}
+                  </Button>
                 </div>
-                <div className="form-group">
-                    <p><Link to="passwordForgot">Forgot your password?</Link></p>
-                    <p>Already have an account? <Link to="login">Log in</Link>.</p>
-                </div>
+                <Padding t={4}>
+                  <div><Link to="passwordForgot">Forgot your password?</Link></div>
+                  <div>Already have an account? <Link to="login">Log in</Link>.</div>
+                </Padding>
               </form>
             </Col>
           </Row>

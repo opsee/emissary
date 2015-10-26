@@ -27,6 +27,7 @@ var Padding = React.createClass({
     if(!arr.length){
       arr.push(style.pa);
     }
+    arr.push(this.props.className);
     return cx(arr);
   },
   render(){

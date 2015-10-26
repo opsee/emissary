@@ -4,6 +4,8 @@ import {ChevronRight} from '../icons';
 import {StepCounter} from '../global';
 import img from '../../../img/tut-discovery.svg';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
+import {Padding} from '../layout';
 
 export default React.createClass({
   statics:{
@@ -21,12 +23,9 @@ export default React.createClass({
               <img className="step-image" src={img}/>
               <h2>Opsee Discovers Your Infrastructure</h2>
               <p>The Bastion Instance then uses AWS APIs to discover your instances and groups. The bastion is always scanning, and detects changes to infrastructure automatically.</p>
-              <div className="clearfix"><br/></div>
-              <div className="clearfix">
-                <Link to="tutorial3" className="btn btn-success btn-raised btn-block">
-                  Next&nbsp;<ChevronRight inline={true}/>
-                </Link>
-              </div>
+              <Padding t={2}>
+                <Button to="tutorial3" color="success" block={true} chevron={true}>Next</Button>
+              </Padding>
               <StepCounter active={2} steps={3}/>
             </Col>
           </Row>

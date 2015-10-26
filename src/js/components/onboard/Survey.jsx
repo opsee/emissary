@@ -102,7 +102,7 @@ const Survey = React.createClass({
   renderButton(){
     if(this.state.step != (this.getSteps().length - 1)){
       return (
-        <Button bsStyle="info" block={true} className="pull-right" onClick={this.next}>Next</Button>
+        <Button color="info" block={true} className="pull-right" onClick={this.next}>Next</Button>
       )
     }else{
       return <div/>
