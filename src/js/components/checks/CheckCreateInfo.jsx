@@ -190,10 +190,9 @@ const CheckCreateInfo = React.createClass({
     if(!this.props.renderAsInclude){
       return(
         <div>
-          <div><br/><br/></div>
-          <div>
+          <Padding t={2}> 
             <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
-          </div>
+          </Padding>
           <StepCounter active={4} steps={4}/>
         </div>
       )
