@@ -13,6 +13,7 @@ import {Button} from '../forms';
 import router from '../../modules/router.js';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList.jsx';
+import colors from '../global/colors.css';
 
 function getState(){
   return {
@@ -77,50 +78,37 @@ export default React.createClass({
   removeCheck(){
     CheckActions.deleteCheck(this.props.params.id);
   },
+  getTarget(){
+    GroupStore.getGroupFromFilter()
+  },
   getLink(){
     const target = this.state.check.get('target');
+    const group = this.state.group.toJS();
     if(target.type == 'sg'){
       return (
-        <Link to="groupSecurity" params={{id:target.id}}>{target.name || target.id}</Link>
+        <span>{group.name || group.id}</span>
       )
     }else{
       //elb
       return (
-        <Link to="group" params={{id:target.id}}>{target.name || target.id}</Link>
+        <span>{group.name || group.id}</span>
       )
     }
   },
-  getTarget(){
-    GroupStore.getGroupFromFilter()
-  },
   innerRender(){
+    const spec = this.getCheckJS().check_spec.value;
     if(!this.state.error && this.state.check.get('id')){
       return(
         <div>
           <Padding b={1}>
-            <h3>Target</h3>
-            <GroupItem item={this.state.group}/>
+            <h3>HTTP Request</h3>
+            <Alert bsStyle="default">
+              <strong>{spec.verb}</strong> http://{this.getLink()}:<span>{spec.port}</span>{spec.path}
+            </Alert>
           </Padding>
           <Padding b={1}>
-            <h3>Check Information</h3>
-            <Table>
-              <tr>
-                <td><strong>Path</strong></td>
-                <td>{this.getCheckJS().check_spec.value.path}</td>
-              </tr>
-              <tr>
-                <td><strong>Port</strong></td>
-                <td>{this.getCheckJS().check_spec.value.port}</td>
-              </tr>
-              <tr>
-                <td><strong>Protocol</strong></td>
-                <td>{this.getCheckJS().check_spec.value.protocol}</td>
-              </tr>
-              <tr>
-                <td><strong>Method</strong></td>
-                <td>{this.getCheckJS().check_spec.value.verb}</td>
-              </tr>
-            </Table>
+            <h3>Target</h3>
+            <GroupItem item={this.state.group}/>
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>
