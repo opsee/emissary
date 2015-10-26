@@ -11,6 +11,8 @@ import forms from 'newforms';
 import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
+import {Button} from '../forms';
+import {Padding} from '../layout';
 
 let checkSubdomainPromise;
 let domainPromisesArray = [];
@@ -92,7 +94,7 @@ const Team = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+              <form name="loginForm" onSubmit={this.submit}>
                 <BoundField bf={this.state.info.boundField('name')}>
                   <div className="text-sm text-secondary flex-order-3 padding-t">
                     <em>This name will appear in headings and menus to identify your team. Your company name is probably a good choice, but it doesn&rsquo;t need to be official or anything.</em>
@@ -104,11 +106,9 @@ const Team = React.createClass({
                   </div>
                 </BoundField>
 
-                <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-                  <span>
-                    {this.btnText()}
-                  </span>
-                </button>
+                <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+                  {this.btnText()}
+                </Button>
               </form>
             </div>
           </div>

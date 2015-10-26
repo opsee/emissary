@@ -12,6 +12,7 @@ import router from '../../modules/router.js';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import colors from 'seedling/colors';
+import {Padding} from '../layout';
 
 let checkSubdomainPromise;
 let domainPromisesArray = [];
@@ -89,44 +90,41 @@ const Team = React.createClass({
       this.state.info.updateData({regions:[]});
     }
   },
-  render() {
+  renderInner(){
     if(!this.state.bastions.length){
       return (
+        <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+         <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
+         {
+         // <h2 className="h3">All AWS regions - <Button flat={true} color="primary" onClick={this.toggleAll.bind(this, true)}>Select All</Button> - <Button flat={true} color="warning"  onClick={this.toggleAll.bind(null, false)}>Deselect All</Button></h2>
+         }
+          <BoundField bf={this.state.info.boundField('regions')}/>
+          <div><br/></div>
+          <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron={true}>Next</Button>
+        </form>
+      )
+    }
+    return (
+      <Padding tb={1}>
+        <Alert bsStyle="info">
+          It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
+        </Alert>
+      </Padding>
+    )
+  },
+  render() {
+    return (
        <div>
         <Toolbar title="Choose a Region"/>
         <Grid>
           <Row>
             <Col xs={12}>
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-               <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
-               {
-               // <h2 className="h3">All AWS regions - <button type="button" className="btn btn-flat btn-primary" onClick={this.toggleAll.bind(this, true)}>Select All</button> - <button type="button" className="btn btn-flat btn-warning" onClick={this.toggleAll.bind(null, false)}>Deselect All</button></h2>
-               }
-                <BoundField bf={this.state.info.boundField('regions')}/>
-                <div><br/></div>
-                <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron={true}>Next</Button>
-              </form>
-              {
-              // <pre>{JSON.stringify(this.state.info.cleanedData, null, ' ')}</pre>
-              }
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>
       </div>
     );
-    }else{
-      return (
-        <Grid>
-          <Row>
-            <Col xs={12} className="padding-tb">
-              <Alert bsStyle="info">
-                It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
-              </Alert>
-            </Col>
-          </Row>
-        </Grid>
-      )
-    }
   }
 });
 

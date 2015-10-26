@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import {Button} from '../../modules/bootstrap';
 import {Toolbar, HTMLFile} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Highlight} from '../global';
 import {Padding} from '../layout';
+import {Button} from '../forms';
 
 export default React.createClass({
   render() {

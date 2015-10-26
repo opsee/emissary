@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
-import {Button} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
+import {Button} from '../forms';
 
 const SystemStatus = React.createClass({
   mixins:[OnboardStore.mixin],

@@ -265,17 +265,17 @@ const EnvWithFilter = React.createClass({
       <Row>
         <Col className="col-xs">
           <Padding b={1}>
-            <Button bsStyle={this.state.buttonSelected == 'passing' ? "success" : 'default'} onClick={this.toggleButtonState.bind(null, 'passing')}>Passing - {this.getNumberPassing()}</Button>
+            <Button color={this.state.buttonSelected == 'passing' ? "success" : 'default'} onClick={this.toggleButtonState.bind(null, 'passing')}>Passing - {this.getNumberPassing()}</Button>
           </Padding>
         </Col>
         <Col className="col-xs">
           <Padding b={1}>
-            <Button bsStyle={this.state.buttonSelected == 'failing' ? "danger" : 'default'} onClick={this.toggleButtonState.bind(null, 'failing')}>Failing - {this.getNumberFailing()}</Button>
+            <Button color={this.state.buttonSelected == 'failing' ? "danger" : 'default'} onClick={this.toggleButtonState.bind(null, 'failing')}>Failing - {this.getNumberFailing()}</Button>
           </Padding>
         </Col>
         <Col className="col-xs">
           <Padding b={1}>
-            <Button bsStyle={this.state.buttonSelected == 'running' ? "primary" : 'default'} onClick={this.toggleButtonState.bind(null, 'running')}>Unmonitored - {this.getNumberUnmonitored()}</Button>
+            <Button color={this.state.buttonSelected == 'running' ? "primary" : 'default'} onClick={this.toggleButtonState.bind(null, 'running')}>Unmonitored - {this.getNumberUnmonitored()}</Button>
           </Padding>
         </Col>
       </Row>

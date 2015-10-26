@@ -1,11 +1,11 @@
 import React from 'react';
-import {Link} from 'react-router';
-import {Grid, Row, Col, Button} from '../../modules/bootstrap';
-import forms from 'newforms';
 import _ from 'lodash';
-import BottomButtonNav from '../global/BottomButtonNav.jsx';
+import forms from 'newforms';
+
+import {Link} from 'react-router';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
-import {BoundField} from '../forms';
+import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
 import {StepCounter} from '../global';
@@ -162,7 +162,7 @@ const CheckCreateInfo = React.createClass({
         })
         }
         <Padding t={2}>
-          <Button className="btn-flat btn-primary btn-nopad" onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
+          <Button color="primary" noPad={true} flat={true} onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
         </Padding>
       </div>
     )
@@ -190,10 +190,9 @@ const CheckCreateInfo = React.createClass({
     if(!this.props.renderAsInclude){
       return(
         <div>
-          <div><br/><br/></div>
-          <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
-          </div>
+          <Padding t={2}> 
+            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
+          </Padding>
           <StepCounter active={4} steps={4}/>
         </div>
       )
@@ -215,9 +214,9 @@ const CheckCreateInfo = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`} bg="info">
-          <Link to="checks" className="btn btn-icon btn-flat">
+          <Button to="checks" icon={true} flat={true}>
             <Close btn={true}/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>

@@ -1,15 +1,38 @@
-import React from 'react';
-import {Button} from '../../modules/bootstrap';
+import React, {PropTypes} from 'react';
 import {ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 import {Link} from 'react-router';
 import router from '../../modules/router';
+import cx from 'classnames';
+import style from './button.css';
 
-const OpseeButton = React.createClass({
+const Button = React.createClass({
+  propTypes:{
+    flat:PropTypes.bool,
+    icon:PropTypes.bool,
+    block:PropTypes.bool,
+    secondary:PropTypes.bool,
+    noPad:PropTypes.bool,
+    fab:PropTypes.bool,
+    color:PropTypes.string,
+    type:PropTypes.string,
+    //text align (left, center, right)
+    text:PropTypes.string
+  },
   getDefaultProps(){
     return {
-      className:''
+      color:'default',
+      type:'button'
     }
+  },
+  getClass(){
+    var arr = [];
+    for(var prop in this.props){
+      const selector = prop.match('color|text') ? this.props[prop] : prop;
+      arr.push(style[`btn${ _.startCase(selector).split(' ').join('')}`])
+    }
+    arr.push(this.props.className);
+    return cx(arr);
   },
   renderChevron(){
     if(this.props.chevron){
@@ -20,53 +43,39 @@ const OpseeButton = React.createClass({
       return <ChevronRight inline={true} fill={fill}/>
     }
   },
-  getStyle(){
-    let obj = this.props.style || {};
-    if(this.props.noPad){
-      obj = {
-        borderRadius:0,
-        paddingLeft:0,
-        paddingRight:0
-      }
-    }
-    return obj;
-  },
-  getFlat(){
-    return this.props.flat ? ' btn-flat' : '';
-  },
-  getIcon(){
-    return this.props.icon ? ' btn-icon' : '';
-  },
-  getBlock(){
-    return this.props.block ? ' btn-block' : '';
-  },
-  getBsStyle(){
-    return this.props.bsStyle ? ` btn-${this.props.bsStyle}` : '';
-  },
-  onLinkClick(e){
+  handleLinkClick(e){
     if(this.props.target && this.props.target == '_blank'){
       e.preventDefault();
       e.stopPropagation();
       window.open(router.makeHref(this.props.to, this.props.params))
     }
   },
+  renderInner(){
+    return(
+      <span>
+        {this.props.children}
+        {this.renderChevron()}
+      </span>
+    )
+  },
   render(){
-    if(!this.props.to){
+    if(this.props.to){
       return (
-        <Button {...this.props} className={this.props.className + this.getFlat() + this.getIcon()} style={this.getStyle()}>
-          {this.props.children}
-          {this.renderChevron()}
-        </Button>
-      )
-    }else{
-      return (
-        <Link className={`btn ${this.props.className}${this.getFlat()}${this.getIcon()}${this.getBlock()}${this.getBsStyle()}`} style={this.getStyle()} to={this.props.to} params={this.props.params} query={this.props.query} onClick={this.onLinkClick}>
-          {this.props.children}
-          {this.renderChevron()}
+        <Link {...this.props} className={this.getClass()} onClick={this.handleLinkClick} title={this.props.title}>
+          {this.renderInner()}
         </Link>
       )
+    }else if(this.props.href){
+      <a className={this.getClass()} onClick={this.props.onClick} href={this.props.href} target={this.props.target} title={this.props.title} style={this.props.style}>
+        {this.renderInner()}
+      </a>
     }
+    return (
+      <button className={this.getClass()} type={this.props.type} onClick={this.props.onClick} disabled={this.props.disabled} title={this.props.title} style={this.props.style}>
+        {this.renderInner()}
+      </button>
+    )
   }
 });
 
-export default OpseeButton;
+export default Button;

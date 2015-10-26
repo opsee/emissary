@@ -9,6 +9,7 @@ import {Add} from '../icons';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
+import {Button} from '../forms';
 
 function getState(){
   return {
@@ -61,9 +62,9 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="Checks">
-          <Link to="checkCreate" className="btn btn-fab btn-primary" title="Create New Check">
+          <Button color="primary" fab={true} to="checkCreate" title="Create New Check">
             <Add btn={true}/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>

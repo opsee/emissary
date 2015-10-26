@@ -26,9 +26,9 @@ export default React.createClass({
   },
   render() {
     return(
-    <a href={`${slack.endpoints.auth}?client_id=${slack.creds.client_id}&state=${Date.now()}&redirect_uri=${window.location.origin}`} className="btn btn-primary">
+    <Button color="primary" href={`${slack.endpoints.auth}?client_id=${slack.creds.client_id}&state=${Date.now()}&redirect_uri=${window.location.origin}`}>
       Connect to Slack
-    </a>
+    </Button>
     )
   }
 });

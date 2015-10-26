@@ -208,7 +208,7 @@ const CheckCreateRequest = React.createClass({
           )
         })
         }
-        <Button flat={true} bsStyle="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
+        <Button flat={true} color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
           <Add fill={colors.primary} inline={true}/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
@@ -234,10 +234,8 @@ const CheckCreateRequest = React.createClass({
     if(!this.props.renderAsInclude){
       return(
         <div>
-          <div><br/><br/></div>
-          <div>
-            <Button bsStyle="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
-          </div>
+          <Padding tb={1}></Padding>
+          <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
           <StepCounter active={2} steps={4}/>
         </div>
       )
@@ -246,7 +244,9 @@ const CheckCreateRequest = React.createClass({
     }
   },
   renderLink(){
-    return this.state.check.id ? <Link to="check" params={{id:this.state.check.id}} className="btn btn-primary btn-fab" title="Edit {check.name}"/> : <div/>;
+    return this.state.check.id ? (
+      <Button color="primary" fab={true} to="check" params={{id:this.state.check.id}} title="Edit {check.name}"/>
+      ) : <div/>;
   },
   renderTargetSelection(){
     const selection = GroupStore.getGroupFromFilter(this.props.check.target);
@@ -340,9 +340,9 @@ const CheckCreateRequest = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
-          <Link to="checks" className="btn btn-icon btn-flat">
+          <Button to="checks" icon={true} flat={true}>
             <Close btn={true}/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>

@@ -1,10 +1,11 @@
 import React, {PropTypes} from 'react';
-import {Alert, Button} from '../../modules/bootstrap';
+import {Alert} from '../../modules/bootstrap';
 import {RadialGraph} from '../global';
 import {Toolbar, StatusHandler} from '../global';
 import InstanceItem from '../instances/InstanceItem.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
+import {Button} from '../forms';
 
 function getState(){
   return {
