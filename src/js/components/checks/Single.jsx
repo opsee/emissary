@@ -158,7 +158,7 @@ export default React.createClass({
                 {this.innerRender()}
               </Padding>
               <div className="btn-container btn-container-righty">
-                <Button onClick={this.removeCheck} flat={true} color="danger">
+                <Button onClick={this.removeCheck} flat={true} color="danger" noPad={true}>
                   <Delete inline={true} fill="danger"/> Delete Check
                 </Button>
               </div>

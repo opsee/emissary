@@ -134,7 +134,7 @@ const InstanceItem = React.createClass({
       )
     }else{
       return (
-        <div className="flex-vertical-align flex-1">
+        <div className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
           <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
         </div>
       )

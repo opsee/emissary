@@ -4,6 +4,7 @@ import {DropdownButton, MenuItem, Dropdown} from '../../modules/bootstrap';
 import _ from 'lodash';
 import Button from './Button';
 import {ChevronDown, ChevronUp} from '../icons';
+import style from './dropdown.css';
 
 export default React.createClass({
   getState(){
@@ -66,7 +67,7 @@ export default React.createClass({
   renderMenu(){
     if(this.state.open){
       return (
-        <div className="flex-order-3">
+        <div className={style.menu}>
           {
             this.props.bf.field._choices.map((choice, i) => {
               return (
@@ -84,13 +85,15 @@ export default React.createClass({
   },
   render(){
     return(
-      <Dropdown id={this.props.bf.idForLabel()} className="flex-column">
+      <Dropdown id={this.props.bf.idForLabel()}>
           <Label bf={this.props.bf}/>
-          <Button id={this.props.bf.idForLabel()} dropdown={true} className="flex-order-2" onClick={this.toggleOpen} style={{position:'relative'}}>
-            {this.state.label}
-            {this.renderChevron()}
-          </Button>
-          {this.renderMenu()}
+          <div style={{position:'relative'}}>
+            <Button id={this.props.bf.idForLabel()} dropdown={true} className="flex-order-2" onClick={this.toggleOpen} block={true}>
+              {this.state.label}
+              {this.renderChevron()}
+            </Button>
+            {this.renderMenu()}
+        </div>
       </Dropdown>
     )
   }
