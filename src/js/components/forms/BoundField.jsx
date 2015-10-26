@@ -23,9 +23,9 @@ export default React.createClass({
     switch(this.props.bf.field.constructor.name){
       case 'ChoiceField':
         const type = _.get(this.props.bf, 'field.widget.attrs.widgetType');
-        if(type && type == 'InlineRadioSelect'){
+        if(type == 'InlineRadioSelect'){
           return <InlineRadioSelect bf={this.props.bf}/>
-        }else if(type && type == 'RadioSelect'){
+        }else if(type == 'RadioSelect'){
           return <RadioSelect bf={this.props.bf}/>
         }else{
           return(
