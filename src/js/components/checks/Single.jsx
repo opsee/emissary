@@ -86,12 +86,12 @@ export default React.createClass({
     const group = this.state.group.toJS();
     if(target.type == 'sg'){
       return (
-        <Link to="groupSecurity" params={{id:target.id}}>{group.name || group.id}</Link>
+        <span>{group.name || group.id}</span>
       )
     }else{
       //elb
       return (
-        <Link to="groupElb" params={{id:target.id}}>{group.name || group.id}</Link>
+        <span>{group.name || group.id}</span>
       )
     }
   },
@@ -101,8 +101,9 @@ export default React.createClass({
       return(
         <div>
           <Padding b={1}>
+            <h3>HTTP Request</h3>
             <Alert bsStyle="default">
-              <strong>{spec.verb}</strong> http://{this.getLink()}:<span className={colors.warning}>{spec.port}</span>{spec.path}
+              <strong>{spec.verb}</strong> http://{this.getLink()}:<span>{spec.port}</span>{spec.path}
             </Alert>
           </Padding>
           <Padding b={1}>
