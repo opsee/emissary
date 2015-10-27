@@ -72,13 +72,6 @@ const InstanceItem = React.createClass({
     </Button>
     );
   },
-  renderGraph(){
-    if(!this.props.noGraph){
-      return <RadialGraph {...this.props.item.toJS()}/>
-    }else{
-      return <div/>
-    }
-  },
   renderModal(){
     if(!this.props.noModal){
       return(

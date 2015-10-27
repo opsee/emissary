@@ -1,7 +1,7 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
-import Immutable, {Record, List, Map} from 'immutable';
+import Immutable, {Record, Map} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -111,7 +111,7 @@ const Store = Flux.createStore(
           payload.data.user.loginDate = new Date();
         }
         statics.setUser(payload.data);
-        Store.emitChange();  
+        Store.emitChange();
       break;
       case 'USER_REFRESH_TOKEN_SUCCESS':
         payload.data.user.loginDate = new Date();
@@ -120,7 +120,7 @@ const Store = Flux.createStore(
       case 'USER_REFRESH_TOKEN_ERROR':
         config.intercom('shutdown');
         statics.logout();
-        Store.emitChange();  
+        Store.emitChange();
       break;
       case 'USER_PUT_USER_DATA_SUCCESS':
       case 'USER_GET_USER_DATA_SUCCESS':

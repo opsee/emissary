@@ -22,6 +22,9 @@ var vendors = ['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstra
 module.exports = {
   cache:true,
   context:context_dir,
+  eslint:{
+    configFile:'./.eslintrc'
+  },
   entry: {
     'index': [
       './js/index.jsx'
