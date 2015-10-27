@@ -1,10 +1,10 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
 import _ from 'lodash';
-import moment from 'moment';
 import Immutable, {Record, List, Map} from 'immutable';
 
-const response = Immutable.fromJS({
+/* eslint-disable no-use-before-define */
+
+const fakeResponse = Immutable.fromJS({
   'responses': [
     {
       'target': {
@@ -82,35 +82,30 @@ const response = Immutable.fromJS({
   ]
 });
 
-var Target = Record({
+const Target = Record({
   name: undefined,
-  type:'sg',
+  type: 'sg',
   id: undefined
 });
 
-var Notification = Record({
-  type: undefined,
-  value: undefined
-});
-
-var Check = Record({
+const Check = Record({
   id: undefined,
-  name:'',
+  name: '',
   target: Target(),
   assertions: List(),
   notifications: List(),
   instances: List(),
   health: 100,
-  state:'running',
+  state: 'running',
   silenceDate: undefined,
   silenceDuration: undefined,
   interval: 30,
   check_spec: Map({
-    type_url:'HttpCheck',
+    type_url: 'HttpCheck',
     value: Map({
       name: undefined,
       path: undefined,
-      protocol:'http',
+      protocol: 'http',
       port: undefined,
       verb: undefined,
       body: undefined,
@@ -119,14 +114,13 @@ var Check = Record({
   })
 });
 
-
-function setSilence(opts){
-  let check = _checks.filter((c) => c.get('id') === opts.id).first();
-  if (check){
-    check.silenceDate = new Date();
-    check.silenceDuration = moment.duration(opts.sizelength, opts.unit).asMilliseconds();
-  }
-}
+// function setSilence(opts){
+//   let check = _checks.filter((c) => c.get('id') === opts.id).first();
+//   if (check){
+//     check.silenceDate = new Date();
+//     check.silenceDuration = moment.duration(opts.sizelength, opts.unit).asMilliseconds();
+//   }
+// }
 
 const statics = {
   getCheckPending(id){
@@ -145,13 +139,21 @@ const statics = {
     Store.emitChange();
   },
   checkFromJS(data){
-    data = _.merge(data, data.check_spec.value);
-    data.name = data.check_spec.value.name;
-    // data.notifications = data.notifications.map(n => {
+    let newData = _.merge(data, data.check_spec.value);
+    newData.name = newData.check_spec.value.name;
+    // newData.notifications = newData.notifications.map(n => {
     //   return new Notification(n);
     // });
-    data.check_spec.value.headers = data.check_spec.value.headers || [];
-    return new Check(data);
+    newData.check_spec.value.headers = newData.check_spec.value.headers || [];
+    return new Check(newData);
+  },
+  _statuses:{
+    getCheck: null,
+    getChecks: null,
+    checkCreate: null,
+    deleteCheck: null,
+    checkEdit: null,
+    testCheck: null
   }
 };
 
@@ -159,15 +161,6 @@ let _data = {
   checks: new List(),
   check: new Check(),
   response: undefined
-};
-
-let _statuses = {
-  getCheck: null,
-  getChecks: null,
-  checkCreate: null,
-  deleteCheck: null,
-  checkEdit: null,
-  testCheck: null
 };
 
 const _public = {
@@ -186,14 +179,13 @@ const _public = {
     return new Check(data);
   },
   getResponse(){
-    let response;
     if (_data.response){
-      response = _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
+      return _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
     }
-    return response;
+    return null;
   },
   getFakeResponse(){
-    return response;
+    return fakeResponse;
   },
   getFormattedResponse(data){
     if (data){
@@ -214,16 +206,7 @@ const _public = {
   }
 };
 
-let statusFunctions = {};
-_.chain(_statuses).keys().map(k => {
-  let arr = [k];
-  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
-  return arr;
-}).forEach(a => {
-  statusFunctions[a[1]] = () => {
-    return _statuses[a[0]];
-  };
-});
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
@@ -245,9 +228,11 @@ const Store = Flux.createStore(
       _data.response = Immutable.fromJS(payload.data);
       Store.emitChange();
       break;
+    default:
+      break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
     if (statusData.haveChanged){
       Store.emitChange();
     }

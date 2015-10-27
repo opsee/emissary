@@ -1,7 +1,6 @@
 import AdminStore from './Admin';
 import AWSStore from './AWS';
 import CheckStore from './Check';
-import DocsStore from './Docs';
 import GlobalStore from './Global';
 import GroupStore from './Group';
 import InstanceStore from './Instance';
@@ -12,7 +11,6 @@ export default {
   AdminStore,
   AWSStore,
   CheckStore,
-  DocsStore,
   GlobalStore,
   GroupStore,
   InstanceStore,

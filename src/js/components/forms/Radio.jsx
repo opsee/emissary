@@ -7,6 +7,9 @@ export default React.createClass({
     id: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired
   },
+  isActive() {
+    return this.props.on ? 'active' : '';
+  },
   handleTouch(e) {
     e.preventDefault();
     this.handleClick();
@@ -14,9 +17,6 @@ export default React.createClass({
   handleClick(e) {
     e.preventDefault();
     this.props.onChange.call(null, this.props.id, !this.props.on);
-  },
-  isActive() {
-    return this.props.on ? 'active' : '';
   },
   render(){
     return (

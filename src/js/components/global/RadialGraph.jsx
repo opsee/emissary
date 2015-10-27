@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import moment from 'moment';
-import colors from 'seedling/colors';
 import _ from 'lodash';
 
 import {SetInterval} from '../../modules/mixins';
@@ -10,62 +9,48 @@ const radialWidth = 40;
 
 const RadialGraph = React.createClass({
   mixins: [SetInterval],
+  propTypes: {
+    state: PropTypes.string,
+    health: PropTypes.string
+  },
   getInitialState() {
     return _.defaults({
       silenceRemaining: 0
     }, this.props);
   },
   componentDidMount(){
-    this.setupSilence()
+    this.runSetupSilence();
   },
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(){
     if (!this.state.silenceRemaining){
-      this.setupSilence();
+      this.runSetupSilence();
     }
   },
-  tick(){
-    this.setState({
-      silenceRemaining: this.getSilenceRemaining()
-    });
-  },
   getBaseClass(){
-    let state = this.getRadialState();
-    return style[`base${_.startCase(state)}`]
+    return style[`base${_.startCase(this.getRadialState())}`];
   },
   getInnerClass(){
-    let state = this.getRadialState();
-    return style[`inner${_.startCase(state)}`]
+    return style[`inner${_.startCase(this.getRadialState())}`];
   },
   getSvgClass(){
-    let state = this.getRadialState();
-    return style[`svg${_.startCase(state)}`]
+    return style[`svg${_.startCase(this.getRadialState())}`];
   },
   getRadialState(){
     let state = this.props.state;
     state = this.state.silenceRemaining ? 'silenced' : state;
     return state;
   },
-  setupSilence(){
-    const remaining = this.getSilenceRemaining();
-    if (remaining){
-      this.setInterval(this.tick, 1000);
-      this.tick();
-    }else {
-      this.intervals.map(clearInterval);
-    }
-  },
   getTitle(){
     switch (this.state.state){
-      case 'running':
+    case 'failing':
       return this.state.silenceRemaining ?
       `This check is running, but is ` :
       `This check is running and has a health of %`;
-      break;
-      case 'running':
+    case 'running':
       return 'This check is currently unmonitored.';
-      break;
-      case 'stopped':
+    case 'stopped':
       return 'This check is stopped in AWS.';
+    default:
       break;
     }
   },
@@ -94,8 +79,7 @@ const RadialGraph = React.createClass({
       unit = 's';
       time = duration.as(unit);
     }
-    return Math.ceil(time)+unit;
-    return (time, 10)+unit;
+    return Math.ceil(time) + unit;
   },
   getPath(){
     const health = this.props.health;
@@ -114,8 +98,8 @@ const RadialGraph = React.createClass({
     }
 
     percentage = parseInt(percentage, 10);
-    const w = radialWidth/2;
-    const α = (percentage/100)*360;
+    const w = radialWidth / 2;
+    const α = (percentage / 100) * 360;
     const r = ( α * Math.PI / 180 );
     const x = Math.sin( r ) * w;
     const y = Math.cos( r ) * - w;
@@ -123,12 +107,26 @@ const RadialGraph = React.createClass({
     return `M 0 0 v -${w} A ${w} ${w} 1 ${mid} 1 ${x} ${y} z`;
   },
   getTranslate(){
-    const w = radialWidth/2;
+    const w = radialWidth / 2;
     return `translate(${w},${w})`;
+  },
+  runSilence(){
+    this.setState({
+      silenceRemaining: this.getSilenceRemaining()
+    });
+  },
+  runSetupSilence(){
+    const remaining = this.getSilenceRemaining();
+    if (remaining){
+      this.setInterval(this.runSilence, 1000);
+      this.runSilence();
+    }else {
+      this.intervals.map(clearInterval);
+    }
   },
   render() {
     if (!this.state.state){
-      return <div>No state defined.</div>
+      return <div>No state defined.</div>;
     }
     return (
       <div className={this.getBaseClass()} title={this.getTitle()}>

@@ -6,11 +6,6 @@ export default React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
-  getInitialState(){
-    return {
-      data: this.props.bf.value()
-    };
-  },
   componentDidMount(){
     const val = this.props.bf.value();
     if (val){
@@ -22,16 +17,21 @@ export default React.createClass({
       this.onChange(this.props.bf.field.initial[0], true);
     }
   },
-  onChange(id, bool){
+  isWidgetActive(w){
+    return this.props.bf.value() === w.choiceValue;
+  },
+  getInitialState(){
+    return {
+      data: this.props.bf.value()
+    };
+  },
+  handleChange(id, bool){
     const data = bool ? [id] : [];
     let obj = {};
     obj[this.props.bf.name] = data;
     return this.props.bf.form.updateData(obj, {
       clearValidation: false
     });
-  },
-  isWidgetActive(w){
-    return this.props.bf.value() === w.choiceValue;
   },
   render(){
     return (
@@ -41,7 +41,7 @@ export default React.createClass({
           {this.props.bf.subWidgets().map((w, i) => {
             return (
               <li key={i} style={{marginRight: '1.8em'}}>
-                <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '.4em', color: colors.textColor, paddingLeft: 0}}/>
+                <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '.4em', color: colors.textColor, paddingLeft: 0}}/>
               </li>
             );
           })}

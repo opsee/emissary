@@ -35,13 +35,6 @@ let _data = {
   instancesRDS: new List()
 };
 
-let _statuses = {
-  getInstanceECC: null,
-  getInstancesECC: null,
-  getInstanceRDS: null,
-  getInstancesRDS: null
-};
-
 const statics = {
   getStateFromItem(item){
     const checks = item.checks;
@@ -175,6 +168,12 @@ const statics = {
       }
       return instance;
     });
+  },
+  _statuses:{
+    getInstanceECC: null,
+    getInstancesECC: null,
+    getInstanceRDS: null,
+    getInstancesRDS: null
   }
 };
 
@@ -200,16 +199,7 @@ const _public = {
   instanceFromJS: statics.instanceFromJS
 };
 
-let statusFunctions = {};
-_.chain(_statuses).keys().map(k => {
-  let arr = [k];
-  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
-  return arr;
-}).forEach(a => {
-  statusFunctions[a[1]] = () => {
-    return _statuses[a[0]];
-  };
-});
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
@@ -232,8 +222,8 @@ const Store = Flux.createStore(
     default:
       break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
     if (statusData.haveChanged){
       Store.emitChange();
     }

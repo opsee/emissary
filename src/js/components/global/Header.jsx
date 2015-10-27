@@ -1,15 +1,14 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checkmark, Help, Cloud, Login, Opsee} from '../icons';
+import {Person, Checkmark, Help, Cloud, Login} from '../icons';
 import {UserStore, GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import config from '../../modules/config';
 import colors from 'seedling/colors';
 
 import style from './header.css';
 
-export default React.createClass({
+const Header = React.createClass({
   mixins: [UserStore.mixin, GlobalStore.mixin],
   storeDidChange(){
     this.setState({
@@ -21,7 +20,14 @@ export default React.createClass({
   getInitialState(){
     return {
       showNav: GlobalStore.getShowNav()
+    };
+  },
+  getHeaderStyle(){
+    let obj = {};
+    if (this.state.ghosting){
+      obj.background = colors.danger;
     }
+    return obj;
   },
   renderLoginLink(){
     if (UserStore.hasUser()){
@@ -30,15 +36,14 @@ export default React.createClass({
           <Person nav/>&nbsp;
           <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
-      )
-    }else {
-      return (
-        <Link to="login" className={style.navbarLink}>
-          <Login nav/>&nbsp;
-          <span className={`${style.navbarTitle}`}>Login</span>
-        </Link>
-      )
+      );
     }
+    return (
+      <Link to="login" className={style.navbarLink}>
+        <Login nav/>&nbsp;
+        <span className={`${style.navbarTitle}`}>Login</span>
+      </Link>
+    );
   },
   renderNavItems(){
     return (
@@ -67,13 +72,6 @@ export default React.createClass({
       </ul>
       );
   },
-  getHeaderStyle(){
-    let obj = {};
-    if (this.state.ghosting){
-      obj.background = colors.danger;
-    }
-    return obj;
-  },
   render(){
     return (
       <header id="header" className={this.state.showNav ? style.header : style.headerHide} style={this.getHeaderStyle()}>
@@ -88,6 +86,8 @@ export default React.createClass({
           </nav>
         <SearchBox/>
       </header>
-    )
+    );
   }
-})
+});
+
+export default Header;

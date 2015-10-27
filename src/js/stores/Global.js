@@ -38,6 +38,9 @@ let statics = {
       _data.socketMessages.push(msg);
       Store.emitChange();
     }
+  },
+  _statuses:{
+    globalSocketConnect: null
   }
 };
 
@@ -52,30 +55,29 @@ let _data = {
   globalSocketError: null
 };
 
-let _statuses = {
-  globalSocketConnect: null
-};
+const _public = {
+  getModalMessage(){
+    return !_data.modalMessage.used && _data.modalMessage.options;
+  },
+  getSocketMessages(){
+    return _data.socketMessages;
+  },
+  getSocketStarted(){
+    return _data.socketStarted;
+  },
+  getShowNav(){
+    return _data.showNav;
+  },
+  getGlobalSocketError(){
+    return _data.globalSocketError;
+  }
+}
 
-afe
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
-  {
-    getModalMessage(){
-      return !_data.modalMessage.used && _data.modalMessage.options;
-    },
-    getSocketMessages(){
-      return _data.socketMessages;
-    },
-    getSocketStarted(){
-      return _data.socketStarted;
-    },
-    getShowNav(){
-      return _data.showNav;
-    },
-    getGlobalSocketError(){
-      return _data.globalSocketError;
-    }
-  }, function handlePayload(payload){
+  _.assign({}, _public, statusFunctions),
+  function handlePayload(payload){
   switch (payload.actionType) {
   case 'GLOBAL_MODAL_MESSAGE':
     statics.globalModalMessage(payload.data);
@@ -96,12 +98,12 @@ const Store = Flux.createStore(
     console.log(payload.data);
     break;
   case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
-    payload.data.forEach(function(d, i){
-        setTimeout(function(){
-            _data.socketMessages.push(d);
-            Store.emitChange();
-          }, i * 500);
-      });
+    payload.data.forEach((d, i) => {
+      setTimeout(() => {
+        _data.socketMessages.push(d);
+        Store.emitChange();
+      }, i * 500);
+    });
     break;
   case 'GLOBAL_SOCKET_MESSAGE':
     statics.parseSocketMessage(payload.data);
@@ -114,9 +116,11 @@ const Store = Flux.createStore(
     _data.globalSocketError = payload.data;
     Store.emitChange();
     break;
+  default:
+    break;
   }
-  const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-  _statuses = statusData.statuses;
+  const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+  statics._statuses = statusData.statuses;
   if (statusData.haveChanged){
     Store.emitChange();
   }

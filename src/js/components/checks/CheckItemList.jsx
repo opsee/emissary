@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {RadialGraph, ListItem, StatusHandler} from '../global';
+import {RadialGraph, StatusHandler} from '../global';
 import {CheckActions} from '../../actions';
 import {CheckStore} from '../../stores';
 import {Alert} from '../../modules/bootstrap';

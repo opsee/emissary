@@ -6,15 +6,6 @@ import $q from 'q';
 
 /* eslint-disable no-use-before-define */
 
-let _statuses = {
-  onboardSignupCreate: null,
-  onboardSetPassword: null,
-  subdomainAvailability: null,
-  onboardCreateOrg: null,
-  onboardVpcScan: null,
-  getBastions: null
-};
-
 let _teamData = {
   customer_id: null,
   subdomain: null
@@ -96,16 +87,18 @@ const _public = {
   }
 };
 
-let statusFunctions = {};
-_.chain(_statuses).keys().map(k => {
-  let arr = [k];
-  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
-  return arr;
-}).forEach(a => {
-  statusFunctions[a[1]] = () => {
-    return _statuses[a[0]];
-  };
-});
+const statics = {
+  _statuses:{
+  onboardSignupCreate: null,
+  onboardSetPassword: null,
+  subdomainAvailability: null,
+  onboardCreateOrg: null,
+  onboardVpcScan: null,
+  getBastions: null
+  }
+}
+
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
@@ -166,8 +159,8 @@ const Store = Flux.createStore(
     default:
       break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
     if (statusData.haveChanged){
       Store.emitChange();
     }

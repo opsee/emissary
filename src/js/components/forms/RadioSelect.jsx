@@ -11,7 +11,10 @@ export default React.createClass({
       data: this.props.bf.value()
     };
   },
-  onChange(id, bool){
+  isWidgetActive(w){
+    return _.findWhere(this.props.bf.value(), w.choiceValue);
+  },
+  handleChange(id, bool){
     const data = bool ? [id] : [];
     let obj = {};
     obj[this.props.bf.name] = data;
@@ -19,16 +22,13 @@ export default React.createClass({
       clearValidation: false
     });
   },
-  isWidgetActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
-  },
   render(){
     return (
       <ul className="list-unstyled">
         {this.props.bf.subWidgets().map((w, i) => {
           return (
             <li key={i}>
-              <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+              <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
             </li>
           );
         })}

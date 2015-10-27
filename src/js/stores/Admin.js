@@ -1,19 +1,15 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
-import _ from 'lodash';
-import moment from 'moment';
-import Immutable, {Record, List, Map} from 'immutable';
+import Immutable, {List} from 'immutable';
 
 let _signups = new List();
 
 const statics = {
   getSignupsSuccess(data){
     _signups = Immutable.fromJS(data);
+  },
+  _statuses:{
+    adminActivateSignup: null
   }
-};
-
-let _statuses = {
-  adminActivateSignup: null
 };
 
 const Store = Flux.createStore(
@@ -34,9 +30,11 @@ const Store = Flux.createStore(
         // _statuses.adminActivateSignup = null;
         // Store.emitChange();
     break;
+  default:
+    break;
   }
-  const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-  _statuses = statusData.statuses;
+  const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+  statics._statuses = statusData.statuses;
   if (statusData.haveChanged){
     Store.emitChange();
   }

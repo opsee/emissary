@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Modal} from '../../modules/bootstrap';
 import {GlobalStore} from '../../stores';
 import {GlobalActions} from '../../actions';
@@ -8,13 +8,13 @@ function getState(){
   return {
     options: GlobalStore.getModalMessage(),
     showModal: false
-  }
+  };
 }
 
 export default React.createClass({
   mixins: [GlobalStore.mixin],
   storeDidChange() {
-    var obj = getState();
+    const obj = getState();
     if (obj && obj.options){
       this.setState({
         msg: {
@@ -28,24 +28,21 @@ export default React.createClass({
     }
   },
   getInitialState: getState,
-  close(){
-    this.setState({ showModal: false });
-  },
-  open(){
-    this.setState({ showModal: true });
-  },
   getStyle(){
     return {
       background: this.state.style ? colors[this.state.style] : colors.warning
-    }
+    };
   },
   getClassName(){
     return this.state.type || 'notify';
   },
+  handleHide(){
+    this.setState({ showModal: false });
+  },
   render() {
     return (
       <div>
-        <Modal show={this.state.showModal} onHide={this.close} className={this.getClassName()}>
+        <Modal show={this.state.showModal} onHide={this.handleHide} className={this.getClassName()}>
         {
           // <Modal.Header closeButton>
           //   <Modal.Title>Modal heading</Modal.Title>
@@ -56,7 +53,7 @@ export default React.createClass({
           </Modal.Body>
           {
           // <Modal.Footer>
-          //   <button className="btn btn-primary" onClick={this.close}>Close</button>
+          //   <button className="btn btn-primary" onClick={this.handleHide}>Close</button>
           // </Modal.Footer>
           }
         </Modal>

@@ -4,7 +4,8 @@ import style from './table.css';
 const Table = React.createClass({
   propTypes: {
     bordered: PropTypes.bool,
-    striped: PropTypes.bool
+    striped: PropTypes.bool,
+    children: PropTypes.node
   },
   getTableClass(){
     let c = {};
@@ -24,8 +25,8 @@ const Table = React.createClass({
       <table className={this.getTableClass()}>
         {this.props.children}
       </table>
-    )
+    );
   }
-})
+});
 
 export default Table;

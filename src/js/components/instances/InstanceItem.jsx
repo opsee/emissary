@@ -1,13 +1,12 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import colors from 'seedling/colors';
-import Immutable, {Record} from 'immutable';
+import {Record} from 'immutable';
 import cx from 'classnames';
 
-import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {RadialGraph, ListItem, Modal} from '../global';
-import {CheckActions, InstanceActions} from '../../actions';
+import {RadialGraph, Modal} from '../global';
+import {InstanceActions} from '../../actions';
 import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
@@ -15,25 +14,27 @@ import {Padding} from '../layout';
 
 const InstanceItem = React.createClass({
   propTypes: {
-    item: React.PropTypes.instanceOf(Record).isRequired
+    item: PropTypes.instanceOf(Record).isRequired,
+    selected: PropTypes.string,
+    onClick: PropTypes.func,
+    noModal: PropTypes.bool,
+    noGraph: PropTypes.bool,
+    title: PropTypes.string,
+    linkInsteadOfMenu: PropTypes.bool
+  },
+  isSelected(){
+    return this.props.selected && this.props.selected === this.props.item.get('id');
   },
   getInitialState(){
     return _.assign({}, {
       showModal: false
     });
   },
-  actions(e, id){
-    e.preventDefault();
-    console.log(this.props.item.get('id'));
-  },
   getInstanceLink(){
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `instance${suffix}`;
   },
-  isSelected(){
-    return this.props.selected && this.props.selected == this.props.item.get('id');
-  },
-  openMenu(e){
+  runMenuOpen(e){
     e.preventDefault();
     this.setState({
       showModal: true
@@ -42,25 +43,24 @@ const InstanceItem = React.createClass({
   runAction(action, id){
     InstanceActions.runInstanceAction({id});
   },
-  hideContextMenu(){
+  handleHide(){
     this.setState({showModal: false});
   },
-  renderStatusText(){
-    if (this.props.item.get('state') == 'restarting'){
-      return <span>:&nbsp;(Restarting)</span>
-    }else {
-      return <span/>
-    }
-  },
-  onClick(e){
-    if (typeof this.props.onClick == 'function'){
+  handleClick(e){
+    if (typeof this.props.onClick === 'function'){
       e.preventDefault();
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
   },
+  renderStatusText(){
+    if (this.props.item.get('state') === 'restarting'){
+      return <span>:&nbsp;(Restarting)</span>;
+    }
+    return <span/>;
+  },
   renderButton(){
     return (
-    <Button icon flat onClick={this.openMenu} title="Instance Menu">
+    <Button icon flat onClick={this.runMenuOpen} title="Instance Menu">
       <Settings fill={colors.textColorSecondary} btn/>
     </Button>
     );
@@ -75,7 +75,7 @@ const InstanceItem = React.createClass({
   renderModal(){
     if (!this.props.noModal){
       return (
-        <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
+        <Modal show={this.state.showModal} onHide={this.handleHide} className="context" style="default">
           <Grid fluid>
             <Row>
               <div className="flex-1">
@@ -98,7 +98,7 @@ const InstanceItem = React.createClass({
             </Row>
           </Grid>
         </Modal>
-      )
+      );
     }
   },
   renderGraph(){
@@ -108,15 +108,13 @@ const InstanceItem = React.createClass({
           <Link to={this.getInstanceLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={listItem.link}>
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
-        )
-      }else {
-        return (
-          <RadialGraph {...this.props.item.toJS()}/>
-        )
+        );
       }
-    }else {
-      return <div/>
+      return (
+        <RadialGraph {...this.props.item.toJS()}/>
+      );
     }
+    return <div/>;
   },
   renderText(){
     if (!this.props.onClick){
@@ -124,19 +122,18 @@ const InstanceItem = React.createClass({
       <Link to={this.getInstanceLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
         <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
       </Link>
-      )
-    }else {
-      return (
-        <div className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
-          <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
-        </div>
-      )
+      );
     }
+    return (
+      <div className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
+        <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+      </div>
+    );
   },
   render(){
     if (this.props.item.get('name')){
       return (
-        <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
+        <div key="listItem" className={listItem.item} onClick={this.handleClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>
             {this.renderModal()}
             <Grid fluid>
@@ -159,9 +156,8 @@ const InstanceItem = React.createClass({
           </Padding>
         </div>
       );
-    }else {
-      return <div/>
     }
+    return <div/>;
   }
 });
 

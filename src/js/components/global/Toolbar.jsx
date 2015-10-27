@@ -1,19 +1,14 @@
 import React, {PropTypes} from 'react';
-import SearchBox from './SearchBox.jsx';
 import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './toolbar.css';
 
-var Toolbar = React.createClass({
+const Toolbar = React.createClass({
   propTypes: {
     title: PropTypes.string.isRequired,
     btnPosition: PropTypes.string,
-    bg: PropTypes.string
-  },
-  outputTitle(){
-    return (
-      <DocumentTitle title={this.props.documentTitle || this.props.title}/>
-    );
+    bg: PropTypes.string,
+    children: PropTypes.node
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
@@ -22,7 +17,7 @@ var Toolbar = React.createClass({
   },
   getOuterClass(){
     let c = {};
-    if (this.props.bg == "info"){
+    if (this.props.bg === 'info'){
       c = style.outerInfo;
     } else {
       c = style.outer;
@@ -36,10 +31,15 @@ var Toolbar = React.createClass({
     }
     return obj;
   },
+  renderTitle(){
+    return (
+      <DocumentTitle title={this.props.title}/>
+    );
+  },
   render(){
     return (
       <div className={this.getOuterClass()}>
-        {this.outputTitle()}
+        {this.renderTitle()}
         <Grid>
           <Row>
             <Col xs={12} className={style.inner}>
@@ -51,8 +51,8 @@ var Toolbar = React.createClass({
           </Row>
         </Grid>
       </div>
-    )
+    );
   }
-})
+});
 
 export default Toolbar;

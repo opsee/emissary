@@ -36,9 +36,9 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title={this.state.user.name}>
-          <Link className="btn btn-fab btn-primary" to="profileEdit" title="Edit Your Profile">
+          <Button fab color="primary" to="profileEdit" title="Edit Your Profile">
             <Edit btn/>
-          </Link>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>
@@ -57,11 +57,11 @@ export default React.createClass({
                 </Table>
               </div>
               <div className="padding-b">
-                <Link className="btn btn-flat btn-primary" to="profileEdit" >Change Your Password</Link>
+                <Button flat noPad color="primary" to="profileEdit" >Change Your Password</Button>
               </div>
               <div className="btn-container btn-container-righty">
-                <Button flat bsStyle="danger" onClick={this.logOut}>
-                  <Logout className="icon"/> Log Out
+                <Button flat noPad color="danger" onClick={this.logOut}>
+                  <Logout inline fill="danger"/> Log Out
                 </Button>
               </div>
             </Col>

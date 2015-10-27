@@ -42,15 +42,6 @@ let _data = {
   groupsELB: new List()
 };
 
-let _statuses = {
-  getGroupsSecurity: null,
-  getGroupSecurity: null,
-  getGroupsRDSSecurity: null,
-  getGroupRDSSecurity: null,
-  getGroupsELB: null,
-  getGroupELB: null
-};
-
 const statics = {
   getStateFromItem(item){
     let string = 'running';
@@ -198,6 +189,14 @@ const statics = {
       const newSg = sg.set('instances', new List(instances));
       return newSg;
     });
+  },
+  _statuses:{
+    getGroupsSecurity: null,
+    getGroupSecurity: null,
+    getGroupsRDSSecurity: null,
+    getGroupRDSSecurity: null,
+    getGroupsELB: null,
+    getGroupELB: null
   }
 };
 
@@ -244,20 +243,11 @@ const _public = {
   groupFromJS: statics.groupFromJS
 };
 
-let statusFunctions = {};
-_.chain(_statuses).keys().map(k => {
-  let arr = [k];
-  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
-  return arr;
-}).forEach(a => {
-  statusFunctions[a[1]] = () => {
-    return _statuses[a[0]];
-  };
-});
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
    _.assign({}, _public, statusFunctions),
-  function handlePayload(payload){
+   function handlePayload(payload){
     switch (payload.actionType) {
     case 'GET_GROUPS_SECURITY_SUCCESS':
       statics.getGroupsSecuritySuccess(payload.data);
@@ -282,8 +272,8 @@ const Store = Flux.createStore(
     default:
       break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
     if (statusData.haveChanged){
       Store.emitChange();
     }

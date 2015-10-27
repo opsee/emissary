@@ -28,16 +28,7 @@ const _public = {
   }
 };
 
-let statusFunctions = {};
-_.chain(_statuses).keys().map(k => {
-  let arr = [k];
-  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
-  return arr;
-}).forEach(a => {
-  statusFunctions[a[1]] = () => {
-    return _statuses[a[0]];
-  };
-});
+const statusFunctions = Flux.statics.generateStatusFunctions(_statuses);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),

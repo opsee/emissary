@@ -4,7 +4,7 @@ import Immutable, {Record} from 'immutable';
 
 import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {RadialGraph, ListItem, Modal} from '../global';
+import {RadialGraph, Modal} from '../global';
 import {CheckActions} from '../../actions';
 import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';

@@ -2,7 +2,8 @@ import React from 'react';
 import _ from 'lodash';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
-import {Alert, StatusHandler, Toolbar} from '../global';
+import {Alert} from '../../modules/bootstrap';
+import {StatusHandler, Toolbar} from '../global';
 import {CheckStore} from '../../stores';
 import {InstanceItem} from '../instances';
 import {Link} from 'react-router';

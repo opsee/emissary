@@ -1,28 +1,24 @@
 import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
-import {BoundField} from '../forms';
 import _ from 'lodash';
-import {Close, ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 
 export default React.createClass({
   propTypes: {
-    percentage: PropTypes.number.isRequired
+    percentage: PropTypes.number.isRequired,
+    steps: PropTypes.number
   },
   getDefaultProps(){
     return {
       steps: 7
-    }
+    };
   },
   getBg(){
     if (this.props.percentage >= 100){
       return colors.success;
-    }else {
-      if (this.props.percentage === 0){
-        return colors.warning;
-      }else if (this.props.percentage === -1){
-        return colors.danger;
-      }
+    }else if (this.props.percentage === 0){
+      return colors.warning;
+    }else if (this.props.percentage === -1){
+      return colors.danger;
     }
     return colors.primary;
   },
@@ -30,7 +26,7 @@ export default React.createClass({
     if (this.props.percentage === 0 || this.props.percentage === -1){
       return '100%';
     }
-    return this.props.percentage+'%';
+    return `${this.props.percentage}%`;
   },
   render() {
     return (
@@ -39,8 +35,8 @@ export default React.createClass({
         <div className="ticks">
           {_.range(this.props.steps - 1).map(i => {
             return (
-              <div className="tick" style={{margin:`0 ${100/this.props.steps/2}%`}}/>
-            )
+              <div className="tick" style={{margin: `0 ${100 / this.props.steps / 2}%`}} key={`progress-bar-${i}`}/>
+            );
           })}
         </div>
       </div>

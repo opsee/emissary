@@ -1,16 +1,12 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import router from '../../modules/router.js';
 
-export default React.createClass({
+const SearchBox = React.createClass({
   getInitialState(){
     return {
       hidden: true
-    }
-  },
-  submit(e, foo){
-    e.preventDefault();
-    console.log(foo);
+    };
   },
   getData(input, cb){
     let routes = router.getAllRoutes();
@@ -19,23 +15,19 @@ export default React.createClass({
     }).map(r => r.name).value();
     cb(null, data);
   },
-  selectItem(choice, event){
+  handleSelect(choice){
     router.transitionTo(choice);
     this.setState({hidden: true});
   },
-  inputAttributes: {
-    placeholder: 'Search for a Page Route',
-    id: 'searchBoxInput'
-  },
   render(){
     const self = this;
-    document.onkeydown = function(e){
+    document.onkeydown = (e) => {
       switch (e.which){
-        //forward slash
-        case 191:
-        if (e.srcElement && (e.srcElement.nodeName == 'BODY' || e.srcElement.id == 'searchBoxInput')){
+      //forward slash
+      case 191:
+        if (e.srcElement && (e.srcElement.nodeName === 'BODY' || e.srcElement.id === 'searchBoxInput')){
           const isHidden = !!self.state.hidden;
-          self.setState({hidden:!isHidden});
+          self.setState({hidden: !isHidden});
           if (isHidden){
             const el = document.querySelector('#searchBox input');
             if (el){
@@ -44,20 +36,23 @@ export default React.createClass({
           }
         }
         break;
-        //escape key
-        case 27:
+      //escape key
+      case 27:
         self.setState({hidden: true});
         break;
+      default:
+        break;
       }
-    }
+    };
     if (!this.state.hidden){
       return (
         <div id="searchBox">
-          <Autosuggest suggestions={this.getData} onSuggestionSelected={this.selectItem} inputAttributes={this.inputAttributes}/>
+          <Autosuggest suggestions={this.getData} onSuggestionSelected={this.handleSelect} inputAttributes={{placeholder: 'Search for a Page Route', id: 'searchBoxInput'}}/>
         </div>
-      )
-    }else {
-      return <div/>
+      );
     }
+    return <div/>;
   }
-})
+});
+
+export default SearchBox;

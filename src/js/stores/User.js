@@ -18,12 +18,6 @@ const User = Record({
   loginRedirect: null
 });
 
-let _data = {
-  user: statics.getInitialUser(),
-  userData: null,
-  refreshInterval: undefined
-};
-
 const statics = {
   setUser(data){
     if (data && data.user){
@@ -46,17 +40,22 @@ const statics = {
     let initialUser = storage.get('user');
     initialUser = initialUser ? new User(initialUser) : null;
     return initialUser || new User();
+  },
+  _statuses:{
+    userLogin: null,
+    userSendResetEmail: null,
+    userEdit: null,
+    userGetUser: null,
+    userPutUserData: null,
+    userGetUserData: null,
+    userRefreshToken: null
   }
 };
 
-let _statuses = {
-  userLogin: null,
-  userSendResetEmail: null,
-  userEdit: null,
-  userGetUser: null,
-  userPutUserData: null,
-  userGetUserData: null,
-  userRefreshToken: null
+let _data = {
+  user: statics.getInitialUser(),
+  userData: null,
+  refreshInterval: undefined
 };
 
 const _public = {
@@ -90,18 +89,7 @@ const _public = {
   }
 };
 
-let statusFunctions = {};
-_.chain(_statuses).keys().map(k => {
-  let arr = [k];
-  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
-  return arr;
-}).forEach(a => {
-  /* eslint-disable func-names */
-  statusFunctions[a[1]] = function(){
-    return _statuses[a[0]];
-  };
-  /* eslint-enable func-names */
-});
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
@@ -136,8 +124,8 @@ const Store = Flux.createStore(
     default:
       break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
     if (statusData.haveChanged){
       Store.emitChange();
     }

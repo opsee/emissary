@@ -48,9 +48,12 @@ Flux.statics = {
     };
     return Flux.createActions(obj);
   },
-  statusProcessor(payload, originalStatuses, Store){
+  statusProcessor(payload, identityObject, Store){
     let haveChanged = false;
-    let statuses = _.cloneDeep(originalStatuses);
+    if(!identityObject._statuses){
+      return console.error('Improper status processor setup', Store);
+    }
+    let statuses = _.cloneDeep(identityObject._statuses);
     let keys = Object.keys(statuses);
     let possible = _.chain(keys).map(k => {
       return _.startCase(k).split(' ').join('_').toUpperCase();
@@ -72,7 +75,7 @@ Flux.statics = {
       }
     }
 
-    if (!_.isEqual(statuses, originalStatuses)){
+    if (!_.isEqual(statuses, identityObject._statuses)){
       haveChanged = true;
     }else {
       let resetSuccessStatuses = _.mapValues(statuses, val => {
@@ -94,7 +97,8 @@ Flux.statics = {
     // },50);
     return statuses;
   },
-  generateStatusFunctions(statuses){
+  generateStatusFunctions(obj, identity){
+    const statuses = obj._statuses || obj;
     let statusFunctions = {};
     let keys = _.chain(statuses).keys().map(k => {
       let arr = [k];
@@ -102,7 +106,7 @@ Flux.statics = {
       return arr;
     }).forEach(a => {
       statusFunctions[a[1]] = function(){
-        return _statuses[a[0]];
+        return obj._statuses ? obj._statuses[a[0]] : statuses[a[0]];
       };
     }).value();
     return statusFunctions;
