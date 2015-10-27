@@ -60,15 +60,15 @@ const InstanceItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu">
-      <Settings fill={colors.textColorSecondary} btn={true}/>
+    <Button icon flat onClick={this.openMenu} title="Instance Menu">
+      <Settings fill={colors.textColorSecondary} btn/>
     </Button>
     );
   },
   renderLinkButton(){
     return (
-    <Button to={this.getInstanceLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
-        <NewWindow btn={true} fill={colors.textColorSecondary}/>
+    <Button to={this.getInstanceLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon flat target="_blank" className={listItem.btn}>
+        <NewWindow btn fill={colors.textColorSecondary}/>
     </Button>
     );
   },
@@ -76,23 +76,23 @@ const InstanceItem = React.createClass({
     if (!this.props.noModal){
       return (
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
-          <Grid fluid={true}>
+          <Grid fluid>
             <Row>
               <div className="flex-1">
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button text="left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
-                  <Refresh inline={true} fill="primary"/> Restart
+                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
+                  <Refresh inline fill="primary"/> Restart
                 </Button>
-                <Button text="left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Stop')}>
-                  <Stop inline={true} fill="primary"/> Stop
+                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Stop')}>
+                  <Stop inline fill="primary"/> Stop
                 </Button>
-                <Button text="left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
-                  <Play inline={true} fill="primary"/> Start
+                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Start')}>
+                  <Play inline fill="primary"/> Start
                 </Button>
-                <Button text="left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Start')}>
-                  <Delete inline={true} fill="primary"/> Terminate
+                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Start')}>
+                  <Delete inline fill="primary"/> Terminate
                 </Button>
               </div>
             </Row>
@@ -139,7 +139,7 @@ const InstanceItem = React.createClass({
         <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>
             {this.renderModal()}
-            <Grid fluid={true}>
+            <Grid fluid>
               <Row>
                 <Col xs={2} sm={1}>
                   {this.renderGraph()}

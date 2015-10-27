@@ -40,7 +40,7 @@ export default React.createClass({
     if (state.status == 'success'){
       const target = state.check.get('target');
       if (target){
-        switch(target.type){
+        switch (target.type){
           case 'sg':
             GroupActions.getGroupSecurity(target.id);
           break;
@@ -119,7 +119,7 @@ export default React.createClass({
             <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
               return (
-                <li><Mail inline={true} fill="primary"/> {n.value}</li>
+                <li><Mail inline fill="primary"/> {n.value}</li>
               )
             })}
             </ul>
@@ -137,8 +137,8 @@ export default React.createClass({
   outputLink(){
     if (this.state.check && this.state.check.get('id')){
       return (
-        <Button to="checkEdit" params={{id: this.props.params.id}} color="primary" fab={true} title={`Edit ${this.state.check.name}`}>
-          <Edit btn={true}/>
+        <Button to="checkEdit" params={{id: this.props.params.id}} color="primary" fab title={`Edit ${this.state.check.name}`}>
+          <Edit btn/>
         </Button>
       )
     }else {
@@ -158,8 +158,8 @@ export default React.createClass({
                 {this.innerRender()}
               </Padding>
               <div className="btn-container btn-container-righty">
-                <Button onClick={this.removeCheck} flat={true} color="danger" noPad={true}>
-                  <Delete inline={true} fill="danger"/> Delete Check
+                <Button onClick={this.removeCheck} flat color="danger" noPad>
+                  <Delete inline fill="danger"/> Delete Check
                 </Button>
               </div>
             </Col>

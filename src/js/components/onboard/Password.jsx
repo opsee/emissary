@@ -64,10 +64,10 @@ export default React.createClass({
                 <form name="loginForm" onSubmit={this.submit}>
                   <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
                   <Padding t={1}>
-                    <Button type="submit" block={true} color="success" chevron={true} disabled={this.disabled()}>{this.btnText()}</Button>
+                    <Button type="submit" block color="success" chevron disabled={this.disabled()}>{this.btnText()}</Button>
                   </Padding>
                   <Padding t={1}>
-                    <Button to="passwordForgot" flat={true}>Forgot Password?</Button>
+                    <Button to="passwordForgot" flat>Forgot Password?</Button>
                   </Padding>
                 </form>
               </Col>

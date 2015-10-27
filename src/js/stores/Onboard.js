@@ -1,51 +1,51 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
-import storage from '../modules/storage';
 import './User';
 import _ from 'lodash';
-import GlobalStore from './Global';
 import $q from 'q';
 
+/* eslint-disable no-use-before-define */
+
 let _statuses = {
-  onboardSignupCreate:null,
-  onboardSetPassword:null,
-  subdomainAvailability:null,
-  onboardCreateOrg:null,
-  onboardVpcScan:null,
-  getBastions:null
+  onboardSignupCreate: null,
+  onboardSetPassword: null,
+  subdomainAvailability: null,
+  onboardCreateOrg: null,
+  onboardVpcScan: null,
+  getBastions: null
 };
 
 let _teamData = {
-  customer_id:null,
-  subdomain:null
+  customer_id: null,
+  subdomain: null
 };
 
 let _installData = {
-  regions:[],//['us-west-1', 'us-east-1'],
-  'access-key':null,
-  'secret-key':null,
-  vpcs:[]
+  regions: [],//['us-west-1', 'us-east-1'],
+  'access-key': null,
+  'secret-key': null,
+  vpcs: []
 };
 
 let _data = {
-  bastionHasLaunched:!!(config.demo) || false,
-  bastionLaunchHasBeenChecked:false,
-  availableVpcs:[],
-  domainPromisesArray:[],
-  subdomainAvailable:null,
-  bastions:[]
+  bastionHasLaunched: !!(config.demo) || false,
+  bastionLaunchHasBeenChecked: false,
+  availableVpcs: [],
+  domainPromisesArray: [],
+  subdomainAvailable: null,
+  bastions: []
 };
 
 const _public = {
   getBastionHasLaunchedPromise(){
-    var d = $q.defer();
+    const d = $q.defer();
     if (_data.bastionHasLaunched || _data.bastionLaunchHasBeenChecked){
       d.resolve(_data.bastionHasLaunched);
     }else {
       setTimeout(() => {
         _data.bastionLaunchHasBeenChecked = true;
         d.resolve(_data.bastionHasLaunched);
-      },17000);
+      }, 17000);
     }
     return d.promise;
   },
@@ -57,9 +57,9 @@ const _public = {
   },
   getVpcScanData(){
     return {
-      'access-key':_installData['access-key'],
-      'secret-key':_installData['secret-key'],
-      regions:_installData.regions
+      'access-key': _installData['access-key'],
+      'secret-key': _installData['secret-key'],
+      regions: _installData.regions
     };
   },
   getAvailableVpcs(){
@@ -69,16 +69,16 @@ const _public = {
     return _data.bastions;
   },
   getFinalInstallData(){
-    let relation = _installData.vpcs.map(function(v){
-      Store.getAvailableVpcs().forEach(
-        function(r){
-          r.vpcs.forEach(function(rvpc){
-            if (rvpc['vpc-id'] === v){
-              v = {id:v,region:r.region};
-            }
-          });
+    let relation = _installData.vpcs.map((v) => {
+      let newVpc;
+      Store.getAvailableVpcs().forEach(r => {
+        r.vpcs.forEach(rvpc => {
+          if (rvpc['vpc-id'] === v){
+            newVpc = {id: v, region: r.region};
+          }
         });
-      return v.id ? v : false;
+      });
+      return newVpc.id ? newVpc : false;
     });
     if (!_.every(relation) || !relation.length){
       return false;
@@ -86,30 +86,30 @@ const _public = {
     //TODO fix this so it works with multiple vpcs later
     relation = relation.map(r => {
       return {
-        region:r.region,
-        vpcs:[{id:r.id}]
+        region: r.region,
+        vpcs: [{id: r.id}]
       };
     });
-    let aggregate = _.assign({}, _installData, {regions:relation}, {'instance-size':'t2.micro'});
+    let aggregate = _.assign({}, _installData, {regions: relation}, {'instance-size': 't2.micro'});
     delete aggregate.vpcs;
     return aggregate;
   }
 };
 
 let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
+_.chain(_statuses).keys().map(k => {
   let arr = [k];
   arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
-  statusFunctions[a[1]] = function(){
+  statusFunctions[a[1]] = () => {
     return _statuses[a[0]];
   };
-}).value();
+});
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
-  function(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     case 'SIGNUP_CREATE_SUCCESS':
         // loginSuccess(payload.data);
@@ -141,7 +141,7 @@ const Store = Flux.createStore(
       break;
     case 'ONBOARD_SET_VPCS':
       const data = Array.isArray(payload.data) ? payload.data : [payload.data];
-      _installData = _.assign(_installData, {vpcs:data});
+      _installData = _.assign(_installData, {vpcs: data});
       Store.emitChange();
       break;
     case 'GLOBAL_SOCKET_MESSAGE':
@@ -162,6 +162,8 @@ const Store = Flux.createStore(
       break;
     case 'GET_BASTIONS_SUCCESS':
       _data.bastions = payload.data;
+      break;
+    default:
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

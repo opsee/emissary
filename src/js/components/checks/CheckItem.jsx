@@ -52,15 +52,15 @@ const CheckItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Check Menu">
-      <Settings fill={colors.textColorSecondary} btn={true}/>
+    <Button icon flat onClick={this.openMenu} title="Check Menu">
+      <Settings fill={colors.textColorSecondary} btn/>
     </Button>
     );
   },
   renderLinkButton(){
     return (
-    <Button to={this.getLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('check_spec').value.name} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
-        <NewWindow btn={true} fill={colors.textColorSecondary}/>
+    <Button to={this.getLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('check_spec').value.name} in a New Window`} icon flat target="_blank" className={listItem.btn}>
+        <NewWindow btn fill={colors.textColorSecondary}/>
     </Button>
     );
   },
@@ -100,14 +100,14 @@ const CheckItem = React.createClass({
     if (!this.props.noModal){
       return (
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
-          <Grid fluid={true}>
+          <Grid fluid>
             <Row>
               <div className="flex-1">
                 <Padding lr={1}>
                   <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
                 </Padding>
-                <Button text="left" color="primary" block={true} flat={true} onClick={this.runAction.bind(null, 'Test')}>
-                  <Refresh inline={true} fill="primary"/> Test
+                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Test')}>
+                  <Refresh inline fill="primary"/> Test
                 </Button>
               </div>
             </Row>
@@ -122,7 +122,7 @@ const CheckItem = React.createClass({
         <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>
             {this.renderModal()}
-            <Grid fluid={true}>
+            <Grid fluid>
               <Row>
                 <Col xs={2} sm={1}>
                   {this.renderGraph()}

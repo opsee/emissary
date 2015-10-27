@@ -95,7 +95,7 @@ export default React.createClass({
                   <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
                   <Padding t={2}>
                     <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'elb'}}}>
-                      <Add inline={true}/> Create Check
+                      <Add inline/> Create Check
                     </Button>
                   </Padding>
                 </div>

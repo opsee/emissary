@@ -27,14 +27,14 @@ export default React.createClass({
     if (UserStore.hasUser()){
       return (
         <Link to="profile" className={style.navbarLink}>
-          <Person nav={true}/>&nbsp;
+          <Person nav/>&nbsp;
           <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
       )
     }else {
       return (
         <Link to="login" className={style.navbarLink}>
-          <Login nav={true}/>&nbsp;
+          <Login nav/>&nbsp;
           <span className={`${style.navbarTitle}`}>Login</span>
         </Link>
       )
@@ -45,19 +45,19 @@ export default React.createClass({
       <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
         <li>
          <Link to="checks" className={style.navbarLink}>
-           <Checkmark nav={true}/>&nbsp;
+           <Checkmark nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
         <li>
          <Link to="env" className={style.navbarLink}>
-           <Cloud nav={true}/>&nbsp;
+           <Cloud nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Environment</span>
          </Link>
        </li>
         <li>
          <Link to="help" className={style.navbarLink}>
-           <Help nav={true}/>&nbsp;
+           <Help nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Help</span>
          </Link>
        </li>

@@ -189,7 +189,7 @@ const CheckCreateRequest = React.createClass({
         {this.getHeaderForms().map((form, index) => {
           return (
             <Padding b={2} key={`header-form-${index}`}>
-              <Grid fluid={true}>
+              <Grid fluid>
                 <Row>
                   <Col xs={12} sm={5} key={`header-field-${index}-key`}>
                     <BoundField bf={form.boundField('key')}/>
@@ -208,8 +208,8 @@ const CheckCreateRequest = React.createClass({
           )
         })
         }
-        <Button flat={true} color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
-          <Add fill={colors.primary} inline={true}/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+        <Button flat color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
+          <Add fill={colors.primary} inline/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     )
@@ -235,7 +235,7 @@ const CheckCreateRequest = React.createClass({
       return (
         <div>
           <Padding tb={1}></Padding>
-          <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
+          <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           <StepCounter active={2} steps={4}/>
         </div>
       )
@@ -245,7 +245,7 @@ const CheckCreateRequest = React.createClass({
   },
   renderLink(){
     return this.state.check.id ? (
-      <Button color="primary" fab={true} to="check" params={{id: this.state.check.id}} title="Edit {check.name}"/>
+      <Button color="primary" fab to="check" params={{id: this.state.check.id}} title="Edit {check.name}"/>
       ) : <div/>;
   },
   renderTargetSelection(){
@@ -254,7 +254,7 @@ const CheckCreateRequest = React.createClass({
       return (
         <div>
           <h3>Your Target</h3>
-          <GroupItem item={selection} noBorder={true} linkInsteadOfMenu={true} onClick={this.props.onTargetClick} title="Return to target selection"/>
+          <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
           <hr/>
         </div>
       )
@@ -340,8 +340,8 @@ const CheckCreateRequest = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
-          <Button to="checks" icon={true} flat={true}>
-            <Close btn={true}/>
+          <Button to="checks" icon flat>
+            <Close btn/>
           </Button>
         </Toolbar>
         <Grid>

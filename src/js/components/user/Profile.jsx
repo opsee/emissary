@@ -37,7 +37,7 @@ export default React.createClass({
        <div>
         <Toolbar title={this.state.user.name}>
           <Link className="btn btn-fab btn-primary" to="profileEdit" title="Edit Your Profile">
-            <Edit btn={true}/>
+            <Edit btn/>
           </Link>
         </Toolbar>
         <Grid>
@@ -60,7 +60,7 @@ export default React.createClass({
                 <Link className="btn btn-flat btn-primary" to="profileEdit" >Change Your Password</Link>
               </div>
               <div className="btn-container btn-container-righty">
-                <Button flat={true} bsStyle="danger" onClick={this.logOut}>
+                <Button flat bsStyle="danger" onClick={this.logOut}>
                   <Logout className="icon"/> Log Out
                 </Button>
               </div>

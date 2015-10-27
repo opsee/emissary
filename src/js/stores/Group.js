@@ -1,54 +1,54 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
 import _ from 'lodash';
-import moment from 'moment';
-import Immutable, {Record, List, Map} from 'immutable';
+import Immutable, {Record, List} from 'immutable';
 import InstanceStore from './Instance';
 
-var Group = Record({
-  id:undefined,
-  name:undefined,
-  customer_id:undefined,
-  instances:List(),
-  state:'running',
-  health:undefined,
-  silenceDate:undefined,
-  silenceDuration:undefined,
-  type:'security',
-  Description:undefined,
-  checks:List()
+/* eslint-disable no-use-before-define */
+
+const Group = Record({
+  id: undefined,
+  name: undefined,
+  customer_id: undefined,
+  instances: List(),
+  state: 'running',
+  health: undefined,
+  silenceDate: undefined,
+  silenceDuration: undefined,
+  type: 'security',
+  Description: undefined,
+  checks: List()
 });
 
-var GroupELB = Record({
-  id:undefined,
-  name:undefined,
-  instances:List(),
-  state:'running',
-  health:undefined,
-  silenceDate:undefined,
-  silenceDuration:undefined,
-  type:'elb',
-  Description:undefined,
-  CreatedTime:undefined,
-  checks:List()
+const GroupELB = Record({
+  id: undefined,
+  name: undefined,
+  instances: List(),
+  state: 'running',
+  health: undefined,
+  silenceDate: undefined,
+  silenceDuration: undefined,
+  type: 'elb',
+  Description: undefined,
+  CreatedTime: undefined,
+  checks: List()
 });
 
 let _data = {
-  groupSecurity:new Group(),
-  groupsSecurity:new List(),
-  groupRDSSecurity:new Group(),
-  groupsRDSSecurity:new List(),
-  groupELB:new Group(),
-  groupsELB:new List(),
+  groupSecurity: new Group(),
+  groupsSecurity: new List(),
+  groupRDSSecurity: new Group(),
+  groupsRDSSecurity: new List(),
+  groupELB: new Group(),
+  groupsELB: new List()
 };
 
 let _statuses = {
-  getGroupsSecurity:null,
-  getGroupSecurity:null,
-  getGroupsRDSSecurity:null,
-  getGroupRDSSecurity:null,
-  getGroupsELB:null,
-  getGroupELB:null
+  getGroupsSecurity: null,
+  getGroupSecurity: null,
+  getGroupsRDSSecurity: null,
+  getGroupRDSSecurity: null,
+  getGroupsELB: null,
+  getGroupELB: null
 };
 
 const statics = {
@@ -80,13 +80,13 @@ const statics = {
     Store.emitChange();
   },
   getGroupsSecuritySuccess(data){
-    data = _.chain(data).map(d => {
+    let newData = _.chain(data).map(d => {
       d.type = 'security';
       return d;
     }).sortBy(d => {
       return d.GroupName.toLowerCase();
     }).value();
-    _data.groupsSecurity = data && data.length ? Immutable.fromJS(data.map(statics.groupFromJS)) : new List();
+    _data.groupsSecurity = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupFromJS)) : new List();
     Store.emitChange();
   },
   getGroupELBSuccess(data){
@@ -94,111 +94,112 @@ const statics = {
     Store.emitChange();
   },
   getGroupsELBSuccess(data){
-    data = _.chain(data)
+    let newData = _.chain(data)
     .sortBy(d => {
       return d.LoadBalancerName.toLowerCase();
     }).value();
-    _data.groupsELB = data && data.length ? Immutable.fromJS(data.map(statics.groupELBFromJS)) : new List();
+    _data.groupsELB = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupELBFromJS)) : new List();
     Store.emitChange();
   },
   groupELBFromJS(data){
     let instances = data.instances;
+    let newData = data;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName});
+        return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
       });
     }
     if (instances.length){
       if (instances[0].InstanceId){
-        data.instances = _.uniq(instances, 'InstanceId');
+        newData.instances = _.uniq(instances, 'InstanceId');
       }
-      data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
+      newData.instances = new List(newData.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
-    data.name = data.LoadBalancerName;
-    data.id = data.LoadBalancerName;
-    if (data.name === 'api-lb'){
-      data.checks = [{
-        assertions:[
-          {passing:true}
+    newData.name = newData.LoadBalancerName;
+    newData.id = newData.LoadBalancerName;
+    if (newData.name === 'api-lb'){
+      newData.checks = [{
+        assertions: [
+          {passing: true}
         ]
       }];
     }
-    if (data.name === 'api-lb-com'){
-      data.checks = [
+    if (newData.name === 'api-lb-com'){
+      newData.checks = [
         {
-          assertions:[
-          {passing:false}
+          assertions: [
+          {passing: false}
           ]
         },
         {
-          assertions:[
-          {passing:true},
-          {passing:true},
+          assertions: [
+          {passing: true},
+          {passing: true}
           ]
-        },
+        }
       ];
     }
-    data.health = statics.getHealthFromItem(data);
-    data.state = statics.getStateFromItem(data);
-    return new GroupELB(data);
+    newData.health = statics.getHealthFromItem(newData);
+    newData.state = statics.getStateFromItem(newData);
+    return new GroupELB(newData);
   },
   groupFromJS(data){
     let instances = data.instances;
+    let newData = data;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName});
+        return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
       });
     }
     if (instances.length){
       if (instances[0].InstanceId){
-        data.instances = _.uniq(instances, 'InstanceId');
+        newData.instances = _.uniq(instances, 'InstanceId');
       }
-      data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
+      newData.instances = new List(newData.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
-    data.meta = Immutable.fromJS(data.meta);
-    data.id = data.GroupId;
-    data.name = data.GroupName;
-    if (data.name === 'api-lb'){
-      data.checks = [
+    newData.meta = Immutable.fromJS(newData.meta);
+    newData.id = newData.GroupId;
+    newData.name = newData.GroupName;
+    if (newData.name === 'api-lb'){
+      newData.checks = [
         {
-          assertions:[
-          {passing:false},
-          {passing:false}
+          assertions: [
+          {passing: false},
+          {passing: false}
           ]
         },
         {
-          assertions:[
-          {passing:true},
-          {passing:true},
-          {passing:false}
+          assertions: [
+          {passing: true},
+          {passing: true},
+          {passing: false}
           ]
         },
         {
-          assertions:[
-          {passing:true},
-          {passing:true},
-          {passing:true}
+          assertions: [
+          {passing: true},
+          {passing: true},
+          {passing: true}
           ]
-        },
+        }
       ];
     }
-    data.health = statics.getHealthFromItem(data);
-    data.state = statics.getStateFromItem(data);
-    return new Group(data);
+    newData.health = statics.getHealthFromItem(newData);
+    newData.state = statics.getStateFromItem(newData);
+    return new Group(newData);
   },
   populateGroupInstances(){
     let groupsSecurity = _data.groupsSecurity;
     _data.groupsSecurity = groupsSecurity.map(sg => {
       const instances = InstanceStore.getInstancesECC().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId:sg.id});
+        return _.findWhere(instance.SecurityGroups, {GroupId: sg.id});
       });
       const newSg = sg.set('instances', new List(instances));
       return newSg;
     });
   }
 };
-
 
 const _public = {
   getGroupsSecurity(){
@@ -221,9 +222,9 @@ const _public = {
       switch (target.type){
       case 'security':
         return _data.groupSecurity;
-        break;
       case 'elb':
         return _data.groupELB;
+      default:
         break;
       }
     }
@@ -234,31 +235,29 @@ const _public = {
       switch (target.type){
       case 'elb':
         return _public.getGroupsELB().filter(group => group.get('id') === target.id).get(0);
-        break;
       default:
         return _public.getGroupsSecurity().filter(group => group.get('id') === target.id).get(0);
-        break;
       }
     }
     return _data.groupSecurity;
   },
-  groupFromJS:statics.groupFromJS
+  groupFromJS: statics.groupFromJS
 };
 
 let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
+_.chain(_statuses).keys().map(k => {
   let arr = [k];
   arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
-  statusFunctions[a[1]] = function(){
+  statusFunctions[a[1]] = () => {
     return _statuses[a[0]];
   };
-}).value();
+});
 
 const Store = Flux.createStore(
    _.assign({}, _public, statusFunctions),
-  function(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     case 'GET_GROUPS_SECURITY_SUCCESS':
       statics.getGroupsSecuritySuccess(payload.data);
@@ -279,6 +278,8 @@ const Store = Flux.createStore(
     case 'GET_INSTANCES_ECC_SUCCESS':
       statics.populateGroupInstances();
       Store.emitChange();
+      break;
+    default:
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

@@ -65,7 +65,7 @@ const CheckCreateTarget = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
+            <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           </div>
           <StepCounter active={1} steps={3}/>
         </div>
@@ -143,8 +143,8 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (1 of 4)" bg="info">
-          <Button icon={true} flat={true} to="checks">
-            <Close btn={true}/>
+          <Button icon flat to="checks">
+            <Close btn/>
           </Button>
         </Toolbar>
         <Grid>

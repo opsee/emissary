@@ -162,7 +162,7 @@ const CheckCreateInfo = React.createClass({
         })
         }
         <Padding t={2}>
-          <Button color="primary" noPad={true} flat={true} onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
+          <Button color="primary" noPad flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline/> Add Another Notification</Button>
         </Padding>
       </div>
     )
@@ -191,7 +191,7 @@ const CheckCreateInfo = React.createClass({
       return (
         <div>
           <Padding t={2}> 
-            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
+            <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} chevron>Finish</Button>
           </Padding>
           <StepCounter active={4} steps={4}/>
         </div>
@@ -214,8 +214,8 @@ const CheckCreateInfo = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`} bg="info">
-          <Button to="checks" icon={true} flat={true}>
-            <Close btn={true}/>
+          <Button to="checks" icon flat>
+            <Close btn/>
           </Button>
         </Toolbar>
         <Grid>

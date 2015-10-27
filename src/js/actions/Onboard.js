@@ -32,13 +32,13 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
     return request
     .get(`${config.api}/orgs/subdomain/${subdomain}`)
     .set('Authorization', UserStore.getAuth())
-    .send({date:date});
+    .send({date: date});
   },
   res => {
     if (res && res.body){
       return {
-        available:res.body.available,
-        date:res.req._data.date
+        available: res.body.available,
+        date: res.req._data.date
       };
     }
   },

@@ -48,7 +48,7 @@ _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
     const authCmd = JSON.stringify({
       command:'authenticate',
       attributes:{
-        token:auth.replace('Bearer ','')
+        token: auth.replace('Bearer ','')
       }
     });
     socket.send(authCmd);
@@ -60,7 +60,7 @@ _actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe',
   if (auth && socket && str){
     const authCmd = JSON.stringify({
       command:'subscribe',
-      attributes:{subscribe_to:str}
+      attributes:{subscribe_to: str}
     });
     socket.send(authCmd);
   }

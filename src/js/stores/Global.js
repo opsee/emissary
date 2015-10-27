@@ -1,15 +1,14 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
-import storage from '../modules/storage';
-import _ from 'lodash';
+
+/* eslint-disable no-use-before-define */
 
 let statics = {
   globalModalMessage(kwargs){
     _data.modalMessage = {
-      used:false,
-      options:{
-        html:kwargs.html,
-        style:kwargs.style
+      used: false,
+      options: {
+        html: kwargs.html,
+        style: kwargs.style
       }
     };
     Store.emitChange();
@@ -19,10 +18,10 @@ let statics = {
   },
   globalContextMenu(kwargs){
     _data.modalMessage = {
-      used:false,
-      options:{
-        html:kwargs.html,
-        type:'context'
+      used: false,
+      options: {
+        html: kwargs.html,
+        type: 'context'
       }
     };
     Store.emitChange();
@@ -34,7 +33,7 @@ let statics = {
     _data.socketStarted = true;
     Store.emitChange();
   },
-  parseSocketMessage(msg = {command:null}){
+  parseSocketMessage(msg = {command: null}){
     if (msg.command && msg.command !== 'heartbeat'){
       _data.socketMessages.push(msg);
       Store.emitChange();
@@ -43,19 +42,21 @@ let statics = {
 };
 
 let _data = {
-  socketStarted:false,
-  socketMessages:[],
-  modalMessage:{
-    used:false,
-    options:null
+  socketStarted: false,
+  socketMessages: [],
+  modalMessage: {
+    used: false,
+    options: null
   },
-  showNav:true,
-  globalSocketError:null,
+  showNav: true,
+  globalSocketError: null
 };
 
 let _statuses = {
-  globalSocketConnect:null
+  globalSocketConnect: null
 };
+
+afe
 
 const Store = Flux.createStore(
   {
@@ -74,7 +75,7 @@ const Store = Flux.createStore(
     getGlobalSocketError(){
       return _data.globalSocketError;
     }
-  }, function(payload){
+  }, function handlePayload(payload){
   switch (payload.actionType) {
   case 'GLOBAL_MODAL_MESSAGE':
     statics.globalModalMessage(payload.data);

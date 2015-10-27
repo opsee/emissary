@@ -49,7 +49,7 @@ const Store = Flux.createStore(
     getRegions(){
       return _regions;
     },
-  }, function(payload){
+  }, function handlePayload(payload){
   switch (payload.actionType) {
   }
 }

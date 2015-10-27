@@ -62,7 +62,7 @@ const AssertionsForm = forms.Form.extend({
         throw forms.ValidationError('Assertion must have operand.');
       }
     }
-    switch(this.cleanedData.key){
+    switch (this.cleanedData.key){
       case 'code':
       break;
       case 'header':
@@ -168,7 +168,7 @@ const CheckCreateAssertions = React.createClass({
       <div>
         {this.getAssertionsForms().map((form, index) => {
           return (
-            <Grid fluid={true} key={`assertion-${index}`}>
+            <Grid fluid key={`assertion-${index}`}>
               <Padding tb={1}>
               <Row>
                 <Col xs={2} sm={1}>
@@ -203,8 +203,8 @@ const CheckCreateAssertions = React.createClass({
         })
         }
         <Padding t={1}>
-          <Button color="primary" flat={true} onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
-            <Add inline={true} fill="primary"/> Add Assertion
+          <Button color="primary" flat onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+            <Add inline fill="primary"/> Add Assertion
           </Button>
         </Padding>
       </div>
@@ -226,7 +226,7 @@ const CheckCreateAssertions = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
+            <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} chevron>Next</Button>
           </div>
           <StepCounter active={3} steps={4}/>
         </div>
@@ -260,8 +260,8 @@ const CheckCreateAssertions = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
-          <Button to="checks" icon={true} flat={true}>
-            <Close btn={true}/>
+          <Button to="checks" icon flat>
+            <Close btn/>
           </Button>
         </Toolbar>
         <Grid>

@@ -12,7 +12,7 @@ const variables = {
       },
       creds:{
         client_id:'3378465181.4743809532',
-        client_secret:config.slackClientSecret
+        client_secret: config.slackClientSecret
       }
     }
   }

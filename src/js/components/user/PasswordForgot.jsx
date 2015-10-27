@@ -45,7 +45,7 @@ export default React.createClass({
       <form name="loginForm" onSubmit={this.submit}>
         <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
         <UserInputs include={['email']}  onChange={this.updateUserData} email={this.state.data.email}/>
-        <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+        <Button type="submit" color="success" block disabled={this.disabled()}>
           {this.btnText()}
         </Button>
       </form>

@@ -13,7 +13,7 @@ const statics = {
 };
 
 let _statuses = {
-  adminActivateSignup:null
+  adminActivateSignup: null
 };
 
 const Store = Flux.createStore(
@@ -24,7 +24,7 @@ const Store = Flux.createStore(
     getActivateSignupStatus(){
       return _statuses.adminActivateSignup;
     }
-  }, function(payload){
+  }, function handlePayload(payload){
   switch (payload.actionType) {
   case 'ADMIN_GET_SIGNUPS_SUCCESS':
     statics.getSignupsSuccess(payload.data);

@@ -23,8 +23,8 @@ _statics.saveNotifications = function(data, checkId, isEditing){
   [isEditing ? 'put' : 'post'](`${config.eventsApi}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
   .send({
-    'check-id':checkId,
-    notifications:data.notifications
+    'check-id': checkId,
+    notifications: data.notifications
   });
 };
 
@@ -33,8 +33,8 @@ _statics.saveAssertions = function(data, checkId, isEditing){
   [isEditing ? 'put' : 'post'](`${config.eventsApi}/assertions${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
   .send({
-    'check-id':checkId,
-    assertions:data.assertions
+    'check-id': checkId,
+    assertions: data.assertions
   });
 };
 
@@ -132,14 +132,14 @@ _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
   (data) => {
     if (config.demo){
       return new Promise((resolve, reject) => {
-        resolve({body:CheckStore.getFakeResponse().toJS()});
+        resolve({body: CheckStore.getFakeResponse().toJS()});
       });
     }else {
       let newData = _statics.formatCheckData(data);
       return request
       .post(`${config.api}/bastions/test-check`)
       .set('Authorization', UserStore.getAuth())
-      .send({check:newData, max_hosts:3, deadline:'30s'});
+      .send({check: newData, max_hosts: 3, deadline:'30s'});
     }
   },
   res => res.body,

@@ -24,7 +24,7 @@ export default React.createClass({
               <h2>Opsee Discovers Your Infrastructure</h2>
               <p>The Bastion Instance then uses AWS APIs to discover your instances and groups. The bastion is always scanning, and detects changes to infrastructure automatically.</p>
               <Padding t={2}>
-                <Button to="tutorial3" color="success" block={true} chevron={true}>Next</Button>
+                <Button to="tutorial3" color="success" block chevron>Next</Button>
               </Padding>
               <StepCounter active={2} steps={3}/>
             </Col>

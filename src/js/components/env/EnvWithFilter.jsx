@@ -227,7 +227,7 @@ const EnvWithFilter = React.createClass({
     }
   },
   getItemTypeFromSlug(slug){
-    switch(slug){
+    switch (slug){
       case 'groupsSecurity':
         return {
           name: 'Security Groups',

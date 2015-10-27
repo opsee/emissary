@@ -106,7 +106,7 @@ const Team = React.createClass({
                   </div>
                 </BoundField>
 
-                <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+                <Button type="submit" color="success" block disabled={this.disabled()}>
                   {this.btnText()}
                 </Button>
               </form>

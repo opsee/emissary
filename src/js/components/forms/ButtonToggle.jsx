@@ -1,9 +1,7 @@
 import React, {PropTypes} from 'react';
-import _ from 'lodash';
 React.initializeTouchEvents(true);
 import Button from './Button.jsx';
-import {Add, Box, Checkmark} from '../icons';
-import colors from 'seedling/colors';
+import {Add, Checkmark} from '../icons';
 
 export default React.createClass({
   propTypes: {
@@ -19,7 +17,7 @@ export default React.createClass({
     return this.props.on ? 'success' : 'default';
   },
   getIcon(){
-    return this.props.on ? <Checkmark inline={true}/> : <Add inline={true}/>
+    return this.props.on ? <Checkmark inline/> : <Add inline/>;
   },
   render(){
     return (

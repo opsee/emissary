@@ -62,8 +62,8 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="Checks">
-          <Button color="primary" fab={true} to="checkCreate" title="Create New Check">
-            <Add btn={true}/>
+          <Button color="primary" fab to="checkCreate" title="Create New Check">
+            <Add btn/>
           </Button>
         </Toolbar>
         <Grid>

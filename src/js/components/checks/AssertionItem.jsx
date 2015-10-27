@@ -25,7 +25,7 @@ const AssertionItem = React.createClass({
   },
   render(){
     return (
-      <Grid fluid={true}>
+      <Grid fluid>
         <Row className="flex-vertical-align">
           <Col xs={2} sm={1}>
             <AssertionCounter label={1} {...this.props.item} keyData={this.props.item.key} response={this.props.response}/>
@@ -37,7 +37,7 @@ const AssertionItem = React.createClass({
           </Col>
         </Row>
       </Grid>
-    )
+    );
   }
 });
 

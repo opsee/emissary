@@ -5,7 +5,7 @@ import paths from './paths';
 
 export default _.mapValues(paths, (string, name) => {
   return React.createClass({
-    displayName:name,
+    displayName: name,
     render(){
       return <Icon path={string} {...this.props}/>;
     }

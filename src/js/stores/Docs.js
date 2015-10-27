@@ -17,19 +17,19 @@ const _public = {
 };
 
 let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
+_.chain(_statuses).keys().map(k => {
   let arr = [k];
   arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
-  statusFunctions[a[1]] = function(){
+  statusFunctions[a[1]] = () => {
     return _statuses[a[0]];
   };
-}).value();
+});
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
-  function(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

@@ -20,7 +20,7 @@ const OpseeAlert = React.createClass({
       </Alert>
     );
     return (
-      <Grid fluid={true} style={this.getOuterStyle()}>
+      <Grid fluid style={this.getOuterStyle()}>
         <Row>
           <Col xs={12} className="padding-tb">
             {this.props.children}

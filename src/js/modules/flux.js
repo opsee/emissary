@@ -12,8 +12,8 @@ Flux.statics = {
         fn.call(null, ...args);
       }
       return {
-        actionType:upperName,
-        data:args[0]
+        actionType: upperName,
+        data: args[0]
       };
     };
     return Flux.createActions(obj);
@@ -24,13 +24,13 @@ Flux.statics = {
     obj[`${baseName}Success`] = function(res, arg0){
       return {
         actionType:`${upperName}_SUCCESS`,
-        data:successFn(res, arg0)
+        data: successFn(res, arg0)
       };
     };
     obj[`${baseName}Error`] = function(res){
       return {
         actionType:`${upperName}_ERROR`,
-        data:errorFn(res)
+        data: errorFn(res)
       };
     };
     obj[baseName] = function(...args){
@@ -43,7 +43,7 @@ Flux.statics = {
       }, config.apiDelay);
       return {
         actionType:`${upperName}_PENDING`,
-        data:args[0]
+        data: args[0]
       };
     };
     return Flux.createActions(obj);

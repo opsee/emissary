@@ -7,17 +7,17 @@ var router = Router.create({
 });
 
 export default {
-  makePath:router.makePath,
-  makeHref:router.makeHref,
-  transitionTo:router.transitionTo,
-  replaceWith:router.replaceWith,
-  goBack:router.goBack,
-  run:router.run,
+  makePath: router.makePath,
+  makeHref: router.makeHref,
+  transitionTo: router.transitionTo,
+  replaceWith: router.replaceWith,
+  goBack: router.goBack,
+  run: router.run,
   getAllRoutes(){
     return router.routes[0].childRoutes.map(r => {
       return {
-        name:r.name,
-        path:r.path
+        name: r.name,
+        path: r.path
       };
     });
   }

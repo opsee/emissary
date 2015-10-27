@@ -60,15 +60,15 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu">
-      <Settings fill="textSecondary" btn={true}/>
+    <Button icon flat onClick={this.openMenu} title="Group Menu">
+      <Settings fill="textSecondary" btn/>
     </Button>
     );
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank">
-        <NewWindow btn={true} fill="textSecondary"/>
+    <Button to={this.getGroupLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon flat target="_blank">
+        <NewWindow btn fill="textSecondary"/>
     </Button>
     );
   },
@@ -76,21 +76,21 @@ const GroupItem = React.createClass({
     if (!this.props.noModal){
       return (
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
-          <Grid fluid={true}>
+          <Grid fluid>
             <Row>
               <div className="flex-1">
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button color="primary" text="left" to="checkCreateRequest" block={true} flat={true} query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type')}}}>
-                  <Add inline={true} fill="primary"/> Create Check
+                <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type')}}}>
+                  <Add inline fill="primary"/> Create Check
                 </Button>
               </div>
             </Row>
           </Grid>
           {
             // this.getActions().map(a => {
-            //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin: 0}}>{a}</Button>
+            //   return <Button block flat onClick={this.runAction.bind(null, a)} className="text-left" style={{margin: 0}}>{a}</Button>
             // })
           }
         </Modal>
@@ -139,7 +139,7 @@ const GroupItem = React.createClass({
         <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>
             {this.renderModal()}
-            <Grid fluid={true}>
+            <Grid fluid>
               <Row>
                 <Col xs={2} sm={1}>
                   {this.renderGraph()}

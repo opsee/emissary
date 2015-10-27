@@ -6,11 +6,11 @@ import Immutable, {Record, List, Map} from 'immutable';
 import GroupStore from './Group';
 
 let _data = {
-  instanceECC:new Instance(),
+  instanceECC: new Instance(),
 };
 
 let _statuses = {
-  getInstanceECC:null,
+  getInstanceECC: null,
 };
 
 const statics = {
@@ -29,19 +29,19 @@ const _public = {
 };
 
 let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
+_.chain(_statuses).keys().map(k => {
   let arr = [k];
   arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
-  statusFunctions[a[1]] = function(){
+  statusFunctions[a[1]] = () => {
     return _statuses[a[0]];
   };
-}).value();
+});
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
-  function(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     case 'GET_INSTANCES_ECC_SUCCESS':
         // statics.getInstancesECCSuccess(payload.data);

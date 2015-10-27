@@ -66,7 +66,7 @@ const BastionInstaller = React.createClass({
     const item = this.getInProgressItem();
     let num;
     let string;
-    switch(item){
+    switch (item){
       case 'Reading':
         num = 1;
         string = 'Reading CloudFormation template';

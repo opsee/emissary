@@ -35,34 +35,30 @@ const Survey = React.createClass({
     return {
       info: new InfoForm({
         onChange(){
-          self.dataHasChanged();
+          self.onDataChange();
           self.forceUpdate();
         },
         labelSuffix: '',
         validation: {
           on: 'blur change',
           onChangeDelay: 100
-        },
+        }
       }),
       step: 0
-    }
+    };
   },
   componentWillMount(){
     UserActions.userGetUserData(UserStore.getUser().toJS());
   },
-  dataHasChanged(){
-    UserActions.userPutUserData('bastionInstallSurvey', this.state.info.cleanedData);
-  },
-  dataComplete(){
+  isDataComplete(){
     return false;
     // return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
   },
-  disabled(){
+  isDisabled(){
     return !this.state.info.isValid();
   },
   getSteps(){
-    return [
-    (
+    return [(
       <div>
         <h3>Which services are you using?</h3>
         <BoundField bf={this.state.info.boundField('services')}/>
@@ -84,22 +80,23 @@ const Survey = React.createClass({
       <div>
         <h3>Thanks for the feedback!</h3>
       </div>
-    )
-    ]
+    )];
   },
-  next(){
+  onDataChange(){
+    UserActions.userPutUserData('bastionInstallSurvey', this.state.info.cleanedData);
+  },
+  handleNextClick(){
     this.setState({
-      step: this.state.step+1
-    })
+      step: this.state.step + 1
+    });
   },
   renderButton(){
-    if (this.state.step != (this.getSteps().length - 1)){
+    if (this.state.step !== (this.getSteps().length - 1)){
       return (
-        <Button color="info" block={true} className="pull-right" onClick={this.next}>Next</Button>
-      )
-    }else {
-      return <div/>
+        <Button color="info" block className="pull-right" onClick={this.handleNextClick}>Next</Button>
+      );
     }
+    return <div/>;
   },
   render() {
     return (

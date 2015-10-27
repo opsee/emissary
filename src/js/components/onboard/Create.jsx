@@ -59,7 +59,7 @@ export default React.createClass({
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
                 <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <div className="form-group">
-                  <Button type="submit" color="success" block={true} disabled={this.disabled()}>
+                  <Button type="submit" color="success" block disabled={this.disabled()}>
                     {this.btnText()}
                   </Button>
                 </div>

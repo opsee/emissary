@@ -3,25 +3,25 @@ import _ from 'lodash';
 
 export default React.createClass({
   propTypes: {
-    bf: PropTypes.object.isRequired
+    bf: PropTypes.object.isRequired,
+    children: PropTypes.node
   },
-  errors(){
+  renderErrors(){
     const errors = this.props.bf && this.props.bf.errors().messages().map((message, i) => {
       return (
         <div key={i}>
           {message}
         </div>
-      )
+      );
     });
     if (!errors || !this.props.bf.label){
       return (
         <div>
           Bad input params.
         </div>
-      )
-    }else {
-      return errors;
+      );
     }
+    return errors;
   },
   renderChildren(){
     if (this.props.children){
@@ -34,17 +34,16 @@ export default React.createClass({
   },
   render(){
     if (_.get(this.props.bf, 'field.widgetAttrs.noLabel')){
-      return <div/>
-    }else {
-      return (
-        <label className="flex-order-1 label user-select-none" htmlFor={this.props.bf.idForLabel()}>
-          <div className="display-flex">
-            {this.renderChildren()}
-            <span className="form-label">{this.props.bf.label}</span>
-            <span className="form-message">{this.errors()}</span>
-          </div>
-        </label>
-      )
+      return <div/>;
     }
+    return (
+      <label className="flex-order-1 label user-select-none" htmlFor={this.props.bf.idForLabel()}>
+        <div className="display-flex">
+          {this.renderChildren()}
+          <span className="form-label">{this.props.bf.label}</span>
+          <span className="form-message">{this.renderErrors()}</span>
+        </div>
+      </label>
+    );
   }
 });

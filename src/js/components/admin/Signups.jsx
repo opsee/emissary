@@ -77,9 +77,9 @@ export default React.createClass({
   },
   outputIcon(signup){
     if (this.isUser(signup)){
-      return <Person fill={colors.textColorSecondary} inline={true}/>
+      return <Person fill={colors.textColorSecondary} inline/>
     } else if (this.isApprovedSignup(signup)){
-      return <Checkmark fill={colors.textColorSecondary} inline={true}/>
+      return <Checkmark fill={colors.textColorSecondary} inline/>
     }else {
       return <span/>
     }
@@ -88,11 +88,11 @@ export default React.createClass({
     if (this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
       const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
       return (
-        <Button flat={true} color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
+        <Button flat color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
       )
     }else {
       return (
-        <Button flat={true} color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
+        <Button flat color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
       )
     }
   },
@@ -137,7 +137,7 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3><Checkmark fill={colors.textColorSecondary} inline={true}/> Approved</h3>
+                <h3><Checkmark fill={colors.textColorSecondary} inline/> Approved</h3>
                 <div className="display-flex-sm flex-wrap">
                   {this.getApproved().map(this.output)}
                 </div>
@@ -148,7 +148,7 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3><Person fill={colors.textColorSecondary} inline={true}/> Users</h3>
+                <h3><Person fill={colors.textColorSecondary} inline/> Users</h3>
                 <div className="display-flex-sm flex-wrap">
                   {this.getUsers().map(this.output)}
                 </div>

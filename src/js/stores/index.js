@@ -4,7 +4,6 @@ import CheckStore from './Check';
 import DocsStore from './Docs';
 import GlobalStore from './Global';
 import GroupStore from './Group';
-import HomeStore from './Home';
 import InstanceStore from './Instance';
 import OnboardStore from './Onboard';
 import UserStore from './User';
@@ -16,7 +15,6 @@ export default {
   DocsStore,
   GlobalStore,
   GroupStore,
-  HomeStore,
   InstanceStore,
   OnboardStore,
   UserStore

@@ -131,7 +131,7 @@ const Credentials = React.createClass({
                 <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
                 </Padding>
 
-                <Button color="success" type="submit" block={true} disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron={true}>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
+                <Button color="success" type="submit" block disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
               </form>
               {this.renderError()}
             </Col>

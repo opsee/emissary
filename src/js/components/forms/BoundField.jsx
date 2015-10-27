@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
 import MultiToggle from './MultiToggle.jsx';
@@ -10,7 +10,12 @@ import MultiButtonToggle from './MultiButtonToggle.jsx';
 import InlineRadioSelect from './InlineRadioSelect.jsx';
 
 export default React.createClass({
-  fallback(){
+  propTypes: {
+    bf: PropTypes.object,
+    children: PropTypes.node,
+    className: PropTypes.string
+  },
+  renderFallback(){
     return (
     <div className="form-group">
       <InputWithLabel bf={this.props.bf}>
@@ -19,46 +24,39 @@ export default React.createClass({
     </div>
     );
   },
-  output(){
-    switch(this.props.bf.field.constructor.name){
-      case 'ChoiceField':
-        const type = _.get(this.props.bf, 'field.widget.attrs.widgetType');
-        if (type && type == 'InlineRadioSelect'){
-          return <InlineRadioSelect bf={this.props.bf}/>
-        }else if (type && type == 'RadioSelect'){
-          return <RadioSelect bf={this.props.bf}/>
-        }else {
-          return (
-            <div className="form-group">
-              <Dropdown bf={this.props.bf}/>
-            </div>
-          );
-        }
-      break;
-      case 'BooleanField':
-        if (this.props.bf.field.label == 'Delete'){
-          return <DeleteFormButton bf={this.props.bf}/>
-        }else {
-          return this.fallback();
-        }
-      break;
-      case 'MultipleChoiceField':
-        if (this.props.bf.field.label == 'buttonToggle'){
-          return <MultiButtonToggle bf={this.props.bf}/>
-        }else {
-          return <MultiToggle bf={this.props.bf}/>
-        }
-      break;
-      default:
-      return this.fallback();
-      break;
+  renderInner(){
+    switch (this.props.bf.field.constructor.name){
+    case 'ChoiceField':
+      const type = _.get(this.props.bf, 'field.widget.attrs.widgetType');
+      if (type === 'InlineRadioSelect'){
+        return <InlineRadioSelect bf={this.props.bf}/>;
+      }else if (type === 'RadioSelect'){
+        return <RadioSelect bf={this.props.bf}/>;
+      }
+      return (
+        <div className="form-group">
+          <Dropdown bf={this.props.bf}/>
+        </div>
+      );
+    case 'BooleanField':
+      if (this.props.bf.field.label === 'Delete'){
+        return <DeleteFormButton bf={this.props.bf}/>;
+      }
+      return this.renderFallback();
+    case 'MultipleChoiceField':
+      if (this.props.bf.field.label === 'buttonToggle'){
+        return <MultiButtonToggle bf={this.props.bf}/>;
+      }
+      return <MultiToggle bf={this.props.bf}/>;
+    default:
+      return this.renderFallback();
     }
   },
   render(){
     return (
       <div className={this.props.className}>
-        {this.output()}
+        {this.renderInner()}
       </div>
-    )
+    );
   }
 });

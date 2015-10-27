@@ -22,8 +22,8 @@ const response = Immutable.fromJS({
               'hash_user_id': '1b8c236ef38a9b92391c9b0feeafeflk3j43rar',
               'search_params': {
                 'location': 'San Francisco, CA, United States',
-                'checkin': '2015-09-27T07:00:00.000Z',
-                'checkout': '2015-10-03T07:00:00.000Z',
+                'checkin': '2015-09-27T07: 00: 00.000Z',
+                'checkout': '2015-10-03T07: 00: 00.000Z',
                 'price_min': 120,
                 'price_max': 215,
                 'room_types': [
@@ -83,38 +83,38 @@ const response = Immutable.fromJS({
 });
 
 var Target = Record({
-  name:undefined,
+  name: undefined,
   type:'sg',
-  id:undefined
+  id: undefined
 });
 
 var Notification = Record({
-  type:undefined,
-  value:undefined
+  type: undefined,
+  value: undefined
 });
 
 var Check = Record({
-  id:undefined,
+  id: undefined,
   name:'',
-  target:Target(),
-  assertions:List(),
-  notifications:List(),
-  instances:List(),
-  health:100,
+  target: Target(),
+  assertions: List(),
+  notifications: List(),
+  instances: List(),
+  health: 100,
   state:'running',
-  silenceDate:undefined,
-  silenceDuration:undefined,
-  interval:30,
-  check_spec:Map({
+  silenceDate: undefined,
+  silenceDuration: undefined,
+  interval: 30,
+  check_spec: Map({
     type_url:'HttpCheck',
-    value:Map({
-      name:undefined,
-      path:undefined,
+    value: Map({
+      name: undefined,
+      path: undefined,
       protocol:'http',
-      port:undefined,
-      verb:undefined,
-      body:undefined,
-      headers:new List()
+      port: undefined,
+      verb: undefined,
+      body: undefined,
+      headers: new List()
     })
   })
 });
@@ -156,18 +156,18 @@ const statics = {
 };
 
 let _data = {
-  checks:new List(),
-  check:new Check(),
-  response:undefined
+  checks: new List(),
+  check: new Check(),
+  response: undefined
 };
 
 let _statuses = {
-  getCheck:null,
-  getChecks:null,
-  checkCreate:null,
-  deleteCheck:null,
-  checkEdit:null,
-  testCheck:null
+  getCheck: null,
+  getChecks: null,
+  checkCreate: null,
+  deleteCheck: null,
+  checkEdit: null,
+  testCheck: null
 };
 
 const _public = {
@@ -215,19 +215,19 @@ const _public = {
 };
 
 let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
+_.chain(_statuses).keys().map(k => {
   let arr = [k];
   arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
-  statusFunctions[a[1]] = function(){
+  statusFunctions[a[1]] = () => {
     return _statuses[a[0]];
   };
-}).value();
+});
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
-  function(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     case 'GET_CHECKS_SUCCESS':
       statics.getChecksSuccess(payload.data);

@@ -117,8 +117,8 @@ export default React.createClass({
     return (
       <div>
         <Toolbar title="Opsee Styleguide">
-          <Button fab={true} color="primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
-            <Add btn={true}/>
+          <Button fab color="primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
+            <Add btn/>
           </Button>
         </Toolbar>
 
@@ -271,8 +271,8 @@ export default React.createClass({
                       </div>
                     </div>
                     <div>
-                      <Button color="default" flat={true}>Delete</Button>
-                      <Button color="primary" flat={true} className="pull-right">Activate</Button>
+                      <Button color="default" flat>Delete</Button>
+                      <Button color="primary" flat className="pull-right">Activate</Button>
                     </div>
                   </div>
                 </Col>
@@ -309,11 +309,11 @@ export default React.createClass({
                 <h4>Disabled</h4>
                 {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
-                    <Button color={i} disabled={true} key={`btn-${i}`}>{i}</Button>
+                    <Button color={i} disabled key={`btn-${i}`}>{i}</Button>
                   )
                 })}
                 <Padding t={2}>
-                  <Button block={true}>Block</Button>
+                  <Button block>Block</Button>
                 </Padding>
               </Padding>
 
@@ -323,17 +323,17 @@ export default React.createClass({
                 {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
                     <Padding className="pull-left" key={`btn-flat-${i}`}>
-                      <Button flat={true} color={i}>{i}</Button>
+                      <Button flat color={i}>{i}</Button>
                     </Padding>
                   )
                 })}
                 <Padding t={1}>
-                  <Button flat={true} color="success" disabled={true}>Disabled</Button>
+                  <Button flat color="success" disabled>Disabled</Button>
                 </Padding>
               </Padding>
 
               <div className="padding-bx2">
-                <Button flat={true} noPad={true} primary={true}>NO PAD</Button>
+                <Button flat noPad primary>NO PAD</Button>
               </div>
             </form>
 

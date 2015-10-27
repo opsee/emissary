@@ -64,8 +64,8 @@ _actions.userPutUserData = Flux.statics.addAsyncAction('userPutUserData',
       index++;
     }
     user[key][index] = {
-      revision:config.revision,
-      data:data
+      revision: config.revision,
+      data: data
     };
     if (reset){
       user[key] = false;

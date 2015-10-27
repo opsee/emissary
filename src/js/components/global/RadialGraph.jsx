@@ -55,7 +55,7 @@ const RadialGraph = React.createClass({
     }
   },
   getTitle(){
-    switch(this.state.state){
+    switch (this.state.state){
       case 'running':
       return this.state.silenceRemaining ?
       `This check is running, but is ` :

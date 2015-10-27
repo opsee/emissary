@@ -1,20 +1,28 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
-import Immutable, {Record, Map} from 'immutable';
+import Immutable, {Record} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
 
-var User = Record({
-  name:null,
-  email:null,
-  id:null,
-  token:null,
-  loginDate:null,
-  admin:false,
-  admin_id:0,
-  loginRedirect:null
+/* eslint-disable no-use-before-define */
+
+const User = Record({
+  name: null,
+  email: null,
+  id: null,
+  token: null,
+  loginDate: null,
+  admin: false,
+  admin_id: 0,
+  loginRedirect: null
 });
+
+let _data = {
+  user: statics.getInitialUser(),
+  userData: null,
+  refreshInterval: undefined
+};
 
 const statics = {
   setUser(data){
@@ -26,7 +34,7 @@ const statics = {
     //don't overwrite properties that aren't coming from the api, like loginRedirect
     obj = _.assign({}, _data.user.toJS(), obj);
     _data.user = Immutable.fromJS(obj);
-    storage.set('user',_data.user.toJS());
+    storage.set('user', _data.user.toJS());
     Store.emitChange();
   },
   logout(){
@@ -41,20 +49,14 @@ const statics = {
   }
 };
 
-let _data = {
-  user:statics.getInitialUser(),
-  userData:null,
-  refreshInterval:undefined
-};
-
 let _statuses = {
-  userLogin:null,
-  userSendResetEmail:null,
-  userEdit:null,
-  userGetUser:null,
-  userPutUserData:null,
-  userGetUserData:null,
-  userRefreshToken:null
+  userLogin: null,
+  userSendResetEmail: null,
+  userEdit: null,
+  userGetUser: null,
+  userPutUserData: null,
+  userGetUserData: null,
+  userRefreshToken: null
 };
 
 const _public = {
@@ -89,19 +91,21 @@ const _public = {
 };
 
 let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
+_.chain(_statuses).keys().map(k => {
   let arr = [k];
   arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
+  /* eslint-disable func-names */
   statusFunctions[a[1]] = function(){
     return _statuses[a[0]];
   };
-}).value();
+  /* eslint-enable func-names */
+});
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
-  function(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     case 'ONBOARD_SET_PASSWORD_SUCCESS':
     case 'USER_SET':
@@ -128,6 +132,8 @@ const Store = Flux.createStore(
       break;
     case 'USER_LOGIN_REDIRECT':
       _data.user = _data.user.set('loginRedirect', payload.data);
+      break;
+    default:
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);

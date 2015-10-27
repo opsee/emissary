@@ -124,8 +124,8 @@ const CheckEdit = React.createClass({
   renderLink(){
     return this.state.check.id ?
     (
-      <Button to="check" params={{id: this.state.check.id}} icon={true} flat={true} title="Return to Check">
-        <Close btn={true}/>
+      <Button to="check" params={{id: this.state.check.id}} icon flat title="Return to Check">
+        <Close btn/>
       </Button>
     )
      : <div/>;
@@ -142,17 +142,17 @@ const CheckEdit = React.createClass({
               <Col xs={12}>
                 {this.renderEnv()}
                 <Padding tb={1}>
-                  <CheckCreateRequest {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateRequest {...this.state} onChange={this.updateData} renderAsInclude/>
                 </Padding>
                 <Padding tb={1}>
-                  <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude/>
                 </Padding>
                 <Padding tb={1}>
-                  <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude={true}/>
+                  <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude/>
                 </Padding>
                 <Padding t={1}>
-                <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()}>
-                  Finish <Checkmark inline={true} fill={colors.success}/>
+                <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()}>
+                  Finish <Checkmark inline fill={colors.success}/>
                 </Button>
                 </Padding>
               </Col>

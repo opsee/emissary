@@ -106,7 +106,7 @@ const Install = React.createClass({
       if (!bastionErrors.length || bastionSuccesses.length){
         return (
           <Padding tb={3}>
-            <Button to="checkCreate" color="primary" block={true} chevron={true}>
+            <Button to="checkCreate" color="primary" block chevron>
               Create a Check
             </Button>
           </Padding>

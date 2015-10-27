@@ -54,7 +54,6 @@
  */
     "comma-dangle": [1, "never"],    // http://eslint.org/docs/rules/comma-dangle
     "no-cond-assign": [1, "always"], // http://eslint.org/docs/rules/no-cond-assign
-    "no-console": 1,                 // http://eslint.org/docs/rules/no-console
     "no-debugger": 1,                // http://eslint.org/docs/rules/no-debugger
     "no-alert": 1,                   // http://eslint.org/docs/rules/no-alert
     "no-constant-condition": 1,      // http://eslint.org/docs/rules/no-constant-condition
@@ -84,7 +83,7 @@
       "allowKeywords": true
     }],
     "eqeqeq": 1,                     // http://eslint.org/docs/rules/eqeqeq
-    "guard-for-in": 1,               // http://eslint.org/docs/rules/guard-for-in
+    "guard-for-in": 0,               // http://eslint.org/docs/rules/guard-for-in
     "no-caller": 1,                  // http://eslint.org/docs/rules/no-caller
     "no-else-return": 1,             // http://eslint.org/docs/rules/no-else-return
     "no-eq-null": 1,                 // http://eslint.org/docs/rules/no-eq-null
@@ -141,10 +140,6 @@
         "beforeColon": false,
         "afterColon": true
     }],
-    "new-cap": [1, {                 // http://eslint.org/docs/rules/new-cap
-      "newIsCap": true,
-      "properties": false
-    }],
     "no-multiple-empty-lines": [1, { // http://eslint.org/docs/rules/no-multiple-empty-lines
       "max": 1
     }],
@@ -200,11 +195,11 @@
         "storeDidChange",
         "componentDidUpdate",
         "componentWillUnmount",
-        "/^on.+$/",
-        "/^get.+$/",
-        "/^handle.+$/",
         "/^is.+$/",
+        "/^get.+$/",
+        "/^on.+$/",
         "/^run.+$/",
+        "/^handle.+$/",
         "/^render.+$/",
         "render"
       ]

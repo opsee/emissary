@@ -96,11 +96,11 @@ const Team = React.createClass({
         <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
          {
-         // <h2 className="h3">All AWS regions - <Button flat={true} color="primary" onClick={this.toggleAll.bind(this, true)}>Select All</Button> - <Button flat={true} color="warning"  onClick={this.toggleAll.bind(null, false)}>Deselect All</Button></h2>
+         // <h2 className="h3">All AWS regions - <Button flat color="primary" onClick={this.toggleAll.bind(this, true)}>Select All</Button> - <Button flat color="warning"  onClick={this.toggleAll.bind(null, false)}>Deselect All</Button></h2>
          }
           <BoundField bf={this.state.info.boundField('regions')}/>
           <div><br/></div>
-          <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron={true}>Next</Button>
+          <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
         </form>
       )
     }

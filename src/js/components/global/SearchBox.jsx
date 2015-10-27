@@ -30,7 +30,7 @@ export default React.createClass({
   render(){
     const self = this;
     document.onkeydown = function(e){
-      switch(e.which){
+      switch (e.which){
         //forward slash
         case 191:
         if (e.srcElement && (e.srcElement.nodeName == 'BODY' || e.srcElement.id == 'searchBoxInput')){
