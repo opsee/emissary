@@ -97,7 +97,7 @@ const Team = React.createClass({
           return r.id
         })
       })
-    }else{
+    }else {
       this.state.info.updateData({regions: []});
     }
   },
@@ -112,7 +112,7 @@ const Team = React.createClass({
           </Padding>
         </div>
       )
-    }else{
+    }else {
       return (
         <Alert type="danger">
           Either you have no active VPCs or something else went wrong.

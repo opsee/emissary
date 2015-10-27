@@ -19,7 +19,7 @@ export default React.createClass({
       const redirect = UserStore.getUser().get('loginRedirect');
       if (redirect){
         router.transitionTo(redirect);
-      }else{
+      }else {
         router.transitionTo('env');
       }
     }else if (status && status != 'pending'){

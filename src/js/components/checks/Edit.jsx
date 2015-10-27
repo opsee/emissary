@@ -104,7 +104,7 @@ const CheckEdit = React.createClass({
       // setTimeout(function(){
       //   scrollTo(document.body, 0, 0);
       // }, 50);
-    }else{
+    }else {
       // setTimeout(function(){
       //   scrollTo(document.body, 0, 0);
       // }, 50);
@@ -117,7 +117,7 @@ const CheckEdit = React.createClass({
           <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         </Padding>
       )
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -160,7 +160,7 @@ const CheckEdit = React.createClass({
           </Grid>
         </div>
       );
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}>
           <h2>Check not found.</h2>

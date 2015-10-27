@@ -50,7 +50,7 @@ export default React.createClass({
           <CheckItemList checks={this.state.checks}/>
         </div>
       )
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}>
           <p>No Checks - <Link to="checkCreate" title="Create New Check">Create One</Link></p>

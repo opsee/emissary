@@ -75,7 +75,7 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}/>
       )

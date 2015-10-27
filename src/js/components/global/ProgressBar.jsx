@@ -17,7 +17,7 @@ export default React.createClass({
   getBg(){
     if (this.props.percentage >= 100){
       return colors.success;
-    }else{
+    }else {
       if (this.props.percentage === 0){
         return colors.warning;
       }else if (this.props.percentage === -1){

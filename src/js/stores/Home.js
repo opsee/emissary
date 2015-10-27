@@ -77,10 +77,10 @@ const Store = Flux.createStore(
     },
   }, function(payload){
   switch (payload.actionType) {
-    case 'GET_INSTANCES_SUCCESS':
-      _data.instances = payload.data;
-      break;
-    }
+  case 'GET_INSTANCES_SUCCESS':
+    _data.instances = payload.data;
+    break;
+  }
 }
 );
 

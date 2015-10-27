@@ -126,8 +126,8 @@ const Store = Flux.createStore(
     case 'ONBOARD_SET_REGIONS':
       _installData.regions = [payload.data];
       if (window.location.host.match('localhost')){
-          _installData.regions = ['us-west-1'];
-        }
+        _installData.regions = ['us-west-1'];
+      }
       Store.emitChange();
       break;
     case 'ONBOARD_SET_CREDENTIALS':
@@ -146,10 +146,10 @@ const Store = Flux.createStore(
       break;
     case 'GLOBAL_SOCKET_MESSAGE':
       if (payload.data && payload.data.command && payload.data.command === 'launch-bastion'){
-          _data.bastionLaunchHasBeenChecked = true;
-          _data.bastionHasLaunched = true;
-          Store.emitChange();
-        }
+        _data.bastionLaunchHasBeenChecked = true;
+        _data.bastionHasLaunched = true;
+        Store.emitChange();
+      }
       break;
     case 'ONBOARD_SET_PASSWORD_SUCCESS':
       _data.bastionLaunchHasBeenChecked = true;

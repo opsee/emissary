@@ -56,7 +56,7 @@ export default React.createClass({
           <Autosuggest suggestions={this.getData} onSuggestionSelected={this.selectItem} inputAttributes={this.inputAttributes}/>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   }

@@ -116,7 +116,7 @@ const CheckCreateInfo = React.createClass({
           <BoundField bf={form.boundField('DELETE')}/>
         </Padding>
       )
-    }else{
+    }else {
       return (
         <Padding lr={1}>
          <div style={{width: '48px'}}/>
@@ -196,7 +196,7 @@ const CheckCreateInfo = React.createClass({
           <StepCounter active={4} steps={4}/>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

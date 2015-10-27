@@ -56,7 +56,7 @@ const Install = React.createClass({
   componentWillMount(){
     if (config.demo || this.props.path.match('example')){
       OnboardActions.onboardExampleInstall();
-    }else{
+    }else {
       OnboardStore.getBastionHasLaunchedPromise().then(function(started){
         statics.checkedInstallStatus = true;
         const data = OnboardStore.getFinalInstallData();
@@ -95,7 +95,7 @@ const Install = React.createClass({
           <Survey/>
         </Padding>
       )
-    }else{
+    }else {
 
     }
   },
@@ -111,7 +111,7 @@ const Install = React.createClass({
             </Button>
           </Padding>
         )
-      }else{
+      }else {
         return (
           <Alert type="info">
             We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
@@ -137,12 +137,12 @@ const Install = React.createClass({
         return (
           <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
         )
-      }else{
+      }else {
         return (
           <p>{bastionErrors.length > 1 ? bastionErrors.length+' ' : ''}Bastion installed correctly.</p>
         )
       }
-    }else{
+    }else {
       return (
         <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
       )

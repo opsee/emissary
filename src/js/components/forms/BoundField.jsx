@@ -27,7 +27,7 @@ export default React.createClass({
           return <InlineRadioSelect bf={this.props.bf}/>
         }else if (type && type == 'RadioSelect'){
           return <RadioSelect bf={this.props.bf}/>
-        }else{
+        }else {
           return (
             <div className="form-group">
               <Dropdown bf={this.props.bf}/>
@@ -38,14 +38,14 @@ export default React.createClass({
       case 'BooleanField':
         if (this.props.bf.field.label == 'Delete'){
           return <DeleteFormButton bf={this.props.bf}/>
-        }else{
+        }else {
           return this.fallback();
         }
       break;
       case 'MultipleChoiceField':
         if (this.props.bf.field.label == 'buttonToggle'){
           return <MultiButtonToggle bf={this.props.bf}/>
-        }else{
+        }else {
           return <MultiToggle bf={this.props.bf}/>
         }
       break;

@@ -3,7 +3,7 @@ import SearchBox from './SearchBox.jsx';
 import colors from 'seedling/colors';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
-var OpseeAlert = React.createClass({
+const OpseeAlert = React.createClass({
   getOuterStyle(){
     let style = {
       backgroundColor: colors.danger,

@@ -97,7 +97,7 @@ const Survey = React.createClass({
       return (
         <Button color="info" block={true} className="pull-right" onClick={this.next}>Next</Button>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

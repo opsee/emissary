@@ -71,7 +71,7 @@ export default React.createClass({
           </Col>
         </Grid>
       )
-    }else{
+    }else {
       return (
         <RouteHandler {...this.props}/>
       )

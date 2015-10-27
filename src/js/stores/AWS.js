@@ -51,7 +51,7 @@ const Store = Flux.createStore(
     },
   }, function(payload){
   switch (payload.actionType) {
-    }
+  }
 }
 );
 

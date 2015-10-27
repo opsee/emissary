@@ -255,7 +255,7 @@ const EnvWithFilter = React.createClass({
     let obj = {};
     if (state == string){
       obj.buttonSelected = false;
-    }else{
+    }else {
       obj.buttonSelected = string;
     }
     this.setState(obj);
@@ -293,7 +293,7 @@ const EnvWithFilter = React.createClass({
           })}
         </form>
       )
-    }else{
+    }else {
       return <StatusHandler status="pending"/>
     }
   },

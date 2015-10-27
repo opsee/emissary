@@ -45,7 +45,7 @@ export default React.createClass({
       return (
         <Alert bsStyle="danger">{this.getErrorText()}</Alert>
       );
-    }else{
+    }else {
       return <div/>
     }
   }

@@ -35,7 +35,7 @@ const SystemStatus = React.createClass({
           Connected Bastions: {this.getConnectedBastions()}
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

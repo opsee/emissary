@@ -108,8 +108,8 @@ const Store = Flux.createStore(
     case 'USER_LOGIN_SUCCESS':
     case 'USER_EDIT_SUCCESS':
       if (payload.actionType === 'USER_LOGIN_SUCCESS'){
-          payload.data.user.loginDate = new Date();
-        }
+        payload.data.user.loginDate = new Date();
+      }
       statics.setUser(payload.data);
       Store.emitChange();
       break;

@@ -159,7 +159,7 @@ const CheckCreateAssertions = React.createClass({
           <BoundField bf={form.boundField('DELETE')}/>
         </Col>
       )
-    }else{
+    }else {
       return <span/>
     }
   },
@@ -231,7 +231,7 @@ const CheckCreateAssertions = React.createClass({
           <StepCounter active={3} steps={4}/>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

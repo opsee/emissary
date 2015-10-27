@@ -49,7 +49,7 @@ export default React.createClass({
           <td>{az}</td>
         </tr>
       )
-    }else{
+    }else {
       return <tr/>
     }
   },
@@ -116,7 +116,7 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else{
+    }else {
       return <StatusHandler status={this.state.status}/>
     }
   }

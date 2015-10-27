@@ -62,7 +62,7 @@ export default React.createClass({
           </ul>
         </div>
     );
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}>
           <Alert bsStyle="default">No instances found</Alert>

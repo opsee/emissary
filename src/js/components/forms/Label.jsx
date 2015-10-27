@@ -19,7 +19,7 @@ export default React.createClass({
           Bad input params.
         </div>
       )
-    }else{
+    }else {
       return errors;
     }
   },
@@ -35,7 +35,7 @@ export default React.createClass({
   render(){
     if (_.get(this.props.bf, 'field.widgetAttrs.noLabel')){
       return <div/>
-    }else{
+    }else {
       return (
         <label className="flex-order-1 label user-select-none" htmlFor={this.props.bf.idForLabel()}>
           <div className="display-flex">

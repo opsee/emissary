@@ -29,7 +29,7 @@ export default React.createClass({
           <div><Link to="styleguide">Style Guide</Link></div>
         </Padding>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

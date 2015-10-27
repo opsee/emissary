@@ -50,7 +50,7 @@ const RadialGraph = React.createClass({
     if (remaining){
       this.setInterval(this.tick, 1000);
       this.tick();
-    }else{
+    }else {
       this.intervals.map(clearInterval);
     }
   },

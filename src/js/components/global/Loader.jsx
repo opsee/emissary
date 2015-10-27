@@ -30,7 +30,7 @@ export default React.createClass({
           <div className={style.loader}></div>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   }

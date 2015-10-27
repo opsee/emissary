@@ -31,7 +31,7 @@ export default React.createClass({
           <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
       )
-    }else{
+    }else {
       return (
         <Link to="login" className={style.navbarLink}>
           <Login nav={true}/>&nbsp;

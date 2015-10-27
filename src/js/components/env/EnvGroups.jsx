@@ -59,7 +59,7 @@ export default React.createClass({
             })}
         </div>
       );
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}>
           No Groups found.

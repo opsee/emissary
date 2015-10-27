@@ -87,7 +87,7 @@ const CheckResponse = React.createClass({
           <ChevronUp/>
         </Button>
       )
-    }else{
+    }else {
       return (
         <Button color="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Open Response">
           <ChevronDown/>
@@ -112,7 +112,7 @@ const CheckResponse = React.createClass({
       return (
         <Alert bsStyle="danger">There was an error sending your request.</Alert>
       )
-    }else{
+    }else {
       return (
         <div>Your response will appear here</div>  
       )
@@ -128,7 +128,7 @@ const CheckResponse = React.createClass({
           {this.getButton()}
         </div>
       )
-    }else{
+    }else {
       return (
         <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
           {this.renderWaitingResponse()}

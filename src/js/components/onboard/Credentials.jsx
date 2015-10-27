@@ -53,7 +53,7 @@ const Credentials = React.createClass({
         if (vpcs.length === 1 && !storage.get('showVpcsOnboard')){
           OnboardActions.onboardSetVpcs(vpcs);
           router.transitionTo('onboardInstall');
-        }else{
+        }else {
           router.transitionTo('onboardVpcSelect');
         }
       }

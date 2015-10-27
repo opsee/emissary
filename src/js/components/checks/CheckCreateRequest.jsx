@@ -239,7 +239,7 @@ const CheckCreateRequest = React.createClass({
           <StepCounter active={2} steps={4}/>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -258,7 +258,7 @@ const CheckCreateRequest = React.createClass({
           <hr/>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -293,7 +293,7 @@ const CheckCreateRequest = React.createClass({
           <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
         </Padding>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

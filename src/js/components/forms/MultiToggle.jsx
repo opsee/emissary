@@ -15,7 +15,7 @@ export default React.createClass({
     let data = this.props.bf.value() || [];
     if (_.findWhere(data, id)){
       data = _.pull(data, id);
-    }else{
+    }else {
       data.push(id);
     }
     var obj = {};

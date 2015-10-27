@@ -57,7 +57,7 @@ export default React.createClass({
     const desc = this.state.group.get('Description');
     if (desc && desc != ''){
       return {desc}
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -104,7 +104,7 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else{
+    }else {
       return <StatusHandler status={this.state.status}/>
     }
   }

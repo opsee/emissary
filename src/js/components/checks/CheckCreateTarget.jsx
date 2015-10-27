@@ -70,7 +70,7 @@ const CheckCreateTarget = React.createClass({
           <StepCounter active={1} steps={3}/>
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -91,7 +91,7 @@ const CheckCreateTarget = React.createClass({
         return fuzzy.filter(string, [sg.get('name')]).length;
       });
       return data;
-    }else{
+    }else {
       return this.state.groupsSecurity;
     }
   },
@@ -101,7 +101,7 @@ const CheckCreateTarget = React.createClass({
       return this.state.groupsELB.filter(elb => {
         return fuzzy.filter(string, [elb.get('name')]).length;
       });
-    }else{
+    }else {
       return this.state.groupsELB;
     }
   },

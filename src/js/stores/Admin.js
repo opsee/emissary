@@ -26,20 +26,20 @@ const Store = Flux.createStore(
     }
   }, function(payload){
   switch (payload.actionType) {
-    case 'ADMIN_GET_SIGNUPS_SUCCESS':
-      statics.getSignupsSuccess(payload.data);
-      Store.emitChange();
-      break;
-    case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
+  case 'ADMIN_GET_SIGNUPS_SUCCESS':
+    statics.getSignupsSuccess(payload.data);
+    Store.emitChange();
+    break;
+  case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
         // _statuses.adminActivateSignup = null;
         // Store.emitChange();
-      break;
-    }
+    break;
+  }
   const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
   _statuses = statusData.statuses;
   if (statusData.haveChanged){
-      Store.emitChange();
-    }
+    Store.emitChange();
+  }
 }
 );
 

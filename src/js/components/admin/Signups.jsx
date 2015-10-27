@@ -80,7 +80,7 @@ export default React.createClass({
       return <Person fill={colors.textColorSecondary} inline={true}/>
     } else if (this.isApprovedSignup(signup)){
       return <Checkmark fill={colors.textColorSecondary} inline={true}/>
-    }else{
+    }else {
       return <span/>
     }
   },
@@ -90,7 +90,7 @@ export default React.createClass({
       return (
         <Button flat={true} color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
       )
-    }else{
+    }else {
       return (
         <Button flat={true} color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
       )

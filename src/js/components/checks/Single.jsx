@@ -88,7 +88,7 @@ export default React.createClass({
       return (
         <span>{group.name || group.id}</span>
       )
-    }else{
+    }else {
       //elb
       return (
         <span>{group.name || group.id}</span>
@@ -126,7 +126,7 @@ export default React.createClass({
           </Padding>
         </div>
       )
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}>
           <h3>No Checks Applied</h3>
@@ -141,7 +141,7 @@ export default React.createClass({
           <Edit btn={true}/>
         </Button>
       )
-    }else{
+    }else {
       return <span/>
     }
   },

@@ -72,12 +72,12 @@ const CheckItem = React.createClass({
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
         )
-      }else{
+      }else {
         return (
           <RadialGraph {...this.props.item.toJS()}/>
         )
       }
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -88,7 +88,7 @@ const CheckItem = React.createClass({
         <div>{this.props.item.get('check_spec').value.name}</div>
       </Link>
       )
-    }else{
+    }else {
       return (
         <div className="flex-vertical-align flex-1">
           <div>{this.props.item.get('check_spec').value.name}</div>
@@ -142,7 +142,7 @@ const CheckItem = React.createClass({
           </Padding>
         </div>
       );
-    }else{
+    }else {
       return <div/>
     }
   }

@@ -54,7 +54,7 @@ export default React.createClass({
           {this.renderMoreButton()}
         </div>
       )
-    }else{
+    }else {
       return (
         <div>
           <Alert bsStyle="default">

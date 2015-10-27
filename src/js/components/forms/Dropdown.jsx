@@ -11,7 +11,7 @@ export default React.createClass({
     let label = this.props.bf.value();
     if (label){
       label = this.getLabelFromChoice(label);
-    }else{
+    }else {
       label = _.clone(this.props.bf.label);
     }
     return _.extend({}, this.props, {
@@ -58,7 +58,7 @@ export default React.createClass({
       return (
         <ChevronUp style={{position: 'absolute', right: '10px', top: '10px'}}/>
       )
-    }else{
+    }else {
       return (
         <ChevronDown style={{position: 'absolute', right: '10px', top: '10px'}}/>
       )
@@ -79,7 +79,7 @@ export default React.createClass({
           }
         </div>
       )
-    }else{
+    }else {
       return <div/>
     }
   },

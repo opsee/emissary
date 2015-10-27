@@ -40,7 +40,7 @@ export default React.createClass({
       return (
         <p>Success. Check your email.</p>
       )
-    }else{
+    }else {
       return (
       <form name="loginForm" onSubmit={this.submit}>
         <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>

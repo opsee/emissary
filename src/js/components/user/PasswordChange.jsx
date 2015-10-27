@@ -57,7 +57,7 @@ export default React.createClass({
       return (
         <p>Success. Check your email.</p>
       )
-    }else{
+    }else {
       return (
       <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
         <p>Enter your new password here.</p>

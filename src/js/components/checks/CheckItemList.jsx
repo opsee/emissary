@@ -44,7 +44,7 @@ export default React.createClass({
           })}
         </div>
       )
-    }else{
+    }else {
       return (
         <StatusHandler status={this.state.status}>
           <Alert bsStyle="default">No checks applied</Alert>

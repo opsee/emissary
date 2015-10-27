@@ -35,7 +35,7 @@ export default React.createClass({
     }else if (this.state.html){
       // return this.getParsedHtml();
       return <div dangerouslySetInnerHTML={{__html: this.state.html}}/>
-    }else{
+    }else {
       return <div/>;
     }
   }

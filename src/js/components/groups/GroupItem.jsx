@@ -105,14 +105,14 @@ const GroupItem = React.createClass({
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
         )
-      }else{
+      }else {
         return (
           <div className={listItem.link}>
             <RadialGraph {...this.props.item.toJS()}/>
           </div>
         )
       }
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -124,7 +124,7 @@ const GroupItem = React.createClass({
         <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
       </Link>
       )
-    }else{
+    }else {
       return (
         <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
           <div>{this.props.item.get('name')}</div>
@@ -159,7 +159,7 @@ const GroupItem = React.createClass({
           </Padding>
         </div>
       );
-    }else{
+    }else {
       return <div/>
     }
   }

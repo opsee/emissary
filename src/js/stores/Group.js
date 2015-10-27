@@ -128,13 +128,13 @@ const statics = {
         {
           assertions:[
           {passing:false}
-        ]
+          ]
         },
         {
           assertions:[
           {passing:true},
           {passing:true},
-        ]
+          ]
         },
       ];
     }
@@ -165,21 +165,21 @@ const statics = {
           assertions:[
           {passing:false},
           {passing:false}
-        ]
+          ]
         },
         {
           assertions:[
           {passing:true},
           {passing:true},
           {passing:false}
-        ]
+          ]
         },
         {
           assertions:[
           {passing:true},
           {passing:true},
           {passing:true}
-        ]
+          ]
         },
       ];
     }

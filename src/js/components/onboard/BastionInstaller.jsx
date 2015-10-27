@@ -10,7 +10,7 @@ const BastionInstaller = React.createClass({
     return {
       id: null,
       messages: []
-    }
+    };
   },
   getInProgressItem(){
     const items = this.getItems();
@@ -26,8 +26,8 @@ const BastionInstaller = React.createClass({
 
     const index = _.findLastIndex(items, {status: 'CREATE_COMPLETE'});
     if (index > -1){
-      if (index+1 < items.length){
-        return items[index+1].ResourceType;
+      if (index + 1 < items.length){
+        return items[index + 1].ResourceType;
       }
       if (items[0].status != 'CREATE_COMPLETE'){
         return 'Cloud Finishing';
@@ -35,7 +35,7 @@ const BastionInstaller = React.createClass({
         return 'Complete';
       }
       return 'AWS:: CloudFormation:: Stack';
-    }else{
+    }else {
       if (!items[1].status){
         return 'Reading';
       }
@@ -46,7 +46,7 @@ const BastionInstaller = React.createClass({
     const num = this.getText().num;
     if (num && num > 0){
       return (num / 7)*100;
-    }else{
+    }else {
       return num;
     }
   },

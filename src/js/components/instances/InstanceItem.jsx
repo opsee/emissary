@@ -48,7 +48,7 @@ const InstanceItem = React.createClass({
   renderStatusText(){
     if (this.props.item.get('state') == 'restarting'){
       return <span>:&nbsp;(Restarting)</span>
-    }else{
+    }else {
       return <span/>
     }
   },
@@ -109,12 +109,12 @@ const InstanceItem = React.createClass({
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
         )
-      }else{
+      }else {
         return (
           <RadialGraph {...this.props.item.toJS()}/>
         )
       }
-    }else{
+    }else {
       return <div/>
     }
   },
@@ -125,7 +125,7 @@ const InstanceItem = React.createClass({
         <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
       </Link>
       )
-    }else{
+    }else {
       return (
         <div className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
           <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
@@ -159,7 +159,7 @@ const InstanceItem = React.createClass({
           </Padding>
         </div>
       );
-    }else{
+    }else {
       return <div/>
     }
   }

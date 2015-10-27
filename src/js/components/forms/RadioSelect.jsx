@@ -13,13 +13,13 @@ export default React.createClass({
   },
   onChange(id, bool){
     const data = bool ? [id] : [];
-    var obj = {};
+    let obj = {};
     obj[this.props.bf.name] = data;
     return this.props.bf.form.updateData(obj, {
       clearValidation: false
     });
   },
-  widgetIsActive(w){
+  isWidgetActive(w){
     return _.findWhere(this.props.bf.value(), w.choiceValue);
   },
   render(){
@@ -28,11 +28,11 @@ export default React.createClass({
         {this.props.bf.subWidgets().map((w, i) => {
           return (
             <li key={i}>
-              <RadioWithLabel on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+              <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
             </li>
-          )
+          );
         })}
       </ul>
-    )
+    );
   }
 });

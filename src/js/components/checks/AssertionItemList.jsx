@@ -24,7 +24,7 @@ export default React.createClass({
           })}
         </div>
       )
-    }else{
+    }else {
       return (
         <Alert bsStyle="default">
           No assertions
