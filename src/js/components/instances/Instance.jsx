@@ -10,7 +10,7 @@ import Immutable from 'immutable';
 
 function getState(){
   return {
-    instance:InstanceStore.getInstance()
+    instance: InstanceStore.getInstance()
   }
 }
 

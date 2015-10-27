@@ -6,15 +6,15 @@ import colors from 'seedling/colors';
 import style from './assertionCounter.css';
 
 const AssertionCounter = React.createClass({
-  propTypes:{
-    key:PropTypes.string,
-    relationship:PropTypes.string,
-    operand:PropTypes.string,
-    value:PropTypes.string,
-    reponse:PropTypes.object
+  propTypes: {
+    key: PropTypes.string,
+    relationship: PropTypes.string,
+    operand: PropTypes.string,
+    value: PropTypes.string,
+    reponse: PropTypes.object
   },
   runTest(){
-    return slate(_.assign(_.cloneDeep(this.props), {key:this.props.keyData}), this.props.response);
+    return slate(_.assign(_.cloneDeep(this.props), {key: this.props.keyData}), this.props.response);
   },
   passing(){
     const test = this.runTest();
@@ -34,7 +34,7 @@ const AssertionCounter = React.createClass({
     )
   },
   render(){
-    return(
+    return (
       <div title={this.getTitle()} className={this.passing() ? style.counterSuccess : style.counterDanger}>
       {this.props.label}
       <div className={`${style.validation} ${!!this.props.relationship ? style.validationActive : ''}`}>

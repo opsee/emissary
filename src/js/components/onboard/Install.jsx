@@ -17,31 +17,31 @@ import {Button} from '../forms';
 import {Padding} from '../layout'
 
 const statics = {
-  checkedInstallStatus:false
+  checkedInstallStatus: false
 }
 
 const Install = React.createClass({
   mixins: [OnboardStore.mixin, GlobalStore.mixin],
   storeDidChange(){
-    let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command:'launch-bastion'}).filter(m => {
+    let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command: 'launch-bastion'}).filter(m => {
         return m.attributes && m.attributes.ResourceType;
       }).value();
 
     let reject = false;
-    if(this.props.query.fail){
-      reject = {instance_id:'1r6k6YRB3Uzh0Bk5vmZsFU'}
-    }else if(config.demo){
-      reject = {instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'}
-    }else if(this.props.query.success){
-      reject = {instance_id:'5tRx0JWEOQgGVdLoKj1W3Z'}
+    if (this.props.query.fail){
+      reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'}
+    }else if (config.demo){
+      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'}
+    }else if (this.props.query.success){
+      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'}
     }
 
     const bastions = _.chain(msgs)
     .reject(reject)
     .groupBy('instance_id').map((value, key) => {
       return {
-        id:key,
-        messages:_.chain(value).pluck('attributes').sort(function(a,b){
+        id: key,
+        messages: _.chain(value).pluck('attributes').sort(function(a, b){
           return Date.parse(a.Timestamp) - Date.parse(b.Timestamp)
         }).value()
       }
@@ -50,22 +50,22 @@ const Install = React.createClass({
   },
   getInitialState() {
     return {
-      bastions:[]
+      bastions: []
     }
   },
   componentWillMount(){
-    if(config.demo || this.props.path.match('example')){
+    if (config.demo || this.props.path.match('example')){
       OnboardActions.onboardExampleInstall();
     }else{
       OnboardStore.getBastionHasLaunchedPromise().then(function(started){
         statics.checkedInstallStatus = true;
         const data = OnboardStore.getFinalInstallData();
-        if(data && !started){
+        if (data && !started){
           const dataHasValues = _.chain(data).values().every(_.identity).value();
-          if(dataHasValues && data.regions.length){
+          if (dataHasValues && data.regions.length){
             OnboardActions.onboardInstall(data);
           }
-        }else if(!data && !started){
+        }else if (!data && !started){
           router.transitionTo('onboardRegionSelect');
         }
       })
@@ -73,7 +73,7 @@ const Install = React.createClass({
   },
   bastionStatuses(){
     return _.chain(this.state.bastions).pluck('messages').map(bastionMsgs => {
-      return _.chain(bastionMsgs).filter({ResourceType:'AWS::CloudFormation::Stack'}).filter(msg => {
+      return _.chain(bastionMsgs).filter({ResourceType: 'AWS:: CloudFormation:: Stack'}).filter(msg => {
         return msg.ResourceStatus == 'CREATE_COMPLETE' || msg.ResourceStatus == 'ROLLBACK_COMPLETE'
       }).pluck('ResourceStatus').first().value()
      }).value();
@@ -89,7 +89,7 @@ const Install = React.createClass({
     return _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
   },
   renderSurvey(){
-    if(!config.demo){
+    if (!config.demo){
       return (
         <Padding tb={1}>
           <Survey/>
@@ -102,9 +102,9 @@ const Install = React.createClass({
   renderBtn(){
     const bastionErrors = this.getBastionErrors();
     const bastionSuccesses = this.getBastionSuccesses();
-    if(this.bastionsComplete()){
-      if(!bastionErrors.length || bastionSuccesses.length){
-        return(
+    if (this.bastionsComplete()){
+      if (!bastionErrors.length || bastionSuccesses.length){
+        return (
           <Padding tb={3}>
             <Button to="checkCreate" color="primary" block={true} chevron={true}>
               Create a Check
@@ -121,19 +121,19 @@ const Install = React.createClass({
     }
   },
   renderText(){
-    if(!statics.checkedInstallStatus && !this.state.bastions.length){
+    if (!statics.checkedInstallStatus && !this.state.bastions.length){
       return (
         <p>Checking installation status...</p>
       )
     }
-    if(this.bastionsComplete()){
+    if (this.bastionsComplete()){
       const bastionErrors = this.getBastionErrors();
       const bastionSuccesses = this.getBastionSuccesses();
-      if(bastionErrors.length && !bastionSuccesses.length){
+      if (bastionErrors.length && !bastionSuccesses.length){
         return (
           <p>{bastionErrors.length > 1 ? bastionErrors.length : ''} Bastion{bastionErrors.length > 1 ? 's' : ''} failed to install correctly</p>
         )
-      }else if(bastionErrors.length){
+      }else if (bastionErrors.length){
         return (
           <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
         )

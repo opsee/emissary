@@ -7,13 +7,13 @@ import {ChevronDown} from '../icons';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  propTypes:{
-    assertions:PropTypes.array.isRequired
+  propTypes: {
+    assertions: PropTypes.array.isRequired
   },
   render() {
     const self = this;
-    if(this.props.assertions.length){
-      return(
+    if (this.props.assertions.length){
+      return (
         <div>
           {this.props.assertions.map((assertion, i) => {
             return (

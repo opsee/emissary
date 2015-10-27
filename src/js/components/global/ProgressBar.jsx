@@ -6,28 +6,28 @@ import {Close, ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 
 export default React.createClass({
-  propTypes:{
-    percentage:PropTypes.number.isRequired
+  propTypes: {
+    percentage: PropTypes.number.isRequired
   },
   getDefaultProps(){
     return {
-      steps:7
+      steps: 7
     }
   },
   getBg(){
-    if(this.props.percentage >= 100){
+    if (this.props.percentage >= 100){
       return colors.success;
     }else{
-      if(this.props.percentage === 0){
+      if (this.props.percentage === 0){
         return colors.warning;
-      }else if(this.props.percentage === -1){
+      }else if (this.props.percentage === -1){
         return colors.danger;
       }
     }
     return colors.primary;
   },
   getWidth(){
-    if(this.props.percentage === 0 || this.props.percentage === -1){
+    if (this.props.percentage === 0 || this.props.percentage === -1){
       return '100%';
     }
     return this.props.percentage+'%';
@@ -35,7 +35,7 @@ export default React.createClass({
   render() {
     return (
      <div className="progress">
-        <div className="progress_bar" style={{width:this.getWidth(),background:this.getBg()}}></div>
+        <div className="progress_bar" style={{width: this.getWidth(), background: this.getBg()}}></div>
         <div className="ticks">
           {_.range(this.props.steps - 1).map(i => {
             return (

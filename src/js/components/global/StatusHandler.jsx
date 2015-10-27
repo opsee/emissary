@@ -5,23 +5,23 @@ import Loader from './Loader.jsx';
 import {Alert} from '../../modules/bootstrap';
 
 export default React.createClass({
-  propTypes:{
-    successText:PropTypes.string,
-    timeout:PropTypes.number
+  propTypes: {
+    successText: PropTypes.string,
+    timeout: PropTypes.number
   },
   getInitialState(){
     return {
-      error:false,
-      success:false
+      error: false,
+      success: false
     }
   },
   componentWillReceiveProps(nextProps){
-    if(nextProps.status == 'success'){
-      return this.setState({success:true});
+    if (nextProps.status == 'success'){
+      return this.setState({success: true});
     }
-    if(nextProps.status && typeof nextProps.status != 'string'){
+    if (nextProps.status && typeof nextProps.status != 'string'){
       let error = nextProps.status;
-      if(error && error.req){
+      if (error && error.req){
         error = error.text;
       }
       error = error.toString()
@@ -29,19 +29,19 @@ export default React.createClass({
     }
   },
   getErrorText(){
-    if(this.state.error && typeof this.state.error == 'object' && this.state.error.message){
+    if (this.state.error && typeof this.state.error == 'object' && this.state.error.message){
       return this.state.error.message;
     }
     return 'Something went wrong.';
   },
   render(){
-    if(this.props.status == 'pending'){
+    if (this.props.status == 'pending'){
       return <Loader timeout={this.props.timeout}/>
-    }else if(this.state.success){
+    }else if (this.state.success){
       return (
         <div>{this.props.children}</div>
       );
-    }else if(this.state.error){
+    }else if (this.state.error){
       return (
         <Alert bsStyle="danger">{this.getErrorText()}</Alert>
       );

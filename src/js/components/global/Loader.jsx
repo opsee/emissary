@@ -4,28 +4,28 @@ import _ from 'lodash';
 import style from './loader.css';
 
 export default React.createClass({
-  propTypes:{
+  propTypes: {
     //wait X number of seconds until showing the loader
-    timeout:PropTypes.number
+    timeout: PropTypes.number
   },
   getInitialState(){
     return {
-      show:false
+      show: false
     }
   },
   componentDidMount(){
     var self = this;
     setTimeout(() => {
-      if(self.isMounted()){
+      if (self.isMounted()){
         self.setState({
-          show:true
+          show: true
         })
       }
-    },self.props.timeout || 700)
+    }, self.props.timeout || 700)
   },
   render(){
-    if(this.state.show){
-      return(
+    if (this.state.show){
+      return (
         <div className="display-flex justify-content-center">
           <div className={style.loader}></div>
         </div>

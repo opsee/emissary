@@ -37,6 +37,9 @@ module.exports = {
     filename: "bundle.js",
   },
   module: {
+    preLoaders:[
+      { test: /\.js$|\.jsx$/, loaders: ['eslint'], include: [context_dir] },
+    ],
     loaders: [
       { test: /\.global\.css$/, loader: 'style-loader!css-loader!cssnext-loader', include: [context_dir]},
       { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]-[hash:base64:5]!cssnext-loader'},

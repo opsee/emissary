@@ -5,7 +5,7 @@ import router from '../../modules/router.js';
 export default React.createClass({
   getInitialState(){
     return {
-      hidden:true
+      hidden: true
     }
   },
   submit(e, foo){
@@ -21,11 +21,11 @@ export default React.createClass({
   },
   selectItem(choice, event){
     router.transitionTo(choice);
-    this.setState({hidden:true});
+    this.setState({hidden: true});
   },
-  inputAttributes:{
-    placeholder:'Search for a Page Route',
-    id:'searchBoxInput'
+  inputAttributes: {
+    placeholder: 'Search for a Page Route',
+    id: 'searchBoxInput'
   },
   render(){
     const self = this;
@@ -33,25 +33,25 @@ export default React.createClass({
       switch(e.which){
         //forward slash
         case 191:
-        if(e.srcElement && (e.srcElement.nodeName == 'BODY' || e.srcElement.id == 'searchBoxInput')){
+        if (e.srcElement && (e.srcElement.nodeName == 'BODY' || e.srcElement.id == 'searchBoxInput')){
           const isHidden = !!self.state.hidden;
           self.setState({hidden:!isHidden});
-          if(isHidden){
+          if (isHidden){
             const el = document.querySelector('#searchBox input');
-            if(el){
-              setTimeout(() => el.focus(),100);
+            if (el){
+              setTimeout(() => el.focus(), 100);
             }
           }
         }
         break;
         //escape key
         case 27:
-        self.setState({hidden:true});
+        self.setState({hidden: true});
         break;
       }
     }
-    if(!this.state.hidden){
-      return(
+    if (!this.state.hidden){
+      return (
         <div id="searchBox">
           <Autosuggest suggestions={this.getData} onSuggestionSelected={this.selectItem} inputAttributes={this.inputAttributes}/>
         </div>

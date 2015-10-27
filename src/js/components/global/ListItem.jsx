@@ -6,10 +6,10 @@ import _ from 'lodash';
 const ListItem = React.createClass({
   getStyle(){
     const local = [{
-      overflow:'hidden',
-      transition:'300ms background',
-      // ':hover':{
-      //   background:colors.gray700
+      overflow: 'hidden',
+      transition: '300ms background',
+      // ': hover': {
+      //   background: colors.gray700
       // }
     }]
     const style = this.props.style || [];

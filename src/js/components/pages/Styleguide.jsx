@@ -20,36 +20,36 @@ const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error',
 function getState(){
   return {
     checks: CheckStore.getChecks(),
-    toggles:[{on:true},{on:false},{on:true}],
-    radios:_.range(3).map(i => {
-      return {id:`radio-${i}`,on:false}
+    toggles: [{on: true},{on: false},{on: true}],
+    radios: _.range(3).map(i => {
+      return {id:`radio-${i}`, on: false}
     }),
-    buttonToggles:['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
-      return {title:title, on:false, id:`button-toggle-${i}`}
+    buttonToggles: ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
+      return {title: title, on: false, id:`button-toggle-${i}`}
     })
   }
 }
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Name',
-      autocomplete:'off',
-      title:'foo'
+    widgetAttrs: {
+      placeholder: 'Name',
+      autocomplete: 'off',
+      title: 'foo'
     }
   }),
   password: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Password',
+    widgetAttrs: {
+      placeholder: 'Password',
     }
   }),
   body: forms.CharField({
     widget: forms.Textarea,
-    widgetAttrs:{
-      placeholder:'Body',
+    widgetAttrs: {
+      placeholder: 'Body',
     }
   }),
-  validation:'auto'
+  validation: 'auto'
 });
 
 export default React.createClass({
@@ -57,8 +57,8 @@ export default React.createClass({
   getInitialState(){
     const self = this;
     return _.extend(getState(), {
-      info:new InfoForm({
-        onChange:self.changeAndUpdate
+      info: new InfoForm({
+        onChange: self.changeAndUpdate
       })
     })
   },
@@ -79,7 +79,7 @@ export default React.createClass({
   triggerRadio(id, bool){
     let radios = _.clone(this.state.radios);
     const index = _.findIndex(radios, {id});
-    if(index > -1){
+    if (index > -1){
       radios = radios.map(r => {
         r.on = r.id == id ? bool : false;
         return r;
@@ -90,7 +90,7 @@ export default React.createClass({
   triggerButtonToggle(id, bool){
     let buttonToggles = _.clone(this.state.buttonToggles);
     const index = _.findIndex(buttonToggles, {id});
-    if(index > -1){
+    if (index > -1){
       buttonToggles = buttonToggles.map(r => {
         r.on = r.id == id ? bool : r.on;
         return r;
@@ -104,8 +104,8 @@ export default React.createClass({
   },
   notify(style){
     GlobalActions.globalModalMessage({
-      html:'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
-      style:style
+      html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
+      style: style
     });
   },
   getColor(){
@@ -127,10 +127,10 @@ export default React.createClass({
             <Col xs={12}>
               <Padding b={1}>
                 <h3>Colors</h3>
-                {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
+                {['brand-primary', 'brand-success', 'brand-info', 'brand-warning', 'brand-danger'].map((color, i) =>{
                   return (
                     <div className="clearfix" key={`color-${i}`}>
-                      <div className={`bg-${color} pull-left`} style={{width:"45px",height:"45px"}} type="button"></div>
+                      <div className={`bg-${color} pull-left`} style={{width:"45px", height:"45px"}} type="button"></div>
                       <div className="padding pull-left">{color}</div>
                     </div>
                   )
@@ -151,7 +151,7 @@ export default React.createClass({
                 <h3>Icons</h3>
                 <div>
                   {Object.keys(icons).map(key => {
-                    return React.createElement(icons[key], {fill:this.getColor()});
+                    return React.createElement(icons[key], {fill: this.getColor()});
                   })}
                 </div>
               <hr/>
@@ -160,8 +160,8 @@ export default React.createClass({
 
                   <h3>Unordered List</h3>
                   <ul>
-                  {[1,2,3,4].map(i => {
-                    return(
+                  {[1, 2, 3, 4].map(i => {
+                    return (
                       <li key={`unordered-item-${i}`}>List Item {i}</li>
                     );
                   })}
@@ -169,8 +169,8 @@ export default React.createClass({
 
                   <h3>Ordered List</h3>
                   <ol>
-                    {[1,2,3,4].map(i => {
-                    return(
+                    {[1, 2, 3, 4].map(i => {
+                    return (
                       <li key={`ordered-item-${i}`}>List Item {i}</li>
                       );
                     })}
@@ -179,8 +179,8 @@ export default React.createClass({
 
                 <h3>Toggle List</h3>
                 <ul className="list-unstyled">
-                {this.state.toggles.map((t,i) => {
-                  return(
+                {this.state.toggles.map((t, i) => {
+                  return (
                     <li key={`toggle-${i}`}>
                       <ToggleWithLabel on={t.on} onChange={this.triggerToggle} id={i} label="Item"/>
                     </li>
@@ -193,8 +193,8 @@ export default React.createClass({
 
               <h3>Radio Select</h3>
               <ul className="list-unstyled">
-              {this.state.radios.map((t,i) => {
-                return(
+              {this.state.radios.map((t, i) => {
+                return (
                   <li className="" key={`radio-${i}`}>
                     <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
                   </li>
@@ -206,9 +206,9 @@ export default React.createClass({
 
           <h3>Button Toggles</h3>
             <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
-            {this.state.buttonToggles.map((t,i) => {
-              return(
-                <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin:'0 .5em'}}>
+            {this.state.buttonToggles.map((t, i) => {
+              return (
+                <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin: '0 .5em'}}>
                   <ButtonToggle on={t.on} onChange={this.triggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
                 </li>
               )
@@ -242,7 +242,7 @@ export default React.createClass({
 
             <h3>Checks</h3>
             {_.range(1).map((i, ci) => {
-              return(
+              return (
                 <ul className="list-unstyled" key={`check-list-${ci}`}>
                 {this.props.checks.map((check, id) => {
                   return (
@@ -259,7 +259,7 @@ export default React.createClass({
 
             <h3>Cards</h3>
             <Row>
-            {[1,2,3,4].map(i => {
+            {[1, 2, 3, 4].map(i => {
               return (
                 <Col xs={12} sm={6} className="padding-tb" key={`card-${i}`}>
                   <div className="bg-gray-900 md-shadow-bottom-z-1">
@@ -301,13 +301,13 @@ export default React.createClass({
               <h3>Buttons</h3>
               <Padding b={2}>
                 <h4>Regular</h4>
-                  {['primary','success','warning','danger','info','default'].map(i => {
+                  {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                     return (
                       <Button color={i} key={`btn-${i}`}>{i}</Button>
                     )
                   })}
                 <h4>Disabled</h4>
-                {['primary','success','warning','danger','info','default'].map(i => {
+                {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
                     <Button color={i} disabled={true} key={`btn-${i}`}>{i}</Button>
                   )
@@ -320,7 +320,7 @@ export default React.createClass({
               <h3>Flat Buttons</h3>
 
               <Padding b={2}>
-                {['primary','success','warning','danger','info','default'].map(i => {
+                {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
                     <Padding className="pull-left" key={`btn-flat-${i}`}>
                       <Button flat={true} color={i}>{i}</Button>

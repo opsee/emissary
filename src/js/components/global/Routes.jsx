@@ -64,8 +64,8 @@ const routes = (
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
 
     <Route path="/env" name="env" handler={Env}/>
-    <Route path="/instance/ec2/:id" name="instanceEC2" handler={InstanceEC2}/>
-    <Route path="/instance/rds/:id" name="instanceRDS" handler={InstanceRDS}/>
+    <Route path="/instance/ec2/: id" name="instanceEC2" handler={InstanceEC2}/>
+    <Route path="/instance/rds/: id" name="instanceRDS" handler={InstanceRDS}/>
 
     <Route path="/" name="checks" handler={CheckList}/>
     <Redirect from="/checks" to="/" />
@@ -77,13 +77,13 @@ const routes = (
       <Route path="/check-create/assertions" name="checkCreateAssertions" handler={CheckCreateAssertions}/>
       <Route path="/check-create/info" name="checkCreateInfo" handler={CheckCreateInfo}/>
     </Route>
-    <Route path="/check/edit/:id" name="checkEdit" handler={CheckEdit}/>
-    <Route path="/check/:id" name="check" handler={CheckSingle}>
+    <Route path="/check/edit/: id" name="checkEdit" handler={CheckEdit}/>
+    <Route path="/check/: id" name="check" handler={CheckSingle}>
       <NotFoundRoute handler={CheckNotFound}/>
     </Route>
 
-    <Route path="/group/security/:id" name="groupSecurity" handler={GroupSecurity}/>
-    <Route path="/group/elb/:id" name="groupElb" handler={GroupElb}/>
+    <Route path="/group/security/: id" name="groupSecurity" handler={GroupSecurity}/>
+    <Route path="/group/elb/: id" name="groupElb" handler={GroupElb}/>
 
     <Route path="/start" name="start" handler={OnboardCreate}/>
     <Route path="/start/thanks" name="onboardThanks" handler={OnboardThanks}/>

@@ -10,7 +10,7 @@ import {Button} from '../forms';
 function getState(){
   return {
     instances: InstanceStore.getInstancesECC(),
-    status:InstanceStore.getGetInstancesECCStatus()
+    status: InstanceStore.getGetInstancesECCStatus()
   }
 }
 
@@ -38,7 +38,7 @@ export default React.createClass({
   },
   renderFailingInstances(){
     const instances = this.getFailingInstances();
-    if(instances.size){
+    if (instances.size){
       return (
         <div>
           <h3>Failing Instances</h3>
@@ -50,7 +50,7 @@ export default React.createClass({
     }
   },
   render() {
-    if(this.state.instances.size){
+    if (this.state.instances.size){
       return (
         <div>
           {this.renderFailingInstances()}

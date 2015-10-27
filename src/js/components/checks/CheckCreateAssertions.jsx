@@ -23,7 +23,7 @@ const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, asse
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
 
 function relationshipConcernsEmpty(relationship){
-  if(typeof relationship == 'string' && relationship.match('empty|notEmpty')){
+  if (typeof relationship == 'string' && relationship.match('empty|notEmpty')){
     return true;
   }
   return false;
@@ -31,34 +31,34 @@ function relationshipConcernsEmpty(relationship){
 
 const AssertionsForm = forms.Form.extend({
   key: forms.ChoiceField({
-    widgetAttrs:{
+    widgetAttrs: {
       noLabel: true
     },
-    choices:assertionTypeOptions
+    choices: assertionTypeOptions
   }),
   relationship: forms.ChoiceField({
-    widgetAttrs:{
+    widgetAttrs: {
       noLabel: true
     },
-    choices:relationshipOptions,
+    choices: relationshipOptions
   }),
   operand: forms.CharField({
     label: 'Value',
-    widgetAttrs:{
-      placeholder:'Value'
+    widgetAttrs: {
+      placeholder: 'Value'
     },
-    required:false
+    required: false
   }),
   value: forms.CharField({
-    label:'Header Key',
-    widgetAttrs:{
-      placeholder:'i.e. Content-Type'
+    label: 'Header Key',
+    widgetAttrs: {
+      placeholder: 'i.e. Content-Type'
     },
-    required:false
+    required: false
   }),
-  clean:function(){
-    if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
-      if(!this.cleanedData.operand){
+  clean: function(){
+    if (!relationshipConcernsEmpty(this.cleanedData.relationship)){
+      if (!this.cleanedData.operand){
         throw forms.ValidationError('Assertion must have operand.');
       }
     }
@@ -66,8 +66,8 @@ const AssertionsForm = forms.Form.extend({
       case 'code':
       break;
       case 'header':
-      if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
-        if(!this.cleanedData.value){
+      if (!relationshipConcernsEmpty(this.cleanedData.relationship)){
+        if (!this.cleanedData.value){
           throw forms.ValidationError('Header assertion must have a value.');
         }
       }
@@ -76,8 +76,8 @@ const AssertionsForm = forms.Form.extend({
 });
 
 const AssertionsFormSet = forms.FormSet.extend({
-  form:AssertionsForm,
-  canDelete:true
+  form: AssertionsForm,
+  canDelete: true
 });
 
 const CheckCreateAssertions = React.createClass({
@@ -85,25 +85,25 @@ const CheckCreateAssertions = React.createClass({
     const self = this;
     var obj = {
       assertions: new AssertionsFormSet({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-        initial:this.props.check.assertions,
+        onChange: self.changeAndUpdate,
+        labelSuffix: '',
+        initial: this.props.check.assertions,
         minNum:!this.props.check.assertions.length ? 1 : 0,
-        extra:0
+        extra: 0
       }),
-      response:this.props.response,
-      formattedResponse:this.props.formattedResponse
+      response: this.props.response,
+      formattedResponse: this.props.formattedResponse
     };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.assertions.forms().forEach((form, i) => {
         //checking here accounts for empty assertion forms
         let data = self.props.check.assertions[i];
-        if(data){
+        if (data){
           form.setData(data);
         }
       });
-    },10);
+    }, 10);
     return obj;
   },
   changeAndUpdate(){
@@ -111,9 +111,9 @@ const CheckCreateAssertions = React.createClass({
   },
   renderOperand(form, key){
     const data = form.cleanedData;
-    if(data && data.relationship){
-      if(data.key == 'header' || !data.relationship.match('empty|notEmpty')){
-        return(
+    if (data && data.relationship){
+      if (data.key == 'header' || !data.relationship.match('empty|notEmpty')){
+        return (
           <Row>
             <Padding t={1}>
               <Col xs={12}>
@@ -127,8 +127,8 @@ const CheckCreateAssertions = React.createClass({
   },
   renderValue(form, key){
     const data = form.cleanedData;
-    if(data && data.relationship && data.key == 'header'){
-      if(!data.relationship.match('empty|notEmpty')){
+    if (data && data.relationship && data.key == 'header'){
+      if (!data.relationship.match('empty|notEmpty')){
         return (
           <Row>
             <Padding t={1}>
@@ -143,7 +143,7 @@ const CheckCreateAssertions = React.createClass({
     return <div/>
   },
   removeAssertion(index){
-    if(index > 0){
+    if (index > 0){
       this.state.assertions.removeForm(index);
     }
   },
@@ -153,7 +153,7 @@ const CheckCreateAssertions = React.createClass({
     });
   },
   renderDeleteAssertionButton(form, index){
-    if(index > 0){
+    if (index > 0){
       return (
         <Col xs={2} sm={1}>
           <BoundField bf={form.boundField('DELETE')}/>
@@ -164,7 +164,7 @@ const CheckCreateAssertions = React.createClass({
     }
   },
   renderAssertionsForm(){
-    return(
+    return (
       <div>
         {this.getAssertionsForms().map((form, index) => {
           return (
@@ -221,8 +221,8 @@ const CheckCreateAssertions = React.createClass({
     return CheckStore.getFormattedResponse(this.props.response);
   },
   renderSubmitButton(){
-    if(!this.props.renderAsInclude){
-      return(
+    if (!this.props.renderAsInclude){
+      return (
         <div>
           <div><br/><br/></div>
           <div>

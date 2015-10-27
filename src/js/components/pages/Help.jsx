@@ -10,7 +10,7 @@ import {Button} from '../forms';
 
 export default React.createClass({
   renderAdminLinks(){
-    if(UserStore.getUser().get('admin')){
+    if (UserStore.getUser().get('admin')){
       return (
         <Padding b={1}>
           <h3>Onboarding Pages</h3>

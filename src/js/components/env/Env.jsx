@@ -15,11 +15,11 @@ import EnvWithFilter from './EnvWithFilter.jsx';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
-    label:'Filter',
-    widgetAttrs:{
-      placeholder:'group:target-group'
+    label: 'Filter',
+    widgetAttrs: {
+      placeholder: 'group: target-group'
     },
-    required:false
+    required: false
   }),
   render() {
     return <BoundField bf={this.boundField('filter')}/>
@@ -27,14 +27,14 @@ const FilterForm = forms.Form.extend({
 });
 
 export default React.createClass({
-  statics:{
-    willTransitionTo:PageAuth
+  statics: {
+    willTransitionTo: PageAuth
   },
   getInitialState(){
     return {
       filter: new FilterForm({
-        onChange:self.filterHasChanged,
-        labelSuffix:''
+        onChange: self.filterHasChanged,
+        labelSuffix: ''
       })
     }
   },

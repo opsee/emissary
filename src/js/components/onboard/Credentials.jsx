@@ -16,53 +16,53 @@ import {Padding} from '../layout';
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
     widget: forms.PasswordInput,
-    label:'Access Key ID',
-    widgetAttrs:{
-      placeholder:'Your AWS Access Key ID',
+    label: 'Access Key ID',
+    widgetAttrs: {
+      placeholder: 'Your AWS Access Key ID',
     }
   }),
   'secret-key': forms.CharField({
     widget: forms.PasswordInput,
-    label:'Secret Key',
-    widgetAttrs:{
-      placeholder:'Your AWS Secret Key',
+    label: 'Secret Key',
+    widgetAttrs: {
+      placeholder: 'Your AWS Secret Key',
     }
   }),
 });
 
 const Credentials = React.createClass({
   mixins: [OnboardStore.mixin],
-  statics:{
+  statics: {
     willTransitionTo(transition, params, query){
       const data = OnboardStore.getInstallData();
-      if(!data.regions.length){
+      if (!data.regions.length){
         transition.redirect('onboardRegionSelect');
       }
     }
   },
   storeDidChange(){
     const vpcScanStatus = OnboardStore.getOnboardVpcScanStatus();
-    if(vpcScanStatus == 'success'){
+    if (vpcScanStatus == 'success'){
       const regionsWithVpcs = OnboardStore.getAvailableVpcs();
       let vpcs = _.chain(regionsWithVpcs).map(r => {
         return r.vpcs.map(v => {
           return v['vpc-id']
         });
       }).flatten().value();
-      if(vpcs.length){
-        if(vpcs.length === 1 && !storage.get('showVpcsOnboard')){
+      if (vpcs.length){
+        if (vpcs.length === 1 && !storage.get('showVpcsOnboard')){
           OnboardActions.onboardSetVpcs(vpcs);
           router.transitionTo('onboardInstall');
         }else{
           router.transitionTo('onboardVpcSelect');
         }
       }
-    }else if(vpcScanStatus && vpcScanStatus != 'pending'){
-      if(config.demo){
+    }else if (vpcScanStatus && vpcScanStatus != 'pending'){
+      if (config.demo){
         return router.transitionTo('onboardInstall');
       }
       this.setState({
-        error:vpcScanStatus && vpcScanStatus.body && vpcScanStatus.body.error
+        error: vpcScanStatus && vpcScanStatus.body && vpcScanStatus.body.error
       })
     }
   },
@@ -70,18 +70,18 @@ const Credentials = React.createClass({
     var self = this;
     var data = OnboardStore.getInstallData();
     return {
-      info:new InfoForm(_.extend({
+      info: new InfoForm(_.extend({
         onChange(){
           OnboardActions.onboardSetCredentials(self.state.info.cleanedData);
           self.forceUpdate();
         },
-        labelSuffix:'',
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
+        labelSuffix: '',
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
         },
-      }, self.dataComplete() ? {data:data} :  null)),
-      submitting:false  
+      }, self.dataComplete() ? {data: data} :  null)),
+      submitting: false  
     }
   },
   dataComplete(){
@@ -90,8 +90,8 @@ const Credentials = React.createClass({
   submit(e){
     e.preventDefault();
     this.setState({
-      error:null,
-      submitting:true
+      error: null,
+      submitting: true
     });
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
     OnboardActions.onboardVpcScan(OnboardStore.getVpcScanData());
@@ -100,7 +100,7 @@ const Credentials = React.createClass({
     return !this.state.info.isValid() || this.state.submitting;
   },
   renderError(){
-    if(this.state.error){
+    if (this.state.error){
       return (
         <div>
           <div><br/></div>

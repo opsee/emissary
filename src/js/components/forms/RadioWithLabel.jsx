@@ -5,20 +5,20 @@ import Radio from './Radio.jsx';
 import colors from 'seedling/colors';
 
 const RadioWithLabel = React.createClass({
-  propTypes:{
-    on:PropTypes.bool.isRequired,
-    onChange:PropTypes.func.isRequired,
-    id:PropTypes.oneOfType([
+  propTypes: {
+    on: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    id: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
-    label:PropTypes.string.isRequired
+    label: PropTypes.string.isRequired
   },
   getStyle(){
     let style = {
-       marginTop:'0.1em'
+       marginTop: '0.1em'
     }
-    if(this.props.on){
+    if (this.props.on){
       style.color = colors.primary;
     }
     return style;

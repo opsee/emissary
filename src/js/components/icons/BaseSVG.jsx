@@ -1,28 +1,27 @@
 import React from 'react';
 
 const BaseSVG = React.createClass({
-  getState(props){
-    props = props || this.props;
-    let width = props.width || 24;
-    let height = props.height || 24;
-    return {
-      width:width,
-      height:height,
-      fill:props.fill || 'white',
-      path:props.path || '',
-      viewBox:props.viewBox || [0, 0, width, height].join(' '),
-      style:props.style || {},
-      className:props.className
-    }
+  getInitialState(){
+    return this.getState();
   },
   componentWillReceiveProps(newProps){
     this.setState(this.getState(newProps));
   },
-  getInitialState(){
-    return this.getState();
+  getState(props){
+    const data = props || this.props;
+    let width = data.width || 24;
+    let height = data.height || 24;
+    return {
+      width: width,
+      height: height,
+      fill: data.fill || 'white',
+      path: data.path || '',
+      viewBox: data.viewBox || [0, 0, width, height].join(' '),
+      style: data.style || {},
+      className: data.className
+    };
   },
-  render: function() {
-    let style = {};
+  render() {
     return (
       <svg xmlns="http://www.w3.org/svg/2000"
         viewBox={this.state.viewBox}
@@ -34,7 +33,7 @@ const BaseSVG = React.createClass({
         >
         <path d={this.state.path} />
       </svg>
-    )
+    );
   }
 });
 

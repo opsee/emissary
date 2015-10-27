@@ -122,7 +122,7 @@ var Check = Record({
 
 function setSilence(opts){
   let check = _checks.filter((c) => c.get('id') == opts.id).first();
-  if(check){
+  if (check){
     check.silenceDate = new Date();
     check.silenceDuration = moment.duration(opts.sizelength, opts.unit).asMilliseconds();
   }
@@ -130,7 +130,7 @@ function setSilence(opts){
 
 const statics = {
   getCheckPending(id){
-    if(_data.check.get('id') != id){
+    if (_data.check.get('id') != id){
       _data.check = new Check();
     }
   },
@@ -175,7 +175,7 @@ const _public = {
     return _data.check;
   },
   getChecks(targetId){
-    if(targetId){
+    if (targetId){
       return _data.checks.filter(c => {
         return c.get('target').id == targetId;
       });
@@ -187,7 +187,7 @@ const _public = {
   },
   getResponse(){
     let response;
-    if(_data.response){
+    if (_data.response){
       response = _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
     }
     return response;
@@ -196,9 +196,9 @@ const _public = {
     return response;
   },
   getFormattedResponse(data){
-    if(data){
+    if (data){
       let response = _.cloneDeep(data);
-      if(response.headers){
+      if (response.headers){
         response.headers = response.headers.map(h => {
           h.values = h.values.join(', ');
           return h;
@@ -248,7 +248,7 @@ const Store = Flux.createStore(
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }

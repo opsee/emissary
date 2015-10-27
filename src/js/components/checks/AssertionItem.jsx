@@ -8,9 +8,9 @@ import relationships from 'slate/src/relationships';
 import types from 'slate/src/types';
 
 const AssertionItem = React.createClass({
-  propTypes:{
-    item:PropTypes.object.isRequired,
-    response:PropTypes.object.isRequired
+  propTypes: {
+    item: PropTypes.object.isRequired,
+    response: PropTypes.object.isRequired
   },
   getKey(){
     const key = this.props.item.key;

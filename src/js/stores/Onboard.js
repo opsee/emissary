@@ -39,7 +39,7 @@ let _data = {
 const _public = {
   getBastionHasLaunchedPromise(){
     var d = $q.defer();
-    if(_data.bastionHasLaunched || _data.bastionLaunchHasBeenChecked){
+    if (_data.bastionHasLaunched || _data.bastionLaunchHasBeenChecked){
       d.resolve(_data.bastionHasLaunched);
     }else{
       setTimeout(() => {
@@ -73,14 +73,14 @@ const _public = {
       Store.getAvailableVpcs().forEach(
         function(r){
           r.vpcs.forEach(function(rvpc){
-            if(rvpc['vpc-id'] == v){
+            if (rvpc['vpc-id'] == v){
               v = {id:v,region:r.region}
             }
           })
         });
       return v.id ? v : false;
     });
-    if(!_.every(relation) || !relation.length){
+    if (!_.every(relation) || !relation.length){
       return false;
     }
     //TODO fix this so it works with multiple vpcs later
@@ -125,7 +125,7 @@ const Store = Flux.createStore(
       break;
       case 'ONBOARD_SET_REGIONS':
         _installData.regions = [payload.data];
-        if(window.location.host.match('localhost')){
+        if (window.location.host.match('localhost')){
           _installData.regions = ['us-west-1']
         }
         Store.emitChange();
@@ -145,7 +145,7 @@ const Store = Flux.createStore(
         Store.emitChange();
       break;
       case 'GLOBAL_SOCKET_MESSAGE':
-        if(payload.data && payload.data.command && payload.data.command == 'launch-bastion'){
+        if (payload.data && payload.data.command && payload.data.command == 'launch-bastion'){
           _data.bastionLaunchHasBeenChecked = true;
           _data.bastionHasLaunched = true;
           Store.emitChange();
@@ -166,7 +166,7 @@ const Store = Flux.createStore(
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }

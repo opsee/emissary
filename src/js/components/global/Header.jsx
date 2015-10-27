@@ -13,18 +13,18 @@ export default React.createClass({
   mixins: [UserStore.mixin, GlobalStore.mixin],
   storeDidChange(){
     this.setState({
-      showNav:GlobalStore.getShowNav(),
-      ghosting:UserStore.getUser().get('admin_id') > 0
+      showNav: GlobalStore.getShowNav(),
+      ghosting: UserStore.getUser().get('admin_id') > 0
     });
     this.forceUpdate();
   },
   getInitialState(){
     return {
-      showNav:GlobalStore.getShowNav()
+      showNav: GlobalStore.getShowNav()
     }
   },
   renderLoginLink(){
-    if(UserStore.hasUser()){
+    if (UserStore.hasUser()){
       return (
         <Link to="profile" className={style.navbarLink}>
           <Person nav={true}/>&nbsp;
@@ -42,7 +42,7 @@ export default React.createClass({
   },
   renderNavItems(){
     return (
-      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin:0}}>
+      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
         <li>
          <Link to="checks" className={style.navbarLink}>
            <Checkmark nav={true}/>&nbsp;
@@ -69,13 +69,13 @@ export default React.createClass({
   },
   getHeaderStyle(){
     let obj = {};
-    if(this.state.ghosting){
+    if (this.state.ghosting){
       obj.background = colors.danger;
     }
     return obj;
   },
   render(){
-    return(
+    return (
       <header id="header" className={this.state.showNav ? style.header : style.headerHide} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>

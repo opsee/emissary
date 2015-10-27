@@ -18,7 +18,7 @@ var User = Record({
 
 const statics = {
   setUser(data){
-    if(data && data.user){
+    if (data && data.user){
       data.user.token = data.token;
     }
     data.user.loginDate = data.user.loginDate || _data.user.get('loginDate');
@@ -65,11 +65,11 @@ const _public = {
     // 720 minutes == 12 hours
     let minutes = 720;
     // 15 minutes for ghosting
-    if(_data.user.get('admin_id') > 0){
+    if (_data.user.get('admin_id') > 0){
       minutes = 15;
     }
     const valid = !!(typeof diff == 'number' && diff < minutes && diff > -1);
-    if(!date || !valid){
+    if (!date || !valid){
       return null;
     }
     return _data.user.get('token') ? `Bearer ${_data.user.get('token')}` : null;
@@ -78,7 +78,7 @@ const _public = {
     return !!(_public.getAuth() && _data.user.get('email'));
   },
   getUser(){
-    if(_data.user.get('email') == 'cliff@leaninto.it' && storage.get('demo') !== false){
+    if (_data.user.get('email') == 'cliff@leaninto.it' && storage.get('demo') !== false){
       config.demo = true;
     }
     return _data.user;
@@ -107,7 +107,7 @@ const Store = Flux.createStore(
       case 'USER_SET':
       case 'USER_LOGIN_SUCCESS':
       case 'USER_EDIT_SUCCESS':
-        if(payload.actionType == 'USER_LOGIN_SUCCESS'){
+        if (payload.actionType == 'USER_LOGIN_SUCCESS'){
           payload.data.user.loginDate = new Date();
         }
         statics.setUser(payload.data);
@@ -132,7 +132,7 @@ const Store = Flux.createStore(
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }

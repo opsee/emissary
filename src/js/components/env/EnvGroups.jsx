@@ -9,7 +9,7 @@ import {Button} from '../forms';
 function getState(){
   return {
     groups: GroupStore.getGroupsSecurity(),
-    status:GroupStore.getGetGroupsSecurityStatus()
+    status: GroupStore.getGetGroupsSecurityStatus()
   }
 }
 export default React.createClass({
@@ -36,7 +36,7 @@ export default React.createClass({
   },
   renderFailingGroups(){
     const groups = this.getFailingGroups();
-    if(groups.size){
+    if (groups.size){
       return (
         <div>
         <h3>Failing Groups</h3>
@@ -48,7 +48,7 @@ export default React.createClass({
     }
   },
   render() {
-    if(this.state.groups.size){
+    if (this.state.groups.size){
       return (
         <div>
           {this.renderFailingGroups()}

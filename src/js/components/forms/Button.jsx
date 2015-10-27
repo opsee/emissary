@@ -7,22 +7,22 @@ import cx from 'classnames';
 import style from './button.css';
 
 const Button = React.createClass({
-  propTypes:{
-    flat:PropTypes.bool,
-    icon:PropTypes.bool,
-    block:PropTypes.bool,
-    secondary:PropTypes.bool,
-    noPad:PropTypes.bool,
-    fab:PropTypes.bool,
-    color:PropTypes.string,
-    type:PropTypes.string,
+  propTypes: {
+    flat: PropTypes.bool,
+    icon: PropTypes.bool,
+    block: PropTypes.bool,
+    secondary: PropTypes.bool,
+    noPad: PropTypes.bool,
+    fab: PropTypes.bool,
+    color: PropTypes.string,
+    type: PropTypes.string,
     //text align (left, center, right)
-    text:PropTypes.string
+    text: PropTypes.string
   },
   getDefaultProps(){
     return {
-      color:'default',
-      type:'button'
+      color: 'default',
+      type: 'button'
     }
   },
   getClass(){
@@ -35,23 +35,23 @@ const Button = React.createClass({
     return cx(arr);
   },
   renderChevron(){
-    if(this.props.chevron){
+    if (this.props.chevron){
       let fill = colors.textColor;
-      if(this.props.disabled){
+      if (this.props.disabled){
         fill = colors.textColorSecondary;
       }
       return <ChevronRight inline={true} fill={fill}/>
     }
   },
   handleLinkClick(e){
-    if(this.props.target && this.props.target == '_blank'){
+    if (this.props.target && this.props.target == '_blank'){
       e.preventDefault();
       e.stopPropagation();
       window.open(router.makeHref(this.props.to, this.props.params))
     }
   },
   renderInner(){
-    return(
+    return (
       <span>
         {this.props.children}
         {this.renderChevron()}
@@ -59,13 +59,13 @@ const Button = React.createClass({
     )
   },
   render(){
-    if(this.props.to){
+    if (this.props.to){
       return (
         <Link {...this.props} className={this.getClass()} onClick={this.handleLinkClick} title={this.props.title}>
           {this.renderInner()}
         </Link>
       )
-    }else if(this.props.href){
+    }else if (this.props.href){
       <a className={this.getClass()} onClick={this.props.onClick} href={this.props.href} target={this.props.target} title={this.props.title} style={this.props.style}>
         {this.renderInner()}
       </a>

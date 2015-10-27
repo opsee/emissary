@@ -16,8 +16,8 @@ import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  statics:{
-    willTransitionTo:PageAuth
+  statics: {
+    willTransitionTo: PageAuth
   },
   mixins: [GroupStore.mixin, SetInterval],
   storeDidChange() {
@@ -30,22 +30,22 @@ export default React.createClass({
   getData(){
     GroupActions.getGroupSecurity(this.props.params.id);
     InstanceActions.getInstancesECC({
-      id:this.props.params.id,
-      type:'security'
+      id: this.props.params.id,
+      type: 'security'
     })
   },
   getState(){
     return {
-      group:GroupStore.getGroup({
-        type:'security',
-        id:this.props.params.id
+      group: GroupStore.getGroup({
+        type: 'security',
+        id: this.props.params.id
       }),
-      instances:InstanceStore.getInstancesECC({
-        type:'security',
-        id:this.props.params.id
+      instances: InstanceStore.getInstancesECC({
+        type: 'security',
+        id: this.props.params.id
       }),
-      status:GroupStore.getGetGroupSecurityStatus(),
-      getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
+      status: GroupStore.getGetGroupSecurityStatus(),
+      getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
     }
   },
   componentWillMount(){
@@ -59,14 +59,14 @@ export default React.createClass({
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
-    if(desc && desc != ''){
+    if (desc && desc != ''){
       return {desc}
     }else{
       return <div/>
     }
   },
   render() {
-    if(this.state.group.get('name')){
+    if (this.state.group.get('name')){
       return (
         <div>
           <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
@@ -98,7 +98,7 @@ export default React.createClass({
                   <h3>Checks</h3>
                   <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
                   <Padding t={2}>
-                    <Button color="primary" text="left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'security'}}}>
+                    <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}}>
                       <Add inline={true}/> Create Check
                     </Button>
                   </Padding>

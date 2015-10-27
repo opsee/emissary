@@ -26,22 +26,22 @@ export default React.createClass({
   getData(){
     GroupActions.getGroupELB(this.props.params.id);
     InstanceActions.getInstancesECC({
-      id:this.props.params.id,
-      type:'elb'
+      id: this.props.params.id,
+      type: 'elb'
     })
   },
   getState(){
     return {
-      group:GroupStore.getGroup({
-        type:'elb',
-        id:this.props.params.id
+      group: GroupStore.getGroup({
+        type: 'elb',
+        id: this.props.params.id
       }),
-      instances:InstanceStore.getInstancesECC({
-        type:'elb',
-        id:this.props.params.id
+      instances: InstanceStore.getInstancesECC({
+        type: 'elb',
+        id: this.props.params.id
       }),
-      status:GroupStore.getGetGroupELBStatus(),
-      getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
+      status: GroupStore.getGetGroupELBStatus(),
+      getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
     }
   },
   componentWillMount(){
@@ -55,14 +55,14 @@ export default React.createClass({
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
-    if(desc && desc != ''){
+    if (desc && desc != ''){
       return {desc}
     }else{
       return <div/>
     }
   },
   render() {
-    if(this.state.group.get('name')){
+    if (this.state.group.get('name')){
       return (
         <div>
           <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
@@ -94,7 +94,7 @@ export default React.createClass({
                   <h3>Checks</h3>
                   <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
                   <Padding t={2}>
-                    <Button color="primary" text="left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'elb'}}}>
+                    <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'elb'}}}>
                       <Add inline={true}/> Create Check
                     </Button>
                   </Padding>

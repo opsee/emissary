@@ -16,11 +16,11 @@ import {Padding} from '../layout';
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
     widget: forms.PasswordInput,
-    label:'New Password',
-    widgetAttrs:{
-      placeholder:'Enter a new password'
+    label: 'New Password',
+    widgetAttrs: {
+      placeholder: 'Enter a new password'
     },
-    required:false
+    required: false
   }),
   render(){
     return (
@@ -37,31 +37,31 @@ function getData(){
 
 export default React.createClass({
   mixins: [UserStore.mixin],
-  statics:{
-    willTransitionTo:PageAuth
+  statics: {
+    willTransitionTo: PageAuth
   },
   storeDidChange(){
     const status = UserStore.getUserGetUserStatus();
-    if(status == 'success'){
+    if (status == 'success'){
       this.setState({
-        user:UserStore.getUser().toJS(),
-        passwordForm:this.getForm()
+        user: UserStore.getUser().toJS(),
+        passwordForm: this.getForm()
       });
     }
     const editStatus = UserStore.getUserEditStatus();
-    if(editStatus == 'success'){
+    if (editStatus == 'success'){
       router.transitionTo('profile');
-    }else if(editStatus && editStatus != 'pending'){
+    }else if (editStatus && editStatus != 'pending'){
       GlobalActions.globalModalMessage({
-        html:'Something went wrong.'
+        html: 'Something went wrong.'
       })
     }
   },
   getInitialState() {
     // return this.getForm();
     return {
-      user:UserStore.getUser().toJS(),
-      passwordForm:this.getForm()
+      user: UserStore.getUser().toJS(),
+      passwordForm: this.getForm()
     }
   },
   getForm(){
@@ -71,10 +71,10 @@ export default React.createClass({
         self.updatePassword(self.state.passwordForm.cleanedData);
         self.forceUpdate();
       },
-      labelSuffix:'',
-      validation:{
-        on:'blur change',
-        onChangeDelay:100
+      labelSuffix: '',
+      validation: {
+        on: 'blur change',
+        onChangeDelay: 100
       },
     });
   },
@@ -85,20 +85,20 @@ export default React.createClass({
     this.setState({user});
   },
   updatePassword(data){
-    this.setState({password:data.password})
+    this.setState({password: data.password})
   },
   dataComplete(){
     return UserStore.getUser().get('name') && UserStore.getUser().toJS();
   },
   componentWillMount(){
-    if(!this.dataComplete()){
+    if (!this.dataComplete()){
       UserActions.userGetUser(UserStore.getUser().get('id'));
     }
   },
   submit(e){
     e.preventDefault();
     let data = this.state.user;
-    if(this.state.password){
+    if (this.state.password){
       data.password = this.state.password;
     }
     UserActions.userEdit(data);

@@ -22,12 +22,12 @@ import {Padding} from '../layout';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
-    label:'Filter',
-    widgetAttrs:{
-      placeholder:'What are you looking for?',
+    label: 'Filter',
+    widgetAttrs: {
+      placeholder: 'What are you looking for?',
       noLabel: true
     },
-    required:false
+    required: false
   }),
   render() {
     return (
@@ -39,24 +39,24 @@ const FilterForm = forms.Form.extend({
 });
 
 const EnvWithFilter = React.createClass({
-  mixins:[GroupStore.mixin, InstanceStore.mixin, SetInterval],
-  propTypes:{
-    include:PropTypes.array,
-    filter:PropTypes.string,
-    onFilterChange:PropTypes.func
+  mixins: [GroupStore.mixin, InstanceStore.mixin, SetInterval],
+  propTypes: {
+    include: PropTypes.array,
+    filter: PropTypes.string,
+    onFilterChange: PropTypes.func
   },
   storeDidChange(){
     const getGroupsSecurityStatus = GroupStore.getGetGroupsSecurityStatus();
     const getGroupsELBStatus = GroupStore.getGetGroupsELBStatus();
     const getInstancesECCStatus = InstanceStore.getGetInstancesECCStatus();
     let stateObj = {};
-    if(getGroupsSecurityStatus == 'success'){
+    if (getGroupsSecurityStatus == 'success'){
       stateObj.attemptedGroupsSecurity = true;
     }
-    if(getGroupsELBStatus == 'success'){
+    if (getGroupsELBStatus == 'success'){
       stateObj.attemptedGroupsELB = true;
     }
-    if(getInstancesECCStatus == 'success'){
+    if (getInstancesECCStatus == 'success'){
       stateObj.attemptedInstancesECC = true;
     }
     this.setState(_.assign(stateObj,{
@@ -67,38 +67,38 @@ const EnvWithFilter = React.createClass({
   },
   getDefaultProps(){
     return {
-      include:['groupsSecurity', 'groupsELB', 'instancesECC']
+      include: ['groupsSecurity', 'groupsELB', 'instancesECC']
     }
   },
   getInitialState() {
     const self = this;
     const obj = {
       filter: new FilterForm(_.assign({
-        onChange:self.filterHasChanged,
-        labelSuffix:'',
-        validation:{
-          on:'blur change',
-          onChangeDelay:50
+        onChange: self.filterHasChanged,
+        labelSuffix: '',
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 50
         }
-      }, this.props.filter ? {data:{filter:this.props.filter}} : null)),
-      attemptedGroupsSecurity:false,
-      attemptedGroupsELB:false,
-      attemptedInstancesECC:false,
-      selected:_.get(this.props, 'check.target.id') || null
+      }, this.props.filter ? {data: {filter: this.props.filter}} : null)),
+      attemptedGroupsSecurity: false,
+      attemptedGroupsELB: false,
+      attemptedInstancesECC: false,
+      selected: _.get(this.props, 'check.target.id') || null
     }
     //this is a workaround because the library is not working correctly with initial + data formset
-    if(this.props.filter){
+    if (this.props.filter){
       setTimeout(() => {
-        this.state.filter.setData({filter:this.props.filter});
-      },50);
+        this.state.filter.setData({filter: this.props.filter});
+      }, 50);
     }
     return _.extend(obj, {
-      cleanedData:null
+      cleanedData: null
     });
   },
   filterHasChanged(){
     this.forceUpdate();
-    if(this.props.onFilterChange){
+    if (this.props.onFilterChange){
       this.props.onFilterChange.call(null, this.state.filter.cleanedData.filter);
     }
   },
@@ -109,7 +109,7 @@ const EnvWithFilter = React.createClass({
   },
   componentWillMount(){
     this.getData();
-    this.setInterval(this.getData,15000);
+    this.setInterval(this.getData, 15000);
   },
   submit(e){
     e.preventDefault();
@@ -149,12 +149,12 @@ const EnvWithFilter = React.createClass({
     let data = GroupStore.getGroupsSecurity().sortBy(sg => {
       return sg.get('health');
     });
-    if(this.state.buttonSelected && !ignoreButtonState){
+    if (this.state.buttonSelected && !ignoreButtonState){
       data = data.filter(sg => {
         return sg.get('state') == this.state.buttonSelected;
       });
     }
-    if(string){
+    if (string){
       return data.filter(sg => {
         return fuzzy.filter(string, [sg.get('name')]).length;
       })
@@ -166,12 +166,12 @@ const EnvWithFilter = React.createClass({
     let data = GroupStore.getGroupsELB().sortBy(elb => {
       return elb.get('health');
     });
-    if(this.state.buttonSelected && !ignoreButtonState){
+    if (this.state.buttonSelected && !ignoreButtonState){
       data = data.filter(elb => {
         return elb.get('state') == this.state.buttonSelected;
       });
     }
-    if(string){
+    if (string){
       return data.filter(elb => {
         return fuzzy.filter(string, [elb.get('name')]).length;
       });
@@ -181,12 +181,12 @@ const EnvWithFilter = React.createClass({
   getInstances(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
     let data = InstanceStore.getInstancesECC();
-    if(this.state.buttonSelected && !ignoreButtonState){
+    if (this.state.buttonSelected && !ignoreButtonState){
       data = data.filter(instance => {
         return instance.get('state') == this.state.buttonSelected;
       });
     }
-    if(string){
+    if (string){
       return data.filter(instance => {
         return fuzzy.filter(string, [instance.get('name')]).length;
       });
@@ -194,7 +194,7 @@ const EnvWithFilter = React.createClass({
     return data;
   },
   renderGroupsSecurity(){
-    if(GroupStore.getGroupsSecurity().size){
+    if (GroupStore.getGroupsSecurity().size){
     return (
       <div>
         <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
@@ -205,7 +205,7 @@ const EnvWithFilter = React.createClass({
     }
   },
   renderGroupsELB(){
-    if(GroupStore.getGroupsELB().size){
+    if (GroupStore.getGroupsELB().size){
       return (
         <div>
           <h3>ELBs ({this.getGroupsELB().size})</h3>
@@ -216,7 +216,7 @@ const EnvWithFilter = React.createClass({
     }
   },
   renderInstancesECC(){
-    if(InstanceStore.getInstancesECC().size){
+    if (InstanceStore.getInstancesECC().size){
       return (
         <div>
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
@@ -230,21 +230,21 @@ const EnvWithFilter = React.createClass({
     switch(slug){
       case 'groupsSecurity':
         return {
-          name:'Security Groups',
-          fn:GroupStore.getGroupsSecurity
+          name: 'Security Groups',
+          fn: GroupStore.getGroupsSecurity
         }
       break;
       case 'groupsELB':
         return {
-          name:'ELB Groups',
-          fn:GroupStore.getGroupsELB
+          name: 'ELB Groups',
+          fn: GroupStore.getGroupsELB
         }
         return 'ELB Groups'
       break;
       case 'instancesECC':
         return {
-          name:'Instances',
-          fn:InstanceStore.getInstancesECC
+          name: 'Instances',
+          fn: InstanceStore.getInstancesECC
         }
         return 'Instances'
       break;
@@ -253,7 +253,7 @@ const EnvWithFilter = React.createClass({
   toggleButtonState(string){
     const state = this.state.buttonSelected;
     let obj = {};
-    if(state == string){
+    if (state == string){
       obj.buttonSelected = false;
     }else{
       obj.buttonSelected = string;
@@ -283,7 +283,7 @@ const EnvWithFilter = React.createClass({
   },
   render(){
     const self = this;
-    if(this.finishedAttempt()){
+    if (this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
           {this.state.filter.render()}

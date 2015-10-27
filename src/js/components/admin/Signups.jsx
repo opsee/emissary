@@ -15,8 +15,8 @@ import {Padding} from '../layout';
 
 function getState(){
   return {
-    signups:getData(),
-    approveStatus:AdminStore.getActivateSignupStatus()
+    signups: getData(),
+    approveStatus: AdminStore.getActivateSignupStatus()
   }
 }
 
@@ -36,15 +36,15 @@ export default React.createClass({
     const data = getState();
     console.log(data);
     this.setState(data);
-    if(data.approveStatus == 'success'){
+    if (data.approveStatus == 'success'){
       AdminActions.adminGetSignups();
       GlobalActions.globalModalMessage({
-        html:'User activated. Email sent.',
-        style:'success'
+        html: 'User activated. Email sent.',
+        style: 'success'
       });
     }
   },
-  getInitialState:getState,
+  getInitialState: getState,
   componentWillMount(){
     AdminActions.adminGetSignups()
   },
@@ -69,14 +69,14 @@ export default React.createClass({
   getUsers(){
     return _.filter(this.state.signups, this.isUser);
   },
-  activateSignup:AdminActions.adminActivateSignup,
+  activateSignup: AdminActions.adminActivateSignup,
   ghostAccount(signup){
     UserActions.userLogOut();
     //revisit this, params isn't working so using query atm
-    router.transitionTo('login', null, {as:signup.id});
+    router.transitionTo('login', null, {as: signup.id});
   },
   outputIcon(signup){
-    if(this.isUser(signup)){
+    if (this.isUser(signup)){
       return <Person fill={colors.textColorSecondary} inline={true}/>
     } else if (this.isApprovedSignup(signup)){
       return <Checkmark fill={colors.textColorSecondary} inline={true}/>
@@ -85,13 +85,13 @@ export default React.createClass({
     }
   },
   outputButton(signup){
-    if(this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
+    if (this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
       const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
       return (
         <Button flat={true} color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
       )
     }else{
-      return(
+      return (
         <Button flat={true} color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
       )
     }

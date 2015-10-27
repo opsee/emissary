@@ -46,7 +46,7 @@ const statics = {
   getStateFromItem(item){
     const checks = item.checks;
     let string = 'running';
-    if(checks && checks.length){
+    if (checks && checks.length){
       const allPassing = _.chain(checks).pluck('assertions').pluck('passing').every().value();
       string = allPassing ? 'passing' : 'failing';
     }
@@ -54,7 +54,7 @@ const statics = {
   },
   getHealthFromItem(item){
     let health;
-    if(item.checks && item.checks.length){
+    if (item.checks && item.checks.length){
       const boolArray = item.checks.map(check => {
         return _.chain(check.assertions).pluck('passing').every().value();
       });
@@ -63,13 +63,13 @@ const statics = {
     return health;
   },
   getInstancePending(data){
-    if(_data.instance.get('id') != data){
+    if (_data.instance.get('id') != data){
       _data.instance = new Instance();
       Store.emitChange();
     }
   },
   getInstanceECCSuccess(data){
-    if(data && data.instance){
+    if (data && data.instance){
       data = data.instance;
       data.type = 'EC2';
       _data.instanceECC = statics.instanceFromJS(data);
@@ -87,7 +87,7 @@ const statics = {
     Store.emitChange();
   },
   getInstanceRDSSuccess(data){
-    if(data && data.instances){
+    if (data && data.instances){
       data = data.instances;
       data.type = 'RDS';
       data.groups = data.SecurityGroups;
@@ -107,7 +107,7 @@ const statics = {
   },
   getCreatedTime(time){
     let launchTime = Date.parse(time);
-    if(typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
+    if (typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
     }else{
       launchTime = null;
     }
@@ -121,18 +121,18 @@ const statics = {
     return new Instance(data);
   },
   instanceFromJS(data){
-    if(data.DBInstanceIdentifier){
+    if (data.DBInstanceIdentifier){
       return statics.instanceRDSFromJS(data);
     }
     data.id = data.InstanceId;
     let name = data.id;
-    if(data.Tags && data.Tags.length){
+    if (data.Tags && data.Tags.length){
       name = _.chain(data.Tags).findWhere({Key:'Name'}).get('Value').value() || name;
     }
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
-    if(data.name == 'coreos4'){
+    if (data.name == 'coreos4'){
       data.checks = [
       {
         assertions:[
@@ -158,7 +158,7 @@ const statics = {
     }
     data.health = statics.getHealthFromItem(data);
     data.state = statics.getStateFromItem(data);
-    if(data.SecurityGroups && data.SecurityGroups.length){
+    if (data.SecurityGroups && data.SecurityGroups.length){
       data.groups = new List(data.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
@@ -167,7 +167,7 @@ const statics = {
   },
   runInstanceAction(data){
     _data.instancesECC = _data.instancesECC.map(instance => {
-      if(instance.get('id') == data.id){
+      if (instance.get('id') == data.id){
         let changed = instance.toJS();
         changed.state = 'restarting';
         return Immutable.fromJS(changed);
@@ -182,7 +182,7 @@ const _public = {
     return _data.instanceECC;
   },
   getInstancesECC(groupId){
-    if(groupId){
+    if (groupId){
       return _data.instancesECC.filter(instance => {
         const groups = instance.get('groups');
         return _.findWhere(groups.toJS(), {id:groupId});
@@ -231,7 +231,7 @@ const Store = Flux.createStore(
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }

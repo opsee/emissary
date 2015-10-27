@@ -8,25 +8,25 @@ let include = [];
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
-    widgetAttrs:{
-      placeholder:'address@domain.com'
+    widgetAttrs: {
+      placeholder: 'address@domain.com'
     }
   }),
   name: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Your Name',
+    widgetAttrs: {
+      placeholder: 'Your Name',
       icon: 'Person'
     }
   }),
   password: forms.CharField({
     widget: forms.PasswordInput,
-    widgetAttrs:{
-      placeholder:'Your Password',
+    widgetAttrs: {
+      placeholder: 'Your Password',
       icon: 'Lock'
     }
   }),
   render() {
-    return(
+    return (
       <div>
       {
         include.map(field => {
@@ -39,8 +39,8 @@ const InfoForm = forms.Form.extend({
 });
 
 export default React.createClass({
-  propTypes:{
-    include:PropTypes.array.isRequired
+  propTypes: {
+    include: PropTypes.array.isRequired
   },
   componentWillMount(){
     include = this.props.include;
@@ -48,24 +48,24 @@ export default React.createClass({
   getInitialState() {
     var self = this;
     return {
-      info:new InfoForm(_.extend({
+      info: new InfoForm(_.extend({
         onChange(){
           self.props.onChange(self.state.info.cleanedData, this.isComplete());
           self.forceUpdate();
         },
-        labelSuffix:'',
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
+        labelSuffix: '',
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
         },
-      },self.dataComplete()))
+      }, self.dataComplete()))
     }
   },
   dataComplete(){
     const test = _.chain(this.props.include).map(s => this.props[s]).every().value();
-    if(test){
+    if (test){
       return {
-        data:this.props
+        data: this.props
       }
     }
   },

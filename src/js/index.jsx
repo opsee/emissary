@@ -18,7 +18,7 @@ router.run((Root, state) => {
           <Root params={state.params} {...state}>
           {
             // <CSSTransitionGroup transitionName="example">
-            //   {React.cloneElement(this.props.children || <div/>, {key:'foo'})}
+            //   {React.cloneElement(this.props.children || <div/>, {key: 'foo'})}
             // </CSSTransitionGroup>
           }
           </Root>

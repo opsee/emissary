@@ -3,17 +3,17 @@ import ToggleWithLabel from './ToggleWithLabel.jsx';
 import _ from 'lodash';
 
 export default React.createClass({
-  propTypes:{
-    bf:PropTypes.object.isRequired
+  propTypes: {
+    bf: PropTypes.object.isRequired
   },
   getInitialState(){
     return {
-      data:this.props.bf.value()
+      data: this.props.bf.value()
     };
   },
   onChange(id, bool){
     let data = this.props.bf.value() || [];
-    if(_.findWhere(data, id)){
+    if (_.findWhere(data, id)){
       data = _.pull(data, id);
     }else{
       data.push(id);
@@ -26,7 +26,7 @@ export default React.createClass({
     return _.findWhere(this.props.bf.value(), w.choiceValue);
   },
   render(){
-    return(
+    return (
       <ul className="list-unstyled">
         {this.props.bf.subWidgets().map((w, i) => {
           return (

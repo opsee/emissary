@@ -15,29 +15,29 @@ export default React.createClass({
   storeDidChange(){
     const status = OnboardStore.getOnboardSignupCreateStatus();
     this.setState({status})
-    if(status == 'success'){
+    if (status == 'success'){
       router.transitionTo('onboardThanks');
-    }else if(status && status != 'pending'){
+    }else if (status && status != 'pending'){
       GlobalActions.globalModalMessage({
-        html:status.body && status.body.message,
+        html: status.body && status.body.message,
       });
     }
   },
   getInitialState(){
     return {
-      data:UserStore.getUser().toJS(),
-      status:OnboardStore.getOnboardSignupCreateStatus()
+      data: UserStore.getUser().toJS(),
+      status: OnboardStore.getOnboardSignupCreateStatus()
     }
   },
   updateUserData(data){
     this.setState({
-      data:data
+      data: data
     })
   },
   submit(e){
     e.preventDefault();
     this.setState({
-      submitting:true
+      submitting: true
     });
     OnboardActions.onboardSignupCreate(this.state.data);
   },

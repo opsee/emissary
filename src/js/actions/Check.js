@@ -12,7 +12,7 @@ let _statics = {};
 
 _statics.formatCheckData = function(data){
   const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id', 'name'];
-  if(data.target.type == 'security'){
+  if (data.target.type == 'security'){
     data.target.type = 'sg';
   }
   return _.omit(data, disallowed);
@@ -46,8 +46,8 @@ _statics.checkCreateOrEdit = function(data, isEditing){
     .set('Authorization', UserStore.getAuth())
     .send(d).then(checkRes =>{
       //REMOVE and go back to this when bartnet is better
-      if(true){
-      // if(checkRes && checkRes.body){
+      if (true){
+      // if (checkRes && checkRes.body){
         _statics.saveNotifications(data, _.get(checkRes, 'body.id') || data.id, isEditing)
         .then(notifRes => {
           _statics.saveAssertions(data, _.get(checkRes, 'body.id') || data.id, isEditing).then(assertionRes => {
@@ -130,7 +130,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
 
 _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
   (data) => {
-    if(config.demo){
+    if (config.demo){
       return new Promise((resolve, reject) => {
         resolve({body:CheckStore.getFakeResponse().toJS()});
       });

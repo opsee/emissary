@@ -15,11 +15,11 @@ import grid from './grid.global.css';
 import style from './opsee.css';
 
 function initialize(){
-  if(UserStore.hasUser() && !GlobalStore.getSocketStarted()){
-    config.intercom('boot', {app_id:'mrw1z4dm', email: UserStore.getUser().get('email')});
+  if (UserStore.hasUser() && !GlobalStore.getSocketStarted()){
+    config.intercom('boot', {app_id: 'mrw1z4dm', email: UserStore.getUser().get('email')});
     GlobalActions.globalSocketStart();
   }
-  if(config.demo){
+  if (config.demo){
     console.info('In Demo Mode.');
   }
 }
@@ -32,26 +32,26 @@ export default React.createClass({
   storeDidChange(){
     const status1 = OnboardStore.getOnboardSetPasswordStatus();
     const status2 = UserStore.getUserLoginStatus();
-    if(status1 == 'success' || status2 == 'success'){
+    if (status1 == 'success' || status2 == 'success'){
       initialize();
     }
     let stateObj = {
-      showNav:GlobalStore.getShowNav()
+      showNav: GlobalStore.getShowNav()
     };
     const socketError = GlobalStore.getGlobalSocketError();
-    if(socketError){
+    if (socketError){
       stateObj.socketError = socketError;
     }
     this.setState(stateObj);
   },
   getInitialState(){
     return {
-      socketError:null,
-      showNav:GlobalStore.getShowNav()
+      socketError: null,
+      showNav: GlobalStore.getShowNav()
     }
   },
   componentWillMount(){
-    if(this.props.query.err || storage.get('err')){
+    if (this.props.query.err || storage.get('err')){
       config.error = true;
     }
   },
@@ -60,7 +60,7 @@ export default React.createClass({
     refreshInterval = setInterval(UserActions.userRefreshToken, (60*1000*14));
   },
   renderInner(){
-    if(this.state.socketError && !config.debug){
+    if (this.state.socketError && !config.debug){
       return (
         <Grid>
           <Col xs={12}>

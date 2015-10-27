@@ -20,33 +20,33 @@ import {Padding} from '../layout';
 
 const groupOptions = []
 
-const verbOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
+const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 
 const HeaderForm = forms.Form.extend({
   key: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. content-type'
-    },
+    widgetAttrs: {
+      placeholder: 'e.g. content-type'
+    }
   }),
   value: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. application/json'
-    },
+    widgetAttrs: {
+      placeholder: 'e.g. application/json'
+    }
   })
 });
 
 const HeaderFormSet = forms.FormSet.extend({
-  form:HeaderForm,
-  canDelete:true
+  form: HeaderForm,
+  canDelete: true
 });
 
 const GroupForm = forms.Form.extend({
   id: forms.ChoiceField({
-    label:'Target',
-    choices:[]
+    label: 'Target',
+    choices: []
   }),
   render() {
-    return(
+    return (
       <div>
         <h3>Choose a Check Target</h3>
         <BoundField bf={this.boundField('id')}/>
@@ -57,30 +57,30 @@ const GroupForm = forms.Form.extend({
 
 const InfoForm = forms.Form.extend({
   port: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. 8080',
+    widgetAttrs: {
+      placeholder: 'e.g. 8080',
     },
-    widget:forms.NumberInput
+    widget: forms.NumberInput
   }),
   verb: forms.ChoiceField({
-    choices:verbOptions,
-    widget:forms.RadioSelect,
-    widgetAttrs:{
-      widgetType:'InlineRadioSelect'
+    choices: verbOptions,
+    widget: forms.RadioSelect,
+    widgetAttrs: {
+      widgetType: 'InlineRadioSelect'
     },
-    initial:['GET']
+    initial: ['GET']
   }),
-  body:forms.CharField({
+  body: forms.CharField({
     widget: forms.Textarea,
-    required:false
+    required: false
   }),
   path: forms.CharField({
-    widgetAttrs:{
-      placeholder:'e.g. /healthcheck'
+    widgetAttrs: {
+      placeholder: 'e.g. /healthcheck'
     }
   }),
   render() {
-    return(
+    return (
       <div>
         <h3>Define HTTP Request</h3>
         <Padding b={1}>
@@ -101,11 +101,11 @@ const InfoForm = forms.Form.extend({
 })
 
 const CheckCreateRequest = React.createClass({
-  mixins:[GroupStore.mixin],
+  mixins: [GroupStore.mixin],
   storeDidChange(){
     const cond1 = GroupStore.getGetGroupsSecurityStatus() == 'success';
     const cond2 = GroupStore.getGetGroupsELBStatus() == 'success';
-    if(cond1 || cond2){
+    if (cond1 || cond2){
       this.forceUpdate();
     }
   },
@@ -114,40 +114,40 @@ const CheckCreateRequest = React.createClass({
     const initialHeaders = this.props.check.check_spec.value.headers;
     const obj = {
       info: new InfoForm(_.extend({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-        validation:{
-          on:'blur change',
-          onChangeDelay:700
+        onChange: self.changeAndUpdate,
+        labelSuffix: '',
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 700
         }
-      }, self.dataComplete() ? {data:self.props.check.check_spec.value} : null)),
+      }, self.dataComplete() ? {data: self.props.check.check_spec.value} : null)),
       headers: new HeaderFormSet({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-        emptyPermitted:false,
-        initial:initialHeaders.length ? initialHeaders : null,
+        onChange: self.changeAndUpdate,
+        labelSuffix: '',
+        emptyPermitted: false,
+        initial: initialHeaders.length ? initialHeaders : null,
         // minNum:!initialHeaders.length ? 1 : 0,
-        extra:0,
-        validation:{
-          on:'blur change',
-          onChangeDelay:700
+        extra: 0,
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 700
         }
       }),
-      check:this.props.check,
+      check: this.props.check,
     }
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.headers.forms().forEach((form, i) => {
         const h = self.props.check.check_spec.value.headers[i];
         const data = {
-          key:h.name,
-          value:h.values.join(', ')
+          key: h.name,
+          value: h.values.join(', ')
         }
         form.setData(data);
       });
-    },10);
+    }, 10);
     return _.extend(obj, {
-      cleanedData:null
+      cleanedData: null
     });
   },
   dataComplete(){
@@ -157,16 +157,16 @@ const CheckCreateRequest = React.createClass({
   },
   componentWillMount(){
     const groups = GroupStore.getGroupsSecurity();
-    if(!groups.size){
+    if (!groups.size){
       GroupActions.getGroupsSecurity();
     }
     const groupsELB = GroupStore.getGroupsELB();
-    if(!groupsELB.size){
+    if (!groupsELB.size){
       GroupActions.getGroupsELB();
     }
   },
   componentDidMount(){
-    if(this.props.renderAsInclude){
+    if (this.props.renderAsInclude){
       this.changeAndUpdate();
     }
   },
@@ -183,7 +183,7 @@ const CheckCreateRequest = React.createClass({
     })
   },
   renderHeaderForm(){
-    return(
+    return (
       <div>
         <h3>Request Headers</h3>
         {this.getHeaderForms().map((form, index) => {
@@ -219,20 +219,20 @@ const CheckCreateRequest = React.createClass({
     let val = check.check_spec.value;
     val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
       return {
-        name:h.key,
-        values:h.value ? h.value.split(', ') : undefined
+        name: h.key,
+        values: h.value ? h.value.split(', ') : undefined
       }
     }).value();
     let cleaned = this.state.info.cleanedData;
-    if(cleaned.port){
+    if (cleaned.port){
      cleaned.port = parseInt(cleaned.port, 10);
     }
     val = _.assign(val, cleaned);
     return check;
   },
   renderSubmitButton(){
-    if(!this.props.renderAsInclude){
-      return(
+    if (!this.props.renderAsInclude){
+      return (
         <div>
           <Padding tb={1}></Padding>
           <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron={true}>Next: Define Assertions</Button>
@@ -245,12 +245,12 @@ const CheckCreateRequest = React.createClass({
   },
   renderLink(){
     return this.state.check.id ? (
-      <Button color="primary" fab={true} to="check" params={{id:this.state.check.id}} title="Edit {check.name}"/>
+      <Button color="primary" fab={true} to="check" params={{id: this.state.check.id}} title="Edit {check.name}"/>
       ) : <div/>;
   },
   renderTargetSelection(){
     const selection = GroupStore.getGroupFromFilter(this.props.check.target);
-    if(selection && selection.get('id')){
+    if (selection && selection.get('id')){
       return (
         <div>
           <h3>Your Target</h3>
@@ -287,7 +287,7 @@ const CheckCreateRequest = React.createClass({
     return _.cloneDeep(this.props.check);
   },
   renderBodyInput(){
-    if(this.state.info.cleanedData.verb != ['GET']){
+    if (this.state.info.cleanedData.verb != ['GET']){
       return (
         <Padding b={1}>
           <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>

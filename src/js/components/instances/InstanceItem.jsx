@@ -14,12 +14,12 @@ import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
 
 const InstanceItem = React.createClass({
-  propTypes:{
-    item:React.PropTypes.instanceOf(Record).isRequired,
+  propTypes: {
+    item: React.PropTypes.instanceOf(Record).isRequired
   },
   getInitialState(){
     return _.assign({},{
-      showModal:false
+      showModal: false
     });
   },
   actions(e, id){
@@ -36,24 +36,24 @@ const InstanceItem = React.createClass({
   openMenu(e){
     e.preventDefault();
     this.setState({
-      showModal:true
+      showModal: true
     });
   },
   runAction(action, id){
     InstanceActions.runInstanceAction({id});
   },
   hideContextMenu(){
-    this.setState({showModal:false});
+    this.setState({showModal: false});
   },
   renderStatusText(){
-    if(this.props.item.get('state') == 'restarting'){
+    if (this.props.item.get('state') == 'restarting'){
       return <span>:&nbsp;(Restarting)</span>
     }else{
       return <span/>
     }
   },
   onClick(e){
-    if(typeof this.props.onClick == 'function'){
+    if (typeof this.props.onClick == 'function'){
       e.preventDefault();
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
@@ -67,14 +67,14 @@ const InstanceItem = React.createClass({
   },
   renderLinkButton(){
     return (
-    <Button to={this.getInstanceLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
+    <Button to={this.getInstanceLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
         <NewWindow btn={true} fill={colors.textColorSecondary}/>
     </Button>
     );
   },
   renderModal(){
-    if(!this.props.noModal){
-      return(
+    if (!this.props.noModal){
+      return (
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
@@ -102,10 +102,10 @@ const InstanceItem = React.createClass({
     }
   },
   renderGraph(){
-    if(!this.props.noGraph){
-      if(!this.props.onClick){
+    if (!this.props.noGraph){
+      if (!this.props.onClick){
         return (
-          <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link}>
+          <Link to={this.getInstanceLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={listItem.link}>
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
         )
@@ -119,9 +119,9 @@ const InstanceItem = React.createClass({
     }
   },
   renderText(){
-    if(!this.props.onClick){
+    if (!this.props.onClick){
       return (
-      <Link to={this.getInstanceLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
+      <Link to={this.getInstanceLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
         <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
       </Link>
       )
@@ -134,7 +134,7 @@ const InstanceItem = React.createClass({
     }
   },
   render(){
-    if(this.props.item.get('name')){
+    if (this.props.item.get('name')){
       return (
         <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>

@@ -19,24 +19,24 @@ let domainPromisesArray = [];
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Initech'
+    widgetAttrs: {
+      placeholder: 'Initech'
     }
   }),
   subdomain: forms.SlugField({
-    widgetAttrs:{
-      placeholder:'initech[.opsee.co]'
+    widgetAttrs: {
+      placeholder: 'initech[.opsee.co]'
     },
-    validation:{
-      on:'blur change',
-      onChangeDelay:200
+    validation: {
+      on: 'blur change',
+      onChangeDelay: 200
     }
   }),
   cleanSubdomain(cb){
     const string = this.cleanedData.subdomain;
     const date = Date.now();
     OnboardActions.subdomainAvailability(string, date);
-    domainPromisesArray.push({date:date,promise:$q.defer()});
+    domainPromisesArray.push({date: date, promise:$q.defer()});
     const correctPromise = domainPromisesArray[(domainPromisesArray.length-1)].promise;
     correctPromise.promise.then((avail) => {
       avail ? cb() : cb(null, 'is not available.');
@@ -50,13 +50,13 @@ const Team = React.createClass({
     const availData = OnboardStore.getSubdomainAvailable();
     const availStatus = OnboardStore.getSubdomainAvailabilityStatus();
     this.setState({availStatus});
-    if(availStatus == 'success'){
-      const promise = _.find(domainPromisesArray, {date:availData.date});
+    if (availStatus == 'success'){
+      const promise = _.find(domainPromisesArray, {date: availData.date});
       promise.promise.resolve(availData.available);
-      this.setState({domainAvailable:availData.available});
+      this.setState({domainAvailable: availData.available});
     }
     const createOrgStatus = OnboardStore.getCreateOrgStatus();
-    if(createOrgStatus == 'success'){
+    if (createOrgStatus == 'success'){
       router.transitionTo('onboardRegionSelect');
     }
     this.setState({createOrgStatus});
@@ -64,15 +64,15 @@ const Team = React.createClass({
   getInitialState() {
     var self = this;
     return {
-      info:new InfoForm({
+      info: new InfoForm({
         onChange(){
           self.forceUpdate();
         },
-        labelSuffix:'',
-        data:_.cloneDeep(self.props),
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
+        labelSuffix: '',
+        data: _.cloneDeep(self.props),
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
         },
       })
     }

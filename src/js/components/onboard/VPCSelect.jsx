@@ -16,11 +16,11 @@ const regions = AWSStore.getRegions();
 
 const InfoForm = forms.Form.extend({
   vpcs: forms.ChoiceField({
-    choices:[],
+    choices: [],
     widget: forms.RadioSelect,
-    widgetAttrs:{
-      widgetType:'RadioSelect'
-    },
+    widgetAttrs: {
+      widgetType: 'RadioSelect'
+    }
   }),
 });
 
@@ -30,20 +30,20 @@ const Team = React.createClass({
     this.setVpcs();
     const data = OnboardStore.getInstallData();
     const dataHasValues = _.chain(data).values().every(_.identity).value();
-    if(dataHasValues && data.regions.length && data.vpcs.length){
+    if (dataHasValues && data.regions.length && data.vpcs.length){
       // OnboardActions.onboardSetVpcs()
       router.transitionTo('onboardInstall');
     }
   },
   setVpcs(){
     const regionsWithVpcs = OnboardStore.getAvailableVpcs()
-    if(regionsWithVpcs.length){
+    if (regionsWithVpcs.length){
       let vpcs = regionsWithVpcs.map(r => {
         return r.vpcs.map(v => {
           let name = v['vpc-id'];
-          if(v.tags){
-            let nameTag = _.findWhere(v.tags, {key:'Name'});
-            if(nameTag){
+          if (v.tags){
+            let nameTag = _.findWhere(v.tags, {key: 'Name'});
+            if (nameTag){
               name = `${nameTag.value} - ${v['vpc-id']}`;
             }
           }
@@ -52,14 +52,14 @@ const Team = React.createClass({
       });
       vpcs = _.flatten(vpcs);
       this.state.info.fields.vpcs.setChoices(vpcs);
-      this.setState({vpcs:vpcs});
+      this.setState({vpcs: vpcs});
     }
   },
-  statics:{
+  statics: {
     willTransitionTo(transition, params, query){
       const data = OnboardStore.getInstallData();
       const dataHasValues = _.chain(data).values().every(_.identity).value();
-      if(!dataHasValues || !data.regions.length){
+      if (!dataHasValues || !data.regions.length){
         transition.redirect('onboardRegionSelect');
       }
     }
@@ -67,20 +67,20 @@ const Team = React.createClass({
   getInitialState() {
     var self = this;
     const obj = {
-      info:new InfoForm({
+      info: new InfoForm({
         onChange(){
           self.forceUpdate();
         },
-        labelSuffix:'',
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
+        labelSuffix: '',
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
         },
       })
     }
     return _.extend(obj, {
-      status:'pending',
-      vpcs:[]
+      status: 'pending',
+      vpcs: []
     });
   },
   submit(e){
@@ -91,18 +91,18 @@ const Team = React.createClass({
     return !this.state.info.cleanedData.vpcs;
   },
   toggleAll(value){
-    if(value){
+    if (value){
       this.state.info.updateData({
-        regions:regions.map(r => {
+        regions: regions.map(r => {
           return r.id
         })
       })
     }else{
-      this.state.info.updateData({regions:[]});
+      this.state.info.updateData({regions: []});
     }
   },
   innerRender(){
-    if(this.state.vpcs.length){
+    if (this.state.vpcs.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>

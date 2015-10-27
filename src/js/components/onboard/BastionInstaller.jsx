@@ -1,58 +1,50 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import _ from 'lodash';
 
-import {OnboardStore} from '../../stores';
-import {OnboardActions} from '../../actions';
+import {ProgressBar} from '../global';
 
-import {Toolbar, ProgressBar} from '../global';
-import {Link} from 'react-router';
-import forms from 'newforms';
-import {BoundField} from '../forms';
-import router from '../../modules/router.js';
-import {Close, Checkmark, ChevronRight} from '../icons';
-
-const itemTypes = ['AWS::CloudFormation::Stack','AWS::IAM::Role','AWS::EC2::SecurityGroup','AWS::IAM::InstanceProfile','AWS::EC2::Instance'];
+const itemTypes = ['AWS:: CloudFormation:: Stack', 'AWS:: IAM:: Role', 'AWS:: EC2:: SecurityGroup', 'AWS:: IAM:: InstanceProfile', 'AWS:: EC2:: Instance'];
 
 const BastionInstaller = React.createClass({
   getDefaultProps(){
     return {
-      id:null,
-      messages:[]
+      id: null,
+      messages: []
     }
   },
   getInProgressItem(){
     const items = this.getItems();
 
-    const rollback = _.findWhere(items,{status:'ROLLBACK_COMPLETE'});
-    if(rollback){
+    const rollback = _.findWhere(items,{status: 'ROLLBACK_COMPLETE'});
+    if (rollback){
       return 'Rollback';
     }
-    const deleting = _.findWhere(items,{status:'DELETE_COMPLETE'});
-    if(deleting){
+    const deleting = _.findWhere(items,{status: 'DELETE_COMPLETE'});
+    if (deleting){
       return 'Deleting';
     }
 
-    const index = _.findLastIndex(items, {status:'CREATE_COMPLETE'});
-    if(index > -1){
-      if(index+1 < items.length){
+    const index = _.findLastIndex(items, {status: 'CREATE_COMPLETE'});
+    if (index > -1){
+      if (index+1 < items.length){
         return items[index+1].ResourceType;
       }
-      if(items[0].status != 'CREATE_COMPLETE'){
+      if (items[0].status != 'CREATE_COMPLETE'){
         return 'Cloud Finishing';
-      }else if(items[0].status == 'CREATE_COMPLETE'){
+      }else if (items[0].status == 'CREATE_COMPLETE'){
         return 'Complete';
       }
-      return 'AWS::CloudFormation::Stack';
+      return 'AWS:: CloudFormation:: Stack';
     }else{
-      if(!items[1].status){
+      if (!items[1].status){
         return 'Reading';
       }
     }
-    return 'AWS::IAM::Role';
+    return 'AWS:: IAM:: Role';
   },
   getPercentComplete(){
     const num = this.getText().num;
-    if(num && num > 0){
+    if (num && num > 0){
       return (num / 7)*100;
     }else{
       return num;
@@ -65,8 +57,8 @@ const BastionInstaller = React.createClass({
   getItems(){
     return itemTypes.map(i => {
       return {
-        ResourceType:i,
-        status:this.getItemStatus(_.filter(this.props.messages, {ResourceType:i}))
+        ResourceType: i,
+        status: this.getItemStatus(_.filter(this.props.messages, {ResourceType: i}))
       }
     })
   },
@@ -79,19 +71,19 @@ const BastionInstaller = React.createClass({
         num = 1;
         string = 'Reading CloudFormation template';
       break;
-      case 'AWS::IAM::Role':
+      case 'AWS:: IAM:: Role':
         num = 2;
         string = 'Creating Instance Role';
       break;
-      case 'AWS::EC2::SecurityGroup':
+      case 'AWS:: EC2:: SecurityGroup':
         num = 3;
         string = 'Creating Security Group';
       break;
-      case 'AWS::IAM::InstanceProfile':
+      case 'AWS:: IAM:: InstanceProfile':
         num = 4;
         string = 'Creating Instance Profile';
       break;
-      case 'AWS::EC2::Instance':
+      case 'AWS:: EC2:: Instance':
         num = 5;
         string = 'Launching Instance.';
       break;
@@ -112,7 +104,7 @@ const BastionInstaller = React.createClass({
         string = 'Bastion install failed. Finished with cleanup.'
       break;
     }
-    if(num && num < 7 && num > 0){
+    if (num && num < 7 && num > 0){
       string = `(${num}/7) ${string}`;
     }
     return {string, num};
@@ -125,7 +117,7 @@ const BastionInstaller = React.createClass({
       <div className="padding-bx2">
         <h2>{this.id}</h2>
         <ProgressBar percentage={this.getPercentComplete()} steps={7}/>
-        <div style={{textAlign:'center'}}>
+        <div style={{textAlign: 'center'}}>
         {this.getText().string}
         </div>
       </div>

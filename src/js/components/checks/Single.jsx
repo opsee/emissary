@@ -17,29 +17,29 @@ import colors from '../global/colors.css';
 
 function getState(){
   return {
-    check:CheckStore.getCheck(),
-    status:CheckStore.getGetCheckStatus(),
-    delStatus:CheckStore.getDeleteCheckStatus(),
-    sgStatus:GroupStore.getGetGroupSecurityStatus(),
-    elbStatus:GroupStore.getGetGroupELBStatus(),
-    group:GroupStore.getNewGroup(),
-    responseStatus:CheckStore.getTestCheckStatus()
+    check: CheckStore.getCheck(),
+    status: CheckStore.getGetCheckStatus(),
+    delStatus: CheckStore.getDeleteCheckStatus(),
+    sgStatus: GroupStore.getGetGroupSecurityStatus(),
+    elbStatus: GroupStore.getGetGroupELBStatus(),
+    group: GroupStore.getNewGroup(),
+    responseStatus: CheckStore.getTestCheckStatus()
   }
 }
 
 export default React.createClass({
   mixins: [CheckStore.mixin, GroupStore.mixin],
-  statics:{
-    willTransitionTo:PageAuth
+  statics: {
+    willTransitionTo: PageAuth
   },
   storeDidChange() {
     let state = getState();
-    if(state.delStatus == 'success'){
+    if (state.delStatus == 'success'){
       router.transitionTo('checks');
     }
-    if(state.status == 'success'){
+    if (state.status == 'success'){
       const target = state.check.get('target');
-      if(target){
+      if (target){
         switch(target.type){
           case 'sg':
             GroupActions.getGroupSecurity(target.id);
@@ -50,17 +50,17 @@ export default React.createClass({
         }
       }
     }
-    if(state.sgStatus == 'success' || state.elbStatus == 'success'){
+    if (state.sgStatus == 'success' || state.elbStatus == 'success'){
       state.group = GroupStore.getGroup(this.state.check.get('target'));
     }
-    if(state.responseStatus == 'success'){
+    if (state.responseStatus == 'success'){
       state.response = CheckStore.getResponse();
     }
     this.setState(state);
   },
   getInitialState(){
     return _.assign(getState(), {
-      response:null
+      response: null
     })
   },
   getData(){
@@ -84,7 +84,7 @@ export default React.createClass({
   getLink(){
     const target = this.state.check.get('target');
     const group = this.state.group.toJS();
-    if(target.type == 'sg'){
+    if (target.type == 'sg'){
       return (
         <span>{group.name || group.id}</span>
       )
@@ -97,8 +97,8 @@ export default React.createClass({
   },
   innerRender(){
     const spec = this.getCheckJS().check_spec.value;
-    if(!this.state.error && this.state.check.get('id')){
-      return(
+    if (!this.state.error && this.state.check.get('id')){
+      return (
         <div>
           <Padding b={1}>
             <h3>HTTP Request</h3>
@@ -118,7 +118,7 @@ export default React.createClass({
             <h3>Notifications</h3>
             <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
-              return(
+              return (
                 <li><Mail inline={true} fill="primary"/> {n.value}</li>
               )
             })}
@@ -135,9 +135,9 @@ export default React.createClass({
     }
   },
   outputLink(){
-    if(this.state.check && this.state.check.get('id')){
+    if (this.state.check && this.state.check.get('id')){
       return (
-        <Button to="checkEdit" params={{id:this.props.params.id}} color="primary" fab={true} title={`Edit ${this.state.check.name}`}>
+        <Button to="checkEdit" params={{id: this.props.params.id}} color="primary" fab={true} title={`Edit ${this.state.check.name}`}>
           <Edit btn={true}/>
         </Button>
       )

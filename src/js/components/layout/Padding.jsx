@@ -9,22 +9,22 @@ availProps.forEach(string => {
 });
 
 var Padding = React.createClass({
-  propTypes:types,
+  propTypes: types,
   getClass(){
     var arr = [];
     for(var prop in this.props){
-      if(availProps.indexOf(prop) > -1){
+      if (availProps.indexOf(prop) > -1){
         let num = this.props[prop];
-        if(num === .5){
+        if (num === .5){
           num = 'half';
         }
-        if(num === 1){
+        if (num === 1){
           num = '';
         }
         arr.push(style[`p${prop}${num}`]);
       }
     }
-    if(!arr.length){
+    if (!arr.length){
       arr.push(style.pa);
     }
     arr.push(this.props.className);

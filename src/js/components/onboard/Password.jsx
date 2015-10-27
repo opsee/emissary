@@ -17,10 +17,10 @@ export default React.createClass({
   storeDidChange(){
     const status = OnboardStore.getOnboardSetPasswordStatus();
     let error;
-    if(status == 'success'){
+    if (status == 'success'){
       router.transitionTo('tutorial');
       error = false;
-    }else if(status && status != 'pending'){
+    }else if (status && status != 'pending'){
       error = status;
     }
     this.setState({
@@ -30,20 +30,20 @@ export default React.createClass({
   },
   getInitialState(){
     return {
-      status:null,
-      token:this.props.query.token,
-      id:this.props.query.id,
-      password:null,
-      error:null
+      status: null,
+      token: this.props.query.token,
+      id: this.props.query.id,
+      password: null,
+      error: null
     }
   },
   updateUserData(data){
-    this.setState({password:data.password})
+    this.setState({password: data.password})
   },
   submit(e){
     e.preventDefault();
     this.setState({
-      submitting:true
+      submitting: true
     });
     OnboardActions.onboardSetPassword(this.state);
   },
@@ -54,7 +54,7 @@ export default React.createClass({
     return this.state.status == 'pending' ? 'Setting...' : 'Set';
   },
   render() {
-    if(!this.state.error){
+    if (!this.state.error){
       return (
          <div>
           <Toolbar title="Set Your Password"/>

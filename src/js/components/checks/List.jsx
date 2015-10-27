@@ -13,19 +13,19 @@ import {Button} from '../forms';
 
 function getState(){
   return {
-    checks:CheckStore.getChecks(),
-    status:CheckStore.getGetChecksStatus()
+    checks: CheckStore.getChecks(),
+    status: CheckStore.getGetChecksStatus()
   }
 }
 
 export default React.createClass({
   mixins: [CheckStore.mixin],
-  statics:{
-    willTransitionTo:PageAuth
+  statics: {
+    willTransitionTo: PageAuth
   },
   storeDidChange() {
     let state = getState();
-    if(state.status && state.status != 'success' && state.status != 'pending'){
+    if (state.status && state.status != 'success' && state.status != 'pending'){
       state.error = state.status;
     }
     this.setState(state);
@@ -43,8 +43,8 @@ export default React.createClass({
     CheckActions.silence(id);
   },
   renderChecks(){
-    if(this.state.checks.size){
-      return(
+    if (this.state.checks.size){
+      return (
         <div>
           <h3>All Checks ({this.state.checks.size})</h3>
           <CheckItemList checks={this.state.checks}/>

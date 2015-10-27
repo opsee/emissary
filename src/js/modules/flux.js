@@ -8,7 +8,7 @@ Flux.statics = {
     const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
     let obj = {};
     obj[baseName] = function(...args){
-      if(typeof fn == 'function'){
+      if (typeof fn == 'function'){
         fn.call(null, ...args);
       }
       return {
@@ -60,35 +60,35 @@ Flux.statics = {
     let found = _.find(possible, p => {
       return _.find(p, s => s == payload.actionType);
     });
-    if(found){
+    if (found){
       const index = _.indexOf(possible, found);
       const k = keys[index];
-      if(payload.actionType.match('_PENDING$')){
+      if (payload.actionType.match('_PENDING$')){
         statuses[k] = 'pending';
-      }else if(payload.actionType.match('_SUCCESS$')){
+      }else if (payload.actionType.match('_SUCCESS$')){
         statuses[k] = 'success';
       }else{
         statuses[k] = payload.data;
       }
     }
 
-    if(!_.isEqual(statuses, originalStatuses)){
+    if (!_.isEqual(statuses, originalStatuses)){
       haveChanged = true;
     }else{
       let resetSuccessStatuses = _.mapValues(statuses, val => {
-        if(val == 'success'){
+        if (val == 'success'){
           return null;
         }
         return val;
       });
-      if(!_.isEqual(statuses, resetSuccessStatuses)){
+      if (!_.isEqual(statuses, resetSuccessStatuses)){
         statuses = resetSuccessStatuses;
         haveChanged = true;
       }
     }
     return {statuses, haveChanged};
     // setTimeout(() => {
-    //   if(haveChanged && Store){
+    //   if (haveChanged && Store){
     //     Store.emitChange();
     //   }
     // },50);

@@ -14,7 +14,7 @@ _actions.globalContextMenu = Flux.statics.addAction('globalContextMenu');
 _actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageConsume');
 
 _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', function(){
-  if(!socket){
+  if (!socket){
     console.info('Socket Started.');
     socket = new WebSocket('wss://api-beta.opsee.co/stream/');
     socket.onopen = function(event){
@@ -29,10 +29,10 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
         console.log(err);
         return false;
       }
-      if(!data){
+      if (!data){
         return false;
       }
-      if(data.command != 'heartbeat'){
+      if (data.command != 'heartbeat'){
         Flux.actions.globalSocketMessage(data);
       }
     }
@@ -44,7 +44,7 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
 
 _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
   const auth = UserStore.getAuth();
-  if(auth && socket){
+  if (auth && socket){
     const authCmd = JSON.stringify({
       command:'authenticate',
       attributes:{
@@ -57,7 +57,7 @@ _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
 
 _actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe', (str) => {
   const auth = UserStore.getAuth();
-  if(auth && socket && str){
+  if (auth && socket && str){
     const authCmd = JSON.stringify({
       command:'subscribe',
       attributes:{subscribe_to:str}

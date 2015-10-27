@@ -15,38 +15,38 @@ export default React.createClass({
   storeDidChange(){
     const status = UserStore.getUserLoginStatus();
     this.setState({status})
-    if(status == 'success'){
+    if (status == 'success'){
       const redirect = UserStore.getUser().get('loginRedirect');
-      if(redirect){
+      if (redirect){
         router.transitionTo(redirect);
       }else{
         router.transitionTo('env');
       }
-    }else if(status && status != 'pending'){
+    }else if (status && status != 'pending'){
       GlobalActions.globalModalMessage({
-        html:status.message || 'Something went wrong.',
-        style:'danger'
+        html: status.message || 'Something went wrong.',
+        style: 'danger'
       })
     }
   },
   getInitialState(){
     return {
-      data:UserStore.getUser(),
-      status:UserStore.getUserLoginStatus()
+      data: UserStore.getUser(),
+      status: UserStore.getUserLoginStatus()
     }
   },
   updateUserData(data){
     this.setState({
-      data:data
+      data: data
     })
   },
   submit(e){
     e.preventDefault();
     this.setState({
-      submitting:true
+      submitting: true
     });
     let data = this.state.data;
-    if(this.props.query.as){
+    if (this.props.query.as){
       data.as = _.parseInt(this.props.query.as, 10);
     }
     UserActions.userLogin(data);

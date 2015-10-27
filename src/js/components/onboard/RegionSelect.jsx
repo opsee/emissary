@@ -26,8 +26,8 @@ const InfoForm = forms.Form.extend({
   regions: forms.ChoiceField({
     choices: regionChoices,
     widget: forms.RadioSelect,
-    widgetAttrs:{
-      widgetType:'RadioSelect'
+    widgetAttrs: {
+      widgetType: 'RadioSelect'
     }
   }),
 });
@@ -36,11 +36,11 @@ const Team = React.createClass({
   mixins: [State, OnboardStore.mixin],
   storeDidChange(){
     const data = OnboardStore.getInstallData();
-    if(data && data.regions && data.regions.length){
+    if (data && data.regions && data.regions.length){
       router.transitionTo('onboardCredentials');
     }
     const bastionStatus = OnboardStore.getGetBastionsStatus();
-    if(bastionStatus == 'success'){
+    if (bastionStatus == 'success'){
       const bastions = OnboardStore.getBastions();
       this.setState({bastions})
     }
@@ -49,24 +49,24 @@ const Team = React.createClass({
     var self = this;
     var data = OnboardStore.getInstallData();
     const obj = {
-      info:new InfoForm({
+      info: new InfoForm({
         onChange(){
           self.forceUpdate();
         },
-        labelSuffix:'',
+        labelSuffix: '',
         data: {
-          regions:data.regions
+          regions: data.regions
         },
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
         },
       }),
-      bastions:[]
+      bastions: []
     }
     setTimeout(function(){
       obj.info.validate();
-    },10);
+    }, 10);
     return obj;
   },
   componentWillMount(){
@@ -80,18 +80,18 @@ const Team = React.createClass({
     return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
   },
   toggleAll(value){
-    if(value){
+    if (value){
       this.state.info.updateData({
-        regions:regions.map(r => {
+        regions: regions.map(r => {
           return r.id
         })
       })
     }else{
-      this.state.info.updateData({regions:[]});
+      this.state.info.updateData({regions: []});
     }
   },
   renderInner(){
-    if(!this.state.bastions.length){
+    if (!this.state.bastions.length){
       return (
         <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>

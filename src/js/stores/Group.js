@@ -54,14 +54,14 @@ let _statuses = {
 const statics = {
   getStateFromItem(item){
     let string = 'running';
-    if(typeof item.health == 'number'){
+    if (typeof item.health == 'number'){
       string = item.health == 100 ? 'passing' : 'failing';
     }
     return string;
   },
   getHealthFromItem(item){
     let health;
-    if(item.checks && item.checks.length){
+    if (item.checks && item.checks.length){
       const boolArray = item.checks.map(check => {
         return _.chain(check.assertions).pluck('passing').every().value();
       });
@@ -70,7 +70,7 @@ const statics = {
     return health;
   },
   getGroupSecurityPending(data){
-    if(_data.groupSecurity.get('id') != data){
+    if (_data.groupSecurity.get('id') != data){
       _data.groupSecurity = new Group();
     }
   },
@@ -103,27 +103,27 @@ const statics = {
   },
   groupELBFromJS(data){
     let instances = data.instances;
-    if(!instances){
+    if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
       });
     }
-    if(instances.length){
-      if(instances[0].InstanceId){
+    if (instances.length){
+      if (instances[0].InstanceId){
         data.instances = _.uniq(instances, 'InstanceId');
       }
       data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
     data.name = data.LoadBalancerName;
     data.id = data.LoadBalancerName;
-    if(data.name == 'api-lb'){
+    if (data.name == 'api-lb'){
       data.checks = [{
         assertions:[
           {passing:true}
         ]
       }]
     }
-    if(data.name == 'api-lb-com'){
+    if (data.name == 'api-lb-com'){
       data.checks = [
       {
         assertions:[
@@ -144,13 +144,13 @@ const statics = {
   },
   groupFromJS(data){
     let instances = data.instances;
-    if(!instances){
+    if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
       });
     }
-    if(instances.length){
-      if(instances[0].InstanceId){
+    if (instances.length){
+      if (instances[0].InstanceId){
         data.instances = _.uniq(instances, 'InstanceId');
       }
       data.instances = new List(data.instances.map(instance => InstanceStore.instanceFromJS(instance)));
@@ -159,7 +159,7 @@ const statics = {
     data.meta = Immutable.fromJS(data.meta);
     data.id = data.GroupId;
     data.name = data.GroupName;
-    if(data.name == 'api-lb'){
+    if (data.name == 'api-lb'){
       data.checks = [
       {
         assertions:[
@@ -217,7 +217,7 @@ const _public = {
     return _data.groupsELB;
   },
   getGroup(target){
-    if(target && target.type){
+    if (target && target.type){
       switch(target.type){
         case 'security':
           return _data.groupSecurity; 
@@ -230,7 +230,7 @@ const _public = {
     return _data.groupSecurity;
   },
   getGroupFromFilter(target){
-    if(target && target.id){
+    if (target && target.id){
       switch(target.type){
         case 'elb':
           return _public.getGroupsELB().filter(group => group.get('id') == target.id).get(0);
@@ -283,7 +283,7 @@ const Store = Flux.createStore(
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }

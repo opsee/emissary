@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 
 export default React.createClass({
   render(){
-    return(
+    return (
       <div className="btn-container btn-container-fixed btn-container-bordered-top btn-container-righty">
         <div className="container">
           <div className="row">

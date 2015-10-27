@@ -1,25 +1,23 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Link} from 'react-router';
 import colors from 'seedling/colors';
-import Immutable, {Record} from 'immutable';
+import {Record} from 'immutable';
 import cx from 'classnames';
 
-import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {RadialGraph, ListItem, Modal} from '../global';
-import {CheckActions} from '../../actions';
+import {RadialGraph, Modal} from '../global';
 import {Settings, NewWindow, Refresh} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
 
 const CheckItem = React.createClass({
-  propTypes:{
-    item:React.PropTypes.instanceOf(Record).isRequired,
+  propTypes: {
+    item: React.PropTypes.instanceOf(Record).isRequired
   },
   getInitialState(){
     return _.assign({},{
-      showModal:false
+      showModal: false
     });
   },
   actions(e, id){
@@ -35,7 +33,7 @@ const CheckItem = React.createClass({
   openMenu(e){
     e.preventDefault();
     this.setState({
-      showModal:true
+      showModal: true
     });
   },
   getActions(){
@@ -44,10 +42,10 @@ const CheckItem = React.createClass({
   runAction(action){
   },
   hideContextMenu(){
-    this.setState({showModal:false});
+    this.setState({showModal: false});
   },
   onClick(e){
-    if(typeof this.props.onClick == 'function'){
+    if (typeof this.props.onClick == 'function'){
       e.preventDefault();
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
@@ -61,16 +59,16 @@ const CheckItem = React.createClass({
   },
   renderLinkButton(){
     return (
-    <Button to={this.getLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('check_spec').value.name} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
+    <Button to={this.getLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('check_spec').value.name} in a New Window`} icon={true} flat={true} target="_blank" className={listItem.btn}>
         <NewWindow btn={true} fill={colors.textColorSecondary}/>
     </Button>
     );
   },
   renderGraph(){
-    if(!this.props.noGraph){
-      if(!this.props.onClick){
+    if (!this.props.noGraph){
+      if (!this.props.onClick){
         return (
-          <Link to={this.getLink()}  params={{id:this.props.item.get('id'), name:this.props.item.get('check_spec').value.name}} className={listItem.link}>
+          <Link to={this.getLink()}  params={{id: this.props.item.get('id'), name: this.props.item.get('check_spec').value.name}} className={listItem.link}>
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
         )
@@ -84,9 +82,9 @@ const CheckItem = React.createClass({
     }
   },
   renderText(){
-    if(!this.props.onClick){
+    if (!this.props.onClick){
       return (
-      <Link to={this.getLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('check_spec').value.name}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
+      <Link to={this.getLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('check_spec').value.name}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
         <div>{this.props.item.get('check_spec').value.name}</div>
       </Link>
       )
@@ -99,8 +97,8 @@ const CheckItem = React.createClass({
     }
   },
   renderModal(){
-    if(!this.props.noModal){
-      return(
+    if (!this.props.noModal){
+      return (
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
@@ -119,7 +117,7 @@ const CheckItem = React.createClass({
     }
   },
   render(){
-    if(this.props.item.get('name')){
+    if (this.props.item.get('name')){
       return (
         <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>

@@ -12,7 +12,7 @@ const slack = variables.integrations.slack;
 
 function getState(){
   return {
-    instance:InstanceStore.getInstance()
+    instance: InstanceStore.getInstance()
   }
 }
 
@@ -25,7 +25,7 @@ export default React.createClass({
     return getState();
   },
   render() {
-    return(
+    return (
     <Button color="primary" href={`${slack.endpoints.auth}?client_id=${slack.creds.client_id}&state=${Date.now()}&redirect_uri=${window.location.origin}`}>
       Connect to Slack
     </Button>

@@ -5,10 +5,10 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './toolbar.css';
 
 var Toolbar = React.createClass({
-  propTypes:{
-    title:PropTypes.string.isRequired,
-    btnPosition:PropTypes.string,
-    bg:PropTypes.string
+  propTypes: {
+    title: PropTypes.string.isRequired,
+    btnPosition: PropTypes.string,
+    bg: PropTypes.string
   },
   outputTitle(){
     return (
@@ -22,7 +22,7 @@ var Toolbar = React.createClass({
   },
   getOuterClass(){
     let c = {};
-    if(this.props.bg == "info"){
+    if (this.props.bg == "info"){
       c = style.outerInfo;
     } else {
       c = style.outer;
@@ -31,13 +31,13 @@ var Toolbar = React.createClass({
   },
   getOuterStyle(){
     let obj = {};
-    if(this.props.bg){
+    if (this.props.bg){
       obj.background = colors[this.props.bg];
     }
     return obj;
   },
   render(){
-    return(
+    return (
       <div className={this.getOuterClass()}>
         {this.outputTitle()}
         <Grid>

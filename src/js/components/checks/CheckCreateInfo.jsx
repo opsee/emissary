@@ -13,40 +13,40 @@ import {UserStore} from '../../stores';
 import {Padding} from '../layout';
 
 const intervalOptions = [
-  ['5m','5min'],
-  ['15m','15min'],
-  ['24h','24hr'],
-  ['7d','7d'],
+  ['5m', '5min'],
+  ['15m', '15min'],
+  ['24h', '24hr'],
+  ['7d', '7d'],
 ]
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
 const NotificationForm = forms.Form.extend({
   type: forms.ChoiceField({
-    choices:notificationOptions
+    choices: notificationOptions
   }),
   value: forms.CharField({
     label: 'Recipient',
-    widgetAttrs:{
-      placeholder:'test@testing.com'
-    },
+    widgetAttrs: {
+      placeholder: 'test@testing.com'
+    }
   }),
 });
 
 const NotificationFormSet = forms.FormSet.extend({
-  form:NotificationForm,
-  canDelete:true
+  form: NotificationForm,
+  canDelete: true
 });
 
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
     label: 'Check name',
-    widgetAttrs:{
-      placeholder:'My Service 404 Check'
+    widgetAttrs: {
+      placeholder: 'My Service 404 Check'
     }
   }),
-  validation:'auto',
+  validation: 'auto',
   render() {
     return (
       <Padding b={1}>
@@ -57,7 +57,7 @@ const InfoForm = forms.Form.extend({
 })
 
 const data = {
-  port:80
+  port: 80
 }
 
 const CheckCreateInfo = React.createClass({
@@ -65,37 +65,37 @@ const CheckCreateInfo = React.createClass({
     const self = this;
 
     let initialNotifs = self.props.check.notifications;
-    if(!initialNotifs.length){
+    if (!initialNotifs.length){
       initialNotifs.push({
-        type:'email',
-        value:UserStore.getUser().get('email')
+        type: 'email',
+        value: UserStore.getUser().get('email')
       })
     }
 
     const obj = {
       info: new InfoForm(_.extend({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-      }, self.dataComplete() ? {data:this.props.check.check_spec.value} : null)),
+        onChange: self.changeAndUpdate,
+        labelSuffix: '',
+      }, self.dataComplete() ? {data: this.props.check.check_spec.value} : null)),
       notifications: new NotificationFormSet({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-        initial:initialNotifs,
+        onChange: self.changeAndUpdate,
+        labelSuffix: '',
+        initial: initialNotifs,
         minNum:!initialNotifs.length ? 1 : 0,
-        extra:0
+        extra: 0
       }),
-      submitting:false
+      submitting: false
     }
 
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
-      self.state.notifications.forms().forEach((form,i) => {
+      self.state.notifications.forms().forEach((form, i) => {
         let notif = initialNotifs[i];
-        if(notif){
+        if (notif){
           form.setData(notif);
         }
       });
-    },10);
+    }, 10);
     return obj;
   },
   dataComplete(){
@@ -105,12 +105,12 @@ const CheckCreateInfo = React.createClass({
     this.props.onChange(this.getFinalData(), this.disabled(), 3)
   },
   componentDidMount(){
-    if(this.props.renderAsInclude){
+    if (this.props.renderAsInclude){
       this.changeAndUpdate();
     }
   },
   renderRemoveNotificationButton(form, index){
-    if(index > 0){
+    if (index > 0){
       return (
         <Padding t={2}>
           <BoundField bf={form.boundField('DELETE')}/>
@@ -119,13 +119,13 @@ const CheckCreateInfo = React.createClass({
     }else{
       return (
         <Padding lr={1}>
-         <div style={{width:'48px'}}/>
+         <div style={{width: '48px'}}/>
        </Padding>
       )
     }
   },
   removeNotification(index){
-    if(index > 0){
+    if (index > 0){
       this.state.notifications.removeForm(index);
     }
   },
@@ -135,7 +135,7 @@ const CheckCreateInfo = React.createClass({
     });
   },
   renderNotificationForm(){
-    return(
+    return (
       <div>
         <h3>Notifications</h3>
         {this.getNotificationsForms().map((form, index) => {
@@ -178,7 +178,7 @@ const CheckCreateInfo = React.createClass({
   getCleanedData(){
     let notificationData = this.state.notifications.cleanedData();
     const data = {
-      notifications:notificationData
+      notifications: notificationData
     }
     return _.assign(data, this.state.info.cleanedData);
   },
@@ -187,8 +187,8 @@ const CheckCreateInfo = React.createClass({
     return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
   },
   renderSubmitButton(){
-    if(!this.props.renderAsInclude){
-      return(
+    if (!this.props.renderAsInclude){
+      return (
         <div>
           <Padding t={2}> 
             <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
@@ -234,7 +234,7 @@ const CheckCreateInfo = React.createClass({
   onSubmit(e) {
     e.preventDefault()
     this.setState({
-      submitting:true
+      submitting: true
     });
     this.props.onSubmit();
   }

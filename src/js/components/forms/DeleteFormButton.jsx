@@ -5,12 +5,12 @@ import Button from './Button.jsx';
 import {Close} from '../icons';
 
 export default React.createClass({
-  propTypes:{
-    bf:PropTypes.object.isRequired
+  propTypes: {
+    bf: PropTypes.object.isRequired
   },
   getInitialState(){
     return {
-      data:this.props.bf.value()
+      data: this.props.bf.value()
     };
   },
   onChange(id, bool){
@@ -20,7 +20,7 @@ export default React.createClass({
     });
   },
   render(){
-    return(
+    return (
       <div className="padding-lr">
         <Button flat={true} icon={true} color="danger" className="pull-right" title="Remove this Header" onClick={this.onChange}>
           <Close inline={true} fill="danger"/>

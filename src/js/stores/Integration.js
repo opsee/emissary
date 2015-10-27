@@ -15,7 +15,7 @@ let _statuses = {
 
 const statics = {
   getInstancePending(data){
-    if(_data.instance.get('id') != data){
+    if (_data.instance.get('id') != data){
       _data.instance = new Instance();
       Store.emitChange();
     }
@@ -49,7 +49,7 @@ const Store = Flux.createStore(
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
     _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }

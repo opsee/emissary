@@ -11,7 +11,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    instance:InstanceStore.getInstanceRDS()
+    instance: InstanceStore.getInstanceRDS()
   }
 }
 

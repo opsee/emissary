@@ -7,10 +7,10 @@ import _ from 'lodash';
 import BaseSVG from './BaseSVG.jsx';
 
 const Icon = React.createClass({
-  propTypes:{
-    path:PropTypes.string.isRequired,
+  propTypes: {
+    path: PropTypes.string.isRequired,
     //fill is either a named opsee color, or any css color
-    fill:PropTypes.string
+    fill: PropTypes.string
   },
   colorClassFromProp(prop){
     const cased = _.startCase(this.props[prop]).split(' ').join('');
@@ -19,7 +19,7 @@ const Icon = React.createClass({
   getClass(){
     var arr = [];
     for(var prop in this.props){
-      if(prop == 'fill'){
+      if (prop == 'fill'){
         arr.push(this.colorClassFromProp(prop));
       }else{
         arr.push(style[prop]);
@@ -30,7 +30,7 @@ const Icon = React.createClass({
   },
   getFill(){
     const colorClass = this.colorClassFromProp('fill');
-    if(!colorClass){
+    if (!colorClass){
       return this.props.fill;
     }
     return false;

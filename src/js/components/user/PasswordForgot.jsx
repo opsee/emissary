@@ -16,13 +16,13 @@ export default React.createClass({
   },
   getInitialState(){
     return {
-      data:UserStore.getUser().toJS(),
-      status:UserStore.getUserSendResetEmailStatus()
+      data: UserStore.getUser().toJS(),
+      status: UserStore.getUserSendResetEmailStatus()
     }
   },
   updateUserData(data){
     this.setState({
-      data:data
+      data: data
     })
   },
   submit(e){
@@ -36,7 +36,7 @@ export default React.createClass({
     return this.state.status == 'pending' ? 'Sending...' : 'Send Reset Email';
   },
   innerRender(){
-    if(this.state.status == 'success'){
+    if (this.state.status == 'success'){
       return (
         <p>Success. Check your email.</p>
       )

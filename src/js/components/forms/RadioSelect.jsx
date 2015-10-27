@@ -3,12 +3,12 @@ import RadioWithLabel from './RadioWithLabel.jsx';
 import _ from 'lodash';
 
 export default React.createClass({
-  propTypes:{
-    bf:PropTypes.object.isRequired
+  propTypes: {
+    bf: PropTypes.object.isRequired
   },
   getInitialState(){
     return {
-      data:this.props.bf.value()
+      data: this.props.bf.value()
     };
   },
   onChange(id, bool){
@@ -16,14 +16,14 @@ export default React.createClass({
     var obj = {};
     obj[this.props.bf.name] = data;
     return this.props.bf.form.updateData(obj, {
-      clearValidation:false
+      clearValidation: false
     });
   },
   widgetIsActive(w){
     return _.findWhere(this.props.bf.value(), w.choiceValue);
   },
   render(){
-    return(
+    return (
       <ul className="list-unstyled">
         {this.props.bf.subWidgets().map((w, i) => {
           return (

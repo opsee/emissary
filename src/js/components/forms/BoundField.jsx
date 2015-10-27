@@ -11,7 +11,7 @@ import InlineRadioSelect from './InlineRadioSelect.jsx';
 
 export default React.createClass({
   fallback(){
-    return(
+    return (
     <div className="form-group">
       <InputWithLabel bf={this.props.bf}>
         {this.props.children}
@@ -23,12 +23,12 @@ export default React.createClass({
     switch(this.props.bf.field.constructor.name){
       case 'ChoiceField':
         const type = _.get(this.props.bf, 'field.widget.attrs.widgetType');
-        if(type == 'InlineRadioSelect'){
+        if (type && type == 'InlineRadioSelect'){
           return <InlineRadioSelect bf={this.props.bf}/>
-        }else if(type == 'RadioSelect'){
+        }else if (type && type == 'RadioSelect'){
           return <RadioSelect bf={this.props.bf}/>
         }else{
-          return(
+          return (
             <div className="form-group">
               <Dropdown bf={this.props.bf}/>
             </div>
@@ -36,14 +36,14 @@ export default React.createClass({
         }
       break;
       case 'BooleanField':
-        if(this.props.bf.field.label == 'Delete'){
+        if (this.props.bf.field.label == 'Delete'){
           return <DeleteFormButton bf={this.props.bf}/>
         }else{
           return this.fallback();
         }
       break;
       case 'MultipleChoiceField':
-        if(this.props.bf.field.label == 'buttonToggle'){
+        if (this.props.bf.field.label == 'buttonToggle'){
           return <MultiButtonToggle bf={this.props.bf}/>
         }else{
           return <MultiToggle bf={this.props.bf}/>

@@ -6,15 +6,15 @@ import colors from 'seedling/colors';
 
 function getState(){
   return {
-    options:GlobalStore.getModalMessage(),
-    showModal:false
+    options: GlobalStore.getModalMessage(),
+    showModal: false
   }
 }
 
 export default React.createClass({
   getStyle(){
     return {
-      background:this.props.style ? colors[this.props.style] : colors.warning
+      background: this.props.style ? colors[this.props.style] : colors.warning
     }
   },
   getClassName(){

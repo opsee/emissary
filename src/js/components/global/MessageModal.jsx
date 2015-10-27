@@ -6,8 +6,8 @@ import colors from 'seedling/colors';
 
 function getState(){
   return {
-    options:GlobalStore.getModalMessage(),
-    showModal:false
+    options: GlobalStore.getModalMessage(),
+    showModal: false
   }
 }
 
@@ -15,19 +15,19 @@ export default React.createClass({
   mixins: [GlobalStore.mixin],
   storeDidChange() {
     var obj = getState();
-    if(obj && obj.options){
+    if (obj && obj.options){
       this.setState({
-        msg:{
-          __html:obj.options.html
+        msg: {
+          __html: obj.options.html
         },
-        showModal:true,
-        style:obj.options.style,
-        type:obj.options.type
+        showModal: true,
+        style: obj.options.style,
+        type: obj.options.type
       });
       GlobalActions.globalModalMessageConsume();
     }
   },
-  getInitialState:getState,
+  getInitialState: getState,
   close(){
     this.setState({ showModal: false });
   },
@@ -36,7 +36,7 @@ export default React.createClass({
   },
   getStyle(){
     return {
-      background:this.state.style ? colors[this.state.style] : colors.warning
+      background: this.state.style ? colors[this.state.style] : colors.warning
     }
   },
   getClassName(){

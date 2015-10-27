@@ -12,20 +12,20 @@ const RadialGraph = React.createClass({
   mixins: [SetInterval],
   getInitialState() {
     return _.defaults({
-      silenceRemaining:0
+      silenceRemaining: 0
     }, this.props);
   },
   componentDidMount(){
     this.setupSilence()
   },
   componentWillReceiveProps(nextProps){
-    if(!this.state.silenceRemaining){
+    if (!this.state.silenceRemaining){
       this.setupSilence();
     }
   },
   tick(){
     this.setState({
-      silenceRemaining:this.getSilenceRemaining()
+      silenceRemaining: this.getSilenceRemaining()
     });
   },
   getBaseClass(){
@@ -47,8 +47,8 @@ const RadialGraph = React.createClass({
   },
   setupSilence(){
     const remaining = this.getSilenceRemaining();
-    if(remaining){
-      this.setInterval(this.tick,1000);
+    if (remaining){
+      this.setInterval(this.tick, 1000);
       this.tick();
     }else{
       this.intervals.map(clearInterval);
@@ -72,7 +72,7 @@ const RadialGraph = React.createClass({
   getSilenceRemaining(){
     const startDate = this.state.silenceDate;
     let num = 0;
-    if(startDate && startDate instanceof Date){
+    if (startDate && startDate instanceof Date){
       const finalVal = startDate.valueOf() + this.state.silenceDuration;
       num = finalVal - Date.now();
     }
@@ -80,28 +80,28 @@ const RadialGraph = React.createClass({
   },
   getText(){
     const millis = this.state.silenceRemaining;
-    if(!millis || millis < 0){
+    if (!millis || millis < 0){
       return this.props.health;
     }
     const duration = moment.duration(millis);
     let unit = 'h';
     let time = duration.as(unit);
-    if(time < 1){
+    if (time < 1){
       unit = 'm';
       time = duration.as(unit);
     }
-    if(time < 1){
+    if (time < 1){
       unit = 's';
       time = duration.as(unit);
     }
     return Math.ceil(time)+unit;
-    return (time,10)+unit;
+    return (time, 10)+unit;
   },
   getPath(){
     const health = this.props.health;
-    if(!health){return '';}
+    if (!health){return '';}
     let percentage;
-    if(this.state.silenceRemaining){
+    if (this.state.silenceRemaining){
       percentage = (this.state.silenceRemaining / this.state.silenceDuration) * 100;
     } else {
       percentage = health;
@@ -113,7 +113,7 @@ const RadialGraph = React.createClass({
       percentage = 0;
     }
 
-    percentage = parseInt(percentage,10);
+    percentage = parseInt(percentage, 10);
     const w = radialWidth/2;
     const α = (percentage/100)*360;
     const r = ( α * Math.PI / 180 );
@@ -127,7 +127,7 @@ const RadialGraph = React.createClass({
     return `translate(${w},${w})`;
   },
   render() {
-    if(!this.state.state){
+    if (!this.state.state){
       return <div>No state defined.</div>
     }
     return (

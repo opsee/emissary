@@ -9,21 +9,21 @@ import {MoreHoriz} from '../icons';
 import Immutable, {Record, List, Map} from 'immutable';
 
 export default React.createClass({
-  mixins:[CheckStore.mixin],
-  propTypes:{
-    type:PropTypes.string,
-    id:PropTypes.string
+  mixins: [CheckStore.mixin],
+  propTypes: {
+    type: PropTypes.string,
+    id: PropTypes.string
   },
   getState(){
     return {
-      status:CheckStore.getGetChecksStatus(),
-      checks:CheckStore.getChecks(this.props.id)
+      status: CheckStore.getGetChecksStatus(),
+      checks: CheckStore.getChecks(this.props.id)
     }
   },
   storeDidChange(){
     let state = this.getState();
     let error = false;
-    if(state.status == 'error'){
+    if (state.status == 'error'){
       error = state.status;
     }
     state.error = error;
@@ -36,8 +36,8 @@ export default React.createClass({
     CheckActions.getChecks();
   },
   renderChecks(){
-    if(this.state.checks.size){
-      return(
+    if (this.state.checks.size){
+      return (
         <div>
           {this.state.checks.map(c => {
             return <CheckItem item={c}/>

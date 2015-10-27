@@ -9,14 +9,14 @@ import style from './dropdown.css';
 export default React.createClass({
   getState(){
     let label = this.props.bf.value();
-    if(label){
+    if (label){
       label = this.getLabelFromChoice(label);
     }else{
       label = _.clone(this.props.bf.label);
     }
     return _.extend({}, this.props, {
-      label:label,
-      open:false
+      label: label,
+      open: false
     });
   },
   getInitialState(){
@@ -25,7 +25,7 @@ export default React.createClass({
   getLabelFromChoice(key){
     let bf = this.state && this.state.bf || this.props.bf;
     let choice = _.find(bf.field._choices, choice => choice[0] == key);
-    if(choice && Array.isArray(choice)){
+    if (choice && Array.isArray(choice)){
       choice = choice[1];
     }
     return choice;
@@ -36,12 +36,12 @@ export default React.createClass({
     obj[this.state.bf.name] = choice[0];
     this.state.bf.form.updateData(obj);
     this.setState({
-      label:choice[1]
+      label: choice[1]
     })
   },
   componentDidMount(){
     const val = this.props.bf.value();
-    if(val){
+    if (val){
       const obj = {};
       obj[this.state.bf.name] = val;
       this.state.bf.form.updateData(obj);
@@ -54,18 +54,18 @@ export default React.createClass({
     this.setState({open:!this.state.open});
   },
   renderChevron(){
-    if(this.state.open){
+    if (this.state.open){
       return (
-        <ChevronUp style={{position:'absolute',right:'10px',top:'10px'}}/>
+        <ChevronUp style={{position: 'absolute', right: '10px', top: '10px'}}/>
       )
     }else{
       return (
-        <ChevronDown style={{position:'absolute',right:'10px',top:'10px'}}/>
+        <ChevronDown style={{position: 'absolute', right: '10px', top: '10px'}}/>
       )
     }
   },
   renderMenu(){
-    if(this.state.open){
+    if (this.state.open){
       return (
         <div className={style.menu}>
           {
@@ -84,10 +84,10 @@ export default React.createClass({
     }
   },
   render(){
-    return(
+    return (
       <Dropdown id={this.props.bf.idForLabel()}>
           <Label bf={this.props.bf}/>
-          <div style={{position:'relative'}}>
+          <div style={{position: 'relative'}}>
             <Button id={this.props.bf.idForLabel()} dropdown={true} className="flex-order-2" onClick={this.toggleOpen} block={true}>
               {this.state.label}
               {this.renderChevron()}

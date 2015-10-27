@@ -4,8 +4,8 @@ React.initializeTouchEvents(true);
 import style from './toggle.css';
 
 export default React.createClass({
-  propTypes:{
-    on:PropTypes.bool.isRequired
+  propTypes: {
+    on: PropTypes.bool.isRequired
   },
   handleTouch(e){
     e.preventDefault();

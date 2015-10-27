@@ -12,36 +12,36 @@ import {PageAuth} from '../../modules/statics';
 
 function getState(noCheck){
   const obj = {
-    check:CheckStore.newCheck().toJS(),
-    response:CheckStore.getResponse(),
-    createStatus:CheckStore.getCheckCreateStatus()
+    check: CheckStore.newCheck().toJS(),
+    response: CheckStore.getResponse(),
+    createStatus: CheckStore.getCheckCreateStatus()
   }
   return _.omit(obj, noCheck ? 'check' : null)
 }
 
 const CheckCreate = React.createClass({
   mixins: [CheckStore.mixin],
-  statics:{
-    willTransitionTo:PageAuth
+  statics: {
+    willTransitionTo: PageAuth
   },
   getState(noCheck){
     const obj = {
-      check:CheckStore.newCheck(this.props.query).toJS(),
-      response:CheckStore.getResponse(),
-      createStatus:CheckStore.getCheckCreateStatus(),
-      filter:null
+      check: CheckStore.newCheck(this.props.query).toJS(),
+      response: CheckStore.getResponse(),
+      createStatus: CheckStore.getCheckCreateStatus(),
+      filter: null
     }
     return _.omit(obj, noCheck ? 'check' : null)
   },
   storeDidChange() {
     const state = this.getState(true);
-    if(state.createStatus == 'success'){
+    if (state.createStatus == 'success'){
       UserActions.userPutUserData('hasDismissedCheckCreationHelp');
       router.transitionTo('checks');
-    }else if(state.createStatus && state.createStatus != 'pending'){
+    }else if (state.createStatus && state.createStatus != 'pending'){
       GlobalActions.globalModalMessage({
-        html:status.body && status.body.message || 'Something went wrong.',
-        style:'danger'
+        html: status.body && status.body.message || 'Something went wrong.',
+        style: 'danger'
       });
     }
     this.setState(state);
@@ -57,12 +57,12 @@ const CheckCreate = React.createClass({
   },
   updateData(data){
     this.setState({
-      check:_.cloneDeep(data)
+      check: _.cloneDeep(data)
     });
   },
   updateFilter(data){
     this.setState({
-      filter:data
+      filter: data
     });
   },
   submit(){

@@ -15,17 +15,17 @@ import cx from 'classnames';
 // import colors from '../global/colors.css';
 
 const GroupItem = React.createClass({
-  propTypes:{
-    item:React.PropTypes.instanceOf(Record).isRequired,
+  propTypes: {
+    item: React.PropTypes.instanceOf(Record).isRequired
   },
   getDefaultProps(){
     return {
-      item:GroupStore.getNewGroup()
+      item: GroupStore.getNewGroup()
     }
   },
   getInitialState(){
     return _.assign({},{
-      showModal:false
+      showModal: false
     });
   },
   actions(e, id){
@@ -41,7 +41,7 @@ const GroupItem = React.createClass({
   openMenu(e){
     e.preventDefault();
     this.setState({
-      showModal:true
+      showModal: true
     });
   },
   getActions(){
@@ -50,10 +50,10 @@ const GroupItem = React.createClass({
   runAction(action){
   },
   hideContextMenu(){
-    this.setState({showModal:false});
+    this.setState({showModal: false});
   },
   onClick(e){
-    if(typeof this.props.onClick == 'function'){
+    if (typeof this.props.onClick == 'function'){
       e.preventDefault();
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
@@ -67,14 +67,14 @@ const GroupItem = React.createClass({
   },
   renderLinkButton(){
     return (
-    <Button to={this.getGroupLink()} params={{id:this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank">
+    <Button to={this.getGroupLink()} params={{id: this.props.item.get('id')}} title={`Open ${this.props.item.get('name')} in a New Window`} icon={true} flat={true} target="_blank">
         <NewWindow btn={true} fill="textSecondary"/>
     </Button>
     );
   },
   renderModal(){
-    if(!this.props.noModal){
-      return(
+    if (!this.props.noModal){
+      return (
         <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
           <Grid fluid={true}>
             <Row>
@@ -82,7 +82,7 @@ const GroupItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button color="primary" text="left" to="checkCreateRequest" block={true} flat={true} query={{target:{id:this.props.item.get('id'), type:this.props.item.get('type')}}}>
+                <Button color="primary" text="left" to="checkCreateRequest" block={true} flat={true} query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type')}}}>
                   <Add inline={true} fill="primary"/> Create Check
                 </Button>
               </div>
@@ -90,7 +90,7 @@ const GroupItem = React.createClass({
           </Grid>
           {
             // this.getActions().map(a => {
-            //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin:0}}>{a}</Button>
+            //   return <Button block={true} flat={true} onClick={this.runAction.bind(null, a)} className="text-left" style={{margin: 0}}>{a}</Button>
             // })
           }
         </Modal>
@@ -98,10 +98,10 @@ const GroupItem = React.createClass({
     }
   },
   renderGraph(){
-    if(!this.props.noGraph){
-      if(!this.props.onClick){
+    if (!this.props.noGraph){
+      if (!this.props.onClick){
         return (
-          <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={listItem.link}>
+          <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={listItem.link}>
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
         )
@@ -117,9 +117,9 @@ const GroupItem = React.createClass({
     }
   },
   renderText(){
-    if(!this.props.onClick){
+    if (!this.props.onClick){
       return (
-      <Link to={this.getGroupLink()} params={{id:this.props.item.get('id'), name:this.props.item.get('name')}} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
+      <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
         <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
       </Link>
@@ -134,7 +134,7 @@ const GroupItem = React.createClass({
     }
   },
   render(){
-    if(this.props.item.get('name')){
+    if (this.props.item.get('name')){
       return (
         <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>

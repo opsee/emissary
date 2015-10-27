@@ -9,7 +9,7 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  statics:{
+  statics: {
       willTransitionTo(transition, params, query, cb){
         const newImg = new Image();
         newImg.src = img;

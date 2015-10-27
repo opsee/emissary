@@ -53,21 +53,21 @@ _actions.userPutUserData = Flux.statics.addAsyncAction('userPutUserData',
     let user = UserStore.getUserData() || {};
     let history = user[key];
     let index;
-    if(history && Array.isArray(history) && history.length){
+    if (history && Array.isArray(history) && history.length){
       index = history.length -1;
     }else{
       index = 0;
       user[key] = [];
     }
     let record = user[key][index];
-    if(record && record.revision != config.revision){
+    if (record && record.revision != config.revision){
       index++;
     }
     user[key][index] = {
       revision:config.revision,
       data:data
     }
-    if(reset){
+    if (reset){
       user[key] = false;
     }
     return request

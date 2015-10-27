@@ -9,17 +9,17 @@ import {OnboardStore} from '../../stores';
 import {Button} from '../forms';
 
 const SystemStatus = React.createClass({
-  mixins:[OnboardStore.mixin],
+  mixins: [OnboardStore.mixin],
   storeDidChange(){
-    if(OnboardStore.getGetBastionsStatus() == 'success'){
+    if (OnboardStore.getGetBastionsStatus() == 'success'){
       this.setState({
-        bastions:OnboardStore.getBastions() || []
+        bastions: OnboardStore.getBastions() || []
       })
     }
   },
   getInitialState(){
     return {
-      bastions:undefined
+      bastions: undefined
     }
   },
   componentWillMount(){
@@ -29,7 +29,7 @@ const SystemStatus = React.createClass({
     return this.state.bastions.length;
   },
   renderBastionsInfo(){
-    if(this.state.bastions){
+    if (this.state.bastions){
       return (
         <div>
           Connected Bastions: {this.getConnectedBastions()}

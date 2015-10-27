@@ -11,8 +11,8 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 
 function getState(){
   return {
-    instance:InstanceStore.getInstanceECC(),
-    status:InstanceStore.getGetInstanceECCStatus()
+    instance: InstanceStore.getInstanceECC(),
+    status: InstanceStore.getGetInstanceECCStatus()
   }
 }
 
@@ -42,7 +42,7 @@ export default React.createClass({
   },
   renderAvailabilityZone(){
     const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
-    if(az){
+    if (az){
       return (
         <tr>
           <td><strong>Availability Zone</strong></td>
@@ -57,7 +57,7 @@ export default React.createClass({
     return this.state.instance.toJS();
   },
   render() {
-    if(this.state.instance.get('id')){
+    if (this.state.instance.get('id')){
       return (
         <div>
           <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || ''}`}/>

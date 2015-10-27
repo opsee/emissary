@@ -6,10 +6,10 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 var OpseeAlert = React.createClass({
   getOuterStyle(){
     let style = {
-      backgroundColor:colors.danger,
-      color:'white'
+      backgroundColor: colors.danger,
+      color: 'white'
     };
-    if(this.props.type){
+    if (this.props.type){
       style.backgroundColor = colors[this.props.type];
     }
     return style;
@@ -19,7 +19,7 @@ var OpseeAlert = React.createClass({
       <Alert bsStyle={this.props.type}>
       </Alert>
     );
-    return(
+    return (
       <Grid fluid={true} style={this.getOuterStyle()}>
         <Row>
           <Col xs={12} className="padding-tb">

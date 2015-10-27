@@ -9,9 +9,9 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
-  statics:{
+  statics: {
     willTransitionTo(transition, params, query){
-      if(!query.id || !query.token){
+      if (!query.id || !query.token){
         transition.redirect('passwordForgot');
       }
     }
@@ -19,30 +19,30 @@ export default React.createClass({
   storeDidChange(){
     const status = UserStore.getUserEditStatus();
     this.setState({status})
-    if(status == 'success'){
+    if (status == 'success'){
       router.transitionTo('env');
-    }else if(status && status != 'pending'){
+    }else if (status && status != 'pending'){
       console.error(status);
     }
   },
   getInitialState(){
     return {
-      status:null,
-      password:null
+      status: null,
+      password: null
     }
   },
   updateUserData(data){
-    this.setState({password:data.password});
+    this.setState({password: data.password});
   },
   submit(e){
     e.preventDefault();
-    UserActions.userEdit({password:this.state.password, id:this.props.query.id});
+    UserActions.userEdit({password: this.state.password, id: this.props.query.id});
   },
   componentWillMount(){
     UserActions.userSet({
-      token:this.props.query.token, 
-      user:_.assign(this.props.query, {
-        loginDate:new Date()
+      token: this.props.query.token, 
+      user: _.assign(this.props.query, {
+        loginDate: new Date()
       })
     });
   },
@@ -53,7 +53,7 @@ export default React.createClass({
     return this.state.status == 'pending' ? 'Changing...' : 'Change';
   },
   innerRender(){
-    if(this.state.status == 'success'){
+    if (this.state.status == 'success'){
       return (
         <p>Success. Check your email.</p>
       )

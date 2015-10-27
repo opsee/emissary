@@ -22,16 +22,16 @@ import {Padding} from '../layout';
 
 const groupOptions = []
 
-const verbOptions = ['GET','POST','PUT','DELETE','PATCH'].map(name => [name, name]);
+const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 
 const CheckCreateTarget = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      selected:this.props.check.target.id
+      selected: this.props.check.target.id
     }
     return _.extend(obj, {
-      cleanedData:null
+      cleanedData: null
     });
   },
   filterHasChanged(){
@@ -45,7 +45,7 @@ const CheckCreateTarget = React.createClass({
     GroupActions.getGroupsELB();
   },
   componentDidMount(){
-    if(this.props.renderAsInclude){
+    if (this.props.renderAsInclude){
       this.changeAndUpdate();
     }
   },
@@ -60,8 +60,8 @@ const CheckCreateTarget = React.createClass({
     return check;
   },
   renderSubmitButton(){
-    if(!this.props.renderAsInclude){
-      return(
+    if (!this.props.renderAsInclude){
+      return (
         <div>
           <div><br/><br/></div>
           <div>
@@ -86,7 +86,7 @@ const CheckCreateTarget = React.createClass({
   },
   getGroupsSecurity(){
     const string = this.state.filter.cleanedData.filter;
-    if(string){
+    if (string){
       const data = this.state.groupsSecurity.filter(sg => {
         return fuzzy.filter(string, [sg.get('name')]).length;
       });
@@ -97,7 +97,7 @@ const CheckCreateTarget = React.createClass({
   },
   getGroupsELB(){
     const string = this.state.filter.cleanedData.filter;
-    if(string){
+    if (string){
       return this.state.groupsELB.filter(elb => {
         return fuzzy.filter(string, [elb.get('name')]).length;
       });
@@ -110,8 +110,8 @@ const CheckCreateTarget = React.createClass({
     check.target.id = id;
     check.target.type = type || 'sg';
     this.setState({
-      selected:check.target.id,
-      selectedType:type
+      selected: check.target.id,
+      selectedType: type
     });
     this.props.onChange(check, this.disabled(), 1);
     router.transitionTo('checkCreateRequest');
@@ -134,7 +134,7 @@ const CheckCreateTarget = React.createClass({
           <p>What would you like to check? When targeting a group or ELB, your check will automatically run on all of its instances. Note: only groups and ELBs are currently supported as targets.</p>
         </Padding>
         {this.renderHelperText()}
-        <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity','groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
+        <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         <StepCounter active={1} steps={4}/>
       </div>
     )

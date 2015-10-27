@@ -35,7 +35,7 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
     .send({date:date})
   },
   res => {
-    if(res && res.body){
+    if (res && res.body){
       return {
         available:res.body.available,
         date:res.req._data.date

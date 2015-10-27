@@ -11,13 +11,13 @@ export default React.createClass({
   mixins: [GlobalStore.mixin],
   storeDidChange() {
     const messages = GlobalStore.getSocketMessages();
-    if(messages.length != this.state.messages.length){
+    if (messages.length != this.state.messages.length){
       this.setState({messages});
     }
   },
   getInitialState(){
     return {
-      messages:[]
+      messages: []
     }
   },
   render() {
