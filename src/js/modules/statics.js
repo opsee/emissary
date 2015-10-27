@@ -5,9 +5,9 @@ export default {
   PageAuth(transition, params, query){
     if (UserStore.hasUser()){
       return true;
-    }else{
+    }else {
       UserActions.userLoginRedirect(transition.path);
       return transition.redirect('login');
     }
   }
-}
+};

@@ -12,7 +12,7 @@ let config = {
   intercom:window.Intercom,
   debug:storage.get('debug') || false,
   ghosting:false
-}
+};
 
 window.config = config;
 export default config;

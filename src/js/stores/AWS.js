@@ -5,9 +5,9 @@ import Immutable, {Record, List, Map} from 'immutable';
 
 const statics = {
   getSignupsSuccess(data){
-    _signups = Immutable.fromJS(data)
+    _signups = Immutable.fromJS(data);
   }
-}
+};
 
 const _regions = [
   {
@@ -50,9 +50,9 @@ const Store = Flux.createStore(
       return _regions;
     },
   }, function(payload){
-    switch(payload.actionType) {
+  switch (payload.actionType) {
     }
-  }
-)
+}
+);
 
 export default Store;

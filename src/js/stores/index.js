@@ -20,4 +20,4 @@ export default {
   InstanceStore,
   OnboardStore,
   UserStore
-}
+};

@@ -1,9 +1,9 @@
 export default {
   get(item){
     var item = window.localStorage[item];
-    try{
+    try {
       item = JSON.parse(item);
-    }catch(err){
+    }catch (err){
       item = null;
     }
     return item;
@@ -14,4 +14,4 @@ export default {
   remove(item){
     return delete window.localStorage[item];
   }
-}
+};

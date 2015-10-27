@@ -25,7 +25,7 @@ var Instance = Record({
   Placement:null,
   SecurityGroups:List(),
   checks:List()
-})
+});
 
 
 let _data = {
@@ -33,14 +33,14 @@ let _data = {
   instancesECC:new List(),
   instanceRDS:new Instance(),
   instancesRDS:new List(),
-}
+};
 
 let _statuses = {
   getInstanceECC:null,
   getInstancesECC:null,
   getInstanceRDS:null,
   getInstancesRDS:null,
-}
+};
 
 const statics = {
   getStateFromItem(item){
@@ -58,12 +58,12 @@ const statics = {
       const boolArray = item.checks.map(check => {
         return _.chain(check.assertions).pluck('passing').every().value();
       });
-      health = Math.floor((_.compact(boolArray).length / boolArray.length)*100);
+      health = Math.floor((_.compact(boolArray).length / boolArray.length) * 100);
     }
     return health;
   },
   getInstancePending(data){
-    if (_data.instance.get('id') != data){
+    if (_data.instance.get('id') !== data){
       _data.instance = new Instance();
       Store.emitChange();
     }
@@ -107,8 +107,8 @@ const statics = {
   },
   getCreatedTime(time){
     let launchTime = Date.parse(time);
-    if (typeof launchTime == 'number' && !_.isNaN(launchTime) && launchTime > 0){
-    }else{
+    if (typeof launchTime === 'number' && !_.isNaN(launchTime) && launchTime > 0){
+    }else {
       launchTime = null;
     }
     return launchTime;
@@ -132,29 +132,29 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
-    if (data.name == 'coreos4'){
+    if (data.name === 'coreos4'){
       data.checks = [
-      {
-        assertions:[
+        {
+          assertions:[
           {passing:false},
           {passing:false}
         ]
-      },
-      {
-        assertions:[
+        },
+        {
+          assertions:[
           {passing:true},
           {passing:true},
           {passing:false}
         ]
-      },
-      {
-        assertions:[
+        },
+        {
+          assertions:[
           {passing:true},
           {passing:true},
           {passing:true}
         ]
-      },
-      ]
+        },
+      ];
     }
     data.health = statics.getHealthFromItem(data);
     data.state = statics.getStateFromItem(data);
@@ -167,7 +167,7 @@ const statics = {
   },
   runInstanceAction(data){
     _data.instancesECC = _data.instancesECC.map(instance => {
-      if (instance.get('id') == data.id){
+      if (instance.get('id') === data.id){
         let changed = instance.toJS();
         changed.state = 'restarting';
         return Immutable.fromJS(changed);
@@ -175,7 +175,7 @@ const statics = {
       return instance;
     });
   }
-}
+};
 
 const _public = {
   getInstanceECC(){
@@ -186,7 +186,7 @@ const _public = {
       return _data.instancesECC.filter(instance => {
         const groups = instance.get('groups');
         return _.findWhere(groups.toJS(), {id:groupId});
-      })
+      });
     }
     return _data.instancesECC;
   },
@@ -197,36 +197,36 @@ const _public = {
     return _data.instancesRDS;
   },
   instanceFromJS:statics.instanceFromJS
-}
+};
 
 let statusFunctions = {};
 let keys = _.chain(_statuses).keys().map(k => {
-  let arr = [k]
-  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  let arr = [k];
+  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
   statusFunctions[a[1]] = function(){
-    return _statuses[a[0]]
-  }
+    return _statuses[a[0]];
+  };
 }).value();
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
   function(payload){
-    switch(payload.actionType) {
-      case 'GET_INSTANCES_ECC_SUCCESS':
-        statics.getInstancesECCSuccess(payload.data);
+    switch (payload.actionType) {
+    case 'GET_INSTANCES_ECC_SUCCESS':
+      statics.getInstancesECCSuccess(payload.data);
       break;
-      case 'GET_INSTANCE_ECC_SUCCESS':
-        statics.getInstanceECCSuccess(payload.data);
+    case 'GET_INSTANCE_ECC_SUCCESS':
+      statics.getInstanceECCSuccess(payload.data);
       break;
-      case 'GET_INSTANCE_ECC_PENDING':
+    case 'GET_INSTANCE_ECC_PENDING':
         // statics.getInstancePending(payload.data);
       break;
-      case 'RUN_INSTANCE_ACTION':
-        statics.runInstanceAction(payload.data);
-        config.error = false;
-        Store.emitChange();
+    case 'RUN_INSTANCE_ACTION':
+      statics.runInstanceAction(payload.data);
+      config.error = false;
+      Store.emitChange();
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
@@ -235,6 +235,6 @@ const Store = Flux.createStore(
       Store.emitChange();
     }
   }
-)
+);
 
 export default Store;

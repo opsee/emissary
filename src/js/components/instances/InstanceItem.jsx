@@ -18,7 +18,7 @@ const InstanceItem = React.createClass({
     item: React.PropTypes.instanceOf(Record).isRequired
   },
   getInitialState(){
-    return _.assign({},{
+    return _.assign({}, {
       showModal: false
     });
   },

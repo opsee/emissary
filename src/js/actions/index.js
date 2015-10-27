@@ -16,4 +16,4 @@ export default {
   InstanceActions,
   OnboardActions,
   UserActions
-}
+};

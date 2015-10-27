@@ -40,7 +40,7 @@ let _data = {
   groupsRDSSecurity:new List(),
   groupELB:new Group(),
   groupsELB:new List(),
-}
+};
 
 let _statuses = {
   getGroupsSecurity:null,
@@ -49,13 +49,13 @@ let _statuses = {
   getGroupRDSSecurity:null,
   getGroupsELB:null,
   getGroupELB:null
-}
+};
 
 const statics = {
   getStateFromItem(item){
     let string = 'running';
-    if (typeof item.health == 'number'){
-      string = item.health == 100 ? 'passing' : 'failing';
+    if (typeof item.health === 'number'){
+      string = item.health === 100 ? 'passing' : 'failing';
     }
     return string;
   },
@@ -65,12 +65,12 @@ const statics = {
       const boolArray = item.checks.map(check => {
         return _.chain(check.assertions).pluck('passing').every().value();
       });
-      health = Math.floor((_.compact(boolArray).length / boolArray.length)*100);
+      health = Math.floor((_.compact(boolArray).length / boolArray.length) * 100);
     }
     return health;
   },
   getGroupSecurityPending(data){
-    if (_data.groupSecurity.get('id') != data){
+    if (_data.groupSecurity.get('id') !== data){
       _data.groupSecurity = new Group();
     }
   },
@@ -105,7 +105,7 @@ const statics = {
     let instances = data.instances;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
+        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName});
       });
     }
     if (instances.length){
@@ -116,27 +116,27 @@ const statics = {
     }
     data.name = data.LoadBalancerName;
     data.id = data.LoadBalancerName;
-    if (data.name == 'api-lb'){
+    if (data.name === 'api-lb'){
       data.checks = [{
         assertions:[
           {passing:true}
         ]
-      }]
+      }];
     }
-    if (data.name == 'api-lb-com'){
+    if (data.name === 'api-lb-com'){
       data.checks = [
-      {
-        assertions:[
+        {
+          assertions:[
           {passing:false}
         ]
-      },
-      {
-        assertions:[
+        },
+        {
+          assertions:[
           {passing:true},
           {passing:true},
         ]
-      },
-      ]
+        },
+      ];
     }
     data.health = statics.getHealthFromItem(data);
     data.state = statics.getStateFromItem(data);
@@ -146,7 +146,7 @@ const statics = {
     let instances = data.instances;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})
+        return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName});
       });
     }
     if (instances.length){
@@ -159,29 +159,29 @@ const statics = {
     data.meta = Immutable.fromJS(data.meta);
     data.id = data.GroupId;
     data.name = data.GroupName;
-    if (data.name == 'api-lb'){
+    if (data.name === 'api-lb'){
       data.checks = [
-      {
-        assertions:[
+        {
+          assertions:[
           {passing:false},
           {passing:false}
         ]
-      },
-      {
-        assertions:[
+        },
+        {
+          assertions:[
           {passing:true},
           {passing:true},
           {passing:false}
         ]
-      },
-      {
-        assertions:[
+        },
+        {
+          assertions:[
           {passing:true},
           {passing:true},
           {passing:true}
         ]
-      },
-      ]
+        },
+      ];
     }
     data.health = statics.getHealthFromItem(data);
     data.state = statics.getStateFromItem(data);
@@ -191,13 +191,13 @@ const statics = {
     let groupsSecurity = _data.groupsSecurity;
     _data.groupsSecurity = groupsSecurity.map(sg => {
       const instances = InstanceStore.getInstancesECC().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId:sg.id})
+        return _.findWhere(instance.SecurityGroups, {GroupId:sg.id});
       });
       const newSg = sg.set('instances', new List(instances));
       return newSg;
-    })
+    });
   }
-}
+};
 
 
 const _public = {
@@ -218,12 +218,12 @@ const _public = {
   },
   getGroup(target){
     if (target && target.type){
-      switch(target.type){
-        case 'security':
-          return _data.groupSecurity; 
+      switch (target.type){
+      case 'security':
+        return _data.groupSecurity;
         break;
-        case 'elb':
-          return _data.groupELB;
+      case 'elb':
+        return _data.groupELB;
         break;
       }
     }
@@ -231,54 +231,54 @@ const _public = {
   },
   getGroupFromFilter(target){
     if (target && target.id){
-      switch(target.type){
-        case 'elb':
-          return _public.getGroupsELB().filter(group => group.get('id') == target.id).get(0);
+      switch (target.type){
+      case 'elb':
+        return _public.getGroupsELB().filter(group => group.get('id') === target.id).get(0);
         break;
-        default:
-          return _public.getGroupsSecurity().filter(group => group.get('id') == target.id).get(0);
+      default:
+        return _public.getGroupsSecurity().filter(group => group.get('id') === target.id).get(0);
         break;
       }
     }
     return _data.groupSecurity;
   },
   groupFromJS:statics.groupFromJS
-}
+};
 
 let statusFunctions = {};
 let keys = _.chain(_statuses).keys().map(k => {
-  let arr = [k]
-  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  let arr = [k];
+  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
   statusFunctions[a[1]] = function(){
-    return _statuses[a[0]]
-  }
+    return _statuses[a[0]];
+  };
 }).value();
 
 const Store = Flux.createStore(
    _.assign({}, _public, statusFunctions),
   function(payload){
-    switch(payload.actionType) {
-      case 'GET_GROUPS_SECURITY_SUCCESS':
-        statics.getGroupsSecuritySuccess(payload.data);
-        statics.populateGroupInstances();
+    switch (payload.actionType) {
+    case 'GET_GROUPS_SECURITY_SUCCESS':
+      statics.getGroupsSecuritySuccess(payload.data);
+      statics.populateGroupInstances();
       break;
-      case 'GET_GROUP_SECURITY_SUCCESS':
-        statics.getGroupSecuritySuccess(payload.data);
+    case 'GET_GROUP_SECURITY_SUCCESS':
+      statics.getGroupSecuritySuccess(payload.data);
       break;
-      case 'GET_GROUP_SECURITY_PENDING':
-        statics.getGroupSecurityPending(payload.data);
+    case 'GET_GROUP_SECURITY_PENDING':
+      statics.getGroupSecurityPending(payload.data);
       break;
-      case 'GET_GROUPS_ELB_SUCCESS':
-        statics.getGroupsELBSuccess(payload.data);
+    case 'GET_GROUPS_ELB_SUCCESS':
+      statics.getGroupsELBSuccess(payload.data);
       break;
-      case 'GET_GROUP_ELB_SUCCESS':
-        statics.getGroupELBSuccess(payload.data);
+    case 'GET_GROUP_ELB_SUCCESS':
+      statics.getGroupELBSuccess(payload.data);
       break;
-      case 'GET_INSTANCES_ECC_SUCCESS':
-        statics.populateGroupInstances();
-        Store.emitChange();
+    case 'GET_INSTANCES_ECC_SUCCESS':
+      statics.populateGroupInstances();
+      Store.emitChange();
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
@@ -287,6 +287,6 @@ const Store = Flux.createStore(
       Store.emitChange();
     }
   }
-)
+);
 
 export default Store;

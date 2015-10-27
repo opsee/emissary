@@ -7,43 +7,43 @@ import GroupStore from './Group';
 
 let _data = {
   instanceECC:new Instance(),
-}
+};
 
 let _statuses = {
   getInstanceECC:null,
-}
+};
 
 const statics = {
   getInstancePending(data){
-    if (_data.instance.get('id') != data){
+    if (_data.instance.get('id') !== data){
       _data.instance = new Instance();
       Store.emitChange();
     }
   }
-}
+};
 
 const _public = {
   getInstanceECC(){
     return _data.instanceECC;
   }
-}
+};
 
 let statusFunctions = {};
 let keys = _.chain(_statuses).keys().map(k => {
-  let arr = [k]
-  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
+  let arr = [k];
+  arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
   return arr;
 }).forEach(a => {
   statusFunctions[a[1]] = function(){
-    return _statuses[a[0]]
-  }
+    return _statuses[a[0]];
+  };
 }).value();
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
   function(payload){
-    switch(payload.actionType) {
-      case 'GET_INSTANCES_ECC_SUCCESS':
+    switch (payload.actionType) {
+    case 'GET_INSTANCES_ECC_SUCCESS':
         // statics.getInstancesECCSuccess(payload.data);
       break;
     }
@@ -53,6 +53,6 @@ const Store = Flux.createStore(
       Store.emitChange();
     }
   }
-)
+);
 
 export default Store;

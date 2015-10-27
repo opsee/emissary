@@ -18,7 +18,7 @@ export default {
       return {
         name:r.name,
         path:r.path
-      }
-    })
+      };
+    });
   }
 };

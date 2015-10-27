@@ -36,4 +36,4 @@ export default {
   StepCounter,
   Table,
   Toolbar
-}
+};

@@ -7,7 +7,7 @@ export default _.mapValues(paths, (string, name) => {
   return React.createClass({
     displayName:name,
     render(){
-      return <Icon path={string} {...this.props}/>
+      return <Icon path={string} {...this.props}/>;
     }
-  })
+  });
 });

@@ -8,13 +8,13 @@ let _signups = new List();
 
 const statics = {
   getSignupsSuccess(data){
-    _signups = Immutable.fromJS(data)
+    _signups = Immutable.fromJS(data);
   }
-}
+};
 
 let _statuses = {
   adminActivateSignup:null
-}
+};
 
 const Store = Flux.createStore(
   {
@@ -25,22 +25,22 @@ const Store = Flux.createStore(
       return _statuses.adminActivateSignup;
     }
   }, function(payload){
-    switch(payload.actionType) {
-      case 'ADMIN_GET_SIGNUPS_SUCCESS':
-        statics.getSignupsSuccess(payload.data);
-        Store.emitChange();
+  switch (payload.actionType) {
+    case 'ADMIN_GET_SIGNUPS_SUCCESS':
+      statics.getSignupsSuccess(payload.data);
+      Store.emitChange();
       break;
-      case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
+    case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
         // _statuses.adminActivateSignup = null;
         // Store.emitChange();
       break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
-    if (statusData.haveChanged){
+  const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
+  _statuses = statusData.statuses;
+  if (statusData.haveChanged){
       Store.emitChange();
     }
-  }
+}
 );
 
 export default Store;

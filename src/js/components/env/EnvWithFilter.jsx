@@ -59,7 +59,7 @@ const EnvWithFilter = React.createClass({
     if (getInstancesECCStatus == 'success'){
       stateObj.attemptedInstancesECC = true;
     }
-    this.setState(_.assign(stateObj,{
+    this.setState(_.assign(stateObj, {
       getGroupsSecurityStatus,
       getGroupsELBStatus,
       getInstancesECCStatus

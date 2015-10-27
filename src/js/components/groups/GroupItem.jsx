@@ -24,7 +24,7 @@ const GroupItem = React.createClass({
     }
   },
   getInitialState(){
-    return _.assign({},{
+    return _.assign({}, {
       showModal: false
     });
   },

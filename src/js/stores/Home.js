@@ -57,9 +57,9 @@ let _data = {
       name:'fee!'
     }
   ]
-}
+};
 
-function addItem(title, completed=false) {
+function addItem(title, completed = false) {
   _data.push({title, completed});
 }
 
@@ -76,12 +76,12 @@ const Store = Flux.createStore(
       return _data.groups;
     },
   }, function(payload){
-    switch(payload.actionType) {
-      case 'GET_INSTANCES_SUCCESS':
-        _data.instances = payload.data;
+  switch (payload.actionType) {
+    case 'GET_INSTANCES_SUCCESS':
+      _data.instances = payload.data;
       break;
     }
-  }
-)
+}
+);
 
 export default Store;

@@ -20,7 +20,7 @@ const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error',
 function getState(){
   return {
     checks: CheckStore.getChecks(),
-    toggles: [{on: true},{on: false},{on: true}],
+    toggles: [{on: true}, {on: false}, {on: true}],
     radios: _.range(3).map(i => {
       return {id:`radio-${i}`, on: false}
     }),

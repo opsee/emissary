@@ -11,9 +11,9 @@ _actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
   () => {
     return request
     .get(`${config.api}/groups/security`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
-  res => res.body && res.body.groups, 
+  res => res.body && res.body.groups,
   res => res && res.response
 );
 
@@ -45,9 +45,9 @@ _actions.getGroupsRDSSecurity = Flux.statics.addAsyncAction('getGroupsRDSSecurit
   () => {
     return request
     .get(`${config.api}/groups/rds-security`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
-  res => res.body && res.body.groups, 
+  res => res.body && res.body.groups,
   res => res && res.response
 );
 
@@ -55,7 +55,7 @@ _actions.getGroupRDSSecurity = Flux.statics.addAsyncAction('getGroupRDSSecurity'
   (id) => {
     return request
     .get(`${config.api}/groups/rds-security/${id}`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => res.body,
   res => res && res.response
@@ -65,9 +65,9 @@ _actions.getGroupsELB = Flux.statics.addAsyncAction('getGroupsELB',
   () => {
     return request
     .get(`${config.api}/groups/elb`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
-  res => res.body && res.body.groups, 
+  res => res.body && res.body.groups,
   res => res && res.response
 );
 
@@ -84,7 +84,7 @@ _actions.getGroupELB = Flux.statics.addAsyncAction('getGroupELB',
           group.instances = res2.body && res2.body.instances;
           resolve(group);
         }, res2 => reject(res2));
-      }, res => reject(res))
+      }, res => reject(res));
     });
   },
   res => res,

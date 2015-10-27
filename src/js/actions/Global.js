@@ -20,25 +20,25 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
     socket.onopen = function(event){
       Flux.actions.globalSocketAuth();
       Flux.actions.globalSocketSubscribe('launch-bastion');
-    }
+    };
     socket.onmessage = function(event){
       let data;
-      try{
-        data = JSON.parse(event.data)
-      }catch(err){
+      try {
+        data = JSON.parse(event.data);
+      }catch (err){
         console.log(err);
         return false;
       }
       if (!data){
         return false;
       }
-      if (data.command != 'heartbeat'){
+      if (data.command !== 'heartbeat'){
         Flux.actions.globalSocketMessage(data);
       }
-    }
+    };
     socket.onerror = function(event){
       Flux.actions.globalSocketError(event);
-    }
+    };
   }
 });
 
