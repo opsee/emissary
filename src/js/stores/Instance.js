@@ -169,7 +169,7 @@ const statics = {
       return instance;
     });
   },
-  _statuses:{
+  _statuses: {
     getInstanceECC: null,
     getInstancesECC: null,
     getInstanceRDS: null,

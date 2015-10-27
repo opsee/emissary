@@ -32,7 +32,7 @@ export default React.createClass({
   storeDidChange(){
     const status1 = OnboardStore.getOnboardSetPasswordStatus();
     const status2 = UserStore.getUserLoginStatus();
-    if (status1 == 'success' || status2 == 'success'){
+    if (status1 === 'success' || status2 === 'success'){
       initialize();
     }
     let stateObj = {
@@ -48,7 +48,7 @@ export default React.createClass({
     return {
       socketError: null,
       showNav: GlobalStore.getShowNav()
-    }
+    };
   },
   componentWillMount(){
     if (this.props.query.err || storage.get('err')){
@@ -57,7 +57,7 @@ export default React.createClass({
   },
   componentDidMount(){
     //refresh user token every 14 minutes
-    refreshInterval = setInterval(UserActions.userRefreshToken, (60*1000*14));
+    refreshInterval = setInterval(UserActions.userRefreshToken, (60 * 1000 * 14));
   },
   renderInner(){
     if (this.state.socketError && !config.debug){
@@ -70,11 +70,11 @@ export default React.createClass({
             </Alert>
           </Col>
         </Grid>
-      )
+      );
     }else {
       return (
         <RouteHandler {...this.props}/>
-      )
+      );
     }
   },
   render() {

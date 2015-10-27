@@ -1,12 +1,11 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import colors from 'seedling/colors';
-import {Mail, Slack, Docs, Chat} from '../icons';
+import {Mail, Slack, Chat} from '../icons';
 import {UserStore} from '../../stores';
-import {Button} from '../forms';
 
 export default React.createClass({
   renderAdminLinks(){
@@ -28,10 +27,9 @@ export default React.createClass({
           <div><Link to="systemStatus">System Status</Link></div>
           <div><Link to="styleguide">Style Guide</Link></div>
         </Padding>
-      )
-    }else {
-      return <div/>
+      );
     }
+    return <div/>;
   },
   render() {
     return (

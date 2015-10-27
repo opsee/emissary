@@ -10,11 +10,11 @@ import {Padding} from '../layout';
 
 export default React.createClass({
   statics: {
-      willTransitionTo(transition, params, query, cb){
+    willTransitionTo(transition, params, query, cb){
         const newImg = new Image();
         newImg.src = img;
         newImg.onload = () => cb();
-    }
+      }
   },
   render() {
     return (

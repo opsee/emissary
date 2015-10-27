@@ -1,5 +1,5 @@
 export default {
-  SetInterval:{
+  SetInterval: {
     componentWillMount(){
       this.intervals = [];
     },

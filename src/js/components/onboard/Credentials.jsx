@@ -42,11 +42,11 @@ const Credentials = React.createClass({
   },
   storeDidChange(){
     const vpcScanStatus = OnboardStore.getOnboardVpcScanStatus();
-    if (vpcScanStatus == 'success'){
+    if (vpcScanStatus === 'success'){
       const regionsWithVpcs = OnboardStore.getAvailableVpcs();
       let vpcs = _.chain(regionsWithVpcs).map(r => {
         return r.vpcs.map(v => {
-          return v['vpc-id']
+          return v['vpc-id'];
         });
       }).flatten().value();
       if (vpcs.length){
@@ -57,13 +57,13 @@ const Credentials = React.createClass({
           router.transitionTo('onboardVpcSelect');
         }
       }
-    }else if (vpcScanStatus && vpcScanStatus != 'pending'){
+    }else if (vpcScanStatus && vpcScanStatus !== 'pending'){
       if (config.demo){
         return router.transitionTo('onboardInstall');
       }
       this.setState({
         error: vpcScanStatus && vpcScanStatus.body && vpcScanStatus.body.error
-      })
+      });
     }
   },
   getInitialState() {
@@ -81,8 +81,8 @@ const Credentials = React.createClass({
           onChangeDelay: 100
         },
       }, self.dataComplete() ? {data: data} :  null)),
-      submitting: false  
-    }
+      submitting: false
+    };
   },
   dataComplete(){
     return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
@@ -108,7 +108,7 @@ const Credentials = React.createClass({
             {this.state.error}
           </Alert>
         </div>
-      )
+      );
     }
   },
   render() {

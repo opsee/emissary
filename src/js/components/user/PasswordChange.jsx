@@ -18,10 +18,10 @@ export default React.createClass({
   },
   storeDidChange(){
     const status = UserStore.getUserEditStatus();
-    this.setState({status})
-    if (status == 'success'){
+    this.setState({status});
+    if (status === 'success'){
       router.transitionTo('env');
-    }else if (status && status != 'pending'){
+    }else if (status && status !== 'pending'){
       console.error(status);
     }
   },
@@ -29,7 +29,7 @@ export default React.createClass({
     return {
       status: null,
       password: null
-    }
+    };
   },
   updateUserData(data){
     this.setState({password: data.password});
@@ -40,23 +40,23 @@ export default React.createClass({
   },
   componentWillMount(){
     UserActions.userSet({
-      token: this.props.query.token, 
+      token: this.props.query.token,
       user: _.assign(this.props.query, {
         loginDate: new Date()
       })
     });
   },
   disabled(){
-    return !this.state.password || this.state.status == 'pending';
+    return !this.state.password || this.state.status === 'pending';
   },
   btnText(){
-    return this.state.status == 'pending' ? 'Changing...' : 'Change';
+    return this.state.status === 'pending' ? 'Changing...' : 'Change';
   },
   innerRender(){
-    if (this.state.status == 'success'){
+    if (this.state.status === 'success'){
       return (
         <p>Success. Check your email.</p>
-      )
+      );
     }else {
       return (
       <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>

@@ -1,11 +1,9 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
-import Immutable, {Record} from 'immutable';
+import {Record} from 'immutable';
 
-import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
-import {CheckActions} from '../../actions';
 import {Settings, NewWindow, Add} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
@@ -16,51 +14,55 @@ import cx from 'classnames';
 
 const GroupItem = React.createClass({
   propTypes: {
-    item: React.PropTypes.instanceOf(Record).isRequired
+    item: PropTypes.instanceOf(Record).isRequired,
+    selected: PropTypes.string,
+    onClick: PropTypes.func,
+    noModal: PropTypes.bool,
+    noGraph: PropTypes.bool,
+    title: PropTypes.string,
+    linkInsteadOfMenu: PropTypes.bool
   },
   getDefaultProps(){
     return {
       item: GroupStore.getNewGroup()
-    }
+    };
   },
   getInitialState(){
     return _.assign({}, {
       showModal: false
     });
   },
-  actions(e, id){
-    e.preventDefault();
+  isSelected(){
+    return this.props.selected && this.props.selected === this.props.item.get('id');
   },
   getGroupLink(){
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `group${suffix}`;
   },
-  isSelected(){
-    return this.props.selected && this.props.selected == this.props.item.get('id');
+  getActions(){
+    return ['Create Check'];
   },
-  openMenu(e){
+  runMenuOpen(e){
     e.preventDefault();
     this.setState({
       showModal: true
     });
   },
-  getActions(){
-    return ['Create Check'];
-  },
   runAction(action){
+    console.log(action);
   },
-  hideContextMenu(){
+  runHideContextMenu(){
     this.setState({showModal: false});
   },
-  onClick(e){
-    if (typeof this.props.onClick == 'function'){
+  handleClick(e){
+    if (typeof this.props.onClick === 'function'){
       e.preventDefault();
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
   },
   renderButton(){
     return (
-    <Button icon flat onClick={this.openMenu} title="Group Menu">
+    <Button icon flat onClick={this.runMenuOpen} title="Group Menu">
       <Settings fill="textSecondary" btn/>
     </Button>
     );
@@ -75,7 +77,7 @@ const GroupItem = React.createClass({
   renderModal(){
     if (!this.props.noModal){
       return (
-        <Modal show={this.state.showModal} onHide={this.hideContextMenu} className="context" style="default">
+        <Modal show={this.state.showModal} onHide={this.runHideContextMenu} className="context" style="default">
           <Grid fluid>
             <Row>
               <div className="flex-1">
@@ -94,7 +96,7 @@ const GroupItem = React.createClass({
             // })
           }
         </Modal>
-      )
+      );
     }
   },
   renderGraph(){
@@ -104,17 +106,15 @@ const GroupItem = React.createClass({
           <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={listItem.link}>
             <RadialGraph {...this.props.item.toJS()}/>
           </Link>
-        )
-      }else {
-        return (
-          <div className={listItem.link}>
-            <RadialGraph {...this.props.item.toJS()}/>
-          </div>
-        )
+        );
       }
-    }else {
-      return <div/>
+      return (
+        <div className={listItem.link}>
+          <RadialGraph {...this.props.item.toJS()}/>
+        </div>
+      );
     }
+    return <div/>;
   },
   renderText(){
     if (!this.props.onClick){
@@ -123,20 +123,19 @@ const GroupItem = React.createClass({
         <div>{this.props.item.get('name')}</div>
         <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
       </Link>
-      )
-    }else {
-      return (
-        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
-          <div>{this.props.item.get('name')}</div>
-          <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
-        </div>
-      )
+      );
     }
+    return (
+      <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
+        <div>{this.props.item.get('name')}</div>
+        <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
+      </div>
+    );
   },
   render(){
     if (this.props.item.get('name')){
       return (
-        <div key="listItem" className={listItem.item} onClick={this.onClick} title={this.props.title || this.props.item.get('name')}>
+        <div key="listItem" className={listItem.item} onClick={this.handleClick} title={this.props.title || this.props.item.get('name')}>
           <Padding b={1}>
             {this.renderModal()}
             <Grid fluid>
@@ -159,9 +158,8 @@ const GroupItem = React.createClass({
           </Padding>
         </div>
       );
-    }else {
-      return <div/>
     }
+    return <div/>;
   }
 });
 

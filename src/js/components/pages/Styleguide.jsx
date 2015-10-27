@@ -1,9 +1,9 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
 import {Padding} from '../layout';
 
-import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
@@ -13,7 +13,7 @@ import {GlobalActions} from '../../actions';
 import {Add, Key} from '../icons';
 
 import icons from '../icons';
-import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Button, BoundField, ButtonToggle, ToggleWithLabel, RadioWithLabel} from '../forms';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
 
@@ -22,12 +22,12 @@ function getState(){
     checks: CheckStore.getChecks(),
     toggles: [{on: true}, {on: false}, {on: true}],
     radios: _.range(3).map(i => {
-      return {id:`radio-${i}`, on: false}
+      return {id: `radio-${i}`, on: false};
     }),
     buttonToggles: ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
-      return {title: title, on: false, id:`button-toggle-${i}`}
+      return {title: title, on: false, id: `button-toggle-${i}`};
     })
-  }
+  };
 }
 
 const InfoForm = forms.Form.extend({
@@ -40,13 +40,13 @@ const InfoForm = forms.Form.extend({
   }),
   password: forms.CharField({
     widgetAttrs: {
-      placeholder: 'Password',
+      placeholder: 'Password'
     }
   }),
   body: forms.CharField({
     widget: forms.Textarea,
     widgetAttrs: {
-      placeholder: 'Body',
+      placeholder: 'Body'
     }
   }),
   validation: 'auto'
@@ -58,9 +58,9 @@ export default React.createClass({
     const self = this;
     return _.extend(getState(), {
       info: new InfoForm({
-        onChange: self.changeAndUpdate
+        onChange: self.forceUpdate
       })
-    })
+    });
   },
   storeDidChange() {
     this.setState(getState());
@@ -68,31 +68,36 @@ export default React.createClass({
   getDefaultProps() {
     return getState();
   },
-  changeAndUpdate(){
-    this.forceUpdate();
+  getColor(){
+    const length = opseeColors.length;
+    const num = Math.round(Math.random() * length);
+    return opseeColors[num];
   },
-  triggerToggle(index, bool){
+  getChecks(){
+    return false;
+  },
+  runTriggerToggle(index, bool){
     let toggles = this.state.toggles;
     toggles[index].on = bool;
     this.setState({toggles});
   },
-  triggerRadio(id, bool){
+  runTriggerRadio(id, bool){
     let radios = _.clone(this.state.radios);
     const index = _.findIndex(radios, {id});
     if (index > -1){
       radios = radios.map(r => {
-        r.on = r.id == id ? bool : false;
+        r.on = r.id === id ? bool : false;
         return r;
       });
       this.setState({radios});
     }
   },
-  triggerButtonToggle(id, bool){
+  runTriggerButtonToggle(id, bool){
     let buttonToggles = _.clone(this.state.buttonToggles);
     const index = _.findIndex(buttonToggles, {id});
     if (index > -1){
       buttonToggles = buttonToggles.map(r => {
-        r.on = r.id == id ? bool : r.on;
+        r.on = r.id === id ? bool : r.on;
         return r;
       });
       this.setState({buttonToggles});
@@ -102,16 +107,11 @@ export default React.createClass({
     // buttonToggles[index].on = bool;
     // this.setState({buttonToggles});
   },
-  notify(style){
+  runNotify(style){
     GlobalActions.globalModalMessage({
       html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
       style: style
     });
-  },
-  getColor(){
-    const length = opseeColors.length;
-    const num = Math.round(Math.random()*length);
-    return opseeColors[num];
   },
   render() {
     return (
@@ -130,10 +130,10 @@ export default React.createClass({
                 {['brand-primary', 'brand-success', 'brand-info', 'brand-warning', 'brand-danger'].map((color, i) =>{
                   return (
                     <div className="clearfix" key={`color-${i}`}>
-                      <div className={`bg-${color} pull-left`} style={{width:"45px", height:"45px"}} type="button"></div>
+                      <div className={`bg-${color} pull-left`} style={{width: '45px', height: '45px'}} type="button"></div>
                       <div className="padding pull-left">{color}</div>
                     </div>
-                  )
+                  );
                 })}
               </Padding>
 
@@ -170,7 +170,7 @@ export default React.createClass({
                   <h3>Ordered List</h3>
                   <ol>
                     {[1, 2, 3, 4].map(i => {
-                    return (
+                      return (
                       <li key={`ordered-item-${i}`}>List Item {i}</li>
                       );
                     })}
@@ -182,9 +182,9 @@ export default React.createClass({
                 {this.state.toggles.map((t, i) => {
                   return (
                     <li key={`toggle-${i}`}>
-                      <ToggleWithLabel on={t.on} onChange={this.triggerToggle} id={i} label="Item"/>
+                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={i} label="Item"/>
                     </li>
-                  )
+                  );
                 })}
                 </ul>
               </Padding>
@@ -196,9 +196,9 @@ export default React.createClass({
               {this.state.radios.map((t, i) => {
                 return (
                   <li className="" key={`radio-${i}`}>
-                    <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
+                    <RadioWithLabel on={t.on} onChange={this.runTriggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
                   </li>
-                )
+                );
               })}
               </ul>
 
@@ -209,9 +209,9 @@ export default React.createClass({
             {this.state.buttonToggles.map((t, i) => {
               return (
                 <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin: '0 .5em'}}>
-                  <ButtonToggle on={t.on} onChange={this.triggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
+                  <ButtonToggle on={t.on} onChange={this.runTriggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
                 </li>
-              )
+              );
             })}
             </ul>
 
@@ -244,7 +244,7 @@ export default React.createClass({
             {_.range(1).map((i, ci) => {
               return (
                 <ul className="list-unstyled" key={`check-list-${ci}`}>
-                {this.props.checks.map((check, id) => {
+                {this.getChecks().map((check, id) => {
                   return (
                     <li key={`check-${id}`}>
                       <CheckItem {...check}/>
@@ -252,7 +252,7 @@ export default React.createClass({
                   );
                 })}
                 </ul>
-              )
+              );
             })}
 
             <hr/>
@@ -276,7 +276,7 @@ export default React.createClass({
                     </div>
                   </div>
                 </Col>
-              )
+              );
             })}
             </Row>
 
@@ -304,13 +304,13 @@ export default React.createClass({
                   {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                     return (
                       <Button color={i} key={`btn-${i}`}>{i}</Button>
-                    )
+                    );
                   })}
                 <h4>Disabled</h4>
                 {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
                     <Button color={i} disabled key={`btn-${i}`}>{i}</Button>
-                  )
+                  );
                 })}
                 <Padding t={2}>
                   <Button block>Block</Button>
@@ -325,7 +325,7 @@ export default React.createClass({
                     <Padding className="pull-left" key={`btn-flat-${i}`}>
                       <Button flat color={i}>{i}</Button>
                     </Padding>
-                  )
+                  );
                 })}
                 <Padding t={1}>
                   <Button flat color="success" disabled>Disabled</Button>
@@ -342,10 +342,10 @@ export default React.createClass({
 
             <h3>Notifcations</h3>
             <Padding b={1}>
-              <Button color="danger" onClick={this.notify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
+              <Button color="danger" onClick={this.runNotify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
             </Padding>
             <Padding b={1}>
-              <Button color="success" onClick={this.notify.bind(null, 'success')}>Success NOTIFICATION</Button>
+              <Button color="success" onClick={this.runNotify.bind(null, 'success')}>Success NOTIFICATION</Button>
             </Padding>
           </Col>
         </Row>

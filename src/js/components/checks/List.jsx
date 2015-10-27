@@ -15,7 +15,7 @@ function getState(){
   return {
     checks: CheckStore.getChecks(),
     status: CheckStore.getGetChecksStatus()
-  }
+  };
 }
 
 export default React.createClass({
@@ -25,7 +25,7 @@ export default React.createClass({
   },
   storeDidChange() {
     let state = getState();
-    if (state.status && state.status != 'success' && state.status != 'pending'){
+    if (state.status && state.status !== 'success' && state.status !== 'pending'){
       state.error = state.status;
     }
     this.setState(state);
@@ -49,7 +49,7 @@ export default React.createClass({
           <h3>All Checks ({this.state.checks.size})</h3>
           <CheckItemList checks={this.state.checks}/>
         </div>
-      )
+      );
     }else {
       return (
         <StatusHandler status={this.state.status}>

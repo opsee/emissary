@@ -7,7 +7,7 @@ Flux.statics = {
   addAction(baseName, fn){
     const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
     let obj = {};
-    obj[baseName] = function(...args){
+    obj[baseName] = (...args) => {
       if (typeof fn === 'function'){
         fn.call(null, ...args);
       }
@@ -21,20 +21,20 @@ Flux.statics = {
   addAsyncAction(baseName, requestFn, successFn, errorFn){
     const upperName = _.startCase(baseName).split(' ').join('_').toUpperCase();
     let obj = {};
-    obj[`${baseName}Success`] = function(res, arg0){
+    obj[`${baseName}Success`] = (res, arg0) => {
       return {
-        actionType:`${upperName}_SUCCESS`,
+        actionType: `${upperName}_SUCCESS`,
         data: successFn(res, arg0)
       };
     };
-    obj[`${baseName}Error`] = function(res){
+    obj[`${baseName}Error`] = (res) => {
       return {
-        actionType:`${upperName}_ERROR`,
+        actionType: `${upperName}_ERROR`,
         data: errorFn(res)
       };
     };
-    obj[baseName] = function(...args){
-      setTimeout(function(){
+    obj[baseName] = (...args) => {
+      setTimeout(() => {
         requestFn.call(null, ...args)
         .then((res) => {
           Flux.actions[`${baseName}Success`].call(null, res, args[0]);
@@ -42,7 +42,7 @@ Flux.statics = {
         .catch(Flux.actions[`${baseName}Error`]);
       }, config.apiDelay);
       return {
-        actionType:`${upperName}_PENDING`,
+        actionType: `${upperName}_PENDING`,
         data: args[0]
       };
     };
@@ -50,7 +50,7 @@ Flux.statics = {
   },
   statusProcessor(payload, identityObject, Store){
     let haveChanged = false;
-    if(!identityObject._statuses){
+    if (!identityObject._statuses){
       return console.error('Improper status processor setup', Store);
     }
     let statuses = _.cloneDeep(identityObject._statuses);
@@ -90,45 +90,41 @@ Flux.statics = {
       }
     }
     return {statuses, haveChanged};
-    // setTimeout(() => {
-    //   if (haveChanged && Store){
-    //     Store.emitChange();
-    //   }
-    // },50);
-    return statuses;
   },
-  generateStatusFunctions(obj, identity){
-    const statuses = obj._statuses || obj;
+  generateStatusFunctions(obj){
+    if (!obj._statuses){
+      return console.error('Improper status processor setup', obj);
+    }
+    const statuses = obj._statuses;
     let statusFunctions = {};
-    let keys = _.chain(statuses).keys().map(k => {
+    _.chain(statuses).keys().map(k => {
       let arr = [k];
       arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
       return arr;
     }).forEach(a => {
-      statusFunctions[a[1]] = function(){
-        return obj._statuses ? obj._statuses[a[0]] : statuses[a[0]];
+      statusFunctions[a[1]] = () => {
+        return obj._statuses[a[0]];
       };
     }).value();
     return statusFunctions;
   },
   createStoreAutomated(data, statuses, statics, switchFn){
-    var obj = {};
+    let obj = {};
     function makeFn(o, key){
-      return function(){
-        console.log(o,key);
+      return () => {
         return o[key];
       };
     }
-    for (var key1 in data){
+    for (const key1 in data){
       const str = _.startCase(key1).split(' ').join('');
       obj[`get${str}`] = makeFn(data, key1);
     }
-    for (var key2 in statuses){
+    for (const key2 in statuses){
       const str = _.startCase(key2).split(' ').join('');
       obj[`get${str}Status`] = makeFn(statuses, key2);
     }
-    statics = _.extend(statics, obj);
-    return Flux.createStore(statics, switchFn);
+    const newStatics = _.extend(statics, obj);
+    return Flux.createStore(newStatics, switchFn);
   }
 };
 export default Flux;

@@ -41,7 +41,7 @@ const Store = Flux.createStore(
       return _regions;
     }
   },
-  function handlePayload(payload){
+  function handlePayload(){
     return false;
   }
 );

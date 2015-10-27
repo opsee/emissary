@@ -11,13 +11,13 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-   mixins: [UserStore.mixin, OnboardStore.mixin],
+  mixins: [UserStore.mixin, OnboardStore.mixin],
   storeDidChange(){
     const status = OnboardStore.getOnboardSignupCreateStatus();
-    this.setState({status})
-    if (status == 'success'){
+    this.setState({status});
+    if (status === 'success'){
       router.transitionTo('onboardThanks');
-    }else if (status && status != 'pending'){
+    }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message,
       });
@@ -27,12 +27,12 @@ export default React.createClass({
     return {
       data: UserStore.getUser().toJS(),
       status: OnboardStore.getOnboardSignupCreateStatus()
-    }
+    };
   },
   updateUserData(data){
     this.setState({
       data: data
-    })
+    });
   },
   submit(e){
     e.preventDefault();
@@ -43,10 +43,10 @@ export default React.createClass({
   },
   disabled(){
     const incomplete = !(this.state.data.name && this.state.data.email);
-    return incomplete || this.state.status == 'pending';
+    return incomplete || this.state.status === 'pending';
   },
   btnText(){
-    return this.state.status == 'pending' ? 'Creating...' : 'Create Account';
+    return this.state.status === 'pending' ? 'Creating...' : 'Create Account';
   },
   render() {
     return (

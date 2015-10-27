@@ -18,7 +18,7 @@ import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
 import {Padding} from '../layout';
 
-const groupOptions = []
+const groupOptions = [];
 
 const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 
@@ -51,7 +51,7 @@ const GroupForm = forms.Form.extend({
         <h3>Choose a Check Target</h3>
         <BoundField bf={this.boundField('id')}/>
       </div>
-    )
+    );
   }
 });
 
@@ -96,15 +96,15 @@ const InfoForm = forms.Form.extend({
           <BoundField bf={this.boundField('body')} key={`bound-field-body`}/>
         </Padding>
       </div>
-    )
+    );
   }
-})
+});
 
 const CheckCreateRequest = React.createClass({
   mixins: [GroupStore.mixin],
   storeDidChange(){
-    const cond1 = GroupStore.getGetGroupsSecurityStatus() == 'success';
-    const cond2 = GroupStore.getGetGroupsELBStatus() == 'success';
+    const cond1 = GroupStore.getGetGroupsSecurityStatus() === 'success';
+    const cond2 = GroupStore.getGetGroupsELBStatus() === 'success';
     if (cond1 || cond2){
       this.forceUpdate();
     }
@@ -134,7 +134,7 @@ const CheckCreateRequest = React.createClass({
         }
       }),
       check: this.props.check,
-    }
+    };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
       self.state.headers.forms().forEach((form, i) => {
@@ -142,7 +142,7 @@ const CheckCreateRequest = React.createClass({
         const data = {
           key: h.name,
           value: h.values.join(', ')
-        }
+        };
         form.setData(data);
       });
     }, 10);
@@ -180,7 +180,7 @@ const CheckCreateRequest = React.createClass({
   getHeaderForms(){
     return _.reject(this.state.headers.forms(), f => {
       return f.cleanedData.DELETE;
-    })
+    });
   },
   renderHeaderForm(){
     return (
@@ -205,14 +205,14 @@ const CheckCreateRequest = React.createClass({
                 </Row>
               </Grid>
             </Padding>
-          )
+          );
         })
         }
         <Button flat color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
           <Add fill={colors.primary} inline/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
-    )
+    );
   },
   getFinalData(){
     let check = _.clone(this.props.check);
@@ -221,11 +221,11 @@ const CheckCreateRequest = React.createClass({
       return {
         name: h.key,
         values: h.value ? h.value.split(', ') : undefined
-      }
+      };
     }).value();
     let cleaned = this.state.info.cleanedData;
     if (cleaned.port){
-     cleaned.port = parseInt(cleaned.port, 10);
+      cleaned.port = parseInt(cleaned.port, 10);
     }
     val = _.assign(val, cleaned);
     return check;
@@ -238,9 +238,9 @@ const CheckCreateRequest = React.createClass({
           <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           <StepCounter active={2} steps={4}/>
         </div>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   renderLink(){
@@ -257,9 +257,9 @@ const CheckCreateRequest = React.createClass({
           <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
           <hr/>
         </div>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   submit(e){
@@ -274,27 +274,27 @@ const CheckCreateRequest = React.createClass({
     UserActions.userPutUserData('hasDismissedCheckCreationHelp');
   },
   renderHelperText(){
-      return (
+    return (
         <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
           <Alert type="info" onDismiss={this.dismissHelperText}>
             <p>Let’s create your first health check! Tell us which security group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
           </Alert>
           <div><br/></div>
         </UserDataRequirement>
-      )
+      );
   },
   getCheck(){
     return _.cloneDeep(this.props.check);
   },
   renderBodyInput(){
-    if (this.state.info.cleanedData.verb != ['GET']){
+    if (this.state.info.cleanedData.verb !== ['GET']){
       return (
         <Padding b={1}>
           <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
         </Padding>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   renderInfoForm(){
@@ -312,7 +312,7 @@ const CheckCreateRequest = React.createClass({
         </Padding>
         {this.renderBodyInput()}
       </div>
-    )
+    );
   },
   innerRender(){
     return (
@@ -352,11 +352,11 @@ const CheckCreateRequest = React.createClass({
           </Row>
         </Grid>
       </div>
-    )
+    );
   },
   render() {
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
-})
+});
 
 export default CheckCreateRequest;

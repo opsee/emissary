@@ -22,12 +22,12 @@ export default React.createClass({
     }
     this.setState({
       user: UserStore.getUser().toJS()
-    })
+    });
   },
   getInitialState(){
     return {
       user: UserStore.getUser().toJS()
-    }
+    };
   },
   logOut(){
     return UserActions.userLogOut();

@@ -27,12 +27,12 @@ const PasswordForm = forms.Form.extend({
       <BoundField bf={this.boundField('password')}>
         <Lock className="icon"/>
       </BoundField>
-    )
+    );
   }
 });
 
 function getData(){
-  UserStore.getUser()
+  UserStore.getUser();
 }
 
 export default React.createClass({
@@ -42,19 +42,19 @@ export default React.createClass({
   },
   storeDidChange(){
     const status = UserStore.getUserGetUserStatus();
-    if (status == 'success'){
+    if (status === 'success'){
       this.setState({
         user: UserStore.getUser().toJS(),
         passwordForm: this.getForm()
       });
     }
     const editStatus = UserStore.getUserEditStatus();
-    if (editStatus == 'success'){
+    if (editStatus === 'success'){
       router.transitionTo('profile');
-    }else if (editStatus && editStatus != 'pending'){
+    }else if (editStatus && editStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: 'Something went wrong.'
-      })
+      });
     }
   },
   getInitialState() {
@@ -62,7 +62,7 @@ export default React.createClass({
     return {
       user: UserStore.getUser().toJS(),
       passwordForm: this.getForm()
-    }
+    };
   },
   getForm(){
     var self = this;
@@ -85,7 +85,7 @@ export default React.createClass({
     this.setState({user});
   },
   updatePassword(data){
-    this.setState({password: data.password})
+    this.setState({password: data.password});
   },
   dataComplete(){
     return UserStore.getUser().get('name') && UserStore.getUser().toJS();

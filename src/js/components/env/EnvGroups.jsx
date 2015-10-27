@@ -10,7 +10,7 @@ function getState(){
   return {
     groups: GroupStore.getGroupsSecurity(),
     status: GroupStore.getGetGroupsSecurityStatus()
-  }
+  };
 }
 export default React.createClass({
   mixins: [GroupStore.mixin],
@@ -31,7 +31,7 @@ export default React.createClass({
   },
   getPassingGroups(){
     return this.state.groups.filter(i => {
-      return i.get('health') == 100;
+      return i.get('health') === 100;
     });
   },
   renderFailingGroups(){
@@ -41,10 +41,10 @@ export default React.createClass({
         <div>
         <h3>Failing Groups</h3>
             {groups.map((group, i) => {
-              return <GroupItem item={group}/>
+              return <GroupItem item={group}/>;
             })}
         </div>
-      )
+      );
     }
   },
   render() {
@@ -55,7 +55,7 @@ export default React.createClass({
           <h3>Passing Groups</h3>
 
             {this.getPassingGroups().map((group, i) => {
-              return <GroupItem item={group}/>
+              return <GroupItem item={group}/>;
             })}
         </div>
       );

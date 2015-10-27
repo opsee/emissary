@@ -20,7 +20,7 @@ import {GroupItemList} from '../groups';
 import {EnvWithFilter} from '../env';
 import {Padding} from '../layout';
 
-const groupOptions = []
+const groupOptions = [];
 
 const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 
@@ -29,7 +29,7 @@ const CheckCreateTarget = React.createClass({
     const self = this;
     const obj = {
       selected: this.props.check.target.id
-    }
+    };
     return _.extend(obj, {
       cleanedData: null
     });
@@ -69,9 +69,9 @@ const CheckCreateTarget = React.createClass({
           </div>
           <StepCounter active={1} steps={3}/>
         </div>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   submit(e){
@@ -117,14 +117,14 @@ const CheckCreateTarget = React.createClass({
     router.transitionTo('checkCreateRequest');
   },
   renderHelperText(){
-      return (
+    return (
         <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
           <Alert type="info" onDismiss={this.dismissHelperText}>
             <p>Let’s create your first health check! Tell us which group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
           </Alert>
           <div><br/></div>
         </UserDataRequirement>
-      )
+      );
   },
   innerRender(){
     return (
@@ -137,7 +137,7 @@ const CheckCreateTarget = React.createClass({
         <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         <StepCounter active={1} steps={4}/>
       </div>
-    )
+    );
   },
   renderAsPage(){
     return (
@@ -155,11 +155,11 @@ const CheckCreateTarget = React.createClass({
           </Row>
         </Grid>
       </div>
-    )
+    );
   },
   render() {
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
-})
+});
 
 export default CheckCreateTarget;

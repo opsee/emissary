@@ -87,7 +87,7 @@ _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
 );
 
 _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
-  (data) => {
+  () => {
     return request
     .get(`${config.api}/bastions`)
     .set('Authorization', UserStore.getAuth());
@@ -97,8 +97,8 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
 );
 
 _actions.onboardExampleInstall = Flux.statics.addAsyncAction('onboardExampleInstall',
-  (data) => {
-    return new Promise((resolve, reject) => {
+  () => {
+    return new Promise((resolve) => {
       return resolve(example);
     });
   },

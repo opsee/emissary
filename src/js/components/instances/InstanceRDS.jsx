@@ -12,7 +12,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 function getState(){
   return {
     instance: InstanceStore.getInstanceRDS()
-  }
+  };
 }
 
 export default React.createClass({
@@ -27,7 +27,7 @@ export default React.createClass({
     return !Immutable.is(this.state.instance, nextState.instance);
   },
   componentWillMount(){
-    this.getData()
+    this.getData();
   },
   componentDidMount(){
     this.setInterval(this.getData, 30000);
@@ -78,7 +78,7 @@ export default React.createClass({
                     <li key={g.get('id')}>
                       <GroupItem item={g}/>
                     </li>
-                    )
+                    );
                 })}
               </ul>
               {

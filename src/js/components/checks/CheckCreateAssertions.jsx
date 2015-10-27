@@ -23,7 +23,7 @@ const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, asse
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
 
 function relationshipConcernsEmpty(relationship){
-  if (typeof relationship == 'string' && relationship.match('empty|notEmpty')){
+  if (typeof relationship === 'string' && relationship.match('empty|notEmpty')){
     return true;
   }
   return false;
@@ -63,9 +63,9 @@ const AssertionsForm = forms.Form.extend({
       }
     }
     switch (this.cleanedData.key){
-      case 'code':
+    case 'code':
       break;
-      case 'header':
+    case 'header':
       if (!relationshipConcernsEmpty(this.cleanedData.relationship)){
         if (!this.cleanedData.value){
           throw forms.ValidationError('Header assertion must have a value.');
@@ -107,12 +107,12 @@ const CheckCreateAssertions = React.createClass({
     return obj;
   },
   changeAndUpdate(){
-    this.props.onChange(this.getFinalData(), this.disabled(), 2)
+    this.props.onChange(this.getFinalData(), this.disabled(), 2);
   },
   renderOperand(form, key){
     const data = form.cleanedData;
     if (data && data.relationship){
-      if (data.key == 'header' || !data.relationship.match('empty|notEmpty')){
+      if (data.key === 'header' || !data.relationship.match('empty|notEmpty')){
         return (
           <Row>
             <Padding t={1}>
@@ -121,13 +121,13 @@ const CheckCreateAssertions = React.createClass({
               </Col>
             </Padding>
           </Row>
-        )
+        );
       }
     }
   },
   renderValue(form, key){
     const data = form.cleanedData;
-    if (data && data.relationship && data.key == 'header'){
+    if (data && data.relationship && data.key === 'header'){
       if (!data.relationship.match('empty|notEmpty')){
         return (
           <Row>
@@ -137,10 +137,10 @@ const CheckCreateAssertions = React.createClass({
               </Col>
             </Padding>
           </Row>
-        )
+        );
       }
     }
-    return <div/>
+    return <div/>;
   },
   removeAssertion(index){
     if (index > 0){
@@ -158,9 +158,9 @@ const CheckCreateAssertions = React.createClass({
         <Col xs={2} sm={1}>
           <BoundField bf={form.boundField('DELETE')}/>
         </Col>
-      )
+      );
     }else {
-      return <span/>
+      return <span/>;
     }
   },
   renderAssertionsForm(){
@@ -172,7 +172,7 @@ const CheckCreateAssertions = React.createClass({
               <Padding tb={1}>
               <Row>
                 <Col xs={2} sm={1}>
-                  <AssertionCounter label={index+1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.props.response}/>
+                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.props.response}/>
                 </Col>
                 <Col xs={8} sm={10}>
                   <Row>
@@ -199,7 +199,7 @@ const CheckCreateAssertions = React.createClass({
                 </Row>
               </Padding>
             </Grid>
-          )
+          );
         })
         }
         <Padding t={1}>
@@ -208,13 +208,13 @@ const CheckCreateAssertions = React.createClass({
           </Button>
         </Padding>
       </div>
-    )
+    );
   },
   getFinalData(){
     let check = _.clone(this.props.check);
     check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
       return _.omit(a, 'DELETE');
-    })
+    });
     return check;
   },
   getFormattedResponse(){
@@ -230,9 +230,9 @@ const CheckCreateAssertions = React.createClass({
           </div>
           <StepCounter active={3} steps={4}/>
         </div>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   disabled(){
@@ -254,7 +254,7 @@ const CheckCreateAssertions = React.createClass({
         <div><br/></div>
         {this.renderSubmitButton()}
       </form>
-    )
+    );
   },
   renderAsPage(){
     return (
@@ -281,11 +281,11 @@ const CheckCreateAssertions = React.createClass({
           </Row>
         </Grid>
       </div>
-    )
+    );
   },
   render() {
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   }
-})
+});
 
 export default CheckCreateAssertions;

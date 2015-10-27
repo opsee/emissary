@@ -17,10 +17,10 @@ export default React.createClass({
   storeDidChange(){
     const status = OnboardStore.getOnboardSetPasswordStatus();
     let error;
-    if (status == 'success'){
+    if (status === 'success'){
       router.transitionTo('tutorial');
       error = false;
-    }else if (status && status != 'pending'){
+    }else if (status && status !== 'pending'){
       error = status;
     }
     this.setState({
@@ -35,10 +35,10 @@ export default React.createClass({
       id: this.props.query.id,
       password: null,
       error: null
-    }
+    };
   },
   updateUserData(data){
-    this.setState({password: data.password})
+    this.setState({password: data.password});
   },
   submit(e){
     e.preventDefault();
@@ -48,10 +48,10 @@ export default React.createClass({
     OnboardActions.onboardSetPassword(this.state);
   },
   disabled(){
-    return !this.state.password || this.state.status == 'pending';
+    return !this.state.password || this.state.status === 'pending';
   },
   btnText(){
-    return this.state.status == 'pending' ? 'Setting...' : 'Set';
+    return this.state.status === 'pending' ? 'Setting...' : 'Set';
   },
   render() {
     if (!this.state.error){
@@ -78,7 +78,7 @@ export default React.createClass({
     }else {
       return (
         <StatusHandler status={this.state.status}/>
-      )
+      );
     }
   }
 });

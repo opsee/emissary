@@ -17,7 +17,7 @@ _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
 );
 
 _actions.userRefreshToken = Flux.statics.addAsyncAction('userRefreshToken',
-  (data) => {
+  () => {
     return request
     .put(`${config.authApi}/authenticate/refresh`)
     .set('Authorization', UserStore.getAuth());
@@ -80,7 +80,7 @@ _actions.userPutUserData = Flux.statics.addAsyncAction('userPutUserData',
 );
 
 _actions.userGetUserData = Flux.statics.addAsyncAction('userGetUserData',
-  (data) => {
+  () => {
     return request
     .get(`${config.authApi}/users/${UserStore.getUser().get('id')}/data`)
     .set('Authorization', UserStore.getAuth());

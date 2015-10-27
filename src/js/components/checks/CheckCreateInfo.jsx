@@ -17,7 +17,7 @@ const intervalOptions = [
   ['15m', '15min'],
   ['24h', '24hr'],
   ['7d', '7d'],
-]
+];
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
@@ -54,11 +54,11 @@ const InfoForm = forms.Form.extend({
       </Padding>
     );
   }
-})
+});
 
 const data = {
   port: 80
-}
+};
 
 const CheckCreateInfo = React.createClass({
   getInitialState() {
@@ -69,7 +69,7 @@ const CheckCreateInfo = React.createClass({
       initialNotifs.push({
         type: 'email',
         value: UserStore.getUser().get('email')
-      })
+      });
     }
 
     const obj = {
@@ -85,7 +85,7 @@ const CheckCreateInfo = React.createClass({
         extra: 0
       }),
       submitting: false
-    }
+    };
 
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(function(){
@@ -102,7 +102,7 @@ const CheckCreateInfo = React.createClass({
     return this.props.check.check_spec.value.name;
   },
   changeAndUpdate(){
-    this.props.onChange(this.getFinalData(), this.disabled(), 3)
+    this.props.onChange(this.getFinalData(), this.disabled(), 3);
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
@@ -115,13 +115,13 @@ const CheckCreateInfo = React.createClass({
         <Padding t={2}>
           <BoundField bf={form.boundField('DELETE')}/>
         </Padding>
-      )
+      );
     }else {
       return (
         <Padding lr={1}>
          <div style={{width: '48px'}}/>
        </Padding>
-      )
+      );
     }
   },
   removeNotification(index){
@@ -158,14 +158,14 @@ const CheckCreateInfo = React.createClass({
                 </Col>
               </Row>
             </Padding>
-          )
+          );
         })
         }
         <Padding t={2}>
           <Button color="primary" noPad flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline/> Add Another Notification</Button>
         </Padding>
       </div>
-    )
+    );
   },
   getFinalData(){
     let check = _.clone(this.props.check);
@@ -179,7 +179,7 @@ const CheckCreateInfo = React.createClass({
     let notificationData = this.state.notifications.cleanedData();
     const data = {
       notifications: notificationData
-    }
+    };
     return _.assign(data, this.state.info.cleanedData);
   },
   disabled(){
@@ -190,14 +190,14 @@ const CheckCreateInfo = React.createClass({
     if (!this.props.renderAsInclude){
       return (
         <div>
-          <Padding t={2}> 
+          <Padding t={2}>
             <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} chevron>Finish</Button>
           </Padding>
           <StepCounter active={4} steps={4}/>
         </div>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   innerRender() {
@@ -208,7 +208,7 @@ const CheckCreateInfo = React.createClass({
         {this.renderNotificationForm()}
         {this.renderSubmitButton()}
       </form>
-    )
+    );
   },
   renderAsPage(){
     return (
@@ -226,18 +226,18 @@ const CheckCreateInfo = React.createClass({
           </Row>
         </Grid>
       </div>
-    )
+    );
   },
   render() {
     return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
   },
   onSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.setState({
       submitting: true
     });
     this.props.onSubmit();
   }
-})
+});
 
 export default CheckCreateInfo;

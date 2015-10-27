@@ -1,8 +1,6 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
-import request from '../modules/request';
 import _ from 'lodash';
-import {GlobalStore, UserStore} from '../stores';
+import {UserStore} from '../stores';
 
 let _actions = {};
 let socket;
@@ -13,15 +11,15 @@ _actions.globalContextMenu = Flux.statics.addAction('globalContextMenu');
 
 _actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageConsume');
 
-_actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', function(){
+_actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', () => {
   if (!socket){
     console.info('Socket Started.');
     socket = new WebSocket('wss://api-beta.opsee.co/stream/');
-    socket.onopen = function(event){
+    socket.onopen = () => {
       Flux.actions.globalSocketAuth();
       Flux.actions.globalSocketSubscribe('launch-bastion');
     };
-    socket.onmessage = function(event){
+    socket.onmessage = (event) => {
       let data;
       try {
         data = JSON.parse(event.data);
@@ -36,7 +34,7 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', functio
         Flux.actions.globalSocketMessage(data);
       }
     };
-    socket.onerror = function(event){
+    socket.onerror = (event) => {
       Flux.actions.globalSocketError(event);
     };
   }
@@ -46,9 +44,9 @@ _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
   const auth = UserStore.getAuth();
   if (auth && socket){
     const authCmd = JSON.stringify({
-      command:'authenticate',
-      attributes:{
-        token: auth.replace('Bearer ','')
+      command: 'authenticate',
+      attributes: {
+        token: auth.replace('Bearer ', '')
       }
     });
     socket.send(authCmd);
@@ -59,8 +57,8 @@ _actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe',
   const auth = UserStore.getAuth();
   if (auth && socket && str){
     const authCmd = JSON.stringify({
-      command:'subscribe',
-      attributes:{subscribe_to: str}
+      command: 'subscribe',
+      attributes: {subscribe_to: str}
     });
     socket.send(authCmd);
   }

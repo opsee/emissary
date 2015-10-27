@@ -28,7 +28,7 @@ export default React.createClass({
     InstanceActions.getInstancesECC({
       id: this.props.params.id,
       type: 'elb'
-    })
+    });
   },
   getState(){
     return {
@@ -42,7 +42,7 @@ export default React.createClass({
       }),
       status: GroupStore.getGetGroupELBStatus(),
       getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
-    }
+    };
   },
   componentWillMount(){
     this.getData();
@@ -55,10 +55,10 @@ export default React.createClass({
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
-    if (desc && desc != ''){
-      return {desc}
+    if (desc && desc !== ''){
+      return {desc};
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   render() {
@@ -105,7 +105,7 @@ export default React.createClass({
         </div>
       );
     }else {
-      return <StatusHandler status={this.state.status}/>
+      return <StatusHandler status={this.state.status}/>;
     }
   }
 });

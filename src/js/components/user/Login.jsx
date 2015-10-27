@@ -14,31 +14,31 @@ export default React.createClass({
   mixins: [UserStore.mixin],
   storeDidChange(){
     const status = UserStore.getUserLoginStatus();
-    this.setState({status})
-    if (status == 'success'){
+    this.setState({status});
+    if (status === 'success'){
       const redirect = UserStore.getUser().get('loginRedirect');
       if (redirect){
         router.transitionTo(redirect);
       }else {
         router.transitionTo('env');
       }
-    }else if (status && status != 'pending'){
+    }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.message || 'Something went wrong.',
         style: 'danger'
-      })
+      });
     }
   },
   getInitialState(){
     return {
       data: UserStore.getUser(),
       status: UserStore.getUserLoginStatus()
-    }
+    };
   },
   updateUserData(data){
     this.setState({
       data: data
-    })
+    });
   },
   submit(e){
     e.preventDefault();
@@ -53,10 +53,10 @@ export default React.createClass({
   },
   disabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);
-    return incomplete || this.state.status == 'pending';
+    return incomplete || this.state.status === 'pending';
   },
   loginBtnText(){
-    return this.state.status == 'pending' ? 'Logging In...' : 'Log In';
+    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
   },
   render() {
     return (
@@ -67,7 +67,7 @@ export default React.createClass({
             <Col xs={12}>
               <LogoColor/>
               <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
+                <UserInputs include={['email','password']}  onChange={this.updateUserData}/>
                 <div className="padding-t">
                   <Button type="submit" color="success" block disabled={this.disabled()}>
                     {this.loginBtnText()}

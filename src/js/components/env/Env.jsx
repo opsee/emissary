@@ -22,7 +22,7 @@ const FilterForm = forms.Form.extend({
     required: false
   }),
   render() {
-    return <BoundField bf={this.boundField('filter')}/>
+    return <BoundField bf={this.boundField('filter')}/>;
   }
 });
 
@@ -36,7 +36,7 @@ export default React.createClass({
         onChange: self.filterHasChanged,
         labelSuffix: ''
       })
-    }
+    };
   },
   filterHasChanged(){
     this.forceUpdate();

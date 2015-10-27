@@ -147,7 +147,7 @@ const statics = {
     newData.check_spec.value.headers = newData.check_spec.value.headers || [];
     return new Check(newData);
   },
-  _statuses:{
+  _statuses: {
     getCheck: null,
     getChecks: null,
     checkCreate: null,

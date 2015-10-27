@@ -3,7 +3,6 @@ import Flux from '../modules/flux';
 import request from '../modules/request';
 import {UserStore} from '../stores';
 import _ from 'lodash';
-import $q from 'q';
 
 let _actions = {};
 
@@ -38,7 +37,7 @@ _actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
     });
   },
   res => res,
-  res => _.get(res,'response') || res
+  res => _.get(res, 'response') || res
 );
 
 _actions.getGroupsRDSSecurity = Flux.statics.addAsyncAction('getGroupsRDSSecurity',

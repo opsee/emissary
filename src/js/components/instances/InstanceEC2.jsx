@@ -13,7 +13,7 @@ function getState(){
   return {
     instance: InstanceStore.getInstanceECC(),
     status: InstanceStore.getGetInstanceECCStatus()
-  }
+  };
 }
 
 export default React.createClass({
@@ -29,7 +29,7 @@ export default React.createClass({
     return !Immutable.is(this.state.instance, nextState.instance);
   },
   componentWillMount(){
-    this.getData()
+    this.getData();
   },
   componentDidMount(){
     this.setInterval(this.getData, 30000);
@@ -48,9 +48,9 @@ export default React.createClass({
           <td><strong>Availability Zone</strong></td>
           <td>{az}</td>
         </tr>
-      )
+      );
     }else {
-      return <tr/>
+      return <tr/>;
     }
   },
   data(){
@@ -95,7 +95,7 @@ export default React.createClass({
                         <li key={g.get('id')}>
                           <GroupItem item={g}/>
                         </li>
-                        )
+                        );
                     })}
                   </ul>
                 </div>
@@ -117,7 +117,7 @@ export default React.createClass({
         </div>
       );
     }else {
-      return <StatusHandler status={this.state.status}/>
+      return <StatusHandler status={this.state.status}/>;
     }
   }
 });

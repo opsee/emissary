@@ -36,7 +36,7 @@ const Team = React.createClass({
     }
   },
   setVpcs(){
-    const regionsWithVpcs = OnboardStore.getAvailableVpcs()
+    const regionsWithVpcs = OnboardStore.getAvailableVpcs();
     if (regionsWithVpcs.length){
       let vpcs = regionsWithVpcs.map(r => {
         return r.vpcs.map(v => {
@@ -77,7 +77,7 @@ const Team = React.createClass({
           onChangeDelay: 100
         },
       })
-    }
+    };
     return _.extend(obj, {
       status: 'pending',
       vpcs: []
@@ -94,9 +94,9 @@ const Team = React.createClass({
     if (value){
       this.state.info.updateData({
         regions: regions.map(r => {
-          return r.id
+          return r.id;
         })
-      })
+      });
     }else {
       this.state.info.updateData({regions: []});
     }
@@ -111,13 +111,13 @@ const Team = React.createClass({
             <Button type="submit" color="success" block disabled={this.disabled()}>Install</Button>
           </Padding>
         </div>
-      )
+      );
     }else {
       return (
         <Alert type="danger">
           Either you have no active VPCs or something else went wrong.
         </Alert>
-      )
+      );
     }
   },
   render() {

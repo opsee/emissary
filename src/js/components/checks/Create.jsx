@@ -16,8 +16,8 @@ function getState(noCheck){
     check: CheckStore.newCheck().toJS(),
     response: CheckStore.getResponse(),
     createStatus: CheckStore.getCheckCreateStatus()
-  }
-  return _.omit(obj, noCheck ? 'check' : null)
+  };
+  return _.omit(obj, noCheck ? 'check' : null);
 }
 
 const CheckCreate = React.createClass({
@@ -31,15 +31,15 @@ const CheckCreate = React.createClass({
       response: CheckStore.getResponse(),
       createStatus: CheckStore.getCheckCreateStatus(),
       filter: null
-    }
-    return _.omit(obj, noCheck ? 'check' : null)
+    };
+    return _.omit(obj, noCheck ? 'check' : null);
   },
   storeDidChange() {
     const state = this.getState(true);
-    if (state.createStatus == 'success'){
+    if (state.createStatus === 'success'){
       UserActions.userPutUserData('hasDismissedCheckCreationHelp');
       router.transitionTo('checks');
-    }else if (state.createStatus && state.createStatus != 'pending'){
+    }else if (state.createStatus && state.createStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message || 'Something went wrong.',
         style: 'danger'

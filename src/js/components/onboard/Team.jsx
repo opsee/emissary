@@ -37,7 +37,7 @@ const InfoForm = forms.Form.extend({
     const date = Date.now();
     OnboardActions.subdomainAvailability(string, date);
     domainPromisesArray.push({date: date, promise:$q.defer()});
-    const correctPromise = domainPromisesArray[(domainPromisesArray.length-1)].promise;
+    const correctPromise = domainPromisesArray[(domainPromisesArray.length - 1)].promise;
     correctPromise.promise.then((avail) => {
       avail ? cb() : cb(null, 'is not available.');
     });
@@ -50,13 +50,13 @@ const Team = React.createClass({
     const availData = OnboardStore.getSubdomainAvailable();
     const availStatus = OnboardStore.getSubdomainAvailabilityStatus();
     this.setState({availStatus});
-    if (availStatus == 'success'){
+    if (availStatus === 'success'){
       const promise = _.find(domainPromisesArray, {date: availData.date});
       promise.promise.resolve(availData.available);
       this.setState({domainAvailable: availData.available});
     }
     const createOrgStatus = OnboardStore.getCreateOrgStatus();
-    if (createOrgStatus == 'success'){
+    if (createOrgStatus === 'success'){
       router.transitionTo('onboardRegionSelect');
     }
     this.setState({createOrgStatus});
@@ -75,17 +75,17 @@ const Team = React.createClass({
           onChangeDelay: 100
         },
       })
-    }
+    };
   },
   submit(e){
     e.preventDefault();
     OnboardActions.onboardCreateOrg(this.state.info.cleanedData);
   },
   disabled(){
-    return !this.state.info.isValid() || (this.state.availStatus == 'pending' && !this.state.domainAvailable);
+    return !this.state.info.isValid() || (this.state.availStatus === 'pending' && !this.state.domainAvailable);
   },
   btnText(){
-    return this.state.createOrgStatus == 'pending' ? 'Setting...' : 'Set';
+    return this.state.createOrgStatus === 'pending' ? 'Setting...' : 'Set';
   },
   render() {
     return (

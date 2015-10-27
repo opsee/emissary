@@ -128,4 +128,4 @@ const hideNavList = ['start', 'onboardThanks', 'onboardPassword', 'tutorial', 'o
 export default {
   routes,
   hideNavList
-}
+};

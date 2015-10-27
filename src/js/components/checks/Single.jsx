@@ -24,7 +24,7 @@ function getState(){
     elbStatus: GroupStore.getGetGroupELBStatus(),
     group: GroupStore.getNewGroup(),
     responseStatus: CheckStore.getTestCheckStatus()
-  }
+  };
 }
 
 export default React.createClass({
@@ -34,26 +34,26 @@ export default React.createClass({
   },
   storeDidChange() {
     let state = getState();
-    if (state.delStatus == 'success'){
+    if (state.delStatus === 'success'){
       router.transitionTo('checks');
     }
-    if (state.status == 'success'){
+    if (state.status === 'success'){
       const target = state.check.get('target');
       if (target){
         switch (target.type){
-          case 'sg':
-            GroupActions.getGroupSecurity(target.id);
+        case 'sg':
+          GroupActions.getGroupSecurity(target.id);
           break;
-          case 'elb':
-            GroupActions.getGroupELB(target.id);
+        case 'elb':
+          GroupActions.getGroupELB(target.id);
           break;
         }
       }
     }
-    if (state.sgStatus == 'success' || state.elbStatus == 'success'){
+    if (state.sgStatus === 'success' || state.elbStatus === 'success'){
       state.group = GroupStore.getGroup(this.state.check.get('target'));
     }
-    if (state.responseStatus == 'success'){
+    if (state.responseStatus === 'success'){
       state.response = CheckStore.getResponse();
     }
     this.setState(state);
@@ -61,7 +61,7 @@ export default React.createClass({
   getInitialState(){
     return _.assign(getState(), {
       response: null
-    })
+    });
   },
   getData(){
     CheckActions.getCheck(this.props.params.id);
@@ -79,20 +79,20 @@ export default React.createClass({
     CheckActions.deleteCheck(this.props.params.id);
   },
   getTarget(){
-    GroupStore.getGroupFromFilter()
+    GroupStore.getGroupFromFilter();
   },
   getLink(){
     const target = this.state.check.get('target');
     const group = this.state.group.toJS();
-    if (target.type == 'sg'){
+    if (target.type === 'sg'){
       return (
         <span>{group.name || group.id}</span>
-      )
+      );
     }else {
       //elb
       return (
         <span>{group.name || group.id}</span>
-      )
+      );
     }
   },
   innerRender(){
@@ -120,12 +120,12 @@ export default React.createClass({
             {this.state.check.get('notifications').map(n => {
               return (
                 <li><Mail inline fill="primary"/> {n.value}</li>
-              )
+              );
             })}
             </ul>
           </Padding>
         </div>
-      )
+      );
     }else {
       return (
         <StatusHandler status={this.state.status}>
@@ -140,9 +140,9 @@ export default React.createClass({
         <Button to="checkEdit" params={{id: this.props.params.id}} color="primary" fab title={`Edit ${this.state.check.name}`}>
           <Edit btn/>
         </Button>
-      )
+      );
     }else {
-      return <span/>
+      return <span/>;
     }
   },
   render() {

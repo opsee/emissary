@@ -41,7 +41,7 @@ const statics = {
     initialUser = initialUser ? new User(initialUser) : null;
     return initialUser || new User();
   },
-  _statuses:{
+  _statuses: {
     userLogin: null,
     userSendResetEmail: null,
     userEdit: null,

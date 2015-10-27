@@ -7,7 +7,7 @@ const statics = {
   getSignupsSuccess(data){
     _signups = Immutable.fromJS(data);
   },
-  _statuses:{
+  _statuses: {
     adminActivateSignup: null
   }
 };

@@ -10,7 +10,7 @@ _actions.checkSilence = Flux.statics.addAction('checkSilence');
 
 let _statics = {};
 
-_statics.formatCheckData = function(data){
+_statics.formatCheckData = (data) => {
   const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id', 'name'];
   if (data.target.type === 'security'){
     data.target.type = 'sg';
@@ -18,7 +18,7 @@ _statics.formatCheckData = function(data){
   return _.omit(data, disallowed);
 };
 
-_statics.saveNotifications = function(data, checkId, isEditing){
+_statics.saveNotifications = (data, checkId, isEditing) => {
   return request
   [isEditing ? 'put' : 'post'](`${config.eventsApi}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
@@ -28,7 +28,7 @@ _statics.saveNotifications = function(data, checkId, isEditing){
   });
 };
 
-_statics.saveAssertions = function(data, checkId, isEditing){
+_statics.saveAssertions = (data, checkId, isEditing) => {
   return request
   [isEditing ? 'put' : 'post'](`${config.eventsApi}/assertions${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
@@ -38,25 +38,24 @@ _statics.saveAssertions = function(data, checkId, isEditing){
   });
 };
 
-_statics.checkCreateOrEdit = function(data, isEditing){
-  return new Promise((resolve, reject) => {
+_statics.checkCreateOrEdit = (data, isEditing) => {
+  return new Promise((resolve) => {
     const d = _statics.formatCheckData(data);
     request
     [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/' + data.id : ''}`)
     .set('Authorization', UserStore.getAuth())
-    .send(d).then(checkRes =>{
+    .send(d).then(checkRes => {
       //REMOVE and go back to this when bartnet is better
-      if (true){
       // if (checkRes && checkRes.body){
-        _statics.saveNotifications(data, _.get(checkRes, 'body.id') || data.id, isEditing)
-        .then(notifRes => {
-          _statics.saveAssertions(data, _.get(checkRes, 'body.id') || data.id, isEditing).then(assertionRes => {
-            resolve(checkRes);
-          });
+      _statics.saveNotifications(data, _.get(checkRes, 'body.id') || data.id, isEditing)
+      .then(() => {
+        _statics.saveAssertions(data, _.get(checkRes, 'body.id') || data.id, isEditing).then(() => {
+          resolve(checkRes);
         });
-      }else {
-        reject(checkRes);
-      }
+      });
+      // else {
+      //   reject(checkRes);
+      // }
     });
   });
 };
@@ -119,7 +118,7 @@ _actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
 );
 
 _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
-  (id) => {
+  () => {
     return request
     .get(`${config.api}/checks`)
     .set('Authorization', UserStore.getAuth());
@@ -131,16 +130,15 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
 _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
   (data) => {
     if (config.demo){
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         resolve({body: CheckStore.getFakeResponse().toJS()});
       });
-    }else {
-      let newData = _statics.formatCheckData(data);
-      return request
-      .post(`${config.api}/bastions/test-check`)
-      .set('Authorization', UserStore.getAuth())
-      .send({check: newData, max_hosts: 3, deadline:'30s'});
     }
+    let newData = _statics.formatCheckData(data);
+    return request
+    .post(`${config.api}/bastions/test-check`)
+    .set('Authorization', UserStore.getAuth())
+    .send({check: newData, max_hosts: 3, deadline: '30s'});
   },
   res => res.body,
   res => _.get(res.body) || res

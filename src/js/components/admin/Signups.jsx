@@ -17,7 +17,7 @@ function getState(){
   return {
     signups: getData(),
     approveStatus: AdminStore.getActivateSignupStatus()
-  }
+  };
 }
 
 function getData(){
@@ -26,8 +26,8 @@ function getData(){
     s.created_at = new Date(Date.parse(s.created_at));
     return s;
   }).sortBy(s => {
-    return -1*s.created_at;
-  }).value()
+    return -1 * s.created_at;
+  }).value();
 }
 
 export default React.createClass({
@@ -36,7 +36,7 @@ export default React.createClass({
     const data = getState();
     console.log(data);
     this.setState(data);
-    if (data.approveStatus == 'success'){
+    if (data.approveStatus === 'success'){
       AdminActions.adminGetSignups();
       GlobalActions.globalModalMessage({
         html: 'User activated. Email sent.',
@@ -46,7 +46,7 @@ export default React.createClass({
   },
   getInitialState: getState,
   componentWillMount(){
-    AdminActions.adminGetSignups()
+    AdminActions.adminGetSignups();
   },
   stepSubmit(data){
     console.log('step submit', data);
@@ -77,11 +77,11 @@ export default React.createClass({
   },
   outputIcon(signup){
     if (this.isUser(signup)){
-      return <Person fill={colors.textColorSecondary} inline/>
+      return <Person fill={colors.textColorSecondary} inline/>;
     } else if (this.isApprovedSignup(signup)){
-      return <Checkmark fill={colors.textColorSecondary} inline/>
+      return <Checkmark fill={colors.textColorSecondary} inline/>;
     }else {
-      return <span/>
+      return <span/>;
     }
   },
   outputButton(signup){
@@ -89,11 +89,11 @@ export default React.createClass({
       const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
       return (
         <Button flat color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
-      )
+      );
     }else {
       return (
         <Button flat color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
-      )
+      );
     }
   },
   output(signup){
@@ -116,7 +116,7 @@ export default React.createClass({
           </div>
         </Padding>
       </Col>
-    )
+    );
   },
   render() {
     return (

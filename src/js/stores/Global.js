@@ -39,7 +39,7 @@ let statics = {
       Store.emitChange();
     }
   },
-  _statuses:{
+  _statuses: {
     globalSocketConnect: null
   }
 };
@@ -71,60 +71,60 @@ const _public = {
   getGlobalSocketError(){
     return _data.globalSocketError;
   }
-}
+};
 
 const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
   function handlePayload(payload){
-  switch (payload.actionType) {
-  case 'GLOBAL_MODAL_MESSAGE':
-    statics.globalModalMessage(payload.data);
-    break;
-  case 'GLOBAL_MODAL_MESSAGE_CONSUME':
-    statics.globalModalMessageConsume(payload.data);
-    break;
-  case 'GLOBAL_CONTEXT_MENU':
-    statics.globalContextMenu(payload.data);
-    break;
-  case 'GLOBAL_CONTEXT_MENU_CONSUME':
-    statics.globalContextMenuConsume(payload.data);
-    break;
-  case 'GLOBAL_SOCKET_START':
-    statics.globalSocketStart(payload.data);
-    break;
-  case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
-    console.log(payload.data);
-    break;
-  case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
-    payload.data.forEach((d, i) => {
-      setTimeout(() => {
-        _data.socketMessages.push(d);
-        Store.emitChange();
-      }, i * 500);
-    });
-    break;
-  case 'GLOBAL_SOCKET_MESSAGE':
-    statics.parseSocketMessage(payload.data);
-    break;
-  case 'GLOBAL_SET_NAV':
-    _data.showNav = payload.data;
-    Store.emitChange();
-    break;
-  case 'GLOBAL_SOCKET_ERROR':
-    _data.globalSocketError = payload.data;
-    Store.emitChange();
-    break;
-  default:
-    break;
+    switch (payload.actionType) {
+    case 'GLOBAL_MODAL_MESSAGE':
+      statics.globalModalMessage(payload.data);
+      break;
+    case 'GLOBAL_MODAL_MESSAGE_CONSUME':
+      statics.globalModalMessageConsume(payload.data);
+      break;
+    case 'GLOBAL_CONTEXT_MENU':
+      statics.globalContextMenu(payload.data);
+      break;
+    case 'GLOBAL_CONTEXT_MENU_CONSUME':
+      statics.globalContextMenuConsume(payload.data);
+      break;
+    case 'GLOBAL_SOCKET_START':
+      statics.globalSocketStart(payload.data);
+      break;
+    case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
+      console.log(payload.data);
+      break;
+    case 'ONBOARD_EXAMPLE_INSTALL_SUCCESS':
+      payload.data.forEach((d, i) => {
+        setTimeout(() => {
+          _data.socketMessages.push(d);
+          Store.emitChange();
+        }, i * 500);
+      });
+      break;
+    case 'GLOBAL_SOCKET_MESSAGE':
+      statics.parseSocketMessage(payload.data);
+      break;
+    case 'GLOBAL_SET_NAV':
+      _data.showNav = payload.data;
+      Store.emitChange();
+      break;
+    case 'GLOBAL_SOCKET_ERROR':
+      _data.globalSocketError = payload.data;
+      Store.emitChange();
+      break;
+    default:
+      break;
+    }
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
+    if (statusData.haveChanged){
+      Store.emitChange();
+    }
   }
-  const statusData = Flux.statics.statusProcessor(payload, statics, Store);
-  statics._statuses = statusData.statuses;
-  if (statusData.haveChanged){
-    Store.emitChange();
-  }
-}
 );
 
 export default Store;

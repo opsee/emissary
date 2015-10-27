@@ -190,7 +190,7 @@ const statics = {
       return newSg;
     });
   },
-  _statuses:{
+  _statuses: {
     getGroupsSecurity: null,
     getGroupSecurity: null,
     getGroupsRDSSecurity: null,
@@ -247,7 +247,7 @@ const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
    _.assign({}, _public, statusFunctions),
-   function handlePayload(payload){
+  function handlePayload(payload){
     switch (payload.actionType) {
     case 'GET_GROUPS_SECURITY_SUCCESS':
       statics.getGroupsSecuritySuccess(payload.data);

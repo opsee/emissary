@@ -34,22 +34,22 @@ function getState(){
     step3: {
       disabled: false
     }
-  }
+  };
 }
 
 const CheckEdit = React.createClass({
   mixins: [CheckStore.mixin],
   storeDidChange(){
     let state = getState();
-    if (state.editStatus == 'success'){
+    if (state.editStatus === 'success'){
       router.transitionTo('checks');
-    }else if (state.editStatus && state.editStatus != 'pending'){
+    }else if (state.editStatus && state.editStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message || 'Something went wrong.',
         style: 'danger'
       });
     }
-    if (state.status == 'success'){
+    if (state.status === 'success'){
       state.check = CheckStore.getCheck().toJS();
     }
     this.setState(state);
@@ -116,9 +116,9 @@ const CheckEdit = React.createClass({
         <Padding tb={1}>
           <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         </Padding>
-      )
+      );
     }else {
-      return <div/>
+      return <div/>;
     }
   },
   renderLink(){
@@ -165,7 +165,7 @@ const CheckEdit = React.createClass({
         <StatusHandler status={this.state.status}>
           <h2>Check not found.</h2>
         </StatusHandler>
-      )
+      );
     }
   }
 });

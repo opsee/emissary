@@ -19,7 +19,7 @@ let domainPromisesArray = [];
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
-  return [r.id, `${r.id} - ${r.name}`]
+  return [r.id, `${r.id} - ${r.name}`];
 });
 
 const InfoForm = forms.Form.extend({
@@ -40,9 +40,9 @@ const Team = React.createClass({
       router.transitionTo('onboardCredentials');
     }
     const bastionStatus = OnboardStore.getGetBastionsStatus();
-    if (bastionStatus == 'success'){
+    if (bastionStatus === 'success'){
       const bastions = OnboardStore.getBastions();
-      this.setState({bastions})
+      this.setState({bastions});
     }
   },
   getInitialState() {
@@ -63,7 +63,7 @@ const Team = React.createClass({
         },
       }),
       bastions: []
-    }
+    };
     setTimeout(function(){
       obj.info.validate();
     }, 10);
@@ -83,9 +83,9 @@ const Team = React.createClass({
     if (value){
       this.state.info.updateData({
         regions: regions.map(r => {
-          return r.id
+          return r.id;
         })
-      })
+      });
     }else {
       this.state.info.updateData({regions: []});
     }
@@ -102,7 +102,7 @@ const Team = React.createClass({
           <div><br/></div>
           <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
         </form>
-      )
+      );
     }
     return (
       <Padding tb={1}>
@@ -110,7 +110,7 @@ const Team = React.createClass({
           It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
         </Alert>
       </Padding>
-    )
+    );
   },
   render() {
     return (

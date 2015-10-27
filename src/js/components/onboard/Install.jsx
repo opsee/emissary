@@ -14,26 +14,26 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
-import {Padding} from '../layout'
+import {Padding} from '../layout';
 
 const statics = {
   checkedInstallStatus: false
-}
+};
 
 const Install = React.createClass({
   mixins: [OnboardStore.mixin, GlobalStore.mixin],
   storeDidChange(){
     let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command: 'launch-bastion'}).filter(m => {
-        return m.attributes && m.attributes.ResourceType;
-      }).value();
+      return m.attributes && m.attributes.ResourceType;
+    }).value();
 
     let reject = false;
     if (this.props.query.fail){
-      reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'}
+      reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
     }else if (config.demo){
-      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'}
+      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
     }else if (this.props.query.success){
-      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'}
+      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
     }
 
     const bastions = _.chain(msgs)
@@ -42,16 +42,16 @@ const Install = React.createClass({
       return {
         id: key,
         messages: _.chain(value).pluck('attributes').sort(function(a, b){
-          return Date.parse(a.Timestamp) - Date.parse(b.Timestamp)
+          return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
         }).value()
-      }
+      };
     }).value();
     this.setState({bastions});
   },
   getInitialState() {
     return {
       bastions: []
-    }
+    };
   },
   componentWillMount(){
     if (config.demo || this.props.path.match('example')){
@@ -68,25 +68,25 @@ const Install = React.createClass({
         }else if (!data && !started){
           router.transitionTo('onboardRegionSelect');
         }
-      })
+      });
     }
   },
   bastionStatuses(){
     return _.chain(this.state.bastions).pluck('messages').map(bastionMsgs => {
       return _.chain(bastionMsgs).filter({ResourceType: 'AWS:: CloudFormation:: Stack'}).filter(msg => {
-        return msg.ResourceStatus == 'CREATE_COMPLETE' || msg.ResourceStatus == 'ROLLBACK_COMPLETE'
-      }).pluck('ResourceStatus').first().value()
-     }).value();
+        return msg.ResourceStatus === 'CREATE_COMPLETE' || msg.ResourceStatus === 'ROLLBACK_COMPLETE';
+      }).pluck('ResourceStatus').first().value();
+    }).value();
   },
   bastionsComplete(){
     const stats = this.bastionStatuses();
     return _.every(stats) && stats.length;
   },
   getBastionErrors(){
-    return _.filter(this.bastionStatuses(), stat => stat == 'ROLLBACK_COMPLETE');
+    return _.filter(this.bastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE');
   },
   getBastionSuccesses(){
-    return _.filter(this.bastionStatuses(), stat => stat == 'CREATE_COMPLETE');
+    return _.filter(this.bastionStatuses(), stat => stat === 'CREATE_COMPLETE');
   },
   renderSurvey(){
     if (!config.demo){
@@ -94,7 +94,7 @@ const Install = React.createClass({
         <Padding tb={1}>
           <Survey/>
         </Padding>
-      )
+      );
     }else {
 
     }
@@ -110,13 +110,13 @@ const Install = React.createClass({
               Create a Check
             </Button>
           </Padding>
-        )
+        );
       }else {
         return (
           <Alert type="info">
             We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
           </Alert>
-        )
+        );
       }
     }
   },
@@ -124,7 +124,7 @@ const Install = React.createClass({
     if (!statics.checkedInstallStatus && !this.state.bastions.length){
       return (
         <p>Checking installation status...</p>
-      )
+      );
     }
     if (this.bastionsComplete()){
       const bastionErrors = this.getBastionErrors();
@@ -132,20 +132,20 @@ const Install = React.createClass({
       if (bastionErrors.length && !bastionSuccesses.length){
         return (
           <p>{bastionErrors.length > 1 ? bastionErrors.length : ''} Bastion{bastionErrors.length > 1 ? 's' : ''} failed to install correctly</p>
-        )
+        );
       }else if (bastionErrors.length){
         return (
           <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
-        )
+        );
       }else {
         return (
-          <p>{bastionErrors.length > 1 ? bastionErrors.length+' ' : ''}Bastion installed correctly.</p>
-        )
+          <p>{bastionErrors.length > 1 ? bastionErrors.length + ' ' : ''}Bastion installed correctly.</p>
+        );
       }
     }else {
       return (
         <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
-      )
+      );
     }
   },
   render() {
@@ -161,7 +161,7 @@ const Install = React.createClass({
                   <Padding tb={1}>
                     <BastionInstaller {...b}/>
                   </Padding>
-                )
+                );
               })}
               {this.renderBtn()}
               {this.renderSurvey()}

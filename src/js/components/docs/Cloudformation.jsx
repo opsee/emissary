@@ -1005,7 +1005,7 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints</a></li>
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes</a></li>
                     </ul>
-                  </Padding>  
+                  </Padding>
 
                   <Padding tb={1}>
                     <pre>sdb:Select*</pre>

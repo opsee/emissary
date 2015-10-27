@@ -7,7 +7,7 @@ import _ from 'lodash';
 let _actions = {};
 
 _actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups',
-  (id) => {
+  () => {
     return request
     .get(`${config.authApi}/signups`)
     .set('Authorization', UserStore.getAuth());

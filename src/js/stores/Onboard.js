@@ -88,15 +88,15 @@ const _public = {
 };
 
 const statics = {
-  _statuses:{
-  onboardSignupCreate: null,
-  onboardSetPassword: null,
-  subdomainAvailability: null,
-  onboardCreateOrg: null,
-  onboardVpcScan: null,
-  getBastions: null
+  _statuses: {
+    onboardSignupCreate: null,
+    onboardSetPassword: null,
+    subdomainAvailability: null,
+    onboardCreateOrg: null,
+    onboardVpcScan: null,
+    getBastions: null
   }
-}
+};
 
 const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 

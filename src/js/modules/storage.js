@@ -1,17 +1,17 @@
 export default {
-  get(item){
-    var item = window.localStorage[item];
+  get(string){
+    let local = window.localStorage[string];
     try {
-      item = JSON.parse(item);
+      local = JSON.parse(local);
     }catch (err){
-      item = null;
+      local = null;
     }
-    return item;
+    return local;
   },
-  set(item, data){
-    return window.localStorage.setItem(item, JSON.stringify(data));
+  set(string, data){
+    return window.localStorage.setItem(string, JSON.stringify(data));
   },
-  remove(item){
-    return delete window.localStorage[item];
+  remove(string){
+    return delete window.localStorage[string];
   }
 };

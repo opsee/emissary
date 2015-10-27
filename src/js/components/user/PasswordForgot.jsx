@@ -18,28 +18,28 @@ export default React.createClass({
     return {
       data: UserStore.getUser().toJS(),
       status: UserStore.getUserSendResetEmailStatus()
-    }
+    };
   },
   updateUserData(data){
     this.setState({
       data: data
-    })
+    });
   },
   submit(e){
     e.preventDefault();
     UserActions.userSendResetEmail(this.state.data);
   },
   disabled(){
-    return !this.state.data.email || this.state.status == 'pending';
+    return !this.state.data.email || this.state.status === 'pending';
   },
   btnText(){
-    return this.state.status == 'pending' ? 'Sending...' : 'Send Reset Email';
+    return this.state.status === 'pending' ? 'Sending...' : 'Send Reset Email';
   },
   innerRender(){
-    if (this.state.status == 'success'){
+    if (this.state.status === 'success'){
       return (
         <p>Success. Check your email.</p>
-      )
+      );
     }else {
       return (
       <form name="loginForm" onSubmit={this.submit}>

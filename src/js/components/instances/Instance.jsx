@@ -11,7 +11,7 @@ import Immutable from 'immutable';
 function getState(){
   return {
     instance: InstanceStore.getInstance()
-  }
+  };
 }
 
 export default React.createClass({
@@ -26,7 +26,7 @@ export default React.createClass({
     return !Immutable.is(this.state.instance, nextState.instance);
   },
   componentWillMount(){
-    this.getData()
+    this.getData();
   },
   componentDidMount(){
     this.setInterval(this.getData, 30000);
@@ -79,7 +79,7 @@ export default React.createClass({
                   <li key={g.get('id')}>
                     <GroupItem item={g}/>
                   </li>
-                  )
+                  );
               })}
             </ul>
 
@@ -90,7 +90,7 @@ export default React.createClass({
                   <li key={i.get('id')}>
                     <CheckItem item={i}/>
                   </li>
-                  )
+                  );
               })}
             </ul>
           </div>
