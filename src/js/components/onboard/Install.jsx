@@ -2,13 +2,8 @@ import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
-import {UserStore} from '../../stores';
-import {Link} from 'react-router';
-import forms from 'newforms';
 import _ from 'lodash';
 import router from '../../modules/router';
-import storage from '../../modules/storage';
-import {Close, ChevronRight} from '../icons';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
@@ -22,6 +17,28 @@ const statics = {
 
 const Install = React.createClass({
   mixins: [OnboardStore.mixin, GlobalStore.mixin],
+  propTypes: {
+    path: PropTypes.string,
+    query: PropTypes.object
+  },
+  componentWillMount(){
+    if (config.demo || this.props.path.match('example')){
+      OnboardActions.onboardExampleInstall();
+    }else {
+      OnboardStore.getBastionHasLaunchedPromise().then((started) => {
+        statics.checkedInstallStatus = true;
+        const data = OnboardStore.getFinalInstallData();
+        if (data && !started){
+          const dataHasValues = _.chain(data).values().every(_.identity).value();
+          if (dataHasValues && data.regions.length){
+            OnboardActions.onboardInstall(data);
+          }
+        }else if (!data && !started){
+          router.transitionTo('onboardRegionSelect');
+        }
+      });
+    }
+  },
   storeDidChange(){
     let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command: 'launch-bastion'}).filter(m => {
       return m.attributes && m.attributes.ResourceType;
@@ -41,52 +58,34 @@ const Install = React.createClass({
     .groupBy('instance_id').map((value, key) => {
       return {
         id: key,
-        messages: _.chain(value).pluck('attributes').sort(function(a, b){
+        messages: _.chain(value).pluck('attributes').sort((a, b) => {
           return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
         }).value()
       };
     }).value();
     this.setState({bastions});
   },
+  isBastionsComplete(){
+    const stats = this.getBastionStatuses();
+    return _.every(stats) && stats.length;
+  },
   getInitialState() {
     return {
       bastions: []
     };
   },
-  componentWillMount(){
-    if (config.demo || this.props.path.match('example')){
-      OnboardActions.onboardExampleInstall();
-    }else {
-      OnboardStore.getBastionHasLaunchedPromise().then(function(started){
-        statics.checkedInstallStatus = true;
-        const data = OnboardStore.getFinalInstallData();
-        if (data && !started){
-          const dataHasValues = _.chain(data).values().every(_.identity).value();
-          if (dataHasValues && data.regions.length){
-            OnboardActions.onboardInstall(data);
-          }
-        }else if (!data && !started){
-          router.transitionTo('onboardRegionSelect');
-        }
-      });
-    }
-  },
-  bastionStatuses(){
+  getBastionStatuses(){
     return _.chain(this.state.bastions).pluck('messages').map(bastionMsgs => {
       return _.chain(bastionMsgs).filter({ResourceType: 'AWS:: CloudFormation:: Stack'}).filter(msg => {
         return msg.ResourceStatus === 'CREATE_COMPLETE' || msg.ResourceStatus === 'ROLLBACK_COMPLETE';
       }).pluck('ResourceStatus').first().value();
     }).value();
   },
-  bastionsComplete(){
-    const stats = this.bastionStatuses();
-    return _.every(stats) && stats.length;
-  },
   getBastionErrors(){
-    return _.filter(this.bastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE');
+    return _.filter(this.getBastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE');
   },
   getBastionSuccesses(){
-    return _.filter(this.bastionStatuses(), stat => stat === 'CREATE_COMPLETE');
+    return _.filter(this.getBastionStatuses(), stat => stat === 'CREATE_COMPLETE');
   },
   renderSurvey(){
     if (!config.demo){
@@ -95,14 +94,13 @@ const Install = React.createClass({
           <Survey/>
         </Padding>
       );
-    }else {
-
     }
+    return <div/>;
   },
   renderBtn(){
     const bastionErrors = this.getBastionErrors();
     const bastionSuccesses = this.getBastionSuccesses();
-    if (this.bastionsComplete()){
+    if (this.isBastionsComplete()){
       if (!bastionErrors.length || bastionSuccesses.length){
         return (
           <Padding tb={3}>
@@ -111,13 +109,12 @@ const Install = React.createClass({
             </Button>
           </Padding>
         );
-      }else {
-        return (
-          <Alert type="info">
-            We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
-          </Alert>
-        );
       }
+      return (
+        <Alert type="info">
+          We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+        </Alert>
+      );
     }
   },
   renderText(){
@@ -126,7 +123,7 @@ const Install = React.createClass({
         <p>Checking installation status...</p>
       );
     }
-    if (this.bastionsComplete()){
+    if (this.isBastionsComplete()){
       const bastionErrors = this.getBastionErrors();
       const bastionSuccesses = this.getBastionSuccesses();
       if (bastionErrors.length && !bastionSuccesses.length){
@@ -137,16 +134,14 @@ const Install = React.createClass({
         return (
           <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
         );
-      }else {
-        return (
-          <p>{bastionErrors.length > 1 ? bastionErrors.length + ' ' : ''}Bastion installed correctly.</p>
-        );
       }
-    }else {
       return (
-        <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
+        <p>{bastionErrors.length > 1 ? bastionErrors.length + ' ' : ''}Bastion installed correctly.</p>
       );
     }
+    return (
+      <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
+    );
   },
   render() {
     return (
