@@ -1,20 +1,15 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
-import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
 import {OnboardActions} from '../../actions';
-import {UserStore} from '../../stores';
 import {State} from 'react-router';
 import router from '../../modules/router.js';
-import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import _ from 'lodash';
 import $q from 'q';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 
-let checkSubdomainPromise;
 let domainPromisesArray = [];
 
 const InfoForm = forms.Form.extend({
@@ -36,7 +31,7 @@ const InfoForm = forms.Form.extend({
     const string = this.cleanedData.subdomain;
     const date = Date.now();
     OnboardActions.subdomainAvailability(string, date);
-    domainPromisesArray.push({date: date, promise:$q.defer()});
+    domainPromisesArray.push({date: date, promise: $q.defer()});
     const correctPromise = domainPromisesArray[(domainPromisesArray.length - 1)].promise;
     correctPromise.promise.then((avail) => {
       avail ? cb() : cb(null, 'is not available.');
@@ -62,7 +57,7 @@ const Team = React.createClass({
     this.setState({createOrgStatus});
   },
   getInitialState() {
-    var self = this;
+    const self = this;
     return {
       info: new InfoForm({
         onChange(){
@@ -73,19 +68,19 @@ const Team = React.createClass({
         validation: {
           on: 'blur change',
           onChangeDelay: 100
-        },
+        }
       })
     };
   },
-  submit(e){
-    e.preventDefault();
-    OnboardActions.onboardCreateOrg(this.state.info.cleanedData);
-  },
-  disabled(){
+  isDisabled(){
     return !this.state.info.isValid() || (this.state.availStatus === 'pending' && !this.state.domainAvailable);
   },
-  btnText(){
+  getButtonText(){
     return this.state.createOrgStatus === 'pending' ? 'Setting...' : 'Set';
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    OnboardActions.onboardCreateOrg(this.state.info.cleanedData);
   },
   render() {
     return (
@@ -94,7 +89,7 @@ const Team = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-10 col-sm-offset-1">
-              <form name="loginForm" onSubmit={this.submit}>
+              <form name="loginForm" onSubmit={this.handleSubmit}>
                 <BoundField bf={this.state.info.boundField('name')}>
                   <div className="text-sm text-secondary flex-order-3 padding-t">
                     <em>This name will appear in headings and menus to identify your team. Your company name is probably a good choice, but it doesn&rsquo;t need to be official or anything.</em>
@@ -106,8 +101,8 @@ const Team = React.createClass({
                   </div>
                 </BoundField>
 
-                <Button type="submit" color="success" block disabled={this.disabled()}>
-                  {this.btnText()}
+                <Button type="submit" color="success" block disabled={this.isDisabled()}>
+                  {this.getButtonText()}
                 </Button>
               </form>
             </div>

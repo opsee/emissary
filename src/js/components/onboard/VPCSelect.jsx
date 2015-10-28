@@ -43,7 +43,7 @@ const Team = React.createClass({
     }
   },
   getInitialState() {
-    var self = this;
+    const self = this;
     const obj = {
       info: new InfoForm({
         onChange(){
@@ -53,13 +53,16 @@ const Team = React.createClass({
         validation: {
           on: 'blur change',
           onChangeDelay: 100
-        },
+        }
       })
     };
     return _.extend(obj, {
       status: 'pending',
       vpcs: []
     });
+  },
+  isDisabled(){
+    return !this.state.info.cleanedData.vpcs;
   },
   runSetVpcs(){
     const regionsWithVpcs = OnboardStore.getAvailableVpcs();
@@ -81,14 +84,7 @@ const Team = React.createClass({
       this.setState({vpcs: vpcs});
     }
   },
-  handleSubmit(e){
-    e.preventDefault();
-    OnboardActions.onboardSetVpcs(this.state.info.cleanedData.vpcs);
-  },
-  isDisabled(){
-    return !this.state.info.cleanedData.vpcs;
-  },
-  toggleAll(value){
+  runToggleAll(value){
     if (value){
       this.state.info.updateData({
         regions: regions.map(r => {
@@ -99,7 +95,11 @@ const Team = React.createClass({
       this.state.info.updateData({regions: []});
     }
   },
-  innerRender(){
+  handleSubmit(e){
+    e.preventDefault();
+    OnboardActions.onboardSetVpcs(this.state.info.cleanedData.vpcs);
+  },
+  renderInner(){
     if (this.state.vpcs.length){
       return (
         <div>
@@ -110,13 +110,12 @@ const Team = React.createClass({
           </Padding>
         </div>
       );
-    }else {
-      return (
-        <Alert type="danger">
-          Either you have no active VPCs or something else went wrong.
-        </Alert>
-      );
     }
+    return (
+      <Alert type="danger">
+        Either you have no active VPCs or something else went wrong.
+      </Alert>
+    );
   },
   render() {
     return (
@@ -126,7 +125,7 @@ const Team = React.createClass({
           <Row>
             <Col xs={12}>
               <form name="loginForm" onSubmit={this.handleSubmit}>
-              {this.innerRender()}
+              {this.renderInner()}
               </form>
             </Col>
           </Row>

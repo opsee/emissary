@@ -101,7 +101,7 @@ const statics = {
   getCreatedTime(time){
     let launchTime;
     const parsed = Date.parse(time);
-    if (typeof launchTime === 'number' && !_.isNaN(launchTime) && launchTime > 0){
+    if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
       launchTime = parsed;
     }
     return launchTime;

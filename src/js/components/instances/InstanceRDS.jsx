@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
-import InstanceItem from './InstanceItem.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
@@ -17,14 +16,8 @@ function getState(){
 
 export default React.createClass({
   mixins: [InstanceStore.mixin, SetInterval],
-  storeDidChange() {
-    this.setState(getState());
-  },
-  getData(){
-    InstanceActions.getInstanceRDS(this.props.params.id);
-  },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !Immutable.is(this.state.instance, nextState.instance);
+  propTypes: {
+    params: PropTypes.object
   },
   componentWillMount(){
     this.getData();
@@ -32,14 +25,17 @@ export default React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !Immutable.is(this.state.instance, nextState.instance);
+  },
+  storeDidChange() {
+    this.setState(getState());
+  },
   getInitialState(){
     return getState();
   },
-  silence(id){
-    InstanceActions.silence(id);
-  },
-  data(){
-    return this.state.instance.toJS();
+  getData(){
+    InstanceActions.getInstanceRDS(this.props.params.id);
   },
   render() {
     return (
@@ -71,7 +67,7 @@ export default React.createClass({
                 </tr>
               </Table>
 
-              <h2>Groups - ( {this.data().groups.length} )</h2>
+              <h2>Groups - ( {this.state.instance.get('groups').size} )</h2>
               <ul className="list-unstyled">
                 {this.state.instance.get('groups').map(g => {
                   return (

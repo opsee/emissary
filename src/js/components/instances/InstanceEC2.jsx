@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {StatusHandler, Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
-import InstanceItem from './InstanceItem.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {PageAuth} from '../../modules/statics';
 
 function getState(){
   return {
@@ -17,16 +17,12 @@ function getState(){
 }
 
 export default React.createClass({
+  statics: {
+    willTransitionTo: PageAuth
+  },
   mixins: [InstanceStore.mixin, SetInterval],
-  storeDidChange() {
-    const state = getState();
-    this.setState(state);
-  },
-  getData(){
-    InstanceActions.getInstanceECC(this.props.params.id);
-  },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !Immutable.is(this.state.instance, nextState.instance);
+  propTypes: {
+    params: PropTypes.object
   },
   componentWillMount(){
     this.getData();
@@ -34,11 +30,18 @@ export default React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !Immutable.is(this.state.instance, nextState.instance);
+  },
+  storeDidChange() {
+    const state = getState();
+    this.setState(state);
+  },
+  getData(){
+    InstanceActions.getInstanceECC(this.props.params.id);
+  },
   getInitialState(){
     return getState();
-  },
-  silence(id){
-    InstanceActions.silence(id);
   },
   renderAvailabilityZone(){
     const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
@@ -88,7 +91,7 @@ export default React.createClass({
                   {this.renderAvailabilityZone()}
                 </Table>
                 <div className="padding-b">
-                  <h3>Groups ({this.data().groups.length})</h3>
+                  <h3>Groups ({this.state.instance.get('groups').size})</h3>
                   <ul className="list-unstyled">
                     {this.state.instance.get('groups').map(g => {
                       return (

@@ -6,12 +6,14 @@ import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router';
-import {Opsee} from '../icons';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
+  propTypes: {
+    query: PropTypes.object
+  },
   storeDidChange(){
     const status = UserStore.getUserLoginStatus();
     this.setState({status});
@@ -35,12 +37,19 @@ export default React.createClass({
       status: UserStore.getUserLoginStatus()
     };
   },
-  updateUserData(data){
+  isDisabled(){
+    const incomplete = !(this.state.data.email && this.state.data.password);
+    return incomplete || this.state.status === 'pending';
+  },
+  getButtonText(){
+    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
+  },
+  setUserData(data){
     this.setState({
       data: data
     });
   },
-  submit(e){
+  handleSubmit(e){
     e.preventDefault();
     this.setState({
       submitting: true
@@ -51,13 +60,6 @@ export default React.createClass({
     }
     UserActions.userLogin(data);
   },
-  disabled(){
-    const incomplete = !(this.state.data.email && this.state.data.password);
-    return incomplete || this.state.status === 'pending';
-  },
-  loginBtnText(){
-    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
-  },
   render() {
     return (
        <div>
@@ -66,11 +68,11 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <LogoColor/>
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={['email','password']}  onChange={this.updateUserData}/>
+              <form name="loginForm" onSubmit={this.handleSubmit}>
+                <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
                 <div className="padding-t">
-                  <Button type="submit" color="success" block disabled={this.disabled()}>
-                    {this.loginBtnText()}
+                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
+                    {this.getButtonText()}
                   </Button>
                 </div>
                 <div className="padding-t-md">

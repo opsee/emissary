@@ -1,10 +1,7 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
 import {Table, Toolbar} from '../global';
-import {Link} from 'react-router';
-import UserInputs from '../user/UserInputs.jsx';
-import _ from 'lodash';
 import router from '../../modules/router.js';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -29,7 +26,7 @@ export default React.createClass({
       user: UserStore.getUser().toJS()
     };
   },
-  logOut(){
+  runLogOut(){
     return UserActions.userLogOut();
   },
   render() {
@@ -60,7 +57,7 @@ export default React.createClass({
                 <Button flat noPad color="primary" to="profileEdit" >Change Your Password</Button>
               </div>
               <div className="btn-container btn-container-righty">
-                <Button flat noPad color="danger" onClick={this.logOut}>
+                <Button flat noPad color="danger" onClick={this.runLogOut}>
                   <Logout inline fill="danger"/> Log Out
                 </Button>
               </div>

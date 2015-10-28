@@ -1,14 +1,12 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
-import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import router from '../../modules/router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import colors from 'seedling/colors';
 import config from '../../modules/config';
 import storage from '../../modules/storage';
 import {Padding} from '../layout';
@@ -18,22 +16,22 @@ const InfoForm = forms.Form.extend({
     widget: forms.PasswordInput,
     label: 'Access Key ID',
     widgetAttrs: {
-      placeholder: 'Your AWS Access Key ID',
+      placeholder: 'Your AWS Access Key ID'
     }
   }),
   'secret-key': forms.CharField({
     widget: forms.PasswordInput,
     label: 'Secret Key',
     widgetAttrs: {
-      placeholder: 'Your AWS Secret Key',
+      placeholder: 'Your AWS Secret Key'
     }
-  }),
+  })
 });
 
 const Credentials = React.createClass({
   mixins: [OnboardStore.mixin],
   statics: {
-    willTransitionTo(transition, params, query){
+    willTransitionTo(transition){
       const data = OnboardStore.getInstallData();
       if (!data.regions.length){
         transition.redirect('onboardRegionSelect');
@@ -67,8 +65,8 @@ const Credentials = React.createClass({
     }
   },
   getInitialState() {
-    var self = this;
-    var data = OnboardStore.getInstallData();
+    const self = this;
+    const data = OnboardStore.getInstallData();
     return {
       info: new InfoForm(_.extend({
         onChange(){
@@ -79,15 +77,18 @@ const Credentials = React.createClass({
         validation: {
           on: 'blur change',
           onChangeDelay: 100
-        },
-      }, self.dataComplete() ? {data: data} :  null)),
+        }
+      }, self.isDataComplete() ? {data: data} :  null)),
       submitting: false
     };
   },
-  dataComplete(){
+  isDataComplete(){
     return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
   },
-  submit(e){
+  isDisabled(){
+    return !this.state.info.isValid() || this.state.submitting;
+  },
+  handleSubmit(e){
     e.preventDefault();
     this.setState({
       error: null,
@@ -95,9 +96,6 @@ const Credentials = React.createClass({
     });
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
     OnboardActions.onboardVpcScan(OnboardStore.getVpcScanData());
-  },
-  disabled(){
-    return !this.state.info.isValid() || this.state.submitting;
   },
   renderError(){
     if (this.state.error){
@@ -118,7 +116,7 @@ const Credentials = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-              <form onSubmit={this.submit}>
+              <form onSubmit={this.handleSubmit}>
                 <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during Bastion Instance installation. You can <a href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
                   <BoundField bf={this.state.info.boundField('access-key')}/>
@@ -131,7 +129,7 @@ const Credentials = React.createClass({
                 <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
                 </Padding>
 
-                <Button color="success" type="submit" block disabled={this.disabled()} title={this.disabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
+                <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
               </form>
               {this.renderError()}
             </Col>

@@ -1,7 +1,4 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
-import {ChevronRight} from '../icons';
-import statics from '../../modules/statics';
+import React from 'react';
 import {StepCounter} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import img from '../../../img/tut-bastion';
@@ -11,10 +8,10 @@ import {Padding} from '../layout';
 export default React.createClass({
   statics: {
     willTransitionTo(transition, params, query, cb){
-        const newImg = new Image();
-        newImg.src = img;
-        newImg.onload = () => cb();
-      }
+      const newImg = new Image();
+      newImg.src = img;
+      newImg.onload = () => cb();
+    }
   },
   render() {
     return (

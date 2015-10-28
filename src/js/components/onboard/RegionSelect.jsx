@@ -1,21 +1,14 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {State} from 'react-router';
-import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
-import _ from 'lodash';
-import $q from 'q';
 import router from '../../modules/router.js';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import colors from 'seedling/colors';
 import {Padding} from '../layout';
-
-let checkSubdomainPromise;
-let domainPromisesArray = [];
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
@@ -29,25 +22,14 @@ const InfoForm = forms.Form.extend({
     widgetAttrs: {
       widgetType: 'RadioSelect'
     }
-  }),
+  })
 });
 
 const Team = React.createClass({
   mixins: [State, OnboardStore.mixin],
-  storeDidChange(){
-    const data = OnboardStore.getInstallData();
-    if (data && data.regions && data.regions.length){
-      router.transitionTo('onboardCredentials');
-    }
-    const bastionStatus = OnboardStore.getGetBastionsStatus();
-    if (bastionStatus === 'success'){
-      const bastions = OnboardStore.getBastions();
-      this.setState({bastions});
-    }
-  },
   getInitialState() {
-    var self = this;
-    var data = OnboardStore.getInstallData();
+    const self = this;
+    const data = OnboardStore.getInstallData();
     const obj = {
       info: new InfoForm({
         onChange(){
@@ -60,11 +42,11 @@ const Team = React.createClass({
         validation: {
           on: 'blur change',
           onChangeDelay: 100
-        },
+        }
       }),
       bastions: []
     };
-    setTimeout(function(){
+    setTimeout(() => {
       obj.info.validate();
     }, 10);
     return obj;
@@ -72,14 +54,21 @@ const Team = React.createClass({
   componentWillMount(){
     OnboardActions.getBastions();
   },
-  submit(e){
-    e.preventDefault();
-    OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
+  storeDidChange(){
+    const data = OnboardStore.getInstallData();
+    if (data && data.regions && data.regions.length){
+      router.transitionTo('onboardCredentials');
+    }
+    const bastionStatus = OnboardStore.getGetBastionsStatus();
+    if (bastionStatus === 'success'){
+      const bastions = OnboardStore.getBastions();
+      this.setState({bastions});
+    }
   },
-  disabled(){
+  isDisabled(){
     return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
   },
-  toggleAll(value){
+  runToggleAll(value){
     if (value){
       this.state.info.updateData({
         regions: regions.map(r => {
@@ -90,17 +79,22 @@ const Team = React.createClass({
       this.state.info.updateData({regions: []});
     }
   },
+  handleSubmit(e){
+    e.preventDefault();
+    OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
+  },
   renderInner(){
     if (!this.state.bastions.length){
       return (
-        <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+        <form name="loginForm" onSubmit={this.handleSubmit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
          {
-         // <h2 className="h3">All AWS regions - <Button flat color="primary" onClick={this.toggleAll.bind(this, true)}>Select All</Button> - <Button flat color="warning"  onClick={this.toggleAll.bind(null, false)}>Deselect All</Button></h2>
+         // <h2 className="h3">All AWS regions - <Button flat color="primary" onClick={this.runToggleAll.bind(this, true)}>Select All</Button> - <Button flat color="warning"  onClick={this.runToggleAll.bind(null, false)}>Deselect All</Button></h2>
          }
           <BoundField bf={this.state.info.boundField('regions')}/>
-          <div><br/></div>
-          <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
+          <Padding t={1}>
+            <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
+          </Padding>
         </form>
       );
     }

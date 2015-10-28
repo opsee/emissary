@@ -1,6 +1,4 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
-import {ChevronRight} from '../icons';
+import React from 'react';
 import {StepCounter} from '../global';
 import img from '../../../img/tut-discovery.svg';
 import {Grid, Row, Col} from '../../modules/bootstrap';

@@ -4,8 +4,8 @@ import UserInputs from '../user/UserInputs.jsx';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
 import router from '../../modules/router.js';
-import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Button} from '../forms';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -16,27 +16,14 @@ export default React.createClass({
       }
     }
   },
-  storeDidChange(){
-    const status = UserStore.getUserEditStatus();
-    this.setState({status});
-    if (status === 'success'){
-      router.transitionTo('env');
-    }else if (status && status !== 'pending'){
-      console.error(status);
-    }
+  propTypes: {
+    query: PropTypes.object
   },
   getInitialState(){
     return {
       status: null,
       password: null
     };
-  },
-  updateUserData(data){
-    this.setState({password: data.password});
-  },
-  submit(e){
-    e.preventDefault();
-    UserActions.userEdit({password: this.state.password, id: this.props.query.id});
   },
   componentWillMount(){
     UserActions.userSet({
@@ -46,30 +33,43 @@ export default React.createClass({
       })
     });
   },
-  disabled(){
+  storeDidChange(){
+    const status = UserStore.getUserEditStatus();
+    this.setState({status});
+    if (status === 'success'){
+      router.transitionTo('env');
+    }else if (status && status !== 'pending'){
+      console.error(status);
+    }
+  },
+  isDisabled(){
     return !this.state.password || this.state.status === 'pending';
   },
-  btnText(){
+  getButtonText(){
     return this.state.status === 'pending' ? 'Changing...' : 'Change';
   },
-  innerRender(){
+  setUserData(data){
+    this.setState({password: data.password});
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    UserActions.userEdit({password: this.state.password, id: this.props.query.id});
+  },
+  renderInner(){
     if (this.state.status === 'success'){
       return (
         <p>Success. Check your email.</p>
       );
-    }else {
-      return (
-      <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-        <p>Enter your new password here.</p>
-        <UserInputs include={['password']}  onChange={this.updateUserData}/>
-        <button type="submit" className="btn btn-raised btn-success btn-block ng-disabled" disabled={this.disabled()}>
-          <span>
-            {this.btnText()}
-          </span>
-        </button>
-      </form>
-      );
     }
+    return (
+      <form name="loginForm" onSubmit={this.handleSubmit}>
+        <p>Enter your new password here.</p>
+        <UserInputs include={['password']}  onChange={this.setUserData}/>
+        <Button color="success" block type="submit" disabled={this.isDisabled()}>
+          {this.getButtonText()}
+        </Button>
+      </form>
+    );
   },
   render() {
     return (
@@ -78,7 +78,7 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.innerRender()}
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>

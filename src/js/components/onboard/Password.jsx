@@ -3,17 +3,18 @@ import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
 import {OnboardActions} from '../../actions';
-import {UserStore} from '../../stores';
 import {State} from 'react-router';
-import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import router from '../../modules/router';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-
+import {StatusHandler} from '../global';
 
 export default React.createClass({
   mixins: [State, OnboardStore.mixin],
+  propTypes: {
+    query: PropTypes.object
+  },
   storeDidChange(){
     const status = OnboardStore.getOnboardSetPasswordStatus();
     let error;
@@ -37,21 +38,21 @@ export default React.createClass({
       error: null
     };
   },
-  updateUserData(data){
+  isDisabled(){
+    return !this.state.password || this.state.status === 'pending';
+  },
+  getButtonText(){
+    return this.state.status === 'pending' ? 'Setting...' : 'Set';
+  },
+  handleUserData(data){
     this.setState({password: data.password});
   },
-  submit(e){
+  handleSubmit(e){
     e.preventDefault();
     this.setState({
       submitting: true
     });
     OnboardActions.onboardSetPassword(this.state);
-  },
-  disabled(){
-    return !this.state.password || this.state.status === 'pending';
-  },
-  btnText(){
-    return this.state.status === 'pending' ? 'Setting...' : 'Set';
   },
   render() {
     if (!this.state.error){
@@ -61,10 +62,10 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <form name="loginForm" onSubmit={this.submit}>
-                  <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
+                <form name="loginForm" onSubmit={this.handleSubmit}>
+                  <UserInputs include={['password']}  onChange={this.handleUserData} email={this.state.password}/>
                   <Padding t={1}>
-                    <Button type="submit" block color="success" chevron disabled={this.disabled()}>{this.btnText()}</Button>
+                    <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>
                   </Padding>
                   <Padding t={1}>
                     <Button to="passwordForgot" flat>Forgot Password?</Button>
@@ -75,10 +76,9 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else {
-      return (
-        <StatusHandler status={this.state.status}/>
-      );
     }
+    return (
+      <StatusHandler status={this.state.status}/>
+    );
   }
 });
