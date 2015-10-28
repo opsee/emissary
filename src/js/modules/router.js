@@ -1,7 +1,7 @@
 import {routes} from '../components/global/Routes.jsx';
 import Router from 'react-router';
 
-var router = Router.create({
+const router = Router.create({
   routes: routes,
   location: Router.HistoryLocation
 });

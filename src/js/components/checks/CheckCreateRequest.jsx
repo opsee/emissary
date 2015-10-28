@@ -1,24 +1,19 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import router from '../../modules/router';
 import forms from 'newforms';
 import colors from 'seedling/colors';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import config from '../../modules/config';
-import Immutable, {Record, List, Map} from 'immutable';
 
-import {Link} from 'react-router';
 import {BoundField, Button} from '../forms';
-import {Toolbar, StepCounter, Loader, StatusHandler} from '../global';
+import {Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
-import {GroupStore, CheckStore} from '../../stores';
+import {GroupStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
 import {Padding} from '../layout';
-
-const groupOptions = [];
 
 const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 
@@ -40,25 +35,10 @@ const HeaderFormSet = forms.FormSet.extend({
   canDelete: true
 });
 
-const GroupForm = forms.Form.extend({
-  id: forms.ChoiceField({
-    label: 'Target',
-    choices: []
-  }),
-  render() {
-    return (
-      <div>
-        <h3>Choose a Check Target</h3>
-        <BoundField bf={this.boundField('id')}/>
-      </div>
-    );
-  }
-});
-
 const InfoForm = forms.Form.extend({
   port: forms.CharField({
     widgetAttrs: {
-      placeholder: 'e.g. 8080',
+      placeholder: 'e.g. 8080'
     },
     widget: forms.NumberInput
   }),
@@ -102,27 +82,26 @@ const InfoForm = forms.Form.extend({
 
 const CheckCreateRequest = React.createClass({
   mixins: [GroupStore.mixin],
-  storeDidChange(){
-    const cond1 = GroupStore.getGetGroupsSecurityStatus() === 'success';
-    const cond2 = GroupStore.getGetGroupsELBStatus() === 'success';
-    if (cond1 || cond2){
-      this.forceUpdate();
-    }
+  propTypes: {
+    check: PropTypes.object,
+    renderAsInclude: PropTypes.bool,
+    onChange: PropTypes.func,
+    onTargetClick: PropTypes.func
   },
   getInitialState() {
     const self = this;
     const initialHeaders = this.props.check.check_spec.value.headers;
     const obj = {
       info: new InfoForm(_.extend({
-        onChange: self.changeAndUpdate,
+        onChange: self.runChange,
         labelSuffix: '',
         validation: {
           on: 'blur change',
           onChangeDelay: 700
         }
-      }, self.dataComplete() ? {data: self.props.check.check_spec.value} : null)),
+      }, self.isDataComplete() ? {data: self.props.check.check_spec.value} : null)),
       headers: new HeaderFormSet({
-        onChange: self.changeAndUpdate,
+        onChange: self.runChange,
         labelSuffix: '',
         emptyPermitted: false,
         initial: initialHeaders.length ? initialHeaders : null,
@@ -133,10 +112,10 @@ const CheckCreateRequest = React.createClass({
           onChangeDelay: 700
         }
       }),
-      check: this.props.check,
+      check: this.props.check
     };
     //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(function(){
+    setTimeout(() => {
       self.state.headers.forms().forEach((form, i) => {
         const h = self.props.check.check_spec.value.headers[i];
         const data = {
@@ -150,11 +129,6 @@ const CheckCreateRequest = React.createClass({
       cleanedData: null
     });
   },
-  dataComplete(){
-    const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
-    return condition1 && condition2;
-  },
   componentWillMount(){
     const groups = GroupStore.getGroupsSecurity();
     if (!groups.size){
@@ -167,20 +141,59 @@ const CheckCreateRequest = React.createClass({
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
-      this.changeAndUpdate();
+      this.runChange();
     }
   },
-  changeAndUpdate(){
-    let data = this.getFinalData();
-    this.props.onChange(data, this.disabled(), 1);
+  storeDidChange(){
+    const cond1 = GroupStore.getGetGroupsSecurityStatus() === 'success';
+    const cond2 = GroupStore.getGetGroupsELBStatus() === 'success';
+    if (cond1 || cond2){
+      this.forceUpdate();
+    }
   },
-  removeHeader(index){
-    this.state.headers.removeForm(index);
+  isDataComplete(){
+    const condition1 = this.props.check.target.id;
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
+    return condition1 && condition2;
+  },
+  isDisabled(){
+    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
+    return !(this.state.info.isComplete() && headersComplete);
   },
   getHeaderForms(){
     return _.reject(this.state.headers.forms(), f => {
       return f.cleanedData.DELETE;
     });
+  },
+  getCheck(){
+    return _.cloneDeep(this.props.check);
+  },
+  getFinalData(){
+    let check = _.clone(this.props.check);
+    let val = check.check_spec.value;
+    val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
+      return {
+        name: h.key,
+        values: h.value ? h.value.split(', ') : undefined
+      };
+    }).value();
+    let cleaned = this.state.info.cleanedData;
+    if (cleaned.port){
+      cleaned.port = parseInt(cleaned.port, 10);
+    }
+    val = _.assign(val, cleaned);
+    return check;
+  },
+  runChange(){
+    let data = this.getFinalData();
+    this.props.onChange(data, this.isDisabled(), 1);
+  },
+  runDismissHelperText(){
+    UserActions.userPutUserData('hasDismissedCheckCreationHelp');
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    router.transitionTo('checkCreateAssertions');
   },
   renderHeaderForm(){
     return (
@@ -214,34 +227,17 @@ const CheckCreateRequest = React.createClass({
       </div>
     );
   },
-  getFinalData(){
-    let check = _.clone(this.props.check);
-    let val = check.check_spec.value;
-    val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
-      return {
-        name: h.key,
-        values: h.value ? h.value.split(', ') : undefined
-      };
-    }).value();
-    let cleaned = this.state.info.cleanedData;
-    if (cleaned.port){
-      cleaned.port = parseInt(cleaned.port, 10);
-    }
-    val = _.assign(val, cleaned);
-    return check;
-  },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){
       return (
         <div>
-          <Padding tb={1}></Padding>
-          <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
+          <Padding tb={1}/>
+          <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           <StepCounter active={2} steps={4}/>
         </div>
       );
-    }else {
-      return <div/>;
     }
+    return <div/>;
   },
   renderLink(){
     return this.state.check.id ? (
@@ -258,33 +254,18 @@ const CheckCreateRequest = React.createClass({
           <hr/>
         </div>
       );
-    }else {
-      return <div/>;
     }
-  },
-  submit(e){
-    e.preventDefault();
-    router.transitionTo('checkCreateAssertions');
-  },
-  disabled(){
-    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
-    return !(this.state.info.isComplete() && headersComplete);
-  },
-  dismissHelperText(){
-    UserActions.userPutUserData('hasDismissedCheckCreationHelp');
+    return <div/>;
   },
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
-          <Alert type="info" onDismiss={this.dismissHelperText}>
+          <Alert type="info" onDismiss={this.runDismissHelperText}>
             <p>Let’s create your first health check! Tell us which security group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
           </Alert>
           <div><br/></div>
         </UserDataRequirement>
       );
-  },
-  getCheck(){
-    return _.cloneDeep(this.props.check);
   },
   renderBodyInput(){
     if (this.state.info.cleanedData.verb !== ['GET']){
@@ -293,9 +274,8 @@ const CheckCreateRequest = React.createClass({
           <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
         </Padding>
       );
-    }else {
-      return <div/>;
     }
+    return <div/>;
   },
   renderInfoForm(){
     return (
@@ -314,9 +294,9 @@ const CheckCreateRequest = React.createClass({
       </div>
     );
   },
-  innerRender(){
+  renderInner(){
     return (
-      <form name="checkCreateRequestForm" ref="form" onSubmit={this.submit}>
+      <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
         {this.renderHelperText()}
         <Padding b={1}>
           {this.renderTargetSelection()}
@@ -347,7 +327,7 @@ const CheckCreateRequest = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.innerRender()}
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>
@@ -355,8 +335,8 @@ const CheckCreateRequest = React.createClass({
     );
   },
   render() {
-    return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
-  },
+    return this.props.renderAsInclude ? this.renderInner() : this.renderAsPage();
+  }
 });
 
 export default CheckCreateRequest;

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
 
-import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
@@ -11,13 +10,6 @@ import colors from 'seedling/colors';
 import {StepCounter} from '../global';
 import {UserStore} from '../../stores';
 import {Padding} from '../layout';
-
-const intervalOptions = [
-  ['5m', '5min'],
-  ['15m', '15min'],
-  ['24h', '24hr'],
-  ['7d', '7d'],
-];
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
@@ -30,14 +22,13 @@ const NotificationForm = forms.Form.extend({
     widgetAttrs: {
       placeholder: 'test@testing.com'
     }
-  }),
+  })
 });
 
 const NotificationFormSet = forms.FormSet.extend({
   form: NotificationForm,
   canDelete: true
 });
-
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
@@ -56,11 +47,13 @@ const InfoForm = forms.Form.extend({
   }
 });
 
-const data = {
-  port: 80
-};
-
 const CheckCreateInfo = React.createClass({
+  propTypes: {
+    check: PropTypes.object,
+    onChange: PropTypes.func,
+    renderAsInclude: PropTypes.bool,
+    onSubmit: PropTypes.func
+  },
   getInitialState() {
     const self = this;
 
@@ -74,21 +67,21 @@ const CheckCreateInfo = React.createClass({
 
     const obj = {
       info: new InfoForm(_.extend({
-        onChange: self.changeAndUpdate,
-        labelSuffix: '',
-      }, self.dataComplete() ? {data: this.props.check.check_spec.value} : null)),
+        onChange: self.runChange,
+        labelSuffix: ''
+      }, self.isDataComplete() ? {data: this.props.check.check_spec.value} : null)),
       notifications: new NotificationFormSet({
-        onChange: self.changeAndUpdate,
+        onChange: self.runChange,
         labelSuffix: '',
         initial: initialNotifs,
-        minNum:!initialNotifs.length ? 1 : 0,
+        minNum: !initialNotifs.length ? 1 : 0,
         extra: 0
       }),
       submitting: false
     };
 
     //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(function(){
+    setTimeout(() => {
       self.state.notifications.forms().forEach((form, i) => {
         let notif = initialNotifs[i];
         if (notif){
@@ -98,16 +91,47 @@ const CheckCreateInfo = React.createClass({
     }, 10);
     return obj;
   },
-  dataComplete(){
-    return this.props.check.check_spec.value.name;
-  },
-  changeAndUpdate(){
-    this.props.onChange(this.getFinalData(), this.disabled(), 3);
-  },
   componentDidMount(){
     if (this.props.renderAsInclude){
-      this.changeAndUpdate();
+      this.runChange();
     }
+  },
+  isDataComplete(){
+    return this.props.check.check_spec.value.name;
+  },
+  isDisabled(){
+    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
+    return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
+  },
+  getNotificationsForms(){
+    return _.reject(this.state.notifications.forms(), f => {
+      return f.cleanedData.DELETE;
+    });
+  },
+  getFinalData(){
+    let check = _.clone(this.props.check);
+    check.check_spec.value.name = this.state.info.cleanedData.name;
+    check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
+      return _.omit(n, 'DELETE');
+    });
+    return check;
+  },
+  getCleanedData(){
+    let notificationData = this.state.notifications.cleanedData();
+    const data = {
+      notifications: notificationData
+    };
+    return _.assign(data, this.state.info.cleanedData);
+  },
+  runChange(){
+    this.props.onChange(this.getFinalData(), this.disabled(), 3);
+  },
+  handleSubmit(e) {
+    e.preventDefault();
+    this.setState({
+      submitting: true
+    });
+    this.props.onSubmit();
   },
   renderRemoveNotificationButton(form, index){
     if (index > 0){
@@ -116,23 +140,12 @@ const CheckCreateInfo = React.createClass({
           <BoundField bf={form.boundField('DELETE')}/>
         </Padding>
       );
-    }else {
-      return (
-        <Padding lr={1}>
-         <div style={{width: '48px'}}/>
-       </Padding>
-      );
     }
-  },
-  removeNotification(index){
-    if (index > 0){
-      this.state.notifications.removeForm(index);
-    }
-  },
-  getNotificationsForms(){
-    return _.reject(this.state.notifications.forms(), f => {
-      return f.cleanedData.DELETE;
-    });
+    return (
+      <Padding lr={1}>
+       <div style={{width: '48px'}}/>
+     </Padding>
+    );
   },
   renderNotificationForm(){
     return (
@@ -167,43 +180,22 @@ const CheckCreateInfo = React.createClass({
       </div>
     );
   },
-  getFinalData(){
-    let check = _.clone(this.props.check);
-    check.check_spec.value.name = this.state.info.cleanedData.name;
-    check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
-      return _.omit(n, 'DELETE');
-    });
-    return check;
-  },
-  getCleanedData(){
-    let notificationData = this.state.notifications.cleanedData();
-    const data = {
-      notifications: notificationData
-    };
-    return _.assign(data, this.state.info.cleanedData);
-  },
-  disabled(){
-    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
-    return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
-  },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){
       return (
         <div>
           <Padding t={2}>
-            <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} chevron>Finish</Button>
+            <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Finish</Button>
           </Padding>
           <StepCounter active={4} steps={4}/>
         </div>
       );
-    }else {
-      return <div/>;
     }
+    return <div/>;
   },
-  innerRender() {
-    const nonFieldErrors = this.state.info.nonFieldErrors();
+  renderInner() {
     return (
-      <form ref="form" onSubmit={this.onSubmit}>
+      <form ref="form" onSubmit={this.handleSubmit}>
         {this.state.info.render()}
         {this.renderNotificationForm()}
         {this.renderSubmitButton()}
@@ -221,7 +213,7 @@ const CheckCreateInfo = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-            {this.innerRender()}
+            {this.renderInner()}
             </Col>
           </Row>
         </Grid>
@@ -229,14 +221,7 @@ const CheckCreateInfo = React.createClass({
     );
   },
   render() {
-    return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
-  },
-  onSubmit(e) {
-    e.preventDefault();
-    this.setState({
-      submitting: true
-    });
-    this.props.onSubmit();
+    return this.props.renderAsInclude ? this.renderInner() : this.renderAsPage();
   }
 });
 

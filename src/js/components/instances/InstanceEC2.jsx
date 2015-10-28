@@ -17,10 +17,10 @@ function getState(){
 }
 
 export default React.createClass({
+  mixins: [InstanceStore.mixin, SetInterval],
   statics: {
     willTransitionTo: PageAuth
   },
-  mixins: [InstanceStore.mixin, SetInterval],
   propTypes: {
     params: PropTypes.object
   },
@@ -33,15 +33,15 @@ export default React.createClass({
   shouldComponentUpdate(nextProps, nextState) {
     return !Immutable.is(this.state.instance, nextState.instance);
   },
+  getInitialState(){
+    return getState();
+  },
   storeDidChange() {
     const state = getState();
     this.setState(state);
   },
   getData(){
     InstanceActions.getInstanceECC(this.props.params.id);
-  },
-  getInitialState(){
-    return getState();
   },
   renderAvailabilityZone(){
     const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
@@ -52,12 +52,8 @@ export default React.createClass({
           <td>{az}</td>
         </tr>
       );
-    }else {
-      return <tr/>;
     }
-  },
-  data(){
-    return this.state.instance.toJS();
+    return <tr/>;
   },
   render() {
     if (this.state.instance.get('id')){
@@ -119,8 +115,7 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else {
-      return <StatusHandler status={this.state.status}/>;
     }
+    return <StatusHandler status={this.state.status}/>;
   }
 });
