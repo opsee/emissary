@@ -1,24 +1,24 @@
 @import '../global/vars.css';
 
 .btn {
-  display: inline-block;
-  margin:0;
-  font-weight: 500;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
   background-image: none;
-  white-space: nowrap;
-  font-size: 16px;
-  line-height: 1.42857;
-  user-select: none;
-  box-shadow: var(--shadowBottomZ1);
   border: none;
-  border-radius: 3px;
-  text-transform: uppercase;
+  border-radius: 0.25em;
+  box-shadow: var(--shadowBottomZ1);
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.42857;
+  margin:0;
   padding: 0.5em;
-  transition: box-shadow var(--transitionEaseOut), background var(--transitionEaseOut), width var(--transitionEaseOut);
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transition: box-shadow var(--transitionEaseOut), background var(--transitionEaseOut), color var(--transitionEaseOut), border-color var(--transitionEaseOut), width var(--transitionEaseOut);
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .btn:focus, .btn:active:focus {
@@ -130,8 +130,14 @@
 
 .btnFlat {
   composes: btn;
-  box-shadow: none;
   background: transparent;
+  border: 1px solid var(--gray500);
+  box-shadow: none;
+  color: var(--gray500);
+  padding: 0.375em;
+}
+.btnFlat:hover, .btnFlat.btnActive {
+  background: var(--gray500);
   color: white;
 }
 
@@ -140,26 +146,47 @@
 }
 .btnFlat.btnPrimary {
   background: transparent;
+  border-color: var(--colorPrimary);
   color: var(--colorPrimary);
+}
+.btnFlat.btnPrimary:hover, .btnFlat.btnPrimary.btnActive {
+  background: var(--colorPrimary);
+  color: white;
 }
 .btnFlat.btnSuccess {
   background: transparent;
+  border-color: var(--colorSuccess);
   color: var(--colorSuccess);
+}
+.btnFlat.btnSuccess:hover, .btnFlat.btnSuccess.btnActive {
+  background: var(--colorSuccess);
+  color: white;
 }
 .btnFlat.btnWarning {
   background: transparent;
+  border-color: var(--colorWarning);
   color: var(--colorWarning);
+}
+.btnFlat.btnWarning:hover {
+  background: var(--colorWarning);
+  color: white;
 }
 .btnFlat.btnDanger {
   background: transparent;
+  border-color: var(--colorDanger);
   color: var(--colorDanger);
+}
+.btnFlat.btnDanger:hover, .btnFlat.btnDanger.btnActive {
+  background: var(--colorDanger);
+  color: white;
 }
 .btnFlat.btnInfo {
   background: transparent;
   color: var(--colorInfo);
 }
-.btnFlat:hover {
-  background: var(--gray800);
+.btnFlat.btnInfo:hover {
+  background: var(--colorInfo);
+  color: white;
 }
 
 .btnBlock {
@@ -209,7 +236,7 @@
 }
 
 .btnSecondary {
-  margin: 0.5em 0.625em 0.5em 0;
+  margin: 0 0.625em 0 0;
 }
 
 .btnDropdown{

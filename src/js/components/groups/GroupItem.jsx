@@ -60,7 +60,7 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Group Menu">
+    <Button icon={true} flat={true} secondary={true} onClick={this.openMenu} title="Group Menu">
       <Settings fill="textSecondary" btn={true}/>
     </Button>
     );

@@ -197,8 +197,10 @@ const EnvWithFilter = React.createClass({
     if(GroupStore.getGroupsSecurity().size){
     return (
       <div>
-        <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-        <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+        <Padding b={1}>
+          <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
+          <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+        </Padding>
         <hr/>
       </div>
       )
@@ -208,8 +210,10 @@ const EnvWithFilter = React.createClass({
     if(GroupStore.getGroupsELB().size){
       return (
         <div>
-          <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          <Padding b={1}>
+            <h3>ELBs ({this.getGroupsELB().size})</h3>
+            <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          </Padding>
           <hr/>
         </div>
       )
@@ -219,8 +223,10 @@ const EnvWithFilter = React.createClass({
     if(InstanceStore.getInstancesECC().size){
       return (
         <div>
-          <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
-          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          <Padding b={1}>
+            <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
+            <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          </Padding>
           <hr/>
         </div>
       )
@@ -265,17 +271,12 @@ const EnvWithFilter = React.createClass({
       <Row>
         <Col className="col-xs">
           <Padding b={1}>
-            <Button color={this.state.buttonSelected == 'passing' ? "success" : 'default'} onClick={this.toggleButtonState.bind(null, 'passing')}>Passing - {this.getNumberPassing()}</Button>
+            <Button flat={true} color={"danger"} onClick={this.toggleButtonState.bind(null, 'failing')}>{this.getNumberFailing()} Failing</Button>
           </Padding>
         </Col>
         <Col className="col-xs">
           <Padding b={1}>
-            <Button color={this.state.buttonSelected == 'failing' ? "danger" : 'default'} onClick={this.toggleButtonState.bind(null, 'failing')}>Failing - {this.getNumberFailing()}</Button>
-          </Padding>
-        </Col>
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button color={this.state.buttonSelected == 'running' ? "primary" : 'default'} onClick={this.toggleButtonState.bind(null, 'running')}>Unmonitored - {this.getNumberUnmonitored()}</Button>
+            <Button flat={true} color={"default"} onClick={this.toggleButtonState.bind(null, 'running')}>{this.getNumberUnmonitored()} Unmonitored</Button>
           </Padding>
         </Col>
       </Row>
@@ -286,7 +287,9 @@ const EnvWithFilter = React.createClass({
     if(this.finishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {this.state.filter.render()}
+          <Padding b={1}>
+            {this.state.filter.render()}
+          </Padding>
           {this.renderFilterButtons()}
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();

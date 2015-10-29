@@ -60,8 +60,8 @@ const InstanceItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon={true} flat={true} onClick={this.openMenu} title="Instance Menu">
-      <Settings fill={colors.textColorSecondary} btn={true}/>
+    <Button icon={true} flat={true} secondary={true} onClick={this.openMenu} title="Instance Menu">
+      <Settings fill="textSecondary" btn={true}/>
     </Button>
     );
   },

@@ -8,6 +8,7 @@ import style from './button.css';
 
 const Button = React.createClass({
   propTypes:{
+    active:PropTypes.bool,
     flat:PropTypes.bool,
     icon:PropTypes.bool,
     block:PropTypes.bool,
