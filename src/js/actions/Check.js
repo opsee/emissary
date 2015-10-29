@@ -39,7 +39,7 @@ _statics.saveAssertions = (data, checkId, isEditing) => {
 };
 
 _statics.checkCreateOrEdit = (data, isEditing) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const d = _statics.formatCheckData(data);
     request
     [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/' + data.id : ''}`)
@@ -51,12 +51,9 @@ _statics.checkCreateOrEdit = (data, isEditing) => {
       .then(() => {
         _statics.saveAssertions(data, _.get(checkRes, 'body.id') || data.id, isEditing).then(() => {
           resolve(checkRes);
-        });
-      });
-      // else {
-      //   reject(checkRes);
-      // }
-    });
+        }).catch(reject);
+      }).catch(reject);
+    }).catch(reject);
   });
 };
 

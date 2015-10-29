@@ -8,7 +8,7 @@ import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
 import colors from 'seedling/colors';
 import {StepCounter} from '../global';
-import {UserStore} from '../../stores';
+import {CheckStore, UserStore} from '../../stores';
 import {Padding} from '../layout';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
@@ -48,6 +48,7 @@ const InfoForm = forms.Form.extend({
 });
 
 const CheckCreateInfo = React.createClass({
+  mixins: [CheckStore.mixin],
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
@@ -94,6 +95,14 @@ const CheckCreateInfo = React.createClass({
   componentDidMount(){
     if (this.props.renderAsInclude){
       this.runChange();
+    }
+  },
+  storeDidChange() {
+    const status = CheckStore.getCheckCreateStatus();
+    if (status !== 'pending'){
+      this.setState({
+        submitting: false
+      });
     }
   },
   isDataComplete(){

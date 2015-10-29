@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
-import {Alert} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
 import {RouteHandler} from 'react-router';
@@ -16,6 +16,9 @@ const CheckCreate = React.createClass({
   },
   propTypes: {
     query: PropTypes.object
+  },
+  getInitialState(){
+    return this.getState();
   },
   storeDidChange() {
     const state = this.getState(true);
@@ -39,9 +42,6 @@ const CheckCreate = React.createClass({
     };
     return _.omit(obj, noCheck ? 'check' : null);
   },
-  getInitialState(){
-    return this.getState();
-  },
   setStatus(obj){
     this.setState(_.extend(this.state.statuses, obj));
   },
@@ -62,9 +62,15 @@ const CheckCreate = React.createClass({
     return (
       <div>
         <RouteHandler {...this.state} onChange={this.setData} onSubmit={this.handleSubmit} setStatus={this.setStatus} onFilterChange={this.setFilter}/>
-        <StatusHandler status={this.state.createStatus}>
-          <Alert bsStyle="danger">Something went wrong.</Alert>
-        </StatusHandler>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <StatusHandler status={this.state.createStatus}>
+                <Alert bsStyle="danger">Something went wrong.</Alert>
+              </StatusHandler>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

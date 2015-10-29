@@ -52,7 +52,7 @@ const AssertionsForm = forms.Form.extend({
     },
     required: false
   }),
-  clean: () => {
+  clean(){
     if (!relationshipConcernsEmpty(this.cleanedData.relationship)){
       if (!this.cleanedData.operand){
         throw forms.ValidationError('Assertion must have operand.');

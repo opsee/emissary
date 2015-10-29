@@ -2,12 +2,13 @@ import React, {PropTypes} from 'react/addons';
 import {RouteHandler} from 'react-router';
 import config from '../../modules/config';
 import storage from '../../modules/storage';
-import {Header, MessageModal} from '../global';
+import {Header, MessageModal, Toolbar} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
+import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
@@ -65,14 +66,18 @@ export default React.createClass({
   renderInner(){
     if (this.state.socketError && !config.debug){
       return (
-        <Grid>
-          <Col xs={12}>
-          <div><br/></div>
-            <Alert bsStyle="danger">
-              Could not connect to Opsee.
-            </Alert>
-          </Col>
-        </Grid>
+        <div>
+          <Toolbar title="Error"/>
+          <Grid>
+            <Col xs={12}>
+              <Padding t={2}>
+                <Alert bsStyle="danger">
+                  Could not connect to Opsee.
+                </Alert>
+              </Padding>
+            </Col>
+          </Grid>
+        </div>
       );
     }
     return (
