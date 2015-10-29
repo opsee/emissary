@@ -231,7 +231,7 @@ const CheckCreateAssertions = React.createClass({
         <div>
           <div><br/><br/></div>
           <div>
-            <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()} chevron>Next</Button>
+            <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Next</Button>
           </div>
           <StepCounter active={3} steps={4}/>
         </div>

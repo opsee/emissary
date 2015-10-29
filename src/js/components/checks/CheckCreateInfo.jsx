@@ -124,7 +124,7 @@ const CheckCreateInfo = React.createClass({
     return _.assign(data, this.state.info.cleanedData);
   },
   runChange(){
-    this.props.onChange(this.getFinalData(), this.disabled(), 3);
+    this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
   },
   handleSubmit(e) {
     e.preventDefault();
