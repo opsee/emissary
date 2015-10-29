@@ -1,5 +1,4 @@
 import React from 'react/addons';
-var {CSSTransitionGroup} = React.addons;
 import router from './modules/router.js';
 import _ from 'lodash';
 import {hideNavList} from './components/global/Routes.jsx';

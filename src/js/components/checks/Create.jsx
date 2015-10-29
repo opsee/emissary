@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
@@ -13,6 +13,9 @@ const CheckCreate = React.createClass({
   mixins: [CheckStore.mixin],
   statics: {
     willTransitionTo: PageAuth
+  },
+  propTypes: {
+    query: PropTypes.object
   },
   storeDidChange() {
     const state = this.getState(true);
@@ -39,29 +42,26 @@ const CheckCreate = React.createClass({
   getInitialState(){
     return this.getState();
   },
-  silence(id){
-    CheckActions.silence(id);
-  },
   setStatus(obj){
     this.setState(_.extend(this.state.statuses, obj));
   },
-  updateData(data){
+  setData(data){
     this.setState({
       check: _.cloneDeep(data)
     });
   },
-  updateFilter(data){
+  setFilter(data){
     this.setState({
       filter: data
     });
   },
-  submit(){
+  handleSubmit(){
     CheckActions.checkCreate(this.state.check);
   },
   render() {
     return (
       <div>
-        <RouteHandler {...this.state} onChange={this.updateData} onSubmit={this.submit} setStatus={this.setStatus} onFilterChange={this.updateFilter}/>
+        <RouteHandler {...this.state} onChange={this.setData} onSubmit={this.handleSubmit} setStatus={this.setStatus} onFilterChange={this.setFilter}/>
         <StatusHandler status={this.state.createStatus}>
           <Alert bsStyle="danger">Something went wrong.</Alert>
         </StatusHandler>

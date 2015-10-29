@@ -1,19 +1,15 @@
 import React, {PropTypes} from 'react';
 import {CheckActions, GroupActions} from '../../actions';
-import {Table, Toolbar, StatusHandler} from '../global';
+import {Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
-import {InstanceItem} from '../instances';
 import {CheckStore, GroupStore} from '../../stores';
-import {Link} from 'react-router';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import AssertionCounter from './AssertionCounter.jsx';
 import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList.jsx';
-import colors from '../global/colors.css';
 
 function getState(){
   return {
@@ -32,6 +28,17 @@ export default React.createClass({
   statics: {
     willTransitionTo: PageAuth
   },
+  propTypes: {
+    params: PropTypes.object
+  },
+  componentWillMount(){
+    this.getData();
+  },
+  getInitialState(){
+    return _.assign(getState(), {
+      response: null
+    });
+  },
   storeDidChange() {
     let state = getState();
     if (state.delStatus === 'success'){
@@ -47,6 +54,8 @@ export default React.createClass({
         case 'elb':
           GroupActions.getGroupELB(target.id);
           break;
+        default:
+          break;
         }
       }
     }
@@ -58,25 +67,11 @@ export default React.createClass({
     }
     this.setState(state);
   },
-  getInitialState(){
-    return _.assign(getState(), {
-      response: null
-    });
-  },
   getData(){
     CheckActions.getCheck(this.props.params.id);
   },
-  componentWillMount(){
-    this.getData();
-  },
-  silence(id){
-    CheckActions.silence(id);
-  },
   getCheckJS(){
     return this.state.check.toJS();
-  },
-  removeCheck(){
-    CheckActions.deleteCheck(this.props.params.id);
   },
   getTarget(){
     GroupStore.getGroupFromFilter();
@@ -88,14 +83,16 @@ export default React.createClass({
       return (
         <span>{group.name || group.id}</span>
       );
-    }else {
-      //elb
-      return (
-        <span>{group.name || group.id}</span>
-      );
     }
+    //elb
+    return (
+      <span>{group.name || group.id}</span>
+    );
   },
-  innerRender(){
+  runRemoveCheck(){
+    CheckActions.deleteCheck(this.props.params.id);
+  },
+  renderInner(){
     const spec = this.getCheckJS().check_spec.value;
     if (!this.state.error && this.state.check.get('id')){
       return (
@@ -126,39 +123,37 @@ export default React.createClass({
           </Padding>
         </div>
       );
-    }else {
-      return (
-        <StatusHandler status={this.state.status}>
-          <h3>No Checks Applied</h3>
-        </StatusHandler>
-      );
     }
+    return (
+      <StatusHandler status={this.state.status}>
+        <h3>No Checks Applied</h3>
+      </StatusHandler>
+    );
   },
-  outputLink(){
+  renderLink(){
     if (this.state.check && this.state.check.get('id')){
       return (
         <Button to="checkEdit" params={{id: this.props.params.id}} color="primary" fab title={`Edit ${this.state.check.name}`}>
           <Edit btn/>
         </Button>
       );
-    }else {
-      return <span/>;
     }
+    return <span/>;
   },
   render() {
     return (
       <div>
         <Toolbar title={`${this.state.check.name}`}>
-          {this.outputLink()}
+          {this.renderLink()}
         </Toolbar>
         <Grid>
           <Row>
             <Col xs={12}>
               <Padding tb={1}>
-                {this.innerRender()}
+                {this.renderInner()}
               </Padding>
               <div className="btn-container btn-container-righty">
-                <Button onClick={this.removeCheck} flat color="danger" noPad>
+                <Button onClick={this.runRemoveCheck} flat color="danger" noPad>
                   <Delete inline fill="danger"/> Delete Check
                 </Button>
               </div>

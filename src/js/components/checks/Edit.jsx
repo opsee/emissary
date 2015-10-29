@@ -1,12 +1,8 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import scrollTo from 'animated-scrollto';
-import offset from 'document-offset';
-import {Link} from 'react-router';
 import colors from 'seedling/colors';
 
 import {Toolbar, StatusHandler} from '../global';
-import InstanceItem from '../instances/InstanceItem.jsx';
 import {CheckStore} from '../../stores';
 import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
 import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
@@ -39,6 +35,26 @@ function getState(){
 
 const CheckEdit = React.createClass({
   mixins: [CheckStore.mixin],
+  statics: {
+    willTransitionTo: PageAuth
+  },
+  propTypes: {
+    params: PropTypes.object,
+    onFilterChange: PropTypes.func,
+    filter: PropTypes.string
+  },
+  getInitialState() {
+    return _.assign(getState(), {
+      check: CheckStore.newCheck(),
+      showEnv: false
+    });
+  },
+  getDefaultProps() {
+    return getState();
+  },
+  componentWillMount(){
+    this.getData();
+  },
   storeDidChange(){
     let state = getState();
     if (state.editStatus === 'success'){
@@ -54,61 +70,37 @@ const CheckEdit = React.createClass({
     }
     this.setState(state);
   },
-  statics: {
-    willTransitionTo: PageAuth
-  },
-  getInitialState() {
-    return _.assign(getState(), {
-      check: CheckStore.newCheck(),
-      showEnv: false
-    });
-  },
-  getDefaultProps() {
-    return getState();
+  isDisabled(){
+    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
   },
   getFinalData(){
     return this.state.check;
   },
-  updateData(data, disabled, num){
-    var obj = {};
+  getData(){
+    CheckActions.getCheck(this.props.params.id);
+  },
+  getCheckTitle(){
+    return this.state.check.check_spec.value.name || this.state.check.id;
+  },
+  setData(data, disabled, num){
+    let obj = {};
     obj[`step${num}`] = {disabled: disabled};
     obj.check = _.cloneDeep(data);
     this.setState(obj);
   },
-  disabled(){
-    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
+  setShowEnv(){
+    const bool = this.state.showEnv;
+    this.setState({showEnv: !bool});
   },
-  getData(){
-    CheckActions.getCheck(this.props.params.id);
-  },
-  componentWillMount(){
-    this.getData();
-  },
-  submit(){
+  handleSubmit(){
     CheckActions.checkEdit(this.getFinalData());
-  },
-  getCheckTitle(){
-    return this.state.check.check_spec.value.name || this.state.check.id;
   },
   handleTargetSelect(id, type){
     let check = _.cloneDeep(this.state.check);
     check.target.id = id;
     check.target.type = type || 'sg';
-    this.updateData(check);
-    this.toggleEnv();
-  },
-  toggleEnv(){
-    const bool = this.state.showEnv;
-    this.setState({showEnv:!bool});
-    if (!bool){
-      // setTimeout(function(){
-      //   scrollTo(document.body, 0, 0);
-      // }, 50);
-    }else {
-      // setTimeout(function(){
-      //   scrollTo(document.body, 0, 0);
-      // }, 50);
-    }
+    this.setData(check);
+    this.setShowEnv();
   },
   renderEnv(){
     if (this.state.showEnv){
@@ -117,9 +109,8 @@ const CheckEdit = React.createClass({
           <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         </Padding>
       );
-    }else {
-      return <div/>;
     }
+    return <div/>;
   },
   renderLink(){
     return this.state.check.id ?
@@ -142,16 +133,16 @@ const CheckEdit = React.createClass({
               <Col xs={12}>
                 {this.renderEnv()}
                 <Padding tb={1}>
-                  <CheckCreateRequest {...this.state} onChange={this.updateData} renderAsInclude/>
+                  <CheckCreateRequest {...this.state} onChange={this.setData} renderAsInclude/>
                 </Padding>
                 <Padding tb={1}>
-                  <CheckCreateAssertions {...this.state} onChange={this.updateData} renderAsInclude/>
+                  <CheckCreateAssertions {...this.state} onChange={this.setData} renderAsInclude/>
                 </Padding>
                 <Padding tb={1}>
-                  <CheckCreateInfo {...this.state} onChange={this.updateData} renderAsInclude/>
+                  <CheckCreateInfo {...this.state} onChange={this.setData} renderAsInclude/>
                 </Padding>
                 <Padding t={1}>
-                <Button color="success" block type="submit" onClick={this.submit} disabled={this.disabled()}>
+                <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
                   Finish <Checkmark inline fill={colors.success}/>
                 </Button>
                 </Padding>
@@ -160,13 +151,12 @@ const CheckEdit = React.createClass({
           </Grid>
         </div>
       );
-    }else {
-      return (
-        <StatusHandler status={this.state.status}>
-          <h2>Check not found.</h2>
-        </StatusHandler>
-      );
     }
+    return (
+      <StatusHandler status={this.state.status}>
+        <h2>Check not found.</h2>
+      </StatusHandler>
+    );
   }
 });
 

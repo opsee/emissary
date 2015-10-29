@@ -1,15 +1,8 @@
-import React, {PropTypes} from 'react';
-import {BoundField, Button} from '../forms';
+import React from 'react';
+import {BoundField} from '../forms';
 import forms from 'newforms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {RadialGraph} from '../global';
-import {HomeStore} from '../../stores';
 import {Toolbar} from '../global';
-import InstanceItem from '../instances/InstanceItem.jsx';
-import GroupItem from '../groups/GroupItem.jsx';
-import {RouteHandler} from 'react-router';
-import {Link} from 'react-router';
-import {InstanceActions, GlobalActions} from '../../actions';
 import {PageAuth} from '../../modules/statics';
 import EnvWithFilter from './EnvWithFilter.jsx';
 
@@ -33,13 +26,10 @@ export default React.createClass({
   getInitialState(){
     return {
       filter: new FilterForm({
-        onChange: self.filterHasChanged,
+        onChange: self.forceUpdate,
         labelSuffix: ''
       })
     };
-  },
-  filterHasChanged(){
-    this.forceUpdate();
   },
   render() {
     return (
