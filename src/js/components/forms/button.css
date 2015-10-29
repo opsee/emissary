@@ -20,6 +20,12 @@
   vertical-align: middle;
   white-space: nowrap;
 }
+.btn svg {
+  transition: fill var(--transitionEaseOut)
+}
+.btn:hover svg, .btn:active svg {
+  fill: white;
+}
 
 .btn:focus, .btn:active:focus {
   outline: thin dotted;
@@ -46,15 +52,15 @@
 
 .btnDefault {
   composes: btn;
-  color: #fff;
-  background: var(--gray900);
+  color: white;
+  background: var(--colorTextSecondary);
 }
 .btnDefault:focus, .btnDefault:hover, .btnDefault:active {
-  color: #fff;
-  background: black;
+  color: white;
+  background: var(--gray800);
 }
 .btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
-  background: var(--gray900);
+  background: var(--colorTextSecondary);
 }
 
 .btnPrimary {
@@ -131,13 +137,11 @@
 .btnFlat {
   composes: btn;
   background: transparent;
-  border: 1px solid var(--gray500);
   box-shadow: none;
-  color: var(--gray500);
-  padding: 0.375em;
+  color: var(--colorTextSecondary);
 }
 .btnFlat:hover, .btnFlat.btnActive {
-  background: var(--gray500);
+  background: var(--colorTextSecondary);
   color: white;
 }
 
@@ -190,6 +194,7 @@
 }
 
 .btnBlock {
+  border-radius: 0;
   display: block;
   width: 100%;
 }

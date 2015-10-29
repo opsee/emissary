@@ -13,7 +13,7 @@ import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
 import {StatusHandler, Table} from '../global';
-import {Close, Add, Search} from '../icons';
+import {Close, Add, Search, Circle} from '../icons';
 import {UserActions, GroupActions, InstanceActions} from '../../actions';
 import {GroupStore, CheckStore, InstanceStore} from '../../stores';
 import {GroupItemList} from '../groups';
@@ -268,18 +268,10 @@ const EnvWithFilter = React.createClass({
   },
   renderFilterButtons(){
     return (
-      <Row>
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button flat={true} color={"danger"} onClick={this.toggleButtonState.bind(null, 'failing')}>{this.getNumberFailing()} Failing</Button>
-          </Padding>
-        </Col>
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button flat={true} color={"default"} onClick={this.toggleButtonState.bind(null, 'running')}>{this.getNumberUnmonitored()} Unmonitored</Button>
-          </Padding>
-        </Col>
-      </Row>
+      <div>
+        <Button flat={true} color={"danger"} onClick={this.toggleButtonState.bind(null, 'failing')}><Circle fill="danger" inline={true}/> {this.getNumberFailing()} Failing</Button>
+        <Button flat={true} color={"default"} onClick={this.toggleButtonState.bind(null, 'running')}><Circle fill="textSecondary" inline={true}/> {this.getNumberUnmonitored()} Unmonitored</Button>
+      </div>
     )
   },
   render(){
@@ -290,7 +282,9 @@ const EnvWithFilter = React.createClass({
           <Padding b={1}>
             {this.state.filter.render()}
           </Padding>
-          {this.renderFilterButtons()}
+          <Padding b={1}>
+            {this.renderFilterButtons()}
+          </Padding>
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();
           })}

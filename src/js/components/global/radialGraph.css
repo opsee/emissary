@@ -93,6 +93,7 @@
 }
 .innerRunning{
   composes: inner;
+  border-color: transparent;
   background:var(--gray600);
 }
 .innerPassing{
