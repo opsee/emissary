@@ -268,7 +268,7 @@ const CheckCreateRequest = React.createClass({
       );
   },
   renderBodyInput(){
-    if (this.state.info.cleanedData.verb !== ['GET']){
+    if (this.state.info.cleanedData.verb !== 'GET'){
       return (
         <Padding b={1}>
           <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
