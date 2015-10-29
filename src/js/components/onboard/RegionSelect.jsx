@@ -32,17 +32,15 @@ const InfoForm = forms.Form.extend({
   }),
 });
 
-const Team = React.createClass({
-  mixins: [State, OnboardStore.mixin],
+const RegionSelect = React.createClass({
+  mixins: [OnboardStore.mixin],
   storeDidChange(){
-    const data = OnboardStore.getInstallData();
-    if(data && data.regions && data.regions.length){
-      router.transitionTo('onboardCredentials');
-    }
     const bastionStatus = OnboardStore.getGetBastionsStatus();
     if(bastionStatus == 'success'){
       const bastions = OnboardStore.getBastions();
-      this.setState({bastions})
+      if(this.isMounted()){
+        this.setState({bastions})
+      }
     }
   },
   getInitialState() {
@@ -51,7 +49,9 @@ const Team = React.createClass({
     const obj = {
       info:new InfoForm({
         onChange(){
-          self.forceUpdate();
+          if(self.isMounted()){
+            self.forceUpdate();
+          }
         },
         labelSuffix:'',
         data: {
@@ -75,6 +75,10 @@ const Team = React.createClass({
   submit(e){
     e.preventDefault();
     OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
+    //redo this later, make install be a parent page instead of this bull
+    setTimeout(() => {
+      router.transitionTo('onboardCredentials');
+    },100);
   },
   disabled(){
     return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
@@ -128,4 +132,4 @@ const Team = React.createClass({
   }
 });
 
-export default Team;
+export default RegionSelect;

@@ -93,8 +93,26 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
     .set('Authorization', UserStore.getAuth())
   },
   res => _.get(res, 'body.bastions') || [],
-  res => res && res.response
+  res => res
 );
+
+// let tried = 0;
+// _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
+//   (data) => {
+//     return new Promise((resolve, reject) => {
+//       return setTimeout(() => {
+//         tried++;
+//         if(tried > 20){
+//           resolve({body:{bastions:['foo']}});
+//         }else{
+//           resolve({body:{bastions:[]}});
+//         }
+//       },4000);
+//     })
+//   },
+//   res => _.get(res, 'body.bastions') || [],
+//   res => res && res.response
+// );
 
 _actions.onboardExampleInstall = Flux.statics.addAsyncAction('onboardExampleInstall',
   (data) => {

@@ -102,7 +102,7 @@ const statics = {
     Store.emitChange();
   },
   groupELBFromJS(data){
-    let instances = data.instances;
+    let instances = data.instances || data.Instances;
     if(!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId:data.LoadBalancerName})

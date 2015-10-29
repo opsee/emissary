@@ -11,7 +11,8 @@ let config = {
   slackClientSecret:window.slackClientSecret,
   intercom:window.Intercom,
   debug:storage.get('debug') || false,
-  ghosting:false
+  ghosting:false,
+  env:process.env
 }
 
 window.config = config;
