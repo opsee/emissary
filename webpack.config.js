@@ -38,7 +38,7 @@ module.exports = {
   },
   module: {
     preLoaders:[
-      { test: /\.js$|\.jsx$/, loaders: ['eslint'], include: [context_dir] },
+      { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
     ],
     loaders: [
       { test: /\.global\.css$/, loader: 'style-loader!css-loader!cssnext-loader', include: [context_dir]},
