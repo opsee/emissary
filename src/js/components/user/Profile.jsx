@@ -7,6 +7,7 @@ import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
+import {Padding} from '../layout';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -40,7 +41,7 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <div className="padding-b">
+              <Padding b={1}>
                 <h3>Your Profile Information</h3>
                 <Table>
                   <tr>
@@ -52,10 +53,10 @@ export default React.createClass({
                     <td>{this.state.user.name}</td>
                   </tr>
                 </Table>
-              </div>
-              <div className="padding-b">
+              </Padding>
+              <Padding b={1}>
                 <Button flat noPad color="primary" to="profileEdit" >Change Your Password</Button>
-              </div>
+              </Padding>
               <div className="btn-container btn-container-righty">
                 <Button flat noPad color="danger" onClick={this.runLogOut}>
                   <Logout inline fill="danger"/> Log Out

@@ -52,7 +52,10 @@ const InfoForm = forms.Form.extend({
   }),
   body: forms.CharField({
     widget: forms.Textarea,
-    required: false
+    required: false,
+    widgetAttrs: {
+      widgetType: 'Textarea'
+    }
   }),
   path: forms.CharField({
     widgetAttrs: {

@@ -27,9 +27,11 @@ const FilterForm = forms.Form.extend({
   }),
   render() {
     return (
-      <BoundField bf={this.boundField('filter')} className="padding-b">
-        <Search className="icon"/>
-      </BoundField>
+      <Padding b={2}>
+        <BoundField bf={this.boundField('filter')}>
+          <Search className="icon"/>
+        </BoundField>
+      </Padding>
     );
   }
 });

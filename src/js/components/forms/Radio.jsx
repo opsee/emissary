@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 React.initializeTouchEvents(true);
+import {Padding} from '../layout';
 
 export default React.createClass({
   propTypes: {
@@ -16,12 +17,14 @@ export default React.createClass({
   },
   handleClick(e) {
     e.preventDefault();
-    this.props.onChange.call(null, this.props.id, !this.props.on);
+    this.props.onChange.call(null, this.props.id, true);
   },
   render(){
     return (
-      <div onClick={this.handleClick} onTouchEnd={this.handleTouch} className="padding-tb-sm" style={{cursor: 'pointer'}}>
-        <button className={`radio ${this.isActive()}`} type="button" onClick={this.handleClick} id={this.props.id}/>
+      <div onClick={this.handleClick} onTouchEnd={this.handleTouch} style={{cursor: 'pointer'}}>
+        <Padding tb={0.5}>
+          <button className={`radio ${this.isActive()}`} type="button" onClick={this.handleClick} id={this.props.id}/>
+        </Padding>
       </div>
     );
   }

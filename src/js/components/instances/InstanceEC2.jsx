@@ -8,6 +8,7 @@ import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
+import {Padding} from '../layout';
 
 function getState(){
   return {
@@ -86,7 +87,7 @@ export default React.createClass({
                   </tr>
                   {this.renderAvailabilityZone()}
                 </Table>
-                <div className="padding-b">
+                <Padding b={1}>
                   <h3>Groups ({this.state.instance.get('groups').size})</h3>
                   <ul className="list-unstyled">
                     {this.state.instance.get('groups').map(g => {
@@ -97,7 +98,7 @@ export default React.createClass({
                         );
                     })}
                   </ul>
-                </div>
+                </Padding>
                 {
                   // <h2>{this.data().checks.length} Checks</h2>
                   // <ul className="list-unstyled">

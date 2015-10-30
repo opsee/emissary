@@ -14,16 +14,25 @@ const InfoForm = forms.Form.extend({
   services: forms.MultipleChoiceField({
     choices: serviceChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
     label: 'buttonToggle'
   }),
   features: forms.MultipleChoiceField({
     choices: featureChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
     label: 'buttonToggle'
   }),
   sucks: forms.MultipleChoiceField({
     choices: sucksChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
     label: 'buttonToggle'
   })
 });

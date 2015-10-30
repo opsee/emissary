@@ -4,6 +4,7 @@ import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {ChevronDown} from '../icons';
+import {Padding} from '../layout';
 
 export default React.createClass({
   propTypes: {
@@ -42,9 +43,11 @@ export default React.createClass({
   renderMoreButton(){
     if (this.state.limit < this.props.groups.size){
       return (
-        <Button color="primary" flat onClick={this.getMore} className="margin-t">
-          Show {this.props.groups.size - this.state.limit} more <ChevronDown inline fill="primary"/>
-        </Button>
+        <Padding t={1}>
+          <Button color="primary" flat onClick={this.getMore}>
+            Show {this.props.groups.size - this.state.limit} more <ChevronDown inline fill="primary"/>
+          </Button>
+        </Padding>
       );
     }
   },
