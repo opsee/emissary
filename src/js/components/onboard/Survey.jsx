@@ -1,6 +1,6 @@
 import React from 'react';
 import {UserActions} from '../../actions';
-import {OnboardStore, UserStore} from '../../stores';
+import {UserStore} from '../../stores';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 
@@ -29,7 +29,6 @@ const InfoForm = forms.Form.extend({
 });
 
 const Survey = React.createClass({
-  mixins: [OnboardStore.mixin],
   getInitialState() {
     const self = this;
     return {

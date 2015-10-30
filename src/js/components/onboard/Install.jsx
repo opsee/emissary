@@ -23,7 +23,9 @@ const Install = React.createClass({
   },
   componentWillMount(){
     if (config.demo || this.props.path.match('example')){
-      OnboardActions.onboardExampleInstall();
+      OnboardActions.onboardExampleInstall().then(() => {
+        statics.checkedInstallStatus = true;
+      });
     }else {
       OnboardStore.getBastionHasLaunchedPromise().then((started) => {
         statics.checkedInstallStatus = true;
@@ -44,17 +46,12 @@ const Install = React.createClass({
       return m.attributes && m.attributes.ResourceType;
     }).value();
 
-    let reject = false;
+    let reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
     if (config.env !== 'production'){
       if (this.props.query.fail){
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
-      }else if (config.demo){
-        reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
-      }else if (this.props.query.success){
-        reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
       }
     }
-
     const bastions = _.chain(msgs)
     .reject(reject)
     .groupBy('instance_id').map((value, key) => {
@@ -70,11 +67,17 @@ const Install = React.createClass({
         setTimeout(OnboardActions.getBastions, 12000);
       }
     }
+    if (OnboardStore.getGetCustomerStatus() === 'success'){
+      if (!OnboardStore.getCustomer().id){
+        setTimeout(OnboardActions.getCustomer, 12000);
+      }
+    }
     this.setState({bastions});
   },
   componentDidUpdate(){
     if (this.areBastionsInstalled() && !this.state.startedPolling){
       OnboardActions.getBastions();
+      OnboardActions.getCustomer();
       /* eslint-disable react/no-did-update-set-state*/
       this.setState({startedPolling: true});
     }
@@ -87,7 +90,7 @@ const Install = React.createClass({
   },
   getBastionStatuses(){
     return _.chain(this.state.bastions).pluck('messages').map(bastionMsgs => {
-      return _.chain(bastionMsgs).filter({ResourceType: 'AWS:: CloudFormation:: Stack'}).filter(msg => {
+      return _.chain(bastionMsgs).filter({ResourceType: 'AWS::CloudFormation::Stack'}).filter(msg => {
         return msg.ResourceStatus === 'CREATE_COMPLETE' || msg.ResourceStatus === 'ROLLBACK_COMPLETE';
       }).pluck('ResourceStatus').first().value();
     }).value();
@@ -103,7 +106,7 @@ const Install = React.createClass({
     return _.every(stats) && stats.length;
   },
   areBastionsInstalled(){
-    const stats = this.bastionStatuses();
+    const stats = this.getBastionStatuses();
     return _.every(stats) && stats.length;
   },
   areBastionsConnected(){
