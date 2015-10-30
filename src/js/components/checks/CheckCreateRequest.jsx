@@ -91,15 +91,19 @@ const CheckCreateRequest = React.createClass({
   getInitialState() {
     const self = this;
     const initialHeaders = this.props.check.check_spec.value.headers;
+    let initialData = _.cloneDeep(self.props.check.check_spec.value);
+    if (initialData.verb && typeof initialData.verb === 'string'){
+      initialData.verb = [initialData.verb];
+    }
     const obj = {
-      info: new InfoForm(_.extend({
+      info: new InfoForm(_.assign({
         onChange: self.runChange,
         labelSuffix: '',
         validation: {
           on: 'blur change',
           onChangeDelay: 700
         }
-      }, self.isDataComplete() ? {data: self.props.check.check_spec.value} : null)),
+      }, self.isDataComplete() ? {data: initialData} : null)),
       headers: new HeaderFormSet({
         onChange: self.runChange,
         labelSuffix: '',
@@ -112,7 +116,8 @@ const CheckCreateRequest = React.createClass({
           onChangeDelay: 700
         }
       }),
-      check: this.props.check
+      check: this.props.check,
+      hasSetHeaders: !self.isDataComplete()
     };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(() => {
@@ -124,7 +129,8 @@ const CheckCreateRequest = React.createClass({
         };
         form.setData(data);
       });
-    }, 10);
+      this.setState({hasSetHeaders: true});
+    }, 50);
     return _.extend(obj, {
       cleanedData: null
     });
@@ -161,14 +167,16 @@ const CheckCreateRequest = React.createClass({
     return _.cloneDeep(this.props.check);
   },
   getFinalData(){
-    let check = _.clone(this.props.check);
+    let check = _.cloneDeep(this.props.check);
     let val = check.check_spec.value;
-    val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
-      return {
-        name: h.key,
-        values: h.value ? h.value.split(', ') : undefined
-      };
-    }).value();
+    if (this.state.hasSetHeaders){
+      val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
+        return {
+          name: h.key,
+          values: h.value ? h.value.split(', ') : undefined
+        };
+      }).value();
+    }
     let cleaned = this.state.info.cleanedData;
     if (cleaned.port){
       cleaned.port = parseInt(cleaned.port, 10);
