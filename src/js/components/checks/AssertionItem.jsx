@@ -1,32 +1,31 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Padding} from '../layout';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import AssertionCounter from './AssertionCounter.jsx';
 import relationships from 'slate/src/relationships';
 import types from 'slate/src/types';
 
 const AssertionItem = React.createClass({
-  propTypes:{
-    item:PropTypes.object.isRequired,
-    response:PropTypes.object.isRequired
+  propTypes: {
+    item: PropTypes.object.isRequired,
+    response: PropTypes.object.isRequired
   },
   getKey(){
     const key = this.props.item.key;
     return _.chain(types).find(t => {
-      return t.id == key;
+      return t.id === key;
     }).get('name').value();
   },
   getRelationship(){
     const rel = this.props.item.relationship;
     return _.chain(relationships).find(r => {
-      return r.id == rel;
+      return r.id === rel;
     }).get('name').value().toLowerCase();
   },
   render(){
     return (
-      <Grid fluid={true}>
+      <Grid fluid>
         <Row className="flex-vertical-align">
           <Col xs={2} sm={1}>
             <AssertionCounter label={1} {...this.props.item} keyData={this.props.item.key} response={this.props.response}/>
@@ -38,7 +37,7 @@ const AssertionItem = React.createClass({
           </Col>
         </Row>
       </Grid>
-    )
+    );
   }
 });
 

@@ -33,6 +33,9 @@ module.exports = {
     ],
     vendor:vendors
   },
+  eslint:{
+    configFile:'./prod.eslintrc'
+  },
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
@@ -40,6 +43,9 @@ module.exports = {
     // chunkFilename: "[id].[hash].bundle.js"
   },
   module: {
+    preLoaders:[
+      { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
+    ],
     loaders: [
       { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!cssnext-loader'), include: [context_dir]},
       { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[hash:base64:12]!cssnext-loader')},

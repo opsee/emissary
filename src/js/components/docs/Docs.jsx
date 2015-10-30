@@ -1,8 +1,7 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Button} from '../forms';
 
 export default React.createClass({
   render() {

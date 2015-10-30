@@ -1,16 +1,15 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import colors from 'seedling/colors';
-import {Mail, Slack, Docs, Chat} from '../icons';
+import {Mail, Slack, Chat} from '../icons';
 import {UserStore} from '../../stores';
-import {Button} from '../forms';
 
 export default React.createClass({
   renderAdminLinks(){
-    if(UserStore.getUser().get('admin')){
+    if (UserStore.getUser().get('admin')){
       return (
         <Padding b={1}>
           <h3>Onboarding Pages</h3>
@@ -28,10 +27,9 @@ export default React.createClass({
           <div><Link to="systemStatus">System Status</Link></div>
           <div><Link to="styleguide">Style Guide</Link></div>
         </Padding>
-      )
-    }else{
-      return <div/>
+      );
     }
+    return <div/>;
   },
   render() {
     return (
@@ -53,11 +51,11 @@ export default React.createClass({
                 <h3>Support</h3>
                 <p>Get in touch with us any time with questions or feature requests:</p>
 
-                <p><span className="text-secondary"><Mail fill={colors.textColorSecondary} inline={true} /> Email:</span> <a href="mailto:support@opsee.com">support@opsee.com</a></p>
+                <p><span className="text-secondary"><Mail fill={colors.textColorSecondary} inline /> Email:</span> <a href="mailto:support@opsee.com">support@opsee.com</a></p>
 
-                <p><span className="text-secondary"><Chat fill={colors.textColorSecondary} inline={true} /> IRC:</span> <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></p>
+                <p><span className="text-secondary"><Chat fill={colors.textColorSecondary} inline /> IRC:</span> <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></p>
 
-                <p><span className="text-secondary"><Slack fill={colors.textColorSecondary} inline={true} /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></p>
+                <p><span className="text-secondary"><Slack fill={colors.textColorSecondary} inline /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></p>
               </Padding>
               {this.renderAdminLinks()}
             </Col>

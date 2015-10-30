@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import {Mail, Person, Lock} from '../icons';
@@ -8,65 +7,65 @@ let include = [];
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
-    widgetAttrs:{
-      placeholder:'address@domain.com'
+    widgetAttrs: {
+      placeholder: 'address@domain.com'
     }
   }),
   name: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Your Name',
+    widgetAttrs: {
+      placeholder: 'Your Name',
       icon: 'Person'
     }
   }),
   password: forms.CharField({
     widget: forms.PasswordInput,
-    widgetAttrs:{
-      placeholder:'Your Password',
+    widgetAttrs: {
+      placeholder: 'Your Password',
       icon: 'Lock'
     }
   }),
   render() {
-    return(
+    return (
       <div>
       {
         include.map(field => {
-          return <BoundField bf={this.boundField(field)} key={field}></BoundField>
+          return <BoundField bf={this.boundField(field)} key={field}/>;
         })
       }
       </div>
-    )
+    );
   }
 });
 
 export default React.createClass({
-  propTypes:{
-    include:PropTypes.array.isRequired
+  propTypes: {
+    include: PropTypes.array.isRequired
   },
   componentWillMount(){
     include = this.props.include;
   },
   getInitialState() {
-    var self = this;
+    const self = this;
     return {
-      info:new InfoForm(_.extend({
+      info: new InfoForm(_.extend({
         onChange(){
           self.props.onChange(self.state.info.cleanedData, this.isComplete());
           self.forceUpdate();
         },
-        labelSuffix:'',
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
-        },
-      },self.dataComplete()))
-    }
+        labelSuffix: '',
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
+        }
+      }, self.getCompleteData()))
+    };
   },
-  dataComplete(){
+  getCompleteData(){
     const test = _.chain(this.props.include).map(s => this.props[s]).every().value();
-    if(test){
+    if (test){
       return {
-        data:this.props
-      }
+        data: this.props
+      };
     }
   },
   renderEmail(){
@@ -74,21 +73,21 @@ export default React.createClass({
        <BoundField bf={this.state.info.boundField('email')}>
         <Mail className="icon"/>
        </BoundField>
-    )
+    );
   },
   renderPassword(){
     return (
        <BoundField bf={this.state.info.boundField('password')}>
         <Lock className="icon"/>
        </BoundField>
-    )
+    );
   },
   renderName(){
     return (
        <BoundField bf={this.state.info.boundField('name')}>
         <Person className="icon"/>
        </BoundField>
-    )
+    );
   },
   render() {
     return (
@@ -98,7 +97,7 @@ export default React.createClass({
             <div className="padding-b">
               {this[`render${_.capitalize(i)}`]()}
             </div>
-          )
+          );
         })}
       </div>
     );

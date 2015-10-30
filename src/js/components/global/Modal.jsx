@@ -1,21 +1,16 @@
 import React, {PropTypes} from 'react';
 import {Modal} from '../../modules/bootstrap';
-import {GlobalStore} from '../../stores';
-import {GlobalActions} from '../../actions';
 import colors from 'seedling/colors';
 
-function getState(){
-  return {
-    options:GlobalStore.getModalMessage(),
-    showModal:false
-  }
-}
-
 export default React.createClass({
+  propTypes: {
+    style: PropTypes.string,
+    children: PropTypes.node
+  },
   getStyle(){
     return {
-      background:this.props.style ? colors[this.props.style] : colors.warning
-    }
+      background: this.props.style ? colors[this.props.style] : colors.warning
+    };
   },
   getClassName(){
     return this.state.type || 'notify';

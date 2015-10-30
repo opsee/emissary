@@ -1,6 +1,6 @@
 dependencies:
   override:
-    - npm install -g webpack casperjs
+    - npm install -g webpack casperjs eslint
     - npm install
     - docker info
     - npm run-script deploy

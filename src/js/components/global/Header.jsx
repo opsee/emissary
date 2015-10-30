@@ -1,63 +1,68 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checkmark, Help, Cloud, Login, Opsee} from '../icons';
+import {Person, Checkmark, Help, Cloud, Login} from '../icons';
 import {UserStore, GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import config from '../../modules/config';
 import colors from 'seedling/colors';
 
 import style from './header.css';
 
-export default React.createClass({
+const Header = React.createClass({
   mixins: [UserStore.mixin, GlobalStore.mixin],
   storeDidChange(){
     this.setState({
-      showNav:GlobalStore.getShowNav(),
-      ghosting:UserStore.getUser().get('admin_id') > 0
+      showNav: GlobalStore.getShowNav(),
+      ghosting: UserStore.getUser().get('admin_id') > 0
     });
     this.forceUpdate();
   },
   getInitialState(){
     return {
-      showNav:GlobalStore.getShowNav()
+      showNav: GlobalStore.getShowNav()
+    };
+  },
+  getHeaderStyle(){
+    let obj = {};
+    if (this.state.ghosting){
+      obj.background = colors.danger;
     }
+    return obj;
   },
   renderLoginLink(){
-    if(UserStore.hasUser()){
+    if (UserStore.hasUser()){
       return (
         <Link to="profile" className={style.navbarLink}>
-          <Person nav={true}/>&nbsp;
+          <Person nav/>&nbsp;
           <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
-      )
-    }else{
-      return (
-        <Link to="login" className={style.navbarLink}>
-          <Login nav={true}/>&nbsp;
-          <span className={`${style.navbarTitle}`}>Login</span>
-        </Link>
-      )
+      );
     }
+    return (
+      <Link to="login" className={style.navbarLink}>
+        <Login nav/>&nbsp;
+        <span className={`${style.navbarTitle}`}>Login</span>
+      </Link>
+    );
   },
   renderNavItems(){
     return (
-      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin:0}}>
+      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
         <li>
          <Link to="checks" className={style.navbarLink}>
-           <Checkmark nav={true}/>&nbsp;
+           <Checkmark nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
         <li>
          <Link to="env" className={style.navbarLink}>
-           <Cloud nav={true}/>&nbsp;
+           <Cloud nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Environment</span>
          </Link>
        </li>
         <li>
          <Link to="help" className={style.navbarLink}>
-           <Help nav={true}/>&nbsp;
+           <Help nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Help</span>
          </Link>
        </li>
@@ -67,15 +72,8 @@ export default React.createClass({
       </ul>
       );
   },
-  getHeaderStyle(){
-    let obj = {};
-    if(this.state.ghosting){
-      obj.background = colors.danger;
-    }
-    return obj;
-  },
   render(){
-    return(
+    return (
       <header id="header" className={this.state.showNav ? style.header : style.headerHide} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
@@ -88,6 +86,8 @@ export default React.createClass({
           </nav>
         <SearchBox/>
       </header>
-    )
+    );
   }
-})
+});
+
+export default Header;

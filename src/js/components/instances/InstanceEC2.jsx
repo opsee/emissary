@@ -1,23 +1,41 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {StatusHandler, Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
-import InstanceItem from './InstanceItem.jsx';
 import {InstanceStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {PageAuth} from '../../modules/statics';
 
 function getState(){
   return {
-    instance:InstanceStore.getInstanceECC(),
-    status:InstanceStore.getGetInstanceECCStatus()
-  }
+    instance: InstanceStore.getInstanceECC(),
+    status: InstanceStore.getGetInstanceECCStatus()
+  };
 }
 
 export default React.createClass({
   mixins: [InstanceStore.mixin, SetInterval],
+  statics: {
+    willTransitionTo: PageAuth
+  },
+  propTypes: {
+    params: PropTypes.object
+  },
+  componentWillMount(){
+    this.getData();
+  },
+  componentDidMount(){
+    this.setInterval(this.getData, 30000);
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !Immutable.is(this.state.instance, nextState.instance);
+  },
+  getInitialState(){
+    return getState();
+  },
   storeDidChange() {
     const state = getState();
     this.setState(state);
@@ -25,39 +43,20 @@ export default React.createClass({
   getData(){
     InstanceActions.getInstanceECC(this.props.params.id);
   },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !Immutable.is(this.state.instance, nextState.instance);
-  },
-  componentWillMount(){
-    this.getData()
-  },
-  componentDidMount(){
-    this.setInterval(this.getData, 30000);
-  },
-  getInitialState(){
-    return getState();
-  },
-  silence(id){
-    InstanceActions.silence(id);
-  },
   renderAvailabilityZone(){
     const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
-    if(az){
+    if (az){
       return (
         <tr>
           <td><strong>Availability Zone</strong></td>
           <td>{az}</td>
         </tr>
-      )
-    }else{
-      return <tr/>
+      );
     }
-  },
-  data(){
-    return this.state.instance.toJS();
+    return <tr/>;
   },
   render() {
-    if(this.state.instance.get('id')){
+    if (this.state.instance.get('id')){
       return (
         <div>
           <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || ''}`}/>
@@ -88,14 +87,14 @@ export default React.createClass({
                   {this.renderAvailabilityZone()}
                 </Table>
                 <div className="padding-b">
-                  <h3>Groups ({this.data().groups.length})</h3>
+                  <h3>Groups ({this.state.instance.get('groups').size})</h3>
                   <ul className="list-unstyled">
                     {this.state.instance.get('groups').map(g => {
                       return (
                         <li key={g.get('id')}>
                           <GroupItem item={g}/>
                         </li>
-                        )
+                        );
                     })}
                   </ul>
                 </div>
@@ -116,8 +115,7 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else{
-      return <StatusHandler status={this.state.status}/>
     }
+    return <StatusHandler status={this.state.status}/>;
   }
 });

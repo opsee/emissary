@@ -4,4 +4,4 @@ import InstanceItemList from './InstanceItemList.jsx';
 export default {
   InstanceItem,
   InstanceItemList
-}
+};

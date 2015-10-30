@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import img from '../../../img/logo-color-border-light.svg';
 import style from './logoColor.css';
 

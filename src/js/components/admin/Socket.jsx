@@ -1,24 +1,20 @@
 import React from 'react';
 import {Toolbar} from '../global';
 import {GlobalStore} from '../../stores';
-import {Link} from 'react-router';
-import Router from 'react-router';
-const RouteHandler = Router.RouteHandler;
-import _ from 'lodash';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 export default React.createClass({
   mixins: [GlobalStore.mixin],
   storeDidChange() {
     const messages = GlobalStore.getSocketMessages();
-    if(messages.length != this.state.messages.length){
+    if (messages.length !== this.state.messages.length){
       this.setState({messages});
     }
   },
   getInitialState(){
     return {
-      messages:[]
-    }
+      messages: []
+    };
   },
   render() {
     return (
@@ -28,11 +24,11 @@ export default React.createClass({
          <Row>
            <Col xs={12}>
                {this.state.messages.map((m, i) => {
-                  return (
+                 return (
                     <div key={i}>
                       <pre>{JSON.stringify(m, null, ' ')}</pre>
                     </div>
-                  )
+                  );
                })}
              </Col>
            </Row>

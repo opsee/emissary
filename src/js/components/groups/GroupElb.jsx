@@ -1,13 +1,10 @@
-import React from 'react';
-import Immutable from 'immutable';
+import React, {PropTypes} from 'react';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
-import TimeAgo from 'react-components/timeago';
-import GroupItem from './GroupItem.jsx';
 import {GroupStore, InstanceStore} from '../../stores';
-import {GroupActions, CheckActions, InstanceActions} from '../../actions';
+import {GroupActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -16,33 +13,11 @@ import {Padding} from '../layout';
 
 export default React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
-  storeDidChange() {
-    const state = this.getState();
-    this.setState(state);
-  },
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !Immutable.is(this.state.group, nextState.group);
   // },
-  getData(){
-    GroupActions.getGroupELB(this.props.params.id);
-    InstanceActions.getInstancesECC({
-      id:this.props.params.id,
-      type:'elb'
-    })
-  },
-  getState(){
-    return {
-      group:GroupStore.getGroup({
-        type:'elb',
-        id:this.props.params.id
-      }),
-      instances:InstanceStore.getInstancesECC({
-        type:'elb',
-        id:this.props.params.id
-      }),
-      status:GroupStore.getGetGroupELBStatus(),
-      getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
-    }
+  propTypes: {
+    params: PropTypes.object
   },
   componentWillMount(){
     this.getData();
@@ -53,16 +28,40 @@ export default React.createClass({
   getInitialState(){
     return this.getState();
   },
+  storeDidChange() {
+    const state = this.getState();
+    this.setState(state);
+  },
+  getData(){
+    GroupActions.getGroupELB(this.props.params.id);
+    InstanceActions.getInstancesECC({
+      id: this.props.params.id,
+      type: 'elb'
+    });
+  },
+  getState(){
+    return {
+      group: GroupStore.getGroup({
+        type: 'elb',
+        id: this.props.params.id
+      }),
+      instances: InstanceStore.getInstancesECC({
+        type: 'elb',
+        id: this.props.params.id
+      }),
+      status: GroupStore.getGetGroupELBStatus(),
+      getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
+    };
+  },
   renderDescription(){
     const desc = this.state.group.get('Description');
-    if(desc && desc != ''){
-      return {desc}
-    }else{
-      return <div/>
+    if (desc && desc !== ''){
+      return {desc};
     }
+    return <div/>;
   },
   render() {
-    if(this.state.group.get('name')){
+    if (this.state.group.get('name')){
       return (
         <div>
           <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
@@ -92,10 +91,10 @@ export default React.createClass({
                 </div>
                 <div className="padding-b">
                   <h3>Checks</h3>
-                  <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
+                  <CheckItemList type="groupELB" id={this.props.params.id}/>
                   <Padding t={2}>
-                    <Button color="primary" text="left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'elb'}}}>
-                      <Add inline={true}/> Create Check
+                    <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'elb'}}}>
+                      <Add inline/> Create Check
                     </Button>
                   </Padding>
                 </div>
@@ -104,8 +103,7 @@ export default React.createClass({
           </Grid>
         </div>
       );
-    }else{
-      return <StatusHandler status={this.state.status}/>
     }
+    return <StatusHandler status={this.state.status}/>;
   }
 });

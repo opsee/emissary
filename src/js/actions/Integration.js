@@ -10,7 +10,7 @@ _actions.getInstancesRDS = Flux.statics.addAsyncAction('getInstancesRDS',
   () => {
     return request
     .get(`${config.api}/instances/rds`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => res.body && res.body.instances,
   res => res && res.response

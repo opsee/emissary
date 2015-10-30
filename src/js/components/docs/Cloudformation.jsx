@@ -1,10 +1,8 @@
-import React, {PropTypes} from 'react';
-import {Toolbar, HTMLFile} from '../global';
-import {Link} from 'react-router';
+import React from 'react';
+import {Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Highlight} from '../global';
 import {Padding} from '../layout';
-import {Button} from '../forms';
 
 export default React.createClass({
   render() {
@@ -17,206 +15,207 @@ export default React.createClass({
               <Padding tb={1}>
                 <h2>The Opsee Bastion Instance CloudFormation Template</h2>
                 <Highlight>
-                {JSON.stringify({
-                   "AWSTemplateFormatVersion": "2010-09-09",
-                   "Description": "The Opsee Bastion Host",
-                   "Parameters": {
-                    "InstanceType": {
-                     "Description": "EC2 Instance type (m3.medium, etc).",
-                     "Type": "String",
-                     "Default": "m3.medium",
-                     "ConstraintDescription": "Must be a valid EC2 instance type."
-                    },
-                    "ImageId": {
-                     "Description": "The Opsee Bastion AMI",
-                     "Type": "String",
-                     "ConstraintDescription": "Must be a valid Opsee AMI."
-                    },
-                    "UserData": {
-                     "Description": "Metadata to set for the instance",
-                     "Type": "String"
-                    },
-                    "KeyName": {
-                     "Description": "The name of a keypair to use.",
-                     "Type": "String"
-                    },
-                    "VpcId": {
-                     "Description": "The VPC in which to deploy the instance",
-                     "Type": "String",
-                     "ConstraintDescription": "Must be a valid VPC ID"
-                    }
-                   },
-                   "Resources": {
-                    "BastionSecurityGroup": {
-                     "Type": "AWS::EC2::SecurityGroup",
-                     "Properties": {
-                      "GroupDescription": "Bastion SecurityGroup",
-                      "Tags": [
-                       {
-                        "Key": "Name",
-                        "Value": "Opsee Bastion Security Group"
-                       },
-                       {
-                        "Key": "type",
-                        "Value": "opsee"
-                       }
-                      ],
-                      "SecurityGroupEgress": [
-                       {
-                        "CidrIp": "0.0.0.0/0",
-                        "FromPort": -1,
-                        "IpProtocol": -1,
-                        "ToPort": -1
-                       }
-                      ],
-                      "SecurityGroupIngress": [
-                       {
-                        "CidrIp": "0.0.0.0/0",
-                        "FromPort": -1,
-                        "IpProtocol": -1,
-                        "ToPort": 22
-                       }
-                      ],
-                      "VpcId": {
-                       "Ref": "VpcId"
-                      }
-                     }
-                    },
-                    "BastionRole": {
-                     "Type": "AWS::IAM::Role",
-                     "Properties": {
-                      "AssumeRolePolicyDocument": {
-                       "Version": "2012-10-17",
-                       "Statement": [
-                        {
-                         "Effect": "Allow",
-                         "Principal": {
-                          "Service": [
-                           "ec2.amazonaws.com"
-                          ]
-                         },
-                         "Action": [
-                          "sts:AssumeRole"
-                         ]
-                        }
-                       ]
+                {JSON.stringify(
+                  {
+                    'AWSTemplateFormatVersion': '2010-09-09',
+                    'Description': 'The Opsee Bastion Host',
+                    'Parameters': {
+                      'InstanceType': {
+                        'Description': 'EC2 Instance type (m3.medium, etc).',
+                        'Type': 'String',
+                        'Default': 'm3.medium',
+                        'ConstraintDescription': 'Must be a valid EC2 instance type.'
                       },
-                      "Path": "/",
-                      "Policies": [
-                       {
-                        "PolicyName": "opsee",
-                        "PolicyDocument": {
-                         "Version": "2012-10-17",
-                         "Statement": [
-                          {
-                           "Action": [
-                            "appstream:Get*",
-                            "autoscaling:Describe*",
-                            "cloudformation:DescribeStacks",
-                            "cloudformation:DescribeStackEvents",
-                            "cloudformation:DescribeStackResource",
-                            "cloudformation:DescribeStackResources",
-                            "cloudformation:GetTemplate",
-                            "cloudformation:List*",
-                            "cloudfront:Get*",
-                            "cloudfront:List*",
-                            "cloudtrail:DescribeTrails",
-                            "cloudtrail:GetTrailStatus",
-                            "cloudwatch:Describe*",
-                            "cloudwatch:Get*",
-                            "cloudwatch:List*",
-                            "directconnect:Describe*",
-                            "dynamodb:GetItem",
-                            "dynamodb:BatchGetItem",
-                            "dynamodb:Query",
-                            "dynamodb:Scan",
-                            "dynamodb:DescribeTable",
-                            "dynamodb:ListTables",
-                            "ec2:*",
-                            "elasticache:Describe*",
-                            "elasticbeanstalk:Check*",
-                            "elasticbeanstalk:Describe*",
-                            "elasticbeanstalk:List*",
-                            "elasticbeanstalk:RequestEnvironmentInfo",
-                            "elasticbeanstalk:RetrieveEnvironmentInfo",
-                            "elasticloadbalancing:Describe*",
-                            "elastictranscoder:Read*",
-                            "elastictranscoder:List*",
-                            "iam:List*",
-                            "iam:Get*",
-                            "kinesis:Describe*",
-                            "kinesis:Get*",
-                            "kinesis:List*",
-                            "opsworks:Describe*",
-                            "opsworks:Get*",
-                            "route53:Get*",
-                            "route53:List*",
-                            "redshift:Describe*",
-                            "redshift:ViewQueriesInConsole",
-                            "rds:Describe*",
-                            "rds:ListTagsForResource",
-                            "s3:Get*",
-                            "s3:List*",
-                            "sdb:GetAttributes",
-                            "sdb:List*",
-                            "sdb:Select*",
-                            "ses:Get*",
-                            "ses:List*",
-                            "sns:Get*",
-                            "sns:List*",
-                            "sqs:GetQueueAttributes",
-                            "sqs:ListQueues",
-                            "sqs:ReceiveMessage",
-                            "storagegateway:List*",
-                            "storagegateway:Describe*",
-                            "trustedadvisor:Describe*"
-                           ],
-                           "Effect": "Allow",
-                           "Resource": "*"
+                      'ImageId': {
+                        'Description': 'The Opsee Bastion AMI',
+                        'Type': 'String',
+                        'ConstraintDescription': 'Must be a valid Opsee AMI.'
+                      },
+                      'UserData': {
+                        'Description': 'Metadata to set for the instance',
+                        'Type': 'String'
+                      },
+                      'KeyName': {
+                        'Description': 'The name of a keypair to use.',
+                        'Type': 'String'
+                      },
+                      'VpcId': {
+                        'Description': 'The VPC in which to deploy the instance',
+                        'Type': 'String',
+                        'ConstraintDescription': 'Must be a valid VPC ID'
+                      }
+                    },
+                    'Resources': {
+                      'BastionSecurityGroup': {
+                        'Type': 'AWS::EC2::SecurityGroup',
+                        'Properties': {
+                          'GroupDescription': 'Bastion SecurityGroup',
+                          'Tags': [
+                            {
+                              'Key': 'Name',
+                              'Value': 'Opsee Bastion Security Group'
+                            },
+                            {
+                              'Key': 'type',
+                              'Value': 'opsee'
+                            }
+                          ],
+                          'SecurityGroupEgress': [
+                            {
+                              'CidrIp': '0.0.0.0/0',
+                              'FromPort': -1,
+                              'IpProtocol': -1,
+                              'ToPort': -1
+                            }
+                          ],
+                          'SecurityGroupIngress': [
+                            {
+                              'CidrIp': '0.0.0.0/0',
+                              'FromPort': -1,
+                              'IpProtocol': -1,
+                              'ToPort': 22
+                            }
+                          ],
+                          'VpcId': {
+                            'Ref': 'VpcId'
                           }
-                         ]
                         }
-                       }
-                      ]
-                     }
-                    },
-                    "BastionInstanceProfile": {
-                     "Type": "AWS::IAM::InstanceProfile",
-                     "Properties": {
-                      "Path": "/",
-                      "Roles": [
-                       {
-                        "Ref": "BastionRole"
-                       }
-                      ]
-                     }
-                    },
-                    "BastionInstance": {
-                     "Type": "AWS::EC2::Instance",
-                     "Properties": {
-                      "ImageId": {
-                       "Ref": "ImageId"
                       },
-                      "IamInstanceProfile": {
-                       "Ref": "BastionInstanceProfile"
+                      'BastionRole': {
+                        'Type': 'AWS::IAM::Role',
+                        'Properties': {
+                          'AssumeRolePolicyDocument': {
+                            'Version': '2012-10-17',
+                            'Statement': [
+                              {
+                                'Effect': 'Allow',
+                                'Principal': {
+                                  'Service': [
+                                    'ec2.amazonaws.com'
+                                  ]
+                                },
+                                'Action': [
+                                  'sts:AssumeRole'
+                                ]
+                              }
+                            ]
+                          },
+                          'Path': '/',
+                          'Policies': [
+                            {
+                              'PolicyName': 'opsee',
+                              'PolicyDocument': {
+                                'Version': '2012-10-17',
+                                'Statement': [
+                                  {
+                                    'Action': [
+                                      'appstream:Get*',
+                                      'autoscaling:Describe*',
+                                      'cloudformation:DescribeStacks',
+                                      'cloudformation:DescribeStackEvents',
+                                      'cloudformation:DescribeStackResource',
+                                      'cloudformation:DescribeStackResources',
+                                      'cloudformation:GetTemplate',
+                                      'cloudformation:List*',
+                                      'cloudfront:Get*',
+                                      'cloudfront:List*',
+                                      'cloudtrail:DescribeTrails',
+                                      'cloudtrail:GetTrailStatus',
+                                      'cloudwatch:Describe*',
+                                      'cloudwatch:Get*',
+                                      'cloudwatch:List*',
+                                      'directconnect:Describe*',
+                                      'dynamodb:GetItem',
+                                      'dynamodb:BatchGetItem',
+                                      'dynamodb:Query',
+                                      'dynamodb:Scan',
+                                      'dynamodb:DescribeTable',
+                                      'dynamodb:ListTables',
+                                      'ec2:*',
+                                      'elasticache:Describe*',
+                                      'elasticbeanstalk:Check*',
+                                      'elasticbeanstalk:Describe*',
+                                      'elasticbeanstalk:List*',
+                                      'elasticbeanstalk:RequestEnvironmentInfo',
+                                      'elasticbeanstalk:RetrieveEnvironmentInfo',
+                                      'elasticloadbalancing:Describe*',
+                                      'elastictranscoder:Read*',
+                                      'elastictranscoder:List*',
+                                      'iam:List*',
+                                      'iam:Get*',
+                                      'kinesis:Describe*',
+                                      'kinesis:Get*',
+                                      'kinesis:List*',
+                                      'opsworks:Describe*',
+                                      'opsworks:Get*',
+                                      'route53:Get*',
+                                      'route53:List*',
+                                      'redshift:Describe*',
+                                      'redshift:ViewQueriesInConsole',
+                                      'rds:Describe*',
+                                      'rds:ListTagsForResource',
+                                      's3:Get*',
+                                      's3:List*',
+                                      'sdb:GetAttributes',
+                                      'sdb:List*',
+                                      'sdb:Select*',
+                                      'ses:Get*',
+                                      'ses:List*',
+                                      'sns:Get*',
+                                      'sns:List*',
+                                      'sqs:GetQueueAttributes',
+                                      'sqs:ListQueues',
+                                      'sqs:ReceiveMessage',
+                                      'storagegateway:List*',
+                                      'storagegateway:Describe*',
+                                      'trustedadvisor:Describe*'
+                                    ],
+                                    'Effect': 'Allow',
+                                    'Resource': '*'
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       },
-                      "InstanceType": {
-                       "Ref": "InstanceType"
+                      'BastionInstanceProfile': {
+                        'Type': 'AWS::IAM::InstanceProfile',
+                        'Properties': {
+                          'Path': '/',
+                          'Roles': [
+                            {
+                              'Ref': 'BastionRole'
+                            }
+                          ]
+                        }
                       },
-                      "KeyName": {
-                       "Ref": "KeyName"
-                      },
-                      "SecurityGroupIds": [
-                       {
-                        "Ref": "BastionSecurityGroup"
-                       }
-                      ],
-                      "UserData": {
-                       "Ref": "UserData"
+                      'BastionInstance': {
+                        'Type': 'AWS::EC2::Instance',
+                        'Properties': {
+                          'ImageId': {
+                            'Ref': 'ImageId'
+                          },
+                          'IamInstanceProfile': {
+                            'Ref': 'BastionInstanceProfile'
+                          },
+                          'InstanceType': {
+                            'Ref': 'InstanceType'
+                          },
+                          'KeyName': {
+                            'Ref': 'KeyName'
+                          },
+                          'SecurityGroupIds': [
+                            {
+                              'Ref': 'BastionSecurityGroup'
+                            }
+                          ],
+                          'UserData': {
+                            'Ref': 'UserData'
+                          }
+                        }
                       }
-                     }
                     }
-                   }
                   }, null, ' ')}
                 </Highlight>
                 <div><br/></div>
@@ -1004,7 +1003,7 @@ export default React.createClass({
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints</a></li>
                       <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes</a></li>
                     </ul>
-                  </Padding>  
+                  </Padding>
 
                   <Padding tb={1}>
                     <pre>sdb:Select*</pre>

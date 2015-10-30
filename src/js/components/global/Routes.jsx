@@ -1,15 +1,12 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Router from 'react-router';
 const Route = Router.Route;
 import Opsee from '../global/Opsee.jsx';
 import NotFoundRoute from 'react-router/lib/components/NotFoundRoute';
-import DefaultRoute from 'react-router/lib/components/DefaultRoute';
 import Redirect from 'react-router/lib/components/Redirect';
 
 //pages
 import Env from '../env/Env.jsx';
-import EnvInstances from '../env/EnvInstances.jsx';
-import EnvGroups from '../env/EnvGroups.jsx';
 import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
@@ -58,7 +55,6 @@ import Styleguide from '../pages/Styleguide.jsx';
 import NotFound from '../pages/NotFound.jsx';
 import SystemStatus from '../env/SystemStatus.jsx';
 
-const RouteHandler = Router.RouteHandler;
 const routes = (
   <Route handler={Opsee}>
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
@@ -100,7 +96,7 @@ const routes = (
     <Route path="/start/credentials" name="onboardCredentials" handler={OnboardCredentials}/>
     <Route path="/start/vpc-select" name="onboardVpcSelect" handler={OnboardVPCSelect}/>
     <Route path="/start/install" name="onboardInstall" handler={OnboardInstall}/>
-    <Route path="/start/install-example" name="onboardInstallExample" handler={OnboardInstall} example={true}/>
+    <Route path="/start/install-example" name="onboardInstallExample" handler={OnboardInstall} example/>
 
     <Route path="/admin/signups" name="adminSignups" handler={AdminSignups}/>
     <Route path="/admin/socket" name="adminSocket" handler={AdminSocket}/>
@@ -128,4 +124,4 @@ const hideNavList = ['start', 'onboardThanks', 'onboardPassword', 'tutorial', 'o
 export default {
   routes,
   hideNavList
-}
+};

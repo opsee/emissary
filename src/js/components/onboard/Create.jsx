@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar, LogoColor} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
@@ -11,42 +11,42 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-   mixins: [UserStore.mixin, OnboardStore.mixin],
+  mixins: [UserStore.mixin, OnboardStore.mixin],
   storeDidChange(){
     const status = OnboardStore.getOnboardSignupCreateStatus();
-    this.setState({status})
-    if(status == 'success'){
+    this.setState({status});
+    if (status === 'success'){
       router.transitionTo('onboardThanks');
-    }else if(status && status != 'pending'){
+    }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
-        html:status.body && status.body.message,
+        html: status.body && status.body.message
       });
     }
   },
   getInitialState(){
     return {
-      data:UserStore.getUser().toJS(),
-      status:OnboardStore.getOnboardSignupCreateStatus()
-    }
+      data: UserStore.getUser().toJS(),
+      status: OnboardStore.getOnboardSignupCreateStatus()
+    };
   },
-  updateUserData(data){
+  isDisabled(){
+    const incomplete = !(this.state.data.name && this.state.data.email);
+    return incomplete || this.state.status === 'pending';
+  },
+  getButtonText(){
+    return this.state.status === 'pending' ? 'Creating...' : 'Create Account';
+  },
+  handleUserData(data){
     this.setState({
-      data:data
-    })
+      data: data
+    });
   },
-  submit(e){
+  handleSubmit(e){
     e.preventDefault();
     this.setState({
-      submitting:true
+      submitting: true
     });
     OnboardActions.onboardSignupCreate(this.state.data);
-  },
-  disabled(){
-    const incomplete = !(this.state.data.name && this.state.data.email);
-    return incomplete || this.state.status == 'pending';
-  },
-  btnText(){
-    return this.state.status == 'pending' ? 'Creating...' : 'Create Account';
   },
   render() {
     return (
@@ -56,11 +56,11 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <LogoColor/>
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={['email', 'name']}  onChange={this.updateUserData} email={this.state.data.email} name={this.state.data.name}/>
+              <form name="loginForm" onSubmit={this.handleSubmit}>
+                <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <div className="form-group">
-                  <Button type="submit" color="success" block={true} disabled={this.disabled()}>
-                    {this.btnText()}
+                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
+                    {this.getButtonText()}
                   </Button>
                 </div>
                 <Padding t={4}>

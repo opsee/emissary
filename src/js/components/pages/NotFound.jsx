@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 

@@ -1,8 +1,6 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar, Highlight} from '../global';
-import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Button} from '../forms';
 
 export default React.createClass({
   render() {
@@ -19,7 +17,6 @@ export default React.createClass({
                 <h2>Setup via the creation of an IAM User</h2>
                 <p>This section describes how to complete the onboarding process by creating an IAM User and attaching an Access Policy to that user.</p>
 
-
                 <h3>Create an IAM User</h3>
                 <p>IAM Users allow you to delegate access to AWS services to third parties.  Opsee will utilize the IAM User you provide during the installation of the bastion. IAM Users are created via the IAM section of the AWS console.</p>
                 <p>If you have trouble creating an IAM User for the onboarding process, refer to the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html">AWS Guide on IAM User setup</a>.</p>
@@ -33,7 +30,7 @@ export default React.createClass({
                   <li>In the navigation pane, click Users.</li>
                   <li>Click the name of the IAM user you created for the onboarding process, then scroll down to the section labled Permissions.</li>
                   <li>In the section entitled, Inline Policies, Click the button labled Create User Policy</li>
-                  <li>Select Custom Policy and click Select</li>   
+                  <li>Select Custom Policy and click Select</li>
                   <li>Enter a name for your policy in the input area labled Policy Name</li>
                   <li>Copy and Paste the policy listed below into the  and click validate policy.</li>
                   <li>If an error has occured, please verify that you have copied the entire Policy from the listing below. </li>
@@ -41,25 +38,25 @@ export default React.createClass({
                 </ol>
                 <Highlight>
                 {JSON.stringify({
-                  "Statement": [
+                  'Statement': [
                     {
-                      "Effect": "Allow",
-                      "Action": [
-                        "cloudformation:*",
-                        "ec2:*",
-                        "rds:*",
-                        "iam:AddRoleToInstanceProfile",
-                        "iam:CreateInstanceProfile",
-                        "iam:CreateRole",
-                        "iam:DeleteInstanceProfile",
-                        "iam:DeleteRole",
-                        "iam:DeleteRolePolicy",
-                        "iam:GetRole",
-                        "iam:PassRole",
-                        "iam:PutRolePolicy",
-                        "iam:RemoveRoleFromInstanceProfile"
+                      'Effect': 'Allow',
+                      'Action': [
+                        'cloudformation:*',
+                        'ec2:*',
+                        'rds:*',
+                        'iam:AddRoleToInstanceProfile',
+                        'iam:CreateInstanceProfile',
+                        'iam:CreateRole',
+                        'iam:DeleteInstanceProfile',
+                        'iam:DeleteRole',
+                        'iam:DeleteRolePolicy',
+                        'iam:GetRole',
+                        'iam:PassRole',
+                        'iam:PutRolePolicy',
+                        'iam:RemoveRoleFromInstanceProfile'
                       ],
-                      "Resource": "*"
+                      'Resource': '*'
                     }
                   ]
                 }, null, ' ')}
