@@ -42,7 +42,7 @@ gulp.task('swaggerApi', function(){
 })
 
 gulp.task('swaggerAuth', function(){
-  return request('https://auth.opsee.co/swagger.json')
+  return request('https://auth.opsee.com/swagger.json')
     .on('error', function(err){
       gutil.log(err.toString(), 'Swagger Auth Error')
       this.emit('end');
