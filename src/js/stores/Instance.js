@@ -103,17 +103,16 @@ const statics = {
     const parsed = Date.parse(time);
     if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
       launchTime = parsed;
-    }else {
-      launchTime = null;
     }
     return launchTime;
   },
   instanceRDSFromJS(data){
-    data.id = data.DbiResourceId;
-    data.name = data.DBName;
-    data.LaunchTime = statics.getCreatedTime(data.InstanceCreateTime);
-    data.type = 'RDS';
-    return new Instance(data);
+    let newData = _.cloneDeep(data);
+    newData.id = newData.DbiResourceId;
+    newData.name = newData.DBName;
+    newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
+    newData.type = 'RDS';
+    return new Instance(newData);
   },
   instanceFromJS(data){
     if (data.DBInstanceIdentifier){
