@@ -119,7 +119,7 @@ const CheckResponse = React.createClass({
   },
   render() {
     if (CheckStore.getResponse() && this.state.complete){
-      if (this.getFormattedResponse().error){
+      if (this.getFormattedResponse() && this.getFormattedResponse().error){
         return (
           <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
             <Alert bsStyle="info">{this.getFormattedResponse().error}</Alert>

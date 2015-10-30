@@ -15,7 +15,10 @@ const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
 const NotificationForm = forms.Form.extend({
   type: forms.ChoiceField({
-    choices: notificationOptions
+    choices: notificationOptions,
+    widgetAttrs: {
+      widgetType: 'Dropdown'
+    }
   }),
   value: forms.CharField({
     label: 'Recipient',

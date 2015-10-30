@@ -28,13 +28,15 @@ function relationshipConcernsEmpty(relationship){
 const AssertionsForm = forms.Form.extend({
   key: forms.ChoiceField({
     widgetAttrs: {
-      noLabel: true
+      noLabel: true,
+      widgetType: 'Dropdown'
     },
     choices: assertionTypeOptions
   }),
   relationship: forms.ChoiceField({
     widgetAttrs: {
-      noLabel: true
+      noLabel: true,
+      widgetType: 'Dropdown'
     },
     choices: relationshipOptions
   }),

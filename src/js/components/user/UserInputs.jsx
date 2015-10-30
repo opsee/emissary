@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import {Mail, Person, Lock} from '../icons';
+import {Padding} from '../layout';
 
 let include = [];
 
@@ -94,9 +95,9 @@ export default React.createClass({
       <div>
         {this.props.include.map(i => {
           return (
-            <div className="padding-b">
+            <Padding b={1}>
               {this[`render${_.capitalize(i)}`]()}
-            </div>
+            </Padding>
           );
         })}
       </div>
