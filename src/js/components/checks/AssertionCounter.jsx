@@ -14,10 +14,10 @@ const AssertionCounter = React.createClass({
     reponse:PropTypes.object
   },
   runTest(){
-    return slate(_.assign(_.cloneDeep(this.props), {key:this.props.keyData}), this.props.response);
+    return slate(_.assign({}, _.cloneDeep(this.props), {key:this.props.keyData}), _.cloneDeep(this.props.response));
   },
   passing(){
-    const test = this.runTest();
+  const test = this.runTest();
     return test && test.success;
   },
   isActive(){

@@ -156,6 +156,16 @@ const statics = {
       },
       ]
     }
+    if(data.name == 'IRC'){
+      data.checks = [
+      {
+        assertions:[
+          {passing:true},
+          {passing:true}
+        ]
+      },
+      ]
+    }
     data.health = statics.getHealthFromItem(data);
     data.state = statics.getStateFromItem(data);
     if(data.SecurityGroups && data.SecurityGroups.length){

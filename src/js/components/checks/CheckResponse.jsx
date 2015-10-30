@@ -13,7 +13,8 @@ import {Button} from '../forms';
 
 function getState(){
   return {
-    status:CheckStore.getTestCheckStatus(),
+    status: CheckStore.getTestCheckStatus(),
+    response: CheckStore.getResponse()
   }
 }
 
@@ -95,13 +96,13 @@ const CheckResponse = React.createClass({
   getButton(){
     if(this.state.expanded){
       return(
-        <Button color="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Close Reponse">
+        <Button color="info" sm onClick={this.toggle} style={this.getButtonStyle()} title="Close Reponse">
           <ChevronUp/>
         </Button>
       )
     }else{
       return (
-        <Button color="info" bsSize="small" onClick={this.toggle} style={this.getButtonStyle()} title="Open Response">
+        <Button color="info" sm onClick={this.toggle} style={this.getButtonStyle()} title="Open Response">
           <ChevronDown/>
         </Button>
         )
@@ -132,10 +133,17 @@ const CheckResponse = React.createClass({
   },
   render() {
     if(CheckStore.getResponse() && this.state.complete){
+      if(this.getFormattedResponse().error){
+        return (
+          <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
+            <Alert bsStyle="info">{this.getFormattedResponse().error}</Alert>
+          </div>
+        );
+      }
       return(
         <div style={this.getStyle()} className={`check-response ${this.state.expanded ? 'expanded' : ''}`}>
           <Highlight>
-            {JSON.stringify(this.getFormattedResponse(), null, ' ')}
+            {JSON.stringify(_.get(this.getFormattedResponse(), 'response.value'), null, ' ')}
           </Highlight>
           {this.getButton()}
         </div>

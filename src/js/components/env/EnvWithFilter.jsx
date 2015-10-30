@@ -147,7 +147,7 @@ const EnvWithFilter = React.createClass({
   getGroupsSecurity(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
     let data = GroupStore.getGroupsSecurity().sortBy(sg => {
-      return sg.get('health');
+      return sg.get('health') || 101;
     });
     if(this.state.buttonSelected && !ignoreButtonState){
       data = data.filter(sg => {
@@ -164,7 +164,7 @@ const EnvWithFilter = React.createClass({
   getGroupsELB(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
     let data = GroupStore.getGroupsELB().sortBy(elb => {
-      return elb.get('health');
+      return elb.get('health') || 101;
     });
     if(this.state.buttonSelected && !ignoreButtonState){
       data = data.filter(elb => {
@@ -180,7 +180,9 @@ const EnvWithFilter = React.createClass({
   },
   getInstances(ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
-    let data = InstanceStore.getInstancesECC();
+    let data = InstanceStore.getInstancesECC().sortBy(instance => {
+      return instance.get('health') || 101;
+    });
     if(this.state.buttonSelected && !ignoreButtonState){
       data = data.filter(instance => {
         return instance.get('state') == this.state.buttonSelected;

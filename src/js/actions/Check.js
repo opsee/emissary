@@ -142,8 +142,10 @@ _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
       .send({check:newData, max_hosts:3, deadline:'30s'})
     }
   },
-  res => res.body,
+  res => _.get(res, 'body.responses') || [],
   res => _.get(res.body) || res
 );
+
+_actions.resetTestCheck = Flux.statics.addAction('resetTestCheck');
 
 export default _.assign({}, ..._.values(_actions));

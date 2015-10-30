@@ -13,7 +13,6 @@ import {PageAuth} from '../../modules/statics';
 function getState(noCheck){
   const obj = {
     check:CheckStore.newCheck().toJS(),
-    response:CheckStore.getResponse(),
     createStatus:CheckStore.getCheckCreateStatus()
   }
   return _.omit(obj, noCheck ? 'check' : null)
@@ -27,7 +26,6 @@ const CheckCreate = React.createClass({
   getState(noCheck){
     const obj = {
       check:CheckStore.newCheck(this.props.query).toJS(),
-      response:CheckStore.getResponse(),
       createStatus:CheckStore.getCheckCreateStatus(),
       filter:null
     }

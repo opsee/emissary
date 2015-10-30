@@ -17,7 +17,8 @@ const Button = React.createClass({
     color:PropTypes.string,
     type:PropTypes.string,
     //text align (left, center, right)
-    text:PropTypes.string
+    text:PropTypes.string,
+    sm: PropTypes.bool
   },
   getDefaultProps(){
     return {
