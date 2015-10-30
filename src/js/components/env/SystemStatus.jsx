@@ -14,6 +14,7 @@ const SystemStatus = React.createClass({
   },
   componentWillMount(){
     OnboardActions.getBastions();
+    OnboardActions.getCustomer();
   },
   storeDidChange(){
     if (OnboardStore.getGetBastionsStatus() === 'success'){

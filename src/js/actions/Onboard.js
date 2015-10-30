@@ -96,6 +96,16 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
   res => res
 );
 
+_actions.getCustomer = Flux.statics.addAsyncAction('getCustomer',
+  () => {
+    return request
+    .get(`${config.api}/customer`)
+    .set('Authorization', UserStore.getAuth());
+  },
+  res => _.get(res, 'body.customer') || {},
+  res => res
+);
+
 // let tried = 0;
 // _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
 //   (data) => {
