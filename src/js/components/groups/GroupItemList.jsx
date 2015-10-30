@@ -41,7 +41,11 @@ export default React.createClass({
   },
   renderMoreButton(){
     if(this.state.limit < this.props.groups.size){
-      return <Button color="primary" flat={true} onClick={this.getMore}>Show {this.props.groups.size - this.state.limit} more <ChevronDown inline={true} fill="primary"/></Button>
+      return (
+        <Padding t={1}>
+          <Button color="primary" flat={true} onClick={this.getMore}>Show {this.props.groups.size - this.state.limit} more <ChevronDown inline={true} fill="primary"/></Button>
+        </Padding>
+      )
     }
   },
   render() {
@@ -49,11 +53,9 @@ export default React.createClass({
     if(this.props.groups.size){
       return(
         <div>
-          <Padding b={1}>
-            {this.getGroups().map((group, i) => {
-              return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>
-            })}
-          </Padding>
+          {this.getGroups().map((group, i) => {
+            return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>
+          })}
           {this.renderMoreButton()}
         </div>
       )

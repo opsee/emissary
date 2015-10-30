@@ -37,7 +37,7 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title={this.state.user.name}>
-          <Button color="primary" fab={true} to="profileEdit" title="Edit Your Profile">
+          <Button color="info" fab={true} to="profileEdit" title="Edit Your Profile">
             <Edit btn={true}/>
           </Button>
         </Toolbar>
@@ -50,10 +50,6 @@ export default React.createClass({
                   <tr>
                     <td><strong>Email</strong></td>
                     <td>{this.state.user.email}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Name</strong></td>
-                    <td>{this.state.user.name}</td>
                   </tr>
                   <tr>
                     <td><strong>Password</strong></td>

@@ -89,7 +89,7 @@
 }
 .innerFailing{
   composes: inner;
-  background:var(--colorSuccess);
+  background:var(--colorDanger);
 }
 .innerRunning{
   composes: inner;

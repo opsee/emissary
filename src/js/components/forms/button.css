@@ -140,11 +140,15 @@
   border: 1px solid var(--colorTextSecondary);
   box-shadow: none;
   color: var(--colorTextSecondary);
+  padding: .4375em 0.5em;
 }
 .btnFlat:hover, .btnFlat.btnActive {
   background: var(--colorTextSecondary);
   border-color: var(--colorTextSecondary);
   color: white;
+}
+.btnFlat.btnBlock {
+  border: none;
 }
 
 .btnFlat[disabled]{
