@@ -92,11 +92,12 @@ const CheckCreateAssertions = React.createClass({
       assertions: new AssertionsFormSet({
         onChange: self.runChange,
         labelSuffix: '',
-        initial: this.props.check.assertions,
+        initial: _.cloneDeep(this.props.check.assertions),
         minNum: !this.props.check.assertions.length ? 1 : 0,
         extra: 0
       }),
-      response: this.props.response
+      response: this.props.response,
+      hasSetAssertions: !self.isDataComplete()
     };
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(() => {
@@ -107,7 +108,8 @@ const CheckCreateAssertions = React.createClass({
           form.setData(data);
         }
       });
-    }, 10);
+      self.setState({hasSetAssertions: true});
+    }, 50);
     return obj;
   },
   getFormattedResponse(){
@@ -119,10 +121,12 @@ const CheckCreateAssertions = React.createClass({
     });
   },
   getFinalData(){
-    let check = _.clone(this.props.check);
-    check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
-      return _.omit(a, 'DELETE');
-    });
+    let check = _.cloneDeep(this.props.check);
+    if (this.state.hasSetAssertions){
+      check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
+        return _.omit(a, 'DELETE');
+      });
+    }
     return check;
   },
   getResponse(){
@@ -135,6 +139,9 @@ const CheckCreateAssertions = React.createClass({
       }
     }
     return val;
+  },
+  isDataComplete(){
+    return this.props.check.assertions.length;
   },
   isDisabled(){
     return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();

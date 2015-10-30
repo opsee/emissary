@@ -139,7 +139,7 @@ const statics = {
     Store.emitChange();
   },
   checkFromJS(data){
-    let newData = _.merge(data, data.check_spec.value);
+    let newData = _.assign({}, data, data.check_spec.value);
     newData.name = newData.check_spec.value.name;
     // newData.notifications = newData.notifications.map(n => {
     //   return new Notification(n);

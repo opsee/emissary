@@ -86,7 +86,7 @@ export default React.createClass({
                   </Table>
                 </div>
                 <div className="padding-b">
-                  <h3>Instances ({this.state.group.get('instances').size})</h3>
+                  <h3>Instances</h3>
                   <InstanceItemList instances={this.state.group.get('instances')}/>
                 </div>
                 <div className="padding-b">
