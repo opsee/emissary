@@ -21,12 +21,6 @@ export default React.createClass({
       limit: this.props.limit || 4
     };
   },
-  isSelected(id){
-    return this.props.selected && this.props.selected === id;
-  },
-  isNotSelected(id){
-    return this.props.selected && this.props.selected !== id;
-  },
   getGroups(){
     return this.props.groups.slice(this.state.offset, this.state.limit);
   },
@@ -38,6 +32,12 @@ export default React.createClass({
     this.setState({
       limit: 1000
     });
+  },
+  isSelected(id){
+    return this.props.selected && this.props.selected === id;
+  },
+  isNotSelected(id){
+    return this.props.selected && this.props.selected !== id;
   },
   renderMoreButton(){
     if (this.state.limit < this.props.groups.size){

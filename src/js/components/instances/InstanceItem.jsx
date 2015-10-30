@@ -22,9 +22,6 @@ const InstanceItem = React.createClass({
     title: PropTypes.string,
     linkInsteadOfMenu: PropTypes.bool
   },
-  isSelected(){
-    return this.props.selected && this.props.selected === this.props.item.get('id');
-  },
   getInitialState(){
     return _.assign({}, {
       showModal: false
@@ -33,6 +30,9 @@ const InstanceItem = React.createClass({
   getInstanceLink(){
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `instance${suffix}`;
+  },
+  isSelected(){
+    return this.props.selected && this.props.selected === this.props.item.get('id');
   },
   runMenuOpen(e){
     e.preventDefault();

@@ -45,12 +45,14 @@ const Install = React.createClass({
     }).value();
 
     let reject = false;
-    if (this.props.query.fail){
-      reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
-    }else if (config.demo){
-      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
-    }else if (this.props.query.success){
-      reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
+    if (config.env !== 'production'){
+      if (this.props.query.fail){
+        reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
+      }else if (config.demo){
+        reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
+      }else if (this.props.query.success){
+        reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
+      }
     }
 
     const bastions = _.chain(msgs)
@@ -63,15 +65,24 @@ const Install = React.createClass({
         }).value()
       };
     }).value();
+    if (OnboardStore.getGetBastionsStatus() === 'success'){
+      if (!OnboardStore.getBastions().length){
+        setTimeout(OnboardActions.getBastions, 12000);
+      }
+    }
     this.setState({bastions});
   },
-  isBastionsComplete(){
-    const stats = this.getBastionStatuses();
-    return _.every(stats) && stats.length;
+  componentDidUpdate(){
+    if (this.areBastionsInstalled() && !this.state.startedPolling){
+      OnboardActions.getBastions();
+      /* eslint-disable react/no-did-update-set-state*/
+      this.setState({startedPolling: true});
+    }
   },
   getInitialState() {
     return {
-      bastions: []
+      bastions: [],
+      startedPolling: false
     };
   },
   getBastionStatuses(){
@@ -87,6 +98,17 @@ const Install = React.createClass({
   getBastionSuccesses(){
     return _.filter(this.getBastionStatuses(), stat => stat === 'CREATE_COMPLETE');
   },
+  isBastionsComplete(){
+    const stats = this.getBastionStatuses();
+    return _.every(stats) && stats.length;
+  },
+  areBastionsInstalled(){
+    const stats = this.bastionStatuses();
+    return _.every(stats) && stats.length;
+  },
+  areBastionsConnected(){
+    return OnboardStore.getBastions().length;
+  },
   renderSurvey(){
     if (!config.demo){
       return (
@@ -99,11 +121,17 @@ const Install = React.createClass({
   },
   renderBtn(){
     const bastionErrors = this.getBastionErrors();
-    const bastionSuccesses = this.getBastionSuccesses();
-    if (this.isBastionsComplete()){
-      if (!bastionErrors.length || bastionSuccesses.length){
+    if (this.areBastionsInstalled()){
+      if (!this.areBastionsConnected()){
         return (
           <Padding tb={3}>
+            <p>Your bastion has been installed, waiting for successful connection...</p>
+          </Padding>
+        );
+      }else if (!bastionErrors.length){
+        return (
+          <Padding tb={3}>
+            <p>All clear!</p>
             <Button to="checkCreate" color="primary" block chevron>
               Create a Check
             </Button>
@@ -116,6 +144,7 @@ const Install = React.createClass({
         </Alert>
       );
     }
+    return <div/>;
   },
   renderText(){
     if (!statics.checkedInstallStatus && !this.state.bastions.length){
@@ -123,7 +152,7 @@ const Install = React.createClass({
         <p>Checking installation status...</p>
       );
     }
-    if (this.isBastionsComplete()){
+    if (this.areBastionsInstalled()){
       const bastionErrors = this.getBastionErrors();
       const bastionSuccesses = this.getBastionSuccesses();
       if (bastionErrors.length && !bastionSuccesses.length){
@@ -135,9 +164,7 @@ const Install = React.createClass({
           <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
         );
       }
-      return (
-        <p>{bastionErrors.length > 1 ? bastionErrors.length + ' ' : ''}Bastion installed correctly.</p>
-      );
+      return <div/>;
     }
     return (
       <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>

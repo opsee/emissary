@@ -49,7 +49,8 @@
   "scripts": {
     "start": "npm install && node server",
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js && mkdir dist/fonts && cp -r src/fonts/ dist/fonts/",
-    "deploy": "npm run-script build && docker build -t quay.io/opsee/emissary:latest ."
+    "deploy": "npm run-script build && docker build -t quay.io/opsee/emissary:latest .",
+    "lint": "eslint src/. --ext .js,.jsx"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",

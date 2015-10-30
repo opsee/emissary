@@ -70,9 +70,6 @@ const CheckEdit = React.createClass({
     }
     this.setState(state);
   },
-  isDisabled(){
-    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
-  },
   getFinalData(){
     return this.state.check;
   },
@@ -81,6 +78,9 @@ const CheckEdit = React.createClass({
   },
   getCheckTitle(){
     return this.state.check.check_spec.value.name || this.state.check.id;
+  },
+  isDisabled(){
+    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
   },
   setData(data, disabled, num){
     let obj = {};

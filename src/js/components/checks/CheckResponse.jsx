@@ -43,11 +43,6 @@ const CheckResponse = React.createClass({
     }
     this.setState(state);
   },
-  isCheckComplete(check){
-    const condition1 = check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
-    return condition1 && condition2;
-  },
   getArrayFromData(data){
     let arr = _.map(['port', 'verb', 'path'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
@@ -75,6 +70,11 @@ const CheckResponse = React.createClass({
       bottom: 0,
       zIndex: 2
     };
+  },
+  isCheckComplete(check){
+    const condition1 = check.target.id;
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
+    return condition1 && condition2;
   },
   runTestCheck(props){
     const complete = this.isCheckComplete(props.check);

@@ -38,11 +38,11 @@ export default React.createClass({
       error: null
     };
   },
-  isDisabled(){
-    return !this.state.password || this.state.status === 'pending';
-  },
   getButtonText(){
     return this.state.status === 'pending' ? 'Setting...' : 'Set';
+  },
+  isDisabled(){
+    return !this.state.password || this.state.status === 'pending';
   },
   handleUserData(data){
     this.setState({password: data.password});

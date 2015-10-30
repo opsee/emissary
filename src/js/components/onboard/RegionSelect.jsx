@@ -2,7 +2,6 @@ import React from 'react';
 import {Toolbar} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
-import {State} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import router from '../../modules/router.js';
@@ -25,15 +24,17 @@ const InfoForm = forms.Form.extend({
   })
 });
 
-const Team = React.createClass({
-  mixins: [State, OnboardStore.mixin],
+const RegionSelect = React.createClass({
+  mixins: [OnboardStore.mixin],
   getInitialState() {
     const self = this;
     const data = OnboardStore.getInstallData();
     const obj = {
       info: new InfoForm({
         onChange(){
-          self.forceUpdate();
+          if (self.isMounted()){
+            self.forceUpdate();
+          }
         },
         labelSuffix: '',
         data: {
@@ -55,14 +56,12 @@ const Team = React.createClass({
     OnboardActions.getBastions();
   },
   storeDidChange(){
-    const data = OnboardStore.getInstallData();
-    if (data && data.regions && data.regions.length){
-      router.transitionTo('onboardCredentials');
-    }
     const bastionStatus = OnboardStore.getGetBastionsStatus();
     if (bastionStatus === 'success'){
       const bastions = OnboardStore.getBastions();
-      this.setState({bastions});
+      if (this.isMounted()){
+        this.setState({bastions});
+      }
     }
   },
   isDisabled(){
@@ -82,6 +81,10 @@ const Team = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
+    //redo this later, make install be a parent page instead of this bull
+    setTimeout(() => {
+      router.transitionTo('onboardCredentials');
+    }, 100);
   },
   renderInner(){
     if (!this.state.bastions.length){
@@ -122,4 +125,4 @@ const Team = React.createClass({
   }
 });
 
-export default Team;
+export default RegionSelect;

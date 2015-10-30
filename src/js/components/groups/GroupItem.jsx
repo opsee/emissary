@@ -32,15 +32,15 @@ const GroupItem = React.createClass({
       showModal: false
     });
   },
-  isSelected(){
-    return this.props.selected && this.props.selected === this.props.item.get('id');
-  },
   getGroupLink(){
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `group${suffix}`;
   },
   getActions(){
     return ['Create Check'];
+  },
+  isSelected(){
+    return this.props.selected && this.props.selected === this.props.item.get('id');
   },
   runMenuOpen(e){
     e.preventDefault();

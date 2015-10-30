@@ -26,14 +26,14 @@ const CheckItem = React.createClass({
       showModal: false
     });
   },
-  isSelected(){
-    return this.props.selected && this.props.selected === this.props.item.get('id');
-  },
   getLink(){
     return 'check';
   },
   getActions(){
     return ['Test'];
+  },
+  isSelected(){
+    return this.props.selected && this.props.selected === this.props.item.get('id');
   },
   runMenuOpen(e){
     e.preventDefault();

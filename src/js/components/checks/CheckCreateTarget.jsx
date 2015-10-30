@@ -39,9 +39,6 @@ const CheckCreateTarget = React.createClass({
       this.runChange();
     }
   },
-  isDisabled(){
-    return false;
-  },
   getFinalData(){
     let check = CheckStore.newCheck().toJS();
     check.target.id = this.state.selected;
@@ -66,6 +63,9 @@ const CheckCreateTarget = React.createClass({
       });
     }
     return this.state.groupsELB;
+  },
+  isDisabled(){
+    return false;
   },
   runChange(){
     let data = this.getFinalData();

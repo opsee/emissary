@@ -110,8 +110,8 @@ const CheckCreateAssertions = React.createClass({
     }, 10);
     return obj;
   },
-  isDisabled(){
-    return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
+  getFormattedResponse(){
+    return CheckStore.getFormattedResponse(this.props.response);
   },
   getAssertionsForms(){
     return _.reject(this.state.assertions.forms(), f => {
@@ -125,8 +125,8 @@ const CheckCreateAssertions = React.createClass({
     });
     return check;
   },
-  getFormattedResponse(){
-    return CheckStore.getFormattedResponse(this.props.response);
+  isDisabled(){
+    return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 2);

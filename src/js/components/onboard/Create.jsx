@@ -29,12 +29,12 @@ export default React.createClass({
       status: OnboardStore.getOnboardSignupCreateStatus()
     };
   },
+  getButtonText(){
+    return this.state.status === 'pending' ? 'Creating...' : 'Create Account';
+  },
   isDisabled(){
     const incomplete = !(this.state.data.name && this.state.data.email);
     return incomplete || this.state.status === 'pending';
-  },
-  getButtonText(){
-    return this.state.status === 'pending' ? 'Creating...' : 'Create Account';
   },
   handleUserData(data){
     this.setState({

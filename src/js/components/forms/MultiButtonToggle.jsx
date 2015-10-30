@@ -6,13 +6,13 @@ export default React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
-  isWidgetActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
-  },
   getInitialState(){
     return {
       data: this.props.bf.value()
     };
+  },
+  isWidgetActive(w){
+    return _.findWhere(this.props.bf.value(), w.choiceValue);
   },
   handleChange(id){
     let data = this.props.bf.value() || [];

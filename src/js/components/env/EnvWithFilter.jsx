@@ -98,13 +98,6 @@ const EnvWithFilter = React.createClass({
       getInstancesECCStatus
     }));
   },
-  isFinishedAttempt(){
-    const case1 = !!(this.state.attemptedGroupsSecurity &&
-      this.state.attemptedGroupsELB &&
-      this.state.attemptedInstancesECC);
-    const case2 = !!GroupStore.getGroupsSecurity().size;
-    return case1 || case2;
-  },
   getData(){
     GroupActions.getGroupsSecurity();
     GroupActions.getGroupsELB();
@@ -201,6 +194,13 @@ const EnvWithFilter = React.createClass({
     default:
       break;
     }
+  },
+  isFinishedAttempt(){
+    const case1 = !!(this.state.attemptedGroupsSecurity &&
+      this.state.attemptedGroupsELB &&
+      this.state.attemptedInstancesECC);
+    const case2 = !!GroupStore.getGroupsSecurity().size;
+    return case1 || case2;
   },
   onFilterChange(){
     this.forceUpdate();

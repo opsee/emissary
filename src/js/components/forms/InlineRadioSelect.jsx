@@ -17,13 +17,13 @@ export default React.createClass({
       this.handleChange(this.props.bf.field.initial[0], true);
     }
   },
-  isWidgetActive(w){
-    return this.props.bf.value()[0] === w.choiceValue;
-  },
   getInitialState(){
     return {
       data: this.props.bf.value()
     };
+  },
+  isWidgetActive(w){
+    return this.props.bf.value()[0] === w.choiceValue;
   },
   handleChange(id, bool){
     const data = bool ? [id] : [];

@@ -32,15 +32,6 @@ export default React.createClass({
       });
     }
   },
-  isUnapprovedSignup(s){
-    return !s.claimed && !s.activated;
-  },
-  isApprovedSignup(s){
-    return s.activated && !s.claimed;
-  },
-  isUser(s){
-    return s.claimed;
-  },
   getData(){
     const signups = AdminStore.getSignups().toJS();
     return _.chain(signups).map(s => {
@@ -64,6 +55,15 @@ export default React.createClass({
   },
   getUsers(){
     return _.filter(this.state.signups, this.isUser);
+  },
+  isUnapprovedSignup(s){
+    return !s.claimed && !s.activated;
+  },
+  isApprovedSignup(s){
+    return s.activated && !s.claimed;
+  },
+  isUser(s){
+    return s.claimed;
   },
   runActivateSignup: AdminActions.adminActivateSignup,
   runGhostAccount(signup){

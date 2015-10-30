@@ -72,11 +72,11 @@ const Team = React.createClass({
       })
     };
   },
-  isDisabled(){
-    return !this.state.info.isValid() || (this.state.availStatus === 'pending' && !this.state.domainAvailable);
-  },
   getButtonText(){
     return this.state.createOrgStatus === 'pending' ? 'Setting...' : 'Set';
+  },
+  isDisabled(){
+    return !this.state.info.isValid() || (this.state.availStatus === 'pending' && !this.state.domainAvailable);
   },
   handleSubmit(e){
     e.preventDefault();

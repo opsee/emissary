@@ -151,15 +151,6 @@ const CheckCreateRequest = React.createClass({
       this.forceUpdate();
     }
   },
-  isDataComplete(){
-    const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
-    return condition1 && condition2;
-  },
-  isDisabled(){
-    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
-    return !(this.state.info.isComplete() && headersComplete);
-  },
   getHeaderForms(){
     return _.reject(this.state.headers.forms(), f => {
       return f.cleanedData.DELETE;
@@ -183,6 +174,15 @@ const CheckCreateRequest = React.createClass({
     }
     val = _.assign(val, cleaned);
     return check;
+  },
+  isDataComplete(){
+    const condition1 = this.props.check.target.id;
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
+    return condition1 && condition2;
+  },
+  isDisabled(){
+    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
+    return !(this.state.info.isComplete() && headersComplete);
   },
   runChange(){
     let data = this.getFinalData();

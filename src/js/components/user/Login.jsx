@@ -37,12 +37,12 @@ export default React.createClass({
       status: UserStore.getUserLoginStatus()
     };
   },
+  getButtonText(){
+    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
+  },
   isDisabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);
     return incomplete || this.state.status === 'pending';
-  },
-  getButtonText(){
-    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
   },
   setUserData(data){
     this.setState({

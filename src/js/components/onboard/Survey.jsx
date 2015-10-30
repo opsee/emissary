@@ -50,13 +50,6 @@ const Survey = React.createClass({
   componentWillMount(){
     UserActions.userGetUserData(UserStore.getUser().toJS());
   },
-  isDataComplete(){
-    return false;
-    // return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
-  },
-  isDisabled(){
-    return !this.state.info.isValid();
-  },
   getSteps(){
     return [(
       <div>
@@ -81,6 +74,13 @@ const Survey = React.createClass({
         <h3>Thanks for the feedback!</h3>
       </div>
     )];
+  },
+  isDataComplete(){
+    return false;
+    // return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
+  },
+  isDisabled(){
+    return !this.state.info.isValid();
   },
   onDataChange(){
     UserActions.userPutUserData('bastionInstallSurvey', this.state.info.cleanedData);

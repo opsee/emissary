@@ -16,9 +16,6 @@ const BastionInstaller = React.createClass({
       messages: []
     };
   },
-  isComplete(){
-    return false;
-  },
   getInProgressItem(){
     const items = this.getItems();
 

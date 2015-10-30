@@ -105,13 +105,6 @@ const CheckCreateInfo = React.createClass({
       });
     }
   },
-  isDataComplete(){
-    return this.props.check.check_spec.value.name;
-  },
-  isDisabled(){
-    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
-    return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
-  },
   getNotificationsForms(){
     return _.reject(this.state.notifications.forms(), f => {
       return f.cleanedData.DELETE;
@@ -131,6 +124,13 @@ const CheckCreateInfo = React.createClass({
       notifications: notificationData
     };
     return _.assign(data, this.state.info.cleanedData);
+  },
+  isDataComplete(){
+    return this.props.check.check_spec.value.name;
+  },
+  isDisabled(){
+    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
+    return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 3);

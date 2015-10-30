@@ -64,12 +64,6 @@ export default React.createClass({
       });
     }
   },
-  isDataComplete(){
-    return UserStore.getUser().get('name') && UserStore.getUser().toJS();
-  },
-  isDisabled(){
-    return !(this.state.user.email && this.state.user.name);
-  },
   getForm(){
     const self = this;
     return new PasswordForm({
@@ -82,6 +76,12 @@ export default React.createClass({
         onChangeDelay: 100
       }
     });
+  },
+  isDataComplete(){
+    return UserStore.getUser().get('name') && UserStore.getUser().toJS();
+  },
+  isDisabled(){
+    return !(this.state.user.email && this.state.user.name);
   },
   handleUserData(data){
     let user = _.clone(this.state.user);

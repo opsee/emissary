@@ -14,15 +14,15 @@ const AssertionCounter = React.createClass({
     keyData: PropTypes.string,
     label: PropTypes.string
   },
+  getTitle(){
+    return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
+  },
   isPassing(){
     const test = this.runTest();
     return test && test.success;
   },
   isActive(){
     return !!this.props.relationship ? 'active' : '';
-  },
-  getTitle(){
-    return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
   },
   runTest(){
     return slate(_.assign(_.cloneDeep(this.props), {key: this.props.keyData}), this.props.response);

@@ -18,11 +18,11 @@ export default React.createClass({
       status: UserStore.getUserSendResetEmailStatus()
     };
   },
-  isDisabled(){
-    return !this.state.data.email || this.state.status === 'pending';
-  },
   getButtonText(){
     return this.state.status === 'pending' ? 'Sending...' : 'Send Reset Email';
+  },
+  isDisabled(){
+    return !this.state.data.email || this.state.status === 'pending';
   },
   setUserData(data){
     this.setState({
