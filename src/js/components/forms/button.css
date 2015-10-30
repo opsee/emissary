@@ -53,11 +53,11 @@
 .btnDefault {
   composes: btn;
   color: white;
-  background: var(--colorTextSecondary);
+  background: var(--gray900);
 }
 .btnDefault:focus, .btnDefault:hover, .btnDefault:active {
   color: white;
-  background: var(--gray800);
+  background: black;
 }
 .btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
   background: var(--colorTextSecondary);
@@ -137,11 +137,13 @@
 .btnFlat {
   composes: btn;
   background: transparent;
+  border: 1px solid var(--colorTextSecondary);
   box-shadow: none;
   color: var(--colorTextSecondary);
 }
 .btnFlat:hover, .btnFlat.btnActive {
   background: var(--colorTextSecondary);
+  border-color: var(--colorTextSecondary);
   color: white;
 }
 

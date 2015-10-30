@@ -69,7 +69,11 @@ export default React.createClass({
     if(this.state.group.get('name')){
       return (
         <div>
-          <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
+          <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}>
+            <Button color="primary" fab={true} to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'security'}}} title="Create New Check">
+              <Add btn={true}/>
+            </Button>
+          </Toolbar>
           <Grid>
             <Row>
               <Col xs={12}>
@@ -97,11 +101,6 @@ export default React.createClass({
                 <div className="padding-b">
                   <h3>Checks</h3>
                   <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
-                  <Padding t={2}>
-                    <Button color="primary" text="left" to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'security'}}}>
-                      <Add inline={true}/> Create Check
-                    </Button>
-                  </Padding>
                 </div>
               </Col>
             </Row>

@@ -55,21 +55,16 @@ export default React.createClass({
                     <td><strong>Name</strong></td>
                     <td>{this.state.user.name}</td>
                   </tr>
+                  <tr>
+                    <td><strong>Password</strong></td>
+                    <td><Link to="profileEdit" >Change Your Password</Link></td>
+                  </tr>
                 </Table>
               </Padding>
-              <Padding b={1}>
-                <Button flat={true} color="primary" to="profileEdit" >Change Your Password</Button>
-              </Padding>
               <Padding t={3}>
-                <Grid fluid={true}>
-                  <Row className="end-xs">
-                    <Col>
-                      <Button flat={true} color="danger" onClick={this.logOut}>
-                        <Logout inline={true} fill="danger"/> Log Out
-                      </Button>
-                    </Col>
-                  </Row>
-                </Grid>
+                <Button flat={true} color="danger" onClick={this.logOut}>
+                  <Logout inline={true} fill="danger"/> Log Out
+                </Button>
               </Padding>
             </Col>
           </Row>

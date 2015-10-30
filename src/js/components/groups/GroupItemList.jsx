@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable, {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
+import {Padding} from '../layout';
 import {Button} from '../forms';
 import {ChevronDown} from '../icons';
 
@@ -40,7 +41,7 @@ export default React.createClass({
   },
   renderMoreButton(){
     if(this.state.limit < this.props.groups.size){
-      return <Button color="primary" flat={true} onClick={this.getMore} className="margin-t">Show {this.props.groups.size - this.state.limit} more <ChevronDown inline={true} fill="primary"/></Button>
+      return <Button color="primary" flat={true} onClick={this.getMore}>Show {this.props.groups.size - this.state.limit} more <ChevronDown inline={true} fill="primary"/></Button>
     }
   },
   render() {
@@ -48,9 +49,11 @@ export default React.createClass({
     if(this.props.groups.size){
       return(
         <div>
-          {this.getGroups().map((group, i) => {
-            return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>
-          })}
+          <Padding b={1}>
+            {this.getGroups().map((group, i) => {
+              return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>
+            })}
+          </Padding>
           {this.renderMoreButton()}
         </div>
       )

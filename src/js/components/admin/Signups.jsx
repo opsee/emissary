@@ -7,7 +7,7 @@ import {Toolbar} from '../global';
 import {AdminActions, GlobalActions, UserActions} from '../../actions';
 import {AdminStore} from '../../stores';
 import {Link} from 'react-router';
-import {Checkmark, Person} from '../icons';
+import {Checkmark, Person, Mail, Ghost} from '../icons';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -85,14 +85,17 @@ export default React.createClass({
     }
   },
   outputButton(signup){
-    if(this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
-      const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
+    if(this.isUnapprovedSignup(signup)){
       return (
-        <Button flat={true} color="primary" onClick={this.activateSignup.bind(null, signup)}>{text}</Button>
+        <Button flat={true} color="success" onClick={this.activateSignup.bind(null, signup)}><Checkmark fill="success" inline={true}/> Activate</Button>
       )
-    }else{
+    } else if (this.isApprovedSignup(signup)) {
+      return (
+        <Button flat={true} color="primary" onClick={this.activateSignup.bind(null, signup)}><Mail fill="primary" inline={true}/> Resend Activation Email</Button>
+      )
+    } else{
       return(
-        <Button flat={true} color="primary" onClick={this.ghostAccount.bind(null, signup)}>Ghost</Button>
+        <Button flat={true} color="danger" onClick={this.ghostAccount.bind(null, signup)}><Ghost fill="danger" inline={true}/> Ghost</Button>
       )
     }
   },
@@ -105,13 +108,13 @@ export default React.createClass({
               <h3>
                 {this.outputIcon(signup)} {signup.name}
               </h3>
-              <div>
+              <Padding b={1}>
                 <div><a href={'mailto:' + signup.email}>{signup.email}</a></div>
                 <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
-                </div>
-              <div>
+              </Padding>
+              <Padding b={1}>
                 {this.outputButton(signup)}
-              </div>
+              </Padding>
             </Padding>
           </div>
         </Padding>

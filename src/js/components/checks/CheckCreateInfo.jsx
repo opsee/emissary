@@ -162,7 +162,7 @@ const CheckCreateInfo = React.createClass({
         })
         }
         <Padding t={2}>
-          <Button color="primary" noPad={true} flat={true} onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
+          <Button color="primary" flat={true} onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline={true}/> Add Another Notification</Button>
         </Padding>
       </div>
     )
@@ -190,7 +190,7 @@ const CheckCreateInfo = React.createClass({
     if(!this.props.renderAsInclude){
       return(
         <div>
-          <Padding t={2}> 
+          <Padding t={2}>
             <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Finish</Button>
           </Padding>
           <StepCounter active={4} steps={4}/>

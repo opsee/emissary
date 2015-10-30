@@ -119,7 +119,7 @@ export default React.createClass({
             <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
               return(
-                <li><Mail inline={true} fill="primary"/> {n.value}</li>
+                <li><Mail inline={true}/> {n.value}</li>
               )
             })}
             </ul>
@@ -154,14 +154,12 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding tb={1}>
+              <Padding b={3}>
                 {this.innerRender()}
               </Padding>
-              <div className="btn-container btn-container-righty">
-                <Button onClick={this.removeCheck} flat={true} color="danger">
-                  <Delete inline={true} fill="danger"/> Delete Check
-                </Button>
-              </div>
+              <Button onClick={this.removeCheck} flat={true} color="danger">
+                <Delete inline={true} fill="danger"/> Delete Check
+              </Button>
             </Col>
           </Row>
         </Grid>

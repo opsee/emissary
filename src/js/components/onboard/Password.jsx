@@ -62,13 +62,12 @@ export default React.createClass({
             <Row>
               <Col xs={12}>
                 <form name="loginForm" onSubmit={this.submit}>
-                  <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
-                  <Padding t={1}>
-                    <Button type="submit" block={true} color="success" chevron={true} disabled={this.disabled()}>{this.btnText()}</Button>
+                  <Padding b={1}>
+                    <UserInputs include={['password']}  onChange={this.updateUserData} email={this.state.password}/>
+                    <Link to="passwordForgot">Forgot your password?</Link>
                   </Padding>
-                  <Padding t={1}>
-                    <Button to="passwordForgot" flat={true}>Forgot Password?</Button>
-                  </Padding>
+                  <Button type="submit" block={true} color="success" chevron={true} disabled={this.disabled()}>{this.btnText()}</Button>
+
                 </form>
               </Col>
             </Row>

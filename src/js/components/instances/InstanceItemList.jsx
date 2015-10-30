@@ -4,6 +4,7 @@ import {InstanceActions} from '../../actions';
 import {InstanceStore} from '../../stores';
 import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
+import {Padding} from '../layout';
 import {Link} from 'react-router';
 import {MoreHoriz} from '../icons';
 import Immutable, {Record, List, Map} from 'immutable';
@@ -35,16 +36,18 @@ export default React.createClass({
   },
   renderMoreButton(){
     if(this.state.limit < this.props.instances.size){
-      return <Button color="primary" flat={true} onClick={this.getMore} className="margin-t">Show {this.props.instances.size - this.state.limit} more <ChevronDown inline={true} fill="primary"/></Button>
+      return <Button color="primary" flat={true} onClick={this.getMore}>Show {this.props.instances.size - this.state.limit} more <ChevronDown inline={true} fill="primary"/></Button>
     }
   },
   render(){
     if(this.props.instances.size){
       return(
         <div>
-          {this.getInstances().map(instance => {
-            return <InstanceItem item={instance} key={instance.get('id')}/>
-          })}
+          <Padding b={1}>
+            {this.getInstances().map(instance => {
+              return <InstanceItem item={instance} key={instance.get('id')}/>
+            })}
+          </Padding>
           {this.renderMoreButton()}
         </div>
       )
