@@ -9,7 +9,7 @@ import {BoundField, Button} from '../forms';
 import {Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {UserActions, GroupActions} from '../../actions';
+import {CheckActions, UserActions, GroupActions} from '../../actions';
 import {GroupStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
@@ -138,6 +138,7 @@ const CheckCreateRequest = React.createClass({
     if (!groupsELB.size){
       GroupActions.getGroupsELB();
     }
+    CheckActions.resetTestCheck();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){

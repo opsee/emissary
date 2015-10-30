@@ -5098,7 +5098,7 @@ Dark style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Or
 }
 
 .hljs-number {
-  color: var(--colorInfo);
+  color: var(--colorWarning);
 }
 
 .hljs,

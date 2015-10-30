@@ -44,9 +44,7 @@ _statics.checkCreateOrEdit = (data, isEditing) => {
     request
     [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/' + data.id : ''}`)
     .set('Authorization', UserStore.getAuth())
-    .send(d).then(checkRes => {
-      //REMOVE and go back to this when bartnet is better
-      // if (checkRes && checkRes.body){
+    .send(d).then(checkRes =>{
       _statics.saveNotifications(data, _.get(checkRes, 'body.id') || data.id, isEditing)
       .then(() => {
         _statics.saveAssertions(data, _.get(checkRes, 'body.id') || data.id, isEditing).then(() => {
@@ -137,8 +135,10 @@ _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
     .set('Authorization', UserStore.getAuth())
     .send({check: newData, max_hosts: 3, deadline: '30s'});
   },
-  res => res.body,
+  res => _.get(res, 'body.responses') || [],
   res => _.get(res.body) || res
 );
+
+_actions.resetTestCheck = Flux.statics.addAction('resetTestCheck');
 
 export default _.assign({}, ..._.values(_actions));

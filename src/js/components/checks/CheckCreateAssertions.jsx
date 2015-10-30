@@ -125,6 +125,17 @@ const CheckCreateAssertions = React.createClass({
     });
     return check;
   },
+  getResponse(){
+    const data = CheckStore.getResponse();
+    let val;
+    if (data){
+      let response = CheckStore.getResponse().toJS();
+      if (response && response.length){
+        val = _.get(response[0], 'response.value');
+      }
+    }
+    return val;
+  },
   isDisabled(){
     return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
   },
@@ -187,7 +198,7 @@ const CheckCreateAssertions = React.createClass({
               <Padding tb={1}>
               <Row>
                 <Col xs={2} sm={1}>
-                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.props.response}/>
+                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
                 </Col>
                 <Col xs={8} sm={10}>
                   <Row>

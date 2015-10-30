@@ -103,16 +103,17 @@ const statics = {
     const parsed = Date.parse(time);
     if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
       launchTime = parsed;
+    }else {
+      launchTime = null;
     }
     return launchTime;
   },
   instanceRDSFromJS(data){
-    let newData = data;
-    newData.id = newData.DbiResourceId;
-    newData.name = newData.DBName;
-    newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
-    newData.type = 'RDS';
-    return new Instance(newData);
+    data.id = data.DbiResourceId;
+    data.name = data.DBName;
+    data.LaunchTime = statics.getCreatedTime(data.InstanceCreateTime);
+    data.type = 'RDS';
+    return new Instance(data);
   },
   instanceFromJS(data){
     if (data.DBInstanceIdentifier){
@@ -130,22 +131,32 @@ const statics = {
       data.checks = [
         {
           assertions: [
-          {passing: false},
-          {passing: false}
+            {passing: false},
+            {passing: false}
           ]
         },
         {
           assertions: [
-          {passing: true},
-          {passing: true},
-          {passing: false}
+            {passing: true},
+            {passing: true},
+            {passing: false}
           ]
         },
         {
           assertions: [
-          {passing: true},
-          {passing: true},
-          {passing: true}
+            {passing: true},
+            {passing: true},
+            {passing: true}
+          ]
+        }
+      ];
+    }
+    if (data.name === 'IRC'){
+      data.checks = [
+        {
+          assertions: [
+            {passing: true},
+            {passing: true}
           ]
         }
       ];

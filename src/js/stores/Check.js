@@ -179,29 +179,44 @@ const _public = {
     return new Check(data);
   },
   getResponse(){
-    if (_data.response){
-      return _.chain(_data.response.toJS()).get('responses').first().get('response.value').value();
-    }
-    return null;
+    return _data.response;
   },
   getFakeResponse(){
     return fakeResponse;
   },
   getFormattedResponse(data){
-    if (data){
-      let response = _.cloneDeep(data);
-      if (response.headers){
-        response.headers = response.headers.map(h => {
+    if (data && data.size){
+      const first = data.toJS()[0];
+      let response = _.cloneDeep(first);
+      const headers = _.get(response, 'response.value.headers');
+      if (headers){
+        response.response.value.headers = headers.map(h => {
           h.values = h.values.join(', ');
           return h;
         });
         let headerObj = {};
-        response.headers.forEach(h => {
+        response.response.value.headers.forEach(h => {
           headerObj[h.name] = h.values;
         });
-        response.headers = headerObj;
+        response.response.value.headers = headerObj;
       }
-      return _.omit(response, 'metrics');
+      if (response.error){
+        try {
+          let err = JSON.parse(response.error);
+          if (err && err.error){
+            response.error = err.error;
+          }else {
+            reponse.error = err;
+          }
+        }catch (err){
+          console.warn(err);
+        }
+      }
+      if (_.get(response, 'response.value.metrics')){
+        delete response.response.value.metrics;
+      }
+      return response;
+      // return _.omit(response, 'response.value.metrics');
     }
   }
 };
@@ -229,6 +244,10 @@ const Store = Flux.createStore(
       Store.emitChange();
       break;
     default:
+      break;
+    case 'RESET_TEST_CHECK':
+      _data.response = undefined;
+      Store.emitChange();
       break;
     }
     const statusData = Flux.statics.statusProcessor(payload, statics, Store);

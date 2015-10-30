@@ -21,11 +21,8 @@ const AssertionCounter = React.createClass({
     const test = this.runTest();
     return test && test.success;
   },
-  isActive(){
-    return !!this.props.relationship ? 'active' : '';
-  },
   runTest(){
-    return slate(_.assign(_.cloneDeep(this.props), {key: this.props.keyData}), this.props.response);
+    return slate(_.assign({}, _.cloneDeep(this.props), {key: this.props.keyData}), _.cloneDeep(this.props.response));
   },
   renderSmallIcon(){
     return this.isPassing() ? (

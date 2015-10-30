@@ -46,7 +46,7 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
 );
 
 _actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
-  (data) => {
+  () => {
     return request
     .post(`${config.api}/orgs`)
     .set('Authorization', UserStore.getAuth())
@@ -102,7 +102,7 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
 //     return new Promise((resolve, reject) => {
 //       return setTimeout(() => {
 //         tried++;
-//         if(tried > 20){
+//         if (tried > 20){
 //           resolve({body:{bastions:['foo']}});
 //         }else{
 //           resolve({body:{bastions:[]}});
