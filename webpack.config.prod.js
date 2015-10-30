@@ -40,7 +40,7 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
-    // chunkFilename: "[id].[hash].bundle.js"
+    chunkFilename: "[id].[hash].js"
   },
   module: {
     preLoaders:[

@@ -11,6 +11,7 @@ import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
 import CheckCreate from '../checks/Create.jsx';
+
 import Docs from '../docs/Docs.jsx';
 import DocsBastion from '../docs/Bastion.jsx';
 import DocsCloudformation from '../docs/Cloudformation.jsx';

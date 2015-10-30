@@ -48,7 +48,7 @@
   },
   "scripts": {
     "start": "npm install && node server",
-    "build": "NODE_ENV=production webpack --config webpack.config.prod.js && mkdir dist/fonts && cp -r src/fonts/ dist/fonts/",
+    "build": "NODE_ENV=production webpack --config webpack.config.prod.js && cp -r src/fonts/ dist/fonts/",
     "deploy": "npm run-script build && docker build -t quay.io/opsee/emissary:latest .",
     "lint": "eslint src/. --ext .js,.jsx"
   },
@@ -89,6 +89,7 @@
     "react-g-analytics": "^0.1.0",
     "react-router": "^0.13.3",
     "react-router-bootstrap": "^0.18.1",
+    "react-router-proxy-loader": "^0.3.0",
     "react-timeago": "^2.2.1",
     "seedling": "git+ssh://git@github.com/opsee/seedling.git",
     "slate": "git+ssh://git@github.com/opsee/slate.git",
