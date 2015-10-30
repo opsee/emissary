@@ -1,6 +1,6 @@
 import React from 'react';
 import {UserActions} from '../../actions';
-import {OnboardStore, UserStore} from '../../stores';
+import {UserStore} from '../../stores';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 
@@ -14,22 +14,30 @@ const InfoForm = forms.Form.extend({
   services: forms.MultipleChoiceField({
     choices: serviceChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
     label: 'buttonToggle'
   }),
   features: forms.MultipleChoiceField({
     choices: featureChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
     label: 'buttonToggle'
   }),
   sucks: forms.MultipleChoiceField({
     choices: sucksChoices.map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
     label: 'buttonToggle'
   })
 });
 
 const Survey = React.createClass({
-  mixins: [OnboardStore.mixin],
   getInitialState() {
     const self = this;
     return {

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {Padding} from '../layout';
 import {ProgressBar} from '../global';
 
-const itemTypes = ['AWS:: CloudFormation:: Stack', 'AWS:: IAM:: Role', 'AWS:: EC2:: SecurityGroup', 'AWS:: IAM:: InstanceProfile', 'AWS:: EC2:: Instance'];
+const itemTypes = ['AWS::CloudFormation::Stack', 'AWS::IAM::Role', 'AWS::EC2::SecurityGroup', 'AWS::IAM::InstanceProfile', 'AWS::EC2::Instance'];
 
 const BastionInstaller = React.createClass({
   propTypes: {
@@ -38,12 +38,12 @@ const BastionInstaller = React.createClass({
       }else if (items[0].status === 'CREATE_COMPLETE'){
         return 'Complete';
       }
-      return 'AWS:: CloudFormation:: Stack';
+      return 'AWS::CloudFormation::Stack';
     }
     if (!items[1].status){
       return 'Reading';
     }
-    return 'AWS:: IAM:: Role';
+    return 'AWS::IAM::Role';
   },
   getPercentComplete(){
     const num = this.getText().num;
@@ -73,19 +73,19 @@ const BastionInstaller = React.createClass({
       num = 1;
       string = 'Reading CloudFormation template';
       break;
-    case 'AWS:: IAM:: Role':
+    case 'AWS::IAM::Role':
       num = 2;
       string = 'Creating Instance Role';
       break;
-    case 'AWS:: EC2:: SecurityGroup':
+    case 'AWS::EC2::SecurityGroup':
       num = 3;
       string = 'Creating Security Group';
       break;
-    case 'AWS:: IAM:: InstanceProfile':
+    case 'AWS::IAM::InstanceProfile':
       num = 4;
       string = 'Creating Instance Profile';
       break;
-    case 'AWS:: EC2:: Instance':
+    case 'AWS::EC2::Instance':
       num = 5;
       string = 'Launching Instance.';
       break;

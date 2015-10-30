@@ -43,7 +43,7 @@ const Toolbar = React.createClass({
         <Grid>
           <Row>
             <Col xs={12} className={style.inner}>
-              <h1 className="margin-none">{this.props.title}</h1>
+              <h1 style={{margin: 0}}>{this.props.title}</h1>
                 <div className={this.getChildrenClass()}>
                 {this.props.children}
                 </div>

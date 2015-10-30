@@ -24,7 +24,8 @@ let _data = {
   availableVpcs: [],
   domainPromisesArray: [],
   subdomainAvailable: null,
-  bastions: []
+  bastions: [],
+  customer: {}
 };
 
 const _public = {
@@ -58,6 +59,9 @@ const _public = {
   },
   getBastions(){
     return _data.bastions;
+  },
+  getCustomer(){
+    return _data.customer;
   },
   getFinalInstallData(){
     let relation = _installData.vpcs.map((v) => {
@@ -94,7 +98,8 @@ const statics = {
     subdomainAvailability: null,
     onboardCreateOrg: null,
     onboardVpcScan: null,
-    getBastions: null
+    getBastions: null,
+    getCustomer: null
   }
 };
 
@@ -155,6 +160,9 @@ const Store = Flux.createStore(
       break;
     case 'GET_BASTIONS_SUCCESS':
       _data.bastions = payload.data;
+      break;
+    case 'GET_CUSTOMER_SUCCESS':
+      _data.customer = payload.data;
       break;
     default:
       break;

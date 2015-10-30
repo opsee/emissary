@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import RadioWithLabel from './RadioWithLabel.jsx';
 import colors from 'seedling/colors';
+import {Padding} from '../layout';
 
 export default React.createClass({
   propTypes: {
@@ -37,15 +38,17 @@ export default React.createClass({
     return (
       <div className="form-group">
         <label className="label">Method</label>
-        <ul className="list-unstyled flex-wrap padding-sm">
-          {this.props.bf.subWidgets().map((w, i) => {
-            return (
-              <li key={i} style={{marginRight: '1.8em'}}>
-                <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '.4em', color: colors.textColor, paddingLeft: 0}}/>
-              </li>
-            );
-          })}
-        </ul>
+        <Padding a={0.5}>
+          <ul className="list-unstyled flex-wrap">
+            {this.props.bf.subWidgets().map((w, i) => {
+              return (
+                <li key={i} style={{marginRight: '1.8em'}}>
+                  <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '.3em', color: colors.textColor, paddingLeft: 0}}/>
+                </li>
+              );
+            })}
+          </ul>
+        </Padding>
       </div>
     );
   }

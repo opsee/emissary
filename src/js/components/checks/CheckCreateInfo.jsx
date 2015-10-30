@@ -15,7 +15,10 @@ const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
 const NotificationForm = forms.Form.extend({
   type: forms.ChoiceField({
-    choices: notificationOptions
+    choices: notificationOptions,
+    widgetAttrs: {
+      widgetType: 'Dropdown'
+    }
   }),
   value: forms.CharField({
     label: 'Recipient',
@@ -78,7 +81,8 @@ const CheckCreateInfo = React.createClass({
         minNum: !initialNotifs.length ? 1 : 0,
         extra: 0
       }),
-      submitting: false
+      submitting: false,
+      hasSetNotifications: !self.isDataComplete()
     };
 
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -89,7 +93,8 @@ const CheckCreateInfo = React.createClass({
           form.setData(notif);
         }
       });
-    }, 10);
+      this.setState({hasSetNotifications: true});
+    }, 50);
     return obj;
   },
   componentDidMount(){
@@ -111,11 +116,13 @@ const CheckCreateInfo = React.createClass({
     });
   },
   getFinalData(){
-    let check = _.clone(this.props.check);
+    let check = _.cloneDeep(this.props.check);
     check.check_spec.value.name = this.state.info.cleanedData.name;
-    check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
-      return _.omit(n, 'DELETE');
-    });
+    if (this.state.hasSetNotifications){
+      check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
+        return _.omit(n, 'DELETE');
+      });
+    }
     return check;
   },
   getCleanedData(){

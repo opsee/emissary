@@ -8,6 +8,7 @@ import _ from 'lodash';
 import router from '../../modules/router';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
+import {Padding} from '../layout';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
@@ -70,15 +71,15 @@ export default React.createClass({
               <LogoColor/>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
-                <div className="padding-t">
+                <Padding t={1}>
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
                   </Button>
-                </div>
-                <div className="padding-t-md">
-                    <p><Link to="passwordForgot">Forgot your password?</Link></p>
-                    <p>Need an account? <Link to="start">Sign up!</Link></p>
-                </div>
+                </Padding>
+                <Padding tb={2}>
+                  <p><Link to="passwordForgot">Forgot your password?</Link></p>
+                  <p>Need an account? <Link to="start">Sign up!</Link></p>
+                </Padding>
               </form>
             </Col>
           </Row>

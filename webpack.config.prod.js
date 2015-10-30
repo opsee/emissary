@@ -17,8 +17,8 @@ var definePlugin = new webpack.DefinePlugin({
 });
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
-  mangle: false,
-  compress:false
+  mangle: true,
+  compress: true
 })
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
@@ -65,7 +65,7 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     definePlugin,
-    // uglify,
+    uglify,
     // new AssetsPlugin(),
     new HtmlWebpackPlugin({
       hash:true,

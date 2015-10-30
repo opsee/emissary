@@ -92,13 +92,13 @@ const CheckResponse = React.createClass({
   renderButton(){
     if (this.state.expanded){
       return (
-        <Button color="info" size="small" onClick={this.handleToggle} style={this.getButtonStyle()} title="Close Reponse">
+        <Button color="info" sm onClick={this.handleToggle} style={this.getButtonStyle()} title="Close Reponse">
           <ChevronUp/>
         </Button>
       );
     }
     return (
-      <Button color="info" size="small" onClick={this.handleToggle} style={this.getButtonStyle()} title="Open Response">
+      <Button color="info" sm onClick={this.handleToggle} style={this.getButtonStyle()} title="Open Response">
         <ChevronDown/>
       </Button>
     );
@@ -119,7 +119,7 @@ const CheckResponse = React.createClass({
   },
   render() {
     if (CheckStore.getResponse() && this.state.complete){
-      if (this.getFormattedResponse().error){
+      if (this.getFormattedResponse() && this.getFormattedResponse().error){
         return (
           <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
             <Alert bsStyle="info">{this.getFormattedResponse().error}</Alert>

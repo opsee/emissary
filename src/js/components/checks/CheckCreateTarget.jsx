@@ -87,7 +87,7 @@ const CheckCreateTarget = React.createClass({
       selectedType: type
     });
     this.props.onChange(check, this.isDisabled(), 1);
-    router.transitionTo('checkCreateRequest');
+    router.transitionTo('checkCreateRequest', null, {target: check.target});
   },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){

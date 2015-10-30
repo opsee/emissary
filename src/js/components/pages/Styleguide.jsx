@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
-import {Padding} from '../layout';
 
+import {Padding} from '../layout';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
@@ -208,8 +208,10 @@ export default React.createClass({
             <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
             {this.state.buttonToggles.map((t, i) => {
               return (
-                <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin: '0 .5em'}}>
-                  <ButtonToggle on={t.on} onChange={this.runTriggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
+                <li key={`button-toggle-${i}`} style={{margin: '0 .5em'}}>
+                  <Padding tb={0.5}>
+                    <ButtonToggle on={t.on} onChange={this.runTriggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
+                  </Padding>
                 </li>
               );
             })}
@@ -261,20 +263,22 @@ export default React.createClass({
             <Row>
             {[1, 2, 3, 4].map(i => {
               return (
-                <Col xs={12} sm={6} className="padding-tb" key={`card-${i}`}>
-                  <div className="bg-gray-900 md-shadow-bottom-z-1">
-                    <div className="padding">
-                      <h2 className="margin-none">A title goes here</h2>
+                <Col xs={12} sm={6} key={`card-${i}`}>
+                  <Padding tb={1}>
+                    <div className="bg-gray-900 md-shadow-bottom-z-1">
+                      <div className="padding">
+                        <h2 className="margin-none">A title goes here</h2>
+                        <div>
+                          <div><a href="mailto:">test@opsee.co</a></div>
+                          <span>#352346 - Created on 12/05/15</span>
+                        </div>
+                      </div>
                       <div>
-                        <div><a href="mailto:">test@opsee.co</a></div>
-                        <span>#352346 - Created on 12/05/15</span>
+                        <Button color="default" flat>Delete</Button>
+                        <Button color="primary" flat className="pull-right">Activate</Button>
                       </div>
                     </div>
-                    <div>
-                      <Button color="default" flat>Delete</Button>
-                      <Button color="primary" flat className="pull-right">Activate</Button>
-                    </div>
-                  </div>
+                  </Padding>
                 </Col>
               );
             })}
@@ -331,10 +335,9 @@ export default React.createClass({
                   <Button flat color="success" disabled>Disabled</Button>
                 </Padding>
               </Padding>
-
-              <div className="padding-bx2">
+              <Padding b={2}>
                 <Button flat noPad primary>NO PAD</Button>
-              </div>
+              </Padding>
             </form>
 
             <h3>Loading State</h3>

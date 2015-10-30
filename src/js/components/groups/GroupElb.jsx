@@ -68,7 +68,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <div className="padding-b">
+                <Padding b={1}>
                   <h3>ELB Information</h3>
                   <Table>
                     <tr>
@@ -84,12 +84,12 @@ export default React.createClass({
                       <td>{this.renderDescription()}</td>
                     </tr>
                   </Table>
-                </div>
-                <div className="padding-b">
-                  <h3>Instances ({this.state.group.get('instances').size})</h3>
+                </Padding>
+                <Padding b={1}>
+                  <h3>Instances</h3>
                   <InstanceItemList instances={this.state.group.get('instances')}/>
-                </div>
-                <div className="padding-b">
+                </Padding>
+                <Padding b={1}>
                   <h3>Checks</h3>
                   <CheckItemList type="groupELB" id={this.props.params.id}/>
                   <Padding t={2}>
@@ -97,7 +97,7 @@ export default React.createClass({
                       <Add inline/> Create Check
                     </Button>
                   </Padding>
-                </div>
+                </Padding>
               </Col>
             </Row>
           </Grid>

@@ -32,6 +32,7 @@ const AssertionItem = React.createClass({
           </Col>
           <Col xs={10} sm={11}>
           <span>{this.getKey()}&nbsp;</span>
+          <span>{this.props.item.value ? ` - ${this.props.item.value} ` : null}</span>
           <span className="text-secondary">{this.getRelationship()}&nbsp;</span>
           <strong>{this.props.item.operand}</strong>
           </Col>
