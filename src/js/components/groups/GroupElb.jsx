@@ -65,15 +65,17 @@ export default React.createClass({
     if(this.state.group.get('name')){
       return (
         <div>
-          <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}>
-            <Button color="primary" fab={true} to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'elb'}}} title="Create New Check">
-              <Add btn={true}/>
-            </Button>
-          </Toolbar>
+          <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || ''}`} />
           <Grid>
             <Row>
               <Col xs={12}>
-                <div className="padding-b">
+                <Padding b={2}>
+                  <Button color="primary" flat={true} to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'elb'}}} title="Create New Check">
+                    <Add fill="primary" inline={true}/> Create a Check
+                  </Button>
+                </Padding>
+
+                <Padding b={1}>
                   <h3>ELB Information</h3>
                   <Table>
                     <tr>
@@ -89,15 +91,17 @@ export default React.createClass({
                       <td>{this.renderDescription()}</td>
                     </tr>
                   </Table>
-                </div>
-                <div className="padding-b">
+                </Padding>
+
+                <Padding b={1}>
                   <h3>Instances ({this.state.group.get('instances').size})</h3>
                   <InstanceItemList instances={this.state.group.get('instances')}/>
-                </div>
-                <div className="padding-b">
+                </Padding>
+
+                <Padding b={1}>
                   <h3>Checks</h3>
                   <CheckItemList type="groupELB" id={this.props.params.id}></CheckItemList>
-                </div>
+                </Padding>
               </Col>
             </Row>
           </Grid>

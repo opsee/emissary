@@ -273,7 +273,7 @@ const EnvWithFilter = React.createClass({
           <Button flat={true} color={"danger"} onClick={this.toggleButtonState.bind(null, 'failing')}><Circle fill="danger" inline={true}/> {this.getNumberFailing()} Failing</Button>
         </Col>
         <Col className="col-xs">
-          <Button flat={true} color={"default"} onClick={this.toggleButtonState.bind(null, 'running')}><Circle fill="textSecondary" inline={true}/> {this.getNumberUnmonitored()} Unmonitored</Button>
+          <Button flat={true} onClick={this.toggleButtonState.bind(null, 'running')}><Circle fill="textSecondary" inline={true}/> {this.getNumberUnmonitored()} Unmonitored</Button>
         </Col>
       </Row>
     )

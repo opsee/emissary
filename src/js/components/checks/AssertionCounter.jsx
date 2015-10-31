@@ -28,20 +28,16 @@ const AssertionCounter = React.createClass({
   },
   getSmallIcon(){
     return this.passing() ? (
-      <Checkmark className={style.iconSuccess}/>
+      <Checkmark  btn={true} fill="#303030" />
     ) : (
-      <Close className={style.iconDanger}/>
+      <Close btn={true} fill="#303030" />
     )
   },
   render(){
     return(
       <div title={this.getTitle()} className={this.passing() ? style.counterSuccess : style.counterDanger}>
-      {this.props.label}
-      <div className={`${style.validation} ${!!this.props.relationship ? style.validationActive : ''}`}>
-      {this.getSmallIcon()}
-      <span className="sr-only">{this.runTest().error}</span>
+        {this.getSmallIcon()}
       </div>
-    </div>
     )
   }
 });

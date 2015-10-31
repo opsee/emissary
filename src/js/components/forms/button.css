@@ -144,7 +144,7 @@
 }
 .btnFlat:hover, .btnFlat.btnActive {
   background: var(--colorTextSecondary);
-  border-color: var(--colorTextSecondary);
+  border-color: transparent;
   color: white;
 }
 .btnFlat.btnBlock {
