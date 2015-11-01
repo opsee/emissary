@@ -12,7 +12,6 @@ var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
   __API__: JSON.stringify(process.env.CONFIG_API),
   __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
-  __EVENTS__: JSON.stringify(process.env.CONFIG_EVENTS),
   'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)}
 });
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
