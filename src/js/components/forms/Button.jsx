@@ -29,8 +29,10 @@ const Button = React.createClass({
   getClass(){
     var arr = [];
     for(var prop in this.props){
-      const selector = prop.match('color|text') ? this.props[prop] : prop;
-      arr.push(style[`btn${ _.startCase(selector).split(' ').join('')}`])
+      if(this.props[prop]){
+        const selector = prop.match('color|text') ? this.props[prop] : prop;
+        arr.push(style[`btn${ _.startCase(selector).split(' ').join('')}`]);
+      }
     }
     arr.push(this.props.className);
     return cx(arr);

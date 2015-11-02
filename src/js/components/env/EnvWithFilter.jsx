@@ -270,10 +270,10 @@ const EnvWithFilter = React.createClass({
     return (
       <Row>
         <Col className="col-xs">
-          <Button flat={true} color={"danger"} onClick={this.toggleButtonState.bind(null, 'failing')}><Circle fill="danger" inline={true}/> {this.getNumberFailing()} Failing</Button>
+          <Button flat={this.state.buttonSelected != 'failing'} color={"danger"} onClick={this.toggleButtonState.bind(null, 'failing')}><Circle fill={this.state.buttonSelected != 'failing' ? "danger" : ""} inline={true}/> {this.getNumberFailing()} Failing</Button>
         </Col>
         <Col className="col-xs">
-          <Button flat={true} onClick={this.toggleButtonState.bind(null, 'running')}><Circle fill="textSecondary" inline={true}/> {this.getNumberUnmonitored()} Unmonitored</Button>
+          <Button flat={this.state.buttonSelected != 'running'} onClick={this.toggleButtonState.bind(null, 'running')}><Circle fill={this.state.buttonSelected != 'running' ? "text" : ""} inline={true}/> {this.getNumberUnmonitored()} Unmonitored</Button>
         </Col>
       </Row>
     )

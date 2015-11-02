@@ -1,10 +1,11 @@
 @import '../global/vars.css';
 
 .btn {
+
   background-image: none;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 0.25em;
-  box-shadow: var(--shadowBottomZ1);
+  box-shadow: none;
   cursor: pointer;
   display: inline-block;
   font-size: 16px;
@@ -15,7 +16,7 @@
   text-align: center;
   text-transform: uppercase;
   touch-action: manipulation;
-  transition: box-shadow var(--transitionEaseOut), background var(--transitionEaseOut), color var(--transitionEaseOut), border-color var(--transitionEaseOut), width var(--transitionEaseOut);
+  transition: background var(--transitionEaseOut), color var(--transitionEaseOut), border-color var(--transitionEaseOut), width var(--transitionEaseOut);
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
@@ -39,7 +40,7 @@
 .btn:active{
   outline: 0;
   background-image: none;
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: none;
 }
 .btn[disabled]{
   cursor: not-allowed;
@@ -53,11 +54,11 @@
 .btnDefault {
   composes: btn;
   color: white;
-  background: var(--gray900);
+  background: var(--colorTextSecondary);
 }
 .btnDefault:focus, .btnDefault:hover, .btnDefault:active {
   color: white;
-  background: black;
+  background: var(--gray500);
 }
 .btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
   background: var(--colorTextSecondary);
@@ -137,12 +138,11 @@
 .btnFlat {
   composes: btn;
   background: transparent;
-  border: 1px solid var(--colorText);
+  border-color: var(--colorText);
   box-shadow: none;
   color: var(--colorText);
-  padding: .4375em 0.5em;
 }
-.btnFlat:hover, .btnFlat.btnActive {
+.btnFlat:hover {
   background: var(--colorText);
   border-color: transparent;
   color: white;
@@ -152,7 +152,7 @@
   background-color: transparent;
 }
 .btnFlat.btnBlock {
-  border: none;
+  border-color: transparent;
 }
 
 .btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
@@ -164,7 +164,7 @@
   border-color: var(--colorPrimary);
   color: var(--colorPrimary);
 }
-.btnFlat.btnPrimary:hover, .btnFlat.btnPrimary.btnActive {
+.btnFlat.btnPrimary:hover {
   background: var(--colorPrimary);
   color: white;
 }
@@ -173,7 +173,7 @@
   border-color: var(--colorSuccess);
   color: var(--colorSuccess);
 }
-.btnFlat.btnSuccess:hover, .btnFlat.btnSuccess.btnActive {
+.btnFlat.btnSuccess:hover {
   background: var(--colorSuccess);
   color: white;
 }
@@ -191,7 +191,7 @@
   border-color: var(--colorDanger);
   color: var(--colorDanger);
 }
-.btnFlat.btnDanger:hover, .btnFlat.btnDanger.btnActive {
+.btnFlat.btnDanger:hover {
   background: var(--colorDanger);
   color: white;
 }
