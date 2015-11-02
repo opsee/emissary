@@ -4,6 +4,7 @@ import colors from 'seedling/colors';
 import {Record} from 'immutable';
 import cx from 'classnames';
 
+import ga from '../../modules/ga';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
 import {InstanceActions} from '../../actions';
@@ -36,6 +37,7 @@ const InstanceItem = React.createClass({
   },
   runMenuOpen(e){
     e.preventDefault();
+    ga('send', 'event', 'InstanceItem', 'menu-open');
     this.setState({
       showModal: true
     });
@@ -44,6 +46,7 @@ const InstanceItem = React.createClass({
     InstanceActions.runInstanceAction({id});
   },
   handleHide(){
+    ga('send', 'event', 'InstanceItem', 'menu-close');
     this.setState({showModal: false});
   },
   handleClick(e){

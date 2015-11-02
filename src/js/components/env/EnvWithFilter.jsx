@@ -4,6 +4,7 @@ import forms from 'newforms';
 import fuzzy from 'fuzzy';
 import {List} from 'immutable';
 
+import ga from '../../modules/ga';
 import {Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
@@ -209,6 +210,7 @@ const EnvWithFilter = React.createClass({
   },
   onFilterChange(){
     this.forceUpdate();
+    ga('send', 'event', 'EnvWithFilter', 'filter-change', this.state.filter.cleanedData.filter);
     if (this.props.onFilterChange){
       this.props.onFilterChange.call(null, this.state.filter.cleanedData.filter);
     }
