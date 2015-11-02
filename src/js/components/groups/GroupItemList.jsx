@@ -2,9 +2,8 @@ import React, {PropTypes} from 'react';
 import Immutable, {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
-import {Button} from '../forms';
-import {ChevronDown} from '../icons';
 import {Padding} from '../layout';
+import {Link} from 'react-router';
 
 export default React.createClass({
   propTypes: {
@@ -34,22 +33,37 @@ export default React.createClass({
       limit: 1000
     });
   },
+  getGroupType(){
+    if (this.props.groups.size){
+      return this.props.groups.get(0).get('type');
+    }
+    return 'security';
+  },
+  getEnvLink(){
+    const type = this.getGroupType();
+    let string = 'envGroupsSecurity';
+    if (type === 'elb'){
+      string = 'envGroupsELB';
+    }
+    return string;
+  },
   isSelected(id){
     return this.props.selected && this.props.selected === id;
   },
   isNotSelected(id){
     return this.props.selected && this.props.selected !== id;
   },
-  renderMoreButton(){
+  renderLink(){
     if (this.state.limit < this.props.groups.size){
       return (
         <Padding t={1}>
-          <Button color="primary" flat onClick={this.getMore}>
-            Show {this.props.groups.size - this.state.limit} more <ChevronDown inline fill="primary"/>
-          </Button>
+          <Link to={this.getEnvLink()}>
+            Show {this.props.groups.size - this.state.limit} more
+          </Link>
         </Padding>
       );
     }
+    return <span/>;
   },
   render() {
     const self = this;
@@ -59,7 +73,7 @@ export default React.createClass({
           {this.getGroups().map((group, i) => {
             return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>;
           })}
-          {this.renderMoreButton()}
+          {this.renderLink()}
         </div>
       );
     }

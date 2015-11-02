@@ -1,34 +1,33 @@
-import React from 'react';
-import {BoundField} from '../forms';
-import forms from 'newforms';
+import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
 import {PageAuth} from '../../modules/statics';
 import EnvWithFilter from './EnvWithFilter.jsx';
-
-const FilterForm = forms.Form.extend({
-  filter: forms.CharField({
-    label: 'Filter',
-    widgetAttrs: {
-      placeholder: 'group: target-group'
-    },
-    required: false
-  }),
-  render() {
-    return <BoundField bf={this.boundField('filter')}/>;
-  }
-});
+import {State} from 'react-router';
+import _ from 'lodash';
 
 export default React.createClass({
+  mixins: [State],
   statics: {
     willTransitionTo: PageAuth
   },
+  propTypes: {
+    query: PropTypes.object
+  },
   getInitialState(){
+    const path = this.getPath();
+    let include = ['groupsSecurity', 'groupsELB', 'instancesECC'];
+    if (path){
+      if (path.match('groups-security')){
+        include = ['groupsSecurity'];
+      }else if (path.match('groups-elb')){
+        include = ['groupsELB'];
+      }else if (path.match('instances-ec2')){
+        include = ['instancesECC'];
+      }
+    }
     return {
-      filter: new FilterForm({
-        onChange: self.forceUpdate,
-        labelSuffix: ''
-      })
+      include
     };
   },
   render() {
@@ -38,7 +37,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter/>
+                <EnvWithFilter include={this.state.include} filter={_.get(this.props.query, 'filter')} limit={this.state.include.length === 1 ? 1000 : null}/>
               </Col>
             </Row>
           </Grid>
