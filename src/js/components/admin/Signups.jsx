@@ -44,7 +44,7 @@ export default React.createClass({
   getState(){
     return {
       signups: this.getData(),
-      approveStatus: AdminStore.getActivateSignupStatus()
+      approveStatus: AdminStore.getAdminActivateSignupStatus()
     };
   },
   getUnapproved(){

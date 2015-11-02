@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {Record} from 'immutable';
+import ga from '../../modules/ga';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
@@ -45,6 +46,7 @@ const GroupItem = React.createClass({
   },
   runMenuOpen(e){
     e.preventDefault();
+    ga('send', 'event', 'GroupItem', 'menu-open');
     this.setState({
       showModal: true
     });
@@ -53,6 +55,7 @@ const GroupItem = React.createClass({
     console.log(action);
   },
   runHideContextMenu(){
+    ga('send', 'event', 'GroupItem', 'menu-close');
     this.setState({showModal: false});
   },
   handleClick(e){

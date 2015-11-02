@@ -185,6 +185,7 @@
         "mixins",
         "statics",
         "propTypes",
+        "contextTypes",
         "getDefaultProps",
         "getInitialState",
         "componentWillMount",
