@@ -8,6 +8,7 @@ import router from '../../modules/router.js';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {PageAuth} from '../../modules/statics';
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
@@ -26,6 +27,9 @@ const InfoForm = forms.Form.extend({
 
 const RegionSelect = React.createClass({
   mixins: [OnboardStore.mixin],
+  statics: {
+    willTransitionTo: PageAuth
+  },
   getInitialState() {
     const self = this;
     const data = OnboardStore.getInstallData();

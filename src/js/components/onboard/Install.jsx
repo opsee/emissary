@@ -10,6 +10,7 @@ import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {PageAuth} from '../../modules/statics';
 
 const statics = {
   checkedInstallStatus: false
@@ -17,6 +18,9 @@ const statics = {
 
 const Install = React.createClass({
   mixins: [OnboardStore.mixin, GlobalStore.mixin],
+  statics: {
+    willTransitionTo: PageAuth
+  },
   propTypes: {
     path: PropTypes.string,
     query: PropTypes.object

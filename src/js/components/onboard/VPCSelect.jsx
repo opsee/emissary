@@ -9,6 +9,7 @@ import router from '../../modules/router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {PageAuth} from '../../modules/statics';
 
 const regions = AWSStore.getRegions();
 
@@ -26,6 +27,7 @@ const Team = React.createClass({
   mixins: [OnboardStore.mixin],
   statics: {
     willTransitionTo(transition){
+      PageAuth(transition);
       const data = OnboardStore.getInstallData();
       const dataHasValues = _.chain(data).values().every(_.identity).value();
       if (!dataHasValues || !data.regions.length){

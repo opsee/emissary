@@ -10,6 +10,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
 import storage from '../../modules/storage';
 import {Padding} from '../layout';
+import {PageAuth} from '../../modules/statics';
 
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
@@ -32,6 +33,7 @@ const Credentials = React.createClass({
   mixins: [OnboardStore.mixin],
   statics: {
     willTransitionTo(transition){
+      PageAuth(transition);
       const data = OnboardStore.getInstallData();
       if (!data.regions.length){
         transition.redirect('onboardRegionSelect');
