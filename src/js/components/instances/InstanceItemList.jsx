@@ -3,7 +3,6 @@ import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import Immutable, {List} from 'immutable';
 import {Button} from '../forms';
-import {ChevronDown} from '../icons';
 import {Padding} from '../layout';
 
 export default React.createClass({
@@ -29,16 +28,17 @@ export default React.createClass({
   getInstances(){
     return this.props.instances.slice(this.state.offset, this.state.limit);
   },
-  renderMoreButton(){
+  renderLink(){
     if (this.state.limit < this.props.instances.size){
       return (
         <Padding t={1}>
-          <Button color="primary" flat onClick={this.getMore}>
-            Show {this.props.instances.size - this.state.limit} more <ChevronDown inline fill="primary"/>
+          <Button to="envInstancesEC2" color="primary">
+            Show {this.props.instances.size - this.state.limit} more
           </Button>
         </Padding>
       );
     }
+    return <span/>;
   },
   render(){
     if (this.props.instances.size){
@@ -47,7 +47,7 @@ export default React.createClass({
           {this.getInstances().map(instance => {
             return <InstanceItem item={instance} key={instance.get('id')}/>;
           })}
-          {this.renderMoreButton()}
+          {this.renderLink()}
         </div>
       );
     }

@@ -43,7 +43,8 @@ const EnvWithFilter = React.createClass({
     filter: PropTypes.string,
     onFilterChange: PropTypes.func,
     onTargetSelect: PropTypes.func,
-    noModal: PropTypes.bool
+    noModal: PropTypes.bool,
+    limit: PropTypes.number
   },
   getDefaultProps(){
     return {
@@ -227,7 +228,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-          <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
           <hr/>
         </div>
       );
@@ -238,7 +239,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
           <hr/>
         </div>
       );
@@ -249,7 +250,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div>
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
-          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect}/>
+          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
           <hr/>
         </div>
       );
