@@ -26,7 +26,7 @@ import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import CheckNotFound from '../checks/NotFound.jsx';
 
 import GroupSecurity from '../groups/GroupSecurity.jsx';
-import GroupELB from '../groups/GroupELB.jsx';
+import GroupELB from '../groups/GroupElb.jsx';
 
 import InstanceEC2 from '../instances/InstanceEC2.jsx';
 import InstanceRDS from '../instances/InstanceRDS.jsx';
