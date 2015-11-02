@@ -5,8 +5,10 @@ import Opsee from '../global/Opsee.jsx';
 import NotFoundRoute from 'react-router/lib/components/NotFoundRoute';
 import Redirect from 'react-router/lib/components/Redirect';
 
-//pages
 import Env from '../env/Env.jsx';
+import EnvGroupsSecurity from '../env/EnvGroupsSecurity.jsx';
+import EnvGroupsELB from '../env/EnvGroupsELB.jsx';
+import EnvInstancesEC2 from '../env/EnvInstancesEC2.jsx';
 import CheckList from '../checks/List.jsx';
 import CheckSingle from '../checks/Single.jsx';
 import CheckEdit from '../checks/Edit.jsx';
@@ -24,7 +26,7 @@ import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import CheckNotFound from '../checks/NotFound.jsx';
 
 import GroupSecurity from '../groups/GroupSecurity.jsx';
-import GroupElb from '../groups/GroupElb.jsx';
+import GroupELB from '../groups/GroupElb.jsx';
 
 import InstanceEC2 from '../instances/InstanceEC2.jsx';
 import InstanceRDS from '../instances/InstanceRDS.jsx';
@@ -61,6 +63,9 @@ const routes = (
     <Route path="styleguide" name="styleguide" handler={Styleguide}/>
 
     <Route path="/env" name="env" handler={Env}/>
+    <Route path="/env-groups-security" name="envGroupsSecurity" handler={EnvGroupsSecurity}/>
+    <Route path="/env-groups-elb" name="envGroupsELB" handler={EnvGroupsELB}/>
+    <Route path="/env-instances-ec2" name="envInstancesEC2" handler={EnvInstancesEC2}/>
     <Route path="/instance/ec2/:id" name="instanceEC2" handler={InstanceEC2}/>
     <Route path="/instance/rds/:id" name="instanceRDS" handler={InstanceRDS}/>
 
@@ -80,7 +85,7 @@ const routes = (
     </Route>
 
     <Route path="/group/security/:id" name="groupSecurity" handler={GroupSecurity}/>
-    <Route path="/group/elb/:id" name="groupElb" handler={GroupElb}/>
+    <Route path="/group/elb/:id" name="groupELB" handler={GroupELB}/>
 
     <Route path="/start" name="start" handler={OnboardCreate}/>
     <Route path="/start/thanks" name="onboardThanks" handler={OnboardThanks}/>

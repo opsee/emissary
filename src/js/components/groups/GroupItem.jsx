@@ -32,7 +32,8 @@ const GroupItem = React.createClass({
     });
   },
   getGroupLink(){
-    const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
+    let suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
+    suffix = suffix.match('Elb') ? 'ELB' : suffix;
     return `group${suffix}`;
   },
   getActions(){

@@ -13,9 +13,6 @@ import {Padding} from '../layout';
 
 export default React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return !Immutable.is(this.state.group, nextState.group);
-  // },
   propTypes: {
     params: PropTypes.object
   },
