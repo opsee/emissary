@@ -1,12 +1,9 @@
 /bower_components/
 /dist/
 /node_modules/
-/.sass-cache/
 *.sublime-project
 *.sublime-workspace
 *.log
 /temp/
-Gemfile.lock
 .DS_Store
-*.ruby-version
 stats.json
