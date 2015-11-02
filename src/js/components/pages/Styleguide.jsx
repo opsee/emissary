@@ -126,6 +126,12 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
+                <h3>Fab button (at top right)</h3>
+                <p>To be used as the primary action on application pages that have CRUD functionality. For example, in a list of health checks to add a new check, or on a profile page to edit the user profile. On screens like the tutorial with Next as the primary action, a Fab should not be used.</p>
+                <p>Additionally, color can be used to help communicate the purpose of the buton. Primary color for Add and Info color for Edit actions are standard across the app.</p>
+              </Padding>
+
+              <Padding b={1}>
                 <h3>Colors</h3>
                 {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
                   return (
@@ -300,25 +306,34 @@ export default React.createClass({
 
               <h3>Buttons</h3>
               <Padding b={2}>
-                <h4>Regular</h4>
-                  {['primary','success','warning','danger','info','default'].map(i => {
-                    return (
-                      <Button color={i} key={`btn-${i}`}>{i}</Button>
-                    )
-                  })}
-                <h4>Disabled</h4>
+                <p><strong>Regular:</strong></p>
+                <p>Regular button styles are used less often than Flat buttons. Regular buttons can be used for primary actions on pages where it is not appropriate to use a Fab (use block styling as well in this case), such as the tutorial, of for form submission</p>
+                <p>Submitting a form uses the Success color.</p>
+                <p>
+                {['primary','success','warning','danger','info','default'].map(i => {
+                  return (
+                    <Button color={i} key={`btn-${i}`}>{i}</Button>
+                  )
+                })}
+                </p>
+
+                <p><strong>Disabled:</strong></p>
+                <p>
                 {['primary','success','warning','danger','info','default'].map(i => {
                   return (
                     <Button color={i} disabled={true} key={`btn-${i}`}>{i}</Button>
                   )
                 })}
+                </p>
                 <Padding t={2}>
                   <Button block={true}>Block</Button>
                 </Padding>
               </Padding>
 
               <h3>Flat Buttons</h3>
-
+              <p>Flat buttons are the workhorses of the app. They are the most common button style, used for secondary actions on any page, like Adding a check to an existing group on its detail page or Logging Out on the profile page.</p>
+              <p>Flat buttons are also used in the context menu actions, and when combined with Block styling they lose their border.</p>
+              <p>"Positive" actions such as creating a check will typically use the Primary color, while negative actions like deleting or logging out will use the Danger color.</p>
               <Padding b={2}>
                 {['primary','success','warning','danger','info','default'].map(i => {
                   return (

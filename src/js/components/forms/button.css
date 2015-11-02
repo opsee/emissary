@@ -137,22 +137,27 @@
 .btnFlat {
   composes: btn;
   background: transparent;
-  border: 1px solid var(--colorTextSecondary);
+  border: 1px solid var(--colorText);
   box-shadow: none;
-  color: var(--colorTextSecondary);
+  color: var(--colorText);
   padding: .4375em 0.5em;
 }
 .btnFlat:hover, .btnFlat.btnActive {
-  background: var(--colorTextSecondary);
+  background: var(--colorText);
   border-color: transparent;
   color: white;
+}
+
+.btnFlat:focus {
+  background-color: transparent;
 }
 .btnFlat.btnBlock {
   border: none;
 }
 
-.btnFlat[disabled]{
+.btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
   background: none;
+  border-color: var(--colorTextSecondary);
 }
 .btnFlat.btnPrimary {
   background: transparent;
@@ -192,6 +197,7 @@
 }
 .btnFlat.btnInfo {
   background: transparent;
+  border-color: var(--colorInfo);
   color: var(--colorInfo);
 }
 .btnFlat.btnInfo:hover {
