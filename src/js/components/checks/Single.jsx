@@ -150,7 +150,7 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={3}>
-                {this.innerRender()}
+                {this.renderInner()}
               </Padding>
               <Button onClick={this.removeCheck} flat color="danger">
                 <Delete inline fill="danger"/> Delete Check
