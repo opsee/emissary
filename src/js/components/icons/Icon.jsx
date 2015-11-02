@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import colors from 'seedling/colors';
 import style from './icon.css';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,21 +6,23 @@ import _ from 'lodash';
 import BaseSVG from './BaseSVG.jsx';
 
 const Icon = React.createClass({
-  propTypes:{
-    path:PropTypes.string.isRequired,
+  propTypes: {
+    path: PropTypes.string.isRequired,
     //fill is either a named opsee color, or any css color
-    fill:PropTypes.string
+    fill: PropTypes.string,
+    className: PropTypes.string,
+    style: PropTypes.object
   },
-  colorClassFromProp(prop){
+  getColorClassFromProp(prop){
     const cased = _.startCase(this.props[prop]).split(' ').join('');
     return style[`fill${cased}`];
   },
   getClass(){
-    var arr = [];
-    for(var prop in this.props){
-      if(prop == 'fill'){
-        arr.push(this.colorClassFromProp(prop));
-      }else{
+    let arr = [];
+    for (const prop in this.props){
+      if (prop === 'fill'){
+        arr.push(this.getColorClassFromProp(prop));
+      }else {
         arr.push(style[prop]);
       }
     }
@@ -29,8 +30,8 @@ const Icon = React.createClass({
     return cx(arr);
   },
   getFill(){
-    const colorClass = this.colorClassFromProp('fill');
-    if(!colorClass){
+    const colorClass = this.getColorClassFromProp('fill');
+    if (!colorClass){
       return this.props.fill;
     }
     return false;
@@ -38,7 +39,7 @@ const Icon = React.createClass({
   render(){
     return (
       <BaseSVG className={this.getClass()} style={this.props.style} fill={this.getFill()} path={this.props.path}/>
-    )
+    );
   }
 });
 

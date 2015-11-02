@@ -12,13 +12,12 @@ var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
   __API__: JSON.stringify(process.env.CONFIG_API),
   __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
-  __EVENTS__: JSON.stringify(process.env.CONFIG_EVENTS),
   'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)}
 });
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
-  mangle: false,
-  compress:false
+  mangle: true,
+  compress: true
 })
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
@@ -33,13 +32,19 @@ module.exports = {
     ],
     vendor:vendors
   },
+  eslint:{
+    configFile:'./prod.eslintrc'
+  },
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
-    // chunkFilename: "[id].[hash].bundle.js"
+    chunkFilename: "[id].[hash].js"
   },
   module: {
+    preLoaders:[
+      { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
+    ],
     loaders: [
       { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!cssnext-loader'), include: [context_dir]},
       { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[hash:base64:12]!cssnext-loader')},
@@ -59,7 +64,7 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     definePlugin,
-    // uglify,
+    uglify,
     // new AssetsPlugin(),
     new HtmlWebpackPlugin({
       hash:true,

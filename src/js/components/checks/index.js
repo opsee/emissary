@@ -3,5 +3,5 @@ import AssertionCounter from './AssertionCounter.jsx';
 
 export default {
   AssertionCounter,
-  CheckItemList,
-}
+  CheckItemList
+};

@@ -1,51 +1,43 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
-import storage from '../modules/storage';
-import './User'
+import './User';
 import _ from 'lodash';
-import GlobalStore from './Global';
 import $q from 'q';
 
-let _statuses = {
-  onboardSignupCreate:null,
-  onboardSetPassword:null,
-  subdomainAvailability:null,
-  onboardCreateOrg:null,
-  onboardVpcScan:null,
-  getBastions:null
-};
+/* eslint-disable no-use-before-define */
 
 let _teamData = {
-  customer_id:null,
-  subdomain:null
-}
+  customer_id: null,
+  subdomain: null
+};
 
 let _installData = {
-  regions:[],//['us-west-1', 'us-east-1'],
-  'access-key':null,
-  'secret-key':null,
-  vpcs:[]
-}
+  regions: [],//['us-west-1', 'us-east-1'],
+  'access-key': null,
+  'secret-key': null,
+  vpcs: []
+};
 
 let _data = {
-  bastionHasLaunched:!!(config.demo) || false,
-  bastionLaunchHasBeenChecked:false,
-  availableVpcs:[],
-  domainPromisesArray:[],
-  subdomainAvailable:null,
-  bastions:[]
-}
+  bastionHasLaunched: !!(config.demo) || false,
+  bastionLaunchHasBeenChecked: false,
+  availableVpcs: [],
+  domainPromisesArray: [],
+  subdomainAvailable: null,
+  bastions: [],
+  customer: {}
+};
 
 const _public = {
   getBastionHasLaunchedPromise(){
-    var d = $q.defer();
-    if(_data.bastionHasLaunched || _data.bastionLaunchHasBeenChecked){
+    const d = $q.defer();
+    if (_data.bastionHasLaunched || _data.bastionLaunchHasBeenChecked){
       d.resolve(_data.bastionHasLaunched);
-    }else{
+    }else {
       setTimeout(() => {
         _data.bastionLaunchHasBeenChecked = true;
         d.resolve(_data.bastionHasLaunched);
-      },17000);
+      }, 17000);
     }
     return d.promise;
   },
@@ -57,10 +49,10 @@ const _public = {
   },
   getVpcScanData(){
     return {
-      'access-key':_installData['access-key'],
-      'secret-key':_installData['secret-key'],
-      regions:_installData.regions
-    }
+      'access-key': _installData['access-key'],
+      'secret-key': _installData['secret-key'],
+      regions: _installData.regions
+    };
   },
   getAvailableVpcs(){
     return _data.availableVpcs;
@@ -68,108 +60,119 @@ const _public = {
   getBastions(){
     return _data.bastions;
   },
+  getCustomer(){
+    return _data.customer;
+  },
   getFinalInstallData(){
-    let relation = _installData.vpcs.map(function(v){
-      Store.getAvailableVpcs().forEach(
-        function(r){
-          r.vpcs.forEach(function(rvpc){
-            if(rvpc['vpc-id'] == v){
-              v = {id:v,region:r.region}
-            }
-          })
+    let relation = _installData.vpcs.map((v) => {
+      let newVpc;
+      Store.getAvailableVpcs().forEach(r => {
+        r.vpcs.forEach(rvpc => {
+          if (rvpc['vpc-id'] === v){
+            newVpc = {id: v, region: r.region};
+          }
         });
-      return v.id ? v : false;
+      });
+      return newVpc.id ? newVpc : false;
     });
-    if(!_.every(relation) || !relation.length){
+    if (!_.every(relation) || !relation.length){
       return false;
     }
     //TODO fix this so it works with multiple vpcs later
     relation = relation.map(r => {
       return {
-        region:r.region,
-        vpcs:[{id:r.id}]
-      }
+        region: r.region,
+        vpcs: [{id: r.id}]
+      };
     });
-    let aggregate = _.assign({}, _installData, {regions:relation}, {'instance-size':'t2.micro'});
+    let aggregate = _.assign({}, _installData, {regions: relation}, {'instance-size': 't2.micro'});
     delete aggregate.vpcs;
     return aggregate;
   }
-}
+};
 
-let statusFunctions = {};
-let keys = _.chain(_statuses).keys().map(k => {
-  let arr = [k]
-  arr.push('get'+_.startCase(k).split(' ').join('')+'Status');
-  return arr;
-}).forEach(a => {
-  statusFunctions[a[1]] = function(){
-    return _statuses[a[0]]
+const statics = {
+  _statuses: {
+    onboardSignupCreate: null,
+    onboardSetPassword: null,
+    subdomainAvailability: null,
+    onboardCreateOrg: null,
+    onboardVpcScan: null,
+    getBastions: null,
+    getCustomer: null
   }
-}).value();
+};
+
+const statusFunctions = Flux.statics.generateStatusFunctions(statics);
 
 const Store = Flux.createStore(
   _.assign({}, _public, statusFunctions),
-  function(payload){
-    switch(payload.actionType) {
-      case 'SIGNUP_CREATE_SUCCESS':
+  function handlePayload(payload){
+    switch (payload.actionType) {
+    case 'SIGNUP_CREATE_SUCCESS':
         // loginSuccess(payload.data);
       break;
-      case 'SUBDOMAIN_AVAILABILITY_SUCCESS':
-        _data.domainPromisesArray.push(payload.data);
-        _data.domainPromisesArray = _.sortBy(_data.domainPromisesArray, 'date');
-        _data.subdomainAvailable = _.last(_data.domainPromisesArray);
+    case 'SUBDOMAIN_AVAILABILITY_SUCCESS':
+      _data.domainPromisesArray.push(payload.data);
+      _data.domainPromisesArray = _.sortBy(_data.domainPromisesArray, 'date');
+      _data.subdomainAvailable = _.last(_data.domainPromisesArray);
       break;
-      case 'ONBOARD_CREATE_ORG':
-        _teamData = _.assign(_teamData, payload.data);
-        Store.emitChange();
+    case 'ONBOARD_CREATE_ORG':
+      _teamData = _.assign(_teamData, payload.data);
+      Store.emitChange();
       break;
-      case 'ONBOARD_SET_REGIONS':
-        _installData.regions = [payload.data];
-        if(window.location.host.match('localhost')){
-          _installData.regions = ['us-west-1']
-        }
-        Store.emitChange();
+    case 'ONBOARD_SET_REGIONS':
+      _installData.regions = [payload.data];
+      if (window.location.host.match('localhost')){
+        _installData.regions = ['us-west-1'];
+      }
+      Store.emitChange();
       break;
-      case 'ONBOARD_SET_CREDENTIALS':
-        _installData = _.assign(_installData, payload.data);
-        Store.emitChange();
+    case 'ONBOARD_SET_CREDENTIALS':
+      _installData = _.assign(_installData, payload.data);
+      Store.emitChange();
       break;
-      case 'ONBOARD_VPC_SCAN_SUCCESS':
-        _data.availableVpcs = payload.data;
+    case 'ONBOARD_VPC_SCAN_SUCCESS':
+      _data.availableVpcs = payload.data;
       break;
-      case 'ONBOARD_VPC_SCAN_ERROR':
+    case 'ONBOARD_VPC_SCAN_ERROR':
       break;
-      case 'ONBOARD_SET_VPCS':
-        const data = Array.isArray(payload.data) ? payload.data : [payload.data];
-        _installData = _.assign(_installData, {vpcs:data});
-        Store.emitChange();
+    case 'ONBOARD_SET_VPCS':
+      const data = Array.isArray(payload.data) ? payload.data : [payload.data];
+      _installData = _.assign(_installData, {vpcs: data});
+      Store.emitChange();
       break;
-      case 'GLOBAL_SOCKET_MESSAGE':
-        if(payload.data && payload.data.command && payload.data.command == 'launch-bastion'){
-          _data.bastionLaunchHasBeenChecked = true;
-          _data.bastionHasLaunched = true;
-          Store.emitChange();
-        }
-      break;
-      case 'ONBOARD_SET_PASSWORD_SUCCESS':
-        _data.bastionLaunchHasBeenChecked = true;
-      break;
-      case 'ONBOARD_INSTALL':
+    case 'GLOBAL_SOCKET_MESSAGE':
+      if (payload.data && payload.data.command && payload.data.command === 'launch-bastion'){
         _data.bastionLaunchHasBeenChecked = true;
         _data.bastionHasLaunched = true;
-        console.info('Launching Bastion');
         Store.emitChange();
+      }
       break;
-      case 'GET_BASTIONS_SUCCESS':
-        _data.bastions = payload.data;
+    case 'ONBOARD_SET_PASSWORD_SUCCESS':
+      _data.bastionLaunchHasBeenChecked = true;
+      break;
+    case 'ONBOARD_INSTALL':
+      _data.bastionLaunchHasBeenChecked = true;
+      _data.bastionHasLaunched = true;
+      console.info('Launching Bastion');
+      Store.emitChange();
+      break;
+    case 'GET_BASTIONS_SUCCESS':
+      _data.bastions = payload.data;
+      break;
+    case 'GET_CUSTOMER_SUCCESS':
+      _data.customer = payload.data;
+      break;
+    default:
       break;
     }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
-    if(statusData.haveChanged){
+    const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+    statics._statuses = statusData.statuses;
+    if (statusData.haveChanged){
       Store.emitChange();
     }
   }
-)
+);
 
 export default Store;

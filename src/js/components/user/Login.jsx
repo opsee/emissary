@@ -6,57 +6,60 @@ import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
 import router from '../../modules/router';
-import {Opsee} from '../icons';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
+import {Padding} from '../layout';
 
 export default React.createClass({
   mixins: [UserStore.mixin],
+  propTypes: {
+    query: PropTypes.object
+  },
   storeDidChange(){
     const status = UserStore.getUserLoginStatus();
-    this.setState({status})
-    if(status == 'success'){
+    this.setState({status});
+    if (status === 'success'){
       const redirect = UserStore.getUser().get('loginRedirect');
-      if(redirect){
+      if (redirect){
         router.transitionTo(redirect);
-      }else{
+      }else {
         router.transitionTo('env');
       }
-    }else if(status && status != 'pending'){
+    }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
-        html:status.message || 'Something went wrong.',
-        style:'danger'
-      })
+        html: status.message || 'Something went wrong.',
+        style: 'danger'
+      });
     }
   },
   getInitialState(){
     return {
-      data:UserStore.getUser(),
-      status:UserStore.getUserLoginStatus()
-    }
+      data: UserStore.getUser(),
+      status: UserStore.getUserLoginStatus()
+    };
   },
-  updateUserData(data){
+  getButtonText(){
+    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
+  },
+  isDisabled(){
+    const incomplete = !(this.state.data.email && this.state.data.password);
+    return incomplete || this.state.status === 'pending';
+  },
+  setUserData(data){
     this.setState({
-      data:data
-    })
+      data: data
+    });
   },
-  submit(e){
+  handleSubmit(e){
     e.preventDefault();
     this.setState({
-      submitting:true
+      submitting: true
     });
     let data = this.state.data;
-    if(this.props.query.as){
+    if (this.props.query.as){
       data.as = _.parseInt(this.props.query.as, 10);
     }
     UserActions.userLogin(data);
-  },
-  disabled(){
-    const incomplete = !(this.state.data.email && this.state.data.password);
-    return incomplete || this.state.status == 'pending';
-  },
-  loginBtnText(){
-    return this.state.status == 'pending' ? 'Logging In...' : 'Log In';
   },
   render() {
     return (
@@ -66,17 +69,17 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <LogoColor/>
-              <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
-                <UserInputs include={["email","password"]}  onChange={this.updateUserData}/>
-                <div className="padding-t">
-                  <Button type="submit" color="success" block={true} disabled={this.disabled()}>
-                    {this.loginBtnText()}
+              <form name="loginForm" onSubmit={this.handleSubmit}>
+                <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
+                <Padding t={1}>
+                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
+                    {this.getButtonText()}
                   </Button>
-                </div>
-                <div className="padding-t-md">
-                    <p><Link to="passwordForgot">Forgot your password?</Link></p>
-                    <p>Need an account? <Link to="start">Sign up!</Link></p>
-                </div>
+                </Padding>
+                <Padding tb={2}>
+                  <p><Link to="passwordForgot">Forgot your password?</Link></p>
+                  <p>Need an account? <Link to="start">Sign up!</Link></p>
+                </Padding>
               </form>
             </Col>
           </Row>

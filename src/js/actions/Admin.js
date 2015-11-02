@@ -6,21 +6,21 @@ import _ from 'lodash';
 
 let _actions = {};
 
-_actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups', 
-  (id) => {
+_actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups',
+  () => {
     return request
     .get(`${config.authApi}/signups`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => res && res.body,
   res => res && res.response
 );
 
-_actions.adminActivateSignup = Flux.statics.addAsyncAction('adminActivateSignup', 
+_actions.adminActivateSignup = Flux.statics.addAsyncAction('adminActivateSignup',
   (signup) => {
     return request
     .put(`${config.authApi}/signups/${signup.id}/activate`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => res && res.body,
   res => res && res.response

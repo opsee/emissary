@@ -11,7 +11,7 @@ _actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate'
   (data) => {
     return request
     .post(`${config.authApi}/signups`)
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
@@ -21,7 +21,7 @@ _actions.onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
   (data) => {
     return request
     .post(`${config.authApi}/signups/${data.id}/claim`)
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
@@ -32,25 +32,25 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
     return request
     .get(`${config.api}/orgs/subdomain/${subdomain}`)
     .set('Authorization', UserStore.getAuth())
-    .send({date:date})
+    .send({date: date});
   },
   res => {
-    if(res && res.body){
+    if (res && res.body){
       return {
-        available:res.body.available,
-        date:res.req._data.date
-      }
+        available: res.body.available,
+        date: res.req._data.date
+      };
     }
   },
   res => res && res.response
 );
 
 _actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
-  (data) => {
+  () => {
     return request
     .post(`${config.api}/orgs`)
     .set('Authorization', UserStore.getAuth())
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
@@ -67,7 +67,7 @@ _actions.onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
     return request
     .post(`${config.api}/scan-vpcs`)
     .set('Authorization', UserStore.getAuth())
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
@@ -80,27 +80,55 @@ _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
     return request
     .post(`${config.api}/bastions/launch`)
     .set('Authorization', UserStore.getAuth())
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
 );
 
 _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
-  (data) => {
+  () => {
     return request
     .get(`${config.api}/bastions`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => _.get(res, 'body.bastions') || [],
-  res => res && res.response
+  res => res
 );
 
+_actions.getCustomer = Flux.statics.addAsyncAction('getCustomer',
+  () => {
+    return request
+    .get(`${config.api}/customer`)
+    .set('Authorization', UserStore.getAuth());
+  },
+  res => _.get(res, 'body.customer') || {},
+  res => res
+);
+
+// let tried = 0;
+// _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
+//   (data) => {
+//     return new Promise((resolve, reject) => {
+//       return setTimeout(() => {
+//         tried++;
+//         if (tried > 20){
+//           resolve({body:{bastions:['foo']}});
+//         }else{
+//           resolve({body:{bastions:[]}});
+//         }
+//       },4000);
+//     })
+//   },
+//   res => _.get(res, 'body.bastions') || [],
+//   res => res && res.response
+// );
+
 _actions.onboardExampleInstall = Flux.statics.addAsyncAction('onboardExampleInstall',
-  (data) => {
-    return new Promise((resolve, reject) => {
+  () => {
+    return new Promise((resolve) => {
       return resolve(example);
-    })
+    });
   },
   res => res,
   res => res

@@ -20,6 +20,8 @@
     "css-loader": "^0.19.0",
     "cssnext-loader": "^1.0.1",
     "eslint": "^1.7.3",
+    "eslint-loader": "^1.1.0",
+    "eslint-plugin-react": "^3.6.3",
     "event-stream": "^3.3.1",
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^0.8.2",
@@ -47,7 +49,8 @@
   "scripts": {
     "start": "npm install && node server",
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js && cp -r src/fonts/ dist/fonts/",
-    "deploy": "NODE_ENV=production webpack --config webpack.config.prod.js && cp -r src/fonts/ dist/fonts/ && docker build -t quay.io/opsee/emissary:latest ."
+    "deploy": "npm run-script build && docker build -t quay.io/opsee/emissary:latest .",
+    "lint": "eslint src/. --ext .js,.jsx"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
@@ -66,7 +69,6 @@
     "classnames": "^2.1.5",
     "document-offset": "^1.0.4",
     "es6-promise": "^3.0.2",
-    "eslint-plugin-react": "^3.6.3",
     "flexboxgrid": "^6.3.0",
     "fuzzy": "^0.1.1",
     "git-sha-webpack-plugin": "0.0.6",
@@ -87,6 +89,7 @@
     "react-g-analytics": "^0.1.0",
     "react-router": "^0.13.3",
     "react-router-bootstrap": "^0.18.1",
+    "react-router-proxy-loader": "^0.3.0",
     "react-timeago": "^2.2.1",
     "seedling": "git+ssh://git@github.com/opsee/seedling.git",
     "slate": "git+ssh://git@github.com/opsee/slate.git",

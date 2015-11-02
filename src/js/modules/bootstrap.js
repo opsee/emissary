@@ -29,4 +29,4 @@ export default {
   Row,
   Tabs,
   Tab
-}
+};

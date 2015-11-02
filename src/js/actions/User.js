@@ -10,17 +10,17 @@ _actions.userLogin = Flux.statics.addAsyncAction('userLogin',
   (data) => {
     return request
     .post(`${config.authApi}/authenticate/password`)
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response && res.response.body
 );
 
 _actions.userRefreshToken = Flux.statics.addAsyncAction('userRefreshToken',
-  (data) => {
+  () => {
     return request
     .put(`${config.authApi}/authenticate/refresh`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => res && res.body,
   res => res && res.response && res.response.body
@@ -31,7 +31,7 @@ _actions.userGetUser = Flux.statics.addAsyncAction('userGetUser',
     return request
     .get(`${config.authApi}/users/${data.id}`)
     .set('Authorization', UserStore.getAuth())
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
@@ -42,7 +42,7 @@ _actions.userEdit = Flux.statics.addAsyncAction('userEdit',
     return request
     .put(`${config.authApi}/users/${data.id}`)
     .set('Authorization', UserStore.getAuth())
-    .send(data)
+    .send(data);
   },
   res => res && res.body,
   res => res && res.response
@@ -53,37 +53,37 @@ _actions.userPutUserData = Flux.statics.addAsyncAction('userPutUserData',
     let user = UserStore.getUserData() || {};
     let history = user[key];
     let index;
-    if(history && Array.isArray(history) && history.length){
-      index = history.length -1;
-    }else{
+    if (history && Array.isArray(history) && history.length){
+      index = history.length - 1;
+    }else {
       index = 0;
       user[key] = [];
     }
     let record = user[key][index];
-    if(record && record.revision != config.revision){
+    if (record && record.revision !== config.revision){
       index++;
     }
     user[key][index] = {
-      revision:config.revision,
-      data:data
-    }
-    if(reset){
+      revision: config.revision,
+      data: data
+    };
+    if (reset){
       user[key] = false;
     }
     return request
     .put(`${config.authApi}/users/${UserStore.getUser().get('id')}/data`)
     .set('Authorization', UserStore.getAuth())
-    .send(user)
+    .send(user);
   },
   res => res && res.body,
   res => res && res.response
 );
 
 _actions.userGetUserData = Flux.statics.addAsyncAction('userGetUserData',
-  (data) => {
+  () => {
     return request
     .get(`${config.authApi}/users/${UserStore.getUser().get('id')}/data`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', UserStore.getAuth());
   },
   res => res && res.body,
   res => res && res.response
@@ -93,7 +93,7 @@ _actions.userSendResetEmail = Flux.statics.addAsyncAction('userSendResetEmail',
   (data) => {
     return request
     .post(`${config.authApi}/authenticate/token`)
-    .send(data)
+    .send(data);
   },
   res => res.body && res.body,
   res => res && res.response

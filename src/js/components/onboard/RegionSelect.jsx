@@ -1,108 +1,109 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {Toolbar} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
-import {State} from 'react-router';
-import {Link} from 'react-router';
 import forms from 'newforms';
 import {BoundField} from '../forms';
-import _ from 'lodash';
-import $q from 'q';
 import router from '../../modules/router.js';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import colors from 'seedling/colors';
 import {Padding} from '../layout';
-
-let checkSubdomainPromise;
-let domainPromisesArray = [];
+import {PageAuth} from '../../modules/statics';
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
-  return [r.id, `${r.id} - ${r.name}`]
+  return [r.id, `${r.id} - ${r.name}`];
 });
 
 const InfoForm = forms.Form.extend({
   regions: forms.ChoiceField({
     choices: regionChoices,
     widget: forms.RadioSelect,
-    widgetAttrs:{
-      widgetType:'RadioSelect'
+    widgetAttrs: {
+      widgetType: 'RadioSelect'
     }
-  }),
+  })
 });
 
-const Team = React.createClass({
-  mixins: [State, OnboardStore.mixin],
-  storeDidChange(){
-    const data = OnboardStore.getInstallData();
-    if(data && data.regions && data.regions.length){
-      router.transitionTo('onboardCredentials');
-    }
-    const bastionStatus = OnboardStore.getGetBastionsStatus();
-    if(bastionStatus == 'success'){
-      const bastions = OnboardStore.getBastions();
-      this.setState({bastions})
-    }
+const RegionSelect = React.createClass({
+  mixins: [OnboardStore.mixin],
+  statics: {
+    willTransitionTo: PageAuth
   },
   getInitialState() {
-    var self = this;
-    var data = OnboardStore.getInstallData();
+    const self = this;
+    const data = OnboardStore.getInstallData();
     const obj = {
-      info:new InfoForm({
+      info: new InfoForm({
         onChange(){
-          self.forceUpdate();
+          if (self.isMounted()){
+            self.forceUpdate();
+          }
         },
-        labelSuffix:'',
+        labelSuffix: '',
         data: {
-          regions:data.regions
+          regions: data.regions
         },
-        validation:{
-          on:'blur change',
-          onChangeDelay:100
-        },
+        validation: {
+          on: 'blur change',
+          onChangeDelay: 100
+        }
       }),
-      bastions:[]
-    }
-    setTimeout(function(){
+      bastions: []
+    };
+    setTimeout(() => {
       obj.info.validate();
-    },10);
+    }, 10);
     return obj;
   },
   componentWillMount(){
     OnboardActions.getBastions();
   },
-  submit(e){
-    e.preventDefault();
-    OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
-  },
-  disabled(){
-    return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
-  },
-  toggleAll(value){
-    if(value){
-      this.state.info.updateData({
-        regions:regions.map(r => {
-          return r.id
-        })
-      })
-    }else{
-      this.state.info.updateData({regions:[]});
+  storeDidChange(){
+    const bastionStatus = OnboardStore.getGetBastionsStatus();
+    if (bastionStatus === 'success'){
+      const bastions = OnboardStore.getBastions();
+      if (this.isMounted()){
+        this.setState({bastions});
+      }
     }
   },
+  isDisabled(){
+    return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
+  },
+  runToggleAll(value){
+    if (value){
+      this.state.info.updateData({
+        regions: regions.map(r => {
+          return r.id;
+        })
+      });
+    }else {
+      this.state.info.updateData({regions: []});
+    }
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
+    //redo this later, make install be a parent page instead of this bull
+    setTimeout(() => {
+      router.transitionTo('onboardCredentials');
+    }, 100);
+  },
   renderInner(){
-    if(!this.state.bastions.length){
+    if (!this.state.bastions.length){
       return (
-        <form name="loginForm" ng-submit="submit()" onSubmit={this.submit}>
+        <form name="loginForm" onSubmit={this.handleSubmit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
          {
-         // <h2 className="h3">All AWS regions - <Button flat={true} color="primary" onClick={this.toggleAll.bind(this, true)}>Select All</Button> - <Button flat={true} color="warning"  onClick={this.toggleAll.bind(null, false)}>Deselect All</Button></h2>
+         // <h2 className="h3">All AWS regions - <Button flat color="primary" onClick={this.runToggleAll.bind(this, true)}>Select All</Button> - <Button flat color="warning"  onClick={this.runToggleAll.bind(null, false)}>Deselect All</Button></h2>
          }
           <BoundField bf={this.state.info.boundField('regions')}/>
-          <div><br/></div>
-          <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} title={this.disabled() ? 'Choose a region to move on.' : 'Next'} chevron={true}>Next</Button>
+          <Padding t={1}>
+            <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
+          </Padding>
         </form>
-      )
+      );
     }
     return (
       <Padding tb={1}>
@@ -110,7 +111,7 @@ const Team = React.createClass({
           It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
         </Alert>
       </Padding>
-    )
+    );
   },
   render() {
     return (
@@ -128,4 +129,4 @@ const Team = React.createClass({
   }
 });
 
-export default Team;
+export default RegionSelect;

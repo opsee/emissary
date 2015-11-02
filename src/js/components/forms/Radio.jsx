@@ -1,28 +1,31 @@
 import React, {PropTypes} from 'react';
-import _ from 'lodash';
 React.initializeTouchEvents(true);
+import {Padding} from '../layout';
 
 export default React.createClass({
-  propTypes:{
-    on:PropTypes.bool.isRequired,
-    id:PropTypes.string.isRequired
+  propTypes: {
+    on: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
   },
-  handleTouch(e){
-    e.preventDefault();
-    this.onClick();
-  },
-  onClick(e){
-    e.preventDefault();
-    this.props.onChange.call(null, this.props.id, !this.props.on);
-  },
-  isActive(){
+  isActive() {
     return this.props.on ? 'active' : '';
+  },
+  handleTouch(e) {
+    e.preventDefault();
+    this.handleClick();
+  },
+  handleClick(e) {
+    e.preventDefault();
+    this.props.onChange.call(null, this.props.id, true);
   },
   render(){
     return (
-      <div onClick={this.onClick} onTouchEnd={this.handleTouch} className="padding-tb-sm" style={{cursor:'pointer'}}>
-        <button className={`radio ${this.isActive()}`} type="button" onClick={this.onClick} id={this.props.id}/>
+      <div onClick={this.handleClick} onTouchEnd={this.handleTouch} style={{cursor: 'pointer'}}>
+        <Padding tb={0.5}>
+          <button className={`radio ${this.isActive()}`} type="button" onClick={this.handleClick} id={this.props.id}/>
+        </Padding>
       </div>
-    )
+    );
   }
 });

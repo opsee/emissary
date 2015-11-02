@@ -1,18 +1,17 @@
 import React, {PropTypes} from 'react';
-import _ from 'lodash';
 React.initializeTouchEvents(true);
 import Toggle from './Toggle.jsx';
 import style from './toggleWithLabel.css';
 
 export default React.createClass({
-  propTypes:{
-    on:PropTypes.bool.isRequired,
-    onChange:PropTypes.func.isRequired,
-    id:PropTypes.oneOfType([
+  propTypes: {
+    on: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    id: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
-    label:PropTypes.string.isRequired
+    label: PropTypes.string.isRequired
   },
   render(){
     return (

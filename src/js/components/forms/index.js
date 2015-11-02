@@ -24,4 +24,4 @@ export default {
   RadioWithLabel,
   Toggle,
   ToggleWithLabel
-}
+};

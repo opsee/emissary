@@ -2,43 +2,45 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import slate from 'slate';
 import {Close, Checkmark} from '../icons';
-import colors from 'seedling/colors';
 import style from './assertionCounter.css';
 
 const AssertionCounter = React.createClass({
-  propTypes:{
-    key:PropTypes.string,
-    relationship:PropTypes.string,
-    operand:PropTypes.string,
-    value:PropTypes.string,
-    reponse:PropTypes.object
+  propTypes: {
+    key: PropTypes.string,
+    relationship: PropTypes.string,
+    operand: PropTypes.string,
+    value: PropTypes.string,
+    response: PropTypes.object,
+    keyData: PropTypes.string,
+    label: PropTypes.string
   },
-  runTest(){
-    return slate(_.assign(_.cloneDeep(this.props), {key:this.props.keyData}), this.props.response);
+  getTitle(){
+    return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
   },
-  passing(){
+  isPassing(){
     const test = this.runTest();
     return test && test.success;
   },
-  isActive(){
-    return !!this.props.relationship ? 'active' : '';
+  runTest(){
+    return slate(_.assign({}, _.cloneDeep(this.props), {key: this.props.keyData}), _.cloneDeep(this.props.response));
   },
-  getTitle(){
-    return this.passing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.'
-  },
-  getSmallIcon(){
-    return this.passing() ? (
-      <Checkmark  btn={true} fill="#303030" />
+  renderSmallIcon(){
+    return this.isPassing() ? (
+      <Checkmark btn fill="#303030"/>
     ) : (
-      <Close btn={true} fill="#303030" />
-    )
+      <Close btn fill="#303030"/>
+    );
   },
   render(){
-    return(
-      <div title={this.getTitle()} className={this.passing() ? style.counterSuccess : style.counterDanger}>
-        {this.getSmallIcon()}
+    return (
+      <div title={this.getTitle()} className={this.isPassing() ? style.counterSuccess : style.counterDanger}>
+      {this.props.label}
+      <div className={`${style.validation} ${!!this.props.relationship ? style.validationActive : ''}`}>
+      {this.renderSmallIcon()}
+      <span className="sr-only">{this.runTest().error}</span>
       </div>
-    )
+    </div>
+    );
   }
 });
 

@@ -270,3 +270,8 @@
 .btnRight{
   text-align:right;
 }
+
+.btnSm{
+  padding:.2em;
+  line-height:1.2em;
+}

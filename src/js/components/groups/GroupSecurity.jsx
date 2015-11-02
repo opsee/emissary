@@ -1,13 +1,10 @@
-import React from 'react';
-import Immutable from 'immutable';
-import TimeAgo from 'react-components/timeago';
+import React, {PropTypes} from 'react';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
-import GroupItem from './GroupItem.jsx';
 import {GroupStore, InstanceStore} from '../../stores';
-import {GroupActions, CheckActions, InstanceActions} from '../../actions';
+import {GroupActions, InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -16,38 +13,16 @@ import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  statics:{
-    willTransitionTo:PageAuth
-  },
   mixins: [GroupStore.mixin, SetInterval],
-  storeDidChange() {
-    const state = this.getState();
-    this.setState(state);
+  statics: {
+    willTransitionTo: PageAuth
+  },
+  propTypes: {
+    params: PropTypes.object
   },
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !Immutable.is(this.state.group, nextState.group);
   // },
-  getData(){
-    GroupActions.getGroupSecurity(this.props.params.id);
-    InstanceActions.getInstancesECC({
-      id:this.props.params.id,
-      type:'security'
-    })
-  },
-  getState(){
-    return {
-      group:GroupStore.getGroup({
-        type:'security',
-        id:this.props.params.id
-      }),
-      instances:InstanceStore.getInstancesECC({
-        type:'security',
-        id:this.props.params.id
-      }),
-      status:GroupStore.getGetGroupSecurityStatus(),
-      getInstanceECCStatus:InstanceStore.getGetInstanceECCStatus()
-    }
-  },
   componentWillMount(){
     this.getData();
   },
@@ -57,16 +32,40 @@ export default React.createClass({
   getInitialState(){
     return this.getState();
   },
+  storeDidChange() {
+    const state = this.getState();
+    this.setState(state);
+  },
+  getData(){
+    GroupActions.getGroupSecurity(this.props.params.id);
+    InstanceActions.getInstancesECC({
+      id: this.props.params.id,
+      type: 'security'
+    });
+  },
+  getState(){
+    return {
+      group: GroupStore.getGroup({
+        type: 'security',
+        id: this.props.params.id
+      }),
+      instances: InstanceStore.getInstancesECC({
+        type: 'security',
+        id: this.props.params.id
+      }),
+      status: GroupStore.getGetGroupSecurityStatus(),
+      getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
+    };
+  },
   renderDescription(){
     const desc = this.state.group.get('Description');
-    if(desc && desc != ''){
-      return {desc}
-    }else{
-      return <div/>
+    if (desc && desc !== ''){
+      return {desc};
     }
+    return <div/>;
   },
   render() {
-    if(this.state.group.get('name')){
+    if (this.state.group.get('name')){
       return (
         <div>
           <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`} />
@@ -74,12 +73,12 @@ export default React.createClass({
             <Row>
               <Col xs={12}>
                 <Padding b={2}>
-                  <Button color="primary" flat={true} to="checkCreateRequest" query={{target:{id:this.state.group.get('id'), type:'security'}}} title="Create New Check">
-                    <Add fill="primary" inline={true}/> Create a Check
+                  <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}} title="Create New Check">
+                    <Add fill="primary" inline/> Create a Check
                   </Button>
                 </Padding>
 
-                <div className="padding-b">
+                <Padding b={1}>
                   <h3>Group Information</h3>
                   <Table>
                     <tr>
@@ -95,22 +94,26 @@ export default React.createClass({
                       <td>{this.renderDescription()}</td>
                     </tr>
                   </Table>
-                </div>
-                <div className="padding-b">
-                  <h3>Instances ({this.state.group.get('instances').size})</h3>
+                </Padding>
+                <Padding b={1}>
+                  <h3>Instances</h3>
                   <InstanceItemList instances={this.state.group.get('instances')}/>
-                </div>
-                <div className="padding-b">
+                </Padding>
+                <Padding b={1}>
                   <h3>Checks</h3>
-                  <CheckItemList type="groupSecurity" id={this.props.params.id}></CheckItemList>
-                </div>
+                  <CheckItemList type="groupSecurity" id={this.props.params.id}/>
+                  <Padding t={2}>
+                    <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}}>
+                      <Add inline/> Create Check
+                    </Button>
+                  </Padding>
+                </Padding>
               </Col>
             </Row>
           </Grid>
         </div>
       );
-    }else{
-      return <StatusHandler status={this.state.status}/>
     }
+    return <StatusHandler status={this.state.status}/>;
   }
 });

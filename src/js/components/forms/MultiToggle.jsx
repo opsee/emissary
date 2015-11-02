@@ -3,39 +3,39 @@ import ToggleWithLabel from './ToggleWithLabel.jsx';
 import _ from 'lodash';
 
 export default React.createClass({
-  propTypes:{
-    bf:PropTypes.object.isRequired
+  propTypes: {
+    bf: PropTypes.object.isRequired
   },
   getInitialState(){
     return {
-      data:this.props.bf.value()
+      data: this.props.bf.value()
     };
   },
-  onChange(id, bool){
+  isWidgetActive(w){
+    return _.findWhere(this.props.bf.value(), w.choiceValue);
+  },
+  handleChange(id){
     let data = this.props.bf.value() || [];
-    if(_.findWhere(data, id)){
+    if (_.findWhere(data, id)){
       data = _.pull(data, id);
-    }else{
+    }else {
       data.push(id);
     }
-    var obj = {};
+    let obj = {};
     obj[this.props.bf.name] = data;
     this.props.bf.form.setData(obj);
   },
-  widgetIsActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
-  },
   render(){
-    return(
+    return (
       <ul className="list-unstyled">
         {this.props.bf.subWidgets().map((w, i) => {
           return (
             <li key={i}>
-              <ToggleWithLabel on={this.widgetIsActive(w) ? true : false} onChange={this.onChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+              <ToggleWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
             </li>
-          )
+          );
         })}
       </ul>
-    )
+    );
   }
 });

@@ -1,20 +1,16 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
-import _ from 'lodash';
-import moment from 'moment';
-import Immutable, {Record, List, Map} from 'immutable';
+import Immutable, {List} from 'immutable';
 
 let _signups = new List();
 
 const statics = {
   getSignupsSuccess(data){
-    _signups = Immutable.fromJS(data)
+    _signups = Immutable.fromJS(data);
+  },
+  _statuses: {
+    adminActivateSignup: null
   }
-}
-
-let _statuses = {
-  adminActivateSignup:null
-}
+};
 
 const Store = Flux.createStore(
   {
@@ -24,23 +20,25 @@ const Store = Flux.createStore(
     getActivateSignupStatus(){
       return _statuses.adminActivateSignup;
     }
-  }, function(payload){
-    switch(payload.actionType) {
-      case 'ADMIN_GET_SIGNUPS_SUCCESS':
-        statics.getSignupsSuccess(payload.data);
-        Store.emitChange();
-      break;
-      case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
+  }, function handlePayload(payload){
+  switch (payload.actionType) {
+  case 'ADMIN_GET_SIGNUPS_SUCCESS':
+    statics.getSignupsSuccess(payload.data);
+    Store.emitChange();
+    break;
+  case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':
         // _statuses.adminActivateSignup = null;
         // Store.emitChange();
-      break;
-    }
-    const statusData = Flux.statics.statusProcessor(payload, _statuses, Store);
-    _statuses = statusData.statuses;
-    if(statusData.haveChanged){
-      Store.emitChange();
-    }
+    break;
+  default:
+    break;
   }
+  const statusData = Flux.statics.statusProcessor(payload, statics, Store);
+  statics._statuses = statusData.statuses;
+  if (statusData.haveChanged){
+    Store.emitChange();
+  }
+}
 );
 
 export default Store;

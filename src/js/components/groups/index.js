@@ -4,4 +4,4 @@ import GroupItemList from './GroupItemList.jsx';
 export default {
   GroupItem,
   GroupItemList
-}
+};

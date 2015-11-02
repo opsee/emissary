@@ -2,9 +2,6 @@ FROM opsee/nginx
 
 MAINTAINER Greg Poirier <greg@opsee.co>
 
-ENV BARTNET_HOST="api-beta.opsee.co"
-ENV BARTNET_PORT="80"
-
 RUN mkdir -p /app
 COPY robots.txt dist /app/
 RUN mkdir -p /app/nginx

@@ -1,10 +1,11 @@
 import React, {PropTypes} from 'react';
 import style from './table.css';
 
-var Table = React.createClass({
-  propTypes:{
-    bordered:PropTypes.bool,
-    striped:PropTypes.bool
+const Table = React.createClass({
+  propTypes: {
+    bordered: PropTypes.bool,
+    striped: PropTypes.bool,
+    children: PropTypes.node
   },
   getTableClass(){
     let c = {};
@@ -20,12 +21,12 @@ var Table = React.createClass({
     return c;
   },
   render(){
-    return(
+    return (
       <table className={this.getTableClass()}>
         {this.props.children}
       </table>
-    )
+    );
   }
-})
+});
 
 export default Table;

@@ -1,9 +1,9 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
-import {Padding} from '../layout';
 
-import {Grid, Row, Col, Tabs, Tab} from '../../modules/bootstrap';
+import {Padding} from '../layout';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
 import CheckItem from '../checks/CheckItem.jsx';
 
@@ -13,43 +13,43 @@ import {GlobalActions} from '../../actions';
 import {Add, Key} from '../icons';
 
 import icons from '../icons';
-import {Button, BoundField, ButtonToggle, Toggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Button, BoundField, ButtonToggle, ToggleWithLabel, RadioWithLabel} from '../forms';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
 
 function getState(){
   return {
     checks: CheckStore.getChecks(),
-    toggles:[{on:true},{on:false},{on:true}],
-    radios:_.range(3).map(i => {
-      return {id:`radio-${i}`,on:false}
+    toggles: [{on: true}, {on: false}, {on: true}],
+    radios: _.range(3).map(i => {
+      return {id: `radio-${i}`, on: false};
     }),
-    buttonToggles:['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
-      return {title:title, on:false, id:`button-toggle-${i}`}
+    buttonToggles: ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
+      return {title: title, on: false, id: `button-toggle-${i}`};
     })
-  }
+  };
 }
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Name',
-      autocomplete:'off',
-      title:'foo'
+    widgetAttrs: {
+      placeholder: 'Name',
+      autocomplete: 'off',
+      title: 'foo'
     }
   }),
   password: forms.CharField({
-    widgetAttrs:{
-      placeholder:'Password',
+    widgetAttrs: {
+      placeholder: 'Password'
     }
   }),
   body: forms.CharField({
     widget: forms.Textarea,
-    widgetAttrs:{
-      placeholder:'Body',
+    widgetAttrs: {
+      placeholder: 'Body'
     }
   }),
-  validation:'auto'
+  validation: 'auto'
 });
 
 export default React.createClass({
@@ -57,10 +57,10 @@ export default React.createClass({
   getInitialState(){
     const self = this;
     return _.extend(getState(), {
-      info:new InfoForm({
-        onChange:self.changeAndUpdate
+      info: new InfoForm({
+        onChange: self.forceUpdate
       })
-    })
+    });
   },
   storeDidChange() {
     this.setState(getState());
@@ -68,31 +68,36 @@ export default React.createClass({
   getDefaultProps() {
     return getState();
   },
-  changeAndUpdate(){
-    this.forceUpdate();
+  getColor(){
+    const length = opseeColors.length;
+    const num = Math.round(Math.random() * length);
+    return opseeColors[num];
   },
-  triggerToggle(index, bool){
+  getChecks(){
+    return false;
+  },
+  runTriggerToggle(index, bool){
     let toggles = this.state.toggles;
     toggles[index].on = bool;
     this.setState({toggles});
   },
-  triggerRadio(id, bool){
+  runTriggerRadio(id, bool){
     let radios = _.clone(this.state.radios);
     const index = _.findIndex(radios, {id});
-    if(index > -1){
+    if (index > -1){
       radios = radios.map(r => {
-        r.on = r.id == id ? bool : false;
+        r.on = r.id === id ? bool : false;
         return r;
       });
       this.setState({radios});
     }
   },
-  triggerButtonToggle(id, bool){
+  runTriggerButtonToggle(id, bool){
     let buttonToggles = _.clone(this.state.buttonToggles);
     const index = _.findIndex(buttonToggles, {id});
-    if(index > -1){
+    if (index > -1){
       buttonToggles = buttonToggles.map(r => {
-        r.on = r.id == id ? bool : r.on;
+        r.on = r.id === id ? bool : r.on;
         return r;
       });
       this.setState({buttonToggles});
@@ -102,23 +107,18 @@ export default React.createClass({
     // buttonToggles[index].on = bool;
     // this.setState({buttonToggles});
   },
-  notify(style){
+  runNotify(style){
     GlobalActions.globalModalMessage({
-      html:'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
-      style:style
+      html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
+      style: style
     });
-  },
-  getColor(){
-    const length = opseeColors.length;
-    const num = Math.round(Math.random()*length);
-    return opseeColors[num];
   },
   render() {
     return (
       <div>
         <Toolbar title="Opsee Styleguide">
-          <Button fab={true} color="primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
-            <Add btn={true}/>
+          <Button fab color="primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
+            <Add btn/>
           </Button>
         </Toolbar>
 
@@ -133,13 +133,13 @@ export default React.createClass({
 
               <Padding b={1}>
                 <h3>Colors</h3>
-                {['brand-primary','brand-success','brand-info','brand-warning','brand-danger'].map((color, i) =>{
+                {['brand-primary', 'brand-success', 'brand-info', 'brand-warning', 'brand-danger'].map((color, i) =>{
                   return (
                     <div className="clearfix" key={`color-${i}`}>
-                      <div className={`bg-${color} pull-left`} style={{width:"45px",height:"45px"}} type="button"></div>
+                      <div className={`bg-${color} pull-left`} style={{width: '45px', height: '45px'}} type="button"></div>
                       <div className="padding pull-left">{color}</div>
                     </div>
-                  )
+                  );
                 })}
               </Padding>
 
@@ -157,7 +157,7 @@ export default React.createClass({
                 <h3>Icons</h3>
                 <div>
                   {Object.keys(icons).map(key => {
-                    return React.createElement(icons[key], {fill:this.getColor()});
+                    return React.createElement(icons[key], {fill: this.getColor()});
                   })}
                 </div>
               <hr/>
@@ -166,8 +166,8 @@ export default React.createClass({
 
                   <h3>Unordered List</h3>
                   <ul>
-                  {[1,2,3,4].map(i => {
-                    return(
+                  {[1, 2, 3, 4].map(i => {
+                    return (
                       <li key={`unordered-item-${i}`}>List Item {i}</li>
                     );
                   })}
@@ -175,8 +175,8 @@ export default React.createClass({
 
                   <h3>Ordered List</h3>
                   <ol>
-                    {[1,2,3,4].map(i => {
-                    return(
+                    {[1, 2, 3, 4].map(i => {
+                      return (
                       <li key={`ordered-item-${i}`}>List Item {i}</li>
                       );
                     })}
@@ -185,12 +185,12 @@ export default React.createClass({
 
                 <h3>Toggle List</h3>
                 <ul className="list-unstyled">
-                {this.state.toggles.map((t,i) => {
-                  return(
+                {this.state.toggles.map((t, i) => {
+                  return (
                     <li key={`toggle-${i}`}>
-                      <ToggleWithLabel on={t.on} onChange={this.triggerToggle} id={i} label="Item"/>
+                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={i} label="Item"/>
                     </li>
-                  )
+                  );
                 })}
                 </ul>
               </Padding>
@@ -199,12 +199,12 @@ export default React.createClass({
 
               <h3>Radio Select</h3>
               <ul className="list-unstyled">
-              {this.state.radios.map((t,i) => {
-                return(
+              {this.state.radios.map((t, i) => {
+                return (
                   <li className="" key={`radio-${i}`}>
-                    <RadioWithLabel on={t.on} onChange={this.triggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
+                    <RadioWithLabel on={t.on} onChange={this.runTriggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
                   </li>
-                )
+                );
               })}
               </ul>
 
@@ -212,12 +212,14 @@ export default React.createClass({
 
           <h3>Button Toggles</h3>
             <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
-            {this.state.buttonToggles.map((t,i) => {
-              return(
-                <li className="padding-tb-sm" key={`button-toggle-${i}`} style={{margin:'0 .5em'}}>
-                  <ButtonToggle on={t.on} onChange={this.triggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
+            {this.state.buttonToggles.map((t, i) => {
+              return (
+                <li key={`button-toggle-${i}`} style={{margin: '0 .5em'}}>
+                  <Padding tb={0.5}>
+                    <ButtonToggle on={t.on} onChange={this.runTriggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
+                  </Padding>
                 </li>
-              )
+              );
             })}
             </ul>
 
@@ -248,9 +250,9 @@ export default React.createClass({
 
             <h3>Checks</h3>
             {_.range(1).map((i, ci) => {
-              return(
+              return (
                 <ul className="list-unstyled" key={`check-list-${ci}`}>
-                {this.props.checks.map((check, id) => {
+                {this.getChecks().map((check, id) => {
                   return (
                     <li key={`check-${id}`}>
                       <CheckItem {...check}/>
@@ -258,31 +260,33 @@ export default React.createClass({
                   );
                 })}
                 </ul>
-              )
+              );
             })}
 
             <hr/>
 
             <h3>Cards</h3>
             <Row>
-            {[1,2,3,4].map(i => {
+            {[1, 2, 3, 4].map(i => {
               return (
-                <Col xs={12} sm={6} className="padding-tb" key={`card-${i}`}>
-                  <div className="bg-gray-900 md-shadow-bottom-z-1">
-                    <div className="padding">
-                      <h2 className="margin-none">A title goes here</h2>
+                <Col xs={12} sm={6} key={`card-${i}`}>
+                  <Padding tb={1}>
+                    <div className="bg-gray-900 md-shadow-bottom-z-1">
+                      <div className="padding">
+                        <h2 className="margin-none">A title goes here</h2>
+                        <div>
+                          <div><a href="mailto:">test@opsee.co</a></div>
+                          <span>#352346 - Created on 12/05/15</span>
+                        </div>
+                      </div>
                       <div>
-                        <div><a href="mailto:">test@opsee.co</a></div>
-                        <span>#352346 - Created on 12/05/15</span>
+                        <Button color="default" flat>Delete</Button>
+                        <Button color="primary" flat className="pull-right">Activate</Button>
                       </div>
                     </div>
-                    <div>
-                      <Button color="default" flat={true}>Delete</Button>
-                      <Button color="primary" flat={true} className="pull-right">Activate</Button>
-                    </div>
-                  </div>
+                  </Padding>
                 </Col>
-              )
+              );
             })}
             </Row>
 
@@ -310,23 +314,23 @@ export default React.createClass({
                 <p>Regular button styles are used less often than Flat buttons. Regular buttons can be used for primary actions on pages where it is not appropriate to use a Fab (use block styling as well in this case), such as the tutorial, of for form submission</p>
                 <p>Submitting a form uses the Success color.</p>
                 <p>
-                {['primary','success','warning','danger','info','default'].map(i => {
+                {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
                     <Button color={i} key={`btn-${i}`}>{i}</Button>
-                  )
+                  );
                 })}
                 </p>
 
                 <p><strong>Disabled:</strong></p>
                 <p>
-                {['primary','success','warning','danger','info','default'].map(i => {
+                {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
-                    <Button color={i} disabled={true} key={`btn-${i}`}>{i}</Button>
-                  )
+                    <Button color={i} disabled key={`btn-${i}`}>{i}</Button>
+                  );
                 })}
                 </p>
                 <Padding t={2}>
-                  <Button block={true}>Block</Button>
+                  <Button block>Block</Button>
                 </Padding>
               </Padding>
 
@@ -335,21 +339,20 @@ export default React.createClass({
               <p>Flat buttons are also used in the context menu actions, and when combined with Block styling they lose their border.</p>
               <p>"Positive" actions such as creating a check will typically use the Primary color, while negative actions like deleting or logging out will use the Danger color.</p>
               <Padding b={2}>
-                {['primary','success','warning','danger','info','default'].map(i => {
+                {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
                     <Padding className="pull-left" key={`btn-flat-${i}`}>
-                      <Button flat={true} color={i}>{i}</Button>
+                      <Button flat color={i}>{i}</Button>
                     </Padding>
-                  )
+                  );
                 })}
                 <Padding t={1}>
-                  <Button flat={true} color="success" disabled={true}>Disabled</Button>
+                  <Button flat color="success" disabled>Disabled</Button>
                 </Padding>
               </Padding>
-
-              <div className="padding-bx2">
-                <Button flat={true} noPad={true} primary={true}>NO PAD</Button>
-              </div>
+              <Padding b={2}>
+                <Button flat noPad primary>NO PAD</Button>
+              </Padding>
             </form>
 
             <h3>Loading State</h3>
@@ -357,10 +360,10 @@ export default React.createClass({
 
             <h3>Notifcations</h3>
             <Padding b={1}>
-              <Button color="danger" onClick={this.notify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
+              <Button color="danger" onClick={this.runNotify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
             </Padding>
             <Padding b={1}>
-              <Button color="success" onClick={this.notify.bind(null, 'success')}>Success NOTIFICATION</Button>
+              <Button color="success" onClick={this.runNotify.bind(null, 'success')}>Success NOTIFICATION</Button>
             </Padding>
           </Col>
         </Row>

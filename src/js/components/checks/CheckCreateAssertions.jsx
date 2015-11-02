@@ -1,20 +1,16 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import router from '../../modules/router.js';
-import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import {Toolbar, StepCounter} from '../global';
 
-import slate from 'slate';
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import AssertionCounter from './AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
-import colors from 'seedling/colors';
-import Highlight from '../global/Highlight.jsx';
 import {CheckStore} from '../../stores';
 import {Padding} from '../layout';
 import {Button} from '../forms';
@@ -23,7 +19,7 @@ const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, asse
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
 
 function relationshipConcernsEmpty(relationship){
-  if(typeof relationship == 'string' && relationship.match('empty|notEmpty')){
+  if (typeof relationship === 'string' && relationship.match('empty|notEmpty')){
     return true;
   }
   return false;
@@ -31,89 +27,139 @@ function relationshipConcernsEmpty(relationship){
 
 const AssertionsForm = forms.Form.extend({
   key: forms.ChoiceField({
-    widgetAttrs:{
-      noLabel: true
+    widgetAttrs: {
+      noLabel: true,
+      widgetType: 'Dropdown'
     },
-    choices:assertionTypeOptions
+    choices: assertionTypeOptions
   }),
   relationship: forms.ChoiceField({
-    widgetAttrs:{
-      noLabel: true
+    widgetAttrs: {
+      noLabel: true,
+      widgetType: 'Dropdown'
     },
-    choices:relationshipOptions,
+    choices: relationshipOptions
   }),
   operand: forms.CharField({
     label: 'Value',
-    widgetAttrs:{
-      placeholder:'Value'
+    widgetAttrs: {
+      placeholder: 'Value'
     },
-    required:false
+    required: false
   }),
   value: forms.CharField({
-    label:'Header Key',
-    widgetAttrs:{
-      placeholder:'i.e. Content-Type'
+    label: 'Header Key',
+    widgetAttrs: {
+      placeholder: 'i.e. Content-Type'
     },
-    required:false
+    required: false
   }),
-  clean:function(){
-    if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
-      if(!this.cleanedData.operand){
+  clean(){
+    if (!relationshipConcernsEmpty(this.cleanedData.relationship)){
+      if (!this.cleanedData.operand){
         throw forms.ValidationError('Assertion must have operand.');
       }
     }
-    switch(this.cleanedData.key){
-      case 'code':
+    switch (this.cleanedData.key){
+    case 'code':
       break;
-      case 'header':
-      if(!relationshipConcernsEmpty(this.cleanedData.relationship)){
-        if(!this.cleanedData.value){
+    case 'header':
+      if (!relationshipConcernsEmpty(this.cleanedData.relationship)){
+        if (!this.cleanedData.value){
           throw forms.ValidationError('Header assertion must have a value.');
         }
       }
+      break;
+    default:
+      break;
     }
   }
 });
 
 const AssertionsFormSet = forms.FormSet.extend({
-  form:AssertionsForm,
-  canDelete:true
+  form: AssertionsForm,
+  canDelete: true
 });
 
 const CheckCreateAssertions = React.createClass({
+  propTypes: {
+    check: PropTypes.object,
+    response: PropTypes.object,
+    onChange: PropTypes.func,
+    renderAsInclude: PropTypes.bool
+  },
   getInitialState() {
     const self = this;
-    var obj = {
+    const obj = {
       assertions: new AssertionsFormSet({
-        onChange:self.changeAndUpdate,
-        labelSuffix:'',
-        initial:this.props.check.assertions,
-        minNum:!this.props.check.assertions.length ? 1 : 0,
-        extra:0
+        onChange: self.runChange,
+        labelSuffix: '',
+        initial: _.cloneDeep(this.props.check.assertions),
+        minNum: !this.props.check.assertions.length ? 1 : 0,
+        extra: 0
       }),
-      response:this.props.response,
-      formattedResponse:this.props.formattedResponse
+      response: this.props.response,
+      hasSetAssertions: !self.isDataComplete()
     };
     //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(function(){
+    setTimeout(() => {
       self.state.assertions.forms().forEach((form, i) => {
         //checking here accounts for empty assertion forms
         let data = self.props.check.assertions[i];
-        if(data){
+        if (data){
           form.setData(data);
         }
       });
-    },10);
+      self.setState({hasSetAssertions: true});
+    }, 50);
     return obj;
   },
-  changeAndUpdate(){
-    this.props.onChange(this.getFinalData(), this.disabled(), 2)
+  getFormattedResponse(){
+    return CheckStore.getFormattedResponse(this.props.response);
   },
-  renderOperand(form, key){
+  getAssertionsForms(){
+    return _.reject(this.state.assertions.forms(), f => {
+      return f.cleanedData.DELETE;
+    });
+  },
+  getFinalData(){
+    let check = _.cloneDeep(this.props.check);
+    if (this.state.hasSetAssertions){
+      check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
+        return _.omit(a, 'DELETE');
+      });
+    }
+    return check;
+  },
+  getResponse(){
+    const data = CheckStore.getResponse();
+    let val;
+    if (data){
+      let response = CheckStore.getResponse().toJS();
+      if (response && response.length){
+        val = _.get(response[0], 'response.value');
+      }
+    }
+    return val;
+  },
+  isDataComplete(){
+    return this.props.check.assertions.length;
+  },
+  isDisabled(){
+    return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
+  },
+  runChange(){
+    this.props.onChange(this.getFinalData(), this.isDisabled(), 2);
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    router.transitionTo('checkCreateInfo');
+  },
+  renderOperand(form){
     const data = form.cleanedData;
-    if(data && data.relationship){
-      if(data.key == 'header' || !data.relationship.match('empty|notEmpty')){
-        return(
+    if (data && data.relationship){
+      if (data.key === 'header' || !data.relationship.match('empty|notEmpty')){
+        return (
           <Row>
             <Padding t={1}>
               <Col xs={12}>
@@ -121,14 +167,14 @@ const CheckCreateAssertions = React.createClass({
               </Col>
             </Padding>
           </Row>
-        )
+        );
       }
     }
   },
   renderValue(form, key){
     const data = form.cleanedData;
-    if(data && data.relationship && data.key == 'header'){
-      if(!data.relationship.match('empty|notEmpty')){
+    if (data && data.relationship && data.key === 'header'){
+      if (!data.relationship.match('empty|notEmpty')){
         return (
           <Row>
             <Padding t={1}>
@@ -137,42 +183,31 @@ const CheckCreateAssertions = React.createClass({
               </Col>
             </Padding>
           </Row>
-        )
+        );
       }
     }
-    return <div/>
-  },
-  removeAssertion(index){
-    if(index > 0){
-      this.state.assertions.removeForm(index);
-    }
-  },
-  getAssertionsForms(){
-    return _.reject(this.state.assertions.forms(), f => {
-      return f.cleanedData.DELETE;
-    });
+    return <div/>;
   },
   renderDeleteAssertionButton(form, index){
-    if(index > 0){
+    if (index > 0){
       return (
         <Col xs={2} sm={1}>
           <BoundField bf={form.boundField('DELETE')}/>
         </Col>
-      )
-    }else{
-      return <span/>
+      );
     }
+    return <span/>;
   },
   renderAssertionsForm(){
-    return(
+    return (
       <div>
         {this.getAssertionsForms().map((form, index) => {
           return (
-            <Grid fluid={true} key={`assertion-${index}`}>
+            <Grid fluid key={`assertion-${index}`}>
               <Padding tb={1}>
               <Row>
                 <Col xs={2} sm={1}>
-                  <AssertionCounter label={index+1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.props.response}/>
+                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
                 </Col>
                 <Col xs={8} sm={10}>
                   <Row>
@@ -199,52 +234,34 @@ const CheckCreateAssertions = React.createClass({
                 </Row>
               </Padding>
             </Grid>
-          )
+          );
         })
         }
         <Padding t={1}>
-          <Button color="primary" flat={true} onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
-            <Add inline={true} fill="primary"/> Add Assertion
+          <Button color="primary" flat onClick={this.state.assertions.addAnother.bind(this.state.assertions)}>
+            <Add inline fill="primary"/> Add Assertion
           </Button>
         </Padding>
       </div>
-    )
-  },
-  getFinalData(){
-    let check = _.clone(this.props.check);
-    check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
-      return _.omit(a, 'DELETE');
-    })
-    return check;
-  },
-  getFormattedResponse(){
-    return CheckStore.getFormattedResponse(this.props.response);
+    );
   },
   renderSubmitButton(){
-    if(!this.props.renderAsInclude){
-      return(
+    if (!this.props.renderAsInclude){
+      return (
         <div>
           <div><br/><br/></div>
           <div>
-            <Button color="success" block={true} type="submit" onClick={this.submit} disabled={this.disabled()} chevron={true}>Next</Button>
+            <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Next</Button>
           </div>
           <StepCounter active={3} steps={4}/>
         </div>
-      )
-    }else{
-      return <div/>
+      );
     }
+    return <div/>;
   },
-  disabled(){
-    return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
-  },
-  submit(e){
-    e.preventDefault();
-    router.transitionTo('checkCreateInfo');
-  },
-  innerRender() {
+  renderInner() {
     return (
-      <form ref="form" onSubmit={this.submit}>
+      <form ref="form" onSubmit={this.handleSubmit}>
         <Padding t={1}>
           <h3>Assertions</h3>
         </Padding>
@@ -254,14 +271,14 @@ const CheckCreateAssertions = React.createClass({
         <div><br/></div>
         {this.renderSubmitButton()}
       </form>
-    )
+    );
   },
   renderAsPage(){
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
-          <Button to="checks" icon={true} flat={true}>
-            <Close btn={true}/>
+          <Button to="checks" icon flat>
+            <Close btn/>
           </Button>
         </Toolbar>
         <Grid>
@@ -275,17 +292,17 @@ const CheckCreateAssertions = React.createClass({
                 </Padding>
               </Padding>
               <Padding tb={1}>
-                {this.innerRender()}
+                {this.renderInner()}
               </Padding>
             </Col>
           </Row>
         </Grid>
       </div>
-    )
+    );
   },
   render() {
-    return this.props.renderAsInclude ? this.innerRender() : this.renderAsPage();
+    return this.props.renderAsInclude ? this.renderInner() : this.renderAsPage();
   }
-})
+});
 
 export default CheckCreateAssertions;
