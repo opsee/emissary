@@ -26,7 +26,4 @@ Configure bartnet URL:
 Configure fieri URL:
 ```CONFIG_AUTH=http://localhost:9000 npm start```
 
-Configure events URL:
-```CONFIG_EVENTS=http://localhost:9000 npm start```
-
 Or any combination.

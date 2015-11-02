@@ -20,7 +20,7 @@ _statics.formatCheckData = (data) => {
 
 _statics.saveNotifications = (data, checkId, isEditing) => {
   return request
-  [isEditing ? 'put' : 'post'](`${config.eventsApi}/notifications${isEditing ? '/' + checkId : ''}`)
+  [isEditing ? 'put' : 'post'](`${config.api}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
   .send({
     'check-id': checkId,
@@ -30,7 +30,7 @@ _statics.saveNotifications = (data, checkId, isEditing) => {
 
 _statics.saveAssertions = (data, checkId, isEditing) => {
   return request
-  [isEditing ? 'put' : 'post'](`${config.eventsApi}/assertions${isEditing ? '/' + checkId : ''}`)
+  [isEditing ? 'put' : 'post'](`${config.api}/assertions${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', UserStore.getAuth())
   .send({
     'check-id': checkId,
@@ -80,12 +80,12 @@ _actions.getCheck = Flux.statics.addAsyncAction('getCheck',
       .then((checkRes) => {
         let check = checkRes.body;
         request
-        .get(`${config.eventsApi}/notifications/${id}`)
+        .get(`${config.api}/notifications/${id}`)
         .set('Authorization', UserStore.getAuth())
         .then(notifRes => {
           check.notifications = notifRes.body.notifications;
           request
-          .get(`${config.eventsApi}/assertions/${id}`)
+          .get(`${config.api}/assertions/${id}`)
           .set('Authorization', UserStore.getAuth())
           .then(assertionRes => {
             check.assertions = assertionRes.body.assertions;
