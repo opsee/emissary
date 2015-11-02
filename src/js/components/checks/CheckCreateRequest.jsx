@@ -181,6 +181,9 @@ const CheckCreateRequest = React.createClass({
       }).value();
     }
     let cleaned = this.state.info.cleanedData;
+    if (cleaned.path && !cleaned.path.match('^\/')){
+      cleaned.path = `/${cleaned.path}`;
+    }
     if (cleaned.port){
       cleaned.port = parseInt(cleaned.port, 10);
     }
