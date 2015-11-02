@@ -2,11 +2,10 @@ import React, {PropTypes} from 'react/addons';
 import {RouteHandler} from 'react-router';
 import config from '../../modules/config';
 import storage from '../../modules/storage';
-import {Header, MessageModal, Toolbar} from '../global';
+import {Header, MessageModal, Toolbar, Analytics} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
-import GoogleAnalytics from 'react-g-analytics';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
@@ -86,7 +85,7 @@ export default React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <GoogleAnalytics id="UA-59205908-2"/>
+        <Analytics id="UA-59205908-2"/>
         <Header/>
         <div className={this.state.showNav ? style.meat : style.meatUp}>
         {

@@ -1,3 +1,4 @@
+import Analytics from './Analytics.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
 import HTMLFile from './HTMLFile.jsx';
@@ -16,6 +17,7 @@ import Table from './Table.jsx';
 import Toolbar from './Toolbar.jsx';
 
 export default {
+  Analytics,
   Header,
   Highlight,
   HTMLFile,
