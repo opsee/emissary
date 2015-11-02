@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react';
 import Immutable, {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
-import {Button} from '../forms';
 import {Padding} from '../layout';
+import {Link} from 'react-router';
 
 export default React.createClass({
   propTypes: {
@@ -42,7 +42,7 @@ export default React.createClass({
   getEnvLink(){
     const type = this.getGroupType();
     let string = 'envGroupsSecurity';
-    if (type == 'elb'){
+    if (type === 'elb'){
       string = 'envGroupsELB';
     }
     return string;
@@ -57,9 +57,9 @@ export default React.createClass({
     if (this.state.limit < this.props.groups.size){
       return (
         <Padding t={1}>
-          <Button to={this.getEnvLink()} color="primary">
+          <Link to={this.getEnvLink()}>
             Show {this.props.groups.size - this.state.limit} more
-          </Button>
+          </Link>
         </Padding>
       );
     }

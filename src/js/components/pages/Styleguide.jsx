@@ -5,7 +5,6 @@ import forms from 'newforms';
 import {Padding} from '../layout';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
-import CheckItem from '../checks/CheckItem.jsx';
 
 import {CheckStore} from '../../stores';
 import {GlobalActions} from '../../actions';
@@ -243,19 +242,21 @@ export default React.createClass({
             <hr/>
 
             <h3>Checks</h3>
-            {_.range(1).map((i, ci) => {
-              return (
-                <ul className="list-unstyled" key={`check-list-${ci}`}>
-                {this.getChecks().map((check, id) => {
-                  return (
-                    <li key={`check-${id}`}>
-                      <CheckItem {...check}/>
-                    </li>
-                  );
-                })}
-                </ul>
-              );
-            })}
+            {
+            //   _.range(1).map((i, ci) => {
+            //   return (
+            //     <ul className="list-unstyled" key={`check-list-${ci}`}>
+            //     {CheckStore.getChecks().map((check, id) => {
+            //       return (
+            //         <li key={`check-${id}`}>
+            //           <CheckItem {...check}/>
+            //         </li>
+            //       );
+            //     })}
+            //     </ul>
+            //   );
+            // })
+          }
 
             <hr/>
 
