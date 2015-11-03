@@ -5,6 +5,7 @@ import {Alert} from '../../modules/bootstrap';
 const StatusHandler = React.createClass({
   propTypes: {
     successText: PropTypes.string,
+    errorText: PropTypes.string,
     timeout: PropTypes.number,
     status: PropTypes.oneOfType([
       PropTypes.string,
@@ -14,7 +15,7 @@ const StatusHandler = React.createClass({
   },
   getInitialState(){
     return {
-      error: false,
+      error: (this.props.status && typeof this.props.status === 'object') || false,
       success: false
     };
   },
@@ -35,7 +36,7 @@ const StatusHandler = React.createClass({
     if (this.state.error && typeof this.state.error === 'object' && this.state.error.message){
       return this.state.error.message;
     }
-    return 'Something went wrong.';
+    return this.props.errorText || 'Something went wrong.';
   },
   render(){
     if (this.props.status === 'pending'){

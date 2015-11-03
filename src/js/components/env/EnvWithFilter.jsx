@@ -87,13 +87,13 @@ const EnvWithFilter = React.createClass({
     const getGroupsELBStatus = GroupStore.getGetGroupsELBStatus();
     const getInstancesECCStatus = InstanceStore.getGetInstancesECCStatus();
     let stateObj = {};
-    if (getGroupsSecurityStatus === 'success'){
+    if (getGroupsSecurityStatus === 'success' || typeof getGroupsSecurityStatus === 'object'){
       stateObj.attemptedGroupsSecurity = true;
     }
-    if (getGroupsELBStatus === 'success'){
+    if (getGroupsELBStatus === 'success' || typeof getGroupsELBStatus === 'object'){
       stateObj.attemptedGroupsELB = true;
     }
-    if (getInstancesECCStatus === 'success'){
+    if (getInstancesECCStatus === 'success' || typeof getInstancesECCStatus === 'object'){
       stateObj.attemptedInstancesECC = true;
     }
     this.setState(_.assign(stateObj, {
@@ -235,6 +235,11 @@ const EnvWithFilter = React.createClass({
         </div>
       );
     }
+    return (
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get Security Groups.">
+        No Security Groups
+      </StatusHandler>
+    );
   },
   renderGroupsELB(){
     if (GroupStore.getGroupsELB().size){
@@ -246,6 +251,11 @@ const EnvWithFilter = React.createClass({
         </div>
       );
     }
+    return (
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get ELB Groups.">
+        No ELB Groups
+      </StatusHandler>
+    );
   },
   renderInstancesECC(){
     if (InstanceStore.getInstancesECC().size){
@@ -257,6 +267,11 @@ const EnvWithFilter = React.createClass({
         </div>
       );
     }
+    return (
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get EC2 Instances.">
+        No EC2 Instances
+      </StatusHandler>
+    );
   },
   renderFilterButtons(){
     return (
