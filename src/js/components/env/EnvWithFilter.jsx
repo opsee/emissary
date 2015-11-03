@@ -326,7 +326,7 @@ const EnvWithFilter = React.createClass({
   render(){
     const self = this;
     if (this.isFinishedAttempt()){
-      if (!OnboardStore.getBastions().length){
+      if (OnboardStore.getBastions().length){
         return (
           <form name="envWithFilterForm">
             <Padding b={1}>
