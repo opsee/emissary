@@ -61,10 +61,16 @@ export default React.createClass({
     if (this.state.group.get('name')){
       return (
         <div>
-          <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || ''}`}/>
+          <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || ''}`} />
           <Grid>
             <Row>
               <Col xs={12}>
+                <Padding b={2}>
+                  <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'elb'}}} title="Create New Check">
+                    <Add fill="primary" inline/> Create a Check
+                  </Button>
+                </Padding>
+
                 <Padding b={1}>
                   <h3>ELB Information</h3>
                   <Table>
@@ -82,18 +88,15 @@ export default React.createClass({
                     </tr>
                   </Table>
                 </Padding>
+
                 <Padding b={1}>
-                  <h3>Instances</h3>
+                  <h3>Instances ({this.state.group.get('instances').size})</h3>
                   <InstanceItemList instances={this.state.group.get('instances')}/>
                 </Padding>
+
                 <Padding b={1}>
                   <h3>Checks</h3>
                   <CheckItemList type="groupELB" id={this.props.params.id}/>
-                  <Padding t={2}>
-                    <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'elb'}}}>
-                      <Add inline/> Create Check
-                    </Button>
-                  </Padding>
                 </Padding>
               </Col>
             </Row>

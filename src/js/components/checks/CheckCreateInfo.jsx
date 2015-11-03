@@ -1,12 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
-
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
-import colors from 'seedling/colors';
 import {StepCounter} from '../global';
 import {CheckStore, UserStore} from '../../stores';
 import {Padding} from '../layout';
@@ -191,7 +189,7 @@ const CheckCreateInfo = React.createClass({
         })
         }
         <Padding t={2}>
-          <Button color="primary" noPad flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill={colors.primary} inline/> Add Another Notification</Button>
+          <Button color="primary" flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill="primary" inline/> Add Another Notification</Button>
         </Padding>
       </div>
     );

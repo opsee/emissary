@@ -2,11 +2,10 @@ import React from 'react';
 import router from '../../modules/router';
 import colors from 'seedling/colors';
 import _ from 'lodash';
-
 import {Toolbar} from '../global';
 import {AdminActions, GlobalActions, UserActions} from '../../actions';
 import {AdminStore} from '../../stores';
-import {Checkmark, Person} from '../icons';
+import {Checkmark, Person, Mail, Ghost} from '../icons';
 import TimeAgo from 'react-timeago';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -80,14 +79,17 @@ export default React.createClass({
     return <span/>;
   },
   renderButton(signup){
-    if (this.isUnapprovedSignup(signup) || this.isApprovedSignup(signup)){
-      const text = this.isUnapprovedSignup(signup) ? 'Activate' : 'Resend Activation Email';
+    if (this.isUnapprovedSignup(signup)){
       return (
-        <Button flat color="primary" onClick={this.runActivateSignup.bind(null, signup)}>{text}</Button>
+        <Button flat color="success" onClick={this.activateSignup.bind(null, signup)}><Checkmark fill="success" inline/> Activate</Button>
+      );
+    } else if (this.isApprovedSignup(signup)) {
+      return (
+        <Button flat color="primary" onClick={this.activateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Activation Email</Button>
       );
     }
     return (
-      <Button flat color="primary" onClick={this.runGhostAccount.bind(null, signup)}>Ghost</Button>
+      <Button flat color="danger" onClick={this.ghostAccount.bind(null, signup)}><Ghost fill="danger" inline/> Ghost</Button>
     );
   },
   renderItem(signup){
@@ -99,10 +101,10 @@ export default React.createClass({
               <h3>
                 {this.renderIcon(signup)} {signup.name}
               </h3>
-              <div>
+              <Padding b={1}>
                 <div><a href={'mailto:' + signup.email}>{signup.email}</a></div>
                 <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
-                </div>
+              </Padding>
               <div>
                 {this.renderButton(signup)}
               </div>

@@ -11,7 +11,6 @@ import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
 import {GroupStore} from '../../stores';
 import cx from 'classnames';
-// import colors from '../global/colors.css';
 
 const GroupItem = React.createClass({
   propTypes: {
@@ -66,9 +65,9 @@ const GroupItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon flat onClick={this.runMenuOpen} title="Group Menu">
-      <Settings fill="textSecondary" btn/>
-    </Button>
+      <Button icon flat secondary onClick={this.runMenuOpen} title="Group Menu">
+        <Settings fill="textSecondary" btn/>
+      </Button>
     );
   },
   renderLinkButton(){

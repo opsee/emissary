@@ -10,7 +10,7 @@ import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
 import {StatusHandler} from '../global';
-import {Search} from '../icons';
+import {Search, Circle} from '../icons';
 import {GroupActions, InstanceActions} from '../../actions';
 import {GroupStore, InstanceStore} from '../../stores';
 import {GroupItemList} from '../groups';
@@ -262,19 +262,10 @@ const EnvWithFilter = React.createClass({
     return (
       <Row>
         <Col className="col-xs">
-          <Padding b={1}>
-            <Button color={this.state.buttonSelected === 'passing' ? 'success' : 'default'} onClick={this.runToggleButtonState.bind(null, 'passing')}>Passing - {this.getNumberPassing()}</Button>
-          </Padding>
+          <Button flat={this.state.buttonSelected !== 'failing'} color="danger" onClick={this.runToggleButtonState.bind(null, 'failing')}><Circle fill={this.state.buttonSelected !== 'failing' ? 'danger' : ''} inline/> {this.getNumberFailing()} Failing</Button>
         </Col>
         <Col className="col-xs">
-          <Padding b={1}>
-            <Button color={this.state.buttonSelected === 'failing' ? 'danger' : 'default'} onClick={this.runToggleButtonState.bind(null, 'failing')}>Failing - {this.getNumberFailing()}</Button>
-          </Padding>
-        </Col>
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button color={this.state.buttonSelected === 'running' ? 'primary' : 'default'} onClick={this.runToggleButtonState.bind(null, 'running')}>Unmonitored - {this.getNumberUnmonitored()}</Button>
-          </Padding>
+          <Button flat={this.state.buttonSelected !== 'running'} onClick={this.runToggleButtonState.bind(null, 'running')}><Circle fill={this.state.buttonSelected !== 'running' ? 'text' : ''} inline/> {this.getNumberUnmonitored()} Unmonitored</Button>
         </Col>
       </Row>
     );
@@ -284,8 +275,12 @@ const EnvWithFilter = React.createClass({
     if (this.isFinishedAttempt()){
       return (
         <form name="envWithFilterForm">
-          {this.state.filter.render()}
-          {this.renderFilterButtons()}
+          <Padding b={1}>
+            {this.state.filter.render()}
+          </Padding>
+          <Padding b={1}>
+            {this.renderFilterButtons()}
+          </Padding>
           {this.props.include.map(i => {
             return self[`render${_.capitalize(i)}`]();
           })}

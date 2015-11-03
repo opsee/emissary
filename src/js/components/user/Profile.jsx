@@ -3,6 +3,7 @@ import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
 import {Table, Toolbar} from '../global';
 import router from '../../modules/router.js';
+import {Link} from 'react-router';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -34,7 +35,7 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title={this.state.user.name}>
-          <Button fab color="primary" to="profileEdit" title="Edit Your Profile">
+          <Button fab color="info" to="profileEdit" title="Edit Your Profile">
             <Edit btn/>
           </Button>
         </Toolbar>
@@ -49,19 +50,16 @@ export default React.createClass({
                     <td>{this.state.user.email}</td>
                   </tr>
                   <tr>
-                    <td><strong>Name</strong></td>
-                    <td>{this.state.user.name}</td>
+                    <td><strong>Password</strong></td>
+                    <td><Link to="profileEdit" >Change Your Password</Link></td>
                   </tr>
                 </Table>
               </Padding>
-              <Padding b={1}>
-                <Button flat noPad color="primary" to="profileEdit" >Change Your Password</Button>
-              </Padding>
-              <div className="btn-container btn-container-righty">
-                <Button flat noPad color="danger" onClick={this.runLogOut}>
+              <Padding t={3}>
+                <Button flat color="danger" onClick={this.runLogOut}>
                   <Logout inline fill="danger"/> Log Out
                 </Button>
-              </div>
+              </Padding>
             </Col>
           </Row>
         </Grid>

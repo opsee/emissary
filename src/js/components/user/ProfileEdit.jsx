@@ -112,7 +112,7 @@ export default React.createClass({
               <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
               <Padding t={2}>
-                <Button color="primary" type="submit" disabled={this.isDisabled()}>Update Profile</Button>
+                <Button color="success" type="submit" disabled={this.isDisabled()}>Update Profile</Button>
               </Padding>
             </form>
             </Col>

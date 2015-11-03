@@ -1,24 +1,31 @@
 @import '../global/vars.css';
 
 .btn {
-  display: inline-block;
-  margin:0;
-  font-weight: 500;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
+
   background-image: none;
-  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 0.25em;
+  box-shadow: none;
+  cursor: pointer;
+  display: inline-block;
   font-size: 16px;
+  font-weight: 500;
   line-height: 1.42857;
-  user-select: none;
-  box-shadow: var(--shadowBottomZ1);
-  border: none;
-  border-radius: 3px;
-  text-transform: uppercase;
+  margin:0;
   padding: 0.5em;
-  transition: box-shadow var(--transitionEaseOut), background var(--transitionEaseOut), width var(--transitionEaseOut);
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transition: background var(--transitionEaseOut), color var(--transitionEaseOut), border-color var(--transitionEaseOut), width var(--transitionEaseOut);
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.btn svg {
+  transition: fill var(--transitionEaseOut)
+}
+.btn:hover svg, .btn:active svg {
+  fill: white;
 }
 
 .btn:focus, .btn:active:focus {
@@ -33,7 +40,7 @@
 .btn:active{
   outline: 0;
   background-image: none;
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: none;
 }
 .btn[disabled]{
   cursor: not-allowed;
@@ -46,15 +53,15 @@
 
 .btnDefault {
   composes: btn;
-  color: #fff;
-  background: var(--gray900);
+  color: white;
+  background: var(--colorTextSecondary);
 }
 .btnDefault:focus, .btnDefault:hover, .btnDefault:active {
-  color: #fff;
-  background: black;
+  color: white;
+  background: var(--gray500);
 }
 .btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
-  background: var(--gray900);
+  background: var(--colorTextSecondary);
 }
 
 .btnPrimary {
@@ -130,39 +137,76 @@
 
 .btnFlat {
   composes: btn;
-  box-shadow: none;
   background: transparent;
+  border-color: var(--colorText);
+  box-shadow: none;
+  color: var(--colorText);
+}
+.btnFlat:hover {
+  background: var(--colorText);
+  border-color: transparent;
   color: white;
 }
 
-.btnFlat[disabled]{
+.btnFlat:focus {
+  background-color: transparent;
+}
+.btnFlat.btnBlock {
+  border-color: transparent;
+}
+
+.btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
   background: none;
+  border-color: var(--colorTextSecondary);
 }
 .btnFlat.btnPrimary {
   background: transparent;
+  border-color: var(--colorPrimary);
   color: var(--colorPrimary);
+}
+.btnFlat.btnPrimary:hover {
+  background: var(--colorPrimary);
+  color: white;
 }
 .btnFlat.btnSuccess {
   background: transparent;
+  border-color: var(--colorSuccess);
   color: var(--colorSuccess);
+}
+.btnFlat.btnSuccess:hover {
+  background: var(--colorSuccess);
+  color: white;
 }
 .btnFlat.btnWarning {
   background: transparent;
+  border-color: var(--colorWarning);
   color: var(--colorWarning);
+}
+.btnFlat.btnWarning:hover {
+  background: var(--colorWarning);
+  color: white;
 }
 .btnFlat.btnDanger {
   background: transparent;
+  border-color: var(--colorDanger);
   color: var(--colorDanger);
+}
+.btnFlat.btnDanger:hover {
+  background: var(--colorDanger);
+  color: white;
 }
 .btnFlat.btnInfo {
   background: transparent;
+  border-color: var(--colorInfo);
   color: var(--colorInfo);
 }
-.btnFlat:hover {
-  background: var(--gray800);
+.btnFlat.btnInfo:hover {
+  background: var(--colorInfo);
+  color: white;
 }
 
 .btnBlock {
+  border-radius: 0;
   display: block;
   width: 100%;
 }
@@ -209,7 +253,7 @@
 }
 
 .btnSecondary {
-  margin: 0.5em 0.625em 0.5em 0;
+  margin: 0 0.625em 0 0;
 }
 
 .btnDropdown{

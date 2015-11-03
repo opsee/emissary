@@ -116,7 +116,7 @@ export default React.createClass({
             <ul className="list-unstyled">
             {this.state.check.get('notifications').map(n => {
               return (
-                <li><Mail inline fill="primary"/> {n.value}</li>
+                <li><Mail inline/> {n.value}</li>
               );
             })}
             </ul>
@@ -133,7 +133,7 @@ export default React.createClass({
   renderLink(){
     if (this.state.check && this.state.check.get('id')){
       return (
-        <Button to="checkEdit" params={{id: this.props.params.id}} color="primary" fab title={`Edit ${this.state.check.name}`}>
+        <Button to="checkEdit" params={{id: this.props.params.id}} color="info" fab title={`Edit ${this.state.check.name}`}>
           <Edit btn/>
         </Button>
       );
@@ -149,14 +149,12 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding tb={1}>
+              <Padding b={3}>
                 {this.renderInner()}
               </Padding>
-              <div className="btn-container btn-container-righty">
-                <Button onClick={this.runRemoveCheck} flat color="danger" noPad>
-                  <Delete inline fill="danger"/> Delete Check
-                </Button>
-              </div>
+              <Button onClick={this.removeCheck} flat color="danger">
+                <Delete inline fill="danger"/> Delete Check
+              </Button>
             </Col>
           </Row>
         </Grid>

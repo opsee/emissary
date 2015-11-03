@@ -16,7 +16,6 @@ const Button = React.createClass({
     fab: PropTypes.bool,
     color: PropTypes.string,
     type: PropTypes.string,
-    //text align (left, center, right)
     text: PropTypes.string,
     className: PropTypes.string,
     target: PropTypes.string,
@@ -40,8 +39,10 @@ const Button = React.createClass({
   getClass(){
     let arr = [];
     for (const prop in this.props){
-      const selector = prop.match('color|text') ? this.props[prop] : prop;
-      arr.push(style[`btn${ _.startCase(selector).split(' ').join('')}`]);
+      if (this.props[prop]){
+        const selector = prop.match('color|text') ? this.props[prop] : prop;
+        arr.push(style[`btn${ _.startCase(selector).split(' ').join('')}`]);
+      }
     }
     arr.push(this.props.className);
     return cx(arr);

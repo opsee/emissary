@@ -6,6 +6,7 @@ import {OnboardActions} from '../../actions';
 import {State} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import router from '../../modules/router';
+import {Link} from 'react-router';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {StatusHandler} from '../global';
@@ -68,8 +69,9 @@ export default React.createClass({
                     <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>
                   </Padding>
                   <Padding t={1}>
-                    <Button to="passwordForgot" flat>Forgot Password?</Button>
+                    <Link to="passwordForgot">Forgot your password?</Link>
                   </Padding>
+                  <Button type="submit" block chevron color="success" disabled={this.isDisabled()}>{this.btnText()}</Button>
                 </form>
               </Col>
             </Row>

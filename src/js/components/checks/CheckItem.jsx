@@ -55,8 +55,8 @@ const CheckItem = React.createClass({
   },
   renderButton(){
     return (
-    <Button icon flat onClick={this.runMenuOpen} title="Check Menu">
-      <Settings fill={colors.textColorSecondary} btn/>
+    <Button icon flat secondary onClick={this.runMenuOpen} title="Check Menu">
+      <Settings fill="textSecondary" btn/>
     </Button>
     );
   },
