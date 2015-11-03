@@ -12,6 +12,7 @@ import {GlobalActions} from '../../actions';
 import {Add, Key} from '../icons';
 
 import icons from '../icons';
+import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel, RadioWithLabel} from '../forms';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
@@ -146,12 +147,16 @@ export default React.createClass({
 
               <Padding b={1}>
                 <h3>Colors</h3>
-                {['brand-primary', 'brand-success', 'brand-info', 'brand-warning', 'brand-danger'].map((color, i) =>{
+                {opseeColors.map(color => {
                   return (
-                    <div className="clearfix" key={`color-${i}`}>
-                      <div className={`bg-${color} pull-left`} style={{width: '45px', height: '45px'}} type="button"></div>
-                      <div className="padding pull-left">{color}</div>
-                    </div>
+                    <Row className="flex-vertical-align">
+                      <Col>
+                        <Circle fill={color} style={{width: '40px', height: '40px'}}/>
+                      </Col>
+                      <Col style={{margin: '0 0 0 0.5rem'}}>
+                        {color}
+                      </Col>
+                    </Row>
                   );
                 })}
               </Padding>
