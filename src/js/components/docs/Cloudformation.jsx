@@ -13,7 +13,7 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <Padding tb={1}>
-                <h2>The Opsee Bastion Instance CloudFormation Template</h2>
+                <h3>The Opsee Bastion Instance CloudFormation Template</h3>
                 <Highlight>
                 {JSON.stringify(
                   {
@@ -220,7 +220,7 @@ export default React.createClass({
                 </Highlight>
                 <div><br/></div>
 
-                  <h2>The IAM Role and Permissions</h2>
+                  <h3>The IAM Role and Permissions</h3>
 
                   <p>Here is a summary of the role and permissions for the Opsee Bastion Instance.</p>
 
@@ -229,7 +229,7 @@ export default React.createClass({
                     <p>Initiates a request to compile the specified type of information of the deployed environment.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_RequestEnvironmentInfo.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_RequestEnvironmentInfo.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_RequestEnvironmentInfo.html">API_RequestEnvironmentInfo</a></li>
                     </ul>
                   </Padding>
 
@@ -237,59 +237,59 @@ export default React.createClass({
                     <pre>ec2:*</pre>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DecribeAccountAttributes.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DecribeAccountAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAvailabilityZones.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAvailabilityZones.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeBundleTasks.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeBundleTasks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeClassicLinkInstances.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeClassicLinkInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeConversionTasks.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeConversionTasks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeCustomerGateways.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeCustomerGateways.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeDhcpOptions.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeDhcpOptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeExportTasks.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeExportTasks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeFlowLogs.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeFlowLogs.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImageAttribute.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImageAttribute.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImages.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImages.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImportImageTasks.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImportImageTasks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImportSnapshotTasks.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImportSnapshotTasks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceAttribute.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceAttribute.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstances.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceStatus.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceStatus.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInternetGateways.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInternetGateways.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeKeyPairs.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeKeyPairs.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeMovingAddresses.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeMovingAddresses.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkAcls.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkAcls.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkInterfaceAttribute.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkInterfaceAttribute.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkInterfaces.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkInterfaces.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribePlacementGroups.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribePlacementGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribePrefixLists.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribePrefixLists.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRegions.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRegions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstances.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesListings.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesListings.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesModifications.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesModifications.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesOfferings.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesOfferings.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRouteTables.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRouteTables.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshotAttribute.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshotAttribute.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshots.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshots.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotDatafeedSubscription.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotDatafeedSubscription.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetInstances.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetRequestHistory.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetRequestHistory.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetRequests.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetRequests.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotInstanceRequests.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotInstanceRequests.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotPriceHistory.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotPriceHistory.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSubnets.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSubnets.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeTags.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumeAttribute.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumeAttribute.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumes.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumeStatus.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumeStatus.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcAttribute.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcAttribute.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcClassicLink.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcClassicLink.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcEndpoints.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcEndpoints.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcEndpointServices.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcEndpointServices.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcPeeringConnections.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcPeeringConnections.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcs.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcs.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnConnections.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnConnections.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnGateways.html">http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnGateways.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DecribeAccountAttributes.html">API_DecribeAccountAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html">API_DescribeAddresses</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAvailabilityZones.html">API_DescribeAvailabilityZones</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeBundleTasks.html">API_DescribeBundleTasks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeClassicLinkInstances.html">API_DescribeClassicLinkInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeConversionTasks.html">API_DescribeConversionTasks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeCustomerGateways.html">API_DescribeCustomerGateways</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeDhcpOptions.html">API_DescribeDhcpOptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeExportTasks.html">API_DescribeExportTasks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeFlowLogs.html">API_DescribeFlowLogs</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImageAttribute.html">API_DescribeImageAttribute</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImages.html">API_DescribeImages</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImportImageTasks.html">API_DescribeImportImageTasks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImportSnapshotTasks.html">API_DescribeImportSnapshotTasks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceAttribute.html">API_DescribeInstanceAttribute</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstances.html">API_DescribeInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceStatus.html">API_DescribeInstanceStatus</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInternetGateways.html">API_DescribeInternetGateways</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeKeyPairs.html">API_DescribeKeyPairs</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeMovingAddresses.html">API_DescribeMovingAddresses</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkAcls.html">API_DescribeNetworkAcls</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkInterfaceAttribute.html">API_DescribeNetworkInterfaceAttribute</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeNetworkInterfaces.html">API_DescribeNetworkInterfaces</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribePlacementGroups.html">API_DescribePlacementGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribePrefixLists.html">API_DescribePrefixLists</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRegions.html">API_DescribeRegions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstances.html">API_DescribeReservedInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesListings.html">API_DescribeReservedInstancesListings</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesModifications.html">API_DescribeReservedInstancesModifications</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeReservedInstancesOfferings.html">API_DescribeReservedInstancesOfferings</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRouteTables.html">API_DescribeRouteTables</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html">API_DescribeSecurityGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshotAttribute.html">API_DescribeSnapshotAttribute</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshots.html">API_DescribeSnapshots</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotDatafeedSubscription.html">API_DescribeSpotDatafeedSubscription</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetInstances.html">API_DescribeSpotFleetInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetRequestHistory.html">API_DescribeSpotFleetRequestHistory</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotFleetRequests.html">API_DescribeSpotFleetRequests</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotInstanceRequests.html">API_DescribeSpotInstanceRequests</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSpotPriceHistory.html">API_DescribeSpotPriceHistory</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSubnets.html">API_DescribeSubnets</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeTags.html">API_DescribeTags</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumeAttribute.html">API_DescribeVolumeAttribute</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumes.html">API_DescribeVolumes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVolumeStatus.html">API_DescribeVolumeStatus</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcAttribute.html">API_DescribeVpcAttribute</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcClassicLink.html">API_DescribeVpcClassicLink</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcEndpoints.html">API_DescribeVpcEndpoints</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcEndpointServices.html">API_DescribeVpcEndpointServices</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcPeeringConnections.html">API_DescribeVpcPeeringConnections</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpcs.html">API_DescribeVpcs</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnConnections.html">API_DescribeVpnConnections</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeVpnGateways.html">API_DescribeVpnGateways</a></li>
                     </ul>
                   </Padding>
 
@@ -298,18 +298,18 @@ export default React.createClass({
                     <p>See elasticache Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheClusters.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheClusters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheEngineVersions.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheEngineVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheParameterGroups.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheParameterGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheParameters.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheSecurityGroups.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheSecurityGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheSubnetGroups.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheSubnetGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeEngineDefaultParameters.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeEngineDefaultParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeEvents.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeEvents.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReplicationGroups.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReplicationGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodes.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodesOfferings.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodesOfferings.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeSnapshots.html">http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeSnapshots.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheClusters.html">API_DescribeCacheClusters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheEngineVersions.html">API_DescribeCacheEngineVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheParameterGroups.html">API_DescribeCacheParameterGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheParameters.html">API_DescribeCacheParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheSecurityGroups.html">API_DescribeCacheSecurityGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeCacheSubnetGroups.html">API_DescribeCacheSubnetGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeEngineDefaultParameters.html">API_DescribeEngineDefaultParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeEvents.html">API_DescribeEvents</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReplicationGroups.html">API_DescribeReplicationGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodes.html">API_DescribeReservedCacheNodes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeReservedCacheNodesOfferings.html">API_DescribeReservedCacheNodesOfferings</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_DescribeSnapshots.html">API_DescribeSnapshots</a></li>
                     </ul>
                   </Padding>
 
@@ -318,7 +318,7 @@ export default React.createClass({
                     <p>Gets attributes for the specified queue. </p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_GetQueueAttributes.html">http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_GetQueueAttributes.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_GetQueueAttributes.html">API_GetQueueAttributes</a></li>
                     </ul>
                   </Padding>
 
@@ -327,7 +327,7 @@ export default React.createClass({
                     <p>Describes the specified stream.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_DescribeStream.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_DescribeStream.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_DescribeStream.html">API_DescribeStream</a></li>
                     </ul>
                   </Padding>
 
@@ -336,7 +336,7 @@ export default React.createClass({
                     <p>Returns AWS resource descriptions for running and deleted stacks. If StackName is specified, all the associated resources that are part of the stack are returned. If PhysicalResourceId is specified, the associated resources of the stack that the resource belongs to are returned.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResources.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResources.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResources.html">API_DescribeStackResources</a></li>
                     </ul>
                   </Padding>
 
@@ -345,7 +345,7 @@ export default React.createClass({
                     <p>The following policy grants users read-only access to Amazon AppStream.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/appstream/latest/developerguide/appstream-advanced-build-streaming-app.html">http://docs.aws.amazon.com/appstream/latest/developerguide/appstream-advanced-build-streaming-app.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/appstream/latest/developerguide/appstream-advanced-build-streaming-app.html">appstream-advanced-build-streaming-app</a></li>
                     </ul>
                   </Padding>
 
@@ -354,15 +354,15 @@ export default React.createClass({
                     <p>See elasticbeanstalk Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplications.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplications.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplicationVersions.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplicationVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationOptions.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationOptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationSettings.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationSettings.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentHealth.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentHealth.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentResources.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentResources.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplications.html">API_DescribeApplications</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplicationVersions.html">API_DescribeApplicationVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationOptions.html">API_DescribeConfigurationOptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationSettings.html">API_DescribeConfigurationSettings</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentHealth.html">API_DescribeEnvironmentHealth</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentResources.html">API_DescribeEnvironmentResources</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html">API_DescribeEnvironments</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html">API_DescribeEvents</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html">API_DescribeInstancesHealth</a></li>
                     </ul>
                   </Padding>
 
@@ -371,7 +371,7 @@ export default React.createClass({
                     <p>See cloudfront documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -380,7 +380,7 @@ export default React.createClass({
                     <p>See route53 api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -389,7 +389,7 @@ export default React.createClass({
                     <p>Returns a description of the specified resource in the specified stack.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResource.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResource.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackResource.html">API_DescribeStackResource</a></li>
                     </ul>
                   </Padding>
 
@@ -398,7 +398,7 @@ export default React.createClass({
                     <p>Returns information about the table, including the current status of the table, when it was created, the primary key schema, and any indexes on the table.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DescribeTable.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DescribeTable.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DescribeTable.html">API_DescribeTable</a></li>
                     </ul>
                   </Padding>
 
@@ -407,9 +407,9 @@ export default React.createClass({
                     <p>See ses List*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentities.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentities.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentityPolicies.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentityPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListVerifiedEmailAddresses.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_ListVerifiedEmailAddresses.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentities.html">API_ListIdentities</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListIdentityPolicies.html">API_ListIdentityPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_ListVerifiedEmailAddresses.html">API_ListVerifiedEmailAddresses</a></li>
                     </ul>
                   </Padding>
 
@@ -418,7 +418,7 @@ export default React.createClass({
                     <p>Gets a generated host name for the specified layer, based on the current host name theme.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_GetHostnameSuggestion.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_GetHostnameSuggestion.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_GetHostnameSuggestion.html">API_GetHostnameSuggestion</a></li>
                     </ul>
                   </Padding>
 
@@ -427,9 +427,9 @@ export default React.createClass({
                     <p>See cloudwatch DescribeAlarmsHistory, DescribeAlarms, DescribeAlarmsForMetric, DescribeAlarmActions</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmHistory.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmHistory.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmsForMetric.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmsForMetric.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmHistory.html">API_DescribeAlarmHistory</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html">API_DescribeAlarms</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmsForMetric.html">API_DescribeAlarmsForMetric</a></li>
                     </ul>
                   </Padding>
 
@@ -438,7 +438,7 @@ export default React.createClass({
                     <p>See elastictranscoder documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html">http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html">introduction</a></li>
                     </ul>
                   </Padding>
 
@@ -447,11 +447,11 @@ export default React.createClass({
                     <p>See sns List*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListEndpointsByPlatformApplication.html">http://docs.aws.amazon.com/sns/latest/api/API_ListEndpointsByPlatformApplication.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListPlatformApplications.html">http://docs.aws.amazon.com/sns/latest/api/API_ListPlatformApplications.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptions.html">http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html">http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html">http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListEndpointsByPlatformApplication.html">API_ListEndpointsByPlatformApplication</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListPlatformApplications.html">API_ListPlatformApplications</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptions.html">API_ListSubscriptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html">API_ListSubscriptionsByTopic</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html">API_ListTopics</a></li>
                     </ul>
                   </Padding>
 
@@ -460,7 +460,7 @@ export default React.createClass({
                     <p>Lists all tags on an Amazon RDS resource.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_ListTagsForResource.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_ListTagsForResource.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_ListTagsForResource.html">API_ListTagsForResource</a></li>
                     </ul>
                   </Padding>
 
@@ -469,27 +469,27 @@ export default React.createClass({
                     <p>See opsworks Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeAgentVersions.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeAgentVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeApps.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeApps.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeCommands.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeCommands.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeDeployments.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeDeployments.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeEcsClusters.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeEcsClusters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeElasticIps.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeElasticIps.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeElasticLoadBalancers.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeElasticLoadBalancers.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeInstances.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeLayers.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeLayers.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeLoadBasedAutoScaling.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeLoadBasedAutoScaling.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeMyUserProfile.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeMyUserProfile.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribePermissions.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribePermissions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeRaidArrays.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeRaidArrays.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeRdsDbInstances.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeRdsDbInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeServiceErrors.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeServiceErrors.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStackProvisioningParameters.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStackProvisioningParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStacks.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStacks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStackSummary.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStackSummary.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeTimeBasedAutoScaling.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeTimeBasedAutoScaling.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeUserProfiles.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeUserProfiles.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeVolumes.html">http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeVolumes.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeAgentVersions.html">API_DescribeAgentVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeApps.html">API_DescribeApps</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeCommands.html">API_DescribeCommands</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeDeployments.html">API_DescribeDeployments</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeEcsClusters.html">API_DescribeEcsClusters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeElasticIps.html">API_DescribeElasticIps</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeElasticLoadBalancers.html">API_DescribeElasticLoadBalancers</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeInstances.html">API_DescribeInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeLayers.html">API_DescribeLayers</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeLoadBasedAutoScaling.html">API_DescribeLoadBasedAutoScaling</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeMyUserProfile.html">API_DescribeMyUserProfile</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribePermissions.html">API_DescribePermissions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeRaidArrays.html">API_DescribeRaidArrays</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeRdsDbInstances.html">API_DescribeRdsDbInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeServiceErrors.html">API_DescribeServiceErrors</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStackProvisioningParameters.html">API_DescribeStackProvisioningParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStacks.html">API_DescribeStacks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeStackSummary.html">API_DescribeStackSummary</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeTimeBasedAutoScaling.html">API_DescribeTimeBasedAutoScaling</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeUserProfiles.html">API_DescribeUserProfiles</a></li>
+                      <li><a href="http://docs.aws.amazon.com/opsworks/latest/APIReference/API_DescribeVolumes.html">API_DescribeVolumes</a></li>
                     </ul>
                   </Padding>
 
@@ -498,7 +498,7 @@ export default React.createClass({
                     <p>action controls whether a user can see queries in the Amazon Redshift console in the Queries tab of the Cluster section</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/mgmt/redshift-policy-elements.html">http://docs.aws.amazon.com/redshift/latest/mgmt/redshift-policy-elements.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/mgmt/redshift-policy-elements.html">redshift-policy-elements</a></li>
                     </ul>
                   </Padding>
 
@@ -507,13 +507,13 @@ export default React.createClass({
                     <p>See directconnect Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeConnections.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeConnections.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeConnectionsOnInterconnect.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeConnectionsOnInterconnect.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeInterconnects.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeInterconnects.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeInterconnects.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeInterconnects.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeLocations.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeLocations.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualGateways.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualGateways.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualInterfaces.html">http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualInterfaces.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeConnections.html">API_DescribeConnections</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeConnectionsOnInterconnect.html">API_DescribeConnectionsOnInterconnect</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeInterconnects.html">API_DescribeInterconnects</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeInterconnects.html">API_DescribeInterconnects</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeLocations.html">API_DescribeLocations</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualGateways.html">API_DescribeVirtualGateways</a></li>
+                      <li><a href="http://docs.aws.amazon.com/directconnect/latest/APIReference/API_DescribeVirtualInterfaces.html">API_DescribeVirtualInterfaces</a></li>
                     </ul>
                   </Padding>
 
@@ -522,7 +522,7 @@ export default React.createClass({
                     <p>Returns the template body for a specified stack. You can get the template for running or deleted stacks. For deleted stacks, GetTemplate returns the template for up to 90 days after the stack has been deleted.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_GetTemplate.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_GetTemplate.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_GetTemplate.html">API_GetTemplate</a></li>
                     </ul>
                   </Padding>
 
@@ -531,27 +531,27 @@ export default React.createClass({
                     <p>See iam Get*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccessKeyLastUsed.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccessKeyLastUsed.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountPasswordPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountPasswordPolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountSummary.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountSummary.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetCredentialReport.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetCredentialReport.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroup.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroup.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroupPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroupPolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetInstanceProfile.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetInstanceProfile.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetLoginProfile.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetLoginProfile.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOpenIDConnectProvider.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOpenIDConnectProvider.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicyVersion.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicyVersion.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRole.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRole.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRolePolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRolePolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSAMLProvider.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSAMLProvider.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServerCertificate.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServerCertificate.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSSHPublicKey.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSSHPublicKey.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUserPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUserPolicy.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccessKeyLastUsed.html">API_GetAccessKeyLastUsed</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html">API_GetAccountAuthorizationDetails</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountPasswordPolicy.html">API_GetAccountPasswordPolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountSummary.html">API_GetAccountSummary</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html">API_GetContextKeysForCustomPolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html">API_GetContextKeysForPrincipalPolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetCredentialReport.html">API_GetCredentialReport</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroup.html">API_GetGroup</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroupPolicy.html">API_GetGroupPolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetInstanceProfile.html">API_GetInstanceProfile</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetLoginProfile.html">API_GetLoginProfile</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOpenIDConnectProvider.html">API_GetOpenIDConnectProvider</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html">API_GetPolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicyVersion.html">API_GetPolicyVersion</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRole.html">API_GetRole</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRolePolicy.html">API_GetRolePolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSAMLProvider.html">API_GetSAMLProvider</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServerCertificate.html">API_GetServerCertificate</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSSHPublicKey.html">API_GetSSHPublicKey</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html">API_GetUser</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUserPolicy.html">API_GetUserPolicy</a></li>
                     </ul>
                   </Padding>
 
@@ -560,7 +560,7 @@ export default React.createClass({
                     <p>Returns a list of the available solution stack names.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_ListAvailableSolutionStacks.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_ListAvailableSolutionStacks.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_ListAvailableSolutionStacks.html">API_ListAvailableSolutionStacks</a></li>
                     </ul>
                   </Padding>
 
@@ -569,7 +569,7 @@ export default React.createClass({
                     <p>The GetItem operation returns a set of attributes for the item with the given primary key. If there is no matching item, GetItem does not return any data.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html">API_GetItem</a></li>
                     </ul>
                   </Padding>
 
@@ -578,7 +578,7 @@ export default React.createClass({
                     <p>See cloudwatch ListMetrics</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html">API_ListMetrics</a></li>
                     </ul>
                   </Padding>
 
@@ -587,7 +587,7 @@ export default React.createClass({
                     <p>Returns an array of table names associated with the current account and endpoint. The output from ListTables is paginated, with each page returning a maximum of 100 table names.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ListTables.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ListTables.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ListTables.html">API_ListTables</a></li>
                     </ul>
                   </Padding>
 
@@ -596,7 +596,7 @@ export default React.createClass({
                     <p>See support api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/awssupport/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/awssupport/latest/APIReference/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/awssupport/latest/APIReference/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -605,9 +605,9 @@ export default React.createClass({
                     <p>See kinesis ListStreams,ListTagsForStream</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListTagsForStream.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListTagsForStream.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html">API_ListStreams</a></li>
+                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListStreams.html">API_ListStreams</a></li>
+                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_ListTagsForStream.html">API_ListTagsForStream</a></li>
                     </ul>
                   </Padding>
 
@@ -616,30 +616,30 @@ export default React.createClass({
                     <p>See iam List*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccountAliases.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccountAliases.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedGroupPolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedGroupPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedRolePolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedRolePolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedUserPolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedUserPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupPolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroups.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupsForUser.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupsForUser.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfiles.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfiles.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfilesForRole.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfilesForRole.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListMFADevices.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListMFADevices.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicyVersions.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicyVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRolePolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRolePolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRoles.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRoles.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSAMLProviders.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSAMLProviders.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListServerCertificates.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListServerCertificates.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSSHPublicKeys.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSSHPublicKeys.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListVirtualMFADevices.html">http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListVirtualMFADevices.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html">API_ListAccessKeys</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccountAliases.html">API_ListAccountAliases</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedGroupPolicies.html">API_ListAttachedGroupPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedRolePolicies.html">API_ListAttachedRolePolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedUserPolicies.html">API_ListAttachedUserPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html">API_ListEntitiesForPolicy</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupPolicies.html">API_ListGroupPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroups.html">API_ListGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupsForUser.html">API_ListGroupsForUser</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfiles.html">API_ListInstanceProfiles</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfilesForRole.html">API_ListInstanceProfilesForRole</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListMFADevices.html">API_ListMFADevices</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html">API_ListOpenIDConnectProviders</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html">API_ListPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicyVersions.html">API_ListPolicyVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRolePolicies.html">API_ListRolePolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRoles.html">API_ListRoles</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSAMLProviders.html">API_ListSAMLProviders</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListServerCertificates.html">API_ListServerCertificates</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html">API_ListSigningCertificates</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSSHPublicKeys.html">API_ListSSHPublicKeys</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html">API_ListUserPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html">API_ListUsers</a></li>
+                      <li><a href="http://docs.aws.amazon.com/IAM/latest/APIReference/API_ListVirtualMFADevices.html">API_ListVirtualMFADevices</a></li>
                     </ul>
                   </Padding>
 
@@ -648,7 +648,7 @@ export default React.createClass({
                     <p>See s3 api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html">http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -657,7 +657,7 @@ export default React.createClass({
                     <p>See elastictranscoder documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html">http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/introduction.html">introduction</a></li>
                     </ul>
                   </Padding>
 
@@ -666,7 +666,7 @@ export default React.createClass({
                     <p>Retrieves settings for the trail associated with the current region for your account.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DescribeTrails.html">http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DescribeTrails.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DescribeTrails.html">API_DescribeTrails</a></li>
                     </ul>
                   </Padding>
 
@@ -675,12 +675,12 @@ export default React.createClass({
                     <p>See elasticloadbalancing Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeInstanceHealth.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeInstanceHealth.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerAttributes.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerPolicies.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerPolicyTypes.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerPolicyTypes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancers.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancers.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeTags.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeInstanceHealth.html">API_DescribeInstanceHealth</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerAttributes.html">API_DescribeLoadBalancerAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerPolicies.html">API_DescribeLoadBalancerPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancerPolicyTypes.html">API_DescribeLoadBalancerPolicyTypes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeLoadBalancers.html">API_DescribeLoadBalancers</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/APIReference/API_DescribeTags.html">API_DescribeTags</a></li>
                     </ul>
                   </Padding>
 
@@ -689,10 +689,10 @@ export default React.createClass({
                     <p>See sns Get*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetEndpointAttributes.html">http://docs.aws.amazon.com/sns/latest/api/API_GetEndpointAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetPlatformApplicationAttributes.html">http://docs.aws.amazon.com/sns/latest/api/API_GetPlatformApplicationAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetSubscriptionAttributes.html">http://docs.aws.amazon.com/sns/latest/api/API_GetSubscriptionAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetTopicAttributes.html">http://docs.aws.amazon.com/sns/latest/api/API_GetTopicAttributes.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetEndpointAttributes.html">API_GetEndpointAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetPlatformApplicationAttributes.html">API_GetPlatformApplicationAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetSubscriptionAttributes.html">API_GetSubscriptionAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/sns/latest/api/API_GetTopicAttributes.html">API_GetTopicAttributes</a></li>
                     </ul>
                   </Padding>
 
@@ -701,15 +701,15 @@ export default React.createClass({
                     <p>See elasticbeanstalk Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplications.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplications.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplicationVersions.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplicationVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationOptions.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationOptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationSettings.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationSettings.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentHealth.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentHealth.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentResources.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentResources.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplications.html">API_DescribeApplications</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeApplicationVersions.html">API_DescribeApplicationVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationOptions.html">API_DescribeConfigurationOptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeConfigurationSettings.html">API_DescribeConfigurationSettings</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentHealth.html">API_DescribeEnvironmentHealth</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironmentResources.html">API_DescribeEnvironmentResources</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html">API_DescribeEnvironments</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEvents.html">API_DescribeEvents</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeInstancesHealth.html">API_DescribeInstancesHealth</a></li>
                     </ul>
                   </Padding>
 
@@ -718,7 +718,7 @@ export default React.createClass({
                     <p>Returns a list of your queues.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html">http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html">API_ListQueues</a></li>
                     </ul>
                   </Padding>
 
@@ -727,7 +727,7 @@ export default React.createClass({
                     <p>Returns all of the attributes associated with the item.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_GetAttributes.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_GetAttributes.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_GetAttributes.html">SDB_API_GetAttributes</a></li>
                     </ul>
                   </Padding>
 
@@ -736,7 +736,7 @@ export default React.createClass({
                     <p>The ListDomains operation lists all domains associated with the Access Key ID.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_ListDomains.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_ListDomains.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_ListDomains.html">SDB_API_ListDomains</a></li>
                     </ul>
                   </Padding>
 
@@ -745,31 +745,31 @@ export default React.createClass({
                     <p>See rds Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeAccountAttributes.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeAccountAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeCertificates.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeCertificates.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterParameterGroups.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterParameterGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterParameters.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusters.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterSnapshots.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterSnapshots.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBEngineVersions.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBEngineVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBInstances.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBLogFiles.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBLogFiles.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBParameterGroups.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBParameterGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBParameters.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSecurityGroups.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSecurityGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSnapshots.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSnapshots.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSubnetGroups.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSubnetGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEngineDefaultClusterParameters.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEngineDefaultClusterParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEngineDefaultParameters.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEngineDefaultParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEventCategories.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEventCategories.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEvents.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEvents.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEventSubscriptions.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEventSubscriptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOptionGroupOptions.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOptionGroupOptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOptionGroups.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOptionGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOrderableDBInstanceOptions.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOrderableDBInstanceOptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribePendingMaintenanceActions.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribePendingMaintenanceActions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstances.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstancesOfferings.html">http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstancesOfferings.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeAccountAttributes.html">API_DescribeAccountAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeCertificates.html">API_DescribeCertificates</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterParameterGroups.html">API_DescribeDBClusterParameterGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterParameters.html">API_DescribeDBClusterParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusters.html">API_DescribeDBClusters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBClusterSnapshots.html">API_DescribeDBClusterSnapshots</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBEngineVersions.html">API_DescribeDBEngineVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBInstances.html">API_DescribeDBInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBLogFiles.html">API_DescribeDBLogFiles</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBParameterGroups.html">API_DescribeDBParameterGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBParameters.html">API_DescribeDBParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSecurityGroups.html">API_DescribeDBSecurityGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSnapshots.html">API_DescribeDBSnapshots</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBSubnetGroups.html">API_DescribeDBSubnetGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEngineDefaultClusterParameters.html">API_DescribeEngineDefaultClusterParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEngineDefaultParameters.html">API_DescribeEngineDefaultParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEventCategories.html">API_DescribeEventCategories</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEvents.html">API_DescribeEvents</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeEventSubscriptions.html">API_DescribeEventSubscriptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOptionGroupOptions.html">API_DescribeOptionGroupOptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOptionGroups.html">API_DescribeOptionGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeOrderableDBInstanceOptions.html">API_DescribeOrderableDBInstanceOptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribePendingMaintenanceActions.html">API_DescribePendingMaintenanceActions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstances.html">API_DescribeReservedDBInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeReservedDBInstancesOfferings.html">API_DescribeReservedDBInstancesOfferings</a></li>
                     </ul>
                   </Padding>
 
@@ -778,7 +778,7 @@ export default React.createClass({
                     <p>Returns the description for the specified stack; if no stack name was specified, then it returns the description for all the stacks created</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStacks.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStacks.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStacks.html">API_DescribeStacks</a></li>
                     </ul>
                   </Padding>
 
@@ -787,23 +787,23 @@ export default React.createClass({
                     <p>See autoscaling Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAccountLimits.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAccountLimits.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAdjustmentTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAdjustmentTypes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingGroups.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingInstances.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingInstances.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingNotificationTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingNotificationTypes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLaunchConfigurations.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLaunchConfigurations.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLifecycleHooks.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLifecycleHooks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLifecycleHookTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLifecycleHookTypes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLoadBalancers.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLoadBalancers.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeMetricCollectionTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeMetricCollectionTypes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeNotificationConfigurations.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeNotificationConfigurations.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribePolicies.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribePolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScalingActivities.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScalingActivities.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScalingProcessTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScalingProcessTypes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScheduledActions.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScheduledActions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTags.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTerminationPolicyTypes.html">http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTerminationPolicyTypes.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAccountLimits.html">API_DescribeAccountLimits</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAdjustmentTypes.html">API_DescribeAdjustmentTypes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingGroups.html">API_DescribeAutoScalingGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingInstances.html">API_DescribeAutoScalingInstances</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeAutoScalingNotificationTypes.html">API_DescribeAutoScalingNotificationTypes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLaunchConfigurations.html">API_DescribeLaunchConfigurations</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLifecycleHooks.html">API_DescribeLifecycleHooks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLifecycleHookTypes.html">API_DescribeLifecycleHookTypes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeLoadBalancers.html">API_DescribeLoadBalancers</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeMetricCollectionTypes.html">API_DescribeMetricCollectionTypes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeNotificationConfigurations.html">API_DescribeNotificationConfigurations</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribePolicies.html">API_DescribePolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScalingActivities.html">API_DescribeScalingActivities</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScalingProcessTypes.html">API_DescribeScalingProcessTypes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeScheduledActions.html">API_DescribeScheduledActions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTags.html">API_DescribeTags</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AutoScaling/latest/APIReference/API_DescribeTerminationPolicyTypes.html">API_DescribeTerminationPolicyTypes</a></li>
                     </ul>
                   </Padding>
 
@@ -812,7 +812,7 @@ export default React.createClass({
                     <p>The BatchGetItem operation returns the attributes of one or more items from one or more tables. You identify requested items by primary key.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchGetItem.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchGetItem.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchGetItem.html">API_BatchGetItem</a></li>
                     </ul>
                   </Padding>
 
@@ -821,7 +821,7 @@ export default React.createClass({
                     <p>See cloudfront documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/APIReference/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -830,7 +830,7 @@ export default React.createClass({
                     <p>See route53 api documentation</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/Route53/latest/APIReference/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -839,7 +839,7 @@ export default React.createClass({
                     <p>A Query operation uses the primary key of a table or a secondary index to directly access items from that table or index.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html">API_Query</a></li>
                     </ul>
                   </Padding>
 
@@ -848,19 +848,19 @@ export default React.createClass({
                     <p>See storagegateway Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeCache.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeCache.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeCachediSCSIVolumes.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeCachediSCSIVolumes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeChapCredentials.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeChapCredentials.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeGatewayInformation.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeGatewayInformation.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeMaintenanceStartTime.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeMaintenanceStartTime.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeSnapshotSchedule.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeSnapshotSchedule.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeStorediSCSIVolumes.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeStorediSCSIVolumes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeTapeArchives.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeTapeArchives.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeTapeRecoveryPoints.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeTapeRecoveryPoints.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DDescribeTapes.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DDescribeTapes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeUploadBuffer.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeUploadBuffer.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeVTLDevices.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeVTLDevices.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeWorkingStorage.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeWorkingStorage.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeCache.html">API_DescribeCache</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeCachediSCSIVolumes.html">API_DescribeCachediSCSIVolumes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeChapCredentials.html">API_DescribeChapCredentials</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeGatewayInformation.html">API_DescribeGatewayInformation</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeMaintenanceStartTime.html">API_DescribeMaintenanceStartTime</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeSnapshotSchedule.html">API_DescribeSnapshotSchedule</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeStorediSCSIVolumes.html">API_DescribeStorediSCSIVolumes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeTapeArchives.html">API_DescribeTapeArchives</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeTapeRecoveryPoints.html">API_DescribeTapeRecoveryPoints</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DDescribeTapes.html">API_DDescribeTapes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeUploadBuffer.html">API_DescribeUploadBuffer</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeVTLDevices.html">API_DescribeVTLDevices</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_DescribeWorkingStorage.html">API_DescribeWorkingStorage</a></li>
                     </ul>
                   </Padding>
 
@@ -869,7 +869,7 @@ export default React.createClass({
                     <p>Returns a JSON-formatted list of information about the specified trail. Fields include information on delivery errors, Amazon SNS and Amazon S3 errors, and start and stop logging times for each trail.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_GetTrailStatus.html">http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_GetTrailStatus.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_GetTrailStatus.html">API_GetTrailStatus</a></li>
                     </ul>
                   </Padding>
 
@@ -878,7 +878,7 @@ export default React.createClass({
                     <p>See s3 api documentatin</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html">http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html">Welcome</a></li>
                     </ul>
                   </Padding>
 
@@ -887,8 +887,8 @@ export default React.createClass({
                     <p>See kinesis GetRecords, GetShardIterator</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetRecords.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetRecords.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html">http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetRecords.html">API_GetRecords</a></li>
+                      <li><a href="http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html">API_GetShardIterator</a></li>
                     </ul>
                   </Padding>
 
@@ -897,7 +897,7 @@ export default React.createClass({
                     <p>The Scan operation returns one or more items and item attributes by accessing every item in a table or a secondary index.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html">API_Scan</a></li>
                     </ul>
                   </Padding>
 
@@ -906,12 +906,12 @@ export default React.createClass({
                     <p>See ses Get*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityDkimAttributes.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityDkimAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityNotificationAttributes.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityNotificationAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityPolicies.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityPolicies.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityVerificationAttributes.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityVerificationAttributes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendQuota.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendQuota.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendStatistics.html">http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendStatistics.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityDkimAttributes.html">API_GetIdentityDkimAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityNotificationAttributes.html">API_GetIdentityNotificationAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityPolicies.html">API_GetIdentityPolicies</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetIdentityVerificationAttributes.html">API_GetIdentityVerificationAttributes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendQuota.html">API_GetSendQuota</a></li>
+                      <li><a href="http://docs.aws.amazon.com/ses/latest/APIReference/API_GetSendStatistics.html">API_GetSendStatistics</a></li>
                     </ul>
                   </Padding>
 
@@ -920,7 +920,7 @@ export default React.createClass({
                     <p>Checks if the specified CNAME is available.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CheckDNSAvailability.html">http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CheckDNSAvailability.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CheckDNSAvailability.html">API_CheckDNSAvailability</a></li>
                     </ul>
                   </Padding>
 
@@ -929,28 +929,28 @@ export default React.createClass({
                     <p>See redshift Describe*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterParameterGroups.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterParameterGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterParameters.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusters.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSecurityGroups.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSecurityGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSecurityGroups.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSecurityGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSnapshots.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSnapshots.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSubnetGroups.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSubnetGroups.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterVersions.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterVersions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeDefaultClusterParameters.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeDefaultClusterParameters.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEventCategories.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEventCategories.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEvents.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEvents.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEventSubscriptions.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEventSubscriptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeHsmClientCertificates.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeHsmClientCertificates.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeHsmConfigurations.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeHsmConfigurations.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeLoggingStatus.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeLoggingStatus.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeLoggingStatus.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeLoggingStatus.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeOrderableClusterOptions.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeOrderableClusterOptions.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeReservedNodeOfferings.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeReservedNodeOfferings.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeReservedNodes.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeReservedNodes.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeResize.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeResize.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeSnapshotCopyGrants.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeSnapshotCopyGrants.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeTags.html">http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeTags.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterParameterGroups.html">API_DescribeClusterParameterGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterParameters.html">API_DescribeClusterParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusters.html">API_DescribeClusters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSecurityGroups.html">API_DescribeClusterSecurityGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSecurityGroups.html">API_DescribeClusterSecurityGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSnapshots.html">API_DescribeClusterSnapshots</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterSubnetGroups.html">API_DescribeClusterSubnetGroups</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeClusterVersions.html">API_DescribeClusterVersions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeDefaultClusterParameters.html">API_DescribeDefaultClusterParameters</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEventCategories.html">API_DescribeEventCategories</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEvents.html">API_DescribeEvents</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeEventSubscriptions.html">API_DescribeEventSubscriptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeHsmClientCertificates.html">API_DescribeHsmClientCertificates</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeHsmConfigurations.html">API_DescribeHsmConfigurations</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeLoggingStatus.html">API_DescribeLoggingStatus</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeLoggingStatus.html">API_DescribeLoggingStatus</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeOrderableClusterOptions.html">API_DescribeOrderableClusterOptions</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeReservedNodeOfferings.html">API_DescribeReservedNodeOfferings</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeReservedNodes.html">API_DescribeReservedNodes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeResize.html">API_DescribeResize</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeSnapshotCopyGrants.html">API_DescribeSnapshotCopyGrants</a></li>
+                      <li><a href="http://docs.aws.amazon.com/redshift/latest/APIReference/API_DescribeTags.html">API_DescribeTags</a></li>
                     </ul>
                   </Padding>
 
@@ -959,7 +959,7 @@ export default React.createClass({
                     <p>Returns all stack related events for a specified stack. For more information about a stack event history, go to Stacks in the AWS CloudFormation User Guide.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackEvents.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackEvents.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DescribeStackEvents.html">API_DescribeStackEvents</a></li>
                     </ul>
                   </Padding>
 
@@ -968,8 +968,8 @@ export default React.createClass({
                     <p>See cloudformation ListStacks and ListResources</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStacks.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStacks.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStackResources.html">http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStackResources.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStacks.html">API_ListStacks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListStackResources.html">API_ListStackResources</a></li>
                     </ul>
                   </Padding>
 
@@ -978,7 +978,7 @@ export default React.createClass({
                     <p>Retrieves one or more messages, with a maximum limit of 10 messages, from the specified queue. Long poll support is enabled by using the WaitTimeSeconds parameter.</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html">http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html">API_ReceiveMessage</a></li>
                     </ul>
                   </Padding>
 
@@ -987,7 +987,7 @@ export default React.createClass({
                     <p>See cloudwatch GetMetricStatistics</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html</a></li>
+                      <li><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html">API_GetMetricStatistics</a></li>
                     </ul>
                   </Padding>
 
@@ -996,12 +996,12 @@ export default React.createClass({
                     <p>See storagegateway List*</p>
                     <p>Reference URL(s):</p>
                     <ul>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListGateways.html">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListGateways.html</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListLocalDisks">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListLocalDisks</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListTagsForResource">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListTagsForResource</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeInitiators">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeInitiators</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints</a></li>
-                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes">http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListGateways.html">API_ListGateways</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListLocalDisks">API_ListLocalDisks</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListTagsForResource">API_ListTagsForResource</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeInitiators">API_ListVolumeInitiators</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumeRecoveryPoints">API_ListVolumeRecoveryPoints</a></li>
+                      <li><a href="http://docs.aws.amazon.com/storagegateway/latest/APIReference/API_ListVolumes">API_ListVolumes</a></li>
                     </ul>
                   </Padding>
 
@@ -1011,7 +1011,7 @@ export default React.createClass({
                     <p>Reference URL(s):</p>
                     <ul>
                       <li>
-                        <a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html">http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html
+                        <a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDB_API_Select.html">SDB_API_Select.html
                         </a>
                       </li>
                     </ul>

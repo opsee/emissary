@@ -50,6 +50,10 @@ a {
   background-color: transparent;
 }
 
+p {
+  margin-bottom: 1rem;
+}
+
 a:active,
 a:hover {
   outline: 0;
@@ -66,11 +70,6 @@ strong {
 
 dfn {
   font-style: italic;
-}
-
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
 }
 
 mark {
@@ -1827,101 +1826,6 @@ input[type="checkbox"] {
   }
 }
 
-@media print {
-  .hidden-print {
-    display: none !important;
-  }
-}
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Tungsten A", "Tungsten B", sans-serif;
-  font-weight: 100;
-  line-height: 1.1;
-  color: inherit;
-}
-h1 small,
-h1 .small, h2 small,
-h2 .small, h3 small,
-h3 .small, h4 small,
-h4 .small, h5 small,
-h5 .small, h6 small,
-h6 .small,
-.h1 small,
-.h1 .small, .h2 small,
-.h2 .small, .h3 small,
-.h3 .small, .h4 small,
-.h4 .small, .h5 small,
-.h5 .small, .h6 small,
-.h6 .small {
-  font-weight: normal;
-  line-height: 1;
-  color: #777777;
-}
-
-h1, .h1,
-h2, .h2,
-h3, .h3 {
-  margin-top: 22px;
-  margin-bottom: 11px;
-}
-h1 small,
-h1 .small, .h1 small,
-.h1 .small,
-h2 small,
-h2 .small, .h2 small,
-.h2 .small,
-h3 small,
-h3 .small, .h3 small,
-.h3 .small {
-  font-size: 65%;
-}
-
-h4, .h4,
-h5, .h5,
-h6, .h6 {
-  margin-top: 11px;
-  margin-bottom: 11px;
-}
-h4 small,
-h4 .small, .h4 small,
-.h4 .small,
-h5 small,
-h5 .small, .h5 small,
-.h5 .small,
-h6 small,
-h6 .small, .h6 small,
-.h6 .small {
-  font-size: 75%;
-}
-
-h1, .h1 {
-  font-size: 41px;
-}
-
-h2, .h2 {
-  font-size: 34px;
-}
-
-h3, .h3 {
-  font-size: 28px;
-}
-
-h4, .h4 {
-  font-size: 20px;
-}
-
-h5, .h5 {
-  font-size: 16px;
-}
-
-h6, .h6 {
-  font-size: 14px;
-}
-
-p {
-  margin: 0 0 11px;
-}
-
 .lead {
   margin-bottom: 22px;
   font-size: 18px;
@@ -2711,19 +2615,23 @@ pre {
 
 h1, .h1 {
   font-family: "Tungsten A", "Tungsten B", sans-serif;
+  font-size: 4rem;
+  font-weight: 100;
 }
 
 h2, .h2 {
   color: var(--colorTextSecondary);
   margin: 0 0 .5em 0;
   font-family: "Tungsten A", "Tungsten B", sans-serif;
+  font-size: 3.2rem;
+  font-weight: 100;
 }
 
 h3, .h3 {
   color: var(--colorTextSecondary);
   font-family: "Gotham SSm A", "Gotham SSm B", sans-serif;
-  font-size: 1em;
-  font-weight: 500;
+  font-size: 1.8rem;
+  font-weight: 700;
   margin: 1em 0;
 }
 
