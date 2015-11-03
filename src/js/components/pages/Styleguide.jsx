@@ -12,7 +12,7 @@ import {GlobalActions} from '../../actions';
 import {Add, Key} from '../icons';
 
 import icons from '../icons';
-import {Button, BoundField, ButtonToggle, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Button, BoundField, ToggleWithLabel, RadioWithLabel} from '../forms';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
 
@@ -28,6 +28,8 @@ function getState(){
     })
   };
 }
+
+const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
@@ -48,6 +50,14 @@ const InfoForm = forms.Form.extend({
       placeholder: 'Body'
     }
   }),
+  services: forms.MultipleChoiceField({
+    choices: serviceChoices.map(s => [s, s]),
+    widget: forms.CheckboxSelectMultiple(),
+    widgetAttrs: {
+      widgetType: 'MultiButtonToggle'
+    },
+    label: 'buttonToggle'
+  }),
   validation: 'auto'
 });
 
@@ -57,7 +67,11 @@ export default React.createClass({
     const self = this;
     return _.extend(getState(), {
       info: new InfoForm({
-        onChange: self.forceUpdate
+        onChange(){
+          if (self.isMounted()){
+            self.forceUpdate();
+          }
+        }
       })
     });
   },
@@ -210,18 +224,7 @@ export default React.createClass({
               <hr/>
 
           <h3>Button Toggles</h3>
-            <ul className="list-unstyled flex-wrap flex-vertical-align justify-content-center">
-            {this.state.buttonToggles.map((t, i) => {
-              return (
-                <li key={`button-toggle-${i}`} style={{margin: '0 .5em'}}>
-                  <Padding tb={0.5}>
-                    <ButtonToggle on={t.on} onChange={this.runTriggerButtonToggle} id={`button-toggle-${i}`} label={t.title} />
-                  </Padding>
-                </li>
-              );
-            })}
-            </ul>
-
+          <BoundField bf={this.state.info.boundField('services')}/>
             <hr/>
 
             <h3>Data Tables</h3>

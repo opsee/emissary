@@ -1,7 +1,6 @@
 @import '../global/vars.css';
 
 .btn {
-
   background-image: none;
   border: 1px solid transparent;
   border-radius: 0.25em;
@@ -142,15 +141,15 @@
   box-shadow: none;
   color: var(--colorText);
 }
-.btnFlat:hover {
-  background: var(--colorText);
-  border-color: transparent;
-  color: white;
-}
-
 .btnFlat:focus {
   background-color: transparent;
 }
+.btnFlat:hover{
+  background: var(--colorTextSecondary);
+  border-color: transparent;
+  color: white !important;
+}
+
 .btnFlat.btnBlock {
   border-color: transparent;
 }
@@ -160,49 +159,39 @@
   border-color: var(--colorTextSecondary);
 }
 .btnFlat.btnPrimary {
-  background: transparent;
   border-color: var(--colorPrimary);
   color: var(--colorPrimary);
 }
 .btnFlat.btnPrimary:hover {
   background: var(--colorPrimary);
-  color: white;
 }
 .btnFlat.btnSuccess {
-  background: transparent;
   border-color: var(--colorSuccess);
   color: var(--colorSuccess);
 }
 .btnFlat.btnSuccess:hover {
   background: var(--colorSuccess);
-  color: white;
 }
 .btnFlat.btnWarning {
-  background: transparent;
   border-color: var(--colorWarning);
   color: var(--colorWarning);
 }
 .btnFlat.btnWarning:hover {
   background: var(--colorWarning);
-  color: white;
 }
 .btnFlat.btnDanger {
-  background: transparent;
   border-color: var(--colorDanger);
   color: var(--colorDanger);
 }
 .btnFlat.btnDanger:hover {
   background: var(--colorDanger);
-  color: white;
 }
 .btnFlat.btnInfo {
-  background: transparent;
   border-color: var(--colorInfo);
   color: var(--colorInfo);
 }
 .btnFlat.btnInfo:hover {
   background: var(--colorInfo);
-  color: white;
 }
 
 .btnBlock {

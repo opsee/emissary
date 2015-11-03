@@ -17,11 +17,11 @@ export default React.createClass({
     return this.props.on ? 'success' : 'default';
   },
   getIcon(){
-    return this.props.on ? <Checkmark fill="success" inline/> : <Add inline/>;
+    return this.props.on ? <Checkmark fill="white" inline/> : <Add inline/>;
   },
   render(){
     return (
-      <Button flat color={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)} style={{textTransform: 'none'}}>{this.getIcon()} {this.props.label}</Button>
+      <Button color={this.getStyle()} onClick={this.props.onChange.bind(null, this.props.id, !this.props.on)} style={{textTransform: 'none'}} flat={!this.props.on}>{this.getIcon()} {this.props.label}</Button>
     );
   }
 });
