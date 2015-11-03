@@ -9,10 +9,11 @@ import {BoundField, Button} from '../forms';
 import {Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {CheckActions, UserActions, GroupActions} from '../../actions';
-import {GroupStore} from '../../stores';
+import {CheckActions, GroupActions, InstanceActions, UserActions} from '../../actions';
+import {GroupStore, InstanceStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
+import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
 
 const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
@@ -139,13 +140,14 @@ const CheckCreateRequest = React.createClass({
     });
   },
   componentWillMount(){
-    const groups = GroupStore.getGroupsSecurity();
-    if (!groups.size){
+    if (!GroupStore.getGroupsSecurity().size){
       GroupActions.getGroupsSecurity();
     }
-    const groupsELB = GroupStore.getGroupsELB();
-    if (!groupsELB.size){
+    if (!GroupStore.getGroupsELB().size){
       GroupActions.getGroupsELB();
+    }
+    if (!InstanceStore.getInstancesECC().size){
+      InstanceActions.getInstancesECC();
     }
     CheckActions.resetTestCheck();
   },
@@ -157,7 +159,8 @@ const CheckCreateRequest = React.createClass({
   storeDidChange(){
     const cond1 = GroupStore.getGetGroupsSecurityStatus() === 'success';
     const cond2 = GroupStore.getGetGroupsELBStatus() === 'success';
-    if (cond1 || cond2){
+    const cond3 = InstanceStore.getInstancesECC() === 'success';
+    if (cond1 || cond2 || cond3){
       this.forceUpdate();
     }
   },
@@ -257,14 +260,18 @@ const CheckCreateRequest = React.createClass({
       ) : <div/>;
   },
   renderTargetSelection(){
-    const selection = GroupStore.getGroupFromFilter(this.props.check.target);
+    let selection = GroupStore.getGroupFromFilter(this.props.check.target);
+    if(!selection){
+      selection = InstanceStore.getInstanceFromFilter(this.props.check.target);
+    }
     if (selection && selection.get('id')){
+      if(this.props.check.target.type == 'EC2'){
+        return (
+          <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
+        );
+      }
       return (
-        <div>
-          <h3>Your Target</h3>
-          <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
-          <hr/>
-        </div>
+        <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
       );
     }
     return <div/>;
@@ -311,7 +318,9 @@ const CheckCreateRequest = React.createClass({
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
         {this.renderHelperText()}
         <Padding b={1}>
+          <h3>Your Target</h3>
           {this.renderTargetSelection()}
+          <hr/>
         </Padding>
         <Padding b={1}>
           {this.renderInfoForm()}

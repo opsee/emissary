@@ -15,6 +15,9 @@ _statics.formatCheckData = (data) => {
   if (data.target.type === 'security'){
     data.target.type = 'sg';
   }
+  if (data.target.type === 'EC2'){
+    data.target.type = 'instance';
+  }
   return _.omit(data, disallowed);
 };
 

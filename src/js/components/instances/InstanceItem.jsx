@@ -7,7 +7,9 @@ import cx from 'classnames';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
 import {InstanceActions} from '../../actions';
-import {Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
+/*eslint-disable  no-unused-vars*/
+import {Add, Settings, NewWindow, Refresh, Stop, Play, Delete} from '../icons';
+/*eslint-enable  no-unused-vars*/
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
@@ -82,18 +84,23 @@ const InstanceItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
-                  <Refresh inline fill="primary"/> Restart
+                <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type')}}}>
+                  <Add inline fill="primary"/> Create Check
                 </Button>
-                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Stop')}>
-                  <Stop inline fill="primary"/> Stop
-                </Button>
-                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Start')}>
-                  <Play inline fill="primary"/> Start
-                </Button>
-                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Start')}>
-                  <Delete inline fill="primary"/> Terminate
-                </Button>
+                {
+                // <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Restart', this.props.item.get('id'))}>
+                //   <Refresh inline fill="primary"/> Restart
+                // </Button>
+                // <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Stop')}>
+                //   <Stop inline fill="primary"/> Stop
+                // </Button>
+                // <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Start')}>
+                //   <Play inline fill="primary"/> Start
+                // </Button>
+                // <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Start')}>
+                //   <Delete inline fill="primary"/> Terminate
+                // </Button>
+                }
               </div>
             </Row>
           </Grid>

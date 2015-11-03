@@ -27,7 +27,7 @@ const FilterForm = forms.Form.extend({
   }),
   render() {
     return (
-      <Padding b={2}>
+      <Padding b={1}>
         <BoundField bf={this.boundField('filter')}>
           <Search className="icon"/>
         </BoundField>
@@ -329,13 +329,13 @@ const EnvWithFilter = React.createClass({
       if (OnboardStore.getBastions().length){
         return (
           <form name="envWithFilterForm">
-            <Padding b={1}>
-              {this.state.filter.render()}
-            </Padding>
+            {this.state.filter.render()}
             {this.renderFilterButtons()}
-            {this.props.include.map(i => {
-              return self[`render${_.capitalize(i)}`]();
-            })}
+            <Padding t={1}>
+              {this.props.include.map(i => {
+                return self[`render${_.capitalize(i)}`]();
+              })}
+            </Padding>
           </form>
         );
       }
