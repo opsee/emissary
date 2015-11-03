@@ -2,18 +2,18 @@
 
 .counter {
   position: relative;
-  border-radius: 18px;
+  border-radius: 100%;
   transition: background-color var(--transitionEaseOut);
   background-color: var(--gray600);
   color: var(--bodyBg);
   display: block;
   font-family: var(--fontTungsten);
   font-size: 24px;
-  line-height: 32px;
-  width: 32px;
-  height: 32px;
-  margin-top: 3px;
+  line-height: 40px;
+  width: 40px;
+  height: 40px;
   text-align: center;
+  margin:0;
 }
 .counterSuccess {
   composes: counter;
@@ -22,30 +22,6 @@
 .counterDanger {
   composes: counter;
   background-color: var(--colorDanger);
-}
-
-.validation {
-  border-radius: 50%;
-  opacity: 0;
-  box-shadow: var(--shadowBottomZ1);
-  transition: transform var(--transitionEaseOut),
-              opacity var(--transitionEaseOut),
-              visibility var(--transitionEaseOut);
-  background-color: var(--gray900);
-  display: block;
-  height: 18px;
-  margin: 0 auto;
-  position: absolute;
-  right: -6px;
-  top: -6px;
-  width: 18px;
-  color: var(--colorDanger);
-  fill: var(--colorDanger);
-  visibility: hidden;
-}
-.validationActive{
-  opacity: 1;
-  visibility: visible;
 }
 
 .icon{

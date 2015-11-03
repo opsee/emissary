@@ -49,6 +49,27 @@
 .fillGray200{
   fill:var(--gray200);
 }
+.fillGray300{
+  fill:var(--gray300);
+}
+.fillGray400{
+  fill:var(--gray400);
+}
+.fillGray500{
+  fill:var(--gray500);
+}
+.fillGray600{
+  fill:var(--gray600);
+}
+.fillGray700{
+  fill:var(--gray700);
+}
+.fillGray800{
+  fill:var(--gray800);
+}
+.fillGray900{
+  fill:var(--gray900);
+}
 .fillText{
   fill:var(--colorText);
 }
