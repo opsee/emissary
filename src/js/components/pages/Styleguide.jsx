@@ -13,7 +13,7 @@ import {Add, Key} from '../icons';
 
 import icons from '../icons';
 import {Circle} from '../icons';
-import {Button, BoundField, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Button, BoundField, ToggleWithLabel} from '../forms';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
 
@@ -52,12 +52,19 @@ const InfoForm = forms.Form.extend({
     }
   }),
   services: forms.MultipleChoiceField({
-    choices: serviceChoices.map(s => [s, s]),
+    choices: serviceChoices.slice(0, 6).map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
     widgetAttrs: {
       widgetType: 'MultiButtonToggle'
     },
     label: 'buttonToggle'
+  }),
+  radio: forms.ChoiceField({
+    choices: serviceChoices.slice(0, 5).map(s => [s, s]),
+    widget: forms.RadioSelect,
+    widgetAttrs: {
+      widgetType: 'RadioSelect'
+    }
   }),
   validation: 'auto'
 });
@@ -216,16 +223,7 @@ export default React.createClass({
               <hr/>
 
               <h3>Radio Select</h3>
-              <ul className="list-unstyled">
-              {this.state.radios.map((t, i) => {
-                return (
-                  <li className="" key={`radio-${i}`}>
-                    <RadioWithLabel on={t.on} onChange={this.runTriggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
-                  </li>
-                );
-              })}
-              </ul>
-
+              <BoundField bf={this.state.info.boundField('radio')}/>
               <hr/>
 
           <h3>Button Toggles</h3>

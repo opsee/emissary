@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 React.initializeTouchEvents(true);
+
 import {Padding} from '../layout';
+import style from './radio.css';
 
 export default React.createClass({
   propTypes: {
@@ -22,8 +24,8 @@ export default React.createClass({
   render(){
     return (
       <div onClick={this.handleClick} onTouchEnd={this.handleTouch} style={{cursor: 'pointer'}}>
-        <Padding tb={0.5}>
-          <button className={`radio ${this.isActive()}`} type="button" onClick={this.handleClick} id={this.props.id}/>
+        <Padding b={1}>
+          <button className={this.props.on ? style.radioActive : style.radio} type="button" onClick={this.handleClick} id={this.props.id}/>
         </Padding>
       </div>
     );
