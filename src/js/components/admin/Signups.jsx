@@ -21,7 +21,6 @@ export default React.createClass({
   },
   storeDidChange() {
     const data = this.getState();
-    console.log(data);
     this.setState(data);
     if (data.approveStatus === 'success'){
       AdminActions.adminGetSignups();
@@ -81,15 +80,15 @@ export default React.createClass({
   renderButton(signup){
     if (this.isUnapprovedSignup(signup)){
       return (
-        <Button flat color="success" onClick={this.activateSignup.bind(null, signup)}><Checkmark fill="success" inline/> Activate</Button>
+        <Button flat color="success" onClick={this.runActivateSignup.bind(null, signup)}><Checkmark fill="success" inline/> Activate</Button>
       );
     } else if (this.isApprovedSignup(signup)) {
       return (
-        <Button flat color="primary" onClick={this.activateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Activation Email</Button>
+        <Button flat color="primary" onClick={this.runActivateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Activation Email</Button>
       );
     }
     return (
-      <Button flat color="danger" onClick={this.ghostAccount.bind(null, signup)}><Ghost fill="danger" inline/> Ghost</Button>
+      <Button flat color="danger" onClick={this.runGhostAccount.bind(null, signup)}><Ghost fill="danger" inline/> Ghost</Button>
     );
   },
   renderItem(signup){
