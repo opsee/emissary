@@ -104,7 +104,7 @@ const GroupItem = React.createClass({
       if (!this.props.onClick){
         return (
           <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={listItem.link}>
-            <RadialGraph {...this.props.item.toJS()}/>
+            <RadialGraph {...this.props.item.toJS()} type={this.props.item.get('type') === 'security' ? 'Security Group' : 'ELB Group'}/>
           </Link>
         );
       }

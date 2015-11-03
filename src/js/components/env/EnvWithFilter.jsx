@@ -4,14 +4,14 @@ import forms from 'newforms';
 import fuzzy from 'fuzzy';
 import {List} from 'immutable';
 
-import {Row, Col} from '../../modules/bootstrap';
+import {Alert, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
 import {StatusHandler} from '../global';
 import {Search, Circle} from '../icons';
-import {GroupActions, InstanceActions} from '../../actions';
-import {GroupStore, InstanceStore} from '../../stores';
+import {GroupActions, InstanceActions, OnboardActions} from '../../actions';
+import {GroupStore, InstanceStore, OnboardStore} from '../../stores';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
@@ -65,6 +65,7 @@ const EnvWithFilter = React.createClass({
       attemptedGroupsSecurity: false,
       attemptedGroupsELB: false,
       attemptedInstancesECC: false,
+      gotBastions: false,
       selected: _.get(this.props, 'check.target.id') || null
     };
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -95,6 +96,10 @@ const EnvWithFilter = React.createClass({
     if (getInstancesECCStatus === 'success' || typeof getInstancesECCStatus === 'object'){
       stateObj.attemptedInstancesECC = true;
     }
+    if (OnboardStore.getGetBastionsStatus() === 'success'){
+      stateObj.gotBastions = true;
+    }
+    // const allData = this.getAll();
     this.setState(_.assign(stateObj, {
       getGroupsSecurityStatus,
       getGroupsELBStatus,
@@ -105,12 +110,17 @@ const EnvWithFilter = React.createClass({
     GroupActions.getGroupsSecurity();
     GroupActions.getGroupsELB();
     InstanceActions.getInstancesECC();
+    OnboardActions.getBastions();
   },
   getAll(){
     let arr = new List();
-    arr = arr.concat(this.getGroupsSecurity(true));
-    arr = arr.concat(this.getGroupsELB(true));
-    arr = arr.concat(this.getInstances(true));
+    const dataArray = [this.getGroupsSecurity(true), this.getGroupsELB(true), this.getInstances(true)];
+    const includes = ['groupsSecurity', 'groupsELB', 'instancesECC'];
+    includes.forEach((include, i) => {
+      if (this.props.include.indexOf(include) > -1){
+        arr = arr.concat(dataArray[i]);
+      }
+    });
     return arr;
   },
   getNumberPassing(){
@@ -203,9 +213,16 @@ const EnvWithFilter = React.createClass({
   isFinishedAttempt(){
     const case1 = !!(this.state.attemptedGroupsSecurity &&
       this.state.attemptedGroupsELB &&
-      this.state.attemptedInstancesECC);
+      this.state.attemptedInstancesECC &&
+      this.state.gotBastions
+      );
     const case2 = !!GroupStore.getGroupsSecurity().size;
     return case1 || case2;
+  },
+  shouldButtonsRender(){
+    const failing = this.getNumberFailing();
+    const unmonitored = this.getNumberUnmonitored();
+    return (failing > 0 && unmonitored > 0);
   },
   onFilterChange(){
     this.forceUpdate();
@@ -271,33 +288,61 @@ const EnvWithFilter = React.createClass({
       </StatusHandler>
     );
   },
-  renderFilterButtons(){
-    return (
-      <Row>
+  renderFailingButton(){
+    const num = this.getNumberFailing();
+    if (num > 0){
+      return (
         <Col className="col-xs">
           <Button flat={this.state.buttonSelected !== 'failing'} color="danger" onClick={this.runToggleButtonState.bind(null, 'failing')}><Circle fill={this.state.buttonSelected !== 'failing' ? 'danger' : ''} inline/> {this.getNumberFailing()} Failing</Button>
         </Col>
+      );
+    }
+    return <Col/>;
+  },
+  renderUnmonitoredButton(){
+    const num = this.getNumberUnmonitored();
+    if (num > 0){
+      return (
         <Col className="col-xs">
           <Button flat={this.state.buttonSelected !== 'running'} onClick={this.runToggleButtonState.bind(null, 'running')}><Circle fill={this.state.buttonSelected !== 'running' ? 'text' : ''} inline/> {this.getNumberUnmonitored()} Unmonitored</Button>
         </Col>
-      </Row>
-    );
+      );
+    }
+    return <Col/>;
+  },
+  renderFilterButtons(){
+    if (this.shouldButtonsRender()){
+      return (
+        <Padding b={1}>
+          <Row>
+            {this.renderFailingButton()}
+            {this.renderUnmonitoredButton()}
+          </Row>
+        </Padding>
+      );
+    }
+    return <div/>;
   },
   render(){
     const self = this;
     if (this.isFinishedAttempt()){
-      return (
-        <form name="envWithFilterForm">
-          <Padding b={1}>
-            {this.state.filter.render()}
-          </Padding>
-          <Padding b={1}>
+      if (!OnboardStore.getBastions().length){
+        return (
+          <form name="envWithFilterForm">
+            <Padding b={1}>
+              {this.state.filter.render()}
+            </Padding>
             {this.renderFilterButtons()}
-          </Padding>
-          {this.props.include.map(i => {
-            return self[`render${_.capitalize(i)}`]();
-          })}
-        </form>
+            {this.props.include.map(i => {
+              return self[`render${_.capitalize(i)}`]();
+            })}
+          </form>
+        );
+      }
+      return (
+        <Alert bsStyle="danger">
+          Bastion is disconnected or offline.
+        </Alert>
       );
     }
     return <StatusHandler status="pending"/>;

@@ -11,7 +11,13 @@ const RadialGraph = React.createClass({
   mixins: [SetInterval],
   propTypes: {
     state: PropTypes.string,
-    health: PropTypes.string
+    health: PropTypes.string,
+    type: PropTypes.string
+  },
+  getDefaultProps(){
+    return {
+      type: 'check'
+    };
   },
   getInitialState() {
     return _.defaults({
@@ -44,12 +50,12 @@ const RadialGraph = React.createClass({
     switch (this.state.state){
     case 'failing':
       return this.state.silenceRemaining ?
-      `This check is running, but is ` :
-      `This check is running and has a health of %`;
+      `This ${this.props.type} is running, but is ` :
+      `This ${this.props.type} is running and has a health of %`;
     case 'running':
-      return 'This check is currently unmonitored.';
+      return `This ${this.props.type} is currently unmonitored.`;
     case 'stopped':
-      return 'This check is stopped in AWS.';
+      return `This ${this.props.type} is stopped in AWS.`;
     default:
       break;
     }
