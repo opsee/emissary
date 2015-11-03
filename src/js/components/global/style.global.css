@@ -2111,24 +2111,6 @@ opsee-footer {
   position: relative;
 }
 
-.step-container {
-  transition: visibility var(--transitionEaseOut);
-}
-.step-container.active {
-  visibility: visible;
-}
-.step-container.active .step-image {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=10000);
-  opacity: 100;
-  transform: translate(0, 0);
-  visibility: visible;
-}
-.step-container.previous .step-image {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-  opacity: 0;
-  transform: translate(-100%, 0);
-}
-
 .step-image {
   display: block;
   margin: 0 auto 2em auto;
