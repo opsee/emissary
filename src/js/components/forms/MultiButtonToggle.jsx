@@ -13,7 +13,7 @@ export default React.createClass({
     };
   },
   isWidgetActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
+    return !!(_.findWhere(this.props.bf.value(), w.choiceValue));
   },
   handleChange(id){
     let data = this.props.bf.value() || [];
@@ -34,7 +34,7 @@ export default React.createClass({
           return (
             <li key={i} style={{margin: '0 .5em'}}>
               <Padding tb={1}>
-                <ButtonToggle on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+                <ButtonToggle on={this.isWidgetActive(w)} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
               </Padding>
             </li>
           );
