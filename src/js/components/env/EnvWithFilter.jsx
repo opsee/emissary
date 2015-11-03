@@ -9,6 +9,7 @@ import {Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
+import {Alert} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {Search, Circle} from '../icons';
 import {GroupActions, InstanceActions} from '../../actions';
@@ -237,7 +238,11 @@ const EnvWithFilter = React.createClass({
     }
     return (
       <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get Security Groups.">
-        No Security Groups
+        <h3>Security Groups</h3>
+        <Alert bsStyle="default">
+          No security groups found
+        </Alert>
+        <hr/>
       </StatusHandler>
     );
   },
@@ -252,9 +257,7 @@ const EnvWithFilter = React.createClass({
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get ELB Groups.">
-        No ELB Groups
-      </StatusHandler>
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get ELB Groups."/>
     );
   },
   renderInstancesECC(){
@@ -269,7 +272,11 @@ const EnvWithFilter = React.createClass({
     }
     return (
       <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get EC2 Instances.">
-        No EC2 Instances
+        <h3>EC2 Instances</h3>
+        <Alert bsStyle="default">
+          No EC2 Instances found
+        </Alert>
+        <hr/>
       </StatusHandler>
     );
   },
