@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import Autosuggest from 'react-autosuggest';
 import router from '../../modules/router.js';
 

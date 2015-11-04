@@ -46,7 +46,7 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
 );
 
 _actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
-  () => {
+  (data) => {
     return request
     .post(`${config.api}/orgs`)
     .set('Authorization', UserStore.getAuth())

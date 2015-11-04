@@ -1,4 +1,6 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
+
 import {CheckActions, GroupActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';

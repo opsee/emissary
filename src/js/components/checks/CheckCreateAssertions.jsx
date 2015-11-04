@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import router from '../../modules/router.js';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import {Toolbar, StepCounter} from '../global';
@@ -9,6 +9,8 @@ import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
+import {UserDataRequirement} from '../user';
+import {UserActions} from '../../actions';
 import AssertionCounter from './AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
 import {CheckStore} from '../../stores';
@@ -151,6 +153,9 @@ const CheckCreateAssertions = React.createClass({
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 2);
   },
+  runDismissHelperText(){
+    UserActions.userPutUserData('hasDismissedCheckAssertionsHelp');
+  },
   handleSubmit(e){
     e.preventDefault();
     router.transitionTo('checkCreateInfo');
@@ -259,6 +264,16 @@ const CheckCreateAssertions = React.createClass({
     }
     return <div/>;
   },
+  renderHelperText(){
+    return (
+        <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
+          <Alert type="success" onDismiss={this.runDismissHelperText}>
+            <p>After you define a Request, Opsee tests the Request on your Target and shows you the response, which should be right below this message.</p>
+            <p>Now you can define assertions to tell us what a passing check looks like. For a typical HTTP check this could be something like <strong>'Status Code equal to 200'</strong>.</p>
+          </Alert>
+        </UserDataRequirement>
+      );
+  },
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
@@ -284,6 +299,9 @@ const CheckCreateAssertions = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <Padding b={1}>
+                {this.renderHelperText()}
+              </Padding>
               <Padding b={1}>
                 <h3>Response to Your Request</h3>
                 <p>The complete response that came back from your request.</p>

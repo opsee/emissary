@@ -1,12 +1,14 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
 import {StepCounter} from '../global';
 import {CheckStore, UserStore} from '../../stores';
+import {UserDataRequirement} from '../user';
+import {UserActions} from '../../actions';
 import {Padding} from '../layout';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
@@ -140,6 +142,9 @@ const CheckCreateInfo = React.createClass({
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
   },
+  runDismissHelperText(){
+    UserActions.userPutUserData('hasDismissedCheckInfoHelp');
+  },
   handleSubmit(e) {
     e.preventDefault();
     this.setState({
@@ -207,6 +212,15 @@ const CheckCreateInfo = React.createClass({
     }
     return <div/>;
   },
+  renderHelperText(){
+    return (
+        <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
+          <Alert type="success" onDismiss={this.runDismissHelperText}>
+            <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails. Opsee automatically runs your check every 30 seconds.</p>
+          </Alert>
+        </UserDataRequirement>
+      );
+  },
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
@@ -227,6 +241,9 @@ const CheckCreateInfo = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+            <Padding b={3}>
+              {this.renderHelperText()}
+            </Padding>
             {this.renderInner()}
             </Col>
           </Row>

@@ -1,4 +1,6 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
+
 import {StatusHandler, Table, Toolbar} from '../global';
 import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';

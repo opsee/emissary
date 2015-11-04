@@ -105,20 +105,18 @@ const CheckCreateTarget = React.createClass({
   renderHelperText(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
-        <Alert type="info" onDismiss={this.runDismissHelperText}>
-          <p>Let’s create your first health check! Tell us which group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
-        </Alert>
-        <div><br/></div>
+        <Padding b={1}>
+          <Alert type="info" onDismiss={this.runDismissHelperText}>
+            <p>Let’s create a check! The first step is to choose a target to check. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.</p>
+          </Alert>
+        </Padding>
       </UserDataRequirement>
     );
   },
   renderInner(){
     return (
       <div>
-        <Padding b={2}>
-          <h2>Choose a Target for your Health Check</h2>
-          <p>What would you like to check? When targeting a group or ELB, your check will automatically run on all of its instances. Note: only groups and ELBs are currently supported as targets.</p>
-        </Padding>
+        <h3>Choose a Target for your Check</h3>
         {this.renderHelperText()}
         <EnvWithFilter onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         <StepCounter active={1} steps={4}/>

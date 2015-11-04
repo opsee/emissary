@@ -207,7 +207,7 @@ const CheckCreateRequest = React.createClass({
     this.props.onChange(data, this.isDisabled(), 1);
   },
   runDismissHelperText(){
-    UserActions.userPutUserData('hasDismissedCheckCreationHelp');
+    UserActions.userPutUserData('hasDismissedCheckRequestHelp');
   },
   handleSubmit(e){
     e.preventDefault();
@@ -281,11 +281,10 @@ const CheckCreateRequest = React.createClass({
   },
   renderHelperText(){
     return (
-        <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
-          <Alert type="info" onDismiss={this.runDismissHelperText}>
-            <p>Let’s create your first health check! Tell us which security group to check, and Opsee will apply it to the right instances.<br/>Only HTTP checks are supported right now.</p>
+        <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
+          <Alert type="success" onDismiss={this.runDismissHelperText}>
+            <p>The Request defines the check to run on your chosen target. You can try a typical HTTP request by choosing to GET the '/' route on port 80.</p>
           </Alert>
-          <div><br/></div>
         </UserDataRequirement>
       );
   },
@@ -302,7 +301,7 @@ const CheckCreateRequest = React.createClass({
   renderInfoForm(){
     return (
       <div>
-        <h3>Define HTTP Request</h3>
+        <h3>Define Your HTTP Request</h3>
         <Padding b={1}>
           <BoundField bf={this.state.info.boundField('verb')} key={`bound-field-verb`}/>
         </Padding>
@@ -319,7 +318,9 @@ const CheckCreateRequest = React.createClass({
   renderInner(){
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
-        {this.renderHelperText()}
+        <Padding b={1}>
+          {this.renderHelperText()}
+        </Padding>
         <Padding b={1}>
           <h3>Your Target</h3>
           {this.renderTargetSelection()}

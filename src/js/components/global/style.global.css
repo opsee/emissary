@@ -1116,8 +1116,8 @@ input[type="search"] {
 }
 
 .alert-info {
-  background-color: #8762c6;
-  border-color: #6650bf;
+  background-color: var(--colorInfo);
+  border-color: transparent;
   color: var(--colorInfo);
 }
 .alert-info hr {

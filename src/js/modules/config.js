@@ -1,7 +1,9 @@
 import storage from './storage';
 
 let config = {
+  /*global __API__*/
   api: __API__ || 'https://api.opsee.com',
+  /*global __AUTH__*/
   authApi: __AUTH__ || 'https://auth.opsee.com',
   revision: window.revision,
   apiDelay: storage.get('apiDelay') ? parseInt(storage.get('apiDelay'), 10) : 0,

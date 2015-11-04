@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
 import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './toolbar.css';
@@ -23,13 +24,6 @@ const Toolbar = React.createClass({
       c = style.outer;
     }
     return c;
-  },
-  getOuterStyle(){
-    let obj = {};
-    if (this.props.bg){
-      obj.background = colors[this.props.bg];
-    }
-    return obj;
   },
   renderTitle(){
     return (

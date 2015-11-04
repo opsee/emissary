@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {UserStore} from '../../stores';
