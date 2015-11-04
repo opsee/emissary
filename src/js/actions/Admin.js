@@ -10,7 +10,10 @@ _actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups',
   () => {
     return request
     .get(`${config.authApi}/signups`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', UserStore.getAuth())
+    .query({
+      per_page: 1000
+    });
   },
   res => res && res.body,
   res => res && res.response
