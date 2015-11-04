@@ -6,7 +6,7 @@ import cx from 'classnames';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
-import {Settings, NewWindow, Refresh} from '../icons';
+import {Edit, Settings, NewWindow} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
@@ -106,8 +106,8 @@ const CheckItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('check_spec').value.name} Actions</h3>
                 </Padding>
-                <Button text="left" color="primary" block flat onClick={this.runAction.bind(null, 'Test')}>
-                  <Refresh inline fill="primary"/> Test
+                <Button text="left" color="primary" block flat to="checkEdit"  params={{id: this.props.item.get('id')}}>
+                  <Edit inline fill="primary"/> Edit
                 </Button>
               </div>
             </Row>

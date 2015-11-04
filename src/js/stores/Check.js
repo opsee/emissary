@@ -218,6 +218,7 @@ const _public = {
       return response;
       // return _.omit(response, 'response.value.metrics');
     }
+    return {error: 'Something went wrong'};
   }
 };
 

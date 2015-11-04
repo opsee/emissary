@@ -157,12 +157,8 @@ const _public = {
   getInstanceECC(){
     return _data.instanceECC;
   },
-  getInstanceFromFilter(target){
-    if(target && target.type){
-      if(target.type == 'EC2'){
-        return _public.getInstancesECC().filter(instance => instance.get('id') === target.id).get(0);
-      }
-    }
+  getInstanceFromFilter(target = {type: null, id: null}){
+    return _public.getInstancesECC().filter(instance => instance.get('id') === target.id).get(0);
   },
   getInstancesECC(groupId){
     if (groupId){
