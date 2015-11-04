@@ -215,7 +215,7 @@ const CheckCreateInfo = React.createClass({
     return (
         <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
           <Alert type="success" onDismiss={this.runDismissHelperText}>
-            <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails. Opsee automatically runs your check once per minute.</p>
+            <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails. Opsee automatically runs your check every 30 seconds.</p>
           </Alert>
         </UserDataRequirement>
       );
