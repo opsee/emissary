@@ -55,13 +55,15 @@ casper.test.begin( 'Coffee machine visual tests', function ( test ) {
   /*
     The test scenario
   */
-  casper.start('http://localhost:8080');
+  casper.start('https://app.opsee.com');
+  // casper.start('https://yahoo.com');
 
-  // casper.viewport( 1024, 768 );
+  casper.viewport( 1024, 768 );
 
-  casper.waitForSelector('h1', function(){
-    phantomcss.screenshot( 'h1', 'h1');
-    phantomcss.screenshot( 'img[alt="Opsee logo"]', 'logo');
+  casper.waitForSelector('body', function(){
+    // phantomcss.screenshot( 'h1', 'h1');
+    phantomcss.screenshot( 'body', 'body');
+    // phantomcss.screenshot( 'img[alt="Opsee logo"]', 'logo');
   });
 
   /*
