@@ -71,7 +71,7 @@ export default React.createClass({
                   <Padding t={1}>
                     <Link to="passwordForgot">Forgot your password?</Link>
                   </Padding>
-                  <Button type="submit" block chevron color="success" disabled={this.isDisabled()}>{this.btnText()}</Button>
+                  <Button type="submit" block chevron color="success" disabled={this.isDisabled()}>{this.getButtonText()}</Button>
                 </form>
               </Col>
             </Row>
