@@ -9,7 +9,6 @@ import {Alert, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
 import {BoundField, Button} from '../forms';
-import {Alert} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {Search, Circle} from '../icons';
 import {GroupActions, InstanceActions, OnboardActions} from '../../actions';
