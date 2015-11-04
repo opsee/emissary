@@ -152,7 +152,7 @@ export default React.createClass({
               <Padding b={3}>
                 {this.renderInner()}
               </Padding>
-              <Button onClick={this.removeCheck} flat color="danger">
+              <Button onClick={this.runRemoveCheck} flat color="danger">
                 <Delete inline fill="danger"/> Delete Check
               </Button>
             </Col>

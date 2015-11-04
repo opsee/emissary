@@ -9,6 +9,8 @@ import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
+import {Button} from '../forms';
+import {Add} from '../icons';
 
 function getState(){
   return {
@@ -64,6 +66,11 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
+                <Padding b={2}>
+                  <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.instance.get('id'), type: 'EC2'}}} title="Create New Check">
+                    <Add fill="primary" inline/> Create a Check
+                  </Button>
+                </Padding>
                 <Table>
                   <tr>
                     <td><strong>State</strong></td>

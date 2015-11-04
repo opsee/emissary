@@ -24,7 +24,7 @@ const AssertionCounter = React.createClass({
   runTest(){
     return slate(_.assign({}, _.cloneDeep(this.props), {key: this.props.keyData}), _.cloneDeep(this.props.response));
   },
-  renderSmallIcon(){
+  renderIcon(){
     return this.isPassing() ? (
       <Checkmark btn fill="#303030"/>
     ) : (
@@ -34,11 +34,8 @@ const AssertionCounter = React.createClass({
   render(){
     return (
       <div title={this.getTitle()} className={this.isPassing() ? style.counterSuccess : style.counterDanger}>
-      {this.props.label}
-      <div className={`${style.validation} ${!!this.props.relationship ? style.validationActive : ''}`}>
-      {this.renderSmallIcon()}
+        {this.renderIcon()}
       <span className="sr-only">{this.runTest().error}</span>
-      </div>
     </div>
     );
   }

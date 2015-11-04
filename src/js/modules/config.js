@@ -11,7 +11,7 @@ let config = {
   intercom: window.Intercom,
   debug: storage.get('debug') || false,
   ghosting: false,
-  env: process.env
+  env: process.env.NODE_ENV
 };
 
 window.config = config;

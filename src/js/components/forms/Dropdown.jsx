@@ -73,7 +73,7 @@ export default React.createClass({
           {
             this.props.bf.field._choices.map((choice, i) => {
               return (
-                <Button block dropdown key={`${this.props.bf.idForLabel}-menu-item-${i}`} onClick={this.onSelect.bind(null, event, choice)}>
+                <Button block color="dark" dropdown key={`${this.props.bf.idForLabel}-menu-item-${i}`} onClick={this.onSelect.bind(null, event, choice)}>
                 {choice[1]}
                 </Button>
               );
@@ -89,7 +89,7 @@ export default React.createClass({
       <Dropdown id={this.props.bf.idForLabel()}>
           <Label bf={this.props.bf}/>
           <div style={{position: 'relative'}}>
-            <Button id={this.props.bf.idForLabel()} dropdown className="flex-order-2" onClick={this.handleClick} block>
+            <Button id={this.props.bf.idForLabel()} color="dark" dropdown className="flex-order-2" onClick={this.handleClick} block>
               {this.state.label}
               {this.renderChevron()}
             </Button>

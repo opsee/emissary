@@ -128,6 +128,16 @@
   background: var(--colorDanger);
 }
 
+.btnDark {
+  composes: btn;
+  color: #fff;
+  background: var(--gray900);
+}
+.btnDark:focus, .btnDark:hover, .btnDark:active {
+  color: #fff;
+  background: black;
+}
+
 .btnNoPad {
   border-radius: 0;
   padding-left: 0;

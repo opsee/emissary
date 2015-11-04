@@ -12,9 +12,10 @@ import {GlobalActions} from '../../actions';
 import {Add, Key} from '../icons';
 
 import icons from '../icons';
-import {Button, BoundField, ToggleWithLabel, RadioWithLabel} from '../forms';
+import {Circle} from '../icons';
+import {Button, BoundField, ToggleWithLabel} from '../forms';
 
-const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'text', 'textSecondary', 'header'];
+const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
 
 function getState(){
   return {
@@ -51,12 +52,19 @@ const InfoForm = forms.Form.extend({
     }
   }),
   services: forms.MultipleChoiceField({
-    choices: serviceChoices.map(s => [s, s]),
+    choices: serviceChoices.slice(0, 6).map(s => [s, s]),
     widget: forms.CheckboxSelectMultiple(),
     widgetAttrs: {
       widgetType: 'MultiButtonToggle'
     },
     label: 'buttonToggle'
+  }),
+  radio: forms.ChoiceField({
+    choices: serviceChoices.slice(0, 5).map(s => [s, s]),
+    widget: forms.RadioSelect,
+    widgetAttrs: {
+      widgetType: 'RadioSelect'
+    }
   }),
   validation: 'auto'
 });
@@ -146,12 +154,16 @@ export default React.createClass({
 
               <Padding b={1}>
                 <h3>Colors</h3>
-                {['brand-primary', 'brand-success', 'brand-info', 'brand-warning', 'brand-danger'].map((color, i) =>{
+                {opseeColors.map(color => {
                   return (
-                    <div className="clearfix" key={`color-${i}`}>
-                      <div className={`bg-${color} pull-left`} style={{width: '45px', height: '45px'}} type="button"></div>
-                      <div className="padding pull-left">{color}</div>
-                    </div>
+                    <Row className="flex-vertical-align">
+                      <Col>
+                        <Circle fill={color} style={{width: '40px', height: '40px'}}/>
+                      </Col>
+                      <Col style={{margin: '0 0 0 0.5rem'}}>
+                        {color}
+                      </Col>
+                    </Row>
                   );
                 })}
               </Padding>
@@ -211,16 +223,7 @@ export default React.createClass({
               <hr/>
 
               <h3>Radio Select</h3>
-              <ul className="list-unstyled">
-              {this.state.radios.map((t, i) => {
-                return (
-                  <li className="" key={`radio-${i}`}>
-                    <RadioWithLabel on={t.on} onChange={this.runTriggerRadio} id={`radio-${i}`} label={`Item ${i}`} />
-                  </li>
-                );
-              })}
-              </ul>
-
+              <BoundField bf={this.state.info.boundField('radio')}/>
               <hr/>
 
           <h3>Button Toggles</h3>

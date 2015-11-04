@@ -3,8 +3,13 @@ import router from './modules/router.js';
 import _ from 'lodash';
 import {hideNavList} from './components/global/Routes.jsx';
 import {GlobalActions} from './actions';
+import config from './modules/config';
 
-window._ = _;
+if (config.env !== 'production'){
+  window._ = _;
+  window.Perf = React.addons.Perf;
+  window.Perf.start();
+}
 
 router.run((Root, state) => {
   const testRoutes = state.routes;

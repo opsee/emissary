@@ -126,40 +126,6 @@ const statics = {
     data.name = name;
     data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
     data.type = 'EC2';
-    if (data.name === 'coreos4'){
-      data.checks = [
-        {
-          assertions: [
-            {passing: false},
-            {passing: false}
-          ]
-        },
-        {
-          assertions: [
-            {passing: true},
-            {passing: true},
-            {passing: false}
-          ]
-        },
-        {
-          assertions: [
-            {passing: true},
-            {passing: true},
-            {passing: true}
-          ]
-        }
-      ];
-    }
-    if (data.name === 'IRC'){
-      data.checks = [
-        {
-          assertions: [
-            {passing: true},
-            {passing: true}
-          ]
-        }
-      ];
-    }
     data.health = statics.getHealthFromItem(data);
     data.state = statics.getStateFromItem(data);
     if (data.SecurityGroups && data.SecurityGroups.length){
@@ -190,6 +156,9 @@ const statics = {
 const _public = {
   getInstanceECC(){
     return _data.instanceECC;
+  },
+  getInstanceFromFilter(target = {type: null, id: null}){
+    return _public.getInstancesECC().filter(instance => instance.get('id') === target.id).get(0);
   },
   getInstancesECC(groupId){
     if (groupId){

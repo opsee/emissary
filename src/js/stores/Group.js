@@ -108,28 +108,13 @@ const statics = {
     }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;
-    if (newData.name === 'api-lb'){
-      newData.checks = [{
-        assertions: [
-          {passing: true}
-        ]
-      }];
-    }
-    if (newData.name === 'api-lb-com'){
-      newData.checks = [
-        {
-          assertions: [
-          {passing: false}
-          ]
-        },
-        {
-          assertions: [
-          {passing: true},
-          {passing: true}
-          ]
-        }
-      ];
-    }
+    // if (newData.name === 'api-lb'){
+    //   newData.checks = [{
+    //     assertions: [
+    //       {passing: true}
+    //     ]
+    //   }];
+    // }
     newData.health = statics.getHealthFromItem(newData);
     newData.state = statics.getStateFromItem(newData);
     return new GroupELB(newData);
@@ -152,30 +137,6 @@ const statics = {
     newData.meta = Immutable.fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
-    if (newData.name === 'api-lb'){
-      newData.checks = [
-        {
-          assertions: [
-          {passing: false},
-          {passing: false}
-          ]
-        },
-        {
-          assertions: [
-          {passing: true},
-          {passing: true},
-          {passing: false}
-          ]
-        },
-        {
-          assertions: [
-          {passing: true},
-          {passing: true},
-          {passing: true}
-          ]
-        }
-      ];
-    }
     newData.health = statics.getHealthFromItem(newData);
     newData.state = statics.getStateFromItem(newData);
     return new Group(newData);
