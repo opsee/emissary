@@ -69,6 +69,7 @@
     "no-irregular-whitespace": 1,    // http://eslint.org/docs/rules/no-irregular-whitespace
     "no-obj-calls": 1,               // http://eslint.org/docs/rules/no-obj-calls
     "no-sparse-arrays": 1,           // http://eslint.org/docs/rules/no-sparse-arrays
+    "no-undef": 1,                   // http://eslint.org/docs/rules/no-undef
     "no-unreachable": 1,             // http://eslint.org/docs/rules/no-unreachable
     "use-isnan": 1,                  // http://eslint.org/docs/rules/use-isnan
     "block-scoped-var": 1,           // http://eslint.org/docs/rules/block-scoped-var

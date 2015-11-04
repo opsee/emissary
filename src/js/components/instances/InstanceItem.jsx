@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import colors from 'seedling/colors';
 import {Record} from 'immutable';
 import cx from 'classnames';
+import _ from 'lodash';
 
 import ga from '../../modules/ga';
 import {Grid, Row, Col} from '../../modules/bootstrap';

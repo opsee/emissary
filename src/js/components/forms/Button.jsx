@@ -1,4 +1,6 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
+
 import {ChevronRight} from '../icons';
 import colors from 'seedling/colors';
 import {Link} from 'react-router';

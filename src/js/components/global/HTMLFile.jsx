@@ -16,12 +16,9 @@ export default React.createClass({
     request.get(this.props.path).then(res => {
       this.setState({html: res.text});
     }).catch(err => {
-      newErr = err.message || err;
+      const newErr = err.message || err;
       this.setState({error: newErr.toString()});
     });
-  },
-  getParsedHtml(){
-    return Parser.parse(this.state.html);
   },
   render() {
     if (this.state.error){

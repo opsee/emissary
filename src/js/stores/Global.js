@@ -1,4 +1,5 @@
 import Flux from '../modules/flux';
+import _ from 'lodash';
 
 /* eslint-disable no-use-before-define */
 

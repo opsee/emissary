@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import {Mail, Person, Lock} from '../icons';

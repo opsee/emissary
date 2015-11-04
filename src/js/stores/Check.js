@@ -206,7 +206,7 @@ const _public = {
           if (err && err.error){
             response.error = err.error;
           }else {
-            reponse.error = err;
+            response.error = err;
           }
         }catch (err){
           console.warn(err);
