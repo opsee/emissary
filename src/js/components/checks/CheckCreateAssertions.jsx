@@ -10,6 +10,7 @@ import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
+import {UserActions} from '../../actions';
 import AssertionCounter from './AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
 import {CheckStore} from '../../stores';

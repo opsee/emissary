@@ -8,6 +8,7 @@ import {Close, Add} from '../icons';
 import {StepCounter} from '../global';
 import {CheckStore, UserStore} from '../../stores';
 import {UserDataRequirement} from '../user';
+import {UserActions} from '../../actions';
 import {Padding} from '../layout';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
