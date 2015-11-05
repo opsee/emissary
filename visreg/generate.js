@@ -15,7 +15,7 @@ module.exports = function(){
     Promise.all(folderPromises).then(() => {
       const nightmare = Nightmare({
         width:1200,
-        height:2000
+        height:6000
       });
       function run(path) {
         console.log(`Loading ${path}...`);
