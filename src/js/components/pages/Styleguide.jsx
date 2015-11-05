@@ -89,10 +89,8 @@ export default React.createClass({
   getDefaultProps() {
     return getState();
   },
-  getColor(){
-    const length = opseeColors.length;
-    const num = Math.round(Math.random() * length);
-    return opseeColors[num];
+  getColor(index){
+    return opseeColors[index % opseeColors.length];
   },
   getChecks(){
     return false;
@@ -181,8 +179,8 @@ export default React.createClass({
 
                 <h3>Icons</h3>
                 <div>
-                  {Object.keys(icons).map(key => {
-                    return React.createElement(icons[key], {fill: this.getColor()});
+                  {Object.keys(icons).map((key, i) => {
+                    return React.createElement(icons[key], {fill: this.getColor(i)});
                   })}
                 </div>
               <hr/>
