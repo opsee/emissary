@@ -6,7 +6,7 @@ import {CheckStore} from '../../stores';
 import {CheckActions} from '../../actions';
 import {ChevronUp, ChevronDown} from '../icons';
 import {Button} from '../forms';
-import style from './CheckResponse.css';
+import style from './checkResponse.css';
 
 function getState(){
   return {
