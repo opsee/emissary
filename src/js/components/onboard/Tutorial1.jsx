@@ -21,7 +21,7 @@ export default React.createClass({
         <Col xs={12}>
           <img className="step-image" src={img}/>
           <h2>First, Add the Bastion Instance</h2>
-          <p>The first thing we do is add the Bastion Instance to your AWS environment. <a href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>
+          <p>The first thing we do is add the Bastion Instance to your AWS environment. <a target="_blank" href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>
           <Padding t={2}>
             <Button to="tutorial2" color="success" block>Next <ArrowRight inline/></Button>
           </Padding>
