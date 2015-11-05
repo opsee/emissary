@@ -1,5 +1,4 @@
 const Nightmare = require('nightmare');
-const vo = require('vo');
 const paths = require('./paths');
 const mkdirp = require('mkdirp');
 
