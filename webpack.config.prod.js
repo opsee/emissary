@@ -17,7 +17,9 @@ var definePlugin = new webpack.DefinePlugin({
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
   mangle: true,
-  compress: true
+  compress: {
+    warnings: false
+  }
 })
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
