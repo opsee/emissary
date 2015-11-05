@@ -4,8 +4,11 @@ const PNG = require('pngjs').PNG;
 const generate = require('./generate');
 const paths = require('./paths');
 const colors = require('colors');
+const _ = require('lodash');
 
 generate().then(run);
+
+let resultsArray = [];
 
 function compare(path){
   return new Promise((resolve, reject) => {
@@ -17,6 +20,7 @@ function compare(path){
         var diff = new PNG({width: oldImg.width, height: oldImg.height});
 
         var numberOfPixelsChanged = pixelmatch(oldImg.data, newImg.data, diff.data, oldImg.width, oldImg.height, {threshold: 0.1});
+        resultsArray.push(numberOfPixelsChanged);
         if(numberOfPixelsChanged > 0){
           const string = `Found changed pixels in /${path}. Overwrite /base/${path}.png with /compare/${path}.png and commit if intended.`.red;
           process.env.NODE_ENV === 'production' ? console.error(string) : console.warn(string);
@@ -33,7 +37,7 @@ function run(){
       if(paths.indexOf(item) === paths.length - 1){
         return compare(item).then(() => {
           console.log('Compared all images.');
-          process.exit();
+          process.exit(_.compact(resultsArray).length);
           // masterResolve();
         })
       }
