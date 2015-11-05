@@ -96,11 +96,11 @@ const CheckResponse = React.createClass({
   renderWaitingResponse(){
     if (this.state.status && this.state.status === 'pending'){
       return (
-        <div>Sending request...</div>
+        <div className={style.checkResponseWaiting}>Sending request...</div>
       );
     }else if (this.state.error){
       return (
-        <Alert type="danger">There was an error sending your request.</Alert>
+        <Alert bsStyle="danger">There was an error sending your request.</Alert>
       );
     }
     return (
@@ -111,8 +111,8 @@ const CheckResponse = React.createClass({
     if (CheckStore.getResponse() && this.state.complete){
       if (this.getFormattedResponse() && this.getFormattedResponse().error){
         return (
-          <div className={this.getResponseClass()}>
-            <Alert type="info">{this.getFormattedResponse().error}</Alert>
+          <div className={style.checkResponseWaiting}>
+            <Alert bsStyle="danger">{this.getFormattedResponse().error}</Alert>
           </div>
         );
       }
