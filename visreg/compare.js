@@ -3,6 +3,7 @@ const pixelmatch = require('pixelmatch');
 const PNG = require('pngjs').PNG;
 const generate = require('./generate');
 const paths = require('./paths');
+const colors = require('colors');
 
 generate().then(run);
 
@@ -16,6 +17,10 @@ function compare(path){
         var diff = new PNG({width: oldImg.width, height: oldImg.height});
 
         var numberOfPixelsChanged = pixelmatch(oldImg.data, newImg.data, diff.data, oldImg.width, oldImg.height, {threshold: 0.1});
+        if(numberOfPixelsChanged > 0){
+          const string = `Found changed pixels in /${path}. Overwrite /base/${path}.png with /compare/${path}.png and commit if intended.`.red;
+          process.env.NODE_ENV === 'production' ? console.error(string) : console.warn(string);
+        }
         var stream = diff.pack().pipe(fs.createWriteStream(`./visreg/img/diff/${path}.png`));
         stream.on('finish', resolve);
     }
