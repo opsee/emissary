@@ -6,6 +6,7 @@ import {CheckStore} from '../../stores';
 import {CheckActions} from '../../actions';
 import {ChevronUp, ChevronDown} from '../icons';
 import {Button} from '../forms';
+import style from './checkResponse.css';
 
 function getState(){
   return {
@@ -58,19 +59,8 @@ const CheckResponse = React.createClass({
   getFormattedResponse(){
     return CheckStore.getFormattedResponse(CheckStore.getResponse());
   },
-  getStyle(){
-    return {
-      height: this.state.expanded ? 'auto' : '130px',
-      overflow: this.state.expanded ? 'visible' : 'hidden'
-    };
-  },
-  getButtonStyle(){
-    return {
-      right: 0,
-      position: 'absolute',
-      bottom: 0,
-      zIndex: 2
-    };
+  getResponseClass(){
+    return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
   },
   isCheckComplete(check){
     const condition1 = check.target.id;
@@ -92,21 +82,21 @@ const CheckResponse = React.createClass({
   renderButton(){
     if (this.state.expanded){
       return (
-        <Button color="info" sm onClick={this.handleToggle} style={this.getButtonStyle()} title="Close Reponse">
-          <ChevronUp/>
+        <Button color="info" onClick={this.handleToggle} className={style.checkResponseButton} title="Close Reponse">
+          <ChevronUp inline/>
         </Button>
       );
     }
     return (
-      <Button color="info" sm onClick={this.handleToggle} style={this.getButtonStyle()} title="Open Response">
-        <ChevronDown/>
+      <Button color="info" onClick={this.handleToggle} className={style.checkResponseButton} title="Open Response">
+        <ChevronDown inline/>
       </Button>
     );
   },
   renderWaitingResponse(){
     if (this.state.status && this.state.status === 'pending'){
       return (
-        <div>Sending request...</div>
+        <div className={style.checkResponseWaiting}>Sending request...</div>
       );
     }else if (this.state.error){
       return (
@@ -114,20 +104,20 @@ const CheckResponse = React.createClass({
       );
     }
     return (
-      <div>Your response will appear here</div>
+      <div className={style.checkResponseWaiting}>Your response will appear here</div>
     );
   },
   render() {
     if (CheckStore.getResponse() && this.state.complete){
       if (this.getFormattedResponse() && this.getFormattedResponse().error){
         return (
-          <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
-            <Alert bsStyle="info">{this.getFormattedResponse().error}</Alert>
+          <div className={style.checkResponseWaiting}>
+            <Alert bsStyle="danger">{this.getFormattedResponse().error}</Alert>
           </div>
         );
       }
       return (
-        <div style={this.getStyle()} className={`check-response ${this.state.expanded ? 'expanded' : ''}`}>
+        <div className={this.getResponseClass()}>
           <Highlight>
             {JSON.stringify(_.get(this.getFormattedResponse(), 'response.value'), null, ' ')}
           </Highlight>
@@ -136,7 +126,7 @@ const CheckResponse = React.createClass({
       );
     }
     return (
-      <div style={this.getStyle()} className={`check-response flex-vertical-align justify-content-center`}>
+      <div className={this.getResponseClass()}>
         {this.renderWaitingResponse()}
       </div>
     );

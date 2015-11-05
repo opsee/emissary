@@ -268,8 +268,7 @@ const CheckCreateAssertions = React.createClass({
     return (
         <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
           <Alert type="success" onDismiss={this.runDismissHelperText}>
-            <p>After you define a Request, Opsee tests the Request on your Target and shows you the response, which should be right below this message.</p>
-            <p>Now you can define assertions to tell us what a passing check looks like. For a typical HTTP check this could be something like <strong>'Status Code equal to 200'</strong>.</p>
+            <p>Now you can define assertions against your live Request to inform what a passing check looks like. A typical HTTP check might be: <strong>'Status Code equal to 200'</strong>.</p>
           </Alert>
         </UserDataRequirement>
       );

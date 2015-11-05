@@ -1,0 +1,48 @@
+@import '../global/vars.css';
+
+.checkResponse {
+  align-items: flex-start;
+  background: var(--gray900);
+  border: 2px solid var(--gray900);
+  display: flex;
+  height: 13rem;
+  max-height: 13rem;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+  transition: max-height var(--transitionEaseOut);
+}
+.checkResponse:after {
+  background-size: 100%;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--gray900));
+  bottom: 0;
+  content: '';
+  display: block;
+  height: 2.5rem;
+  overflow: visible;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.checkResponseWaiting {
+  composes: checkResponse;
+  align-items: center;
+}
+
+.checkResponseExpanded {
+  composes: checkResponse;
+  align-items: flex-start;
+  height: auto;
+  max-height: 100rem;
+}
+.checkResponseExpanded:after {
+  display: none;
+}
+
+.checkResponseButton {
+  bottom: 1rem;
+  position: absolute;
+  right: 1rem;
+  z-index: 2;
+}
