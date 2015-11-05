@@ -1,3 +1,5 @@
+"use strict"
+
 const fs = require('fs');
 const pixelmatch = require('pixelmatch');
 const PNG = require('pngjs').PNG;
@@ -37,7 +39,10 @@ function run(){
       if(paths.indexOf(item) === paths.length - 1){
         return compare(item).then(() => {
           console.log('Compared all images.');
-          process.exit(_.compact(resultsArray).length);
+          const len = _.compact(resultsArray).length;
+          let string = len === 0 ? 'No changes found.'.green : 'Changes found, exiting.'.red;
+          console.log(string);
+          process.exit(len);
           // masterResolve();
         })
       }
