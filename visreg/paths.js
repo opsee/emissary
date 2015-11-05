@@ -1,5 +1,6 @@
 module.exports = [
   'login',
   'styleguide',
-  'start'
+  'start',
+  'help'
 ]
