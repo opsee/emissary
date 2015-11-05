@@ -16,7 +16,7 @@ var definePlugin = new webpack.DefinePlugin({
 });
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
-var vendors = ['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'react-document-title', 'react-g-analytics', 'react-router-bootstrap', 'react-timeago'];
+var vendors = ['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'react-document-title', 'react-router-bootstrap', 'react-timeago'];
 
 module.exports = {
   cache:true,
@@ -41,7 +41,7 @@ module.exports = {
     ],
     loaders: [
       { test: /\.global\.css$/, loader: 'style-loader!css-loader!cssnext-loader', include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]-[hash:base64:5]!cssnext-loader'},
+      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]!cssnext-loader'},
       { test: /\.js$|\.jsx$/, loaders: ['react-hot', 'babel-loader?optional[]=runtime&stage=0'], include: [context_dir] },
       { test: /\.json$/, loaders: ['json'], include: [context_dir]},
       {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
