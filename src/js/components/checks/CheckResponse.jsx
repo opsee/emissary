@@ -60,13 +60,7 @@ const CheckResponse = React.createClass({
     return CheckStore.getFormattedResponse(CheckStore.getResponse());
   },
   getResponseClass(){
-    let c = {};
-    if (this.state.expanded) {
-      c = style.checkResponseExpanded;
-    } else {
-      c = style.checkResponse;
-    }
-    return c;
+    return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
   },
   isCheckComplete(check){
     const condition1 = check.target.id;
