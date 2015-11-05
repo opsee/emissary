@@ -14,6 +14,7 @@ test:
     - docker run -d -p 8080:80 quay.io/opsee/emissary:latest; sleep 10;
     - curl http://localhost:8080/
     - casperjs test test-deploy.js
+    - npm run-script compare
 deployment:
   hub:
     branch: master
