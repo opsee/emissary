@@ -93,6 +93,7 @@ const Store = Flux.createStore(
       statics.globalContextMenuConsume(payload.data);
       break;
     case 'GLOBAL_SOCKET_START':
+      _data.globalSocketError = undefined;
       statics.globalSocketStart(payload.data);
       break;
     case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
