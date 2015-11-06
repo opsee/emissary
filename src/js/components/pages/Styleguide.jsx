@@ -3,7 +3,7 @@ import _ from 'lodash';
 import forms from 'newforms';
 
 import {Padding} from '../layout';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
 
 import {CheckStore} from '../../stores';
@@ -359,6 +359,15 @@ export default React.createClass({
                 <Button flat noPad primary>NO PAD</Button>
               </Padding>
             </form>
+
+            <h3>Alerts</h3>
+            <Padding b={2}>
+              {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
+                return (
+                  <Alert bsStyle={i} onDismiss>A great alert goes here.</Alert>
+                  );
+              })}
+            </Padding>
 
             <h3>Loading State</h3>
             <Loader/>
