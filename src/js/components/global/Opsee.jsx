@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react/addons';
 import {RouteHandler} from 'react-router';
 import config from '../../modules/config';
 import storage from '../../modules/storage';
+import {SetInterval} from '../../modules/mixins';
 import {Header, MessageModal, Toolbar, Analytics} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions, UserActions} from '../../actions';
@@ -26,7 +27,7 @@ function initialize(){
 initialize();
 
 export default React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin],
+  mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval],
   propTypes: {
     query: PropTypes.object
   },
@@ -43,7 +44,7 @@ export default React.createClass({
   },
   componentDidMount(){
     //refresh user token every 14 minutes
-    setInterval(UserActions.userRefreshToken, (60 * 1000 * 14));
+    this.setInterval(UserActions.userRefreshToken, (60 * 1000 * 14));
   },
   storeDidChange(){
     const status1 = OnboardStore.getOnboardSetPasswordStatus();

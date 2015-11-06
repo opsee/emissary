@@ -32,6 +32,9 @@ export default React.createClass({
     if (state.status && state.status !== 'success' && state.status !== 'pending'){
       state.error = state.status;
     }
+    if (CheckStore.getDeleteCheckStatus() === 'success'){
+      this.getData();
+    }
     this.setState(state);
   },
   getData(){

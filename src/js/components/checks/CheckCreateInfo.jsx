@@ -22,6 +22,7 @@ const NotificationForm = forms.Form.extend({
   }),
   value: forms.CharField({
     label: 'Recipient',
+    validators: [forms.validators.validateEmail],
     widgetAttrs: {
       placeholder: 'test@testing.com'
     }

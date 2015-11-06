@@ -7,10 +7,12 @@ import _ from 'lodash';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
-import {Edit, Settings, NewWindow} from '../icons';
+import {Delete, Edit, NewWindow, Settings} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
+import {Hyphenate} from '../type';
+import {CheckActions} from '../../actions';
 
 const CheckItem = React.createClass({
   propTypes: {
@@ -54,6 +56,11 @@ const CheckItem = React.createClass({
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
   },
+  handleDeleteClick(e){
+    e.preventDefault();
+    CheckActions.deleteCheck(this.props.item.get('id'));
+    this.setState({showModal: false});
+  },
   renderButton(){
     return (
     <Button icon flat secondary onClick={this.runMenuOpen} title="Check Menu">
@@ -87,13 +94,13 @@ const CheckItem = React.createClass({
     if (!this.props.onClick){
       return (
         <Link to={this.getLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('check_spec').value.name}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
-          <div>{this.props.item.get('check_spec').value.name}</div>
+          <Hyphenate>{this.props.item.get('check_spec').value.name}</Hyphenate>
         </Link>
       );
     }
     return (
       <div className="flex-vertical-align flex-1">
-        <div>{this.props.item.get('check_spec').value.name}</div>
+        <Hyphenate>{this.props.item.get('check_spec').value.name}</Hyphenate>
       </div>
     );
   },
@@ -109,6 +116,9 @@ const CheckItem = React.createClass({
                 </Padding>
                 <Button text="left" color="primary" block flat to="checkEdit"  params={{id: this.props.item.get('id')}}>
                   <Edit inline fill="primary"/> Edit
+                </Button>
+                <Button text="left" color="danger" block flat onClick={this.handleDeleteClick}>
+                  <Delete inline fill="danger"/> Delete
                 </Button>
               </div>
             </Row>

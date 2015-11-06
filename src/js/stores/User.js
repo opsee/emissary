@@ -1,6 +1,7 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
+import ga from '../modules/ga';
 import Immutable, {Record} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
@@ -112,6 +113,7 @@ const Store = Flux.createStore(
     case 'USER_REFRESH_TOKEN_ERROR':
       config.intercom('shutdown');
       statics.logout();
+      ga('send', 'event', 'User', 'logout', payload.actionType);
       Store.emitChange();
       break;
     case 'USER_PUT_USER_DATA_SUCCESS':
