@@ -78,14 +78,7 @@ export default React.createClass({
     GroupStore.getGroupFromFilter();
   },
   getLink(){
-    const target = this.state.check.get('target');
     const group = this.state.group.toJS();
-    if (target.type === 'sg'){
-      return (
-        <span>{group.name || group.id}</span>
-      );
-    }
-    //elb
     return (
       <span>{group.name || group.id}</span>
     );
@@ -100,7 +93,7 @@ export default React.createClass({
         <div>
           <Padding b={1}>
             <h3>HTTP Request</h3>
-            <Alert bsStyle="default">
+            <Alert bsStyle="default" style={{'word-break': 'break-word'}}>
               <strong>{spec.verb}</strong> http://{this.getLink()}:<span>{spec.port}</span>{spec.path}
             </Alert>
           </Padding>

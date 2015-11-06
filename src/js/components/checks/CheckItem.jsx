@@ -93,7 +93,7 @@ const CheckItem = React.createClass({
     if (!this.props.onClick){
       return (
         <Link to={this.getLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('check_spec').value.name}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
-          <div>{this.props.item.get('check_spec').value.name}</div>
+          <div style={{'word-break': 'break-word'}}>{this.props.item.get('check_spec').value.name}</div>
         </Link>
       );
     }
