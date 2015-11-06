@@ -2,18 +2,19 @@ import storage from './storage';
 
 let config = {
   /*global __API__*/
-  api: __API__ || 'https://api.opsee.com',
   /*global __AUTH__*/
-  authApi: __AUTH__ || 'https://auth.opsee.com',
-  revision: window.revision,
+  api: __API__ || 'https://api.opsee.com',
   apiDelay: storage.get('apiDelay') ? parseInt(storage.get('apiDelay'), 10) : 0,
+  authApi: __AUTH__ || 'https://auth.opsee.com',
+  debug: storage.get('debug') || false,
   demo: storage.get('demo') || false,
   error: storage.get('error') || false,
-  slackClientSecret: window.slackClientSecret,
-  intercom: window.Intercom,
-  debug: storage.get('debug') || false,
+  env: process.env.NODE_ENV,
   ghosting: false,
-  env: process.env.NODE_ENV
+  intercom: window.Intercom,
+  revision: window.revision,
+  slackClientSecret: window.slackClientSecret,
+  socket: 'wss://api.opsee.com/stream/'
 };
 
 window.config = config;

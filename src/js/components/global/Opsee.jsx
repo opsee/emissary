@@ -58,6 +58,9 @@ export default React.createClass({
     const socketError = GlobalStore.getGlobalSocketError();
     if (socketError){
       stateObj.socketError = socketError;
+      setTimeout(GlobalActions.globalSocketStart, 10000);
+    }else {
+      stateObj.socketError = null;
     }
     this.setState(stateObj);
   },
@@ -70,7 +73,7 @@ export default React.createClass({
             <Col xs={12}>
               <Padding t={2}>
                 <Alert bsStyle="danger">
-                  Could not connect to Opsee.
+                  Could not connect to Opsee. Attempting to reconnect...
                 </Alert>
               </Padding>
             </Col>

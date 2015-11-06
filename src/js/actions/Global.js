@@ -1,6 +1,7 @@
 import Flux from '../modules/flux';
 import _ from 'lodash';
 import {UserStore} from '../stores';
+import config from '../modules/config';
 
 let _actions = {};
 let socket;
@@ -13,11 +14,11 @@ _actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageC
 
 _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', () => {
   if (!socket){
-    console.info('Socket Started.');
-    socket = new WebSocket('wss://api.opsee.com/stream/');
+    socket = new WebSocket(config.socket);
     socket.onopen = () => {
       Flux.actions.globalSocketAuth();
       Flux.actions.globalSocketSubscribe('launch-bastion');
+      console.info('Socket Started.');
     };
     socket.onmessage = (event) => {
       let data;
@@ -36,6 +37,8 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', () => {
     };
     socket.onerror = (event) => {
       Flux.actions.globalSocketError(event);
+      socket = undefined;
+      console.info('Socket Error.');
     };
   }
 });
