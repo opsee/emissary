@@ -61,7 +61,7 @@ const GroupItem = React.createClass({
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
       e.preventDefault();
-      this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
+      this.props.onClick(this.props.item.get('id'), this.props.item.get('type'), this.props.item.get('name'));
     }
   },
   renderButton(){
@@ -88,7 +88,7 @@ const GroupItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type')}}}>
+                <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type'), name: this.props.item.get('name')}}}>
                   <Add inline fill="primary"/> Create Check
                 </Button>
               </div>
@@ -125,14 +125,14 @@ const GroupItem = React.createClass({
       return (
       <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
-        <div className="text-secondary">{this.props.item.get('instances').size || this.props.item.get('instance_count')} Instances</div>
+        <div className="text-secondary">{_.get(this.props.item.get('instances'), 'size') || this.props.item.get('instance_count')} Instances</div>
       </Link>
       );
     }
     return (
       <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
-        <div className="text-secondary">{this.props.item.get('instances').size || this.props.item.get('instance_count')} Instances</div>
+        <div className="text-secondary">{_.get(this.props.item.get('instances'), 'size') || this.props.item.get('instance_count')} Instances</div>
       </div>
     );
   },

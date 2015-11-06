@@ -44,8 +44,7 @@ export default React.createClass({
     }
     return choice;
   },
-  onSelect(e, choice){
-    e.preventDefault();
+  onSelect(choice){
     const obj = {};
     obj[this.state.bf.name] = choice[0];
     this.state.bf.form.updateData(obj);
@@ -73,7 +72,7 @@ export default React.createClass({
           {
             this.props.bf.field._choices.map((choice, i) => {
               return (
-                <Button block color="dark" dropdown key={`${this.props.bf.idForLabel}-menu-item-${i}`} onClick={this.onSelect.bind(null, event, choice)}>
+                <Button block color="dark" dropdown key={`${this.props.bf.idForLabel}-menu-item-${i}`} onClick={this.onSelect.bind(null, choice)}>
                 {choice[1]}
                 </Button>
               );

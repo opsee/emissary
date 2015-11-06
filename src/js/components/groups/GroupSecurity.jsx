@@ -69,7 +69,7 @@ export default React.createClass({
       return (
         <div>
           <Padding b={2}>
-            <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}} title="Create New Check">
+            <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security', name: this.state.group.get('name')}}} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>

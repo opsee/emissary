@@ -268,7 +268,7 @@ const CheckCreateRequest = React.createClass({
       selection = InstanceStore.getInstanceFromFilter(this.props.check.target);
     }
     if (selection && selection.get('id')){
-      if (this.props.check.target.type === 'EC2'){
+      if (this.props.check.target.type.match('EC2|instance')){
         return (
           <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
         );

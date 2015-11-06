@@ -43,8 +43,8 @@ export default React.createClass({
     }
   },
   componentDidMount(){
-    //refresh user token every 14 minutes
-    this.setInterval(UserActions.userRefreshToken, (60 * 1000 * 14));
+    //refresh user token every 5 minutes
+    this.setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
   },
   storeDidChange(){
     const status1 = OnboardStore.getOnboardSetPasswordStatus();
