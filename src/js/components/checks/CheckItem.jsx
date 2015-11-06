@@ -7,10 +7,11 @@ import _ from 'lodash';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {RadialGraph, Modal} from '../global';
-import {Edit, Settings, NewWindow} from '../icons';
+import {Delete, Edit, NewWindow, Settings} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
+import {CheckActions} from '../../actions';
 
 const CheckItem = React.createClass({
   propTypes: {
@@ -53,6 +54,11 @@ const CheckItem = React.createClass({
       e.preventDefault();
       this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
     }
+  },
+  handleDeleteClick(e){
+    e.preventDefault();
+    CheckActions.deleteCheck(this.props.item.get('id'));
+    this.setState({showModal: false});
   },
   renderButton(){
     return (
@@ -109,6 +115,9 @@ const CheckItem = React.createClass({
                 </Padding>
                 <Button text="left" color="primary" block flat to="checkEdit"  params={{id: this.props.item.get('id')}}>
                   <Edit inline fill="primary"/> Edit
+                </Button>
+                <Button text="left" color="danger" block flat onClick={this.handleDeleteClick}>
+                  <Delete inline fill="danger"/> Delete
                 </Button>
               </div>
             </Row>

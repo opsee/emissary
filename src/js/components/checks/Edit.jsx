@@ -7,7 +7,7 @@ import {CheckStore} from '../../stores';
 import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
 import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
 import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
-import {Checkmark, Close} from '../icons';
+import {Checkmark, Close, Delete} from '../icons';
 import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {PageAuth} from '../../modules/statics';
@@ -68,6 +68,9 @@ const CheckEdit = React.createClass({
     if (state.status === 'success'){
       state.check = CheckStore.getCheck().toJS();
     }
+    if (CheckStore.getDeleteCheckStatus() === 'success'){
+      router.transitionTo('checks');
+    }
     this.setState(state);
   },
   getFinalData(){
@@ -81,6 +84,9 @@ const CheckEdit = React.createClass({
   },
   isDisabled(){
     return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
+  },
+  runRemoveCheck(){
+    CheckActions.deleteCheck(this.props.params.id);
   },
   setData(data, disabled, num){
     let obj = {};
@@ -145,6 +151,13 @@ const CheckEdit = React.createClass({
                 <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
                   Finish <Checkmark inline fill={colors.success}/>
                 </Button>
+                </Padding>
+                <Padding t={4}>
+                  <Padding t={4}>
+                    <Button onClick={this.runRemoveCheck} flat color="danger">
+                      <Delete inline fill="danger"/> Delete Check
+                    </Button>
+                  </Padding>
                 </Padding>
               </Col>
             </Row>

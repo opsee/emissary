@@ -17,7 +17,6 @@ function getState(){
   return {
     check: CheckStore.getCheck(),
     status: CheckStore.getGetCheckStatus(),
-    delStatus: CheckStore.getDeleteCheckStatus(),
     sgStatus: GroupStore.getGetGroupSecurityStatus(),
     elbStatus: GroupStore.getGetGroupELBStatus(),
     group: GroupStore.getNewGroup(),
@@ -43,7 +42,7 @@ export default React.createClass({
   },
   storeDidChange() {
     let state = getState();
-    if (state.delStatus === 'success'){
+    if (CheckStore.getDeleteCheckStatus() === 'success'){
       router.transitionTo('checks');
     }
     if (state.status === 'success'){
