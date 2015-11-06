@@ -165,29 +165,17 @@ const CheckCreateAssertions = React.createClass({
     if (data && data.relationship){
       if (data.key === 'header' || !data.relationship.match('empty|notEmpty')){
         return (
-          <Row>
-            <Padding t={1}>
-              <Col xs={12}>
-                <BoundField bf={form.boundField('operand')}/>
-              </Col>
-            </Padding>
-          </Row>
+          <BoundField bf={form.boundField('operand')}/>
         );
       }
     }
   },
-  renderValue(form, key){
+  renderValue(form){
     const data = form.cleanedData;
     if (data && data.relationship && data.key === 'header'){
       if (!data.relationship.match('empty|notEmpty')){
         return (
-          <Row>
-            <Padding t={1}>
-              <Col xs={12} key={key}>
-                <BoundField bf={form.boundField('value')}/>
-              </Col>
-            </Padding>
-          </Row>
+          <BoundField bf={form.boundField('value')}/>
         );
       }
     }
@@ -209,29 +197,28 @@ const CheckCreateAssertions = React.createClass({
         {this.getAssertionsForms().map((form, index) => {
           return (
             <Grid fluid key={`assertion-${index}`}>
-              <Padding tb={1}>
-              <Row>
-                <Col xs={2} sm={1}>
-                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
-                </Col>
-                <Col xs={8} sm={10}>
-                  <Row>
-                    <Col xs={12}>
-                      <Row>
-                        <Col xs={12} sm={6} key={`assertion-key-${index}`}>
-                          <BoundField bf={form.boundField('key')}/>
-                          <Padding t={1} className="visible-xs"/>
-                        </Col>
-                        <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
-                          <BoundField bf={form.boundField('relationship')}/>
-                        </Col>
-                      </Row>
-                    </Col>
+              <Padding tb={2}>
+                <Row>
+                  <Col xs={2} sm={1}>
+                    <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
+                  </Col>
+                  <Col xs={8} sm={10}>
+                    <Row>
+                      <Col xs={12}>
+                        <Row>
+                          <Col xs={12} sm={6} key={`assertion-key-${index}`}>
+                            <BoundField bf={form.boundField('key')}/>
+                          </Col>
+                          <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
+                            <BoundField bf={form.boundField('relationship')}/>
+                          </Col>
+                        </Row>
+                      </Col>
                     </Row>
                     <Row>
                       <Col xs={12}>
-                      {this.renderValue(form, `assertion-${index}-value-field`)}
-                      {this.renderOperand(form, `assertion-${index}-operand-field`)}
+                        {this.renderValue(form, `assertion-${index}-value-field`)}
+                        {this.renderOperand(form, `assertion-${index}-operand-field`)}
                       </Col>
                     </Row>
                   </Col>
@@ -267,8 +254,8 @@ const CheckCreateAssertions = React.createClass({
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
-          <Alert type="success" onDismiss={this.runDismissHelperText}>
-            <p>Now you can define assertions against your live Request to inform what a passing check looks like. A typical HTTP check might be: <strong>'Status Code equal to 200'</strong>.</p>
+          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
+            <p>Assertions are used to describe what a passing check looks like. A typical assertion for a HTTP check might be: <strong>'Status Code equal to 200'</strong>.</p>
           </Alert>
         </UserDataRequirement>
       );

@@ -282,8 +282,8 @@ const CheckCreateRequest = React.createClass({
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
-          <Alert type="success" onDismiss={this.runDismissHelperText}>
-            <p>The Request defines the check to run on your chosen target. You can try a typical HTTP request by choosing to GET the '/' route on port 80.</p>
+          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
+            <p>Your Request defines the check you want to run on your chosen target. You can try a typical HTTP request by choosing to GET the '/' route on port 80.</p>
           </Alert>
         </UserDataRequirement>
       );

@@ -168,7 +168,7 @@ const CheckCreateInfo = React.createClass({
   },
   renderNotificationForm(){
     return (
-      <div>
+      <Padding b={2}>
         <h3>Notifications</h3>
         {this.getNotificationsForms().map((form, index) => {
           return (
@@ -176,27 +176,26 @@ const CheckCreateInfo = React.createClass({
               <Row>
                 <Col xs={10} sm={11}>
                   <Row>
-                   <Col xs={12} sm={6}>
+                    <Col xs={12} sm={6}>
                       <BoundField bf={form.boundField('type')}/>
-                      <Padding b={1} className="visible-xs"/>
-                   </Col>
+                    </Col>
                     <Col xs={12} sm={6}>
                       <BoundField bf={form.boundField('value')}/>
-                   </Col>
+                    </Col>
                   </Row>
                 </Col>
                 <Col xs={2} sm={1}>
-                  {this.renderRemoveNotificationButton(form, index)}
+                  <Padding t={1}>
+                    {this.renderRemoveNotificationButton(form, index)}
+                  </Padding>
                 </Col>
               </Row>
             </Padding>
           );
         })
         }
-        <Padding t={2}>
-          <Button color="primary" flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill="primary" inline/> Add Another Notification</Button>
-        </Padding>
-      </div>
+        <Button color="primary" flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill="primary" inline/> Add Another Notification</Button>
+      </Padding>
     );
   },
   renderSubmitButton(){
@@ -215,7 +214,7 @@ const CheckCreateInfo = React.createClass({
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
-          <Alert type="success" onDismiss={this.runDismissHelperText}>
+          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
             <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails. Opsee automatically runs your check every 30 seconds.</p>
           </Alert>
         </UserDataRequirement>

@@ -106,7 +106,7 @@ const CheckCreateTarget = React.createClass({
     return (
       <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
         <Padding b={1}>
-          <Alert type="info" onDismiss={this.runDismissHelperText}>
+          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
             <p>Let’s create a check! The first step is to choose a target to check. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.</p>
           </Alert>
         </Padding>
