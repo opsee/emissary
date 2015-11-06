@@ -111,8 +111,9 @@ const Store = Flux.createStore(
       break;
     case 'USER_LOG_OUT':
     case 'USER_REFRESH_TOKEN_ERROR':
-      //if the data does not have status, then it probably timed out.
-      if (!payload.data.timeout){
+      if (_.get(payload, 'data.timeout')){
+        //if the data does not have status, then it probably timed out.
+      }else {
         config.intercom('shutdown');
         statics.logout();
         ga('send', 'event', 'User', 'logout', payload.actionType);

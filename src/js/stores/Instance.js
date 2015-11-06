@@ -71,7 +71,6 @@ const statics = {
   },
   getInstancesECCSuccess(data){
     let newData = _.chain(data)
-    .uniq('InstanceId')
     .map(statics.instanceFromJS)
     .sortBy(i => {
       return i.name.toLowerCase();
@@ -107,7 +106,7 @@ const statics = {
     return launchTime;
   },
   instanceRDSFromJS(data){
-    let newData = _.cloneDeep(data);
+    let newData = data.instance || data;
     newData.id = newData.DbiResourceId;
     newData.name = newData.DBName;
     newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
@@ -118,22 +117,23 @@ const statics = {
     if (data.DBInstanceIdentifier){
       return statics.instanceRDSFromJS(data);
     }
-    data.id = data.InstanceId;
-    let name = data.id;
-    if (data.Tags && data.Tags.length){
-      name = _.chain(data.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
+    let newData = data.instance || data;
+    newData.id = newData.InstanceId;
+    let name = newData.id;
+    if (newData.Tags && newData.Tags.length){
+      name = _.chain(newData.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
     }
-    data.name = name;
-    data.LaunchTime = statics.getCreatedTime(data.LaunchTime);
-    data.type = 'EC2';
-    data.health = statics.getHealthFromItem(data);
-    data.state = statics.getStateFromItem(data);
-    if (data.SecurityGroups && data.SecurityGroups.length){
-      data.groups = new List(data.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
+    newData.name = name;
+    newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
+    newData.type = 'EC2';
+    newData.health = statics.getHealthFromItem(newData);
+    newData.state = statics.getStateFromItem(newData);
+    if (newData.SecurityGroups && newData.SecurityGroups.length){
+      newData.groups = new List(newData.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
-    data.meta = Immutable.fromJS(data.meta);
-    return new Instance(data);
+    newData.meta = Immutable.fromJS(newData.meta);
+    return new Instance(newData);
   },
   runInstanceAction(data){
     _data.instancesECC = _data.instancesECC.map(instance => {
