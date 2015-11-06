@@ -71,10 +71,13 @@ const CheckCreateInfo = React.createClass({
     }
 
     const obj = {
-      info: new InfoForm(_.extend({
+      info: new InfoForm({
         onChange: self.runChange,
-        labelSuffix: ''
-      }, self.isDataComplete() ? {data: this.props.check.check_spec.value} : null)),
+        labelSuffix: '',
+        data: {
+          name: `Http ${self.props.check.target.name}`
+        }
+      }),
       notifications: new NotificationFormSet({
         onChange: self.runChange,
         labelSuffix: '',

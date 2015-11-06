@@ -55,7 +55,7 @@ const InstanceItem = React.createClass({
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
       e.preventDefault();
-      this.props.onClick(this.props.item.get('id'), this.props.item.get('type'));
+      this.props.onClick(this.props.item.get('id'), this.props.item.get('type'), this.props.item.get('name'));
     }
   },
   renderStatusText(){
@@ -88,7 +88,7 @@ const InstanceItem = React.createClass({
                 <Padding lr={1}>
                   <h3>{this.props.item.get('name')} Actions</h3>
                 </Padding>
-                <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type')}}}>
+                <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.props.item.get('id'), type: this.props.item.get('type'), name: this.props.item.get('name')}}}>
                   <Add inline fill="primary"/> Create Check
                 </Button>
                 {
