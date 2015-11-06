@@ -16,7 +16,8 @@ const Group = Record({
   silenceDuration: undefined,
   type: 'security',
   Description: undefined,
-  checks: List()
+  checks: List(),
+  instance_count: undefined
 });
 
 const GroupELB = Record({
@@ -30,7 +31,8 @@ const GroupELB = Record({
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
-  checks: List()
+  checks: List(),
+  instance_count: undefined
 });
 
 let _data = {
@@ -72,10 +74,10 @@ const statics = {
   },
   getGroupsSecuritySuccess(data){
     let newData = _.chain(data).map(d => {
-      d.type = 'security';
+      d.group.type = 'security';
       return d;
     }).sortBy(d => {
-      return d.GroupName.toLowerCase();
+      return d.group.GroupName.toLowerCase();
     }).value();
     _data.groupsSecurity = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupFromJS)) : new List();
     Store.emitChange();
@@ -87,14 +89,15 @@ const statics = {
   getGroupsELBSuccess(data){
     let newData = _.chain(data)
     .sortBy(d => {
-      return d.LoadBalancerName.toLowerCase();
+      return d.group.LoadBalancerName.toLowerCase();
     }).value();
     _data.groupsELB = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupELBFromJS)) : new List();
     Store.emitChange();
   },
   groupELBFromJS(data){
     let instances = data.instances || data.Instances;
-    let newData = data;
+    let newData = data.group || data;
+    newData.instance_count = data.instance_count;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
@@ -121,7 +124,8 @@ const statics = {
   },
   groupFromJS(data){
     let instances = data.instances;
-    let newData = data;
+    let newData = data.group || data;
+    newData.instance_count = data.instance_count;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});

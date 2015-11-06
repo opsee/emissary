@@ -125,14 +125,14 @@ const GroupItem = React.createClass({
       return (
       <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
-        <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
+        <div className="text-secondary">{this.props.item.get('instances').size || this.props.item.get('instance_count')} Instances</div>
       </Link>
       );
     }
     return (
       <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
-        <div className="text-secondary">{this.props.item.get('instances').size} Instances</div>
+        <div className="text-secondary">{this.props.item.get('instances').size || this.props.item.get('instance_count')} Instances</div>
       </div>
     );
   },
