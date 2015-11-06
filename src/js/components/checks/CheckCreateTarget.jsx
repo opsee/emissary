@@ -106,7 +106,7 @@ const CheckCreateTarget = React.createClass({
   renderHelperText(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
-        <Padding b={1}>
+        <Padding b={2}>
           <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
             <p>Let’s create a check! The first step is to choose a target to check. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.</p>
           </Alert>
@@ -117,8 +117,8 @@ const CheckCreateTarget = React.createClass({
   renderInner(){
     return (
       <div>
-        <h3>Choose a Target for your Check</h3>
         {this.renderHelperText()}
+        <h3>Choose a Target for your Check</h3>
         <EnvWithFilter onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         <StepCounter active={1} steps={4}/>
       </div>
