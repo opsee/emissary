@@ -9,6 +9,7 @@ let include = [];
 
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
+    validators: [forms.validators.validateEmail],
     widgetAttrs: {
       placeholder: 'address@domain.com'
     }
