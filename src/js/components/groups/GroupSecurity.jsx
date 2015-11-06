@@ -64,56 +64,63 @@ export default React.createClass({
     }
     return <div/>;
   },
-  render() {
+  renderInner(){
     if (this.state.group.get('name')){
       return (
         <div>
-          <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || ''}`} />
-          <Grid>
-            <Row>
-              <Col xs={12}>
-                <Padding b={2}>
-                  <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}} title="Create New Check">
-                    <Add fill="primary" inline/> Create a Check
-                  </Button>
-                </Padding>
+          <Padding b={2}>
+            <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}} title="Create New Check">
+              <Add fill="primary" inline/> Create a Check
+            </Button>
+          </Padding>
 
-                <Padding b={1}>
-                  <h3>Group Information</h3>
-                  <Table>
-                    <tr>
-                      <td><strong>Id</strong></td>
-                      <td>{this.state.group.get('id')}</td>
-                    </tr>
-                    <tr>
-                      <td><strong>State</strong></td>
-                      <td>{this.state.group.get('state')}</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Description</strong></td>
-                      <td>{this.renderDescription()}</td>
-                    </tr>
-                  </Table>
-                </Padding>
-                <Padding b={1}>
-                  <h3>Instances</h3>
-                  <InstanceItemList instances={this.state.group.get('instances')}/>
-                </Padding>
-                <Padding b={1}>
-                  <h3>Checks</h3>
-                  <CheckItemList type="groupSecurity" id={this.props.params.id}/>
-                  <Padding t={2}>
-                    <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}}>
-                      <Add inline/> Create Check
-                    </Button>
-                  </Padding>
-                </Padding>
-              </Col>
-            </Row>
-          </Grid>
+          <Padding b={1}>
+            <h3>Group Information</h3>
+            <Table>
+              <tr>
+                <td><strong>Id</strong></td>
+                <td>{this.state.group.get('id')}</td>
+              </tr>
+              <tr>
+                <td><strong>State</strong></td>
+                <td>{this.state.group.get('state')}</td>
+              </tr>
+              <tr>
+                <td><strong>Description</strong></td>
+                <td>{this.renderDescription()}</td>
+              </tr>
+            </Table>
+          </Padding>
+          <Padding b={1}>
+            <h3>Instances</h3>
+            <InstanceItemList instances={this.state.group.get('instances')}/>
+          </Padding>
+          <Padding b={1}>
+            <h3>Checks</h3>
+            <CheckItemList type="groupSecurity" id={this.props.params.id}/>
+            <Padding t={2}>
+              <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}}>
+                <Add inline/> Create Check
+              </Button>
+            </Padding>
+          </Padding>
         </div>
       );
     }
     return <StatusHandler status={this.state.status}/>;
+  },
+  render() {
+    return (
+      <div>
+        <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || this.props.params.id}`} />
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              {this.renderInner()}
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    );
   }
 });
