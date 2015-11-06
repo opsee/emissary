@@ -207,10 +207,14 @@ const CheckCreateAssertions = React.createClass({
                       <Col xs={12}>
                         <Row>
                           <Col xs={12} sm={6} key={`assertion-key-${index}`}>
-                            <BoundField bf={form.boundField('key')}/>
+                            <Padding b={1}>
+                              <BoundField bf={form.boundField('key')}/>
+                            </Padding>
                           </Col>
                           <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
-                            <BoundField bf={form.boundField('relationship')}/>
+                            <Padding b={1}>
+                              <BoundField bf={form.boundField('relationship')}/>
+                            </Padding>
                           </Col>
                         </Row>
                       </Col>
