@@ -93,7 +93,7 @@ export default React.createClass({
         <div>
           <Padding b={1}>
             <h3>HTTP Request</h3>
-            <Alert bsStyle="default" style={{'word-break': 'break-word'}}>
+            <Alert bsStyle="default" style={{'word-break': 'break-all'}}>
               <strong>{spec.verb}</strong> http://{this.getLink()}:<span>{spec.port}</span>{spec.path}
             </Alert>
           </Padding>
