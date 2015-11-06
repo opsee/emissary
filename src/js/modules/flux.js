@@ -27,19 +27,19 @@ Flux.statics = {
         data: successFn(res, arg0)
       };
     };
-    obj[`${baseName}Error`] = (res) => {
+    obj[`${baseName}Error`] = (res, arg0) => {
       return {
         actionType: `${upperName}_ERROR`,
-        data: errorFn(res)
+        data: errorFn(res, arg0)
       };
     };
     obj[baseName] = (...args) => {
       setTimeout(() => {
         requestFn.call(null, ...args)
-        .then((res) => {
-          Flux.actions[`${baseName}Success`].call(null, res, args[0]);
-        })
-        .catch(Flux.actions[`${baseName}Error`]);
+        .then(
+          Flux.actions[`${baseName}Success`],
+          Flux.actions[`${baseName}Error`]
+        );
       }, config.apiDelay);
       return {
         actionType: `${upperName}_PENDING`,

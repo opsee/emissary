@@ -20,10 +20,11 @@ _actions.userRefreshToken = Flux.statics.addAsyncAction('userRefreshToken',
   () => {
     return request
     .put(`${config.authApi}/authenticate/refresh`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', UserStore.getAuth())
+    .timeout(7000);
   },
   res => res && res.body,
-  res => res && res.response && res.response.body
+  res => _.get(res, 'response.body') || res
 );
 
 _actions.userGetUser = Flux.statics.addAsyncAction('userGetUser',
