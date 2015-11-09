@@ -1,18 +1,25 @@
 import React, {PropTypes} from 'react';
+import Immutable from 'immutable';
+
 import {StatusHandler} from '../global';
 import {CheckActions} from '../../actions';
 import {CheckStore} from '../../stores';
 import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
+import {SetInterval} from '../../modules/mixins';
 
 export default React.createClass({
-  mixins: [CheckStore.mixin],
+  mixins: [CheckStore.mixin, SetInterval],
   propTypes: {
     type: PropTypes.string,
     id: PropTypes.string
   },
   componentWillMount(){
     CheckActions.getChecks();
+    this.setInterval(CheckActions.getChecks, 15000);
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !Immutable.is(this.state.checks, nextState.checks) || nextState.status !== this.state.status;
   },
   storeDidChange(){
     let state = this.getState();
@@ -37,7 +44,7 @@ export default React.createClass({
       return (
         <div>
           {this.state.checks.map(c => {
-            return <CheckItem item={c}/>;
+            return <CheckItem item={c} key={c.get('id')}/>;
           })}
         </div>
       );

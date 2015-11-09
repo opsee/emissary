@@ -2643,8 +2643,9 @@ to prevent collapsing during animation*/
   color: var(--colorInfo);
 }
 
-.modal.notify.fade .modal-dialog {
+.modal.notify .modal-dialog {
   transform: translate(0, 100px);
+  transition: transform var(--transitionEaseOut);
 }
 .modal.notify.in .modal-dialog {
   transform: translate(0, 0);
@@ -2665,10 +2666,6 @@ to prevent collapsing during animation*/
   }
 }
 
-.modal.context.fade .modal-dialog {
-  transform: translate(0, 100%);
-  transition: transform var(--transitionEaseOut);
-}
 .modal.context.in .modal-dialog {
   transform: translate(0, 0);
 }

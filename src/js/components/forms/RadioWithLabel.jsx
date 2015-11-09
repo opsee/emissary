@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-React.initializeTouchEvents(true);
 import _ from 'lodash';
 import Radio from './Radio.jsx';
 import colors from 'seedling/colors';

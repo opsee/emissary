@@ -1,13 +1,15 @@
-import React from 'react/addons';
+import React from 'react';
+import Perf from 'react-addons-perf';
 import router from './modules/router.js';
 import _ from 'lodash';
 import {hideNavList} from './components/global/Routes.jsx';
 import {GlobalActions} from './actions';
 import config from './modules/config';
+import ReactDOM from 'react-dom';
 
 if (config.env !== 'production'){
   window._ = _;
-  window.Perf = React.addons.Perf;
+  window.Perf = Perf;
   window.Perf.start();
 }
 
@@ -16,7 +18,7 @@ router.run((Root, state) => {
   const names = _.pluck(testRoutes, 'name');
   const bool = !(_.intersection(names, hideNavList).length);
   GlobalActions.globalSetNav(bool);
-  React.render(
+  ReactDOM.render(
       (
         <div>
           <Root params={state.params} {...state}>

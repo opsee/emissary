@@ -66,6 +66,7 @@ export default React.createClass({
     return <span/>;
   },
   render() {
+    console.log('render groupitemlist');
     const self = this;
     if (this.props.groups.size){
       return (

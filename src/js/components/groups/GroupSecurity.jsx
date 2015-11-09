@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import Immutable from 'immutable';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
@@ -12,7 +13,7 @@ import {Add} from '../icons';
 import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const GroupSecurity = React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
   statics: {
     willTransitionTo: PageAuth
@@ -20,14 +21,14 @@ export default React.createClass({
   propTypes: {
     params: PropTypes.object
   },
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return !Immutable.is(this.state.group, nextState.group);
-  // },
   componentWillMount(){
     this.getData();
   },
   componentDidMount(){
     this.setInterval(this.getData, 30000);
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !Immutable.is(this.state.group, nextState.group);
   },
   getInitialState(){
     return this.getState();
@@ -60,7 +61,7 @@ export default React.createClass({
   renderDescription(){
     const desc = this.state.group.get('Description');
     if (desc && desc !== ''){
-      return {desc};
+      return <span>{desc}</span>;
     }
     return <div/>;
   },
@@ -124,3 +125,5 @@ export default React.createClass({
     );
   }
 });
+
+export default GroupSecurity;

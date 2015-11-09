@@ -23,7 +23,9 @@ const Table = React.createClass({
   render(){
     return (
       <table className={this.getTableClass()}>
-        {this.props.children}
+        <tbody>
+          {this.props.children}
+        </tbody>
       </table>
     );
   }

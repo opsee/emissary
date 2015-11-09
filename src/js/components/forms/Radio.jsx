@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-React.initializeTouchEvents(true);
 
 import {Padding} from '../layout';
 import style from './radio.css';

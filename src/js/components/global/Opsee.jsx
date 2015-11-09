@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react/addons';
+import React, {PropTypes} from 'react';
 import {RouteHandler} from 'react-router';
 import config from '../../modules/config';
 import storage from '../../modules/storage';

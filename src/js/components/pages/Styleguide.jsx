@@ -36,7 +36,7 @@ const InfoForm = forms.Form.extend({
   name: forms.CharField({
     widgetAttrs: {
       placeholder: 'Name',
-      autocomplete: 'off',
+      autoComplete: 'off',
       title: 'foo'
     }
   }),
@@ -127,6 +127,7 @@ export default React.createClass({
     // this.setState({buttonToggles});
   },
   runNotify(style){
+    console.log(`run notify ${style}`);
     GlobalActions.globalModalMessage({
       html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
       style: style
@@ -154,7 +155,7 @@ export default React.createClass({
                 <h3>Colors</h3>
                 {opseeColors.map(color => {
                   return (
-                    <Row className="flex-vertical-align">
+                    <Row className="flex-vertical-align" key={`color-list-${color}`}>
                       <Col>
                         <Circle fill={color} style={{width: '40px', height: '40px'}}/>
                       </Col>
@@ -180,7 +181,7 @@ export default React.createClass({
                 <h3>Icons</h3>
                 <div>
                   {Object.keys(icons).map((key, i) => {
-                    return React.createElement(icons[key], {fill: this.getColor(i)});
+                    return React.createElement(icons[key], {fill: this.getColor(i), key: `icon-${i}`});
                   })}
                 </div>
               <hr/>
@@ -211,7 +212,7 @@ export default React.createClass({
                 {this.state.toggles.map((t, i) => {
                   return (
                     <li key={`toggle-${i}`}>
-                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={i} label="Item"/>
+                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={`toggle-${i}`} label="Item"/>
                     </li>
                   );
                 })}
@@ -364,7 +365,7 @@ export default React.createClass({
             <Padding b={2}>
               {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                 return (
-                  <Alert bsStyle={i} onDismiss>A great alert goes here.</Alert>
+                  <Alert bsStyle={i} onDismiss={_.noop} key={`alert-${i}`}>A great alert goes here.</Alert>
                   );
               })}
             </Padding>

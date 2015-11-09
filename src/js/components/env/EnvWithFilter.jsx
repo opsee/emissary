@@ -245,7 +245,7 @@ const EnvWithFilter = React.createClass({
   renderGroupsSecurity(){
     if (GroupStore.getGroupsSecurity().size){
       return (
-        <div>
+        <div key="groupsSecurity">
           <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
           <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
           <hr/>
@@ -253,7 +253,7 @@ const EnvWithFilter = React.createClass({
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get Security Groups.">
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
         <h3>Security Groups</h3>
         <Alert bsStyle="default">
           No security groups found
@@ -265,7 +265,7 @@ const EnvWithFilter = React.createClass({
   renderGroupsELB(){
     if (GroupStore.getGroupsELB().size){
       return (
-        <div>
+        <div key="groupsELB">
           <h3>ELBs ({this.getGroupsELB().size})</h3>
           <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
           <hr/>
@@ -273,13 +273,13 @@ const EnvWithFilter = React.createClass({
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get ELB Groups."/>
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get ELB Groups." key="groupsELBStatus"/>
     );
   },
   renderInstancesECC(){
     if (InstanceStore.getInstancesECC().size){
       return (
-        <div>
+        <div key="instancesECC">
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
           <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
           <hr/>
@@ -287,7 +287,7 @@ const EnvWithFilter = React.createClass({
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get EC2 Instances.">
+      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get EC2 Instances." key="instancesECCStatus">
         <h3>EC2 Instances</h3>
         <Alert bsStyle="default">
           No EC2 Instances found

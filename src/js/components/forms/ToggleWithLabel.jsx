@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-React.initializeTouchEvents(true);
 import Toggle from './Toggle.jsx';
 import style from './toggleWithLabel.css';
 

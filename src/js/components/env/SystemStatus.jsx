@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
@@ -30,15 +30,26 @@ const SystemStatus = React.createClass({
   getConnectedBastions(){
     return this.state.bastions.length;
   },
-  renderBastionsInfo(){
-    if (this.state.bastions){
+  renderBastionList(){
+    if (this.state.bastions.length){
       return (
         <div>
-          Connected Bastions: {this.getConnectedBastions()}
+          <h3>Connected Bastions</h3>
+          <ul>
+            {this.state.bastions.map(bastion => {
+              return <li>EC2 Instance ID: {bastion}</li>;
+            })}
+          </ul>
         </div>
       );
     }
-    return <div/>;
+    return <h3>No Connected Bastions.</h3>;
+  },
+  renderBastionsInfo(){
+    if (this.state.bastions){
+      return this.renderBastionList();
+    }
+    return <StatusHandler status={OnboardStore.getGetBastionsStatus()}/>;
   },
   render() {
     return (

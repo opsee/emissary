@@ -31,7 +31,9 @@ const CheckCreate = React.createClass({
         style: 'danger'
       });
     }
-    this.setState(state);
+    if (this.isMounted()){
+      this.setState(state);
+    }
   },
   getState(noCheck){
     const obj = {
