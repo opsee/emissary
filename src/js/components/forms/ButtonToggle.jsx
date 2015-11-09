@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-React.initializeTouchEvents(true);
 import Button from './Button.jsx';
 import {Add, Checkmark} from '../icons';
 

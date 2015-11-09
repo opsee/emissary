@@ -2,6 +2,7 @@ import Flux from '../modules/flux';
 import _ from 'lodash';
 import Immutable, {Record, List} from 'immutable';
 import InstanceStore from './Instance';
+import result from '../modules/result';
 
 /* eslint-disable no-use-before-define */
 
@@ -17,7 +18,8 @@ const Group = Record({
   type: 'security',
   Description: undefined,
   checks: List(),
-  instance_count: undefined
+  instance_count: undefined,
+  result: undefined
 });
 
 const GroupELB = Record({
@@ -32,7 +34,8 @@ const GroupELB = Record({
   Description: undefined,
   CreatedTime: undefined,
   checks: List(),
-  instance_count: undefined
+  instance_count: undefined,
+  result: undefined
 });
 
 let _data = {
@@ -52,13 +55,22 @@ const statics = {
     }
     return string;
   },
+  // getHealthFromItem(item){
+  //   let health;
+  //   if (item.checks && item.checks.length){
+  //     const boolArray = item.checks.map(check => {
+  //       return _.chain(check.assertions).pluck('passing').every().value();
+  //     });
+  //     health = Math.floor((_.compact(boolArray).length / boolArray.length) * 100);
+  //   }
+  //   return health;
+  // },
   getHealthFromItem(item){
     let health;
-    if (item.checks && item.checks.length){
-      const boolArray = item.checks.map(check => {
-        return _.chain(check.assertions).pluck('passing').every().value();
-      });
-      health = Math.floor((_.compact(boolArray).length / boolArray.length) * 100);
+    if (item.result && item.result.toJS().responses.length){
+      const responses = item.result.toJS().responses;
+      const passing = _.filter(responses, 'passing');
+      return Math.floor((passing.length / responses.length) * 100);
     }
     return health;
   },
@@ -104,10 +116,7 @@ const statics = {
       });
     }
     if (instances.length){
-      if (instances[0].InstanceId){
-        newData.instances = _.uniq(instances, 'InstanceId');
-      }
-      newData.instances = new List(newData.instances.map(instance => InstanceStore.instanceFromJS(instance)));
+      newData.instances = new List(instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;
@@ -118,6 +127,7 @@ const statics = {
     //     ]
     //   }];
     // }
+    newData.result = result.fromJS(data.result);
     newData.health = statics.getHealthFromItem(newData);
     newData.state = statics.getStateFromItem(newData);
     return new GroupELB(newData);
@@ -132,15 +142,13 @@ const statics = {
       });
     }
     if (instances.length){
-      if (instances[0].InstanceId){
-        newData.instances = _.uniq(instances, 'InstanceId');
-      }
-      newData.instances = new List(newData.instances.map(instance => InstanceStore.instanceFromJS(instance)));
+      newData.instances = new List(instances.map(instance => InstanceStore.instanceFromJS(instance)));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     newData.meta = Immutable.fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
+    newData.result = result.fromJS(data.result);
     newData.health = statics.getHealthFromItem(newData);
     newData.state = statics.getStateFromItem(newData);
     return new Group(newData);

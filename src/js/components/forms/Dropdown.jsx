@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Label from './Label.jsx';
-import {Dropdown} from '../../modules/bootstrap';
 import _ from 'lodash';
 import Button from './Button';
 import {ChevronDown, ChevronUp} from '../icons';
@@ -85,16 +84,16 @@ export default React.createClass({
   },
   render(){
     return (
-      <Dropdown id={this.props.bf.idForLabel()}>
+      <div id={this.props.bf.idForLabel()}>
           <Label bf={this.props.bf}/>
           <div style={{position: 'relative'}}>
-            <Button id={this.props.bf.idForLabel()} color="dark" dropdown className="flex-order-2" onClick={this.handleClick} block>
+            <Button id={this.props.bf.idForLabel()} color="dark" dropdown className="flex-order-2" onClick={this.handleClick} block bsRole="toggle">
               {this.state.label}
               {this.renderChevron()}
             </Button>
             {this.renderMenu()}
         </div>
-      </Dropdown>
+      </div>
     );
   }
 });
