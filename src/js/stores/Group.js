@@ -19,7 +19,9 @@ const Group = Record({
   Description: undefined,
   checks: List(),
   instance_count: undefined,
-  result: undefined
+  results: List(),
+  passing: undefined,
+  total: undefined
 });
 
 const GroupELB = Record({
@@ -35,7 +37,9 @@ const GroupELB = Record({
   CreatedTime: undefined,
   checks: List(),
   instance_count: undefined,
-  result: undefined
+  results: List(),
+  passing: undefined,
+  total: undefined
 });
 
 let _data = {
@@ -48,32 +52,6 @@ let _data = {
 };
 
 const statics = {
-  getStateFromItem(item){
-    let string = 'running';
-    if (typeof item.health === 'number'){
-      string = item.health === 100 ? 'passing' : 'failing';
-    }
-    return string;
-  },
-  // getHealthFromItem(item){
-  //   let health;
-  //   if (item.checks && item.checks.length){
-  //     const boolArray = item.checks.map(check => {
-  //       return _.chain(check.assertions).pluck('passing').every().value();
-  //     });
-  //     health = Math.floor((_.compact(boolArray).length / boolArray.length) * 100);
-  //   }
-  //   return health;
-  // },
-  getHealthFromItem(item){
-    let health;
-    if (item.result && item.result.toJS().responses.length){
-      const responses = item.result.toJS().responses;
-      const passing = _.filter(responses, 'passing');
-      return Math.floor((passing.length / responses.length) * 100);
-    }
-    return health;
-  },
   getGroupSecurityPending(data){
     if (_data.groupSecurity.get('id') !== data){
       _data.groupSecurity = new Group();
@@ -127,9 +105,7 @@ const statics = {
     //     ]
     //   }];
     // }
-    newData.result = result.fromJS(data.result);
-    newData.health = statics.getHealthFromItem(newData);
-    newData.state = statics.getStateFromItem(newData);
+    _.assign(newData, result.getFormattedData(data));
     return new GroupELB(newData);
   },
   groupFromJS(data){
@@ -148,9 +124,7 @@ const statics = {
     newData.meta = Immutable.fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
-    newData.result = result.fromJS(data.result);
-    newData.health = statics.getHealthFromItem(newData);
-    newData.state = statics.getStateFromItem(newData);
+    _.assign(newData, result.getFormattedData(data));
     return new Group(newData);
   },
   populateGroupInstances(){

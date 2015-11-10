@@ -24,17 +24,42 @@ const Result = Record({
   responses: List()
 });
 
+function fromJS(data){
+  let newData = {};
+  const resultArray = data.results || data.result;
+  const results = Array.isArray(resultArray) ? resultArray : [resultArray];
+  if (resultArray && results.length){
+    newData.results = new List(results.map(result => {
+      if (result && result.responses){
+        let resultData = _.cloneDeep(result);
+        resultData.responses = new List(result.responses.map(response => {
+          let d = _.cloneDeep(response);
+          d.response = new InnerResponse(response.response);
+          return new OuterResponse(d);
+        }));
+        return new Result(resultData);
+      }
+    }));
+  }
+  return newData;
+}
+
 export default {
-  fromJS(data){
-    if (data && data.responses){
-      let resultData = _.cloneDeep(data);
-      resultData.responses = new List(data.responses.map(response => {
-        let newData = _.cloneDeep(response);
-        newData.response = new InnerResponse(response.response);
-        return new OuterResponse(newData);
-      }));
-      return new Result(resultData);
+  getFormattedData(data){
+    let obj = {
+      passing: undefined,
+      total: undefined,
+      health: undefined,
+      results: fromJS(data).results || new List()
+    };
+    if (obj.results && obj.results.size){
+      const boolArray = _.chain(obj.results.toJS()).pluck('responses').flatten().pluck('passing').value();
+      const passing = _.compact(boolArray);
+      obj.passing = passing.length;
+      obj.total = boolArray.length;
+      obj.health = Math.floor((passing.length / boolArray.length) * 100);
+      obj.state = obj.health === 100 ? 'passing' : 'failing';
     }
-    return new Result();
+    return obj;
   }
 };

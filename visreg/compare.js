@@ -23,7 +23,7 @@ function compare(path){
 
         var numberOfPixelsChanged = pixelmatch(oldImg.data, newImg.data, diff.data, oldImg.width, oldImg.height, {threshold: 0.1});
         resultsArray.push(numberOfPixelsChanged);
-        if(numberOfPixelsChanged > 0){
+        if (numberOfPixelsChanged > 0){
           const string = `Found changed pixels in /${path}. Overwrite /base/${path}.png with /compare/${path}.png and commit if intended.`.red;
           process.env.NODE_ENV === 'production' ? console.error(string) : console.warn(string);
         }
@@ -36,7 +36,7 @@ function compare(path){
 function run(){
   var chain = paths.reduce(function(previous, item){
     return previous.then(function(){
-      if(paths.indexOf(item) === paths.length - 1){
+      if (paths.indexOf(item) === paths.length - 1){
         return compare(item).then(() => {
           console.log('Compared all images.');
           const len = _.compact(resultsArray).length;

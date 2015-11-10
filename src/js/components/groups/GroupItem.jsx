@@ -38,6 +38,12 @@ const GroupItem = React.createClass({
     suffix = suffix.match('Elb') ? 'ELB' : suffix;
     return `group${suffix}`;
   },
+  getInfoText(){
+    if (this.props.item.get('total')){
+      return `${this.props.item.get('passing')} of ${this.props.item.get('total')} passing`;
+    }
+    return 'No checks applied.';
+  },
   getActions(){
     return ['Create Check'];
   },
@@ -125,14 +131,14 @@ const GroupItem = React.createClass({
       return (
       <Link to={this.getGroupLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
-        <div className="text-secondary">{_.get(this.props.item.get('instances'), 'size') || this.props.item.get('instance_count')} Instances</div>
+        <div className="text-secondary">{this.getInfoText()}</div>
       </Link>
       );
     }
     return (
       <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}</div>
-        <div className="text-secondary">{_.get(this.props.item.get('instances'), 'size') || this.props.item.get('instance_count')} Instances</div>
+        <div className="text-secondary">{this.getInfoText()}</div>
       </div>
     );
   },

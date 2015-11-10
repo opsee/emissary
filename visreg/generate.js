@@ -34,7 +34,7 @@ module.exports = function(){
       }
       var chain = paths.reduce(function(previous, item){
         return previous.then(function(){
-          if(paths.indexOf(item) === paths.length - 1){
+          if (paths.indexOf(item) === paths.length - 1){
             return run(item).then(() => {
               console.log('Captured all screenshots.');
               nightmare.end();

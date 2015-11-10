@@ -35,6 +35,12 @@ const InstanceItem = React.createClass({
     const suffix = _.startCase(this.props.item.get('type')).split(' ').join('');
     return `instance${suffix}`;
   },
+  getInfoText(){
+    if (this.props.item.get('total')){
+      return `${this.props.item.get('passing')} of ${this.props.item.get('total')} passing`;
+    }
+    return 'No checks applied.';
+  },
   isSelected(){
     return this.props.selected && this.props.selected === this.props.item.get('id');
   },
@@ -130,14 +136,16 @@ const InstanceItem = React.createClass({
   renderText(){
     if (!this.props.onClick){
       return (
-      <Link to={this.getInstanceLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
+      <Link to={this.getInstanceLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+        <div className="text-secondary">{this.getInfoText()}</div>
       </Link>
       );
     }
     return (
-      <div className={cx([listItem.link, 'flex-vertical-align', 'flex-1'])}>
+      <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
         <div>{this.props.item.get('name')}{this.renderStatusText()}</div>
+        <div className="text-secondary">{this.getInfoText()}</div>
       </div>
     );
   },
