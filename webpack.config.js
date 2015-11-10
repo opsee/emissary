@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var GitSHAPlugin = require('git-sha-webpack-plugin');
 var AssetsPlugin = require('assets-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
