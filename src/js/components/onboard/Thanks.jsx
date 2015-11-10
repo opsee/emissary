@@ -10,7 +10,8 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <p>Thanks for letting us know you're interested in Opsee! When you're approved for the Opsee beta program, you'll get an email. Til then, check out the <a href="http://twitter.com/opseeco" target="_blank">Opsee Twitter account</a> for updates.</p>
+              <p>Thanks for letting us know you're interested in Opsee! We're currently reviewing signups for our private beta, and if you're a good fit you'll get an email from us.</p>
+              <p>Til then, check out the <a href="http://twitter.com/opseeco" target="_blank">@opseeco on Twitter</a> for updates.</p>
             </Col>
           </Row>
         </Grid>
