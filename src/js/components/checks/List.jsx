@@ -51,7 +51,15 @@ export default React.createClass({
     }
     return (
       <StatusHandler status={this.state.status}>
-        <p>No Checks - <Link to="checkCreate" title="Create New Check">Create One</Link></p>
+        <p>You don't have any Checks yet. <Link to="checkCreate" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
+
+        <p>Try creating a check like this to start:</p>
+        <ol>
+          <li>Target a Group or Instance running a <strong>HTTP service</strong></li>
+          <li>Make a request to the URL and port running that service (e.g. <strong>"/healthcheck"</strong> on <strong>Port 80</strong>)</li>
+          <li>Assert that the <strong>Status Code</strong> must come back <strong>Equal to 200</strong></li>
+          <li>Send <strong>notifications to your email</strong> when the Check fails</li>
+        </ol>
       </StatusHandler>
     );
   },
