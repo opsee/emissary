@@ -26,20 +26,26 @@ const Result = Record({
 
 function fromJS(data){
   let newData = {};
-  const resultArray = data.results || data.result;
-  const results = Array.isArray(resultArray) ? resultArray : [resultArray];
-  if (resultArray && results.length){
-    newData.results = new List(results.map(result => {
-      if (result && result.responses){
+  const results = data.results || data.result;
+  const resultsArray = Array.isArray(results) ? results : [results];
+  if (results && resultsArray.length){
+    let newResults = resultsArray.map(result => {
+      let responses = result.responses || result.response;
+      responses = Array.isArray(responses) ? responses : [responses];
+      if (responses && responses.length){
         let resultData = _.cloneDeep(result);
-        resultData.responses = new List(result.responses.map(response => {
-          let d = _.cloneDeep(response);
-          d.response = new InnerResponse(response.response);
+        resultData.responses = new List(responses.map(r => {
+          let d = _.cloneDeep(r);
+          d.response = new InnerResponse(r.response);
           return new OuterResponse(d);
         }));
         return new Result(resultData);
       }
-    }));
+    });
+    newResults = _.compact(newResults);
+    if (newResults && newResults.length){
+      newData.results = new List(newResults);
+    }
   }
   return newData;
 }
