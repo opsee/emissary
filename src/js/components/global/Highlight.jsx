@@ -1,6 +1,7 @@
 import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 
 hljs.registerLanguage('json', json);
 
@@ -10,9 +11,8 @@ const Highlight = React.createClass({
     className: PropTypes.string,
     children: PropTypes.node
   },
-  getDefaultProps: function getDefaultProps() {
+  getDefaultProps() {
     return {
-      innerHTML: false,
       className: ''
     };
   },
@@ -23,7 +23,7 @@ const Highlight = React.createClass({
     this.runHighlightCode();
   },
   runHighlightCode() {
-    const domNode = this.getDOMNode();
+    const domNode = ReactDOM.findDOMNode(this);
     const nodes = domNode.querySelectorAll('pre code');
     if (nodes.length > 0) {
       for (let i = 0; i < nodes.length; i = i + 1) {

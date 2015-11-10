@@ -79,7 +79,7 @@ const Install = React.createClass({
     this.setState({bastions});
   },
   componentDidUpdate(){
-    if (this.areBastionsInstalled() && !this.state.startedPolling){
+    if (this.areBastionsComplete() && !this.state.startedPolling){
       OnboardActions.getBastions();
       OnboardActions.getCustomer();
       /* eslint-disable react/no-did-update-set-state*/
@@ -105,16 +105,12 @@ const Install = React.createClass({
   getBastionSuccesses(){
     return _.filter(this.getBastionStatuses(), stat => stat === 'CREATE_COMPLETE');
   },
-  isBastionsComplete(){
-    const stats = this.getBastionStatuses();
-    return _.every(stats) && stats.length;
-  },
-  areBastionsInstalled(){
+  areBastionsComplete(){
     const stats = this.getBastionStatuses();
     return _.every(stats) && stats.length;
   },
   areBastionsConnected(){
-    return OnboardStore.getBastions().length;
+    return OnboardStore.getBastions().length && !this.getBastionErrors().length;
   },
   renderSurvey(){
     if (!config.demo){
@@ -127,28 +123,27 @@ const Install = React.createClass({
     return <div/>;
   },
   renderBtn(){
-    const bastionErrors = this.getBastionErrors();
-    if (this.areBastionsInstalled()){
-      if (!this.areBastionsConnected()){
+    if (this.areBastionsComplete()){
+      if (this.getBastionErrors().length){
+        return (
+          <Alert bsStyle="danger">
+            We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+          </Alert>
+        );
+      }else if (!this.areBastionsConnected()){
         return (
           <Padding tb={3}>
             <p>Your bastion has been installed, waiting for successful connection...</p>
           </Padding>
         );
-      }else if (!bastionErrors.length){
-        return (
-          <Padding tb={3}>
-            <p>All clear!</p>
-            <Button to="checkCreate" color="primary" block chevron>
-              Create a Check
-            </Button>
-          </Padding>
-        );
       }
       return (
-        <Alert type="info">
-          We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
-        </Alert>
+        <Padding tb={3}>
+          <p>All clear!</p>
+          <Button to="checkCreate" color="primary" block chevron>
+            Create a Check
+          </Button>
+        </Padding>
       );
     }
     return <div/>;
@@ -158,24 +153,26 @@ const Install = React.createClass({
       return (
         <p>Checking installation status...</p>
       );
+    }else if (!this.areBastionsComplete().length && !this.getBastionErrors().length){
+      return (
+        <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
+      );
     }
-    if (this.areBastionsInstalled()){
-      const bastionErrors = this.getBastionErrors();
-      const bastionSuccesses = this.getBastionSuccesses();
-      if (bastionErrors.length && !bastionSuccesses.length){
-        return (
-          <p>{bastionErrors.length > 1 ? bastionErrors.length : ''} Bastion{bastionErrors.length > 1 ? 's' : ''} failed to install correctly</p>
-        );
-      }else if (bastionErrors.length){
-        return (
-          <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
-        );
-      }
-      return <div/>;
-    }
-    return (
-      <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
-    );
+    return <div/>;
+    // if (this.areBastionsComplete()){
+    //   const bastionErrors = this.getBastionErrors();
+    //   const bastionSuccesses = this.getBastionSuccesses();
+    //   if (bastionErrors.length && !bastionSuccesses.length){
+    //     return (
+    //       <p>{bastionErrors.length > 1 ? bastionErrors.length : ''} Bastion{bastionErrors.length > 1 ? 's' : ''} failed to install correctly</p>
+    //     );
+    //   }else if (bastionErrors.length){
+    //     return (
+    //       <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
+    //     );
+    //   }
+    //   return <div/>;
+    // }
   },
   render() {
     return (
@@ -185,9 +182,9 @@ const Install = React.createClass({
           <Row>
             <Col xs={12}>
               {this.renderText()}
-              {this.state.bastions.map(b => {
+              {this.state.bastions.map((b, i) => {
                 return (
-                  <Padding tb={1}>
+                  <Padding tb={1} key={`bastion-installer-${i}`}>
                     <BastionInstaller {...b}/>
                   </Padding>
                 );

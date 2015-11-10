@@ -3,6 +3,7 @@ import Flux from '../modules/flux';
 import _ from 'lodash';
 import Immutable, {Record, List, Map} from 'immutable';
 import GroupStore from './Group';
+import result from '../modules/result';
 
 /* eslint-disable no-use-before-define */
 
@@ -25,7 +26,10 @@ const Instance = Record({
   InstanceType: null,
   Placement: null,
   SecurityGroups: List(),
-  checks: List()
+  checks: List(),
+  results: List(),
+  passing: undefined,
+  total: undefined
 });
 
 let _data = {
@@ -36,25 +40,6 @@ let _data = {
 };
 
 const statics = {
-  getStateFromItem(item){
-    const checks = item.checks;
-    let string = 'running';
-    if (checks && checks.length){
-      const allPassing = _.chain(checks).pluck('assertions').pluck('passing').every().value();
-      string = allPassing ? 'passing' : 'failing';
-    }
-    return string;
-  },
-  getHealthFromItem(item){
-    let health;
-    if (item.checks && item.checks.length){
-      const boolArray = item.checks.map(check => {
-        return _.chain(check.assertions).pluck('passing').every().value();
-      });
-      health = Math.floor((_.compact(boolArray).length / boolArray.length) * 100);
-    }
-    return health;
-  },
   getInstancePending(data){
     if (_data.instance.get('id') !== data){
       _data.instance = new Instance();
@@ -126,8 +111,7 @@ const statics = {
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
-    newData.health = statics.getHealthFromItem(newData);
-    newData.state = statics.getStateFromItem(newData);
+    _.assign(newData, result.getFormattedData(data));
     if (newData.SecurityGroups && newData.SecurityGroups.length){
       newData.groups = new List(newData.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
     }

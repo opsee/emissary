@@ -1,6 +1,7 @@
 import Flux from '../modules/flux';
 import _ from 'lodash';
 import Immutable, {Record, List, Map} from 'immutable';
+import result from '../modules/result';
 
 /* eslint-disable no-use-before-define */
 
@@ -95,11 +96,14 @@ const Check = Record({
   assertions: List(),
   notifications: List(),
   instances: List(),
-  health: 100,
+  health: undefined,
   state: 'running',
   silenceDate: undefined,
   silenceDuration: undefined,
   interval: 30,
+  results: undefined,
+  passing: undefined,
+  total: undefined,
   check_spec: Map({
     type_url: 'HttpCheck',
     value: Map({
@@ -139,12 +143,14 @@ const statics = {
     Store.emitChange();
   },
   checkFromJS(data){
-    let newData = _.assign({}, data, data.check_spec.value);
+    const legit = data.instance || data;
+    let newData = _.assign({}, legit, legit.check_spec.value);
     newData.name = newData.check_spec.value.name;
     // newData.notifications = newData.notifications.map(n => {
     //   return new Notification(n);
     // });
     newData.check_spec.value.headers = newData.check_spec.value.headers || [];
+    _.assign(newData, result.getFormattedData(data));
     return new Check(newData);
   },
   _statuses: {
