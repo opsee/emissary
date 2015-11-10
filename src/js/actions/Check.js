@@ -121,7 +121,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
     .get(`${config.api}/checks`)
     .set('Authorization', UserStore.getAuth());
   },
-  res => res.body,
+  res => _.get(res.body, 'checks') || res.body,
   res => res && res.body
 );
 
