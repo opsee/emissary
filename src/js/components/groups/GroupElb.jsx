@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import TimeAgo from 'react-timeago';
-import _ from 'lodash';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
@@ -61,7 +60,7 @@ export default React.createClass({
   },
   renderLastChecked(){
     const d = this.state.group.lastChecked;
-    if(d && _.isDate(d)){
+    if (d){
       return (
         <tr>
           <td><strong>Last Checked</strong></td>
@@ -71,7 +70,7 @@ export default React.createClass({
         </tr>
       );
     }
-    return <tr/>
+    return <tr/>;
   },
   renderInner(){
     if (this.state.group.get('name')){

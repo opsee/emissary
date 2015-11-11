@@ -68,7 +68,7 @@ export default {
       obj.health = Math.floor((passing.length / boolArray.length) * 100);
       obj.state = obj.health === 100 ? 'passing' : 'failing';
       const d = moment.unix(obj.results.toJS()[0].time).toDate();
-      if(_.isDate(d)){
+      if (_.isDate(d)){
         obj.lastChecked = d;
       }
     }

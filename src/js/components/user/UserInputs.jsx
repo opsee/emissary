@@ -10,6 +10,7 @@ let include = [];
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
     validators: [forms.validators.validateEmail],
+    // widget: forms.EmailInput,
     widgetAttrs: {
       placeholder: 'address@domain.com'
     }
@@ -67,7 +68,7 @@ export default React.createClass({
     const test = _.chain(this.props.include).map(s => this.props[s]).every().value();
     if (test){
       return {
-        data: this.props
+        data: _.cloneDeep(this.props)
       };
     }
   },

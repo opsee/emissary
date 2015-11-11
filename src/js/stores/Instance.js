@@ -48,9 +48,9 @@ const statics = {
   },
   getInstanceECCSuccess(data){
     if (data && data.instance){
-      let newData = data.instance;
-      newData.type = 'EC2';
-      _data.instanceECC = statics.instanceFromJS(newData);
+      let newInstance = data.instance;
+      newInstance.type = 'EC2';
+      _data.instanceECC = statics.instanceFromJS({instance: newInstance, results: data.results});
       Store.emitChange();
     }
   },
@@ -98,7 +98,8 @@ const statics = {
     newData.type = 'RDS';
     return new Instance(newData);
   },
-  instanceFromJS(data){
+  instanceFromJS(raw){
+    let data = raw.instance;
     if (data.DBInstanceIdentifier){
       return statics.instanceRDSFromJS(data);
     }
@@ -111,7 +112,7 @@ const statics = {
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
-    _.assign(newData, result.getFormattedData(data));
+    _.assign(newData, result.getFormattedData(raw));
     if (newData.SecurityGroups && newData.SecurityGroups.length){
       newData.groups = new List(newData.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
     }
