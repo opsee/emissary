@@ -8,11 +8,13 @@ const AssertionCounter = React.createClass({
   propTypes: {
     key: PropTypes.string,
     relationship: PropTypes.string,
-    operand: PropTypes.string,
+    operand: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
     value: PropTypes.string,
     response: PropTypes.object,
-    keyData: PropTypes.string,
-    label: PropTypes.string
+    keyData: PropTypes.string
   },
   getTitle(){
     return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';

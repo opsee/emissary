@@ -9,7 +9,7 @@ import result from '../modules/result';
 
 const Instance = Record({
   name: null,
-  lastChecked: new Date(),
+  lastChecked: undefined,
   info: null,
   id: null,
   meta: Map({

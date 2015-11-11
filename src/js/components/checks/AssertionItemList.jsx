@@ -14,7 +14,7 @@ export default React.createClass({
         <div>
           {this.props.assertions.map((assertion, i) => {
             return (
-              <Padding tb={0.5}>
+              <Padding tb={0.5} key={`assertion-item-${i}`}>
                 <AssertionItem item={assertion} key={i} response={this.props.response}/>
               </Padding>
               );
