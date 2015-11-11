@@ -3,7 +3,7 @@ import _ from 'lodash';
 import forms from 'newforms';
 
 import {Padding} from '../layout';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col, Modal} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
 
 import {CheckStore} from '../../stores';
@@ -80,7 +80,8 @@ export default React.createClass({
             self.forceUpdate();
           }
         }
-      })
+      }),
+      showMenu: false
     });
   },
   storeDidChange() {
@@ -132,6 +133,9 @@ export default React.createClass({
       html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
       style: style
     });
+  },
+  runToggleContextMenu(){
+    this.setState({showMenu:!this.state.showMenu});
   },
   render() {
     return (
@@ -372,8 +376,23 @@ export default React.createClass({
 
             <h3>Loading State</h3>
             <Loader/>
-
-            <h3>Notifcations</h3>
+            <h3>Context Menu</h3>
+            <Button onClick={this.runToggleContextMenu} color="primary">Toggle</Button>
+            <Modal show={this.state.showMenu} onHide={this.runToggleContextMenu} className="context" style="default">
+              <Grid fluid>
+                <Row>
+                  <div className="flex-1">
+                    <Padding lr={1}>
+                      <h3>Actions</h3>
+                    </Padding>
+                    <Button text="left" color="primary" block flat>
+                      <Add inline fill="primary"/> Add Item
+                    </Button>
+                  </div>
+                </Row>
+              </Grid>
+            </Modal>
+            <h3>Global Notifcations</h3>
             <Padding b={1}>
               <Button color="danger" onClick={this.runNotify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
             </Padding>
