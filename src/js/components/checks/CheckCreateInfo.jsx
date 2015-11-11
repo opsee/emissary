@@ -121,7 +121,8 @@ const CheckCreateInfo = React.createClass({
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.check_spec.value.name = this.state.info.cleanedData.name;
+    check.name = this.state.info.cleanedData.name;
+    check.check_spec.value.name = check.name;
     if (this.state.hasSetNotifications){
       check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
         return _.omit(n, 'DELETE');
@@ -236,7 +237,7 @@ const CheckCreateInfo = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title={`Create Check (4 of 4)`} bg="info">
+        <Toolbar btnPosition="midRight" title="Create Check (4 of 4)" bg="info">
           <Button to="checks" icon flat>
             <Close btn/>
           </Button>

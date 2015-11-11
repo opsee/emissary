@@ -145,7 +145,7 @@ const statics = {
   checkFromJS(data){
     const legit = data.instance || data;
     let newData = _.assign({}, legit, legit.check_spec.value);
-    newData.name = newData.check_spec.value.name;
+    newData.name = newData.name || newData.check_spec.value.name;
     // newData.notifications = newData.notifications.map(n => {
     //   return new Notification(n);
     // });
