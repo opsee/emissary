@@ -1240,8 +1240,8 @@ input[type="search"] {
   outline: 0;
 }
 .modal.fade .modal-dialog {
-  transform: translate(0, -25%);
-  transition: transform 0.3s ease-out;
+  transform: translate(0, 100%);
+  transition: transform var(--transitionEaseOut);
 }
 .modal.in .modal-dialog {
   transform: translate(0, 0);

@@ -42,7 +42,7 @@ const GroupItem = React.createClass({
     if (this.props.item.get('total')){
       return `${this.props.item.get('passing')} of ${this.props.item.get('total')} passing`;
     }
-    return 'No checks applied.';
+    return 'No checks applied';
   },
   getActions(){
     return ['Create Check'];

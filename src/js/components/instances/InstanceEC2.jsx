@@ -69,29 +69,34 @@ export default React.createClass({
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
-          <Table>
-            <tr>
-              <td><strong>State</strong></td>
-              <td>{this.state.instance.get('state')}</td>
-            </tr>
-            <tr>
-              <td><strong>Last Checked</strong></td>
-              <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
-                <TimeAgo date={this.state.instance.get('lastChecked')}/>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Launched</strong></td>
-              <td>
-                <TimeAgo date={this.state.instance.get('LaunchTime')}/>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Instance Type</strong></td>
-              <td>{this.state.instance.get('InstanceType')}</td>
-            </tr>
-            {this.renderAvailabilityZone()}
-          </Table>
+
+          <Padding b={1}>
+            <h3>Instance Information</h3>
+            <Table>
+              <tr>
+                <td><strong>State</strong></td>
+                <td>{this.state.instance.get('state')}</td>
+              </tr>
+              <tr>
+                <td><strong>Last Checked</strong></td>
+                <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
+                  <TimeAgo date={this.state.instance.get('lastChecked')}/>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Launched</strong></td>
+                <td>
+                  <TimeAgo date={this.state.instance.get('LaunchTime')}/>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Instance Type</strong></td>
+                <td>{this.state.instance.get('InstanceType')}</td>
+              </tr>
+              {this.renderAvailabilityZone()}
+            </Table>
+          </Padding>
+
           <Padding b={1}>
             <h3>Groups ({this.state.instance.get('groups').size})</h3>
             <ul className="list-unstyled">
