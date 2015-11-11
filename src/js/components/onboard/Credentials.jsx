@@ -119,7 +119,7 @@ const Credentials = React.createClass({
             <Row>
               <Col xs={12}>
               <form onSubmit={this.handleSubmit}>
-                <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during Bastion Instance installation. You can <a href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
+                <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during Bastion Instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
                   <BoundField bf={this.state.info.boundField('access-key')}/>
                 </Padding>
