@@ -16,7 +16,7 @@ function getState(){
   };
 }
 
-export default React.createClass({
+const CheckList = React.createClass({
   mixins: [CheckStore.mixin],
   statics: {
     willTransitionTo: PageAuth
@@ -29,9 +29,6 @@ export default React.createClass({
   },
   storeDidChange() {
     let state = getState();
-    if (state.status && state.status !== 'success' && state.status !== 'pending'){
-      state.error = state.status;
-    }
     if (CheckStore.getDeleteCheckStatus() === 'success'){
       this.getData();
     }
@@ -82,3 +79,5 @@ export default React.createClass({
     );
   }
 });
+
+export default CheckList;

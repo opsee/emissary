@@ -343,11 +343,9 @@ const EnvWithFilter = React.createClass({
           <form name="envWithFilterForm">
             {this.state.filter.render()}
             {this.renderFilterButtons()}
-            <Padding t={1}>
-              {this.props.include.map(i => {
-                return self[`render${_.capitalize(i)}`]();
-              })}
-            </Padding>
+            {this.props.include.map(i => {
+              return self[`render${_.capitalize(i)}`]();
+            })}
           </form>
         );
       }

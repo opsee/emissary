@@ -11,7 +11,7 @@ const RadialGraph = React.createClass({
   mixins: [SetInterval],
   propTypes: {
     state: PropTypes.string,
-    health: PropTypes.string,
+    health: PropTypes.number,
     type: PropTypes.string
   },
   getDefaultProps(){

@@ -75,7 +75,7 @@ const CheckCreateInfo = React.createClass({
         onChange: self.runChange,
         labelSuffix: '',
         data: {
-          name: `Http ${self.props.check.target.name}`
+          name: self.props.check.name || `Http ${self.props.check.target.name || self.props.check.target.id}`
         }
       }),
       notifications: new NotificationFormSet({

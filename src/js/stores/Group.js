@@ -39,7 +39,8 @@ const GroupELB = Record({
   instance_count: undefined,
   results: List(),
   passing: undefined,
-  total: undefined
+  total: undefined,
+  lastChecked: undefined
 });
 
 let _data = {

@@ -93,7 +93,7 @@ export default React.createClass({
         <div>
           <Padding b={1}>
             <h3>HTTP Request</h3>
-            <Alert bsStyle="default" style={{'word-break': 'break-all'}}>
+            <Alert bsStyle="default" style={{wordBreak: 'break-all'}}>
               <strong>{spec.verb}</strong> http://{this.getLink()}:<span>{spec.port}</span>{spec.path}
             </Alert>
           </Padding>
@@ -108,9 +108,9 @@ export default React.createClass({
           <Padding b={1}>
             <h3>Notifications</h3>
             <ul className="list-unstyled">
-            {this.state.check.get('notifications').map(n => {
+            {this.state.check.get('notifications').map((n, i) => {
               return (
-                <li><Mail fill="text" inline/> {n.value}</li>
+                <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
               );
             })}
             </ul>

@@ -1,5 +1,6 @@
 import {List, Record} from 'immutable';
 import _ from 'lodash';
+import moment from 'moment';
 
 const OuterResponse = Record({
   check_id: undefined,
@@ -21,7 +22,8 @@ const Result = Record({
   check_id: undefined,
   host: undefined,
   passing: undefined,
-  responses: List()
+  responses: List(),
+  time: undefined
 });
 
 function fromJS(data){
@@ -65,6 +67,10 @@ export default {
       obj.total = boolArray.length;
       obj.health = Math.floor((passing.length / boolArray.length) * 100);
       obj.state = obj.health === 100 ? 'passing' : 'failing';
+      const d = moment.unix(obj.results.toJS()[0].time).toDate();
+      if (_.isDate(d)){
+        obj.lastChecked = d;
+      }
     }
     return obj;
   }
