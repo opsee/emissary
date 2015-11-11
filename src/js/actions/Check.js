@@ -122,7 +122,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
     .set('Authorization', UserStore.getAuth());
   },
   res => _.get(res.body, 'checks') || res.body,
-  res => res && res.body
+  res => res.body || res
 );
 
 _actions.testCheck = Flux.statics.addAsyncAction('testCheck',

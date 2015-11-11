@@ -91,7 +91,7 @@ const Target = Record({
 
 const Check = Record({
   id: undefined,
-  name: '',
+  name: undefined,
   target: Target(),
   assertions: List(),
   notifications: List(),
