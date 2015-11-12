@@ -6,9 +6,10 @@ import {Add} from '../icons';
 import {Button} from '../forms';
 
 const itemRecord = Record({
-  name: 'Example'
+  name: undefined,
+  passing: undefined,
+  total: undefined
 });
-const item = new itemRecord();
 
 const ListItemTest = React.createClass({
   propTypes: {
@@ -28,6 +29,9 @@ const ListItemTest = React.createClass({
       link: 'checks'
     };
   },
+  getItem(){
+    return new itemRecord(this.props);
+  },
   getHealth(){
     if (this.props.total){
       return Math.floor((this.props.passing / this.props.total) * 100);
@@ -41,7 +45,7 @@ const ListItemTest = React.createClass({
   },
   render(){
     return (
-      <ListItem type="Group" item={item} link={this.props.link} onClick={this.props.onClick} state={this.props.state} passing={this.props.passing} total={this.props.total} menuTitle="Example Actions">
+      <ListItem type="Group" item={this.getItem()} link={this.props.link} onClick={this.props.onClick} state={this.props.state} passing={this.props.passing} total={this.props.total} menuTitle="Example Actions">
         <div key="menu">
           <Button color="primary" text="left" block flat>
             <Add inline fill="primary"/> Create

@@ -6,7 +6,7 @@ import {Padding} from '../layout';
 import {Alert, Grid, Row, Col, Modal} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader, ListItemTest} from '../global';
 
-import {CheckStore} from '../../stores';
+import {CheckStore, GroupStore} from '../../stores';
 import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
@@ -14,6 +14,7 @@ import {Add, Key} from '../icons';
 import icons from '../icons';
 import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
+import {GroupItemList} from '../groups';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
 
@@ -263,6 +264,9 @@ export default React.createClass({
 
             <hr/>
 
+            <h3>Example Group Items</h3>
+            <GroupItemList groups={GroupStore.getExampleGroupsElb()}/>
+            <hr/>
             <h3>Cards</h3>
             <Row>
             {[1, 2, 3, 4].map(i => {

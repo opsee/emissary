@@ -28,12 +28,12 @@ const Result = Record({
 
 function fromJS(data){
   let newData = {};
-  const results = data.results || data.result;
-  const resultsArray = Array.isArray(results) ? results : [results];
-  if (results && resultsArray.length){
-    let newResults = resultsArray.map(result => {
+  const results = _.cloneDeep(data.results);
+  if (results && results.length){
+    let newResults = results.map(result => {
       let responses = result.responses || result.response;
       responses = Array.isArray(responses) ? responses : [responses];
+      responses = _.compact(responses);
       if (responses && responses.length){
         let resultData = _.cloneDeep(result);
         resultData.responses = new List(responses.map(r => {
