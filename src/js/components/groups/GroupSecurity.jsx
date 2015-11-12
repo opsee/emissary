@@ -99,11 +99,6 @@ const GroupSecurity = React.createClass({
           <Padding b={1}>
             <h3>Checks</h3>
             <CheckItemList type="groupSecurity" id={this.props.params.id}/>
-            <Padding t={2}>
-              <Button color="primary" text="left" to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security'}}}>
-                <Add inline/> Create Check
-              </Button>
-            </Padding>
           </Padding>
         </div>
       );
