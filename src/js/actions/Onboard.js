@@ -86,7 +86,7 @@ _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
     .send(data);
   },
   res => res && res.body,
-  res => _.get(res, 'response.body.error') || res
+  res => _.get(res, 'response') || res
 );
 
 _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
