@@ -48,7 +48,7 @@ const CheckList = React.createClass({
     }
     return (
       <StatusHandler status={this.state.status}>
-        <p>You don't have any Checks yet. <Link to="checkCreate" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
+        <p>You don&rsquo;t have any Checks yet. <Link to="checkCreate" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
 
         <p>Try creating a check like this to start:</p>
         <ol>

@@ -12,7 +12,9 @@ const RadialGraph = React.createClass({
   propTypes: {
     state: PropTypes.string,
     health: PropTypes.number,
-    type: PropTypes.string
+    type: PropTypes.string,
+    passing: PropTypes.number,
+    total: PropTypes.number
   },
   getDefaultProps(){
     return {
@@ -31,6 +33,9 @@ const RadialGraph = React.createClass({
     if (!this.state.silenceRemaining){
       this.runSetupSilence();
     }
+  },
+  getHealth(){
+    return this.props.total ? Math.floor((this.props.passing / this.props.total) * 100) : undefined;
   },
   getBaseClass(){
     return style[`base${_.startCase(this.getRadialState())}`];
@@ -72,7 +77,7 @@ const RadialGraph = React.createClass({
   getText(){
     const millis = this.state.silenceRemaining;
     if (!millis || millis < 0){
-      return this.props.health;
+      return this.getHealth() || '';
     }
     const duration = moment.duration(millis);
     let unit = 'h';
@@ -88,7 +93,7 @@ const RadialGraph = React.createClass({
     return Math.ceil(time) + unit;
   },
   getPath(){
-    const health = this.props.health;
+    const health = this.getHealth();
     if (!health){return '';}
     let percentage;
     if (this.state.silenceRemaining){

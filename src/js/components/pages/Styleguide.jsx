@@ -4,7 +4,7 @@ import forms from 'newforms';
 
 import {Padding} from '../layout';
 import {Alert, Grid, Row, Col, Modal} from '../../modules/bootstrap';
-import {Table, Toolbar, Loader} from '../global';
+import {Table, Toolbar, Loader, ListItemTest} from '../global';
 
 import {CheckStore} from '../../stores';
 import {GlobalActions} from '../../actions';
@@ -135,7 +135,7 @@ export default React.createClass({
     });
   },
   runToggleContextMenu(){
-    this.setState({showMenu:!this.state.showMenu});
+    this.setState({showMenu: !this.state.showMenu});
   },
   render() {
     return (
@@ -256,22 +256,10 @@ export default React.createClass({
 
             <hr/>
 
-            <h3>Checks</h3>
-            {
-            //   _.range(1).map((i, ci) => {
-            //   return (
-            //     <ul className="list-unstyled" key={`check-list-${ci}`}>
-            //     {CheckStore.getChecks().map((check, id) => {
-            //       return (
-            //         <li key={`check-${id}`}>
-            //           <CheckItem {...check}/>
-            //         </li>
-            //       );
-            //     })}
-            //     </ul>
-            //   );
-            // })
-          }
+            <h3>List Items</h3>
+            <ListItemTest state="passing" passing={2} total={2}/>
+            <ListItemTest state="failing" passing={1} total={2}/>
+            <ListItemTest state="running"/>
 
             <hr/>
 

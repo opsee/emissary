@@ -11,7 +11,7 @@ _actions.checkSilence = Flux.statics.addAction('checkSilence');
 let _statics = {};
 
 _statics.formatCheckData = (data) => {
-  const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id', 'name', 'results', 'passing', 'total'];
+  const disallowed = ['assertions', 'notifications', 'instances', 'health', 'state', 'silenceDate', 'silenceDuration', 'id', 'results', 'passing', 'total'];
   if (data.target.type === 'security'){
     data.target.type = 'sg';
   }
@@ -133,6 +133,7 @@ _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
       });
     }
     let newData = _statics.formatCheckData(data);
+    newData = _.assign(newData, {name: UserStore.getUser().get('email')});
     return request
     .post(`${config.api}/bastions/test-check`)
     .set('Authorization', UserStore.getAuth())

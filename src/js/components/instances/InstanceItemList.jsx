@@ -45,7 +45,7 @@ export default React.createClass({
       return (
         <div>
           {this.getInstances().map(instance => {
-            return <InstanceItem item={instance} key={instance.get('id')}/>;
+            return <InstanceItem item={instance} key={instance.get('id')} {...this.props}/>;
           })}
           {this.renderLink()}
         </div>
