@@ -100,6 +100,14 @@ const statics = {
     }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;
+    _.assign(newData, result.getFormattedData(data));
+    newData.checks = new List(newData.checks);
+    // newData.checks = CheckStore.getChecks().filter(check => {
+    //   return check.target.id === newData.id;
+    // });
+    if (newData.checks.size && !newData.results.size){
+      newData.state = 'initializing';
+    }
     // if (newData.name === 'api-lb'){
     //   newData.checks = [{
     //     assertions: [
@@ -107,7 +115,6 @@ const statics = {
     //     ]
     //   }];
     // }
-    _.assign(newData, result.getFormattedData(data));
     return new GroupELB(newData);
   },
   groupFromJS(data){
@@ -127,6 +134,10 @@ const statics = {
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
     _.assign(newData, result.getFormattedData(data));
+    newData.checks = new List(newData.checks);
+    if (newData.checks.size && !newData.results.size){
+      newData.state = 'initializing';
+    }
     return new Group(newData);
   },
   populateGroupInstances(){

@@ -28,8 +28,11 @@ const Result = Record({
 
 function fromJS(data){
   let newData = {};
-  const results = _.cloneDeep(data.results);
+  let results = _.cloneDeep(data.results);
   if (results && results.length){
+    if (data.instance){
+      results = _.filter(results, 'response');
+    }
     let newResults = results.map(result => {
       let responses = result.responses || result.response;
       responses = Array.isArray(responses) ? responses : [responses];
@@ -61,7 +64,10 @@ export default {
       results: fromJS(data).results || new List()
     };
     if (obj.results && obj.results.size){
+      //this works for groups
       const boolArray = _.chain(obj.results.toJS()).pluck('responses').flatten().pluck('passing').value();
+      //this works for instances
+      // const boolArray = _.chain(obj.results.toJS()).pluck('passing').value();
       const passing = _.compact(boolArray);
       obj.passing = passing.length;
       obj.total = boolArray.length;

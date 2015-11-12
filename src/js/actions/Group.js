@@ -16,6 +16,35 @@ _actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
   res => res && res.response
 );
 
+_actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
+  () => {
+    return new Promise((resolve, reject) => {
+      return request
+      .get(`${config.api}/groups/security`)
+      .set('Authorization', UserStore.getAuth()).then(res => {
+        request
+        .get(`${config.api}/checks`)
+        .set('Authorization', UserStore.getAuth()).then(checkRes => {
+          let groups = res.body.groups;
+          let checks = _.get(checkRes, 'body.checks');
+          if (checks && checks.length){
+            groups = groups.map(data => {
+              let group = _.cloneDeep(data);
+              group.group.checks = _.filter(checks, c => {
+                return c.target.id === group.group.GroupId;
+              });
+              return group;
+            });
+          }
+          resolve(groups);
+        }, reject);
+      }, reject);
+    });
+  },
+  groups => groups,
+  res => res && res.response
+);
+
 _actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
   (id) => {
     return new Promise((resolve, reject) => {
@@ -64,11 +93,30 @@ _actions.getGroupRDSSecurity = Flux.statics.addAsyncAction('getGroupRDSSecurity'
 
 _actions.getGroupsELB = Flux.statics.addAsyncAction('getGroupsELB',
   () => {
-    return request
-    .get(`${config.api}/groups/elb`)
-    .set('Authorization', UserStore.getAuth());
+    return new Promise((resolve, reject) => {
+      return request
+      .get(`${config.api}/groups/elb`)
+      .set('Authorization', UserStore.getAuth()).then(res => {
+        request
+        .get(`${config.api}/checks`)
+        .set('Authorization', UserStore.getAuth()).then(checkRes => {
+          let groups = res.body.groups;
+          let checks = _.get(checkRes, 'body.checks');
+          if (checks && checks.length){
+            groups = groups.map(data => {
+              let group = _.cloneDeep(data);
+              group.group.checks = _.filter(checks, c => {
+                return c.target.id === group.group.LoadBalancerName;
+              });
+              return group;
+            });
+          }
+          resolve(groups);
+        }, reject);
+      }, reject);
+    });
   },
-  res => res.body && res.body.groups,
+  groups => groups,
   res => res && res.response
 );
 
