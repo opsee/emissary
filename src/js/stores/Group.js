@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Immutable, {Record, List} from 'immutable';
 import InstanceStore from './Instance';
 import result from '../modules/result';
+import exampleGroupsElb from '../examples/groupsElb';
 
 /* eslint-disable no-use-before-define */
 
@@ -163,6 +164,13 @@ const _public = {
   },
   getGroupsELB(){
     return _data.groupsELB;
+  },
+  getExampleGroupsElb(){
+    let newData = _.chain(exampleGroupsElb.groups)
+    .sortBy(d => {
+      return d.group.LoadBalancerName.toLowerCase();
+    }).value();
+    return newData && newData.length ? Immutable.fromJS(newData.map(statics.groupELBFromJS)) : new List();
   },
   getGroup(target){
     if (target && target.type){
