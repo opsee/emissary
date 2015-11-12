@@ -3,8 +3,8 @@ import _ from 'lodash';
 import forms from 'newforms';
 
 import {Padding} from '../layout';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {Table, Toolbar, Loader} from '../global';
+import {Alert, Grid, Row, Col, Modal} from '../../modules/bootstrap';
+import {Table, Toolbar, Loader, ListItemTest} from '../global';
 
 import {CheckStore} from '../../stores';
 import {GlobalActions} from '../../actions';
@@ -80,7 +80,8 @@ export default React.createClass({
             self.forceUpdate();
           }
         }
-      })
+      }),
+      showMenu: false
     });
   },
   storeDidChange() {
@@ -132,6 +133,9 @@ export default React.createClass({
       html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
       style: style
     });
+  },
+  runToggleContextMenu(){
+    this.setState({showMenu: !this.state.showMenu});
   },
   render() {
     return (
@@ -252,22 +256,10 @@ export default React.createClass({
 
             <hr/>
 
-            <h3>Checks</h3>
-            {
-            //   _.range(1).map((i, ci) => {
-            //   return (
-            //     <ul className="list-unstyled" key={`check-list-${ci}`}>
-            //     {CheckStore.getChecks().map((check, id) => {
-            //       return (
-            //         <li key={`check-${id}`}>
-            //           <CheckItem {...check}/>
-            //         </li>
-            //       );
-            //     })}
-            //     </ul>
-            //   );
-            // })
-          }
+            <h3>List Items</h3>
+            <ListItemTest state="passing" passing={2} total={2}/>
+            <ListItemTest state="failing" passing={1} total={2}/>
+            <ListItemTest state="running"/>
 
             <hr/>
 
@@ -372,8 +364,23 @@ export default React.createClass({
 
             <h3>Loading State</h3>
             <Loader/>
-
-            <h3>Notifcations</h3>
+            <h3>Context Menu</h3>
+            <Button onClick={this.runToggleContextMenu} color="primary">Toggle</Button>
+            <Modal show={this.state.showMenu} onHide={this.runToggleContextMenu} className="context" style="default">
+              <Grid fluid>
+                <Row>
+                  <div className="flex-1">
+                    <Padding lr={1}>
+                      <h3>Actions</h3>
+                    </Padding>
+                    <Button text="left" color="primary" block flat>
+                      <Add inline fill="primary"/> Add Item
+                    </Button>
+                  </div>
+                </Row>
+              </Grid>
+            </Modal>
+            <h3>Global Notifcations</h3>
             <Padding b={1}>
               <Button color="danger" onClick={this.runNotify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
             </Padding>

@@ -78,14 +78,14 @@ const CheckCreateTarget = React.createClass({
     e.preventDefault();
     router.transitionTo('checkCreateRequest');
   },
-  handleTargetSelect(id, type, name){
+  handleTargetSelect(item){
     let check = CheckStore.newCheck().toJS();
-    check.target.id = id;
-    check.target.type = type || 'sg';
-    check.target.name = name;
+    check.target.id = item.get('id');
+    check.target.type = item.get('type') || 'sg';
+    check.target.name = item.get('name');
     this.setState({
       selected: check.target.id,
-      selectedType: type
+      selectedType: item.get('type') || 'sg'
     });
     this.props.onChange(check, this.isDisabled(), 1);
     router.transitionTo('checkCreateRequest', null, {target: check.target});

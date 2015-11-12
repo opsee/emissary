@@ -139,56 +139,31 @@ const EnvWithFilter = React.createClass({
       return item.get('state') === 'running';
     }).size;
   },
-  getGroupsSecurity(ignoreButtonState){
+  getFilteredItems(items, ignoreButtonState){
     const string = this.state.filter.cleanedData.filter;
-    let data = GroupStore.getGroupsSecurity().sortBy(sg => {
-      return sg.get('health') || 101;
+    let data = items.sortBy(item => {
+      return item.get('health') || 101;
     });
     if (this.state.buttonSelected && !ignoreButtonState){
-      data = data.filter(sg => {
-        return sg.get('state') === this.state.buttonSelected;
+      data = data.filter(item => {
+        return item.get('state') === this.state.buttonSelected;
       });
     }
     if (string){
-      return data.filter(sg => {
-        return fuzzy.filter(string, [sg.get('name')]).length;
+      return data.filter(item => {
+        return fuzzy.filter(string, [item.get('name')]).length;
       });
     }
     return data;
+  },
+  getGroupsSecurity(ignoreButtonState){
+    return this.getFilteredItems(GroupStore.getGroupsSecurity(), ignoreButtonState);
   },
   getGroupsELB(ignoreButtonState){
-    const string = this.state.filter.cleanedData.filter;
-    let data = GroupStore.getGroupsELB().sortBy(elb => {
-      return elb.get('health') || 101;
-    });
-    if (this.state.buttonSelected && !ignoreButtonState){
-      data = data.filter(elb => {
-        return elb.get('state') === this.state.buttonSelected;
-      });
-    }
-    if (string){
-      return data.filter(elb => {
-        return fuzzy.filter(string, [elb.get('name')]).length;
-      });
-    }
-    return data;
+    return this.getFilteredItems(GroupStore.getGroupsELB(), ignoreButtonState);
   },
   getInstances(ignoreButtonState){
-    const string = this.state.filter.cleanedData.filter;
-    let data = InstanceStore.getInstancesECC().sortBy(instance => {
-      return instance.get('health') || 101;
-    });
-    if (this.state.buttonSelected && !ignoreButtonState){
-      data = data.filter(instance => {
-        return instance.get('state') === this.state.buttonSelected;
-      });
-    }
-    if (string){
-      return data.filter(instance => {
-        return fuzzy.filter(string, [instance.get('name')]).length;
-      });
-    }
-    return data;
+    return this.getFilteredItems(InstanceStore.getInstancesECC(), ignoreButtonState);
   },
   getItemTypeFromSlug(slug){
     switch (slug){
@@ -247,7 +222,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="groupsSecurity">
           <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-          <GroupItemList groups={this.getGroupsSecurity()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
+          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
       );
@@ -267,7 +242,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="groupsELB">
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
+          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
       );
@@ -281,7 +256,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="instancesECC">
           <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
-          <InstanceItemList instances={this.getInstances()} noLink={!!this.props.onTargetSelect} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} linkInsteadOfMenu={!!this.props.onTargetSelect} limit={this.props.limit}/>
+          <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
       );
