@@ -101,7 +101,7 @@ const Check = Record({
   silenceDate: undefined,
   silenceDuration: undefined,
   interval: 30,
-  results: undefined,
+  results: List(),
   passing: undefined,
   total: undefined,
   check_spec: Map({

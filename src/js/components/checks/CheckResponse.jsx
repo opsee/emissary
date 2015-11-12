@@ -18,7 +18,8 @@ function getState(){
 const CheckResponse = React.createClass({
   mixins: [CheckStore.mixin],
   propTypes: {
-    check: PropTypes.object.isRequired
+    check: PropTypes.object,
+    response: PropTypes.object
   },
   getInitialState() {
     return _.assign(getState(), {
@@ -30,10 +31,12 @@ const CheckResponse = React.createClass({
     this.runTestCheck(this.props);
   },
   componentWillReceiveProps(nextProps){
-    const old = this.getArrayFromData(this.props.check);
-    const data = this.getArrayFromData(nextProps.check);
-    if (!_.isEqual(old, data)){
-      this.runTestCheck(nextProps);
+    if (!this.props.response){
+      const old = this.getArrayFromData(this.props.check);
+      const data = this.getArrayFromData(nextProps.check);
+      if (!_.isEqual(old, data)){
+        this.runTestCheck(nextProps);
+      }
     }
   },
   storeDidChange(){
@@ -57,7 +60,8 @@ const CheckResponse = React.createClass({
     return arr;
   },
   getFormattedResponse(){
-    return CheckStore.getFormattedResponse(CheckStore.getResponse());
+    const data = this.props.response || CheckStore.getResponse();
+    return CheckStore.getFormattedResponse(data);
   },
   getResponseClass(){
     return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
@@ -68,6 +72,9 @@ const CheckResponse = React.createClass({
     return condition1 && condition2;
   },
   runTestCheck(props){
+    if (this.props.response){
+      return this.setState({complete: true});
+    }
     const complete = this.isCheckComplete(props.check);
     if (complete){
       if (this.state.status !== 'pending'){
@@ -108,7 +115,7 @@ const CheckResponse = React.createClass({
     );
   },
   render() {
-    if (CheckStore.getResponse() && this.state.complete){
+    if (this.props.response || (CheckStore.getResponse() && this.state.complete)){
       if (this.getFormattedResponse() && this.getFormattedResponse().error){
         return (
           <div className={style.checkResponseWaiting}>
