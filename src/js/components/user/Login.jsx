@@ -23,7 +23,7 @@ export default React.createClass({
       if (redirect){
         router.transitionTo(redirect);
       }else {
-        router.transitionTo('env');
+        router.transitionTo('checks');
       }
     }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
