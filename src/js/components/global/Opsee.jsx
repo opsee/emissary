@@ -19,6 +19,8 @@ function initialize(){
   if (UserStore.hasUser() && !GlobalStore.getSocketStarted()){
     config.intercom('boot', {app_id: 'mrw1z4dm', email: UserStore.getUser().get('email')});
     GlobalActions.globalSocketStart();
+    //refresh user token every 5 minutes
+    setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
   }
   if (config.demo){
     console.info('In Demo Mode.');
@@ -41,10 +43,6 @@ export default React.createClass({
     if (this.props.query.err || storage.get('err')){
       config.error = true;
     }
-  },
-  componentDidMount(){
-    //refresh user token every 5 minutes
-    this.setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
   },
   storeDidChange(){
     const status1 = OnboardStore.getOnboardSetPasswordStatus();
