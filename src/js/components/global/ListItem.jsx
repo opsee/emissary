@@ -22,9 +22,6 @@ const ListItem = React.createClass({
     link: PropTypes.string,
     params: PropTypes.object,
     query: PropTypes.object,
-    state: PropTypes.string,
-    passing: PropTypes.number,
-    total: PropTypes.number,
     children: PropTypes.node,
     item: PropTypes.object
   },
@@ -61,7 +58,7 @@ const ListItem = React.createClass({
   },
   renderGraph(){
     const graph = (
-      <RadialGraph state={this.props.state} passing={this.props.item.get('passing')} total={this.props.item.get('total')}/>
+      <RadialGraph state={this.props.item.get('state')} passing={this.props.item.get('passing')} total={this.props.item.get('total')}/>
     );
     if (this.props.onClick){
       return (

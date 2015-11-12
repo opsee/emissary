@@ -42,6 +42,10 @@
   composes: base;
   background:var(--colorPrimary);
 }
+.baseInitializing{
+  composes: base;
+  background:var(--colorPrimary);
+}
 
 .svg{
   width:var(--radialWidth);
@@ -71,6 +75,10 @@
 .svgSilenced{
   composes: svg;
   fill: var(--colorInfo);
+}
+.svgInitializing{
+  composes: svg;
+  fill: var(--colorPrimary);
 }
 
 .inner{
@@ -103,4 +111,9 @@
 .innerRestarting{
   composes: inner;
   background:var(--colorInfo);
+}
+.innerInitializing{
+  composes: inner;
+  border-color: transparent;
+  background:var(--colorPrimary);
 }

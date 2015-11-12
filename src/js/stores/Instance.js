@@ -113,6 +113,9 @@ const statics = {
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
     _.assign(newData, result.getFormattedData(raw));
+    if (newData.checks.size && !newData.results.size){
+      newData.state = 'initializing';
+    }
     if (newData.SecurityGroups && newData.SecurityGroups.length){
       newData.groups = new List(newData.SecurityGroups.map(group => GroupStore.groupFromJS(group)));
     }

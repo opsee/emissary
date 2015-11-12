@@ -18,6 +18,8 @@ const InstanceItem = React.createClass({
   getInfoText(){
     if (this.props.item.get('total')){
       return `${this.props.item.get('passing')} of ${this.props.item.get('total')} passing`;
+    }else if (this.props.item.get('checks').size){
+      return 'Initializing checks';
     }
     return 'No checks applied';
   },
