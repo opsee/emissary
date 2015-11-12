@@ -99,7 +99,8 @@ const statics = {
     onboardCreateOrg: null,
     onboardVpcScan: null,
     getBastions: null,
-    getCustomer: null
+    getCustomer: null,
+    onboardInstall: null
   }
 };
 

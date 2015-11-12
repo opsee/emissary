@@ -70,7 +70,10 @@ _actions.onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
     .send(data);
   },
   res => res && res.body,
-  res => res && res.response
+  res => {
+    let message = _.get(res, 'response.body.error') || res.response;
+    return {message};
+  }
 );
 
 _actions.onboardSetVpcs = Flux.statics.addAction('onboardSetVpcs');
@@ -83,7 +86,7 @@ _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
     .send(data);
   },
   res => res && res.body,
-  res => res && res.response
+  res => _.get(res, 'response.body.error') || res
 );
 
 _actions.getBastions = Flux.statics.addAsyncAction('getBastions',

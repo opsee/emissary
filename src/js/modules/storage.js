@@ -1,6 +1,6 @@
 export default {
   get(string){
-    let local = window.localStorage[string];
+    let local = window.localStorage.getItem(string);
     try {
       local = JSON.parse(local);
     }catch (err){
@@ -12,6 +12,6 @@ export default {
     return window.localStorage.setItem(string, JSON.stringify(data));
   },
   remove(string){
-    return delete window.localStorage[string];
+    return window.localStorage.removeItem(string);
   }
 };

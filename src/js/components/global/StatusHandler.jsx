@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Loader from './Loader.jsx';
 import {Alert} from '../../modules/bootstrap';
+import _ from 'lodash';
 
 const StatusHandler = React.createClass({
   propTypes: {
@@ -28,12 +29,14 @@ const StatusHandler = React.createClass({
       if (error && error.req){
         error = error.text;
       }
-      error = error.toString();
+      if (!error.message){
+        error = error.toString();
+      }
       this.setState({error});
     }
   },
   getErrorText(){
-    if (this.state.error && typeof this.state.error === 'object' && this.state.error.message){
+    if (_.get(this.state, 'error.message')){
       return this.state.error.message;
     }
     return this.props.errorText || 'Something went wrong.';
