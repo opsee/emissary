@@ -123,9 +123,6 @@ const Store = Flux.createStore(
       break;
     case 'ONBOARD_SET_REGIONS':
       _installData.regions = [payload.data];
-      if (window.location.host.match('localhost')){
-        _installData.regions = ['us-west-1'];
-      }
       Store.emitChange();
       break;
     case 'ONBOARD_SET_CREDENTIALS':
