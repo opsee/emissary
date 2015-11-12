@@ -34,7 +34,10 @@ function fromJS(data){
       results = _.filter(results, 'response');
     }
     let newResults = results.map(result => {
-      let responses = result.responses || result.response;
+      // old, crap?
+      // let responses = result.responses || result.response;
+      // use just 'result' for instances while bartnet is screwy
+      let responses = result.responses || result;
       responses = Array.isArray(responses) ? responses : [responses];
       responses = _.compact(responses);
       if (responses && responses.length){
