@@ -77,7 +77,7 @@ const RadialGraph = React.createClass({
   getText(){
     const millis = this.state.silenceRemaining;
     if (!millis || millis < 0){
-      return this.getHealth() || '';
+      return typeof this.getHealth() === 'number' ? this.getHealth() : '';
     }
     const duration = moment.duration(millis);
     let unit = 'h';
