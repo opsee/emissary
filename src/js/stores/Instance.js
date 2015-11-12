@@ -113,7 +113,7 @@ const statics = {
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
     _.assign(newData, result.getFormattedData(raw));
-    if (newData.checks.size && !newData.results.size){
+    if (newData.checks && newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
     }
     if (newData.SecurityGroups && newData.SecurityGroups.length){
