@@ -3,6 +3,7 @@ import _ from 'lodash';
 import forms from 'newforms';
 import fuzzy from 'fuzzy';
 import {List} from 'immutable';
+import {Link} from 'react-router';
 
 import ga from '../../modules/ga';
 import {Alert, Row, Col} from '../../modules/bootstrap';
@@ -326,7 +327,7 @@ const EnvWithFilter = React.createClass({
       }
       return (
         <Alert bsStyle="danger">
-          Bastion is disconnected or offline.
+          Bastion is disconnected or offline. If you need to install one, <Link to="onboardRegionSelect" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
         </Alert>
       );
     }

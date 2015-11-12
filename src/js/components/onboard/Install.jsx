@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {Link} from 'react-router';
 import {Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
@@ -56,6 +57,17 @@ const Install = React.createClass({
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }
     }
+    const installStatus = OnboardStore.getOnboardInstallStatus();
+    if (installStatus && typeof installStatus === 'object'){
+      if (this.state.launchAttempts < 3){
+        this.setState({launchAttempts: this.state.launchAttempts + 1});
+        setTimeout(() => {
+          OnboardActions.onboardInstall(OnboardStore.getFinalInstallData());
+        }, 3000);
+      }else if (!this.state.showError){
+        this.setState({showError: true});
+      }
+    }
     const bastions = _.chain(msgs)
     .reject(reject)
     .groupBy('instance_id').map((value, key) => {
@@ -89,7 +101,9 @@ const Install = React.createClass({
   getInitialState() {
     return {
       bastions: [],
-      startedPolling: false
+      startedPolling: false,
+      launchAttempts: 0,
+      showError: false
     };
   },
   getBastionStatuses(){
@@ -174,6 +188,29 @@ const Install = React.createClass({
     //   return <div/>;
     // }
   },
+  renderInner(){
+    if (!this.state.showError){
+      return (
+        <div>
+          {this.renderText()}
+          {this.state.bastions.map((b, i) => {
+            return (
+              <Padding tb={1} key={`bastion-installer-${i}`}>
+                <BastionInstaller {...b}/>
+              </Padding>
+            );
+          })}
+          {this.renderBtn()}
+          {this.renderSurvey()}
+        </div>
+      );
+    }
+    return (
+      <Alert bsStyle="danger">
+        Something went wrong before the install began. Please contact support by visiting our <Link to="help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
+      </Alert>
+    );
+  },
   render() {
     return (
        <div>
@@ -181,16 +218,7 @@ const Install = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderText()}
-              {this.state.bastions.map((b, i) => {
-                return (
-                  <Padding tb={1} key={`bastion-installer-${i}`}>
-                    <BastionInstaller {...b}/>
-                  </Padding>
-                );
-              })}
-              {this.renderBtn()}
-              {this.renderSurvey()}
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>

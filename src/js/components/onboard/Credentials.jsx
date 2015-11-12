@@ -1,13 +1,12 @@
 import React from 'react';
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import router from '../../modules/router';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import config from '../../modules/config';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import storage from '../../modules/storage';
 import {Padding} from '../layout';
 import {PageAuth} from '../../modules/statics';
@@ -57,13 +56,8 @@ const Credentials = React.createClass({
           router.transitionTo('onboardVpcSelect');
         }
       }
-    }else if (vpcScanStatus && vpcScanStatus !== 'pending'){
-      if (config.demo){
-        return router.transitionTo('onboardInstall');
-      }
-      this.setState({
-        error: vpcScanStatus && vpcScanStatus.body && vpcScanStatus.body.error
-      });
+    }else if (vpcScanStatus !== 'pending'){
+      this.setState({submitting: false});
     }
   },
   getInitialState() {
@@ -93,23 +87,10 @@ const Credentials = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     this.setState({
-      error: null,
       submitting: true
     });
     OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
     OnboardActions.onboardVpcScan(OnboardStore.getVpcScanData());
-  },
-  renderError(){
-    if (this.state.error){
-      return (
-        <div>
-          <div><br/></div>
-          <Alert type="danger">
-            {this.state.error}
-          </Alert>
-        </div>
-      );
-    }
   },
   render() {
     return (
@@ -130,9 +111,9 @@ const Credentials = React.createClass({
                 <Padding b={2}>
                 <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
                 </Padding>
+                <StatusHandler status={OnboardStore.getOnboardVpcScanStatus()}/>
                 <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
               </form>
-              {this.renderError()}
             </Col>
           </Row>
         </Grid>
