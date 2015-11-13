@@ -1,28 +1,82 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
 import Immutable, {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Link} from 'react-router';
+import {GroupActions} from '../../actions';
+import {GroupStore} from '../../stores';
+import {StatusHandler} from '../global';
 
 export default React.createClass({
+  mixins: [GroupStore.mixin],
   propTypes: {
-    groups: PropTypes.instanceOf(List).isRequired,
+    groups: PropTypes.instanceOf(List),
     offset: PropTypes.number,
     limit: PropTypes.number,
-    selected: PropTypes.string
+    selected: PropTypes.string,
+    ids: React.PropTypes.array,
+    type: React.PropTypes.string,
+    title: React.PropTypes.string,
+    instanceIds: React.PropTypes.array
+  },
+  getDefaultProps(){
+    return {
+      type: 'security'
+    };
+  },
+  componentWillMount(){
+    if (!this.props.groups){
+      switch (this.props.type){
+      case 'elb':
+        GroupActions.getGroupsSecurity();
+        break;
+      default:
+        GroupActions.getGroupsELB();
+        break;
+      }
+    }
   },
   shouldComponentUpdate(nextProps, nextState){
     return !Immutable.is(this.props.groups, nextProps.groups) || nextState !== this.state;
   },
+  storeDidChange(){
+    const state = this.getState();
+    this.setState(state);
+  },
+  getState(){
+    return {
+      status: this.props.type === 'elb' ? GroupStore.getGetGroupsELBStatus() : GroupStore.getGetGroupsSecurityStatus(),
+      groups: this.props.type === 'elb' ? GroupStore.getGroupsELB() : GroupStore.getGroupsSecurity()
+    };
+  },
   getInitialState(){
     return {
       offset: this.props.offset || 0,
-      limit: this.props.limit || 4
+      limit: this.props.limit || 4,
+      groups: List()
     };
   },
-  getGroups(){
-    return this.props.groups.slice(this.state.offset, this.state.limit);
+  getGroups(noFilter){
+    let data = this.props.groups ? this.props.groups : this.state.groups;
+    if (noFilter){
+      return data;
+    }
+    if (this.props.ids){
+      data = data.filter(d => {
+        return this.props.ids.indexOf(d.id) > -1;
+      });
+    }
+    if (this.props.instanceIds){
+      data = data.filter(d => {
+        return _.intersection(this.props.instanceIds, _.pluck(d.get('instances').toJS(), 'id')).length;
+      });
+    }
+    data = data.sortBy(item => {
+      return typeof item.get('health') === 'number' ? item.get('health') : 101;
+    });
+    return data.slice(this.state.offset, this.state.limit);
   },
   getMore(){
     // const limit = this.state.limit;
@@ -54,33 +108,42 @@ export default React.createClass({
     return this.props.selected && this.props.selected !== id;
   },
   renderLink(){
-    if (this.state.limit < this.props.groups.size){
+    if (this.props.groups && this.state.limit < this.getGroups(true).size){
       return (
         <Padding t={1}>
           <Link to={this.getEnvLink()}>
-            Show {this.props.groups.size - this.state.limit} more
+            Show {this.getGroups(true).size - this.state.limit} more
           </Link>
         </Padding>
       );
     }
     return <span/>;
   },
+  renderTitle(){
+    if (this.props.title){
+      if (this.props.groups){
+        return <h3>{this.props.title} ({this.getGroups(true).size})</h3>;
+      }
+      return <h3>{this.props.title} ({this.getGroups().size})</h3>;
+    }
+    return <span/>;
+  },
   render() {
-    const self = this;
-    if (this.props.groups.size){
+    if (this.getGroups().size){
       return (
         <div>
+          {this.renderTitle()}
           {this.getGroups().map((group, i) => {
-            return <GroupItem item={group} tabIndex={i} selected={self.isSelected(group.get('id'))} notSelected={self.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>;
+            return <GroupItem item={group} tabIndex={i} selected={this.isSelected(group.get('id'))} notSelected={this.isNotSelected(group.get('id'))} {...this.props} key={group.get('id')}/>;
           })}
           {this.renderLink()}
         </div>
       );
     }
     return (
-      <Alert bsStyle="default">
-        No groups
-      </Alert>
+      <StatusHandler status={this.state.status}>
+        <Alert bsStyle="default">No groups found</Alert>
+      </StatusHandler>
     );
   }
 });

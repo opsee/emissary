@@ -14,16 +14,17 @@ import RadialGraph from './RadialGraph';
 
 const ListItem = React.createClass({
   propTypes: {
-    selected: PropTypes.string,
-    onClick: PropTypes.func,
-    title: PropTypes.string,
-    linkInsteadOfMenu: PropTypes.bool,
-    type: PropTypes.string,
-    link: PropTypes.string,
-    params: PropTypes.object,
-    query: PropTypes.object,
     children: PropTypes.node,
-    item: PropTypes.object
+    item: PropTypes.object,
+    link: PropTypes.string,
+    linkInsteadOfMenu: PropTypes.bool,
+    menuTitle: PropTypes.string,
+    onClick: PropTypes.func,
+    params: PropTypes.object,
+    selected: PropTypes.string,
+    title: PropTypes.string,
+    type: PropTypes.string,
+    query: PropTypes.object
   },
   getDefaultProps(){
     return {
@@ -76,14 +77,14 @@ const ListItem = React.createClass({
   renderInfo(){
     if (this.props.onClick){
       return (
-        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
+        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick} title={this.props.title}>
           <div>{_.find(this.props.children, {key: 'line1'})}</div>
           <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])}>
+      <Link to={this.props.link} params={this.props.params} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} title={this.props.title}>
         <div>{_.find(this.props.children, {key: 'line1'})}</div>
         <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
       </Link>
@@ -107,7 +108,7 @@ const ListItem = React.createClass({
     return (
       <div className={listItem.item}>
         <Padding b={1}>
-          <ContextMenu title={this.props.title} show={this.state.showMenu} onHide={this.runMenuClose}>
+          <ContextMenu title={this.props.menuTitle} show={this.state.showMenu} onHide={this.runMenuClose}>
             {_.find(this.props.children, {key: 'menu'})}
           </ContextMenu>
           <Grid fluid>

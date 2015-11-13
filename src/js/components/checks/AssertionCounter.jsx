@@ -19,6 +19,12 @@ const AssertionCounter = React.createClass({
   getTitle(){
     return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
   },
+  getClass(){
+    if (this.props.response){
+      return this.isPassing() ? style.counterSuccess : style.counterDanger;
+    }
+    return style.counterWaiting;
+  },
   isPassing(){
     const test = this.runTest();
     return test && test.success;
@@ -35,7 +41,7 @@ const AssertionCounter = React.createClass({
   },
   render(){
     return (
-      <div title={this.getTitle()} className={this.isPassing() ? style.counterSuccess : style.counterDanger}>
+      <div title={this.getTitle()} className={this.getClass()}>
         {this.renderIcon()}
       <span className="sr-only">{this.runTest().error}</span>
     </div>

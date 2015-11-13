@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react';
 import Immutable from 'immutable';
+import _ from 'lodash';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
-import {GroupStore, InstanceStore} from '../../stores';
-import {GroupActions, InstanceActions} from '../../actions';
+import {GroupStore} from '../../stores';
+import {GroupActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -39,10 +40,6 @@ const GroupSecurity = React.createClass({
   },
   getData(){
     GroupActions.getGroupSecurity(this.props.params.id);
-    InstanceActions.getInstancesECC({
-      id: this.props.params.id,
-      type: 'security'
-    });
   },
   getState(){
     return {
@@ -50,13 +47,13 @@ const GroupSecurity = React.createClass({
         type: 'security',
         id: this.props.params.id
       }),
-      instances: InstanceStore.getInstancesECC({
-        type: 'security',
-        id: this.props.params.id
-      }),
-      status: GroupStore.getGetGroupSecurityStatus(),
-      getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
+      status: GroupStore.getGetGroupSecurityStatus()
     };
+  },
+  getInstanceIds(){
+    if (this.state.group.get('name')){
+      return _.pluck(this.state.group.instances.toJS(), 'id');
+    }
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
@@ -74,18 +71,9 @@ const GroupSecurity = React.createClass({
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
-
           <Padding b={1}>
-            <h3>Group Information</h3>
+            <h3>{this.state.group.get('id')} Information</h3>
             <Table>
-              <tr>
-                <td><strong>Id</strong></td>
-                <td>{this.state.group.get('id')}</td>
-              </tr>
-              <tr>
-                <td><strong>State</strong></td>
-                <td>{this.state.group.get('state')}</td>
-              </tr>
               <tr>
                 <td><strong>Description</strong></td>
                 <td>{this.renderDescription()}</td>
@@ -93,12 +81,12 @@ const GroupSecurity = React.createClass({
             </Table>
           </Padding>
           <Padding b={1}>
-            <h3>Instances</h3>
-            <InstanceItemList instances={this.state.group.get('instances')}/>
+            <h3>Checks</h3>
+            <CheckItemList type="groupSecurity" target={this.props.params.id}/>
           </Padding>
           <Padding b={1}>
-            <h3>Checks</h3>
-            <CheckItemList type="groupSecurity" id={this.props.params.id}/>
+            <h3>Instances</h3>
+            <InstanceItemList ids={this.getInstanceIds()}/>
           </Padding>
         </div>
       );

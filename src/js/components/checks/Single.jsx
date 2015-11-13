@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {List} from 'immutable';
 
 import {CheckActions, GroupActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
@@ -11,7 +12,8 @@ import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
 import router from '../../modules/router.js';
 import {Padding} from '../layout';
-import AssertionItemList from './AssertionItemList.jsx';
+import AssertionItemList from './AssertionItemList';
+import CheckResponse from './CheckResponse';
 
 function getState(){
   return {
@@ -37,7 +39,8 @@ export default React.createClass({
   },
   getInitialState(){
     return _.assign(getState(), {
-      response: null
+      response: null,
+      results: null
     });
   },
   storeDidChange() {
@@ -62,6 +65,7 @@ export default React.createClass({
     }
     if (state.sgStatus === 'success' || state.elbStatus === 'success'){
       state.group = GroupStore.getGroup(this.state.check.get('target'));
+      state.results = state.group.get('results');
     }
     if (state.responseStatus === 'success'){
       state.response = CheckStore.getResponse();
@@ -83,14 +87,39 @@ export default React.createClass({
       <span>{group.name || group.id}</span>
     );
   },
+  getResponses(){
+    if (this.state.results && this.state.results.size){
+      const results = this.state.results.toJS();
+      const failing = _.filter(results, r => {
+        return !r.passing;
+      });
+      return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
+    }
+    return new List();
+  },
+  getSingleResponse(){
+    const data = this.getResponses();
+    let val;
+    if (data && data.size){
+      let response = this.getResponses().toJS();
+      if (response && response.length){
+        val = _.get(response[0], 'response.value');
+      }
+    }
+    return val;
+  },
   runRemoveCheck(){
     CheckActions.deleteCheck(this.props.params.id);
   },
   renderInner(){
     const spec = this.getCheckJS().check_spec.value;
-    if (!this.state.error && this.state.check.get('id')){
+    if (!this.state.error && this.state.check.get('name')){
       return (
         <div>
+          <Padding b={1}>
+            <h3>Target</h3>
+            <GroupItem target={this.state.check.get('target')}/>
+          </Padding>
           <Padding b={1}>
             <h3>HTTP Request</h3>
             <Alert bsStyle="default" style={{wordBreak: 'break-all'}}>
@@ -98,12 +127,12 @@ export default React.createClass({
             </Alert>
           </Padding>
           <Padding b={1}>
-            <h3>Target</h3>
-            <GroupItem item={this.state.group}/>
+            <h3>Assertions</h3>
+            <AssertionItemList assertions={this.state.check.get('assertions')} response={this.getSingleResponse()}/>
           </Padding>
           <Padding b={1}>
-            <h3>Assertions</h3>
-            <AssertionItemList assertions={this.state.check.get('assertions')} response={this.state.response}/>
+            <h3>Response</h3>
+            <CheckResponse response={this.getResponses()}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>

@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react';
 import TimeAgo from 'react-timeago';
+import _ from 'lodash';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
-import {GroupStore, InstanceStore} from '../../stores';
-import {GroupActions, InstanceActions} from '../../actions';
+import {GroupStore} from '../../stores';
+import {GroupActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -32,10 +33,6 @@ export default React.createClass({
   },
   getData(){
     GroupActions.getGroupELB(this.props.params.id);
-    InstanceActions.getInstancesECC({
-      id: this.props.params.id,
-      type: 'elb'
-    });
   },
   getState(){
     return {
@@ -43,20 +40,25 @@ export default React.createClass({
         type: 'elb',
         id: this.props.params.id
       }),
-      instances: InstanceStore.getInstancesECC({
-        type: 'elb',
-        id: this.props.params.id
-      }),
-      status: GroupStore.getGetGroupELBStatus(),
-      getInstanceECCStatus: InstanceStore.getGetInstanceECCStatus()
+      status: GroupStore.getGetGroupELBStatus()
     };
+  },
+  getInstanceIds(){
+    if (this.state.group.get('name')){
+      return _.pluck(this.state.group.instances.toJS(), 'id');
+    }
   },
   renderDescription(){
     const desc = this.state.group.get('Description');
     if (desc && desc !== ''){
-      return {desc};
+      return (
+        <tr>
+          <td><strong>Description</strong></td>
+          <td>{desc}</td>
+        </tr>
+      );
     }
-    return <div/>;
+    return <tr/>;
   },
   renderLastChecked(){
     const d = this.state.group.lastChecked;
@@ -81,35 +83,26 @@ export default React.createClass({
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
-
           <Padding b={1}>
-            <h3>ELB Information</h3>
+            <h3>{this.state.group.get('id')} Information</h3>
             <Table>
               <tr>
-                <td><strong>Id</strong></td>
-                <td>{this.state.group.get('id')}</td>
-              </tr>
-              <tr>
-                <td><strong>State</strong></td>
-                <td>{this.state.group.get('state')}</td>
+                <td><strong>Created</strong></td>
+                <td><TimeAgo date={new Date(this.state.group.get('CreatedTime'))}/></td>
               </tr>
               {this.renderLastChecked()}
-              <tr>
-                <td><strong>Description</strong></td>
-                <td>{this.renderDescription()}</td>
-              </tr>
+              {this.renderDescription()}
             </Table>
           </Padding>
-
-          <Padding b={1}>
-            <h3>Instances ({this.state.group.get('instances').size})</h3>
-            <InstanceItemList instances={this.state.group.get('instances')}/>
-          </Padding>
-
           <Padding b={1}>
             <h3>Checks</h3>
-            <CheckItemList type="groupELB" id={this.props.params.id}/>
+            <CheckItemList type="groupELB" target={this.props.params.id}/>
           </Padding>
+          <Padding b={1}>
+            <h3>Instances ({this.state.group.get('instances').size})</h3>
+            <InstanceItemList ids={this.getInstanceIds()}/>
+          </Padding>
+
         </div>
       );
     }

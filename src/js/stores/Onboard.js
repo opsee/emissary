@@ -161,6 +161,7 @@ const Store = Flux.createStore(
       break;
     case 'GET_CUSTOMER_SUCCESS':
       _data.customer = payload.data;
+      Store.emitChange();
       break;
     default:
       break;

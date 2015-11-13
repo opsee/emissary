@@ -17,12 +17,13 @@ const StatusHandler = React.createClass({
   getInitialState(){
     return {
       error: (this.props.status && typeof this.props.status === 'object') || false,
-      success: false
+      success: false,
+      attempts: 0
     };
   },
   componentWillReceiveProps(nextProps){
     if (nextProps.status === 'success'){
-      return this.setState({success: true});
+      return this.setState({success: true, attempts: this.state.attempts + 1});
     }
     if (nextProps.status && typeof nextProps.status !== 'string'){
       let error = nextProps.status;
@@ -42,15 +43,15 @@ const StatusHandler = React.createClass({
     return this.props.errorText || 'Something went wrong.';
   },
   render(){
-    if (this.props.status === 'pending'){
+    if (this.props.status === 'pending' && this.state.attempts < 1){
       return <Loader timeout={this.props.timeout}/>;
-    }else if (this.state.success){
-      return (
-        <div>{this.props.children}</div>
-      );
     }else if (this.state.error){
       return (
         <Alert bsStyle="danger">{this.getErrorText()}</Alert>
+      );
+    }else if (this.state.success || this.state.attempts > 0){
+      return (
+        <div>{this.props.children}</div>
       );
     }
     return <div/>;

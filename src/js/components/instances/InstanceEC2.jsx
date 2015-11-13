@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {List} from 'immutable';
 
 import {StatusHandler, Table, Toolbar} from '../global';
-import GroupItem from '../groups/GroupItem.jsx';
 import TimeAgo from 'react-timeago';
-import {InstanceStore} from '../../stores';
+import {InstanceStore, GroupStore} from '../../stores';
 import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
@@ -13,6 +13,8 @@ import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {Add} from '../icons';
+import {GroupItemList} from '../groups';
+import {CheckItemList} from '../checks';
 
 function getState(){
   return {
@@ -47,6 +49,18 @@ export default React.createClass({
   },
   getData(){
     InstanceActions.getInstanceECC(this.props.params.id);
+  },
+  getGroups(){
+    const group = GroupStore.getGroupFromFilter({id: this.state.instance.get('groups').toJS()[0].id});
+    if (group){
+      return new List([group]);
+    }
+    return this.state.instance.get('groups');
+  },
+  getGroupIds(){
+    if (this.state.instance.get('name')){
+      return _.pluck(this.state.instance.groups.toJS(), 'id');
+    }
   },
   renderAvailabilityZone(){
     const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
@@ -85,13 +99,8 @@ export default React.createClass({
           </Padding>
 
           <Padding b={1}>
-            <h3>Instance Information</h3>
+            <h3>{this.props.params.id} Information</h3>
             <Table>
-              <tr>
-                <td><strong>State</strong></td>
-                <td>{this.state.instance.get('state')}</td>
-              </tr>
-              {this.renderLastChecked()}
               <tr>
                 <td><strong>Launched</strong></td>
                 <td>
@@ -103,20 +112,18 @@ export default React.createClass({
                 <td>{this.state.instance.get('InstanceType')}</td>
               </tr>
               {this.renderAvailabilityZone()}
+              {this.renderLastChecked()}
             </Table>
           </Padding>
-
           <Padding b={1}>
-            <h3>Groups ({this.state.instance.get('groups').size})</h3>
-            <ul className="list-unstyled">
-              {this.state.instance.get('groups').map(g => {
-                return (
-                  <li key={g.get('id')}>
-                    <GroupItem item={g}/>
-                  </li>
-                  );
-              })}
-            </ul>
+            <h3>Checks</h3>
+            <CheckItemList type="instance" target={this.props.params.id}/>
+          </Padding>
+          <Padding b={1}>
+            <GroupItemList ids={this.getGroupIds()} title="Security Groups"/>
+          </Padding>
+          <Padding b={1}>
+            <GroupItemList type="elb" instanceIds={[this.state.instance.get('id')]} title="ELBs"/>
           </Padding>
           {
             // <h2>{this.data().checks.length} Checks</h2>

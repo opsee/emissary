@@ -9,7 +9,7 @@ import types from 'slate/src/types';
 const AssertionItem = React.createClass({
   propTypes: {
     item: PropTypes.object.isRequired,
-    response: PropTypes.object.isRequired
+    response: PropTypes.object
   },
   getKey(){
     const key = this.props.item.key;

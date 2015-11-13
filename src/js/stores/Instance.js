@@ -103,7 +103,10 @@ const statics = {
     if (data.DBInstanceIdentifier){
       return statics.instanceRDSFromJS(data);
     }
-    let newData = data.instance || data;
+    let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
+    if (!newData.results){
+      newData.results = raw.results || data.results;
+    }
     newData.id = newData.InstanceId;
     let name = newData.id;
     if (newData.Tags && newData.Tags.length){
@@ -112,7 +115,7 @@ const statics = {
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
-    _.assign(newData, result.getFormattedData(raw));
+    _.assign(newData, result.getFormattedData(newData));
     if (newData.checks && newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
     }
