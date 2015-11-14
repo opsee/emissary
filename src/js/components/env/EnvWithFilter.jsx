@@ -256,7 +256,7 @@ const EnvWithFilter = React.createClass({
     if (InstanceStore.getInstancesECC().size){
       return (
         <div key="instancesECC">
-          <h3>Instances ({InstanceStore.getInstancesECC().size})</h3>
+          <h3>Instances ({this.getInstances().size})</h3>
           <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>

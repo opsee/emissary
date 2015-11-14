@@ -87,8 +87,8 @@ const statics = {
     Store.emitChange();
   },
   groupELBFromJS(data){
-    let instances = data.instances || data.Instances;
     let newData = data.group || data;
+    let instances = data.instances || data.Instances || newData.instances || newData.Instances;
     newData.instance_count = data.instance_count;
     if (!instances){
       instances = InstanceStore.getInstancesECC().toJS().filter(instance => {
@@ -96,7 +96,10 @@ const statics = {
       });
     }
     if (instances.length){
-      newData.instances = new List(instances.map(instance => InstanceStore.instanceFromJS(instance)));
+      newData.instances = new List(instances.map(instance => {
+        const results = instance.results;
+        return InstanceStore.instanceFromJS({instance, results});
+      }));
     }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;
@@ -127,7 +130,10 @@ const statics = {
       });
     }
     if (instances.length){
-      newData.instances = new List(instances.map(instance => InstanceStore.instanceFromJS(instance)));
+      newData.instances = new List(instances.map(instance => {
+        const results = instance.results;
+        return InstanceStore.instanceFromJS({instance, results});
+      }));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     newData.meta = Immutable.fromJS(newData.meta);
@@ -198,12 +204,11 @@ const _public = {
   },
   getGroupFromFilter(target){
     if (target && target.id){
-      switch (target.type){
-      case 'elb':
-        return _public.getGroupsELB().filter(group => group.get('id') === target.id).get(0);
-      default:
-        return _public.getGroupsSecurity().filter(group => group.get('id') === target.id).get(0);
+      const elb = _public.getGroupsELB().filter(group => group.get('id') === target.id);
+      if (elb.size){
+        return elb.get(0);
       }
+      return _public.getGroupsSecurity().filter(group => group.get('id') === target.id).get(0);
     }
     return _data.groupSecurity;
   },

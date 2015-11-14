@@ -12,7 +12,7 @@ export default React.createClass({
   mixins: [CheckStore.mixin, SetInterval],
   propTypes: {
     type: PropTypes.string,
-    id: PropTypes.string
+    target: PropTypes.string
   },
   componentWillMount(){
     CheckActions.getChecks();
@@ -33,17 +33,26 @@ export default React.createClass({
   getState(){
     return {
       status: CheckStore.getGetChecksStatus(),
-      checks: CheckStore.getChecks(this.props.id)
+      checks: CheckStore.getChecks()
     };
   },
   getInitialState(){
     return this.getState();
   },
-  renderChecks(){
-    if (this.state.checks.size){
+  getChecks(){
+    let data = CheckStore.getChecks();
+    if (this.props.target){
+      data = data.filter(c => {
+        return c.get('target').id === this.props.target;
+      });
+    }
+    return data;
+  },
+  render() {
+    if (this.getChecks().size){
       return (
         <div>
-          {this.state.checks.map(c => {
+          {this.getChecks().map(c => {
             return <CheckItem item={c} key={c.get('id')}/>;
           })}
         </div>
@@ -54,8 +63,5 @@ export default React.createClass({
         <Alert bsStyle="default">No checks applied</Alert>
       </StatusHandler>
     );
-  },
-  render() {
-    return this.renderChecks();
   }
 });

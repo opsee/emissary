@@ -162,22 +162,19 @@ const CheckCreateAssertions = React.createClass({
   },
   renderOperand(form){
     const data = form.cleanedData;
-    if (data && data.relationship){
-      if (data.key === 'header' || !data.relationship.match('empty|notEmpty')){
-        return (
-          <BoundField bf={form.boundField('operand')}/>
-        );
-      }
+    if (data && data.relationship && !data.relationship.match('empty|notEmpty')){
+      return (
+        <BoundField bf={form.boundField('operand')}/>
+      );
     }
+    return <div/>;
   },
   renderValue(form){
     const data = form.cleanedData;
     if (data && data.relationship && data.key === 'header'){
-      if (!data.relationship.match('empty|notEmpty')){
-        return (
-          <BoundField bf={form.boundField('value')}/>
-        );
-      }
+      return (
+        <BoundField bf={form.boundField('value')}/>
+      );
     }
     return <div/>;
   },

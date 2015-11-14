@@ -97,7 +97,7 @@ const Check = Record({
   notifications: List(),
   instances: List(),
   health: undefined,
-  state: 'running',
+  state: 'initializing',
   silenceDate: undefined,
   silenceDuration: undefined,
   interval: 30,
@@ -173,12 +173,7 @@ const _public = {
   getCheck(){
     return _data.check;
   },
-  getChecks(targetId){
-    if (targetId){
-      return _data.checks.filter(c => {
-        return c.get('target').id === targetId;
-      });
-    }
+  getChecks(){
     return _data.checks;
   },
   newCheck(data){
@@ -194,6 +189,9 @@ const _public = {
     if (data && data.size){
       const first = data.toJS()[0];
       let response = _.cloneDeep(first);
+      if (!response.response.type_url){
+        return {error: 'Error in sending the response'};
+      }
       const headers = _.get(response, 'response.value.headers');
       if (headers){
         response.response.value.headers = headers.map(h => {

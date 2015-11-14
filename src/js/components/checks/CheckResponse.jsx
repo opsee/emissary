@@ -114,29 +114,40 @@ const CheckResponse = React.createClass({
       <div className={style.checkResponseWaiting}>Your response will appear here</div>
     );
   },
-  render() {
-    if (this.props.response || (CheckStore.getResponse() && this.state.complete)){
-      if (this.getFormattedResponse() && this.getFormattedResponse().error){
-        return (
-          <div className={style.checkResponseWaiting}>
-            <Alert bsStyle="danger">{this.getFormattedResponse().error}</Alert>
-          </div>
-        );
-      }
-      return (
-        <div className={this.getResponseClass()}>
-          <Highlight>
-            {JSON.stringify(_.get(this.getFormattedResponse(), 'response.value'), null, ' ')}
-          </Highlight>
-          {this.renderButton()}
-        </div>
-      );
-    }
+  renderCode(){
+    return (
+      <div className={this.getResponseClass()}>
+        <Highlight>
+          {JSON.stringify(_.get(this.getFormattedResponse(), 'response.value'), null, ' ')}
+        </Highlight>
+        {this.renderButton()}
+      </div>
+    );
+  },
+  renderWaiting(){
     return (
       <div className={this.getResponseClass()}>
         {this.renderWaitingResponse()}
       </div>
     );
+  },
+  renderError(){
+    return (
+      <div className={style.checkResponseWaiting}>
+        <Alert bsStyle="danger">{this.getFormattedResponse().error}</Alert>
+      </div>
+    );
+  },
+  render() {
+    if (this.props.response && !this.props.response.size){
+      return this.renderWaiting();
+    }else if (this.props.response || (CheckStore.getResponse() && this.state.complete)){
+      if (this.getFormattedResponse() && this.getFormattedResponse().error){
+        return this.renderError();
+      }
+      return this.renderCode();
+    }
+    return this.renderWaiting();
   }
 });
 

@@ -23,6 +23,11 @@
   composes: counter;
   background-color: var(--colorDanger);
 }
+/*this class is for when we are expecting a response but are waiting for some reason*/
+.counterWaiting {
+  composes: counter;
+  opacity:0;
+}
 
 .icon{
   fill: black;

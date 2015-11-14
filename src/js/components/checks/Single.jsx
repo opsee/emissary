@@ -100,7 +100,7 @@ export default React.createClass({
   getSingleResponse(){
     const data = this.getResponses();
     let val;
-    if (data){
+    if (data && data.size){
       let response = this.getResponses().toJS();
       if (response && response.length){
         val = _.get(response[0], 'response.value');
@@ -113,12 +113,12 @@ export default React.createClass({
   },
   renderInner(){
     const spec = this.getCheckJS().check_spec.value;
-    if (!this.state.error && this.state.check.get('id')){
+    if (!this.state.error && this.state.check.get('name')){
       return (
         <div>
           <Padding b={1}>
             <h3>Target</h3>
-            <GroupItem item={this.state.group}/>
+            <GroupItem target={this.state.check.get('target')}/>
           </Padding>
           <Padding b={1}>
             <h3>HTTP Request</h3>
