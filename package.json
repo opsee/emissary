@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start": "node rev | node server",
-    "build": "NODE_ENV=production webpack --config webpack.config.prod.js && cp -r src/fonts/ dist/fonts/",
+    "build": "node rev | NODE_ENV=production webpack --config webpack.config.prod.js && cp -r src/fonts/ dist/fonts/",
     "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
     "lint": "eslint src/. --ext .js,.jsx",
     "compare": "node visreg/compare",
