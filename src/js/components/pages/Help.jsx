@@ -6,7 +6,6 @@ import {Padding} from '../layout';
 import colors from 'seedling/colors';
 import {Mail, Slack, Chat} from '../icons';
 import {UserStore} from '../../stores';
-import config from '../../modules/config';
 
 export default React.createClass({
   renderAdminLinks(){
@@ -59,9 +58,6 @@ export default React.createClass({
                 </p>
                 <p>
                   <span className="text-secondary"><Slack fill={colors.textColorSecondary} inline /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a>
-                </p>
-                <p>
-                  App Revision: <span className="text-secondary">{config.revision}</span>
                 </p>
               </Padding>
               {this.renderAdminLinks()}
