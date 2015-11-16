@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import Immutable, {List} from 'immutable';
@@ -11,10 +11,11 @@ import {InstanceStore} from '../../stores';
 export default React.createClass({
   mixins: [InstanceStore.mixin],
   propTypes: {
-    instances: React.PropTypes.instanceOf(List),
-    offset: React.PropTypes.number,
-    limit: React.PropTypes.number,
-    ids: React.PropTypes.array
+    instances: PropTypes.instanceOf(List),
+    offset: PropTypes.number,
+    limit: PropTypes.number,
+    ids: PropTypes.array,
+    noFallback: PropTypes.bool
   },
   componentWillMount(){
     if (!this.props.instances){
@@ -85,7 +86,7 @@ export default React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.state.status}>
+      <StatusHandler status={this.state.status} noFallback={this.props.noFallback}>
         <Alert bsStyle="default">No instances found</Alert>
       </StatusHandler>
     );

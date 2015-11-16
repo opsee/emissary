@@ -80,9 +80,6 @@ const _public = {
     return !!(_public.getAuth() && _data.user.get('email'));
   },
   getUser(){
-    if (storage.get('demo') === true){
-      config.demo = true;
-    }
     return _data.user;
   },
   getUserData(){

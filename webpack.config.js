@@ -2,16 +2,24 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AssetsPlugin = require('assets-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var fs = require('fs');
 
 var path = require('path');
 var node_modules_dir = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
+var config;
+try{
+  config = JSON.stringify(fs.readFileSync(path.join(__dirname, '/config.json')).toString());
+}catch(err){}
+
 var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
   __API__: JSON.stringify(process.env.CONFIG_API),
   __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
-  'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)}
+  'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)},
+  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString()),
+  __CONFIG__: config
 });
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 

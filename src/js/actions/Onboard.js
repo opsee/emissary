@@ -105,7 +105,18 @@ _actions.getCustomer = Flux.statics.addAsyncAction('getCustomer',
     .get(`${config.api}/customer`)
     .set('Authorization', UserStore.getAuth());
   },
-  res => _.get(res, 'body.customer') || {},
+  res => {
+    let body = _.get(res, 'body.body');
+    if (body){
+      try {
+        body = JSON.parse(body);
+        return body.customer;
+      }catch (err){
+        return {};
+      }
+    }
+    return {};
+  },
   res => res
 );
 

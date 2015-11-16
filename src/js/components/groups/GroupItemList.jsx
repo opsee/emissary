@@ -16,10 +16,11 @@ export default React.createClass({
     offset: PropTypes.number,
     limit: PropTypes.number,
     selected: PropTypes.string,
-    ids: React.PropTypes.array,
-    type: React.PropTypes.string,
-    title: React.PropTypes.string,
-    instanceIds: React.PropTypes.array
+    ids: PropTypes.array,
+    type: PropTypes.string,
+    title: PropTypes.string,
+    instanceIds: PropTypes.array,
+    noFallback: PropTypes.bool
   },
   getDefaultProps(){
     return {
@@ -141,7 +142,7 @@ export default React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.state.status}>
+      <StatusHandler status={this.state.status} noFallback={this.props.noFallback}>
         <Alert bsStyle="default">No groups found</Alert>
       </StatusHandler>
     );

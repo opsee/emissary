@@ -1,18 +1,21 @@
 import React from 'react';
-import {CheckActions} from '../../actions';
+import {CheckActions, OnboardActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
-import {CheckStore} from '../../stores';
+import {CheckStore, OnboardStore} from '../../stores';
 import {Link} from 'react-router';
 import {Add} from '../icons';
 import {PageAuth} from '../../modules/statics';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 
 function getState(){
   return {
     checks: CheckStore.getChecks(),
-    status: CheckStore.getGetChecksStatus()
+    status: CheckStore.getGetChecksStatus(),
+    bastionStatus: OnboardStore.getGetBastionsStatus(),
+    bastions: OnboardStore.getBastions(),
+    gotBastions: OnboardStore.getBastions().length || false
   };
 }
 
@@ -32,13 +35,25 @@ const CheckList = React.createClass({
     if (CheckStore.getDeleteCheckStatus() === 'success'){
       this.getData();
     }
+    if (state.bastionStatus === 'success'){
+      state.gotBastions = true;
+    }
     this.setState(state);
   },
   getData(){
     CheckActions.getChecks();
+    OnboardActions.getBastions();
   },
   renderChecks(){
-    if (this.state.checks.size){
+    if (this.state.gotBastions && !this.state.bastions.length){
+      return (
+        <Alert bsStyle="danger">
+          Bastion is disconnected or offline. If you need to install one, <Link to="onboardRegionSelect" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        </Alert>
+      );
+    }else if (!this.state.bastions.length){
+      return <StatusHandler status={this.state.bastionStatus}/>;
+    }else if (this.state.checks.size){
       return (
         <div>
           <h3>All Checks ({this.state.checks.size})</h3>
@@ -60,13 +75,20 @@ const CheckList = React.createClass({
       </StatusHandler>
     );
   },
+  renderButton(){
+    if (this.state.bastions.length){
+      return (
+        <Button color="primary" fab to="checkCreate" title="Create New Check">
+          <Add btn/>
+        </Button>
+      );
+    }
+  },
   render() {
     return (
       <div>
         <Toolbar title="Checks">
-          <Button color="primary" fab to="checkCreate" title="Create New Check">
-            <Add btn/>
-          </Button>
+          {this.renderButton()}
         </Toolbar>
         <Grid>
           <Row>

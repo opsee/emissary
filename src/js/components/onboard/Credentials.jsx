@@ -7,9 +7,9 @@ import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import storage from '../../modules/storage';
 import {Padding} from '../layout';
 import {PageAuth} from '../../modules/statics';
+import config from '../../modules/config';
 
 const InfoForm = forms.Form.extend({
   'access-key': forms.CharField({
@@ -49,7 +49,7 @@ const Credentials = React.createClass({
         });
       }).flatten().value();
       if (vpcs.length){
-        if (vpcs.length === 1 && !storage.get('showVpcsOnboard')){
+        if (vpcs.length === 1 && !config.showVpcScreen){
           OnboardActions.onboardSetVpcs(vpcs);
           router.transitionTo('onboardInstall');
         }else {
@@ -111,7 +111,7 @@ const Credentials = React.createClass({
                 <Padding b={2}>
                 <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
                 </Padding>
-                <StatusHandler status={OnboardStore.getOnboardVpcScanStatus()}/>
+                <StatusHandler status={OnboardStore.getOnboardVpcScanStatus()} timeout={1500}/>
                 <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
               </form>
             </Col>

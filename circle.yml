@@ -3,7 +3,7 @@ dependencies:
     - npm install -g webpack casperjs eslint
     - npm install
     - docker info
-    - npm run-script deploy
+    - npm run deploy
 machine:
   services:
     - docker
