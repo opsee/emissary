@@ -5,6 +5,7 @@ import {Person, Checkmark, Help, Cloud, Login} from '../icons';
 import {UserStore, GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
+import config from '../../modules/config';
 
 import style from './header.css';
 
@@ -13,7 +14,7 @@ const Header = React.createClass({
   storeDidChange(){
     this.setState({
       showNav: GlobalStore.getShowNav(),
-      ghosting: UserStore.getUser().get('admin_id') > 0
+      ghosting: UserStore.getUser().get('admin_id') > 0 || config.ghosting
     });
     this.forceUpdate();
   },

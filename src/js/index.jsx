@@ -16,8 +16,8 @@ if (config.env !== 'production'){
 router.run((Root, state) => {
   const testRoutes = state.routes;
   const names = _.pluck(testRoutes, 'name');
-  const bool = !(_.intersection(names, hideNavList).length);
-  GlobalActions.globalSetNav(bool);
+  const shouldHideNav = !(_.intersection(names, hideNavList).length);
+  GlobalActions.globalSetNav(shouldHideNav);
   ReactDOM.render(
       (
         <div>

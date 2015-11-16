@@ -13,7 +13,8 @@ var definePlugin = new webpack.DefinePlugin({
   __API__: JSON.stringify(process.env.CONFIG_API),
   __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
   'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)},
-  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString())
+  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString()),
+  __CONFIG__: JSON.stringify(fs.readFileSync(path.join(__dirname, '/config.json')).toString())
 });
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 

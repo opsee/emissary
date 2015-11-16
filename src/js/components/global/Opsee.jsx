@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {RouteHandler} from 'react-router';
 import config from '../../modules/config';
-import storage from '../../modules/storage';
 import {SetInterval} from '../../modules/mixins';
 import {Header, MessageModal, Toolbar, Analytics} from '../global';
 import DocumentTitle from 'react-document-title';
@@ -40,7 +39,7 @@ export default React.createClass({
     };
   },
   componentWillMount(){
-    if (this.props.query.err || storage.get('err')){
+    if (this.props.query.err){
       config.error = true;
     }
   },

@@ -75,10 +75,12 @@ const Team = React.createClass({
           if (v.tags){
             let nameTag = _.findWhere(v.tags, {key: 'Name'});
             if (nameTag){
-              name = `${nameTag.value} - ${v['vpc-id']}`;
+              name = `${nameTag.value}`;
+              // name = `${nameTag.value} - ${v['vpc-id']}`;
             }
           }
-          return [v['vpc-id'], `${name} (${r.region})`];
+          return [v['vpc-id'], `${name} (${v.count} Instances)`];
+          // return [v['vpc-id'], `${name} (${r.region})`];
         });
       });
       vpcs = _.flatten(vpcs);
