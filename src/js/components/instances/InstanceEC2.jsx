@@ -123,7 +123,7 @@ export default React.createClass({
             <GroupItemList ids={this.getGroupIds()} title="Security Groups"/>
           </Padding>
           <Padding b={1}>
-            <GroupItemList type="elb" instanceIds={[this.state.instance.get('id')]} title="ELBs"/>
+            <GroupItemList type="elb" instanceIds={[this.state.instance.get('id')]} title="ELBs" noFallback/>
           </Padding>
           {
             // <h2>{this.data().checks.length} Checks</h2>

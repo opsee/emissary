@@ -12,7 +12,8 @@ const StatusHandler = React.createClass({
       PropTypes.string,
       PropTypes.object
     ]),
-    children: PropTypes.node
+    children: PropTypes.node,
+    noFallback: PropTypes.bool
   },
   getInitialState(){
     return {
@@ -49,7 +50,7 @@ const StatusHandler = React.createClass({
       return (
         <Alert bsStyle="danger">{this.getErrorText()}</Alert>
       );
-    }else if (this.state.success || this.state.attempts > 0){
+    }else if ((this.state.success || this.state.attempts > 0) && !this.props.noFallback){
       return (
         <div>{this.props.children}</div>
       );
