@@ -71,8 +71,11 @@ const statics = {
     }).sortBy(d => {
       return d.group.GroupName.toLowerCase();
     }).value();
-    _data.groupsSecurity = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupFromJS)) : new List();
-    Store.emitChange();
+    const changed = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupFromJS)) : new List();
+    if (!Immutable.is(_data.groupsELB, changed)){
+      _data.groupsSecurity = changed;
+      Store.emitChange();
+    }
   },
   getGroupELBSuccess(data){
     _data.groupELB = statics.groupELBFromJS(data);
@@ -83,8 +86,11 @@ const statics = {
     .sortBy(d => {
       return d.group.LoadBalancerName.toLowerCase();
     }).value();
-    _data.groupsELB = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupELBFromJS)) : new List();
-    Store.emitChange();
+    const changed = newData && newData.length ? Immutable.fromJS(newData.map(statics.groupELBFromJS)) : new List();
+    if (!Immutable.is(_data.groupsELB, changed)){
+      _data.groupsELB = changed;
+      Store.emitChange();
+    }
   },
   groupELBFromJS(data){
     let newData = data.group || data;

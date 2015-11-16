@@ -3,6 +3,7 @@ import storage from './storage';
 let config = {
   /*global __API__*/
   /*global __AUTH__*/
+  /*global __REVISION__*/
   api: __API__ || 'https://api.opsee.com',
   apiDelay: storage.get('apiDelay') ? parseInt(storage.get('apiDelay'), 10) : 0,
   authApi: __AUTH__ || 'https://auth.opsee.com',
@@ -12,7 +13,7 @@ let config = {
   env: process.env.NODE_ENV,
   ghosting: false,
   intercom: window.Intercom,
-  revision: window.revision,
+  revision: __REVISION__,
   slackClientSecret: window.slackClientSecret,
   socket: 'wss://api.opsee.com/stream/'
 };
