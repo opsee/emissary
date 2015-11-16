@@ -6,6 +6,7 @@ import {Padding} from '../layout';
 import colors from 'seedling/colors';
 import {Mail, Slack, Chat} from '../icons';
 import {UserStore} from '../../stores';
+import config from '../../modules/config';
 
 export default React.createClass({
   renderAdminLinks(){
@@ -50,12 +51,18 @@ export default React.createClass({
               <Padding b={1}>
                 <h3>Support</h3>
                 <p>Get in touch with us any time with questions or feature requests:</p>
-
-                <p><span className="text-secondary"><Mail fill={colors.textColorSecondary} inline /> Email:</span> <a href="mailto:support@opsee.com">support@opsee.com</a></p>
-
-                <p><span className="text-secondary"><Chat fill={colors.textColorSecondary} inline /> IRC:</span> <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></p>
-
-                <p><span className="text-secondary"><Slack fill={colors.textColorSecondary} inline /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></p>
+                <p>
+                  <span className="text-secondary"><Mail fill={colors.textColorSecondary} inline /> Email:</span> <a href="mailto:support@opsee.com">support@opsee.com</a>
+                </p>
+                <p>
+                  <span className="text-secondary"><Chat fill={colors.textColorSecondary} inline /> IRC:</span> <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a>
+                </p>
+                <p>
+                  <span className="text-secondary"><Slack fill={colors.textColorSecondary} inline /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a>
+                </p>
+                <p>
+                  App Revision: <span className="text-secondary">{config.revision}</span>
+                </p>
               </Padding>
               {this.renderAdminLinks()}
             </Col>
