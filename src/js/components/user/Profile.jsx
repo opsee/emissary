@@ -2,7 +2,6 @@ import React from 'react';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
 import {Table, Toolbar} from '../global';
-import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -16,9 +15,6 @@ export default React.createClass({
     willTransitionTo: PageAuth
   },
   storeDidChange(){
-    if (!UserStore.getAuth()){
-      return router.transitionTo('login');
-    }
     this.setState({
       user: UserStore.getUser().toJS()
     });

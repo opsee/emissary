@@ -75,7 +75,7 @@ export default React.createClass({
       });
     }
     data = data.sortBy(item => {
-      return typeof item.get('health') === 'number' ? item.get('health') : 101;
+      return typeof item.get('health') === 'number' ? item.get('health') : 99.99;
     });
     return data.slice(this.state.offset, this.state.limit);
   },

@@ -24,7 +24,7 @@ export default React.createClass({
           }
           <h3>Admin Pages</h3>
           <div><Link to="adminSignups">Admin: Signups</Link></div>
-          <div><Link to="systemStatus">System Status</Link></div>
+          <div><Link to="system">System</Link></div>
           <div><Link to="styleguide">Style Guide</Link></div>
         </Padding>
       );
