@@ -1829,7 +1829,7 @@ mark,
 }
 
 .text-muted {
-  color: #777777;
+  color: var(--colorTextSecondary);
 }
 
 .text-info {

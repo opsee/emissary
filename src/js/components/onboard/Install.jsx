@@ -129,7 +129,9 @@ const Install = React.createClass({
   renderSurvey(){
     if (!config.demo){
       return (
-        <Padding tb={1}>
+        <Padding t={3}>
+          <hr/>
+          <h2>Opsee Customer Survey</h2>
           <Survey/>
         </Padding>
       );
@@ -195,7 +197,7 @@ const Install = React.createClass({
           {this.renderText()}
           {this.state.bastions.map((b, i) => {
             return (
-              <Padding tb={1} key={`bastion-installer-${i}`}>
+              <Padding b={1} key={`bastion-installer-${i}`}>
                 <BastionInstaller {...b}/>
               </Padding>
             );

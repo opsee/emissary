@@ -220,7 +220,8 @@ const CheckCreateInfo = React.createClass({
     return (
         <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
           <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails. Opsee automatically runs your check every 30 seconds.</p>
+            <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails.</p>
+            <p><strong>Opsee automatically runs your check every 30 seconds</strong>.</p>
           </Alert>
         </UserDataRequirement>
       );
@@ -228,7 +229,10 @@ const CheckCreateInfo = React.createClass({
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
-        {this.state.info.render()}
+        <Padding b={1}>
+          {this.state.info.render()}
+          <em className="small text-muted">For display in the Opsee app</em>
+        </Padding>
         {this.renderNotificationForm()}
         {this.renderSubmitButton()}
       </form>
