@@ -177,7 +177,7 @@ const CheckCreateInfo = React.createClass({
         <h3>Notifications</h3>
         {this.getNotificationsForms().map((form, index) => {
           return (
-            <Padding b={2}>
+            <Padding b={2} key={`notif-form-${index}`}>
               <Row>
                 <Col xs={10} sm={11}>
                   <Row>

@@ -81,7 +81,7 @@ export default React.createClass({
     return UserStore.getUser().get('name') && UserStore.getUser().toJS();
   },
   isDisabled(){
-    return !(this.state.user.email && this.state.user.name);
+    return !(this.state.user.email && this.state.user.name) || UserStore.getUserEditStatus() === 'pending';
   },
   handleUserData(data){
     let user = _.clone(this.state.user);
@@ -112,7 +112,9 @@ export default React.createClass({
               <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
               <Padding t={2}>
-                <Button color="success" type="submit" disabled={this.isDisabled()}>Update Profile</Button>
+                <Button color="success" type="submit" disabled={this.isDisabled()}>
+                  {UserStore.getUserEditStatus() === 'pending' ? 'Updating...' : 'Update Profile'}
+                </Button>
               </Padding>
             </form>
             </Col>

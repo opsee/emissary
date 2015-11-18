@@ -8,7 +8,7 @@ import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 import config from '../../modules/config';
 
-const SystemStatus = React.createClass({
+const System = React.createClass({
   mixins: [OnboardStore.mixin],
   statics: {
     willTransitionTo: PageAuth
@@ -84,4 +84,4 @@ const SystemStatus = React.createClass({
   }
 });
 
-export default SystemStatus;
+export default System;

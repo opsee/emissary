@@ -67,11 +67,17 @@ Flux.statics = {
       const index = _.indexOf(possible, found);
       const k = keys[index];
       if (payload.actionType.match('_PENDING$')){
-        statuses[k] = 'pending';
+        statuses[k] = _.assign({}, statuses[k], {state: 'pending'});
       }else if (payload.actionType.match('_SUCCESS$')){
-        statuses[k] = 'success';
+        statuses[k] = _.assign({}, statuses[k]);
+        if (statuses[k].state !== 'success'){
+          let history = statuses[k].history || [];
+          history.push(Date.now());
+          statuses[k].history = history;
+        }
+        statuses[k].state = 'success';
       }else {
-        statuses[k] = payload.data;
+        statuses[k] = _.assign({}, statuses[k], {state: payload.data});
       }
     }
 
@@ -79,8 +85,8 @@ Flux.statics = {
       haveChanged = true;
     }else {
       let resetSuccessStatuses = _.mapValues(statuses, val => {
-        if (val === 'success'){
-          return null;
+        if (_.get(val, 'state') === 'success'){
+          return {state: null, history: val.history};
         }
         return val;
       });
@@ -100,10 +106,14 @@ Flux.statics = {
     _.chain(statuses).keys().map(k => {
       let arr = [k];
       arr.push('get' + _.startCase(k).split(' ').join('') + 'Status');
+      arr.push('get' + _.startCase(k).split(' ').join('') + 'History');
       return arr;
     }).forEach(a => {
       statusFunctions[a[1]] = () => {
-        return obj._statuses[a[0]];
+        return _.get(obj._statuses[a[0]], 'state');
+      };
+      statusFunctions[a[2]] = () => {
+        return _.get(obj._statuses[a[0]], 'history') || [];
       };
     }).value();
     return statusFunctions;

@@ -4,7 +4,6 @@ import {UserStore} from '../stores';
 import config from '../modules/config';
 
 let _actions = {};
-let socket;
 
 _actions.globalModalMessage = Flux.statics.addAction('globalModalMessage');
 
@@ -13,14 +12,14 @@ _actions.globalContextMenu = Flux.statics.addAction('globalContextMenu');
 _actions.globalModalMessageConsume = Flux.statics.addAction('globalModalMessageConsume');
 
 _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', () => {
-  if (!socket){
-    socket = new WebSocket(config.socket);
-    socket.onopen = () => {
+  if (!window.socket){
+    window.socket = new WebSocket(config.socket);
+    window.socket.onopen = () => {
       Flux.actions.globalSocketAuth();
       Flux.actions.globalSocketSubscribe('launch-bastion');
       console.info('Socket Started.');
     };
-    socket.onmessage = (event) => {
+    window.socket.onmessage = (event) => {
       let data;
       try {
         data = JSON.parse(event.data);
@@ -35,35 +34,39 @@ _actions.globalSocketStart = Flux.statics.addAction('globalSocketStart', () => {
         Flux.actions.globalSocketMessage(data);
       }
     };
-    socket.onerror = (event) => {
+    window.socket.onerror = (event) => {
       Flux.actions.globalSocketError(event);
-      socket = undefined;
+      delete window.socket;
       console.info('Socket Error.');
+    };
+    window.socket.onclose = () => {
+      console.info('Socket closed.');
+      delete window.socket;
     };
   }
 });
 
 _actions.globalSocketAuth = Flux.statics.addAction('globalSocketAuth', () => {
   const auth = UserStore.getAuth();
-  if (auth && socket){
+  if (auth && window.socket){
     const authCmd = JSON.stringify({
       command: 'authenticate',
       attributes: {
         token: auth.replace('Bearer ', '')
       }
     });
-    socket.send(authCmd);
+    window.socket.send(authCmd);
   }
 });
 
 _actions.globalSocketSubscribe = Flux.statics.addAction('globalSocketSubscribe', (str) => {
   const auth = UserStore.getAuth();
-  if (auth && socket && str){
+  if (auth && window.socket && str){
     const authCmd = JSON.stringify({
       command: 'subscribe',
       attributes: {subscribe_to: str}
     });
-    socket.send(authCmd);
+    window.socket.send(authCmd);
   }
 });
 

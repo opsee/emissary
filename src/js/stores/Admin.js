@@ -2,20 +2,30 @@ import Flux from '../modules/flux';
 import Immutable, {List} from 'immutable';
 import _ from 'lodash';
 
-let _signups = new List();
+const _data = {
+  signups: new List(),
+  users: new List()
+};
 
 const statics = {
   getSignupsSuccess(data){
-    _signups = Immutable.fromJS(data);
+    _data.signups = Immutable.fromJS(data);
+  },
+  getUsersSuccess(data){
+    _data.users = Immutable.fromJS(data);
   },
   _statuses: {
-    adminActivateSignup: null
+    adminActivateSignup: null,
+    adminGetUsers: null
   }
 };
 
 const _public = {
   getSignups(){
-    return _signups;
+    return _data.signups;
+  },
+  getUsers(){
+    return _data.users;
   }
 };
 
@@ -27,6 +37,10 @@ const Store = Flux.createStore(
     switch (payload.actionType) {
     case 'ADMIN_GET_SIGNUPS_SUCCESS':
       statics.getSignupsSuccess(payload.data);
+      Store.emitChange();
+      break;
+    case 'ADMIN_GET_USERS_SUCCESS':
+      statics.getUsersSuccess(payload.data);
       Store.emitChange();
       break;
     case 'ADMIN_ACTIVATE_SIGNUP_SUCCESS':

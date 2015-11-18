@@ -18,6 +18,7 @@ export default React.createClass({
   },
   componentWillMount(){
     AdminActions.adminGetSignups();
+    AdminActions.adminGetUsers();
   },
   storeDidChange() {
     const data = this.getState();

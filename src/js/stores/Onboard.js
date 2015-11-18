@@ -158,6 +158,7 @@ const Store = Flux.createStore(
       break;
     case 'GET_BASTIONS_SUCCESS':
       _data.bastions = payload.data;
+      Store.emitChange();
       break;
     case 'GET_CUSTOMER_SUCCESS':
       _data.customer = payload.data;

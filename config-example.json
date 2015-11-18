@@ -4,5 +4,7 @@
   //show the vpc select screen even if there is only 1 vpc found
   "showVpcScreen": false,
   //change the appearance of the application as if the user was in ghosting mode
-  "ghosting": false
+  "ghosting": false,
+  //set a millisecond delay on all api calls, for testing
+  "apiDelay": 0
 }

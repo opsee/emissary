@@ -30,10 +30,6 @@ let statics = {
   globalContextMenuConsume(){
     _data.modalMessage.used = true;
   },
-  globalSocketStart(){
-    _data.socketStarted = true;
-    Store.emitChange();
-  },
   parseSocketMessage(msg = {command: null}){
     if (msg.command && msg.command !== 'heartbeat'){
       _data.socketMessages.push(msg);
@@ -46,7 +42,6 @@ let statics = {
 };
 
 let _data = {
-  socketStarted: false,
   socketMessages: [],
   modalMessage: {
     used: false,
@@ -62,9 +57,6 @@ const _public = {
   },
   getSocketMessages(){
     return _data.socketMessages;
-  },
-  getSocketStarted(){
-    return _data.socketStarted;
   },
   getShowNav(){
     return _data.showNav;
@@ -91,10 +83,6 @@ const Store = Flux.createStore(
       break;
     case 'GLOBAL_CONTEXT_MENU_CONSUME':
       statics.globalContextMenuConsume(payload.data);
-      break;
-    case 'GLOBAL_SOCKET_START':
-      _data.globalSocketError = undefined;
-      statics.globalSocketStart(payload.data);
       break;
     case 'GLOBAL_SOCKET_CONNECT_SUCCESS':
       console.log(payload.data);

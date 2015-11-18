@@ -93,7 +93,13 @@ const Check = Record({
   id: undefined,
   name: undefined,
   target: Target(),
-  assertions: List(),
+  assertions: List([
+    {
+      key: 'code',
+      operand: 200,
+      relationship: 'equal'
+    }
+  ]),
   notifications: List(),
   instances: List(),
   health: undefined,
@@ -189,9 +195,6 @@ const _public = {
     if (data && data.size){
       const first = data.toJS()[0];
       let response = _.cloneDeep(first);
-      if (!response.response.type_url){
-        return {error: 'Error in sending the response'};
-      }
       const headers = _.get(response, 'response.value.headers');
       if (headers){
         response.response.value.headers = headers.map(h => {
@@ -213,8 +216,11 @@ const _public = {
             response.error = err;
           }
         }catch (err){
-          console.warn(err);
+          _.noop();
         }
+      }
+      if (!response.error && !_.get(response, 'response.type_url')){
+        return {error: 'Error in sending the request'};
       }
       if (_.get(response, 'response.value.metrics')){
         delete response.response.value.metrics;
