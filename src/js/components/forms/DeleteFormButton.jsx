@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Button from './Button.jsx';
-import {Close} from '../icons';
+import {Delete} from '../icons';
+import {Padding} from '../layout';
 
 export default React.createClass({
   propTypes: {
@@ -19,9 +20,11 @@ export default React.createClass({
   },
   render(){
     return (
-      <Button flat icon color="danger" className="pull-right" title="Remove this Header" onClick={this.handleChange}>
-        <Close inline fill="danger"/>
-      </Button>
+      <Padding t={0.5}>
+        <Button flat color="danger" className="pull-right" title="Remove this Header" onClick={this.handleChange}>
+          <Delete inline fill="danger"/>
+        </Button>
+      </Padding>
     );
   }
 });
