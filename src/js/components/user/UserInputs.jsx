@@ -98,7 +98,7 @@ export default React.createClass({
       <div>
         {this.props.include.map(i => {
           return (
-            <Padding b={1}>
+            <Padding b={1} key={`padding-${i}`}>
               {this[`render${_.capitalize(i)}`]()}
             </Padding>
           );

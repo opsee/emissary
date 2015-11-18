@@ -12,7 +12,6 @@ let config = {
   error: false,
   env: process.env.NODE_ENV,
   ghosting: false,
-  intercom: window.Intercom,
   revision: __REVISION__,
   slackClientSecret: window.slackClientSecret,
   socket: 'wss://api.opsee.com/stream/'

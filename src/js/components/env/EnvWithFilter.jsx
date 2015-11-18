@@ -5,7 +5,7 @@ import fuzzy from 'fuzzy';
 import {List} from 'immutable';
 import {Link} from 'react-router';
 
-import ga from '../../modules/ga';
+import analytics from '../../modules/analytics';
 import {Alert, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
@@ -39,7 +39,7 @@ const FilterForm = forms.Form.extend({
 });
 
 const EnvWithFilter = React.createClass({
-  mixins: [GroupStore.mixin, InstanceStore.mixin, SetInterval],
+  mixins: [GroupStore.mixin, InstanceStore.mixin, SetInterval, OnboardStore.mixin],
   propTypes: {
     include: PropTypes.array,
     filter: PropTypes.string,
@@ -67,7 +67,6 @@ const EnvWithFilter = React.createClass({
       attemptedGroupsSecurity: false,
       attemptedGroupsELB: false,
       attemptedInstancesECC: false,
-      gotBastions: false,
       selected: _.get(this.props, 'check.target.id') || null
     };
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -97,9 +96,6 @@ const EnvWithFilter = React.createClass({
     }
     if (getInstancesECCStatus === 'success' || typeof getInstancesECCStatus === 'object'){
       stateObj.attemptedInstancesECC = true;
-    }
-    if (OnboardStore.getGetBastionsStatus() === 'success'){
-      stateObj.gotBastions = true;
     }
     // const allData = this.getAll();
     this.setState(_.assign(stateObj, {
@@ -191,7 +187,7 @@ const EnvWithFilter = React.createClass({
     const case1 = !!(this.state.attemptedGroupsSecurity &&
       this.state.attemptedGroupsELB &&
       this.state.attemptedInstancesECC &&
-      this.state.gotBastions
+      OnboardStore.getGetBastionsHistory().length
       );
     const case2 = !!GroupStore.getGroupsSecurity().size;
     return case1 || case2;
@@ -203,9 +199,10 @@ const EnvWithFilter = React.createClass({
   },
   onFilterChange(){
     this.forceUpdate();
-    ga('send', 'event', 'EnvWithFilter', 'filter-change', this.state.filter.cleanedData.filter);
+    const data =  this.state.filter.cleanedData.filter;
+    analytics.event('EnvWithFilter', 'filter-change', {data});
     if (this.props.onFilterChange){
-      this.props.onFilterChange.call(null, this.state.filter.cleanedData.filter);
+      this.props.onFilterChange.call(null, data);
     }
   },
   runToggleButtonState(string){

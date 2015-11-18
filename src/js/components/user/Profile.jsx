@@ -24,13 +24,10 @@ export default React.createClass({
       user: UserStore.getUser().toJS()
     };
   },
-  runLogOut(){
-    return UserActions.userLogOut();
-  },
   render() {
     return (
        <div>
-        <Toolbar title={this.state.user.name}>
+        <Toolbar title={this.state.user.name} pageTitle="Profile">
           <Button fab color="info" to="profileEdit" title="Edit Your Profile">
             <Edit btn/>
           </Button>
@@ -52,7 +49,7 @@ export default React.createClass({
                 </Table>
               </Padding>
               <Padding t={3}>
-                <Button flat color="danger" onClick={this.runLogOut}>
+                <Button flat color="danger" onClick={UserActions.userLogOut}>
                   <Logout inline fill="danger"/> Log Out
                 </Button>
               </Padding>

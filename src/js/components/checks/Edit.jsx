@@ -80,7 +80,7 @@ const CheckEdit = React.createClass({
     CheckActions.getCheck(this.props.params.id);
   },
   getCheckTitle(){
-    return this.state.check.check_spec.value.name || this.state.check.id;
+    return _.get(this, 'state.check.check_spec.value.name') || 'Check';
   },
   isDisabled(){
     return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
@@ -127,41 +127,32 @@ const CheckEdit = React.createClass({
     )
      : <div/>;
   },
-  render() {
+  renderInner(){
     if (this.state.check.id){
       return (
         <div>
-          <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`} bg="info">
-            {this.renderLink()}
-          </Toolbar>
-          <Grid>
-            <Row>
-              <Col xs={12}>
-                {this.renderEnv()}
-                <Padding tb={1}>
-                  <CheckCreateRequest {...this.state} onChange={this.setData} renderAsInclude/>
-                </Padding>
-                <Padding tb={1}>
-                  <CheckCreateAssertions {...this.state} onChange={this.setData} renderAsInclude/>
-                </Padding>
-                <Padding tb={1}>
-                  <CheckCreateInfo {...this.state} onChange={this.setData} renderAsInclude/>
-                </Padding>
-                <Padding t={1}>
-                <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-                  Finish <Checkmark inline fill={colors.success}/>
-                </Button>
-                </Padding>
-                <Padding t={4}>
-                  <Padding t={4}>
-                    <Button onClick={this.runRemoveCheck} flat color="danger">
-                      <Delete inline fill="danger"/> Delete Check
-                    </Button>
-                  </Padding>
-                </Padding>
-              </Col>
-            </Row>
-          </Grid>
+          {this.renderEnv()}
+          <Padding tb={1}>
+            <CheckCreateRequest {...this.state} onChange={this.setData} renderAsInclude/>
+          </Padding>
+          <Padding tb={1}>
+            <CheckCreateAssertions {...this.state} onChange={this.setData} renderAsInclude/>
+          </Padding>
+          <Padding tb={1}>
+            <CheckCreateInfo {...this.state} onChange={this.setData} renderAsInclude/>
+          </Padding>
+          <Padding t={1}>
+          <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
+            Finish <Checkmark inline fill={colors.success}/>
+          </Button>
+          </Padding>
+          <Padding t={4}>
+            <Padding t={4}>
+              <Button onClick={this.runRemoveCheck} flat color="danger">
+                <Delete inline fill="danger"/> Delete Check
+              </Button>
+            </Padding>
+          </Padding>
         </div>
       );
     }
@@ -169,6 +160,22 @@ const CheckEdit = React.createClass({
       <StatusHandler status={this.state.status}>
         <h2>Check not found.</h2>
       </StatusHandler>
+    );
+  },
+  render() {
+    return (
+      <div>
+        <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`} bg="info">
+          {this.renderLink()}
+        </Toolbar>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              {this.renderInner()}
+            </Col>
+          </Row>
+        </Grid>
+      </div>
     );
   }
 });

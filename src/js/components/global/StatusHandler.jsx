@@ -48,7 +48,9 @@ const StatusHandler = React.createClass({
       return <Loader timeout={this.props.timeout}/>;
     }else if (this.state.error){
       return (
-        <Alert bsStyle="danger">{this.getErrorText()}</Alert>
+        <Alert bsStyle="danger">
+          <div dangerouslySetInnerHTML={{__html: this.getErrorText()}}/>
+        </Alert>
       );
     }else if ((this.state.success || this.state.attempts > 0) && !this.props.noFallback){
       return (

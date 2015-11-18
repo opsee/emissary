@@ -195,7 +195,7 @@ const CheckCreateRequest = React.createClass({
   },
   isDataComplete(){
     const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).every().value();
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
     return condition1 && condition2;
   },
   isDisabled(){
@@ -212,6 +212,9 @@ const CheckCreateRequest = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     router.transitionTo('checkCreateAssertions');
+  },
+  handleTargetClick(){
+    router.transitionTo('checkCreateTarget');
   },
   renderHeaderForm(){
     return (
@@ -270,11 +273,11 @@ const CheckCreateRequest = React.createClass({
     if (selection && selection.get('id')){
       if (this.props.check.target.type.match('EC2|instance')){
         return (
-          <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
+          <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
         );
       }
       return (
-        <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.props.onTargetClick} title="Return to target selection"/>
+        <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
       );
     }
     return <div/>;

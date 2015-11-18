@@ -73,6 +73,8 @@
     "animated-scrollto": "^1.1.0",
     "classnames": "^2.1.5",
     "colors": "^1.1.2",
+    "crypto": "0.0.3",
+    "crypto-js": "^3.1.5",
     "document-offset": "^1.0.4",
     "es6-promise": "^3.0.2",
     "flexboxgrid": "^6.3.0",

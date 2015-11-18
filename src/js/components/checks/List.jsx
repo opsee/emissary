@@ -5,7 +5,7 @@ import {CheckStore, OnboardStore} from '../../stores';
 import {Link} from 'react-router';
 import {Add} from '../icons';
 import {PageAuth} from '../../modules/statics';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 
@@ -20,7 +20,7 @@ function getState(){
 }
 
 const CheckList = React.createClass({
-  mixins: [CheckStore.mixin],
+  mixins: [CheckStore.mixin, OnboardStore.mixin],
   statics: {
     willTransitionTo: PageAuth
   },
@@ -35,9 +35,6 @@ const CheckList = React.createClass({
     if (CheckStore.getDeleteCheckStatus() === 'success'){
       this.getData();
     }
-    if (state.bastionStatus === 'success'){
-      state.gotBastions = true;
-    }
     this.setState(state);
   },
   getData(){
@@ -45,15 +42,7 @@ const CheckList = React.createClass({
     OnboardActions.getBastions();
   },
   renderChecks(){
-    if (this.state.gotBastions && !this.state.bastions.length){
-      return (
-        <Alert bsStyle="danger">
-          Bastion is disconnected or offline. If you need to install one, <Link to="onboardRegionSelect" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
-        </Alert>
-      );
-    }else if (!this.state.bastions.length){
-      return <StatusHandler status={this.state.bastionStatus}/>;
-    }else if (this.state.checks.size){
+    if (this.state.checks.size){
       return (
         <div>
           <h3>All Checks ({this.state.checks.size})</h3>

@@ -40,7 +40,7 @@ const CheckCreateTarget = React.createClass({
     }
   },
   getFinalData(){
-    let check = CheckStore.newCheck().toJS();
+    let check = this.props.check ? _.cloneDeep(this.props.check) : CheckStore.newCheck().toJS();
     check.target.id = this.state.selected;
     check.target.type = this.state.selectedType;
     return check;
@@ -79,7 +79,7 @@ const CheckCreateTarget = React.createClass({
     router.transitionTo('checkCreateRequest');
   },
   handleTargetSelect(item){
-    let check = CheckStore.newCheck().toJS();
+    let check = this.props.check ? _.cloneDeep(this.props.check) : CheckStore.newCheck().toJS();
     check.target.id = item.get('id');
     check.target.type = item.get('type') || 'sg';
     check.target.name = item.get('name');

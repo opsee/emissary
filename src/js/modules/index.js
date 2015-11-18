@@ -1,7 +1,6 @@
 import bootstrap from './bootstrap';
 import config from './config';
 import Flux from './flux';
-import ga from './ga';
 import mixins from './mixins';
 import request from './request';
 import router from './router';
@@ -13,7 +12,6 @@ export default {
   bootstrap,
   config,
   Flux,
-  ga,
   mixins,
   request,
   router,

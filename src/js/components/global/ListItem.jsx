@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import _ from 'lodash';
-import ga from '../../modules/ga';
+import analytics from '../../modules/analytics';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Settings, NewWindow} from '../icons';
@@ -39,13 +39,13 @@ const ListItem = React.createClass({
   },
   runMenuOpen(e){
     e.preventDefault();
-    ga('send', 'event', this.props.type, 'menu-open');
+    analytics.event(this.props.type, 'menu-open');
     this.setState({
       showMenu: true
     });
   },
   runMenuClose(){
-    ga('send', 'event', this.props.type, 'menu-close');
+    analytics.event(this.props.type, 'menu-close');
     this.setState({showMenu: false});
   },
   runAction(action){

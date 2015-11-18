@@ -12,14 +12,19 @@ import {Padding} from '../layout';
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
+const intercom = window.Intercom;
 /* eslint-enable no-unused-vars */
 
 function initialize(){
-  if (UserStore.hasUser() && !GlobalStore.getSocketStarted()){
-    config.intercom('boot', {app_id: 'mrw1z4dm', email: UserStore.getUser().get('email')});
+  if (UserStore.hasUser() && !window.userRefreshTokenInterval){
+    intercom('boot', {
+      app_id: 'mrw1z4dm',
+      email: UserStore.getUser().get('email'),
+      user_hash: UserStore.getUser().get('intercom_hmac')
+    });
     GlobalActions.globalSocketStart();
     //refresh user token every 5 minutes
-    setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
+    window.userRefreshTokenInterval = setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
   }
   if (config.demo){
     console.info('In Demo Mode.');

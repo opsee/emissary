@@ -1,10 +1,11 @@
-import config from '../modules/config';
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
-import ga from '../modules/ga';
+import analytics from '../modules/analytics';
 import Immutable, {Record} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
+const intercom = window.Intercom;
+import router from '../modules/router';
 
 /* eslint-disable no-use-before-define */
 
@@ -16,7 +17,8 @@ const User = Record({
   loginDate: null,
   admin: false,
   admin_id: 0,
-  loginRedirect: null
+  loginRedirect: null,
+  intercom_hmac: null
 });
 
 const statics = {
@@ -26,6 +28,7 @@ const statics = {
     }
     data.user.loginDate = data.user.loginDate || _data.user.get('loginDate');
     let obj = data.user || data;
+    obj.intercom_hmac = data.intercom_hmac;
     //don't overwrite properties that aren't coming from the api, like loginRedirect
     obj = _.assign({}, _data.user.toJS(), obj);
     _data.user = Immutable.fromJS(obj);
@@ -33,9 +36,9 @@ const statics = {
     Store.emitChange();
   },
   logout(){
+    intercom('shutdown');
     storage.remove('user');
     _data.user = new User();
-    Store.emitChange();
   },
   getInitialUser(){
     let initialUser = storage.get('user');
@@ -111,9 +114,12 @@ const Store = Flux.createStore(
       if (_.get(payload, 'data.timeout')){
         //if the data does not have status, then it probably timed out.
       }else {
-        config.intercom('shutdown');
+        analytics.event('User', 'logout', payload.actionType);
         statics.logout();
-        ga('send', 'event', 'User', 'logout', payload.actionType);
+        clearInterval(window.userRefreshTokenInterval);
+        delete window.userRefreshTokenInterval;
+        window.socket.close();
+        router.transitionTo('login');
         Store.emitChange();
       }
       break;

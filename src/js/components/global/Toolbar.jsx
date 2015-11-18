@@ -10,7 +10,8 @@ const Toolbar = React.createClass({
     title: PropTypes.string.isRequired,
     btnPosition: PropTypes.string,
     bg: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    pageTitle: PropTypes.string
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
@@ -28,7 +29,7 @@ const Toolbar = React.createClass({
   },
   renderTitle(){
     return (
-      <DocumentTitle title={this.props.title}/>
+      <DocumentTitle title={this.props.pageTitle || this.props.title}/>
     );
   },
   render(){

@@ -117,11 +117,25 @@ _actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
 
 _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
   () => {
-    return request
-    .get(`${config.api}/checks`)
-    .set('Authorization', UserStore.getAuth());
+    return new Promise((resolve, reject) => {
+      request
+      .get(`${config.api}/bastions`)
+      .set('Authorization', UserStore.getAuth())
+      .then(bastionRes => {
+        const bastions = _.get(bastionRes, 'body.bastions') || [];
+        if (!bastions.length){
+          return reject({message: 'Bastion is disconnected or offline. <a href="/start/region-select">Click here to install one.</a>'});
+        }
+        request
+        .get(`${config.api}/checks`)
+        .set('Authorization', UserStore.getAuth())
+        .then(res => {
+          return resolve(_.get(res.body, 'checks') || res.body);
+        }, reject);
+      }, reject);
+    });
   },
-  res => _.get(res.body, 'checks') || res.body,
+  checks => checks,
   res => res.body || res
 );
 

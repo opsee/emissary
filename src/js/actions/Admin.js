@@ -29,4 +29,14 @@ _actions.adminActivateSignup = Flux.statics.addAsyncAction('adminActivateSignup'
   res => res && res.response
 );
 
+_actions.adminGetUsers = Flux.statics.addAsyncAction('adminGetUsers',
+  () => {
+    return request
+    .get(`${config.authApi}/users`)
+    .set('Authorization', UserStore.getAuth());
+  },
+  res => res && res.body,
+  res => res && res.response
+);
+
 export default _.assign({}, ..._.values(_actions));

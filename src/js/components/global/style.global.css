@@ -1143,6 +1143,10 @@ input[type="search"] {
 .alert-danger .alert-link {
   color: #d23b0e;
 }
+.alert-danger a {
+  color: white;
+  text-decoration: underline;
+}
 
 .alert.alert-success, .alert.alert-info, .alert.alert-warning, .alert.alert-danger {
   color: white;
