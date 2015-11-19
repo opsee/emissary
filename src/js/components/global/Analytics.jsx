@@ -13,26 +13,16 @@ export default class GoogleAnalytics extends Component {
     if (!window.ga){
       console.error('No ga script found');
     }
-    this.setState({
-      isReady: true
-    });
   }
   shouldComponentUpdate(props, state) {
-    if (state.isReady && !config.ghosting) {
+    if (!config.ghosting) {
       this.runPageview();
     }
     return false;
   }
   runPageview() {
-    if (!this.context.router) {
-      throw new Error('Router is not presented in the component context.');
-    }
-    const path = this.context.router.getCurrentPath();
-    if (this.latestUrl === path) {
-      return;
-    }
-    this.latestUrl = path;
-    //wait for correct title
+    const path = this.props.location;
+    console.log(path);
     setTimeout(() => {
       GoogleAnalytics.sendPageview(path, document.title);
       window.Intercom('update');

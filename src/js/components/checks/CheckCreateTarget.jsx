@@ -128,7 +128,7 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (1 of 4)" bg="info">
-          <Button icon flat to="checks">
+          <Button icon flat to="/">
             <Close btn/>
           </Button>
         </Toolbar>

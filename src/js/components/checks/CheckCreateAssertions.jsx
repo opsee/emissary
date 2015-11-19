@@ -279,7 +279,7 @@ const CheckCreateAssertions = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
-          <Button to="checks" icon flat>
+          <Button to="/" icon flat>
             <Close btn/>
           </Button>
         </Toolbar>

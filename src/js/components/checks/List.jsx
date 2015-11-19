@@ -52,7 +52,7 @@ const CheckList = React.createClass({
     }
     return (
       <StatusHandler status={this.state.status}>
-        <p>You don&rsquo;t have any Checks yet. <Link to="checkCreate" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
+        <p>You don&rsquo;t have any Checks yet. <Link to="/check-create" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
 
         <p>Try creating a check like this to start:</p>
         <ol>
@@ -67,7 +67,7 @@ const CheckList = React.createClass({
   renderButton(){
     if (this.state.bastions.length){
       return (
-        <Button color="primary" fab to="checkCreate" title="Create New Check">
+        <Button color="primary" fab to="/check-create" title="Create New Check">
           <Add btn/>
         </Button>
       );

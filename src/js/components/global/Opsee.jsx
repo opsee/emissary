@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import {RouteHandler} from 'react-router';
 import config from '../../modules/config';
-import {SetInterval} from '../../modules/mixins';
-import {Header, MessageModal, Toolbar, Analytics} from '../global';
+import {SetInterval, Analytics} from '../../modules/mixins';
+import {Header, MessageModal, Toolbar} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
@@ -32,7 +32,7 @@ function initialize(){
 initialize();
 
 export default React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval],
+  mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval, Analytics],
   propTypes: {
     query: PropTypes.object
   },
@@ -43,7 +43,7 @@ export default React.createClass({
     };
   },
   componentWillMount(){
-    if (this.props.query.err){
+    if (this.props.location.query.err){
       config.error = true;
     }
   },
@@ -82,15 +82,12 @@ export default React.createClass({
         </div>
       );
     }
-    return (
-      <RouteHandler {...this.props}/>
-    );
+    return this.props.children;
   },
   render() {
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <Analytics id="UA-59205908-2"/>
         <Header/>
         <div className={this.state.showNav ? style.meat : style.meatUp}>
         {

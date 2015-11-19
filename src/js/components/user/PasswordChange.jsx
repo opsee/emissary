@@ -28,8 +28,8 @@ export default React.createClass({
   },
   componentWillMount(){
     UserActions.userSet({
-      token: this.props.query.token,
-      user: _.assign(this.props.query, {
+      token: this.props.location.query.token,
+      user: _.assign(this.props.location.query, {
         loginDate: new Date()
       })
     });
@@ -54,7 +54,7 @@ export default React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    UserActions.userEdit({password: this.state.password, id: this.props.query.id});
+    UserActions.userEdit({password: this.state.password, id: this.props.location.query.id});
   },
   renderInner(){
     if (this.state.status === 'success'){

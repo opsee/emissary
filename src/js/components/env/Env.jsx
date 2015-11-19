@@ -15,7 +15,7 @@ export default React.createClass({
     query: PropTypes.object
   },
   getInitialState(){
-    const path = this.getPath();
+    const path = this.props.location.pathname;
     let include = ['groupsSecurity', 'groupsELB', 'instancesECC'];
     if (path){
       if (path.match('groups-security')){
@@ -37,7 +37,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={this.state.include} filter={_.get(this.props.query, 'filter')} limit={this.state.include.length === 1 ? 1000 : null}/>
+                <EnvWithFilter include={this.state.include} filter={_.get(this.props.location.query, 'filter')} limit={this.state.include.length === 1 ? 1000 : null}/>
               </Col>
             </Row>
           </Grid>

@@ -28,7 +28,7 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title={this.state.user.name} pageTitle="Profile">
-          <Button fab color="info" to="profileEdit" title="Edit Your Profile">
+          <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
             <Edit btn/>
           </Button>
         </Toolbar>
@@ -44,7 +44,7 @@ export default React.createClass({
                   </tr>
                   <tr>
                     <td><strong>Password</strong></td>
-                    <td><Link to="profileEdit" >Change Your Password</Link></td>
+                    <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
                 </Table>
               </Padding>

@@ -96,9 +96,9 @@ export default React.createClass({
   },
   getEnvLink(){
     const type = this.getGroupType();
-    let string = 'envGroupsSecurity';
+    let string = 'env-groups-security';
     if (type === 'elb'){
-      string = 'envGroupsELB';
+      string = 'env-groups-elb';
     }
     return string;
   },

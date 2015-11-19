@@ -66,7 +66,7 @@ export default React.createClass({
     if (this.props.instances && this.state.limit < this.getInstances(true).size){
       return (
         <Padding t={1}>
-          <Link to="envInstancesEC2">
+          <Link to="/env-instances-ec2">
             Show {this.getInstances(true).size - this.state.limit} more
           </Link>
         </Padding>

@@ -94,8 +94,8 @@ const CheckCreateRequest = React.createClass({
   },
   getInitialState() {
     const self = this;
-    const initialHeaders = this.props.check.check_spec.value.headers;
-    let initialData = _.cloneDeep(self.props.check.check_spec.value);
+    const initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
+    let initialData = _.cloneDeep(_.get(self.props, 'check.check_spec.value') || {});
     if (initialData.verb && typeof initialData.verb === 'string'){
       initialData.verb = [initialData.verb];
     }
@@ -262,7 +262,7 @@ const CheckCreateRequest = React.createClass({
   },
   renderLink(){
     return this.state.check.id ? (
-      <Button color="primary" fab to="check" params={{id: this.state.check.id}} title="Edit {check.name}"/>
+      <Button color="primary" fab to={`/check/${this.state.check.id}`} params={{id: this.state.check.id}} title="Edit {check.name}"/>
       ) : <div/>;
   },
   renderTargetSelection(){
@@ -348,7 +348,7 @@ const CheckCreateRequest = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
-          <Button to="checks" icon flat>
+          <Button to="/" icon flat>
             <Close btn/>
           </Button>
         </Toolbar>

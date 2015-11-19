@@ -32,8 +32,8 @@ export default React.createClass({
   getInitialState(){
     return {
       status: null,
-      token: this.props.query.token,
-      id: this.props.query.id,
+      token: this.props.location.query.token,
+      id: this.props.location.query.id,
       password: null,
       error: null
     };

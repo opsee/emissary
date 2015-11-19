@@ -56,8 +56,8 @@ export default React.createClass({
       submitting: true
     });
     let data = this.state.data;
-    if (this.props.query.as){
-      data.as = _.parseInt(this.props.query.as, 10);
+    if (this.props.location.query.as){
+      data.as = _.parseInt(this.props.location.query.as, 10);
     }
     UserActions.userLogin(data);
   },
@@ -77,8 +77,8 @@ export default React.createClass({
                   </Button>
                 </Padding>
                 <Padding tb={2}>
-                  <p><Link to="passwordForgot">Forgot your password?</Link></p>
-                  <p>Need an account? <Link to="start">Sign up!</Link></p>
+                  <p><Link to="/passwordForgot">Forgot your password?</Link></p>
+                  <p>Need an account? <Link to="/start">Sign up!</Link></p>
                 </Padding>
               </form>
             </Col>

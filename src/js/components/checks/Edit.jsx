@@ -121,7 +121,7 @@ const CheckEdit = React.createClass({
   renderLink(){
     return this.state.check.id ?
     (
-      <Button to="check" params={{id: this.state.check.id}} icon flat title="Return to Check">
+      <Button to={`/check/${this.state.check.id}`} icon flat title="Return to Check">
         <Close btn/>
       </Button>
     )

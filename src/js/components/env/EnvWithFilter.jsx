@@ -324,7 +324,7 @@ const EnvWithFilter = React.createClass({
       }
       return (
         <Alert bsStyle="danger">
-          Bastion is disconnected or offline. If you need to install one, <Link to="onboardRegionSelect" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+          Bastion is disconnected or offline. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
         </Alert>
       );
     }

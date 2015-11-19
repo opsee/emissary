@@ -64,8 +64,8 @@ export default React.createClass({
                   </Button>
                 </div>
                 <Padding t={4}>
-                  <div><Link to="passwordForgot">Forgot your password?</Link></div>
-                  <div>Already have an account? <Link to="login">Log in</Link>.</div>
+                  <div><Link to="/password-forgot">Forgot your password?</Link></div>
+                  <div>Already have an account? <Link to="/login">Log in</Link>.</div>
                 </Padding>
               </form>
             </Col>

@@ -37,7 +37,7 @@ const CheckCreate = React.createClass({
   },
   getState(noCheck){
     const obj = {
-      check: CheckStore.newCheck(this.props.query).toJS(),
+      check: CheckStore.newCheck({target: this.props.location.query}).toJS(),
       response: CheckStore.getResponse(),
       createStatus: CheckStore.getCheckCreateStatus(),
       filter: null
@@ -52,7 +52,7 @@ const CheckCreate = React.createClass({
       check: _.cloneDeep(data)
     });
   },
-  setFilter(data){
+  handleFilterChange(data){
     this.setState({
       filter: data
     });
@@ -63,7 +63,12 @@ const CheckCreate = React.createClass({
   render() {
     return (
       <div>
-        <RouteHandler {...this.state} onChange={this.setData} onSubmit={this.handleSubmit} setStatus={this.setStatus} onFilterChange={this.setFilter}/>
+        {React.cloneElement(this.props.children, _.assign({
+          onChange: this.setData, 
+          onSubmit: this.handleSubmit, 
+          onFilterChange: this.handleFilterChange
+        }, this.state)
+        )}
         <Grid>
           <Row>
             <Col xs={12}>

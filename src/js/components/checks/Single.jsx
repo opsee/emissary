@@ -156,7 +156,7 @@ export default React.createClass({
   renderLink(){
     if (this.state.check && this.state.check.get('id')){
       return (
-        <Button to="checkEdit" params={{id: this.props.params.id}} color="info" fab title={`Edit ${this.state.check.name}`}>
+        <Button to={`/check/edit/${this.props.params.id}`} color="info" fab title={`Edit ${this.state.check.name}`}>
           <Edit btn/>
         </Button>
       );

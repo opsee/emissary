@@ -8,6 +8,8 @@ import config from './modules/config';
 import {render} from 'react-dom';
 import {routes} from './components/global/Routes.jsx';
 import ReactRouter, {Router, Route} from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+const history = createBrowserHistory();
 
 if (config.env !== 'production'){
   window._ = _;
@@ -16,7 +18,7 @@ if (config.env !== 'production'){
 }
 
 render(
-  <Router>{routes}</Router>, document.getElementById('main')
+  <Router history={history}>{routes}</Router>, document.getElementById('main')
 );
 
 // router.run((Root, state) => {

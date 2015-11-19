@@ -19,7 +19,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={['instancesECC']} filter={_.get(this.props.query, 'filter')} limit={1000}/>
+                <EnvWithFilter include={['instancesECC']} filter={_.get(this.props.location.query, 'filter')} limit={1000}/>
               </Col>
             </Row>
           </Grid>

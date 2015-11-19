@@ -53,7 +53,7 @@ const Install = React.createClass({
 
     let reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
     if (config.env !== 'production'){
-      if (this.props.query.fail){
+      if (this.props.location.query.fail){
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }
     }
@@ -156,7 +156,7 @@ const Install = React.createClass({
       return (
         <Padding tb={3}>
           <p>All clear!</p>
-          <Button to="checkCreate" color="primary" block chevron>
+          <Button to="/check-create" color="primary" block chevron>
             Create a Check
           </Button>
         </Padding>
@@ -209,7 +209,7 @@ const Install = React.createClass({
     }
     return (
       <Alert bsStyle="danger">
-        Something went wrong before the install began. Please contact support by visiting our <Link to="help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
+        Something went wrong before the install began. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
       </Alert>
     );
   },

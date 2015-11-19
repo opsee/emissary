@@ -242,7 +242,7 @@ const CheckCreateInfo = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (4 of 4)" bg="info">
-          <Button to="checks" icon flat>
+          <Button to="/" icon flat>
             <Close btn/>
           </Button>
         </Toolbar>
