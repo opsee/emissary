@@ -61,11 +61,18 @@ const GroupItem = React.createClass({
     if (this.getItem().get('total')){
       return  (
         <span>
-          <Checkmark inline fill="textSecondary"/>{this.props.item.get('passing')}
-          &nbsp;
-          <Close inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
-          &nbsp;
-          <Instance inline fill="textSecondary"/>{this.props.item.get('instance_count')}
+          <span style={{display: 'inline-block', margin: '0 0.5rem 0 0', padding: '0 .4rem'}}>
+            <Checkmark inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+            {this.props.item.get('passing')}
+          </span>
+          <span style={{display: 'inline-block', margin: '0 0.5rem 0 0', padding: '0 .4rem'}}>
+            <Close inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+            {this.props.item.get('total') - this.props.item.get('passing')}
+          </span>
+          <span style={{display: 'inline-block', margin: '0 0.5rem 0 0', padding: '0 .4rem'}}>
+            <Instance inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+            {this.props.item.get('instance_count')}
+          </span>
         </span>
       );
     }else if (this.getItem().get('checks').size){
@@ -73,9 +80,12 @@ const GroupItem = React.createClass({
     }
     return  (
       <span>
-        <Checkmark inline fill="textSecondary"/>No checks
-        &nbsp;
-        <Instance inline fill="textSecondary"/>{this.props.item.get('instance_count')}
+        <Checkmark inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+        No checks
+        <span style={{display: 'inline-block', margin: '0 .6rem 0 0', padding: '0 .4rem'}}>
+          <Instance inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+          {this.props.item.get('instance_count')}
+        </span>
       </span>
     );
   },
