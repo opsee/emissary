@@ -38,7 +38,7 @@ export default React.createClass({
   getInitialState(){
     return {
       offset: this.props.offset || 0,
-      limit: this.props.limit || 4,
+      limit: this.props.limit || 8,
       instances: List()
     };
   },
