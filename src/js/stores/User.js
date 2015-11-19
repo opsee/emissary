@@ -4,7 +4,6 @@ import analytics from '../modules/analytics';
 import Immutable, {Record} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
-const intercom = window.Intercom;
 import router from '../modules/router';
 
 /* eslint-disable no-use-before-define */
@@ -36,7 +35,7 @@ const statics = {
     Store.emitChange();
   },
   logout(){
-    intercom('shutdown');
+    window.Intercom('shutdown');
     storage.remove('user');
     _data.user = new User();
   },
