@@ -12,12 +12,11 @@ import {Padding} from '../layout';
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
-const intercom = window.Intercom;
 /* eslint-enable no-unused-vars */
 
 function initialize(){
   if (UserStore.hasUser() && !window.userRefreshTokenInterval){
-    intercom('boot', {
+    window.Intercom('boot', {
       app_id: 'mrw1z4dm',
       email: UserStore.getUser().get('email'),
       user_hash: UserStore.getUser().get('intercom_hmac')

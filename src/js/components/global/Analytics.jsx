@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import config from '../../modules/config';
-const ga = window.ga;
-const intercom = window.Intercom;
 
 export default class GoogleAnalytics extends Component {
   static propTypes = {
@@ -12,7 +10,7 @@ export default class GoogleAnalytics extends Component {
   };
   /*eslint-disable react/no-did-mount-set-state*/
   componentDidMount() {
-    if (!ga){
+    if (!window.ga){
       console.error('No ga script found');
     }
     this.setState({
@@ -37,17 +35,17 @@ export default class GoogleAnalytics extends Component {
     //wait for correct title
     setTimeout(() => {
       GoogleAnalytics.sendPageview(path, document.title);
-      intercom('update');
+      window.Intercom('update');
     }, 0);
   }
   render() {
     return null;
   }
   static command(...args) {
-    if (!ga) {
+    if (!window.ga) {
       throw new Error('Google analytics is not initialized');
     }
-    return ga.apply(ga, args);
+    return window.ga.apply(window.ga, args);
   }
   static send(what, options) {
     return GoogleAnalytics.command('send', what, options);
