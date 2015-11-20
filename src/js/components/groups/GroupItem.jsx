@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {Record, Map} from 'immutable';
 
 import {ListItem} from '../global';
-import {Add} from '../icons';
+import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
 import {Button} from '../forms';
 import {GroupStore} from '../../stores';
 import {GroupActions} from '../../actions';
@@ -58,11 +58,30 @@ const GroupItem = React.createClass({
   },
   getInfoText(){
     if (this.getItem().get('total')){
-      return `${this.getItem().get('passing')} of ${this.getItem().get('total')} passing`;
+      return  (
+        <span>
+          <span>
+            <ListCheckmark inline fill="textSecondary"/>
+            {this.props.item.get('passing')}
+            &nbsp;&nbsp;
+            <ListClose inline fill="textSecondary"/>
+            {this.props.item.get('total') - this.props.item.get('passing')}
+            &nbsp;&nbsp;
+            <ListInstance inline fill="textSecondary"/>
+            {this.props.item.get('instance_count')}
+          </span>
+        </span>
+      );
     }else if (this.getItem().get('checks').size){
       return 'Initializing checks';
     }
-    return 'No checks applied';
+    return  (
+      <span>
+        <ListCheckmark inline fill="textSecondary"/>No checks
+        &nbsp;
+        <ListInstance inline fill="textSecondary"/>{this.props.item.get('instance_count')}
+      </span>
+    );
   },
   render(){
     if (this.getItem().get('name')){

@@ -69,7 +69,10 @@ const _public = {
       Store.getAvailableVpcs().forEach(r => {
         r.vpcs.forEach(rvpc => {
           if (rvpc['vpc-id'] === v){
-            newVpc = {id: v, region: r.region};
+            /* eslint-disable camelcase */
+            const subnet_id = _.chain(rvpc.subnets).sortByAll([(t)=>t.state === 'available', 'default-for-az', 'available-ip-address-count']).last().get('subnet-id').value();
+            newVpc = {id: v, region: r.region, subnet_id};
+            /* eslint-enable camelcase */
           }
         });
       });
@@ -82,7 +85,7 @@ const _public = {
     relation = relation.map(r => {
       return {
         region: r.region,
-        vpcs: [{id: r.id}]
+        vpcs: [{id: r.id, subnet_id: r.subnet_id}]
       };
     });
     let aggregate = _.assign({}, _installData, {regions: relation}, {'instance-size': 't2.micro'});

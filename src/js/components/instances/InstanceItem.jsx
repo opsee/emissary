@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Record} from 'immutable';
 
 import {ListItem} from '../global';
-import {Add} from '../icons';
+import {Add, ListCheckmark, Close} from '../icons';
 import {Button} from '../forms';
 
 const InstanceItem = React.createClass({
@@ -16,11 +16,21 @@ const InstanceItem = React.createClass({
   },
   getInfoText(){
     if (this.props.item.get('total')){
-      return `${this.props.item.get('passing')} of ${this.props.item.get('total')} passing`;
+      return (
+        <span>
+          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          &nbsp;&nbsp;
+          <Close inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
+        </span>
+      );
     }else if (this.props.item.get('checks').size){
       return 'Initializing checks';
     }
-    return 'No checks applied';
+    return (
+      <span>
+        <ListCheckmark inline fill="textSecondary"/>No checks
+      </span>
+    );
   },
   render(){
     if (this.props.item.get('name')){
