@@ -12,7 +12,7 @@ export default React.createClass({
     willTransitionTo: PageAuth
   },
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   getInitialState(){
     const path = this.props.location.pathname;

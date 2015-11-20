@@ -18,7 +18,7 @@ export default React.createClass({
     }
   },
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   getInitialState(){
     return {

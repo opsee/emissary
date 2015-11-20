@@ -5,7 +5,6 @@ import {CheckActions, GlobalActions, UserActions} from '../../actions';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
-import {RouteHandler} from 'react-router';
 import router from '../../modules/router';
 import {PageAuth} from '../../modules/statics';
 
@@ -15,7 +14,8 @@ const CheckCreate = React.createClass({
     willTransitionTo: PageAuth
   },
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object,
+    children: PropTypes.node
   },
   getInitialState(){
     return this.getState();
@@ -64,8 +64,8 @@ const CheckCreate = React.createClass({
     return (
       <div>
         {React.cloneElement(this.props.children, _.assign({
-          onChange: this.setData, 
-          onSubmit: this.handleSubmit, 
+          onChange: this.setData,
+          onSubmit: this.handleSubmit,
           onFilterChange: this.handleFilterChange
         }, this.state)
         )}

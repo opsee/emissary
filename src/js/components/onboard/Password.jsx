@@ -13,7 +13,7 @@ import {StatusHandler} from '../global';
 export default React.createClass({
   mixins: [State, OnboardStore.mixin],
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   storeDidChange(){
     const status = OnboardStore.getOnboardSetPasswordStatus();

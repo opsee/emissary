@@ -19,7 +19,7 @@ const ListItemTest = React.createClass({
     onClick: PropTypes.func,
     link: PropTypes.string,
     params: PropTypes.object,
-    query: PropTypes.object
+    location: PropTypes.object
   },
   getDefaultProps() {
     return {

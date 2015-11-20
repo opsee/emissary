@@ -24,7 +24,7 @@ const Install = React.createClass({
   },
   propTypes: {
     path: PropTypes.string,
-    query: PropTypes.object
+    location: PropTypes.object
   },
   componentWillMount(){
     if (config.demo || this.props.path.match('example')){

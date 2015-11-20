@@ -101,7 +101,7 @@ export default React.createClass({
     return (
        <div>
         <Toolbar title="Edit Your Profile" bg="info" btnPosition="midRight">
-          <Button to="profile" icon flat>
+          <Button to="/profile" icon flat>
             <Close btn/>
           </Button>
         </Toolbar>

@@ -166,7 +166,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`${this.state.check.name || ''}`}>
+        <Toolbar title={this.state.check.name || this.state.check.id || ''}>
           {this.renderLink()}
         </Toolbar>
         <Grid>

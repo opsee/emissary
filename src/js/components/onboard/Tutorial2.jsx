@@ -7,15 +7,23 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  statics: {
-    willTransitionTo(transition, params, query, cb){
-      const newImg = new Image();
-      newImg.src = img;
-      newImg.onload = () => cb();
-    }
+  getInitialState(){
+    return {
+      loaded: false
+    };
+  },
+  componentWillMount(){
+    const newImg = new Image();
+    newImg.src = img;
+    newImg.onload = () => {
+      this.setState({
+        loaded: true
+      });
+    };
   },
   render() {
-    return (
+    if (this.state.loaded){
+      return (
        <Grid>
         <Row>
           <Col xs={12}>
@@ -29,6 +37,8 @@ export default React.createClass({
             </Col>
           </Row>
         </Grid>
-    );
+      );
+    }
+    return <div/>;
   }
 });

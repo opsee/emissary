@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Redirect} from 'react-router';
+import {Route, Redirect, IndexRoute} from 'react-router';
 import Opsee from '../global/Opsee';
 
 import Env from '../env/Env';
@@ -66,11 +66,13 @@ const routes = (
     <Route path="/instance/ec2/:id" component={InstanceEC2}/>
     <Route path="/instance/rds/:id" component={InstanceRDS}/>
 
-    <Route path="/" component={CheckList}/>
+    <Route path="/" component={CheckList}>
+      <IndexRoute component={CheckList}/>
+    </Route>
     <Redirect from="/checks" to="/"/>
 
+    <Redirect from="/check-create" to="/check-create/target"/>
     <Route path="/check-create" component={CheckCreate}>
-      <Redirect from="/check-create" to="/check-create-target"/>
       <Route path="/check-create/target" component={CheckCreateTarget}/>
       <Route path="/check-create/request" component={CheckCreateRequest}/>
       <Route path="/check-create/assertions" component={CheckCreateAssertions}/>
@@ -85,12 +87,14 @@ const routes = (
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
     <Route path="/start/password" component={OnboardPassword}/>
+
+    <Redirect from="/start/tutorial" to="/start/tutorial/1" />
     <Route path="/start/tutorial" component={OnboardTutorial}>
-      <Redirect from="/start/tutorial" to="/start/tutorial/1" />
       <Route path="/start/tutorial/1" component={OnboardTutorial1}/>
       <Route path="/start/tutorial/2" component={OnboardTutorial2}/>
       <Route path="/start/tutorial/3" component={OnboardTutorial3}/>
     </Route>
+
     <Route path="/start/profile" component={Help}/>
     <Route path="/start/team" component={OnboardTeam}/>
     <Route path="/start/region-select" component={OnboardRegionSelect}/>
@@ -120,7 +124,7 @@ const routes = (
   </Route>
 );
 
-const hideNavList = ['start', 'onboardThanks', 'onboardPassword', 'tutorial', 'onboardRegionSelect', 'onboardCredentials', 'onboardVpcSelect', 'onboardInstall', 'onboardInstallExample', 'login', 'checkCreateTarget', 'checkCreateRequest', 'checkCreateAssertions', 'checkCreateInfo', 'checkEdit', 'profileEdit', 'passwordForgot'];
+const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
 
 export default {
   routes,

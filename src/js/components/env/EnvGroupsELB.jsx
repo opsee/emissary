@@ -10,7 +10,7 @@ export default React.createClass({
     willTransitionTo: PageAuth
   },
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   render() {
     return (

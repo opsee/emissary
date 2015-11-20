@@ -13,7 +13,7 @@ import {Padding} from '../layout';
 export default React.createClass({
   mixins: [UserStore.mixin],
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   storeDidChange(){
     const status = UserStore.getUserLoginStatus();
@@ -77,7 +77,7 @@ export default React.createClass({
                   </Button>
                 </Padding>
                 <Padding tb={2}>
-                  <p><Link to="/passwordForgot">Forgot your password?</Link></p>
+                  <p><Link to="/password/forgot">Forgot your password?</Link></p>
                   <p>Need an account? <Link to="/start">Sign up!</Link></p>
                 </Padding>
               </form>

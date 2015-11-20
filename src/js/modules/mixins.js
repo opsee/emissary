@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default {
   SetInterval: {
     componentWillMount(){
@@ -10,13 +8,6 @@ export default {
     },
     componentWillUnmount(){
       this.intervals.map(clearInterval);
-    }
-  },
-  Analytics: {
-    componentWillReceiveProps(nextProps){
-      if(!_.isEqual(nextProps.location, this.props.location)){
-        console.log(nextProps.location);
-      }
     }
   }
 };
