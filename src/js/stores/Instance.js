@@ -28,8 +28,8 @@ const Instance = Record({
   SecurityGroups: List(),
   checks: List(),
   results: List(),
-  passing: undefined,
-  total: undefined
+  passing: 0,
+  total: 0
 });
 
 let _data = {

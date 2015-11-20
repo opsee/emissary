@@ -63,13 +63,13 @@ const GroupItem = React.createClass({
         <span>
           <span>
             <ListCheckmark inline fill="textSecondary"/>
-            {this.props.item.get('passing')}
+            {this.getItem().get('passing')}
             &nbsp;&nbsp;
             <ListClose inline fill="textSecondary"/>
-            {this.props.item.get('total') - this.props.item.get('passing')}
+            {this.getItem().get('total') - this.getItem().get('passing')}
             &nbsp;&nbsp;
             <ListInstance inline fill="textSecondary"/>
-            {this.props.item.get('instance_count')}
+            {this.getItem().get('instance_count')}
           </span>
         </span>
       );
@@ -80,7 +80,7 @@ const GroupItem = React.createClass({
       <span>
         <ListCheckmark inline fill="textSecondary"/>No checks
         &nbsp;
-        <ListInstance inline fill="textSecondary"/>{this.props.item.get('instance_count')}
+        <ListInstance inline fill="textSecondary"/>{this.getItem().get('instance_count')}
       </span>
     );
   },

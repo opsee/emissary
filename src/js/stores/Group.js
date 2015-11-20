@@ -21,8 +21,8 @@ const Group = Record({
   checks: List(),
   instance_count: undefined,
   results: List(),
-  passing: undefined,
-  total: undefined
+  passing: 0,
+  total: 0
 });
 
 const GroupELB = Record({
@@ -39,8 +39,8 @@ const GroupELB = Record({
   checks: List(),
   instance_count: undefined,
   results: List(),
-  passing: undefined,
-  total: undefined,
+  passing: 0,
+  total: 0,
   lastChecked: undefined
 });
 
