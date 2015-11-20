@@ -18,6 +18,7 @@ import Docs from '../docs/Docs.jsx';
 import DocsBastion from '../docs/Bastion.jsx';
 import DocsCloudformation from '../docs/Cloudformation.jsx';
 import DocsIAM from '../docs/IAM.jsx';
+import DocsChecks from '../docs/Checks.jsx';
 
 import CheckCreateTarget from '../checks/CheckCreateTarget.jsx';
 import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
@@ -120,6 +121,7 @@ const routes = (
     <Route path="/docs/bastion" name="docsBastion" handler={DocsBastion}/>
     <Route path="/docs/cloudformation" name="docsCloudformation" handler={DocsCloudformation}/>
     <Route path="/docs/IAM" name="docsIAM" handler={DocsIAM}/>
+    <Route path="/docs/checks" name="docsChecks" handler={DocsChecks}/>
 
     <NotFoundRoute handler={NotFound}/>
   </Route>
