@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {Record} from 'immutable';
 
 import {ListItem} from '../global';
-import {Add, Checkmark, Close} from '../icons';
+import {Add, ListCheckmark, Close} from '../icons';
 import {Button} from '../forms';
 
 const InstanceItem = React.createClass({
@@ -19,8 +19,8 @@ const InstanceItem = React.createClass({
     if (this.props.item.get('total')){
       return (
         <span>
-          <Checkmark inline fill="textSecondary"/>{this.props.item.get('passing')}
-          &nbsp;
+          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          &nbsp;&nbsp;
           <Close inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
         </span>
       );
@@ -29,7 +29,7 @@ const InstanceItem = React.createClass({
     }
     return (
       <span>
-        <Checkmark inline fill="textSecondary"/>No checks
+        <ListCheckmark inline fill="textSecondary"/>No checks
       </span>
     );
   },

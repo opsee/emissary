@@ -3,7 +3,7 @@ import {Record} from 'immutable';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import {ListItem} from '../global';
-import {Edit, Delete, Checkmark, Close} from '../icons';
+import {Edit, Delete, ListCheckmark, ListClose} from '../icons';
 import {Button} from '../forms';
 import {CheckActions} from '../../actions';
 
@@ -17,9 +17,9 @@ const CheckItem = React.createClass({
     if (this.props.item.get('total')){
       return (
         <span>
-          <Checkmark inline fill="textSecondary"/>{this.props.item.get('passing')}
-          &nbsp;
-          <Close inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
+          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          &nbsp;&nbsp;
+          <ListClose inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
         </span>
       );
     }

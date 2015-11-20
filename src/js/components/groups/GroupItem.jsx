@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {Record, Map} from 'immutable';
 
 import {ListItem} from '../global';
-import {Add, Checkmark, Close, Instance} from '../icons';
+import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
 import {Button} from '../forms';
 import {GroupStore} from '../../stores';
 import {GroupActions} from '../../actions';
@@ -61,16 +61,14 @@ const GroupItem = React.createClass({
     if (this.getItem().get('total')){
       return  (
         <span>
-          <span style={{display: 'inline-block', margin: '0 0.5rem 0 0', padding: '0 .4rem'}}>
-            <Checkmark inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+          <span>
+            <ListCheckmark inline fill="textSecondary"/>
             {this.props.item.get('passing')}
-          </span>
-          <span style={{display: 'inline-block', margin: '0 0.5rem 0 0', padding: '0 .4rem'}}>
-            <Close inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+            &nbsp;&nbsp;
+            <ListClose inline fill="textSecondary"/>
             {this.props.item.get('total') - this.props.item.get('passing')}
-          </span>
-          <span style={{display: 'inline-block', margin: '0 0.5rem 0 0', padding: '0 .4rem'}}>
-            <Instance inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
+            &nbsp;&nbsp;
+            <ListInstance inline fill="textSecondary"/>
             {this.props.item.get('instance_count')}
           </span>
         </span>
@@ -80,12 +78,9 @@ const GroupItem = React.createClass({
     }
     return  (
       <span>
-        <Checkmark inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
-        No checks
-        <span style={{display: 'inline-block', margin: '0 .6rem 0 0', padding: '0 .4rem'}}>
-          <Instance inline fill="textSecondary" style={{height: '1.3rem', width: '1.3rem', verticalAlign: 'middle', margin: '0 0.4rem 0 0'}}/>
-          {this.props.item.get('instance_count')}
-        </span>
+        <ListCheckmark inline fill="textSecondary"/>No checks
+        &nbsp;
+        <ListInstance inline fill="textSecondary"/>{this.props.item.get('instance_count')}
       </span>
     );
   },
