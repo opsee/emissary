@@ -23,3 +23,27 @@
 .error{
   color:var(--colorError);
 }
+
+.bgPrimary{
+  background:var(--colorPrimary);
+}
+
+.bgInfo{
+  background:var(--colorInfo);
+}
+
+.bgDanger{
+  background:var(--colorDanger);
+}
+
+.bgWarning{
+  background:var(--colorWarning);
+}
+
+.bgSuccess{
+  background:var(--colorSuccess);
+}
+
+.bgError{
+  background:var(--colorError);
+}
