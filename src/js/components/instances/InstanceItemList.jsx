@@ -38,7 +38,7 @@ export default React.createClass({
   getInitialState(){
     return {
       offset: this.props.offset || 0,
-      limit: this.props.limit || 4,
+      limit: this.props.limit || 8,
       instances: List()
     };
   },
@@ -53,7 +53,7 @@ export default React.createClass({
       });
     }
     data = data.sortBy(item => {
-      return typeof item.get('health') === 'number' ? item.get('health') : 99.99;
+      return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
     return data.slice(this.state.offset, this.state.limit);
   },
