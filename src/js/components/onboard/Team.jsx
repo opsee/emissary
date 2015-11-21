@@ -53,7 +53,7 @@ const Team = React.createClass({
     }
     const createOrgStatus = OnboardStore.getCreateOrgStatus();
     if (createOrgStatus === 'success'){
-      this.history.pushState('/start/region-select');
+      this.history.pushState(null, '/start/region-select');
     }
     this.setState({createOrgStatus});
   },

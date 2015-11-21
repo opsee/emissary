@@ -49,7 +49,7 @@ const CheckResponse = React.createClass({
     this.setState(state);
   },
   getArrayFromData(data){
-    let arr = _.map(['port', 'verb', 'path'], s => data.check_spec.value[s]);
+    let arr = _.map(['port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
     let headers = _.get(data, 'check_spec.value.headers');
     if (headers){
@@ -139,6 +139,9 @@ const CheckResponse = React.createClass({
     );
   },
   render() {
+    if (_.get(this.state, 'status') === 'pending'){
+      return this.renderWaiting();
+    }
     if (this.props.response && !this.props.response.size){
       return this.renderWaiting();
     }else if (this.props.response || (CheckStore.getResponse() && this.state.complete)){

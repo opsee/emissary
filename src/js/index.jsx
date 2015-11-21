@@ -7,7 +7,9 @@ import {render} from 'react-dom';
 import {routes} from './components/global/Routes.jsx';
 import {Router} from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
-const history = createBrowserHistory();
+import {useStandardScroll} from 'scroll-behavior';
+
+const history = useStandardScroll(createBrowserHistory)();
 
 if (config.env !== 'production'){
   window._ = _;

@@ -16,7 +16,7 @@ export default React.createClass({
     const status = OnboardStore.getOnboardSignupCreateStatus();
     this.setState({status});
     if (status === 'success'){
-      this.history.pushState('/start/thanks');
+      this.history.pushState(null, '/start/thanks');
     }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message

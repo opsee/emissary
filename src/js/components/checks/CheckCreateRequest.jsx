@@ -99,6 +99,10 @@ const CheckCreateRequest = React.createClass({
     if (initialData.verb && typeof initialData.verb === 'string'){
       initialData.verb = [initialData.verb];
     }
+    initialData = _.mapValues(initialData, val => {
+      return val || null;
+    });
+    console.log(initialData);
     const obj = {
       info: new InfoForm(_.assign({
         onChange: self.runChange,
@@ -195,7 +199,7 @@ const CheckCreateRequest = React.createClass({
   },
   isDataComplete(){
     const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
+    const condition2 = _.chain(['port', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
     return condition1 && condition2;
   },
   isDisabled(){
