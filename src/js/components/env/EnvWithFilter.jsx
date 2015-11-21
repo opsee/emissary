@@ -195,7 +195,7 @@ const EnvWithFilter = React.createClass({
   shouldButtonsRender(){
     const failing = this.getNumberFailing();
     const unmonitored = this.getNumberUnmonitored();
-    return (failing > 0 && unmonitored > 0);
+    return (failing > 0 || unmonitored > 0);
   },
   onFilterChange(){
     this.forceUpdate();
