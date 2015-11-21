@@ -13,7 +13,7 @@ export default React.createClass({
             <Col xs={12}>
               <div>
                 <h2>Overview</h2>
-                <p>The Opsee onboarding process requires <em>temporary access to your AWS resources</em>. This access will only be used to install and start the Opsee Bastion EC2 Instance.  The Bastion is responsible for discovering and monitoring your AWS services. To learn more about the Bastion Instance <Link to="docsBastion" >see the FAQ</Link>.</p>
+                <p>The Opsee onboarding process requires <em>temporary access to your AWS resources</em>. This access will only be used to install and start the Opsee Bastion EC2 Instance.  The Bastion is responsible for discovering and monitoring your AWS services. To learn more about the Bastion Instance <Link to="/docs/bastion" >see the FAQ</Link>.</p>
 
                 <h2>Setup via the creation of an IAM User</h2>
                 <p>This section describes how to complete the onboarding process by creating an IAM User and attaching an Access Policy to that user.</p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import router from '../../modules/router';
+import {History} from 'react-router';
 import colors from 'seedling/colors';
 import _ from 'lodash';
 import {Toolbar} from '../global';
@@ -12,7 +12,7 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  mixins: [AdminStore.mixin],
+  mixins: [AdminStore.mixin, History],
   getInitialState(){
     return this.getState();
   },
@@ -68,7 +68,7 @@ export default React.createClass({
   runGhostAccount(signup){
     UserActions.userLogOut();
     //revisit this, params isn't working so using query atm
-    router.transitionTo('login', null, {as: signup.id});
+    this.history.pushState(null, 'login', {as: signup.id});
   },
   renderIcon(signup){
     if (this.isUser(signup)){

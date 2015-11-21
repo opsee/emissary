@@ -7,15 +7,23 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  statics: {
-    willTransitionTo(transition, params, query, cb){
-      const newImg = new Image();
-      newImg.src = img;
-      newImg.onload = () => cb();
-    }
+  getInitialState(){
+    return {
+      loaded: false
+    };
+  },
+  componentWillMount(){
+    const newImg = new Image();
+    newImg.src = img;
+    newImg.onload = () => {
+      this.setState({
+        loaded: true
+      });
+    };
   },
   render() {
-    return (
+    if (this.state.loaded){
+      return (
        <Grid>
         <Row>
           <Col xs={12}>
@@ -23,12 +31,14 @@ export default React.createClass({
               <h2>Opsee Discovers Your Infrastructure</h2>
               <p>The Bastion Instance then uses AWS APIs to discover your instances and groups. The bastion is always scanning, and detects changes to infrastructure automatically.</p>
               <Padding t={2}>
-                <Button to="tutorial3" color="success" block>Next <ArrowRight inline/></Button>
+                <Button to="/start/tutorial/3" color="success" block>Next <ArrowRight inline/></Button>
               </Padding>
               <StepCounter active={2} steps={3}/>
             </Col>
           </Row>
         </Grid>
-    );
+      );
+    }
+    return <div/>;
   }
 });

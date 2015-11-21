@@ -33,9 +33,9 @@ const CheckItem = React.createClass({
   render(){
     if (this.props.item.get('name')){
       return (
-        <ListItem type="Check" link="check" params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item}>
+        <ListItem type="Check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item}>
           <div key="menu">
-            <Button text="left" color="primary" block flat to="checkEdit"  params={{id: this.props.item.get('id')}}>
+            <Button text="left" color="primary" block flat to={`/check/edit/${this.props.item.get('id')}`}>
               <Edit inline fill="primary"/> Edit
             </Button>
             <Button text="left" color="danger" block flat onClick={this.handleDeleteClick}>

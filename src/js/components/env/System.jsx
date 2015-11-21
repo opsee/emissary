@@ -4,15 +4,11 @@ import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
-import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 import config from '../../modules/config';
 
 const System = React.createClass({
   mixins: [OnboardStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   getInitialState(){
     return {
       bastions: undefined

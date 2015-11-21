@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
-import {RouteHandler} from 'react-router';
+import _ from 'lodash';
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {Header, MessageModal, Toolbar, Analytics} from '../global';
+import {Analytics, Header, MessageModal, Toolbar} from '../global';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
@@ -13,6 +13,8 @@ import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
 /* eslint-enable no-unused-vars */
+
+const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
 
 function initialize(){
   if (UserStore.hasUser() && !window.userRefreshTokenInterval){
@@ -34,7 +36,8 @@ initialize();
 export default React.createClass({
   mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval],
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object,
+    children: PropTypes.node
   },
   getInitialState(){
     return {
@@ -43,7 +46,7 @@ export default React.createClass({
     };
   },
   componentWillMount(){
-    if (this.props.query.err){
+    if (this.props.location.query.err){
       config.error = true;
     }
   },
@@ -65,6 +68,10 @@ export default React.createClass({
     }
     this.setState(stateObj);
   },
+  getMeatClass(){
+    const found = _.find(hideNavList, string => this.props.location.pathname.match(string));
+    return found ? style.meatUp : style.meat;
+  },
   renderInner(){
     if (this.state.socketError && !config.debug){
       return (
@@ -82,31 +89,23 @@ export default React.createClass({
         </div>
       );
     }
-    return (
-      <RouteHandler {...this.props}/>
-    );
+    return this.props.children;
   },
   render() {
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <Analytics id="UA-59205908-2"/>
         <Header/>
-        <div className={this.state.showNav ? style.meat : style.meatUp}>
+        <Analytics/>
+        <div className={this.getMeatClass()}>
         {
           // <CSSTransitionGroup component="div" transitionName="page">
         }
           {this.renderInner()}
-          {
-            // <RouteHandler {...this.props} key={this.props.pathname}/>
-          }
         {
           // </CSSTransitionGroup>
         }
         </div>
-        {
-        // <RouteHandler/>
-        }
         <MessageModal/>
       </div>
     );

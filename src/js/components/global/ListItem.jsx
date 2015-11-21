@@ -69,7 +69,7 @@ const ListItem = React.createClass({
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} query={this.props.query} className={listItem.link}>
+      <Link to={this.props.link} params={this.props.params} className={listItem.link}>
        {graph}
       </Link>
     );
@@ -93,7 +93,7 @@ const ListItem = React.createClass({
   renderMenuButton(){
     if (this.props.onClick){
       return (
-        <Button icon flat to={this.props.link} params={this.props.params} query={this.props.query} target="_blank">
+        <Button icon flat to={this.props.link} target="_blank">
           <NewWindow btn fill="textSecondary"/>
         </Button>
       );

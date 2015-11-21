@@ -11,14 +11,10 @@ import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
-import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 
 const GroupSecurity = React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   propTypes: {
     params: PropTypes.object
   },
@@ -67,7 +63,7 @@ const GroupSecurity = React.createClass({
       return (
         <div>
           <Padding b={2}>
-            <Button color="primary" flat to="checkCreateRequest" query={{target: {id: this.state.group.get('id'), type: 'security', name: this.state.group.get('name')}}} title="Create New Check">
+            <Button color="primary" flat to={`/check-create/request?id=${this.state.group.get('id')}&type=security&name=${this.state.group.get('name')}`} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>

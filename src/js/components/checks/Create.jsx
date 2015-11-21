@@ -1,21 +1,17 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {History} from 'react-router';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
-import {RouteHandler} from 'react-router';
-import router from '../../modules/router';
-import {PageAuth} from '../../modules/statics';
 
 const CheckCreate = React.createClass({
-  mixins: [CheckStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [CheckStore.mixin, History],
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object,
+    children: PropTypes.node
   },
   getInitialState(){
     return this.getState();
@@ -24,7 +20,7 @@ const CheckCreate = React.createClass({
     const state = this.getState(true);
     if (state.createStatus === 'success'){
       UserActions.userPutUserData('hasDismissedCheckCreationHelp');
-      router.transitionTo('checks');
+      this.history.pushState(null, '/');
     }else if (state.createStatus && state.createStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message || 'Something went wrong.',
@@ -37,7 +33,7 @@ const CheckCreate = React.createClass({
   },
   getState(noCheck){
     const obj = {
-      check: CheckStore.newCheck(this.props.query).toJS(),
+      check: CheckStore.newCheck({target: this.props.location.query}).toJS(),
       response: CheckStore.getResponse(),
       createStatus: CheckStore.getCheckCreateStatus(),
       filter: null
@@ -52,7 +48,7 @@ const CheckCreate = React.createClass({
       check: _.cloneDeep(data)
     });
   },
-  setFilter(data){
+  handleFilterChange(data){
     this.setState({
       filter: data
     });
@@ -63,7 +59,12 @@ const CheckCreate = React.createClass({
   render() {
     return (
       <div>
-        <RouteHandler {...this.state} onChange={this.setData} onSubmit={this.handleSubmit} setStatus={this.setStatus} onFilterChange={this.setFilter}/>
+        {React.cloneElement(this.props.children, _.assign({
+          onChange: this.setData,
+          onSubmit: this.handleSubmit,
+          onFilterChange: this.handleFilterChange
+        }, this.state)
+        )}
         <Grid>
           <Row>
             <Col xs={12}>

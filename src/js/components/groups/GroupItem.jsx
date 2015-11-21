@@ -53,9 +53,8 @@ const GroupItem = React.createClass({
     return this.props.item;
   },
   getLink(){
-    let suffix = _.startCase(this.getItem().get('type')).split(' ').join('');
-    suffix = suffix.match('Elb') ? 'ELB' : suffix;
-    return `group${suffix}`;
+    const type = this.getItem().get('type').toLowerCase();
+    return `/group/${type}/${this.getItem().get('id')}`;
   },
   getInfoText(){
     if (this.getItem().get('total')){
@@ -89,7 +88,7 @@ const GroupItem = React.createClass({
       return (
         <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} title={`${this.getItem().get('name')} - ${this.getItem().get('instance_count')} instances`}>
           <div key="menu">
-            <Button color="primary" text="left" to="checkCreateRequest" block flat query={{target: {id: this.getItem().get('id'), type: this.getItem().get('type'), name: this.getItem().get('name')}}}>
+            <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check
             </Button>
           </div>

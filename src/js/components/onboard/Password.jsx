@@ -1,25 +1,25 @@
 import React, {PropTypes} from 'react';
+import {History} from 'react-router';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import {State} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import router from '../../modules/router';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {StatusHandler} from '../global';
 
 export default React.createClass({
-  mixins: [State, OnboardStore.mixin],
+  mixins: [State, OnboardStore.mixin, History],
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   storeDidChange(){
     const status = OnboardStore.getOnboardSetPasswordStatus();
     let error;
     if (status === 'success'){
-      router.transitionTo('tutorial');
+      this.history.pushState(null, '/start/tutorial');
       error = false;
     }else if (status && status !== 'pending'){
       error = status;
@@ -32,8 +32,8 @@ export default React.createClass({
   getInitialState(){
     return {
       status: null,
-      token: this.props.query.token,
-      id: this.props.query.id,
+      token: this.props.location.query.token,
+      id: this.props.location.query.id,
       password: null,
       error: null
     };

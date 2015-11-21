@@ -55,7 +55,9 @@
     "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
     "lint": "eslint src/. --ext .js,.jsx",
     "compare": "node visreg/compare",
-    "fix": "npm install"
+    "fix": "npm install",
+    "casper": "casperjs test test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080",
+    "casper-debug": "npm run build && node connect & npm run casper"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
@@ -79,6 +81,7 @@
     "fuzzy": "^0.1.1",
     "git-rev": "^0.2.1",
     "highlight.js": "^8.6.0",
+    "history": "^1.13.1",
     "immutable": "^3.7.4",
     "lodash": "^3.10.0",
     "mcfly": "0.0.10",
@@ -94,9 +97,10 @@
     "react-components": "^0.2.0",
     "react-document-title": "^2.0.0",
     "react-dom": "^0.14.2",
-    "react-router": "^0.13.3",
-    "react-router-proxy-loader": "^0.3.0",
+    "react-router": "^1.0.0",
+    "react-router-proxy-loader": "^0.4.0",
     "react-timeago": "^2.2.1",
+    "scroll-behavior": "^0.3.0",
     "seedling": "git+ssh://git@github.com/opsee/seedling.git",
     "slate": "git+ssh://git@github.com/opsee/slate.git",
     "superagent": "^1.3.0",

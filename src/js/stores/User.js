@@ -4,7 +4,6 @@ import analytics from '../modules/analytics';
 import Immutable, {Record} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
-import router from '../modules/router';
 
 /* eslint-disable no-use-before-define */
 
@@ -16,7 +15,6 @@ const User = Record({
   loginDate: null,
   admin: false,
   admin_id: 0,
-  loginRedirect: null,
   intercom_hmac: null
 });
 
@@ -117,17 +115,13 @@ const Store = Flux.createStore(
         statics.logout();
         clearInterval(window.userRefreshTokenInterval);
         delete window.userRefreshTokenInterval;
-        window.socket.close();
-        router.transitionTo('login');
+        if (window.socket){window.socket.close();}
         Store.emitChange();
       }
       break;
     case 'USER_PUT_USER_DATA_SUCCESS':
     case 'USER_GET_USER_DATA_SUCCESS':
       _data.userData = payload.data;
-      break;
-    case 'USER_LOGIN_REDIRECT':
-      _data.user = _data.user.set('loginRedirect', payload.data);
       break;
     default:
       break;

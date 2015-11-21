@@ -4,30 +4,27 @@ import {Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import _ from 'lodash';
-import router from '../../modules/router';
+import {History} from 'react-router';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {PageAuth} from '../../modules/statics';
 
 const statics = {
   checkedInstallStatus: false
 };
 
 const Install = React.createClass({
-  mixins: [OnboardStore.mixin, GlobalStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [OnboardStore.mixin, GlobalStore.mixin, History],
   propTypes: {
     path: PropTypes.string,
-    query: PropTypes.object
+    location: PropTypes.object,
+    example: PropTypes.bool
   },
   componentWillMount(){
-    if (config.demo || this.props.path.match('example')){
+    if (config.demo || this.props.example){
       OnboardActions.onboardExampleInstall().then(() => {
         statics.checkedInstallStatus = true;
       });
@@ -41,7 +38,7 @@ const Install = React.createClass({
             OnboardActions.onboardInstall(data);
           }
         }else if (!data && !started){
-          router.transitionTo('onboardRegionSelect');
+          this.history.replaceState(null, '/start/region-select');
         }
       });
     }
@@ -53,7 +50,7 @@ const Install = React.createClass({
 
     let reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
     if (config.env !== 'production'){
-      if (this.props.query.fail){
+      if (this.props.location.query.fail){
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }
     }
@@ -156,7 +153,7 @@ const Install = React.createClass({
       return (
         <Padding tb={3}>
           <p>All clear!</p>
-          <Button to="checkCreate" color="primary" block chevron>
+          <Button to="/check-create" color="primary" block chevron>
             Create a Check
           </Button>
         </Padding>
@@ -209,7 +206,7 @@ const Install = React.createClass({
     }
     return (
       <Alert bsStyle="danger">
-        Something went wrong before the install began. Please contact support by visiting our <Link to="help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
+        Something went wrong before the install began. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
       </Alert>
     );
   },

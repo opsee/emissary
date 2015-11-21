@@ -1,25 +1,26 @@
 import React from 'react';
-import _ from 'lodash';
+// import _ from 'lodash';
 import Autosuggest from 'react-autosuggest';
-import router from '../../modules/router.js';
+import {History} from 'react-router';
 
 const SearchBox = React.createClass({
+  mixins: [History],
   getInitialState(){
     return {
       hidden: true
     };
   },
-  getData(input, cb){
-    let routes = router.getAllRoutes();
-    const data = _.chain(routes).filter(r => {
-      return r.name && r.name.match(input);
-    }).map(r => r.name).value();
-    cb(null, data);
-  },
-  handleSelect(choice){
-    router.transitionTo(choice);
-    this.setState({hidden: true});
-  },
+  // getData(input, cb){
+  //   let routes = router.getAllRoutes();
+  //   const data = _.chain(routes).filter(r => {
+  //     return r.name && r.name.match(input);
+  //   }).map(r => r.name).value();
+  //   cb(null, data);
+  // },
+  // handleSelect(choice){
+  //   this.history.pushState(null, choice);
+  //   this.setState({hidden: true});
+  // },
   render(){
     const self = this;
     document.onkeydown = (e) => {

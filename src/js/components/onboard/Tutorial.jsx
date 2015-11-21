@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
-import {RouteHandler} from 'react-router';
 
 export default React.createClass({
+  propTypes: {
+    children: PropTypes.node
+  },
   render() {
     return (
        <div>
          <Toolbar title="How Opsee Works"/>
-         <RouteHandler/>
+         {this.props.children}
       </div>
     );
   }

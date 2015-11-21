@@ -3,6 +3,9 @@ import config from './config';
 
 const analytics = {
   event(category, action = '', data = {}){
+    if (config.ghosting){
+      return false;
+    }
     //data can be a string or object, both will be converted to object and stringified
     if (!category){
       if (config.env !== 'production'){
@@ -14,6 +17,15 @@ const analytics = {
     const objectData = typeof data === 'string' ? {data} : data;
     window.ga('send', 'event', category, action, stringData);
     window.Intercom('trackEvent', `${category} - ${action}`, objectData);
+  },
+  pageView(page, name){
+    if (config.ghosting){
+      return false;
+    }
+    const title = name || document.title;
+    setTimeout(() => {
+      window.ga('send', 'pageview', {page, title});
+    }, 0);
   }
 };
 

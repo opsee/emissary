@@ -1,21 +1,17 @@
 import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
-import {PageAuth} from '../../modules/statics';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
 import _ from 'lodash';
 
 export default React.createClass({
   mixins: [State],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   propTypes: {
-    query: PropTypes.object
+    location: PropTypes.object
   },
   getInitialState(){
-    const path = this.getPath();
+    const path = this.props.location.pathname;
     let include = ['groupsSecurity', 'groupsELB', 'instancesECC'];
     if (path){
       if (path.match('groups-security')){
@@ -37,7 +33,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={this.state.include} filter={_.get(this.props.query, 'filter')} limit={this.state.include.length === 1 ? 1000 : null}/>
+                <EnvWithFilter include={this.state.include} filter={_.get(this.props.location.query, 'filter')} limit={this.state.include.length === 1 ? 1000 : null}/>
               </Col>
             </Row>
           </Grid>

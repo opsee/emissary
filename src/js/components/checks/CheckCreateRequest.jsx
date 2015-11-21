@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import router from '../../modules/router';
 import forms from 'newforms';
 import colors from 'seedling/colors';
+import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {BoundField, Button} from '../forms';
@@ -85,7 +85,7 @@ const InfoForm = forms.Form.extend({
 });
 
 const CheckCreateRequest = React.createClass({
-  mixins: [GroupStore.mixin],
+  mixins: [GroupStore.mixin, History],
   propTypes: {
     check: PropTypes.object,
     renderAsInclude: PropTypes.bool,
@@ -94,11 +94,15 @@ const CheckCreateRequest = React.createClass({
   },
   getInitialState() {
     const self = this;
-    const initialHeaders = this.props.check.check_spec.value.headers;
-    let initialData = _.cloneDeep(self.props.check.check_spec.value);
+    const initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
+    let initialData = _.cloneDeep(_.get(self.props, 'check.check_spec.value') || {});
     if (initialData.verb && typeof initialData.verb === 'string'){
       initialData.verb = [initialData.verb];
     }
+    initialData = _.mapValues(initialData, val => {
+      return val || null;
+    });
+    console.log(initialData);
     const obj = {
       info: new InfoForm(_.assign({
         onChange: self.runChange,
@@ -195,7 +199,7 @@ const CheckCreateRequest = React.createClass({
   },
   isDataComplete(){
     const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
+    const condition2 = _.chain(['port', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
     return condition1 && condition2;
   },
   isDisabled(){
@@ -211,10 +215,10 @@ const CheckCreateRequest = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    router.transitionTo('checkCreateAssertions');
+    this.history.pushState(null, '/check-create/assertions');
   },
   handleTargetClick(){
-    router.transitionTo('checkCreateTarget');
+    this.history.pushState(null, '/check-create/target');
   },
   renderHeaderForm(){
     return (
@@ -262,7 +266,7 @@ const CheckCreateRequest = React.createClass({
   },
   renderLink(){
     return this.state.check.id ? (
-      <Button color="primary" fab to="check" params={{id: this.state.check.id}} title="Edit {check.name}"/>
+      <Button color="primary" fab to={`/check/${this.state.check.id}`} title="Edit {check.name}"/>
       ) : <div/>;
   },
   renderTargetSelection(){
@@ -348,7 +352,7 @@ const CheckCreateRequest = React.createClass({
     return (
       <div>
         <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
-          <Button to="checks" icon flat>
+          <Button to="/" icon flat>
             <Close btn/>
           </Button>
         </Toolbar>

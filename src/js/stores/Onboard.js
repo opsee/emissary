@@ -12,7 +12,7 @@ let _teamData = {
 };
 
 let _installData = {
-  regions: [],//['us-west-1', 'us-east-1'],
+  regions: [],
   'access-key': null,
   'secret-key': null,
   vpcs: []
