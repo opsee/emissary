@@ -2,18 +2,14 @@ import React from 'react';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
 import {Table, Toolbar} from '../global';
-import {Link} from 'react-router';
-import {PageAuth} from '../../modules/statics';
+import {Link, History} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  mixins: [UserStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [UserStore.mixin, History],
   storeDidChange(){
     this.setState({
       user: UserStore.getUser().toJS()
@@ -23,6 +19,10 @@ export default React.createClass({
     return {
       user: UserStore.getUser().toJS()
     };
+  },
+  runLogout(){
+    this.history.pushState(null, '/login');
+    UserActions.userLogOut();
   },
   render() {
     return (
@@ -49,7 +49,7 @@ export default React.createClass({
                 </Table>
               </Padding>
               <Padding t={3}>
-                <Button flat color="danger" onClick={UserActions.userLogOut}>
+                <Button flat color="danger" onClick={this.runLogout}>
                   <Logout inline fill="danger"/> Log Out
                 </Button>
               </Padding>

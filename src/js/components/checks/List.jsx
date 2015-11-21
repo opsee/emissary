@@ -4,7 +4,6 @@ import {Toolbar, StatusHandler} from '../global';
 import {CheckStore, OnboardStore} from '../../stores';
 import {Link} from 'react-router';
 import {Add} from '../icons';
-import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
@@ -21,9 +20,6 @@ function getState(){
 
 const CheckList = React.createClass({
   mixins: [CheckStore.mixin, OnboardStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   getInitialState(){
     return getState();
   },

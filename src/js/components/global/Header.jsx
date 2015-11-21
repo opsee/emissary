@@ -33,7 +33,7 @@ const Header = React.createClass({
   renderLoginLink(){
     if (UserStore.hasUser()){
       return (
-        <Link to="/profile" className={style.navbarLink}>
+        <Link to="/profile" className={style.navbarLink} activeClassName="active">
           <Person nav/>&nbsp;
           <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
@@ -50,19 +50,19 @@ const Header = React.createClass({
     return (
       <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
         <li>
-         <Link to="/" className={style.navbarLink}>
+         <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checkmark nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
         <li>
-         <Link to="/env" className={style.navbarLink}>
+         <Link to="/env" className={style.navbarLink} activeClassName="active">
            <Cloud nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Environment</span>
          </Link>
        </li>
         <li>
-         <Link to="/help" className={style.navbarLink}>
+         <Link to="/help" className={style.navbarLink} activeClassName="active">
            <Help nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Help</span>
          </Link>

@@ -11,14 +11,10 @@ import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
-import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 
 const GroupSecurity = React.createClass({
   mixins: [GroupStore.mixin, SetInterval],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   propTypes: {
     params: PropTypes.object
   },

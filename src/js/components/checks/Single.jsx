@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {List} from 'immutable';
+import {History} from 'react-router';
 
 import {CheckActions, GroupActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
@@ -8,9 +9,7 @@ import {GroupItem} from '../groups';
 import {CheckStore, GroupStore} from '../../stores';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {PageAuth} from '../../modules/statics';
 import {Button} from '../forms';
-import router from '../../modules/router.js';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponse from './CheckResponse';
@@ -27,10 +26,7 @@ function getState(){
 }
 
 export default React.createClass({
-  mixins: [CheckStore.mixin, GroupStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [CheckStore.mixin, GroupStore.mixin, History],
   propTypes: {
     params: PropTypes.object
   },
@@ -46,7 +42,7 @@ export default React.createClass({
   storeDidChange() {
     let state = getState();
     if (CheckStore.getDeleteCheckStatus() === 'success'){
-      router.transitionTo('checks');
+      this.history.pushState(null, '/');
     }
     if (state.status === 'success'){
       const target = state.check.get('target');

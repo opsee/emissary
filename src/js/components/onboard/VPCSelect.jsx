@@ -5,11 +5,10 @@ import {OnboardActions} from '../../actions';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import _ from 'lodash';
-import router from '../../modules/router';
+import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {PageAuth} from '../../modules/statics';
 
 const regions = AWSStore.getRegions();
 
@@ -24,15 +23,12 @@ const InfoForm = forms.Form.extend({
 });
 
 const Team = React.createClass({
-  mixins: [OnboardStore.mixin],
-  statics: {
-    willTransitionTo(transition){
-      PageAuth(transition);
-      const data = OnboardStore.getInstallData();
-      const dataHasValues = _.chain(data).values().every(_.identity).value();
-      if (!dataHasValues || !data.regions.length){
-        transition.redirect('onboardRegionSelect');
-      }
+  mixins: [OnboardStore.mixin, History],
+  componentWillMount(){
+    const data = OnboardStore.getInstallData();
+    const dataHasValues = _.chain(data).values().every(_.identity).value();
+    if (!dataHasValues || !data.regions.length){
+      this.history.replaceState(null, '/start/region-select');
     }
   },
   storeDidChange(){
@@ -41,7 +37,7 @@ const Team = React.createClass({
     const dataHasValues = _.chain(data).values().every(_.identity).value();
     if (dataHasValues && data.regions.length && data.vpcs.length){
       // OnboardActions.onboardSetVpcs()
-      router.transitionTo('onboardInstall');
+      this.history.pushState(null, '/start/install');
     }
   },
   getInitialState() {

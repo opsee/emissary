@@ -1,16 +1,12 @@
 import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
-import {PageAuth} from '../../modules/statics';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
 import _ from 'lodash';
 
 export default React.createClass({
   mixins: [State],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   propTypes: {
     location: PropTypes.object
   },

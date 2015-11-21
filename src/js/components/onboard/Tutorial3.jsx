@@ -5,19 +5,12 @@ import img from '../../../img/tut-checks.svg';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {History} from 'react-router';
 
 export default React.createClass({
-  mixins:[History],
   getInitialState(){
     return {
       loaded: false
     };
-  },
-  componentDidMount() {
-    setTimeout(function(){
-      this.history.pushState('/start/tutorial/1')
-    }, 3000);
   },
   componentWillMount(){
     const newImg = new Image();

@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
-import router from '../../modules/router.js';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
 import {Toolbar, StepCounter} from '../global';
+import {History} from 'react-router';
 
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
@@ -84,6 +84,7 @@ const AssertionsFormSet = forms.FormSet.extend({
 });
 
 const CheckCreateAssertions = React.createClass({
+  mixins: [History],
   propTypes: {
     check: PropTypes.object,
     response: PropTypes.object,
@@ -158,7 +159,7 @@ const CheckCreateAssertions = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    router.transitionTo('checkCreateInfo');
+    this.history.pushState(null, '/check-create/info');
   },
   renderOperand(form){
     const data = form.cleanedData;

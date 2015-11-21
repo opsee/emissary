@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import colors from 'seedling/colors';
+import {History} from 'react-router';
 
 import {Toolbar, StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
@@ -10,8 +11,6 @@ import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
 import {Checkmark, Close, Delete} from '../icons';
 import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {PageAuth} from '../../modules/statics';
-import router from '../../modules/router';
 import {Padding} from '../layout';
 import {EnvWithFilter} from '../env';
 import {Button} from '../forms';
@@ -34,10 +33,7 @@ function getState(){
 }
 
 const CheckEdit = React.createClass({
-  mixins: [CheckStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [CheckStore.mixin, History],
   propTypes: {
     params: PropTypes.object,
     onFilterChange: PropTypes.func,
@@ -58,7 +54,7 @@ const CheckEdit = React.createClass({
   storeDidChange(){
     let state = getState();
     if (state.editStatus === 'success'){
-      router.transitionTo('checks');
+      this.history.pushState(null, '/');
     }else if (state.editStatus && state.editStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message || 'Something went wrong.',
@@ -69,7 +65,7 @@ const CheckEdit = React.createClass({
       state.check = CheckStore.getCheck().toJS();
     }
     if (CheckStore.getDeleteCheckStatus() === 'success'){
-      router.transitionTo('checks');
+      this.history.pushState(null, '/');
     }
     this.setState(state);
   },

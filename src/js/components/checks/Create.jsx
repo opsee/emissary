@@ -1,18 +1,14 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {History} from 'react-router';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
-import router from '../../modules/router';
-import {PageAuth} from '../../modules/statics';
 
 const CheckCreate = React.createClass({
-  mixins: [CheckStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [CheckStore.mixin, History],
   propTypes: {
     location: PropTypes.object,
     children: PropTypes.node
@@ -24,7 +20,7 @@ const CheckCreate = React.createClass({
     const state = this.getState(true);
     if (state.createStatus === 'success'){
       UserActions.userPutUserData('hasDismissedCheckCreationHelp');
-      router.transitionTo('checks');
+      this.history.pushState(null, '/');
     }else if (state.createStatus && state.createStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message || 'Something went wrong.',

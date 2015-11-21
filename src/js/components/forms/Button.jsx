@@ -1,14 +1,14 @@
 import React, {PropTypes} from 'react';
+import {Link, History} from 'react-router';
 import _ from 'lodash';
 
 import {ChevronRight} from '../icons';
 import colors from 'seedling/colors';
-import {Link} from 'react-router';
-import router from '../../modules/router';
 import cx from 'classnames';
 import style from './button.css';
 
 const Button = React.createClass({
+  mixins: [History],
   propTypes: {
     flat: PropTypes.bool,
     icon: PropTypes.bool,
@@ -53,7 +53,7 @@ const Button = React.createClass({
     if (this.props.target && this.props.target === '_blank'){
       e.preventDefault();
       e.stopPropagation();
-      window.open(router.makeHref(this.props.to, this.props.params));
+      window.open(this.history.createHref(this.props.to));
     }
   },
   renderChevron(){

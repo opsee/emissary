@@ -93,7 +93,7 @@ const ListItem = React.createClass({
   renderMenuButton(){
     if (this.props.onClick){
       return (
-        <Button icon flat to={this.props.link} params={this.props.params} target="_blank">
+        <Button icon flat to={this.props.link} target="_blank">
           <NewWindow btn fill="textSecondary"/>
         </Button>
       );

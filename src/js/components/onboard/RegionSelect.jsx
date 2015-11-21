@@ -1,14 +1,13 @@
 import React from 'react';
+import {History} from 'react-router';
 import {Toolbar} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import forms from 'newforms';
 import {BoundField} from '../forms';
-import router from '../../modules/router.js';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {PageAuth} from '../../modules/statics';
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
@@ -26,10 +25,7 @@ const InfoForm = forms.Form.extend({
 });
 
 const RegionSelect = React.createClass({
-  mixins: [OnboardStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [OnboardStore.mixin, History],
   getInitialState() {
     const self = this;
     const data = OnboardStore.getInstallData();
@@ -87,7 +83,7 @@ const RegionSelect = React.createClass({
     OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
     //redo this later, make install be a parent page instead of this bull
     setTimeout(() => {
-      router.transitionTo('onboardCredentials');
+      this.history.pushState(null, '/start/credentials');
     }, 100);
   },
   renderInner(){

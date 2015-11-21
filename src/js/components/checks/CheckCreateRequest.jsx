@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import router from '../../modules/router';
 import forms from 'newforms';
 import colors from 'seedling/colors';
+import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {BoundField, Button} from '../forms';
@@ -85,7 +85,7 @@ const InfoForm = forms.Form.extend({
 });
 
 const CheckCreateRequest = React.createClass({
-  mixins: [GroupStore.mixin],
+  mixins: [GroupStore.mixin, History],
   propTypes: {
     check: PropTypes.object,
     renderAsInclude: PropTypes.bool,
@@ -211,10 +211,10 @@ const CheckCreateRequest = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    router.transitionTo('checkCreateAssertions');
+    this.history.pushState(null, '/check-create/assertions');
   },
   handleTargetClick(){
-    router.transitionTo('checkCreateTarget');
+    this.history.pushState(null, '/check-create/target');
   },
   renderHeaderForm(){
     return (
@@ -262,7 +262,7 @@ const CheckCreateRequest = React.createClass({
   },
   renderLink(){
     return this.state.check.id ? (
-      <Button color="primary" fab to={`/check/${this.state.check.id}`} params={{id: this.state.check.id}} title="Edit {check.name}"/>
+      <Button color="primary" fab to={`/check/${this.state.check.id}`} title="Edit {check.name}"/>
       ) : <div/>;
   },
   renderTargetSelection(){

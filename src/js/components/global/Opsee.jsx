@@ -36,16 +36,14 @@ initialize();
 export default React.createClass({
   mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval],
   propTypes: {
-    location: PropTypes.object
+    location: PropTypes.object,
+    children: PropTypes.node
   },
   getInitialState(){
     return {
       socketError: null,
       showNav: GlobalStore.getShowNav()
     };
-  },
-  componentWillReceiveProps(nextProps){
-    // GlobalActions.globalSetNav();
   },
   componentWillMount(){
     if (this.props.location.query.err){

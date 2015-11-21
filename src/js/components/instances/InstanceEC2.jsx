@@ -9,7 +9,6 @@ import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {PageAuth} from '../../modules/statics';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {Add} from '../icons';
@@ -25,9 +24,6 @@ function getState(){
 
 export default React.createClass({
   mixins: [InstanceStore.mixin, SetInterval],
-  statics: {
-    willTransitionTo: PageAuth
-  },
   propTypes: {
     params: PropTypes.object
   },

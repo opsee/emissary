@@ -1,22 +1,15 @@
 import React, {PropTypes} from 'react';
+import {History} from 'react-router';
 import _ from 'lodash';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {UserStore} from '../../stores';
 import {UserActions} from '../../actions';
-import router from '../../modules/router.js';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 
 export default React.createClass({
-  mixins: [UserStore.mixin],
-  statics: {
-    willTransitionTo(transition, params, query){
-      if (!query.id || !query.token){
-        transition.redirect('passwordForgot');
-      }
-    }
-  },
+  mixins: [UserStore.mixin, History],
   propTypes: {
     location: PropTypes.object
   },
@@ -27,6 +20,9 @@ export default React.createClass({
     };
   },
   componentWillMount(){
+    if (!this.props.location.query.id || !this.props.location.query.token){
+      this.history.replaceState(null, '/password-forgot');
+    }
     UserActions.userSet({
       token: this.props.location.query.token,
       user: _.assign(this.props.location.query, {
@@ -38,7 +34,7 @@ export default React.createClass({
     const status = UserStore.getUserEditStatus();
     this.setState({status});
     if (status === 'success'){
-      router.transitionTo('env');
+      this.history.pushState(null, '/env');
     }else if (status && status !== 'pending'){
       console.error(status);
     }

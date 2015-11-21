@@ -1,4 +1,5 @@
 import React from 'react';
+import {History} from 'react-router';
 import {Toolbar} from '../global';
 import {OnboardStore} from '../../stores';
 import {OnboardActions} from '../../actions';
@@ -40,7 +41,7 @@ const InfoForm = forms.Form.extend({
 });
 
 const Team = React.createClass({
-  mixins: [State, OnboardStore.mixin],
+  mixins: [State, OnboardStore.mixin, History],
   storeDidChange(){
     const availData = OnboardStore.getSubdomainAvailable();
     const availStatus = OnboardStore.getSubdomainAvailabilityStatus();
@@ -52,7 +53,7 @@ const Team = React.createClass({
     }
     const createOrgStatus = OnboardStore.getCreateOrgStatus();
     if (createOrgStatus === 'success'){
-      router.transitionTo('onboardRegionSelect');
+      this.history.pushState('/start/region-select');
     }
     this.setState({createOrgStatus});
   },

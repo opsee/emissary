@@ -3,10 +3,9 @@ import {UserStore} from '../../stores';
 import {UserActions, GlobalActions} from '../../actions';
 import {Toolbar} from '../global';
 import _ from 'lodash';
-import router from '../../modules/router.js';
-import {PageAuth} from '../../modules/statics';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
+import {History} from 'react-router';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
@@ -31,10 +30,7 @@ const PasswordForm = forms.Form.extend({
 });
 
 export default React.createClass({
-  mixins: [UserStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [UserStore.mixin, History],
   getInitialState() {
     // return this.getForm();
     return {
@@ -57,7 +53,7 @@ export default React.createClass({
     }
     const editStatus = UserStore.getUserEditStatus();
     if (editStatus === 'success'){
-      router.transitionTo('profile');
+      this.history.pushState(null, '/profile');
     }else if (editStatus && editStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: 'Something went wrong.'

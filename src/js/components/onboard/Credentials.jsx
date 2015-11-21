@@ -1,14 +1,13 @@
 import React from 'react';
+import forms from 'newforms';
+import {History} from 'react-router';
 import {StatusHandler, Toolbar} from '../global';
 import {OnboardActions} from '../../actions';
 import {OnboardStore} from '../../stores';
-import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
-import router from '../../modules/router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import {PageAuth} from '../../modules/statics';
 import config from '../../modules/config';
 
 const InfoForm = forms.Form.extend({
@@ -29,14 +28,10 @@ const InfoForm = forms.Form.extend({
 });
 
 const Credentials = React.createClass({
-  mixins: [OnboardStore.mixin],
-  statics: {
-    willTransitionTo(transition){
-      PageAuth(transition);
-      const data = OnboardStore.getInstallData();
-      if (!data.regions.length){
-        transition.redirect('onboardRegionSelect');
-      }
+  mixins: [OnboardStore.mixin, History],
+  componentWillMount(){
+    if (!OnboardStore.getInstallData().regions.length){
+      this.history.replaceState(null, '/start/region-select');
     }
   },
   storeDidChange(){
@@ -51,9 +46,9 @@ const Credentials = React.createClass({
       if (vpcs.length){
         if (vpcs.length === 1 && !config.showVpcScreen){
           OnboardActions.onboardSetVpcs(vpcs);
-          router.transitionTo('onboardInstall');
+          this.history.pushState(null, '/start/install');
         }else {
-          router.transitionTo('onboardVpcSelect');
+          this.history.pushState(null, '/start/vpc-select');
         }
       }
     }else if (vpcScanStatus !== 'pending'){

@@ -1,22 +1,22 @@
 import React from 'react';
+import {History} from 'react-router';
 import {Toolbar, LogoColor} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {OnboardStore} from '../../stores';
 import {OnboardActions, GlobalActions} from '../../actions';
 import {UserStore} from '../../stores';
-import router from '../../modules/router.js';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin],
+  mixins: [UserStore.mixin, OnboardStore.mixin, History],
   storeDidChange(){
     const status = OnboardStore.getOnboardSignupCreateStatus();
     this.setState({status});
     if (status === 'success'){
-      router.transitionTo('onboardThanks');
+      this.history.pushState('/start/thanks');
     }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import fuzzy from 'fuzzy';
 
-import router from '../../modules/router';
+import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Button} from '../forms';
@@ -15,6 +15,7 @@ import {EnvWithFilter} from '../env';
 import {Padding} from '../layout';
 
 const CheckCreateTarget = React.createClass({
+  mixins: [History],
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
@@ -76,7 +77,7 @@ const CheckCreateTarget = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    router.transitionTo('checkCreateRequest');
+    this.history.pushState(null, '/check-create/request');
   },
   handleTargetSelect(item){
     let check = this.props.check ? _.cloneDeep(this.props.check) : CheckStore.newCheck().toJS();
@@ -88,7 +89,7 @@ const CheckCreateTarget = React.createClass({
       selectedType: item.get('type') || 'sg'
     });
     this.props.onChange(check, this.isDisabled(), 1);
-    router.transitionTo('checkCreateRequest', null, {target: check.target});
+    this.history.pushState(null, '/check-create/request', {id: check.target.id, type: check.target.type, name: check.target.name});
   },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){

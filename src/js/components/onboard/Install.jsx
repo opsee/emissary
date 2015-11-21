@@ -4,30 +4,27 @@ import {Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import _ from 'lodash';
-import router from '../../modules/router';
+import {History} from 'react-router';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {PageAuth} from '../../modules/statics';
 
 const statics = {
   checkedInstallStatus: false
 };
 
 const Install = React.createClass({
-  mixins: [OnboardStore.mixin, GlobalStore.mixin],
-  statics: {
-    willTransitionTo: PageAuth
-  },
+  mixins: [OnboardStore.mixin, GlobalStore.mixin, History],
   propTypes: {
     path: PropTypes.string,
-    location: PropTypes.object
+    location: PropTypes.object,
+    example: PropTypes.bool
   },
   componentWillMount(){
-    if (config.demo || this.props.path.match('example')){
+    if (config.demo || this.props.example){
       OnboardActions.onboardExampleInstall().then(() => {
         statics.checkedInstallStatus = true;
       });
@@ -41,7 +38,7 @@ const Install = React.createClass({
             OnboardActions.onboardInstall(data);
           }
         }else if (!data && !started){
-          router.transitionTo('onboardRegionSelect');
+          this.history.replaceState(null, '/start/region-select');
         }
       });
     }

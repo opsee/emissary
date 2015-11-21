@@ -2,16 +2,15 @@ import React, {PropTypes} from 'react';
 import {UserStore} from '../../stores';
 import {UserActions, GlobalActions} from '../../actions';
 import {Toolbar, LogoColor} from '../global';
-import {Link} from 'react-router';
+import {Link, History} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import _ from 'lodash';
-import router from '../../modules/router';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 
 export default React.createClass({
-  mixins: [UserStore.mixin],
+  mixins: [UserStore.mixin, History],
   propTypes: {
     location: PropTypes.object
   },
@@ -19,12 +18,11 @@ export default React.createClass({
     const status = UserStore.getUserLoginStatus();
     this.setState({status});
     if (status === 'success'){
-      const redirect = UserStore.getUser().get('loginRedirect');
-      if (redirect){
-        router.transitionTo(redirect);
-      }else {
-        router.transitionTo('checks');
+      const next = _.get(this.props, 'location.state.nextPathname');
+      if (next){
+        return this.history.replaceState(null, next);
       }
+      return this.history.pushState(null, '/');
     }else if (status && status !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.message || 'Something went wrong.',
