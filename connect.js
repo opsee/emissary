@@ -8,3 +8,4 @@ app.use(modRewrite([
 ]));
 app.use(serveStatic(__dirname+'/dist'))
 app.listen(8080);
+console.log('listening on 8080');

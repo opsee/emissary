@@ -55,7 +55,8 @@
     "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
     "lint": "eslint src/. --ext .js,.jsx",
     "compare": "node visreg/compare",
-    "fix": "npm install"
+    "fix": "npm install",
+    "casper-debug": "npm run build && node connect & casperjs test test-deploy --remote-debugger-port=9000"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",

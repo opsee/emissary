@@ -113,7 +113,7 @@ const routes = (
 
     <Route path="/admin/signups" component={AdminSignups} onEnter={auth}/>
     <Route path="/admin/socket" component={AdminSocket} onEnter={auth}/>
-    <Route path="/system" component={System} onEnter={auth} onEnter={auth}/>
+    <Route path="/system" component={System} onEnter={auth}/>
 
     <Route path="/profile" component={Profile} onEnter={auth}/>
     <Route path="/profile/edit" component={ProfileEdit} onEnter={auth}/>
