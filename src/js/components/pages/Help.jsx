@@ -3,7 +3,6 @@ import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import colors from 'seedling/colors';
 import {Mail, Slack, Chat} from '../icons';
 import {UserStore} from '../../stores';
 
@@ -40,7 +39,8 @@ export default React.createClass({
             <Col xs={12}>
               <Padding b={1}>
               <h3>Documentation</h3>
-              <ul className="list-unstyled">
+              <ul>
+                <li><Link to="docsChecks">Check Types and Targets</Link></li>
                 <li><Link to="docsBastion">The Bastion Instance</Link></li>
                 <li><Link to="docsCloudformation">Our Cloudformation Template and Permissions</Link></li>
                 <li><Link to="docsIAM">IAM Profile for Bastion Installation</Link></li>
@@ -50,15 +50,12 @@ export default React.createClass({
               <Padding b={1}>
                 <h3>Support</h3>
                 <p>Get in touch with us any time with questions or feature requests:</p>
-                <p>
-                  <span className="text-secondary"><Mail fill={colors.textColorSecondary} inline /> Email:</span> <a href="mailto:support@opsee.com">support@opsee.com</a>
-                </p>
-                <p>
-                  <span className="text-secondary"><Chat fill={colors.textColorSecondary} inline /> IRC:</span> <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a>
-                </p>
-                <p>
-                  <span className="text-secondary"><Slack fill={colors.textColorSecondary} inline /> Slack:</span> <a href="https://opsee-support.slack.com">opsee-support.slack.com</a>
-                </p>
+                <ul>
+                  <li><Mail fill="text" inline /> Email: <a href="mailto:support@opsee.com">support@opsee.com</a></li>
+                  <li><Chat fill="text" inline /> IRC: <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></li>
+                  <li><Slack fill="text" inline /> Slack: <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></li>
+                </ul>
+
               </Padding>
               {this.renderAdminLinks()}
             </Col>
