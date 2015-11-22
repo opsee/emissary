@@ -269,6 +269,19 @@ const EnvWithFilter = React.createClass({
       </StatusHandler>
     );
   },
+  renderPassingButton(){
+    const num = this.getNumberPassing();
+    if (num > 0){
+      return (
+        <Col className="col-xs">
+          <Padding b={1}>
+            <Button flat={this.state.buttonSelected !== 'passing'} color="success" onClick={this.runToggleButtonState.bind(null, 'passing')}><Circle fill={this.state.buttonSelected !== 'passing' ? 'success' : ''} inline/> {this.getNumberPassing()} Passing</Button>
+          </Padding>
+        </Col>
+      );
+    }
+    return <Col/>;
+  },
   renderFailingButton(){
     const num = this.getNumberFailing();
     if (num > 0){
@@ -301,6 +314,7 @@ const EnvWithFilter = React.createClass({
         <Padding b={1}>
           <Row>
             {this.renderFailingButton()}
+            {this.renderPassingButton()}
             {this.renderUnmonitoredButton()}
           </Row>
         </Padding>

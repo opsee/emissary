@@ -7,6 +7,7 @@ import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
 import {StepCounter} from '../global';
 import {CheckStore, UserStore} from '../../stores';
+import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
 import {UserActions} from '../../actions';
 import {Padding} from '../layout';
@@ -151,6 +152,7 @@ const CheckCreateInfo = React.createClass({
     UserActions.userPutUserData('hasDismissedCheckInfoHelp');
   },
   handleSubmit(e) {
+    analytics.event('Onboard', 'check-created');
     e.preventDefault();
     this.setState({
       submitting: true
