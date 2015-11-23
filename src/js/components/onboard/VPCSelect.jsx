@@ -6,6 +6,7 @@ import forms from 'newforms';
 import {BoundField} from '../forms';
 import _ from 'lodash';
 import {History} from 'react-router';
+import analytics from '../../modules/analytics';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
@@ -64,6 +65,7 @@ const Team = React.createClass({
   },
   runSetVpcs(){
     const regionsWithVpcs = OnboardStore.getAvailableVpcs();
+    analytics.event('Onboard', 'vpc-select', {regionsWithVpcs});
     if (regionsWithVpcs.length){
       let vpcs = regionsWithVpcs.map(r => {
         return r.vpcs.map(v => {
