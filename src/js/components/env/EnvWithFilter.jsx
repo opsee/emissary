@@ -193,9 +193,8 @@ const EnvWithFilter = React.createClass({
     return case1 || case2;
   },
   shouldButtonsRender(){
-    const failing = this.getNumberFailing();
-    const unmonitored = this.getNumberUnmonitored();
-    return (failing > 0 || unmonitored > 0);
+    const arr = [this.getNumberUnmonitored(), this.getNumberFailing(), this.getNumberPassing()];
+    return _.compact(arr).length > 1;
   },
   onFilterChange(){
     this.forceUpdate();
@@ -270,8 +269,7 @@ const EnvWithFilter = React.createClass({
     );
   },
   renderPassingButton(){
-    const num = this.getNumberPassing();
-    if (num > 0){
+    if (this.getNumberPassing() > 0){
       return (
         <Col className="col-xs">
           <Padding b={1}>
@@ -283,8 +281,7 @@ const EnvWithFilter = React.createClass({
     return <Col/>;
   },
   renderFailingButton(){
-    const num = this.getNumberFailing();
-    if (num > 0){
+    if (this.getNumberFailing() > 0){
       return (
         <Col className="col-xs">
           <Padding b={1}>
@@ -296,8 +293,7 @@ const EnvWithFilter = React.createClass({
     return <Col/>;
   },
   renderUnmonitoredButton(){
-    const num = this.getNumberUnmonitored();
-    if (num > 0){
+    if (this.getNumberUnmonitored() > 0){
       return (
         <Col className="col-xs">
           <Padding b={1}>
