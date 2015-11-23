@@ -134,9 +134,4 @@ const routes = (
   </Route>
 );
 
-const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
-
-export default {
-  routes,
-  hideNavList
-};
+export default routes;
