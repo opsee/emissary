@@ -51,7 +51,15 @@ module.exports = {
     loaders: [
       { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!cssnext-loader'), include: [context_dir]},
       { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[hash:base64:12]!cssnext-loader')},
-      { test: /\.js$|\.jsx$/, loaders: ['babel-loader?optional[]=runtime&stage=0'], include: [context_dir] },
+      {
+        test: /\.js$|\.jsx$/, 
+        loader: 'babel-loader',
+        query: {
+          plugins: ['transform-runtime'],
+          presets: ['es2015', 'stage-0', 'react'],
+        },
+        include: [context_dir]
+      },
       { test: /\.json$/, loaders: ['json'], include: [context_dir]},
       {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
     ]

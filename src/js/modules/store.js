@@ -1,19 +1,37 @@
-import { createStore, applyMiddleware } from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
 import reducer from '../reducers'
+import promiseMiddleware from 'redux-promise';
+import {reduxReactRouter} from 'redux-router';
+import routes from '../components/global/Routes';
+import {createHistory} from 'history';
 
-const createStoreWithMiddleware = applyMiddleware(
-  thunk
-)(createStore);
+const reduxRouter = reduxReactRouter({
+  routes,
+  createHistory
+});
 
-export default function configureStore(initialState) {
-  const store = createStoreWithMiddleware(reducer, initialState);
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('../reducers', () => {
-      const nextReducer = require('../reducers')
-      store.replaceReducer(nextReducer)
-    })
-  }
-  return store;
+const middleware = [
+  thunk,
+  promiseMiddleware
+];
+
+let finalCreateStore;
+
+if (process.env.NODE_ENV === 'production') {
+  finalCreateStore = compose(
+    applyMiddleware(...middleware)(createStore),
+    reduxRouter
+  )
+} else {
+  finalCreateStore = compose(
+    applyMiddleware(...middleware),
+    reduxRouter,
+    require('redux-devtools').devTools(),
+    require('redux-devtools').persistState(
+      window.location.href.match(/[?&]debug_session=([^&]+)\b/)
+    )
+  )(createStore)
 }
+
+export default finalCreateStore(reducer);

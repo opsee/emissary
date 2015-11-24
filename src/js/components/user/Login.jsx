@@ -1,15 +1,19 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import _ from 'lodash';
+
 import {UserStore} from '../../stores';
 import {UserActions, GlobalActions} from '../../actions';
-import {Toolbar, LogoColor} from '../global';
+import {Toolbar, LogoColor, StatusHandler} from '../global';
 import {Link, History} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
-import _ from 'lodash';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import * as actions from '../../reduxactions/user';
 
-export default React.createClass({
+const Login = React.createClass({
   mixins: [UserStore.mixin, History],
   propTypes: {
     location: PropTypes.object
@@ -37,7 +41,7 @@ export default React.createClass({
     };
   },
   getButtonText(){
-    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
+    return this.props.user.authenticating ? 'Logging In...' : 'Log In';
   },
   isDisabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);
@@ -57,7 +61,11 @@ export default React.createClass({
     if (this.props.location.query.as){
       data.as = _.parseInt(this.props.location.query.as, 10);
     }
-    UserActions.userLogin(data);
+    this.props.actions.login(data);
+    // UserActions.userLogin(data);
+  },
+  handleDismiss(){
+    this.props.actions.userLoginDismissError();
   },
   render() {
     return (
@@ -69,6 +77,7 @@ export default React.createClass({
               <LogoColor/>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
+                <StatusHandler status={this.props.user.loginReq} onDismiss={this.handleDismiss}/>
                 <Padding t={1}>
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
@@ -86,3 +95,13 @@ export default React.createClass({
     );
   }
 });
+
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions : bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

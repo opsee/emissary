@@ -5,17 +5,12 @@ import _ from 'lodash';
 import {render} from 'react-dom';
 import {Router} from 'react-router';
 import {connect} from 'react-redux';
+import {pushState, ReduxRouter} from 'redux-router';
 
 import config from '../../modules/config';
 import routes from './Routes.jsx';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-import {useStandardScroll} from 'scroll-behavior';
-import createStore from '../../modules/store';
-const store = createStore();
-
-const history = useStandardScroll(createBrowserHistory)();
-
-console.log(routes);
+// import createBrowserHistory from 'history/lib/createBrowserHistory';
+// import {useStandardScroll} from 'scroll-behavior';
 
 if (config.env !== 'production'){
   window._ = _;
@@ -26,14 +21,15 @@ if (config.env !== 'production'){
 const App = React.createClass({
   render(){
     return(
-      <Router history={history} {...this.props}>{routes}</Router>
+      <ReduxRouter>{routes}</ReduxRouter>
     );
   }
 });
 
 function select(state) {
   return {
-    counter: state.counter
+    counter: state.counter,
+    q: _.get(state.router, 'location.query.q')
   }
 }
-export default connect(select)(App);
+export default connect(select, {pushState})(App);

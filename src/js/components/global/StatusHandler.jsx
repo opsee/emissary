@@ -13,7 +13,8 @@ const StatusHandler = React.createClass({
       PropTypes.object
     ]),
     children: PropTypes.node,
-    noFallback: PropTypes.bool
+    noFallback: PropTypes.bool,
+    onDismiss: PropTypes.func
   },
   getInitialState(){
     return {
@@ -24,7 +25,11 @@ const StatusHandler = React.createClass({
   },
   componentWillReceiveProps(nextProps){
     if (nextProps.status === 'success'){
-      return this.setState({success: true, attempts: this.state.attempts + 1});
+      return this.setState({
+        success: true, 
+        attempts: this.state.attempts + 1,
+        error: false
+      });
     }
     if (nextProps.status && typeof nextProps.status !== 'string'){
       let error = nextProps.status;
@@ -43,12 +48,20 @@ const StatusHandler = React.createClass({
     }
     return this.props.errorText || 'Something went wrong.';
   },
+  handleDismiss(){
+    if(this.props.onDismiss){
+      this.props.onDismiss.call(this);
+    }
+    this.setState({
+      error:false
+    });
+  },
   render(){
     if (this.props.status === 'pending' && this.state.attempts < 1){
       return <Loader timeout={this.props.timeout}/>;
     }else if (this.state.error){
       return (
-        <Alert bsStyle="danger">
+        <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
           <div dangerouslySetInnerHTML={{__html: this.getErrorText()}}/>
         </Alert>
       );

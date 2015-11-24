@@ -96,7 +96,9 @@ export default React.createClass({
       <div>
         <DocumentTitle title="Opsee"/>
         <Header/>
-        <Counter {...this.props}/>
+        {
+        // <Counter {...this.props}/>
+        }
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

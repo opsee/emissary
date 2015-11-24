@@ -7,7 +7,23 @@ import InstanceStore from './Instance';
 import OnboardStore from './Onboard';
 import UserStore from './User';
 
-export default {
+console.log(UserStore);
+
+const foo = 'foo';
+
+// const stores = {
+//   AdminStore,
+//   AWSStore,
+//   CheckStore,
+//   GlobalStore,
+//   GroupStore,
+//   InstanceStore,
+//   OnboardStore,
+//   UserStore,
+//   foo
+// };
+
+export {
   AdminStore,
   AWSStore,
   CheckStore,
@@ -15,5 +31,6 @@ export default {
   GroupStore,
   InstanceStore,
   OnboardStore,
-  UserStore
+  UserStore,
+  foo
 };
