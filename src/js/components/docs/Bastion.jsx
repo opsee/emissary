@@ -36,6 +36,7 @@ export default React.createClass({
 
                 <h3>What kind of access and permissions does the Bastion Instance have to my environment?</h3>
                 <p>You can see a complete overview of the Bastion Instance permissions in our <a href="/docs/cloudformation">Cloudformation template document</a>.</p>
+                <p>In addition to permissions for the Bastion Instance itself, Opsee needs to ensure that the Bastion Instance can communicate with the rest of your infrastructure. In order to ensure that the Opsee Bastion can communicate with your services to perform health checks, a process running on the Bastion will regularly examine the security groups in your AWS environment and add a rule that allows communication from the Bastion's security group to your security groups.</p>
                 <hr/>
 
                 <h3>Does Opsee install any software on my systems?</h3>
