@@ -3,12 +3,52 @@ import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
 import createAction from '../modules/createAction';
+import {USER_LOGIN, USER_LOGOUT} from './constants';
 
-export const userLoginReq = createAction('USER_LOGIN_REQ');
-export const login = createAction('USER_LOGIN', (data) => {
-  return request
-  .post(`${config.authApi}/authenticate/password`)
-  .send(data);
+export function login(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: 'USER_LOGIN',
+      payload: new Promise((resolve, reject) => {
+        request
+        .post(`${config.authApi}/authenticate/password`)
+        .send(_.omit(data, 'redirect'))
+        .then((res) => {
+          resolve(res.body);
+          console.log('pushstate');
+          //TODO fix this somehow
+          setTimeout(() => {
+            const string = data.redirect || '/';
+            dispatch(pushState(null, string));
+          }, 100);
+        }, reject)
+      })
+    })
+  }
+}
+
+
+// export const login = createAction(USER_LOGIN, (data) => {
+//   return request
+//   .post(`${config.authApi}/authenticate/password`)
+//   .send(data)
+//   .then(() => {
+//     dispatch(pushState(null, '/'));  
+//   })
+// });
+
+//   export function login(){
+//   return (dispatch) => {
+//     return createAction(USER_LOGIN, (data) => {
+//       return request
+//       .post(`${config.authApi}/authenticate/password`)
+//       .send(data)
+//       .then(() => {
+//         dispatch(pushState(null, '/'));
+//       });
+//     })
+//   }
+// }
   // const result = await request
   // .post(`${config.authApi}/authenticate/password`)
   // .send(data);
@@ -27,9 +67,9 @@ export const login = createAction('USER_LOGIN', (data) => {
   //     dispatch(userLogin(err));
   //   })
   // }
-});
-export const userLogout = createAction('USER_LOGOUT');
-export const userLoginDismissError = createAction('USER_LOGIN_DISMISS_ERROR');
+// });
+
+export const userLogout = createAction(USER_LOGOUT);
 
 export function logout() {
     return {

@@ -15,41 +15,21 @@ const User = Record({
   intercom_hmac: null
 });
 
-const initial = {
-  user: storage.get('user') ? new User(storage.get('user')) : new User(),
-  authenticating: false,
-  error: undefined
-}
+const initial = storage.get('user') ? new User(storage.get('user')) : new User();
 
 export default handleActions({
-  USER_LOGIN_REQ(state){
-    // return {
-    //   ...state,
-    //   userLoginPending: 'pending'
-    // };
-  },
   USER_LOGIN:{
     next(state, action){
       let obj = _.assign({},
         action.payload.user,
         {
           token: action.payload.token,
-          loginDate: new Date()
+          loginDate: new Date(),
+          intercom_hmac: action.payload.intercom_hmac
         }
       );
       storage.set('user', obj);
-      return _.assign({}, state, {
-        user: new User(obj),
-        loginReq: 'success'
-      })
-    },
-    throw(state, action){
-      return _.assign({}, state, {
-        loginReq: new Error(
-          _.get(action.payload, 'response.body.message') || 'Something went wrong.'
-        )
-      });
-      debugger;
+      return new User(obj);
     }
   }
 }, initial);

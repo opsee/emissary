@@ -1,6 +1,7 @@
 import {isFSA} from 'flux-standard-action';
 import uuid from 'node-uuid';
 import _ from 'lodash';
+import config from './config';
 
 function isPromise(val) {
   return val && typeof val.then === 'function';
@@ -14,7 +15,7 @@ export function promiseMiddleware({ dispatch }) {
         : next(action);
     }
     if(isPromise(action.payload)){
-      const aType = `${action.type}_REQ`;
+      const aType = `${action.type}_ASYNC`;
       const id = uuid.v1();
       dispatch({
         type: aType,
@@ -37,11 +38,16 @@ export function promiseMiddleware({ dispatch }) {
           return dispatch(_.assign({}, action, {payload: result}));
         },
         error => {
+          if(config.env !== 'production'){
+            if(!error instanceof Error){
+              throw Error(`Error object from ${action.type} is not a true error.`);
+            }
+          }
           dispatch({
             type: aType,
             payload: {
               time: Date.now(),
-              status: 'error',
+              status: error,
               id
             }
           });

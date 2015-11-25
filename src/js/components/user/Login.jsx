@@ -22,16 +22,11 @@ const Login = React.createClass({
     const status = UserStore.getUserLoginStatus();
     this.setState({status});
     if (status === 'success'){
-      const next = _.get(this.props, 'location.state.nextPathname');
+      const next = _.get(this.props, 'location.state.redirect');
       if (next){
         return this.history.replaceState(null, next);
       }
       return this.history.pushState(null, '/');
-    }else if (status && status !== 'pending'){
-      GlobalActions.globalModalMessage({
-        html: status.message || 'Something went wrong.',
-        style: 'danger'
-      });
     }
   },
   getInitialState(){
@@ -41,7 +36,7 @@ const Login = React.createClass({
     };
   },
   getButtonText(){
-    return this.props.user.authenticating ? 'Logging In...' : 'Log In';
+    return this.props.redux.asyncActions.userLogin.status === 'pending' ? 'Logging In...' : 'Log In';
   },
   isDisabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);
@@ -58,6 +53,7 @@ const Login = React.createClass({
       submitting: true
     });
     let data = this.state.data;
+    data.redirect = this.props.location.query.redirect;
     if (this.props.location.query.as){
       data.as = _.parseInt(this.props.location.query.as, 10);
     }
@@ -77,7 +73,7 @@ const Login = React.createClass({
               <LogoColor/>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
-                <StatusHandler status={this.props.user.loginReq} onDismiss={this.handleDismiss}/>
+                <StatusHandler status={this.props.redux.asyncActions.userLogin.status} onDismiss={this.handleDismiss}/>
                 <Padding t={1}>
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
@@ -96,12 +92,8 @@ const Login = React.createClass({
   }
 });
 
-const mapStateToProps = (state) => ({
-  user: state.user
-});
-
 const mapDispatchToProps = (dispatch) => ({
   actions : bindActionCreators(actions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);

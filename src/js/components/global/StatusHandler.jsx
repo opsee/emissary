@@ -10,7 +10,7 @@ const StatusHandler = React.createClass({
     timeout: PropTypes.number,
     status: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.object
+      PropTypes.object,
     ]),
     children: PropTypes.node,
     noFallback: PropTypes.bool,
@@ -33,20 +33,13 @@ const StatusHandler = React.createClass({
     }
     if (nextProps.status && typeof nextProps.status !== 'string'){
       let error = nextProps.status;
-      if (error && error.req){
-        error = error.text;
-      }
-      if (!error.message){
-        error = error.toString();
-      }
       this.setState({error});
     }
   },
   getErrorText(){
-    if (_.get(this.state, 'error.message')){
-      return this.state.error.message;
-    }
-    return this.props.errorText || 'Something went wrong.';
+    let text = 'Something went wrong';
+    text = _.get(this.state.error, 'response.body.message') || text;
+    return text;
   },
   handleDismiss(){
     if(this.props.onDismiss){
