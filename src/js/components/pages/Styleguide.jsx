@@ -11,7 +11,7 @@ import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
 
-import icons from '../icons';
+import * as icons from '../icons';
 import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
 import {GroupItemList} from '../groups';

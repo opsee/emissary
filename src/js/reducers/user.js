@@ -2,7 +2,7 @@ import storage from '../modules/storage';
 import analytics from '../modules/analytics';
 import Immutable, {Record} from 'immutable';
 import _ from 'lodash';
-import {handleAction, handleActions } from 'redux-actions';
+import {handleAction, handleActions} from 'redux-actions';
 
 const User = Record({
   name: null,
@@ -23,10 +23,10 @@ const initial = {
 
 export default handleActions({
   USER_LOGIN_REQ(state){
-    return {
-      ...state,
-      userLoginPending: 'pending'
-    };
+    // return {
+    //   ...state,
+    //   userLoginPending: 'pending'
+    // };
   },
   USER_LOGIN:{
     next(state, action){

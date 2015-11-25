@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
-import Autosuggest from 'react-autosuggest';
+import Auto from 'react-autosuggest';
 
-export default React.createClass({
+const Autosuggest = React.createClass({
   propTypes: {
     suggestions: PropTypes.func.isRequired,
     onSuggestionSelected: PropTypes.func.isRequired
@@ -16,8 +16,10 @@ export default React.createClass({
   render(){
     return (
       <div>
-        <Autosuggest {...this.props} getData={this.getData} suggestionRenderer={this.renderSuggestion}/>
+        <Auto {...this.props} getData={this.getData} suggestionRenderer={this.renderSuggestion}/>
       </div>
     );
   }
 });
+
+export default Autosuggest;

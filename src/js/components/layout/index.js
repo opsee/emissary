@@ -1,5 +1,5 @@
 import Padding from './Padding.jsx';
 
-export default {
+export {
   Padding
 };

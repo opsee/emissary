@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import style from './toggle.css';
 
-export default React.createClass({
+const Toggle = React.createClass({
   propTypes: {
     on: PropTypes.bool.isRequired,
     onChange: PropTypes.func,
@@ -28,3 +28,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Toggle;

@@ -4,7 +4,7 @@ import {Toolbar} from '../global';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import _ from 'lodash';
 
-export default React.createClass({
+const EnvGroupsELB = React.createClass({
   propTypes: {
     location: PropTypes.object
   },
@@ -23,3 +23,5 @@ export default React.createClass({
     );
   }
 });
+
+export default EnvGroupsELB;

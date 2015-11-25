@@ -6,7 +6,7 @@ import InstanceActions from './Instance';
 import OnboardActions from './Onboard';
 import UserActions from './User';
 
-export default {
+export {
   AdminActions,
   CheckActions,
   GlobalActions,

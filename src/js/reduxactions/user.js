@@ -5,15 +5,10 @@ import _ from 'lodash';
 import createAction from '../modules/createAction';
 
 export const userLoginReq = createAction('USER_LOGIN_REQ');
-export const login = createAction('USER_LOGIN', async () => {
-  try {
-    const result = await request
-    .post(`${config.authApi}/authenticate/password`)
-    .send(data);
-    console.log(result);
-  }catch(err){
-    console.log(err)
-  }
+export const login = createAction('USER_LOGIN', (data) => {
+  return request
+  .post(`${config.authApi}/authenticate/password`)
+  .send(data);
   // const result = await request
   // .post(`${config.authApi}/authenticate/password`)
   // .send(data);

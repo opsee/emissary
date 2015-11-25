@@ -3,7 +3,7 @@ import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-export default React.createClass({
+const Docs = React.createClass({
   render() {
     return (
       <div>
@@ -23,3 +23,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Docs;

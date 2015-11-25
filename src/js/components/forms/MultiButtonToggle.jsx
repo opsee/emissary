@@ -3,7 +3,7 @@ import ButtonToggle from './ButtonToggle.jsx';
 import _ from 'lodash';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const MultiButtonToggle = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
@@ -43,3 +43,5 @@ export default React.createClass({
     );
   }
 });
+
+export default MultiButtonToggle;

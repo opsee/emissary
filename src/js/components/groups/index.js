@@ -1,7 +1,7 @@
 import GroupItem from './GroupItem.jsx';
 import GroupItemList from './GroupItemList.jsx';
 
-export default {
+export {
   GroupItem,
   GroupItemList
 };

@@ -1,5 +1,5 @@
 import EnvWithFilter from './EnvWithFilter.jsx';
 
-export default {
+export {
   EnvWithFilter
 };

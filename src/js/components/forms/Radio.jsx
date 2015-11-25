@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react';
 import {Padding} from '../layout';
 import style from './radio.css';
 
-export default React.createClass({
+const Radio = React.createClass({
   propTypes: {
     on: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired,
@@ -30,3 +30,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Radio;

@@ -5,7 +5,7 @@ import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
 import _ from 'lodash';
 
-export default React.createClass({
+const Env = React.createClass({
   mixins: [State],
   propTypes: {
     location: PropTypes.object
@@ -41,3 +41,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Env;

@@ -25,7 +25,7 @@ function getState(){
   };
 }
 
-export default React.createClass({
+const Single = React.createClass({
   mixins: [CheckStore.mixin, GroupStore.mixin, History],
   propTypes: {
     params: PropTypes.object
@@ -181,3 +181,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Single;

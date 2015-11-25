@@ -3,7 +3,7 @@ import RadioWithLabel from './RadioWithLabel.jsx';
 import colors from 'seedling/colors';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const InlineRadioSelect = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
@@ -53,3 +53,5 @@ export default React.createClass({
     );
   }
 });
+
+export default InlineRadioSelect;

@@ -8,7 +8,7 @@ import statics from './statics';
 import storage from './storage';
 import variables from './variables';
 
-export default {
+export {
   bootstrap,
   config,
   Flux,

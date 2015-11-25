@@ -2,7 +2,7 @@ import React from 'react';
 import {Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-export default React.createClass({
+const Bastion = React.createClass({
   render() {
     return (
       <div>
@@ -68,3 +68,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Bastion;

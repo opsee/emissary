@@ -3,7 +3,7 @@ import AssertionItem from './AssertionItem.jsx';
 // import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const AssertionItemList = React.createClass({
   propTypes: {
     assertions: PropTypes.array,
     response: PropTypes.object
@@ -32,3 +32,5 @@ export default React.createClass({
     // );
   }
 });
+
+export default AssertionItemList;

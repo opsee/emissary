@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import {Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-export default React.createClass({
+const IAM = React.createClass({
   render() {
     return (
       <div>
@@ -86,3 +86,5 @@ export default React.createClass({
     );
   }
 });
+
+export default IAM;

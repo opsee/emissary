@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {Analytics, Header, MessageModal, Toolbar, Counter} from './';
+import {Analytics, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
 import {GlobalActions, UserActions} from '../../actions';
 import {GlobalStore, UserStore, OnboardStore} from '../../stores';
@@ -96,9 +96,6 @@ export default React.createClass({
       <div>
         <DocumentTitle title="Opsee"/>
         <Header/>
-        {
-        // <Counter {...this.props}/>
-        }
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

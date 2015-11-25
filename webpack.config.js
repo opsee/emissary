@@ -50,14 +50,14 @@ module.exports = {
     loaders: [
       { test: /\.global\.css$/, loader: 'style-loader!css-loader!cssnext-loader', include: [context_dir]},
       { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]!cssnext-loader'},
-      // {test: /\.js$|\.jsx$/, loaders: ['react-hot'], include: [context_dir] },
+      {test: /\.js$|\.jsx$/, loaders: ['react-hot'], include: [context_dir] },
       {
         test: /\.js$|\.jsx$/, 
         loader: 'babel-loader',
         query: {
-          plugins: ['transform-es2015-modules-commonjs', 'transform-runtime'],
-          // plugins: ['transform-runtime'],
-          presets: ['es2015', 'stage-0', 'react'],
+          // plugins: ['transform-es2015-modules-commonjs', 'transform-runtime'],
+          plugins: ['transform-runtime'],
+          presets: ['es2015', 'react'],
         },
         include: [context_dir]
       },

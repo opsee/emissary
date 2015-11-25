@@ -11,7 +11,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const Signups = React.createClass({
   mixins: [AdminStore.mixin, History],
   getInitialState(){
     return this.getState();
@@ -156,3 +156,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Signups;

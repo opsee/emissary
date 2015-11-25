@@ -11,7 +11,7 @@ import RadioWithLabel from './RadioWithLabel.jsx';
 import Toggle from './Toggle.jsx';
 import ToggleWithLabel from './ToggleWithLabel.jsx';
 
-export default {
+export {
   Autosuggest,
   Button,
   ButtonToggle,

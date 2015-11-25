@@ -1,7 +1,7 @@
 import Color from './Color';
 import Hyphenate from './Hyphenate';
 
-export default {
+export {
   Color,
   Hyphenate
 };

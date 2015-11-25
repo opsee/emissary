@@ -1,10 +1,10 @@
 import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
 import reducer from '../reducers'
-import promiseMiddleware from 'redux-promise';
 import {reduxReactRouter} from 'redux-router';
 import routes from '../components/global/Routes';
 import {createHistory} from 'history';
+import {promiseMiddleware} from './promiseMiddleware';
 
 const reduxRouter = reduxReactRouter({
   routes,

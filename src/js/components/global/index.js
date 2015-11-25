@@ -20,7 +20,7 @@ import StepCounter from './StepCounter.jsx';
 import Table from './Table.jsx';
 import Toolbar from './Toolbar.jsx';
 
-export default {
+export {
   Analytics,
   Counter,
   ContextMenu,

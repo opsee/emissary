@@ -5,7 +5,7 @@ import Button from './Button';
 import {ChevronDown, ChevronUp} from '../icons';
 import style from './dropdown.css';
 
-export default React.createClass({
+const Dropdown = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
@@ -97,3 +97,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Dropdown;

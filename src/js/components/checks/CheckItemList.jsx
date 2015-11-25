@@ -8,7 +8,7 @@ import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 
-export default React.createClass({
+const CheckItemList = React.createClass({
   mixins: [CheckStore.mixin, SetInterval],
   propTypes: {
     type: PropTypes.string,
@@ -65,3 +65,5 @@ export default React.createClass({
     );
   }
 });
+
+export default CheckItemList;
