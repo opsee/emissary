@@ -1,31 +1,34 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {List} from 'immutable';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import TimeAgo from 'react-timeago';
-import {InstanceStore, GroupStore} from '../../stores';
-import {InstanceActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
-import Immutable from 'immutable';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {Add} from '../icons';
 import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
+import {env as actions} from '../../reduxactions';
 
-function getState(){
-  return {
-    instance: InstanceStore.getInstanceECC(),
-    status: InstanceStore.getGetInstanceECCStatus()
-  };
-}
-
-export default React.createClass({
-  mixins: [InstanceStore.mixin, SetInterval],
+const InstanceEcc = React.createClass({
+  mixins: [SetInterval],
   propTypes: {
-    params: PropTypes.object
+    params: PropTypes.object,
+    actions: PropTypes.shape({
+      getInstanceEcc: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        instances: PropTypes.shape({
+          ecc: PropTypes.object
+        })
+      })
+    })
   },
   componentWillMount(){
     this.getData();
@@ -33,33 +36,21 @@ export default React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !Immutable.is(this.state.instance, nextState.instance) || this.state !== nextState;
-  },
-  getInitialState(){
-    return getState();
-  },
-  storeDidChange() {
-    const state = getState();
-    this.setState(state);
-  },
   getData(){
-    InstanceActions.getInstanceECC(this.props.params.id);
+    this.props.actions.getInstanceEcc(this.props.params.id);
   },
-  getGroups(){
-    const group = GroupStore.getGroupFromFilter({id: this.state.instance.get('groups').toJS()[0].id});
-    if (group){
-      return new List([group]);
-    }
-    return this.state.instance.get('groups');
+  getInstance(){
+    return this.props.redux.env.instances.ecc.find(i => {
+      return i.get('id') === this.props.params.id;
+    }) || new Map();
   },
   getGroupIds(){
-    if (this.state.instance.get('name')){
-      return _.pluck(this.state.instance.groups.toJS(), 'id');
+    if (this.getInstance().get('name')){
+      return _.pluck(this.getInstance().groups.toJS(), 'id');
     }
   },
   renderAvailabilityZone(){
-    const az = _.get(this.state.instance.get('Placement'), 'AvailabilityZone');
+    const az = _.get(this.getInstance().get('Placement'), 'AvailabilityZone');
     if (az){
       return (
         <tr>
@@ -71,13 +62,13 @@ export default React.createClass({
     return <tr/>;
   },
   renderLastChecked(){
-    const d = this.state.instance.lastChecked;
+    const d = this.getInstance().get('lastChecked');
     if (d){
       return (
         <tr>
           <td><strong>Last Checked</strong></td>
           <td title={`Last Checked: ${d.toISOString()}`}>
-            <TimeAgo date={this.state.instance.get('lastChecked')}/>
+            <TimeAgo date={this.getInstance().get('lastChecked')}/>
           </td>
         </tr>
       );
@@ -85,11 +76,11 @@ export default React.createClass({
     return <tr/>;
   },
   renderInner(){
-    if (this.state.instance.get('name')){
+    if (this.getInstance().get('name')){
       return (
         <div>
           <Padding b={2}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.state.instance.get('id')}&type=EC2&name=${this.state.instance.get('name')}`} title="Create New Check">
+            <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=EC2&name=${this.getInstance().get('name')}`} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
@@ -100,12 +91,12 @@ export default React.createClass({
               <tr>
                 <td><strong>Launched</strong></td>
                 <td>
-                  <TimeAgo date={this.state.instance.get('LaunchTime')}/>
+                  <TimeAgo date={this.getInstance().get('LaunchTime')}/>
                 </td>
               </tr>
               <tr>
                 <td><strong>Instance Type</strong></td>
-                <td>{this.state.instance.get('InstanceType')}</td>
+                <td>{this.getInstance().get('InstanceType')}</td>
               </tr>
               {this.renderAvailabilityZone()}
               {this.renderLastChecked()}
@@ -119,12 +110,12 @@ export default React.createClass({
             <GroupItemList ids={this.getGroupIds()} title="Security Groups"/>
           </Padding>
           <Padding b={1}>
-            <GroupItemList type="elb" instanceIds={[this.state.instance.get('id')]} title="ELBs" noFallback/>
+            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
           </Padding>
           {
             // <h2>{this.data().checks.length} Checks</h2>
             // <ul className="list-unstyled">
-            //   {this.state.instance.get('checks').map(i => {
+            //   {this.getInstance().get('checks').map(i => {
             //     return (
             //       <li key={i.get('id')}>
             //         <CheckItem item={i}/>
@@ -136,12 +127,12 @@ export default React.createClass({
         </div>
       );
     }
-    return <StatusHandler status={this.state.status}/>;
+    return <StatusHandler status={this.props.redux.asyncActions.getInstanceEcc.status}/>;
   },
   render() {
     return (
       <div>
-        <Toolbar title={`Instance: ${this.state.instance.get('name') || this.state.instance.get('id') || this.props.params.id}`}/>
+        <Toolbar title={`Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -153,3 +144,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(InstanceEcc);

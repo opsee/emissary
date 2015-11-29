@@ -2,8 +2,8 @@ import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
 import _ from 'lodash';
-import {UserStore} from '../stores';
 import example from '../../files/bastion-install-messages-example.json';
+import storage from '../modules/storage';
 
 let _actions = {};
 
@@ -31,7 +31,7 @@ _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailabil
   (subdomain, date) => {
     return request
     .get(`${config.api}/orgs/subdomain/${subdomain}`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .send({date: date});
   },
   res => {
@@ -49,7 +49,7 @@ _actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
   (data) => {
     return request
     .post(`${config.api}/orgs`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .send(data);
   },
   res => res && res.body,
@@ -66,7 +66,7 @@ _actions.onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
   (data) => {
     return request
     .post(`${config.api}/scan-vpcs`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .send(data);
   },
   res => res && res.body,
@@ -82,7 +82,7 @@ _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
   (data) => {
     return request
     .post(`${config.api}/bastions/launch`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .send(data);
   },
   res => res && res.body,
@@ -93,7 +93,7 @@ _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
   () => {
     return request
     .get(`${config.api}/bastions`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => _.get(res, 'body.bastions') || [],
   res => res
@@ -103,7 +103,7 @@ _actions.getCustomer = Flux.statics.addAsyncAction('getCustomer',
   () => {
     return request
     .get(`${config.api}/customer`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => {
     let body = _.get(res, 'body.body');

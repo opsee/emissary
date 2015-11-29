@@ -1,2 +1,26 @@
+export const APP_INITIALIZE = 'APP_INITIALIZE';
+export const APP_SOCKET_MSG = 'APP_SOCKET_MSG';
+export const APP_SOCKET_ERROR = 'APP_SOCKET_ERROR';
+export const APP_SOCKET_OPEN = 'APP_SOCKET_OPEN';
+export const APP_SOCKET_CLOSE = 'APP_SOCKET_CLOSE';
+
 export const USER_LOGIN = 'USER_LOGIN';
 export const USER_LOGOUT = 'USER_LOGOUT';
+export const USER_REFRESH = 'USER_REFRESH';
+export const USER_EDIT = 'USER_EDIT';
+export const USER_START = 'USER_START';
+
+export const GET_GROUP_SECURITY = 'GET_GROUP_SECURITY';
+export const GET_GROUPS_SECURITY = 'GET_GROUPS_SECURITY';
+export const GET_GROUP_RDS = 'GET_GROUP_RDS';
+export const GET_GROUPS_RDS = 'GET_GROUPS_RDS';
+export const GET_GROUP_ELB = 'GET_GROUP_ELB';
+export const GET_GROUPS_ELB = 'GET_GROUPS_ELB';
+
+export const GET_INSTANCE_ECC = 'GET_INSTANCE_ECC';
+export const GET_INSTANCES_ECC = 'GET_INSTANCES_ECC';
+export const GET_INSTANCE_RDS = 'GET_INSTANCE_RDS';
+export const GET_INSTANCES_RDS = 'GET_INSTANCES_RDS';
+
+export const ENV_SET_SEARCH = 'ENV_SET_SEARCH';
+export const FILTER_ENV = 'FILTER_ENV';

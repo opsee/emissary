@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import analytics from '../../modules/analytics';
 
 const Analytics = React.createClass({
-  contextTypes:{
+  contextTypes: {
     history: React.PropTypes.object.isRequired
   },
   componentDidMount() {

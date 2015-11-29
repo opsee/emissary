@@ -14,12 +14,12 @@ export function promiseMiddleware({ dispatch }) {
         ? action.then(dispatch)
         : next(action);
     }
-    if(isPromise(action.payload)){
+    if (isPromise(action.payload)){
       const aType = `${action.type}_ASYNC`;
       const id = uuid.v1();
       dispatch({
         type: aType,
-        payload:{
+        payload: {
           status: 'pending',
           time: Date.now(),
           id
@@ -38,8 +38,8 @@ export function promiseMiddleware({ dispatch }) {
           return dispatch(_.assign({}, action, {payload: result}));
         },
         error => {
-          if(config.env !== 'production'){
-            if(!error instanceof Error){
+          if (config.env !== 'production'){
+            if (!error instanceof Error){
               throw Error(`Error object from ${action.type} is not a true error.`);
             }
           }

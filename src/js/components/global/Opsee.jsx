@@ -6,100 +6,89 @@ import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
 import {Analytics, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
-import {GlobalActions, UserActions} from '../../actions';
-import {GlobalStore, UserStore, OnboardStore} from '../../stores';
+import {GlobalStore} from '../../stores';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
-import * as actions from '../../reduxactions';
+import {app as appActions} from '../../reduxactions';
+import {user as userActions} from '../../reduxactions';
 /* eslint-enable no-unused-vars */
 
 const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
 
 const Opsee = React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval],
+  mixins: [GlobalStore.mixin, SetInterval],
   propTypes: {
     location: PropTypes.object,
-    children: PropTypes.node
+    children: PropTypes.node,
+    appActions: PropTypes.shape({
+      initialize: PropTypes.func,
+      shutdown: PropTypes.func
+    }),
+    userActions: PropTypes.shape({
+      refresh: PropTypes.func
+    }),
+    redux: PropTypes.object
   },
   getInitialState(){
     return {
-      socketError: null,
       showNav: GlobalStore.getShowNav()
     };
   },
   componentWillMount(){
-    if (this.props.location.query.err){
-      config.error = true;
-    }
+    this.props.appActions.initialize();
+    this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
   },
-  componentDidMount(){
-    this.runInitialize();
+  componentWillReceiveProps(nextProps) {
+    //user log out
+    if (!nextProps.redux.user.get('auth') && this.props.redux.user.get('auth')){
+      this.props.appActions.shutdown();
+    }
+    //user log in
+    if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
+      this.props.appActions.initialize();
+    }
   },
   storeDidChange(){
-    const status1 = OnboardStore.getOnboardSetPasswordStatus();
-    const status2 = UserStore.getUserLoginStatus();
-    if (status1 === 'success' || status2 === 'success'){
-      initialize();
-    }
     let stateObj = {
       showNav: GlobalStore.getShowNav()
     };
-    const socketError = GlobalStore.getGlobalSocketError();
-    if (socketError){
-      stateObj.socketError = socketError;
-      setTimeout(GlobalActions.globalSocketStart, 10000);
-    }else {
-      stateObj.socketError = null;
-    }
     this.setState(stateObj);
   },
   getMeatClass(){
     const found = _.find(hideNavList, string => this.props.location.pathname.match(string));
     return found ? style.meatUp : style.meat;
   },
-  runInitialize(){
-    const user = this.props.redux.user.toJS();
-    if (user.token && !window.userRefreshTokenInterval){
-      window.Intercom('boot', {
-        app_id: 'mrw1z4dm',
-        email: user.email,
-        user_hash: user.intercom_hmac
-      });
-      GlobalActions.globalSocketStart();
-      //refresh user token every 5 minutes
-      window.userRefreshTokenInterval = setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
-    }
-    if (config.demo){
-      console.info('In Demo Mode.');
-    }
+  renderSocketError(){
+    return (
+      <div>
+        <Toolbar title="Error"/>
+        <Grid>
+          <Col xs={12}>
+            <Padding t={2}>
+              <Alert bsStyle="danger">
+                Could not connect to Opsee. Attempting to reconnect...
+              </Alert>
+            </Padding>
+          </Col>
+        </Grid>
+      </div>
+    );
   },
   renderInner(){
-    if (this.state.socketError && !config.debug){
-      return (
-        <div>
-          <Toolbar title="Error"/>
-          <Grid>
-            <Col xs={12}>
-              <Padding t={2}>
-                <Alert bsStyle="danger">
-                  Could not connect to Opsee. Attempting to reconnect...
-                </Alert>
-              </Padding>
-            </Col>
-          </Grid>
-        </div>
-      );
+    if (!this.props.redux.app.ready){
+      return <div/>;
     }
-    return React.cloneElement(this.props.children, _.assign({}, 
+    if (this.props.redux.app.socketError && !config.debug){
+      return this.renderSocketError();
+    }
+    return React.cloneElement(this.props.children, _.assign({},
       {
-        redux: this.props.redux,
-        dispatch: this.props.dispatch
-      }
-      )
+        redux: this.props.redux
+      })
     );
   },
   render() {
@@ -123,8 +112,13 @@ const Opsee = React.createClass({
   }
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  appActions: bindActionCreators(appActions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
+});
+
 const mapStateToProps = (state) => ({
   redux: state
 });
 
-export default connect(mapStateToProps)(Opsee);
+export default connect(mapStateToProps, mapDispatchToProps)(Opsee);

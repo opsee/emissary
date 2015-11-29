@@ -1,8 +1,8 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
-import {UserStore} from '../stores';
 import _ from 'lodash';
+import storage from '../modules/storage';
 
 let _actions = {};
 
@@ -10,7 +10,7 @@ _actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
   () => {
     return request
     .get(`${config.api}/groups/security`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => res.body && res.body.groups,
   res => res && res.response
@@ -21,10 +21,10 @@ _actions.getGroupsSecurity = Flux.statics.addAsyncAction('getGroupsSecurity',
     return new Promise((resolve, reject) => {
       return request
       .get(`${config.api}/groups/security`)
-      .set('Authorization', UserStore.getAuth()).then(res => {
+      .set('Authorization', storage.get('user').auth).then(res => {
         request
         .get(`${config.api}/checks`)
-        .set('Authorization', UserStore.getAuth()).then(checkRes => {
+        .set('Authorization', storage.get('user').auth).then(checkRes => {
           let groups = res.body.groups;
           let checks = _.get(checkRes, 'body.checks');
           if (checks && checks.length){
@@ -50,13 +50,13 @@ _actions.getGroupSecurity = Flux.statics.addAsyncAction('getGroupSecurity',
     return new Promise((resolve, reject) => {
       request
       .get(`${config.api}/groups/security`)
-      .set('Authorization', UserStore.getAuth()).then((res) => {
+      .set('Authorization', storage.get('user').auth).then((res) => {
         let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
           return g.group.GroupId === id;
         });
         request
         .get(`${config.api}/groups/security/${id}`)
-        .set('Authorization', UserStore.getAuth()).then((res2) => {
+        .set('Authorization', storage.get('user').auth).then((res2) => {
           group.instances = res2.body && res2.body.instances;
           resolve(group);
         }, errRes2 => {
@@ -75,7 +75,7 @@ _actions.getGroupsRDSSecurity = Flux.statics.addAsyncAction('getGroupsRDSSecurit
   () => {
     return request
     .get(`${config.api}/groups/rds-security`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => res.body && res.body.groups,
   res => res && res.response
@@ -85,7 +85,7 @@ _actions.getGroupRDSSecurity = Flux.statics.addAsyncAction('getGroupRDSSecurity'
   (id) => {
     return request
     .get(`${config.api}/groups/rds-security/${id}`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => res.body,
   res => res && res.response
@@ -96,10 +96,10 @@ _actions.getGroupsELB = Flux.statics.addAsyncAction('getGroupsELB',
     return new Promise((resolve, reject) => {
       return request
       .get(`${config.api}/groups/elb`)
-      .set('Authorization', UserStore.getAuth()).then(res => {
+      .set('Authorization', storage.get('user').auth).then(res => {
         request
         .get(`${config.api}/checks`)
-        .set('Authorization', UserStore.getAuth()).then(checkRes => {
+        .set('Authorization', storage.get('user').auth).then(checkRes => {
           let groups = res.body.groups;
           let checks = _.get(checkRes, 'body.checks');
           if (checks && checks.length){
@@ -125,13 +125,13 @@ _actions.getGroupELB = Flux.statics.addAsyncAction('getGroupELB',
     return new Promise((resolve, reject) => {
       request
       .get(`${config.api}/groups/elb`)
-      .set('Authorization', UserStore.getAuth()).then((res) => {
+      .set('Authorization', storage.get('user').auth).then((res) => {
         let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
           return g.group.LoadBalancerName === id;
         });
         request
         .get(`${config.api}/groups/elb/${id}`)
-        .set('Authorization', UserStore.getAuth()).then((res2) => {
+        .set('Authorization', storage.get('user').auth).then((res2) => {
           group.instances = res2.body && res2.body.instances;
           resolve(group);
         }, res2 => reject(res2));

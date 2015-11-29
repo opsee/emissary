@@ -1,8 +1,8 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
-import {UserStore} from '../stores';
 import _ from 'lodash';
+import storage from '../modules/storage';
 
 let _actions = {};
 
@@ -10,7 +10,7 @@ _actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups',
   () => {
     return request
     .get(`${config.authApi}/signups`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .query({
       per_page: 1000
     });
@@ -23,7 +23,7 @@ _actions.adminActivateSignup = Flux.statics.addAsyncAction('adminActivateSignup'
   (signup) => {
     return request
     .put(`${config.authApi}/signups/${signup.id}/activate`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => res && res.body,
   res => res && res.response
@@ -33,7 +33,7 @@ _actions.adminGetUsers = Flux.statics.addAsyncAction('adminGetUsers',
   () => {
     return request
     .get(`${config.authApi}/users`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => res && res.body,
   res => res && res.response

@@ -25,7 +25,7 @@ import CheckCreateInfo from '../checks/CheckCreateInfo';
 import GroupSecurity from '../groups/GroupSecurity';
 import GroupELB from '../groups/GroupElb';
 
-import InstanceEC2 from '../instances/InstanceEC2';
+import InstanceEcc from '../instances/InstanceEcc';
 import InstanceRDS from '../instances/InstanceRDS';
 
 import Login from '../user/Login';
@@ -67,12 +67,12 @@ import {auth} from '../global/Authenticator';
 const routes = (
   <Route component={Opsee}>
     <Route path="styleguide" component={Styleguide}/>
-    
+
     <Route path="/env" component={auth(Env)}/>
     <Route path="/env-groups-security" component={auth(EnvGroupsSecurity)}/>
     <Route path="/env-groups-elb" component={auth(EnvGroupsELB)}/>
     <Route path="/env-instances-ec2" component={auth(EnvInstancesEC2)}/>
-    <Route path="/instance/ec2/:id" component={auth(InstanceEC2)}/>
+    <Route path="/instance/ec2/:id" component={auth(InstanceEcc)}/>
     <Route path="/instance/rds/:id" component={auth(InstanceRDS)}/>
 
     <Route path="/" component={auth(CheckList)}>

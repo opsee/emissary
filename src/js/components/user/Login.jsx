@@ -4,35 +4,25 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {UserStore} from '../../stores';
-import {UserActions, GlobalActions} from '../../actions';
 import {Toolbar, LogoColor, StatusHandler} from '../global';
-import {Link, History} from 'react-router';
+import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import * as actions from '../../reduxactions/user';
+import {user as actions} from '../../reduxactions';
 
 const Login = React.createClass({
-  mixins: [UserStore.mixin, History],
   propTypes: {
-    location: PropTypes.object
-  },
-  storeDidChange(){
-    const status = UserStore.getUserLoginStatus();
-    this.setState({status});
-    if (status === 'success'){
-      const next = _.get(this.props, 'location.state.redirect');
-      if (next){
-        return this.history.replaceState(null, next);
-      }
-      return this.history.pushState(null, '/');
-    }
+    location: PropTypes.object,
+    redux: PropTypes.object.isRequired,
+    actions: PropTypes.shape({
+      login: PropTypes.func
+    }).isRequired
   },
   getInitialState(){
     return {
-      data: UserStore.getUser(),
-      status: UserStore.getUserLoginStatus()
+      data: UserStore.getUser()
     };
   },
   getButtonText(){
@@ -40,7 +30,7 @@ const Login = React.createClass({
   },
   isDisabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);
-    return incomplete || this.state.status === 'pending';
+    return incomplete || this.props.redux.asyncActions.userLogin.status === 'pending';
   },
   setUserData(data){
     this.setState({
@@ -49,19 +39,11 @@ const Login = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
     let data = this.state.data;
-    data.redirect = this.props.location.query.redirect;
     if (this.props.location.query.as){
       data.as = _.parseInt(this.props.location.query.as, 10);
     }
     this.props.actions.login(data);
-    // UserActions.userLogin(data);
-  },
-  handleDismiss(){
-    this.props.actions.userLoginDismissError();
   },
   render() {
     return (
@@ -73,7 +55,7 @@ const Login = React.createClass({
               <LogoColor/>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
-                <StatusHandler status={this.props.redux.asyncActions.userLogin.status} onDismiss={this.handleDismiss}/>
+                <StatusHandler status={this.props.redux.asyncActions.userLogin.status}/>
                 <Padding t={1}>
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
@@ -93,7 +75,7 @@ const Login = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions : bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Login);

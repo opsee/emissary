@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {UserStore} from '../../stores';
-import {UserActions, GlobalActions} from '../../actions';
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import _ from 'lodash';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
@@ -10,6 +11,7 @@ import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
 import {Padding} from '../layout';
+import {user as actions} from '../../reduxactions';
 
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
@@ -29,36 +31,24 @@ const PasswordForm = forms.Form.extend({
   }
 });
 
-export default React.createClass({
+const ProfileEdit = React.createClass({
   mixins: [UserStore.mixin, History],
+  propTypes: {
+    actions: PropTypes.shape({
+      edit: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        userEdit: PropTypes.object
+      })
+    })
+  },
   getInitialState() {
     // return this.getForm();
     return {
       user: UserStore.getUser().toJS(),
       passwordForm: this.getForm()
     };
-  },
-  componentWillMount(){
-    if (!this.isDataComplete()){
-      UserActions.userGetUser(UserStore.getUser().get('id'));
-    }
-  },
-  storeDidChange(){
-    const status = UserStore.getUserGetUserStatus();
-    if (status === 'success'){
-      this.setState({
-        user: UserStore.getUser().toJS(),
-        passwordForm: this.getForm()
-      });
-    }
-    const editStatus = UserStore.getUserEditStatus();
-    if (editStatus === 'success'){
-      this.history.pushState(null, '/profile');
-    }else if (editStatus && editStatus !== 'pending'){
-      GlobalActions.globalModalMessage({
-        html: 'Something went wrong.'
-      });
-    }
   },
   getForm(){
     const self = this;
@@ -72,9 +62,6 @@ export default React.createClass({
         onChangeDelay: 100
       }
     });
-  },
-  isDataComplete(){
-    return UserStore.getUser().get('name') && UserStore.getUser().toJS();
   },
   isDisabled(){
     return !(this.state.user.email && this.state.user.name) || UserStore.getUserEditStatus() === 'pending';
@@ -91,7 +78,7 @@ export default React.createClass({
     if (this.state.password){
       data.password = this.state.password;
     }
-    UserActions.userEdit(data);
+    this.props.actions.edit(data);
   },
   render() {
     return (
@@ -107,6 +94,7 @@ export default React.createClass({
             <form onSubmit={this.handleSubmit}>
               <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
+              <StatusHandler status={this.props.redux.asyncActions.userEdit.status}/>
               <Padding t={2}>
                 <Button color="success" type="submit" disabled={this.isDisabled()}>
                   {UserStore.getUserEditStatus() === 'pending' ? 'Updating...' : 'Update Profile'}
@@ -120,3 +108,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(ProfileEdit);

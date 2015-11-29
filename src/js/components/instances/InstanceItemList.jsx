@@ -1,49 +1,47 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
-import Immutable, {List} from 'immutable';
+import {List} from 'immutable';
 import {Padding} from '../layout';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
-import {InstanceActions} from '../../actions';
-import {InstanceStore} from '../../stores';
+import {env as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [InstanceStore.mixin],
+const InstanceItemList = React.createClass({
   propTypes: {
     instances: PropTypes.instanceOf(List),
     offset: PropTypes.number,
     limit: PropTypes.number,
     ids: PropTypes.array,
-    noFallback: PropTypes.bool
+    noFallback: PropTypes.bool,
+    actions: PropTypes.shape({
+      getInstancesEcc: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        instances: PropTypes.shape({
+          ecc: PropTypes.object
+        })
+      })
+    })
   },
   componentWillMount(){
     if (!this.props.instances){
-      InstanceActions.getInstancesECC();
+      this.props.actions.getInstancesEcc();
     }
-  },
-  shouldComponentUpdate(nextProps, nextState){
-    return !Immutable.is(this.props.instances, nextProps.instances) || nextState !== this.state;
-  },
-  storeDidChange(){
-    const state = this.getState();
-    this.setState(state);
-  },
-  getState(){
-    return {
-      status: InstanceStore.getGetInstancesECCStatus(),
-      instances: InstanceStore.getInstancesECC()
-    };
   },
   getInitialState(){
     return {
       offset: this.props.offset || 0,
-      limit: this.props.limit || 8,
-      instances: List()
+      limit: this.props.limit || 8
     };
   },
   getInstances(noFilter){
-    let data = this.props.instances ? this.props.instances : this.state.instances;
+    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances.ecc;
     if (noFilter){
       return data;
     }
@@ -86,9 +84,15 @@ export default React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.state.status} noFallback={this.props.noFallback}>
+      <StatusHandler status={this.props.redux.asyncActions.getInstancesEcc.status} noFallback={this.props.noFallback}>
         <Alert bsStyle="default">No instances found</Alert>
       </StatusHandler>
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(InstanceItemList);

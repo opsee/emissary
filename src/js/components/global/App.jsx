@@ -2,8 +2,6 @@ import React from 'react';
 import Perf from 'react-addons-perf';
 // import router from './modules/router.js';
 import _ from 'lodash';
-import {render} from 'react-dom';
-import {Router} from 'react-router';
 import {connect} from 'react-redux';
 import {pushState, ReduxRouter} from 'redux-router';
 
@@ -20,16 +18,10 @@ if (config.env !== 'production'){
 
 const App = React.createClass({
   render(){
-    return(
+    return (
       <ReduxRouter>{routes}</ReduxRouter>
     );
   }
 });
 
-function select(state) {
-  return {
-    counter: state.counter,
-    q: _.get(state.router, 'location.query.q')
-  }
-}
-export default connect(select, {pushState})(App);
+export default connect(null, {pushState})(App);

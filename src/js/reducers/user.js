@@ -1,8 +1,8 @@
 import storage from '../modules/storage';
-import analytics from '../modules/analytics';
-import Immutable, {Record} from 'immutable';
+import {Record} from 'immutable';
 import _ from 'lodash';
-import {handleAction, handleActions} from 'redux-actions';
+import {handleActions} from 'redux-actions';
+import moment from 'moment';
 
 const User = Record({
   name: null,
@@ -12,43 +12,74 @@ const User = Record({
   loginDate: null,
   admin: false,
   admin_id: 0,
-  intercom_hmac: null
+  intercom_hmac: null,
+  auth: null
 });
 
-const initial = storage.get('user') ? new User(storage.get('user')) : new User();
+function getAuth(data){
+  const date = data.loginDate;
+  const momentDate = moment(date);
+  const diff = moment().diff(momentDate, 'm');
+  // 720 minutes == 12 hours
+  let minutes = 720;
+  // 15 minutes for ghosting
+  if (data.admin_id > 0){
+    minutes = 15;
+  }
+  const valid = !!(typeof diff === 'number' && diff < minutes && diff > -1);
+  let auth;
+  if (date && valid && data.token){
+    auth = `Bearer ${data.token}`;
+  }
+  return auth;
+}
+
+let initial = new User();
+const localUser = storage.get('user');
+if (localUser && getAuth(localUser)){
+  initial = new User(localUser);
+}
+
+function setUser(state, action){
+  let obj = _.assign({},
+    action.payload.user,
+    {
+      token: action.payload.token || state.token,
+      loginDate: action.payload.loginDate || new Date(),
+      intercom_hmac: action.payload.intercom_hmac || state.intercom_hmac
+    }
+  );
+  const auth = getAuth(obj);
+  if (auth){
+    obj = _.assign({}, obj, {auth});
+    storage.set('user', obj);
+    return new User(obj);
+  }
+  return state;
+}
 
 export default handleActions({
-  USER_LOGIN:{
+  USER_START: {
+    next: setUser
+  },
+  USER_LOGIN: {
+    next: setUser
+  },
+  USER_EDIT: {
+    next: setUser
+  },
+  USER_LOGOUT: {
+    next(){
+      return new User();
+    }
+  },
+  USER_REFRESH: {
     next(state, action){
-      let obj = _.assign({},
-        action.payload.user,
-        {
-          token: action.payload.token,
-          loginDate: new Date(),
-          intercom_hmac: action.payload.intercom_hmac
-        }
-      );
-      storage.set('user', obj);
-      return new User(obj);
+      const data = _.assign({}, action.payload, {loginDate: new Date()});
+      return setUser(state, {payload: data});
+    },
+    throw(){
+      return new User();
     }
   }
 }, initial);
-
-//   switch (payload.type) {
-//     case 'USER_LOGOUT':
-//     case 'USER_REFRESH_TOKEN_ERROR':
-//       analytics.event('User', 'logout', payload.type);
-//       window.Intercom('shutdown');
-//       storage.remove('user');
-//       _data.user = new User();
-//       clearInterval(window.userRefreshTokenInterval);
-//       delete window.userRefreshTokenInterval;
-//       if (window.socket){window.socket.close();}
-//       return _.assign({}, state, {
-//         user: new User()
-//       });
-//       break;
-//     default:
-//       return state;
-//   }
-// };

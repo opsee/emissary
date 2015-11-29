@@ -1,7 +1,7 @@
 import Flux from '../modules/flux';
 import storage from '../modules/storage';
 import analytics from '../modules/analytics';
-import Immutable, {Record} from 'immutable';
+import {Record} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -19,19 +19,6 @@ const User = Record({
 });
 
 const statics = {
-  setUser(data){
-    if (data && data.user){
-      data.user.token = data.token;
-    }
-    data.user.loginDate = data.user.loginDate || _data.user.get('loginDate');
-    let obj = data.user || data;
-    obj.intercom_hmac = data.intercom_hmac;
-    //don't overwrite properties that aren't coming from the api, like loginRedirect
-    obj = _.assign({}, _data.user.toJS(), obj);
-    _data.user = Immutable.fromJS(obj);
-    storage.set('user', _data.user.toJS());
-    Store.emitChange();
-  },
   logout(){
     window.Intercom('shutdown');
     storage.remove('user');
@@ -100,7 +87,7 @@ const Store = Flux.createStore(
       if (payload.actionType === 'USER_LOGIN_SUCCESS' || payload.actionType === 'ONBOARD_SET_PASSWORD_SUCCESS'){
         payload.data.user.loginDate = new Date();
       }
-      statics.setUser(payload.data);
+      // statics.setUser(payload.data);
       Store.emitChange();
       break;
     case 'USER_REFRESH_TOKEN_SUCCESS':

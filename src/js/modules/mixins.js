@@ -8,4 +8,4 @@ export const SetInterval = {
   componentWillUnmount(){
     this.intervals.map(clearInterval);
   }
-}
+};

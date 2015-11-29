@@ -6,7 +6,8 @@ import _ from 'lodash';
 
 const EnvGroupsSecurity = React.createClass({
   propTypes: {
-    location: PropTypes.object
+    location: PropTypes.object,
+    redux: PropTypes.object.isRequired
   },
   render() {
     return (
@@ -15,7 +16,7 @@ const EnvGroupsSecurity = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={['groupsSecurity']} filter={_.get(this.props.location.query, 'filter')} limit={1000}/>
+                <EnvWithFilter include={['groupsSecurity']} filter={_.get(this.props.location.query, 'filter')} limit={1000} redux={this.props.redux}/>
               </Col>
             </Row>
           </Grid>

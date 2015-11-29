@@ -1,14 +1,16 @@
 import {combineReducers} from 'redux';
 import {routerStateReducer} from 'redux-router';
-import counter from './counter';
 import user from './user';
 import asyncActions from './asyncActions';
+import app from './app';
+import env from './env';
 
 const rootReducer = combineReducers({
   router: routerStateReducer,
-  counter,
   user,
-  asyncActions
+  asyncActions,
+  app,
+  env
 });
 
 export default rootReducer;

@@ -10,7 +10,7 @@ const StatusHandler = React.createClass({
     timeout: PropTypes.number,
     status: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.object,
+      PropTypes.object
     ]),
     children: PropTypes.node,
     noFallback: PropTypes.bool,
@@ -26,7 +26,7 @@ const StatusHandler = React.createClass({
   componentWillReceiveProps(nextProps){
     if (nextProps.status === 'success'){
       return this.setState({
-        success: true, 
+        success: true,
         attempts: this.state.attempts + 1,
         error: false
       });
@@ -37,16 +37,15 @@ const StatusHandler = React.createClass({
     }
   },
   getErrorText(){
-    let text = 'Something went wrong';
-    text = _.get(this.state.error, 'response.body.message') || text;
-    return text;
+    const text = _.get(this.state.error, 'response.body.message');
+    return text || this.props.errorText || 'Something went wrong.';
   },
   handleDismiss(){
-    if(this.props.onDismiss){
+    if (this.props.onDismiss){
       this.props.onDismiss.call(this);
     }
     this.setState({
-      error:false
+      error: false
     });
   },
   render(){

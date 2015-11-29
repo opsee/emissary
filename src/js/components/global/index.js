@@ -1,5 +1,4 @@
 import Analytics from './Analytics.jsx';
-import Counter from './Counter.jsx';
 import ContextMenu from './ContextMenu.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
@@ -22,7 +21,6 @@ import Toolbar from './Toolbar.jsx';
 
 export {
   Analytics,
-  Counter,
   ContextMenu,
   Header,
   Highlight,

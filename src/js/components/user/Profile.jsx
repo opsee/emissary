@@ -1,33 +1,36 @@
-import React from 'react';
-import {UserStore} from '../../stores';
-import {UserActions} from '../../actions';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {Table, Toolbar} from '../global';
-import {Link, History} from 'react-router';
+import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
+import * as actions from '../../reduxactions/user';
+import * as appActions from '../../reduxactions/app';
 
-export default React.createClass({
-  mixins: [UserStore.mixin, History],
-  storeDidChange(){
-    this.setState({
-      user: UserStore.getUser().toJS()
-    });
+const Profile = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      logout: PropTypes.func
+    }),
+    appActions: PropTypes.shape({
+      shutdown: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      user: PropTypes.object
+    })
   },
-  getInitialState(){
-    return {
-      user: UserStore.getUser().toJS()
-    };
-  },
-  runLogout(){
-    this.history.pushState(null, '/login');
-    UserActions.userLogOut();
+  handleLogout(){
+    this.props.actions.logout();
+    this.props.appActions.shutdown();
   },
   render() {
+    const user = this.props.redux.user.toJS();
     return (
        <div>
-        <Toolbar title={this.state.user.name} pageTitle="Profile">
+        <Toolbar title={user.name} pageTitle="Profile">
           <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
             <Edit btn/>
           </Button>
@@ -40,7 +43,7 @@ export default React.createClass({
                 <Table>
                   <tr>
                     <td><strong>Email</strong></td>
-                    <td>{this.state.user.email}</td>
+                    <td>{user.email}</td>
                   </tr>
                   <tr>
                     <td><strong>Password</strong></td>
@@ -49,7 +52,7 @@ export default React.createClass({
                 </Table>
               </Padding>
               <Padding t={3}>
-                <Button flat color="danger" onClick={this.runLogout}>
+                <Button flat color="danger" onClick={this.handleLogout}>
                   <Logout inline fill="danger"/> Log Out
                 </Button>
               </Padding>
@@ -60,3 +63,10 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Profile);
