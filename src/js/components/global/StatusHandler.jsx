@@ -42,8 +42,10 @@ const StatusHandler = React.createClass({
     return !!(this.props.status && typeof this.props.status !== 'string');
   },
   getErrorText(){
-    const text = _.get(this.props.status, 'response.body.message');
-    return text || this.props.errorText || 'Something went wrong.';
+    return _.get(this.props, 'status.message') ||
+    _.get(this.props, 'status.response.body.message') ||
+    this.props.errorText || 
+    'Something went wrong.';
   },
   handleDismiss(){
     if (this.props.onDismiss){

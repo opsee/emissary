@@ -1,7 +1,7 @@
 import {pushState} from 'redux-router';
-import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
+import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import analytics from '../modules/analytics';
 import {
@@ -47,6 +47,20 @@ export function setRegion(data) {
   }
 }
 
+export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
+
+export function set(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_REGION,
+      payload: {region: data}
+    });
+    setTimeout(() => {
+      dispatch(pushState(null, '/start/credentials'));
+    }, 100);
+  }
+}
+
 export function vpcScan(data) {
   return (dispatch, state) => {
     dispatch({
@@ -71,7 +85,7 @@ export function vpcScan(data) {
           }).flatten().value();
           dispatch({
             type: ONBOARD_SET_VPCS,
-            payload: vpcs
+            payload: {vpcs}
           })
           if (vpcs.length){
             if (vpcs.length === 1 && !config.showVpcScreen){

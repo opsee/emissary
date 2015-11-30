@@ -4,8 +4,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {StatusHandler, Toolbar} from '../global';
-import {OnboardActions} from '../../actions';
-import {OnboardStore} from '../../stores';
 import {BoundField, Button} from '../forms';
 import _ from 'lodash';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -41,7 +39,7 @@ const Credentials = React.createClass({
     return {
       info: new InfoForm(_.extend({
         onChange(){
-          OnboardActions.onboardSetCredentials(self.state.info.cleanedData);
+          self.props.actions.setCredentials(self.state.info.cleanedData);
           self.forceUpdate();
         },
         labelSuffix: '',
@@ -49,17 +47,17 @@ const Credentials = React.createClass({
           on: 'blur change',
           onChangeDelay: 100
         }
-      }, self.isDataComplete() ? {data: this.props.redux.onboard.credentials} :  null))
+      }, self.isDataComplete() ? {data: this.props.redux.onboard} :  null))
     };
   },
   getStatus(){
     return this.props.redux.asyncActions.onboardVpcScan.status;
   },
   isDataComplete(){
-    return _.chain(this.props.redux.onboard.credentials).values().every().value();
+    return this.props.redux.onboard['access-key'] && this.props.redux.onboard['secret-key'];
   },
   isDisabled(){
-    return !this.state.info.isValid() || this.getStatus();
+    return !!(!this.state.info.isValid() || this.getStatus() === 'pending');
   },
   handleSubmit(e){
     e.preventDefault();
