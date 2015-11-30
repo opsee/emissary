@@ -69,8 +69,10 @@ export default React.createClass({
     this.setState(stateObj);
   },
   getMeatClass(){
-    const found = _.find(hideNavList, string => this.props.location.pathname.match(string));
-    return found ? style.meatUp : style.meat;
+    return this.shouldHideNav() ? style.meatUp : style.meat;
+  },
+  shouldHideNav(){
+    return !!(_.find(hideNavList, string => this.props.location.pathname.match(string)));
   },
   renderInner(){
     if (this.state.socketError && !config.debug){
@@ -95,7 +97,7 @@ export default React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <Header/>
+        <Header hide={this.shouldHideNav()}/>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

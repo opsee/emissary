@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
 import {Person, Checkmark, Help, Cloud, Login} from '../icons';
-import {UserStore, GlobalStore} from '../../stores';
+import {UserStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
 import config from '../../modules/config';
@@ -10,17 +10,19 @@ import config from '../../modules/config';
 import style from './header.css';
 
 const Header = React.createClass({
-  mixins: [UserStore.mixin, GlobalStore.mixin],
+  mixins: [UserStore.mixin],
+  propTypes: {
+    hide: PropTypes.bool
+  },
   storeDidChange(){
     this.setState({
-      showNav: GlobalStore.getShowNav(),
       ghosting: UserStore.getUser().get('admin_id') > 0 || config.ghosting
     });
     this.forceUpdate();
   },
   getInitialState(){
     return {
-      showNav: GlobalStore.getShowNav()
+      ghosting: false
     };
   },
   getHeaderStyle(){
@@ -75,7 +77,7 @@ const Header = React.createClass({
   },
   render(){
     return (
-      <header id="header" className={this.state.showNav ? style.header : style.headerHide} style={this.getHeaderStyle()}>
+      <header id="header" className={this.props.hide ? style.headerHide : style.header} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>
