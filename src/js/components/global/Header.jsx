@@ -2,26 +2,19 @@ import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
 import {Person, Checkmark, Help, Cloud, Login} from '../icons';
-import {GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
 
 import style from './header.css';
 
 const Header = React.createClass({
-  mixins: [GlobalStore.mixin],
   propTypes: {
-    user: PropTypes.object.isRequired
-  },
-  storeDidChange(){
-    this.setState({
-      showNav: GlobalStore.getShowNav()
-    });
-    this.forceUpdate();
+    user: PropTypes.object.isRequired,
+    hide: PropTypes.bool
   },
   getInitialState(){
     return {
-      showNav: GlobalStore.getShowNav()
+      ghosting: false
     };
   },
   getHeaderStyle(){
@@ -76,7 +69,7 @@ const Header = React.createClass({
   },
   render(){
     return (
-      <header id="header" className={this.state.showNav ? style.header : style.headerHide} style={this.getHeaderStyle()}>
+      <header id="header" className={this.props.hide ? style.headerHide : style.header} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>

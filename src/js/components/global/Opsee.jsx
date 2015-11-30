@@ -59,8 +59,10 @@ const Opsee = React.createClass({
     this.setState(stateObj);
   },
   getMeatClass(){
-    const found = _.find(hideNavList, string => this.props.location.pathname.match(string));
-    return found ? style.meatUp : style.meat;
+    return this.shouldHideNav() ? style.meatUp : style.meat;
+  },
+  shouldHideNav(){
+    return !!(_.find(hideNavList, string => this.props.location.pathname.match(string)));
   },
   renderSocketError(){
     return (
@@ -95,7 +97,7 @@ const Opsee = React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <Header user={this.props.redux.user}/>
+        <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {
