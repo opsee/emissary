@@ -81,7 +81,7 @@ _actions.onboardSetVpcs = Flux.statics.addAction('onboardSetVpcs');
 
 _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
   (data) => {
-    analytics.event('Onboard', 'bastion-install', {data});
+    analytics.event('Onboard', 'bastion-install');
     return request
     .post(`${config.api}/bastions/launch`)
     .set('Authorization', UserStore.getAuth())
