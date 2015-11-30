@@ -1,5 +1,7 @@
 import React from 'react';
-import {History} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import {Toolbar} from '../global';
 import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
@@ -8,6 +10,7 @@ import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {onboard as actions} from '../../reduxactions';
 
 const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
@@ -25,10 +28,9 @@ const InfoForm = forms.Form.extend({
 });
 
 const RegionSelect = React.createClass({
-  mixins: [OnboardStore.mixin, History],
+  mixins: [OnboardStore.mixin],
   getInitialState() {
     const self = this;
-    const data = OnboardStore.getInstallData();
     const obj = {
       info: new InfoForm({
         onChange(){
@@ -38,7 +40,7 @@ const RegionSelect = React.createClass({
         },
         labelSuffix: '',
         data: {
-          regions: data.regions
+          regions: [this.props.redux.onboard.region]
         },
         validation: {
           on: 'blur change',
@@ -80,11 +82,7 @@ const RegionSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
-    //redo this later, make install be a parent page instead of this bull
-    setTimeout(() => {
-      this.history.pushState(null, '/start/credentials');
-    }, 100);
+    this.props.actions.setRegion(this.state.info.cleanedData.regions);
   },
   renderInner(){
     if (!this.state.bastions.length){
@@ -125,4 +123,8 @@ const RegionSelect = React.createClass({
   }
 });
 
-export default RegionSelect;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(RegionSelect);

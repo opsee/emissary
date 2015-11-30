@@ -1,4 +1,5 @@
 import {pushState} from 'redux-router';
+import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
@@ -7,7 +8,10 @@ import {
   ONBOARD_SIGNUP_CREATE,
   ONBOARD_SET_PASSWORD,
   ONBOARD_VPC_SCAN,
-  ONBOARD_INSTALL
+  ONBOARD_INSTALL,
+  ONBOARD_SET_CREDENTIALS,
+  ONBOARD_SET_REGION,
+  ONBOARD_SET_VPCS
 } from './constants';
 import storage from '../modules/storage';
 
@@ -26,6 +30,66 @@ export function signupCreate(data) {
             dispatch(pushState(null, '/start/thanks'))
           }, 100);
         }, reject);
+      })
+    });
+  };
+}
+
+export function setRegion(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_REGION,
+      payload: {region: data}
+    });
+    setTimeout(() => {
+      dispatch(pushState(null, '/start/credentials'));
+    }, 100);
+  }
+}
+
+export function vpcScan(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_CREDENTIALS,
+      payload: data
+    });
+    const sendData = _.assign({}, data, {regions: [state().onboard.region]});
+    dispatch({
+      type: ONBOARD_VPC_SCAN,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.api}/scan-vpcs`)
+        .set('Authorization', state().user.get('auth'))
+        .send(sendData)
+        .then((res) => {
+          resolve(res.body);
+          //TODO remove timeout somehow
+          let vpcs = _.chain(res.body).map(r => {
+            return r.vpcs.map(v => {
+              return v['vpc-id'];
+            });
+          }).flatten().value();
+          dispatch({
+            type: ONBOARD_SET_VPCS,
+            payload: vpcs
+          })
+          if (vpcs.length){
+            if (vpcs.length === 1 && !config.showVpcScreen){
+              setTimeout(() => {
+                dispatch(pushState(null, '/start/install'));
+              }, 100);
+            }else {
+              setTimeout(() => {
+                dispatch(pushState(null, '/start/vpc-select'));
+              }, 100);
+            }
+          }else{
+            return reject(new Error('No vpcs found.'));
+          }
+        }, (err) => {
+          let message = _.get(err, 'response.body.error') || err.response;
+          return reject({message});
+        });
       })
     });
   };
