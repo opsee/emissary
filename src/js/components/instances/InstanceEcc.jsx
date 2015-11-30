@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import TimeAgo from 'react-timeago';
@@ -104,13 +105,15 @@ const InstanceEcc = React.createClass({
           </Padding>
           <Padding b={1}>
             <h3>Checks</h3>
-            <CheckItemList type="instance" target={this.props.params.id}/>
+            <CheckItemList type="instance" target={this.props.params.id} redux={this.props.redux}/>
           </Padding>
           <Padding b={1}>
-            <GroupItemList ids={this.getGroupIds()} title="Security Groups"/>
+          {
+            // <GroupItemList ids={this.getGroupIds()} title="Security Groups"/>
+          }
           </Padding>
           <Padding b={1}>
-            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
+            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback redux={this.props.redux}/>
           </Padding>
           {
             // <h2>{this.data().checks.length} Checks</h2>

@@ -58,13 +58,13 @@ export function logout(){
 
 export function refresh() {
   return (dispatch, state) => {
+    //logged out
+    if (!state().user.get('auth')){
+      return false;
+    }
     dispatch({
       type: USER_REFRESH,
       payload: new Promise((resolve, reject) => {
-        //logged out
-        if (!state().user.get('auth')){
-          return reject();
-        }
         request
         .put(`${config.authApi}/authenticate/refresh`)
         .set('Authorization', state().user.get('auth'))

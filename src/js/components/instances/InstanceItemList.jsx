@@ -27,7 +27,7 @@ const InstanceItemList = React.createClass({
           ecc: PropTypes.object
         })
       })
-    })
+    }).isRequired
   },
   componentWillMount(){
     if (!this.props.instances){

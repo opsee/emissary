@@ -200,7 +200,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="groupsSecurity">
           <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
           <hr/>
         </div>
       );
@@ -220,7 +220,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="groupsELB">
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
           <hr/>
         </div>
       );
@@ -234,7 +234,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="instancesECC">
           <h3>Instances ({this.getInstances().size})</h3>
-          <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
           <hr/>
         </div>
       );
