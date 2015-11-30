@@ -11,7 +11,11 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <p>Opsee currently supports the following check types and check targets.</p>
+              <h2>General Information</h2>
+
+              <p>Checks run every 30 seconds. Opsee looks for 4 consecutive events of the same state - we call this "stable state". If a stable failing state occurs, you will receive a notifiction.</p>
+
+              <p>Opsee currently supports the following check types and check targets:</p>
               <h2>Check Types</h2>
 
               <h3>HTTP</h3>
