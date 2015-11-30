@@ -1,46 +1,38 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import _ from 'lodash';
+
 import {Toolbar} from '../global';
 import {OnboardStore, GlobalStore} from '../../stores';
 import {OnboardActions} from '../../actions';
-import _ from 'lodash';
-import {History} from 'react-router';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {onboard as actions, env as envActions} from '../../reduxactions';
 
 const statics = {
   checkedInstallStatus: false
 };
 
 const Install = React.createClass({
-  mixins: [OnboardStore.mixin, GlobalStore.mixin, History],
+  mixins: [OnboardStore.mixin, GlobalStore.mixin],
   propTypes: {
     path: PropTypes.string,
     location: PropTypes.object,
-    example: PropTypes.bool
+    example: PropTypes.bool,
+    actions: PropTypes.shape({
+      setCredentials: PropTypes.func,
+      vpcScan: PropTypes.func
+    })
   },
   componentWillMount(){
     if (config.demo || this.props.example){
-      OnboardActions.onboardExampleInstall().then(() => {
-        statics.checkedInstallStatus = true;
-      });
-    }else {
-      OnboardStore.getBastionHasLaunchedPromise().then((started) => {
-        statics.checkedInstallStatus = true;
-        const data = OnboardStore.getFinalInstallData();
-        if (data && !started){
-          const dataHasValues = _.chain(data).values().every(_.identity).value();
-          if (dataHasValues && data.regions.length){
-            OnboardActions.onboardInstall(data);
-          }
-        }else if (!data && !started){
-          this.history.replaceState(null, '/start/region-select');
-        }
-      });
+      this.props.actions.onboardExampleInstall();
     }
   },
   storeDidChange(){
@@ -88,12 +80,25 @@ const Install = React.createClass({
     this.setState({bastions});
   },
   componentDidUpdate(){
+    // const data = OnboardStore.getFinalInstallData();
+    // if (data && !started){
+    //   const dataHasValues = _.chain(data).values().every(_.identity).value();
+    //   if (dataHasValues && data.regions.length){
+    //     OnboardActions.onboardInstall(data);
+    //   }
+    // }else if (!data && !started){
+    //   this.history.replaceState(null, '/start/region-select');
+    // }
+    // this.props.history.replaceState(null, '/start/region-select');
     if (this.areBastionsComplete() && !this.state.startedPolling){
       OnboardActions.getBastions();
       OnboardActions.getCustomer();
       /* eslint-disable react/no-did-update-set-state*/
       this.setState({startedPolling: true});
     }
+  },
+  isBastionLaunching(){
+    return !!(this.props.redux.app.socketMessages.filter({command: 'launch-bastion'}).length);
   },
   getInitialState() {
     return {
@@ -162,7 +167,7 @@ const Install = React.createClass({
     return <div/>;
   },
   renderText(){
-    if (!statics.checkedInstallStatus && !this.state.bastions.length){
+    if (this.props.redux.onboard.bastionLaunching === undefined && this.props.redux.env.bastions.length){
       return (
         <p>Checking installation status...</p>
       );
@@ -226,4 +231,8 @@ const Install = React.createClass({
   }
 });
 
-export default Install;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Install);

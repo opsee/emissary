@@ -15,10 +15,6 @@
   }
 }
 
-.headerHide{
-  display: none;
-}
-
 @media (max-width: 768px){
   .headerHide{
     composes:header;

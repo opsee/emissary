@@ -12,7 +12,8 @@ import {
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   FILTER_ENV,
-  ENV_SET_SEARCH
+  ENV_SET_SEARCH,
+  ENV_GET_BASTIONS
   // GET_INSTANCE_RDS,
   // GET_INSTANCES_RDS
 } from './constants';
@@ -169,6 +170,26 @@ export function getInstancesEcc(){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body.instances);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function getBastions(){
+  return (dispatch, state) => {
+    dispatch({
+      type: ENV_GET_BASTIONS,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/bastions`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => {
+          const arr = _.get(res, 'body.bastions');
+          if(!arr && config.env !== 'production'){
+            console.error('No array from GET /bastions');
+          }
+          resolve(arr || []);
         }, reject);
       })
     });

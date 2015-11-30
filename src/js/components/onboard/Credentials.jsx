@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -29,6 +29,12 @@ const InfoForm = forms.Form.extend({
 });
 
 const Credentials = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      setCredentials: PropTypes.func,
+      vpcScan: PropTypes.func
+    })
+  },
   componentWillMount(){
     if (!this.props.redux.onboard.region){
       this.props.history.replaceState(null, '/start/region-select');

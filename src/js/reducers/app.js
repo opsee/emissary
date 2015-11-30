@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 
 const initial = {
-  socketMsgs: []
+  socketMessages: []
 };
 
 export default handleActions({
@@ -22,8 +22,8 @@ export default handleActions({
   APP_SOCKET_MSG: {
     next(state, action){
       const data = _.assign({}, action.payload, {date: new Date()});
-      const socketMsgs = state.socketMsgs.concat([data]);
-      return _.assign({}, state, {socketMsgs});
+      const socketMessages = state.socketMessages.concat([data]);
+      return _.assign({}, state, {socketMessages});
     }
   },
   APP_SOCKET_ERROR: {

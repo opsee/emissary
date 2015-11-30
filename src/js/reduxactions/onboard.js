@@ -49,18 +49,6 @@ export function setRegion(data) {
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
 
-export function set(data) {
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SET_REGION,
-      payload: {region: data}
-    });
-    setTimeout(() => {
-      dispatch(pushState(null, '/start/credentials'));
-    }, 100);
-  }
-}
-
 export function vpcScan(data) {
   return (dispatch, state) => {
     dispatch({
@@ -107,4 +95,24 @@ export function vpcScan(data) {
       })
     });
   };
+}
+
+export function getBastionLaunchStatus(data) {
+  return (dispatch, state) => {
+    function is(){
+      return !!(state().redux.app.socketMessages.filter({command: 'launch-bastion'}).length);
+    }
+    if(is()){
+      return dispatch({
+        type: ONBOARD_GET_BASTION_LAUNCH_STATUS,
+        payload: true
+      });
+    }
+    return setTimeout(() => {
+      dispatch({
+        type: ONBOARD_GET_BASTION_LAUNCH_STATUS,
+        payload: is()
+      });
+    }, 17000);
+  }
 }

@@ -290,7 +290,8 @@ const initial = {
     ecc: new List(),
     rds: new List()
   },
-  search: null
+  search: null,
+  bastions: []
 };
 
 export default handleActions({
@@ -355,6 +356,11 @@ export default handleActions({
       const ecc = statics.getInstancesEccSuccess(state, action.payload);
       const data = _.assign({}, state.instances, {ecc});
       return _.assign({}, state, {instances: data});
+    }
+  },
+  ENV_GET_BASTIONS: {
+    next(state, action){
+      return _.assign({}, state, {bastions: action.payload});
     }
   }
 }, initial);
