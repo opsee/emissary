@@ -95,7 +95,7 @@ const Opsee = React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <Header/>
+        <Header user={this.props.redux.user}/>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

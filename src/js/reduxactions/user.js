@@ -8,7 +8,7 @@ import {
   USER_LOGOUT,
   USER_REFRESH,
   USER_EDIT,
-  USER_START
+  USER_SET_PASSWORD
 } from './constants';
 import storage from '../modules/storage';
 
@@ -33,14 +33,21 @@ export function login(data) {
   };
 }
 
-export function start(){
-  return (dispatch) => {
-    const user = storage.get('user');
+export function setPassword(data) {
+  return (dispatch, state) => {
     dispatch({
-      type: USER_START,
-      payload: _.assign({
-        user
-      }, user)
+      type: USER_SET_PASSWORD,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.authApi}/signups/${data.id}/claim`)
+        .send(data)
+        .then((res) => {
+          resolve(res.body);
+          setTimeout(() => {
+            dispatch(pushState(null, '/start/tutorial'));
+          }, 100);
+        }, reject);
+      })
     });
   };
 }

@@ -62,13 +62,13 @@ function setUser(state, action){
 }
 
 export default handleActions({
+  USER_START: {
+    next: setUser
+  },
   USER_LOGIN: {
     next: setUser
   },
   USER_EDIT: {
-    next: setUser
-  },
-  USER_SET_PASSWORD:{
     next: setUser
   },
   USER_LOGOUT: {

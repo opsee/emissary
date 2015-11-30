@@ -1,7 +1,9 @@
 import React, {PropTypes} from 'react';
-import Loader from './Loader.jsx';
-import {Alert} from '../../modules/bootstrap';
 import _ from 'lodash';
+
+import {Alert} from '../../modules/bootstrap';
+import Loader from './Loader';
+import Padding from '../layout/Padding';
 
 const StatusHandler = React.createClass({
   propTypes: {
@@ -23,21 +25,24 @@ const StatusHandler = React.createClass({
       attempts: 0
     };
   },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState);
+  },
   componentWillReceiveProps(nextProps){
+    let state = {};
+    if(this.props.status !== nextProps.status){
+      state.dismissed = false;
+    }
     if (nextProps.status === 'success'){
-      return this.setState({
-        success: true,
-        attempts: this.state.attempts + 1,
-        error: false
-      });
+      state.attempts = this.state.attempts + 1;
     }
-    if (nextProps.status && typeof nextProps.status !== 'string'){
-      let error = nextProps.status;
-      this.setState({error});
-    }
+    this.setState(state);
+  },
+  isError(){
+    return !!(this.props.status && typeof this.props.status !== 'string');
   },
   getErrorText(){
-    const text = _.get(this.state.error, 'response.body.message');
+    const text = _.get(this.props.status, 'response.body.message');
     return text || this.props.errorText || 'Something went wrong.';
   },
   handleDismiss(){
@@ -45,19 +50,24 @@ const StatusHandler = React.createClass({
       this.props.onDismiss.call(this);
     }
     this.setState({
-      error: false
+      dismissed: true
     });
   },
   render(){
+    if(this.state.dismissed){
+      return <div/>;
+    }
     if (this.props.status === 'pending' && this.state.attempts < 1){
       return <Loader timeout={this.props.timeout}/>;
-    }else if (this.state.error){
+    }else if (this.isError()){
       return (
-        <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
-          <div dangerouslySetInnerHTML={{__html: this.getErrorText()}}/>
-        </Alert>
+        <Padding b={1}>
+          <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
+            <div dangerouslySetInnerHTML={{__html: this.getErrorText()}}/>
+          </Alert>
+        </Padding>
       );
-    }else if ((this.state.success || this.state.attempts > 0) && !this.props.noFallback){
+    }else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
       return (
         <div>{this.props.children}</div>
       );

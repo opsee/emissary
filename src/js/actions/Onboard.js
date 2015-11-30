@@ -8,26 +8,6 @@ import storage from '../modules/storage';
 
 let _actions = {};
 
-_actions.onboardSignupCreate = Flux.statics.addAsyncAction('onboardSignupCreate',
-  (data) => {
-    return request
-    .post(`${config.authApi}/signups`)
-    .send(data);
-  },
-  res => res && res.body,
-  res => res && res.response
-);
-
-_actions.onboardSetPassword = Flux.statics.addAsyncAction('onboardSetPassword',
-  (data) => {
-    return request
-    .post(`${config.authApi}/signups/${data.id}/claim`)
-    .send(data);
-  },
-  res => res && res.body,
-  res => res && res.response
-);
-
 _actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability',
   (subdomain, date) => {
     return request

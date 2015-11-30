@@ -2,10 +2,10 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {Link} from 'react-router';
 
 import {UserStore} from '../../stores';
 import {Toolbar, LogoColor, StatusHandler} from '../global';
-import {Link} from 'react-router';
 import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
