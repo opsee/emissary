@@ -29,7 +29,7 @@ const IAM = React.createClass({
                 <ol>
                   <li>If for some reason you are not already signed in, sign in to the AWS Management Console and open the IAM console at <a target="_blank" href="https://console.aws.amazon.com/iam/">https://console.aws.amazon.com/iam/</a></li>
                   <li>In the navigation pane, click <strong>Users</strong></li>
-                  <li>If you don't already have a user ready for this purpose, click <strong>Create New Users</strong></li>
+                  <li>If you don&rsquo;t already have a user ready for this purpose, click <strong>Create New Users</strong></li>
                   <li>Click the name of the IAM user you created for the onboarding process, then scroll down to the tab/section called Permissions</li>
                   <li>Expand the <em>Inline Policies</em> section, and click <strong>Create User Policy</strong></li>
                   <li>Choose <em>Custom Policy</em> and click <strong>Select</strong></li>
@@ -45,19 +45,53 @@ const IAM = React.createClass({
                     {
                       'Effect': 'Allow',
                       'Action': [
-                        'cloudformation:*',
-                        'ec2:*',
-                        'rds:*',
+                        'autoscaling:DescribeLoadBalancers',
+                        'autoscaling:DescribeAutoScalingGroups',
+                        'cloudformation:CreateStack',
+                        'cloudformation:DeleteStack',
+                        'ec2:CreateTags',
+                        'ec2:DeleteTags',
+                        'ec2:AuthorizeSecurityGroupIngress',
+                        'ec2:AuthorizeSecurityGroupEgress',
+                        'ec2:RevokeSecurityGroupIngress',
+                        'ec2:RevokeSecurityGroupEgress',
+                        'ec2:StartInstances',
+                        'ec2:RunInstances',
+                        'elasticloadbalancing:DescribeLoadBalancers',
+                        'ec2:StopInstances',
+                        'ec2:RebootInstances',
+                        'ec2:TerminateInstances',
+                        'ec2:DescribeAccountAttributes',
+                        'ec2:DescribeImages',
+                        'ec2:DescribeSecurityGroups',
+                        'ec2:CreateSecurityGroup',
+                        'ec2:DeleteSecurityGroup',
+                        'ec2:DescribeSubnets',
+                        'ec2:DescribeVpcs',
+                        'ec2:DescribeInstances',
                         'iam:AddRoleToInstanceProfile',
-                        'iam:CreateInstanceProfile',
+                        'iam:RemoveRoleFromInstanceProfile',
                         'iam:CreateRole',
-                        'iam:DeleteInstanceProfile',
+                        'iam:CreateRollPolicy',
+                        'iam:CreateInstanceProfile',
+                        'iam:PutRolePolicy',
                         'iam:DeleteRole',
                         'iam:DeleteRolePolicy',
-                        'iam:GetRole',
+                        'iam:DeleteInstanceProfile',
                         'iam:PassRole',
-                        'iam:PutRolePolicy',
-                        'iam:RemoveRoleFromInstanceProfile'
+                        'sns:CreateTopic',
+                        'sns:DeleteTopic',
+                        'sns:Subscribe',
+                        'sns:Unsubscribe',
+                        'sns:Publish',
+                        'sqs:CreateQueue',
+                        'sqs:DeleteQueue',
+                        'sqs:DeleteMessage',
+                        'sqs:ReceiveMessage',
+                        'sqs:GetQueueAttributes',
+                        'sqs:SetQueueAttributes',
+                        'rds:DescribeDBInstances',
+                        'rds:DescribeDBSecurityGroups'
                       ],
                       'Resource': '*'
                     }

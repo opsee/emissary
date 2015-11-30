@@ -37,7 +37,6 @@
   text-decoration: none;
 }
 .btn:active{
-  outline: 0;
   background-image: none;
   box-shadow: none;
 }
@@ -55,9 +54,12 @@
   color: white;
   background: var(--colorTextSecondary);
 }
-.btnDefault:focus, .btnDefault:hover, .btnDefault:active {
+.btnDefault:hover {
   color: white;
-  background: var(--gray500);
+  background: color(var(--colorTextSecondary) shade(20%));
+}
+.btnDefault:active {
+  background: color(var(--colorTextSecondary) shade(40%));
 }
 .btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
   background: var(--colorTextSecondary);
@@ -68,9 +70,12 @@
   color: #fff;
   background: var(--colorPrimary);
 }
-.btnPrimary:focus, .btnPrimary:hover, .btnPrimary:active {
+.btnPrimary:hover {
   color: #fff;
-  background: color(var(--colorPrimary) blackness(30%));
+  background: color(var(--colorPrimary) shade(20%));
+}
+.btnPrimary:active {
+  background: color(var(--colorPrimary) shade(40%));
 }
 .btnPrimary[disabled], .btnPrimary[disabled]:hover, .btnPrimary[disabled]:focus, .btnPrimary[disabled]:active {
   background: var(--colorPrimary);
@@ -81,9 +86,12 @@
   color: #fff;
   background: var(--colorSuccess);
 }
-.btnSuccess:focus, .btnSuccess:hover, .btnSuccess:active {
+.btnSuccess:hover {
   color: #fff;
-  background: color(var(--colorSuccess) blackness(40%));
+  background: color(var(--colorSuccess) shade(20%));
+}
+.btnSuccess:active {
+  background: color(var(--colorSuccess) shade(40%));
 }
 .btnSuccess[disabled], .btnSuccess[disabled]:hover, .btnSuccess[disabled]:focus, .btnSuccess[disabled]:active {
   background: var(--colorSuccess);
@@ -94,9 +102,12 @@
   color: #fff;
   background: var(--colorInfo);
 }
-.btnInfo:focus, .btnInfo:hover, .btnInfo:active {
+.btnInfo:hover {
   color: #fff;
-  background: color(var(--colorInfo) blackness(60%));
+  background: color(var(--colorInfo) shade(20%));
+}
+.btnInfo:active {
+  background: color(var(--colorInfo) shade(40%));
 }
 .btnInfo[disabled], .btnInfo[disabled]:hover, .btnInfo[disabled]:focus, .btnInfo[disabled]:active {
   background: var(--colorInfo);
@@ -107,9 +118,12 @@
   color: #fff;
   background: var(--colorWarning);
 }
-.btnWarning:focus, .btnWarning:hover, .btnWarning:active {
+.btnWarning:hover {
   color: #fff;
-  background: color(var(--colorWarning) blackness(20%));
+  background: color(var(--colorWarning) shade(20%));
+}
+.btnWarning:active {
+  background: color(var(--colorWarning) shade(40%));
 }
 .btnWarning[disabled], .btnWarning[disabled]:hover, .btnWarning[disabled]:focus, .btnWarning[disabled]:active {
   background: var(--colorWarning);
@@ -120,9 +134,12 @@
   color: #fff;
   background: var(--colorDanger);
 }
-.btnDanger:focus, .btnDanger:hover, .btnDanger:active {
+.btnDanger:hover {
   color: #fff;
-  background: color(var(--colorDanger) blackness(30%));
+  background: color(var(--colorDanger) shade(20%));
+}
+.btnDanger:active {
+  background: color(var(--colorDanger) shade(40%));
 }
 .btnDanger[disabled], .btnDanger[disabled]:hover, .btnDanger[disabled]:focus, .btnDanger[disabled]:active {
   background: var(--colorDanger);
@@ -133,9 +150,13 @@
   color: #fff;
   background: var(--gray900);
 }
-.btnDark:focus, .btnDark:hover, .btnDark:active {
+.btnDark:hover {
   color: #fff;
   background: black;
+}
+.btnDark:active {
+  color: #fff;
+  background: var(--gray800);
 }
 
 .btnNoPad {
@@ -159,11 +180,13 @@
   border-color: transparent;
   color: white !important;
 }
+.btnFlat:active{
+  background: color(var(--colorTextSecondary) shade(40%));
+}
 
 .btnFlat.btnBlock, .btnFlat.btnPrimary.btnBlock, .btnFlat.btnSuccess.btnBlock, .btnFlat.btnWarning.btnBlock, .btnFlat.btnInfo.btnBlock, .btnFlat.btnDanger.btnBlock {
   border-color: transparent;
 }
-
 .btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
   background: none;
   border-color: var(--colorTextSecondary);
@@ -175,12 +198,18 @@
 .btnFlat.btnPrimary:hover {
   background: var(--colorPrimary);
 }
+.btnFlat.btnPrimary:active {
+  background: color(var(--colorPrimary) shade(40%));
+}
 .btnFlat.btnSuccess {
   border-color: var(--colorSuccess);
   color: var(--colorSuccess);
 }
 .btnFlat.btnSuccess:hover {
   background: var(--colorSuccess);
+}
+.btnFlat.btnSuccess:active {
+  background: color(var(--colorSuccess) shade(40%));
 }
 .btnFlat.btnWarning {
   border-color: var(--colorWarning);
@@ -189,6 +218,9 @@
 .btnFlat.btnWarning:hover {
   background: var(--colorWarning);
 }
+.btnFlat.btnWarning:active {
+  background: color(var(--colorWarning) shade(40%));
+}
 .btnFlat.btnDanger {
   border-color: var(--colorDanger);
   color: var(--colorDanger);
@@ -196,12 +228,18 @@
 .btnFlat.btnDanger:hover {
   background: var(--colorDanger);
 }
+.btnFlat.btnDanger:active {
+  background: color(var(--colorDanger) shade(40%));
+}
 .btnFlat.btnInfo {
   border-color: var(--colorInfo);
   color: var(--colorInfo);
 }
 .btnFlat.btnInfo:hover {
   background: var(--colorInfo);
+}
+.btnFlat.btnInfo:active {
+  background: color(var(--colorInfo) shade(40%));
 }
 
 .btnBlock {
@@ -229,8 +267,8 @@
   background-size: 24px 24px;
   background-position: 50% 50%;
 }
-.btnFab:hover {
-  transform: scale(1.2);
+.btnFab:hover,.btnFab:active {
+  transform: scale(1.2) rotate(-90deg);
 }
 
 .btnIcon {

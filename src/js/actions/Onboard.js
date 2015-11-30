@@ -1,6 +1,7 @@
 import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
+import analytics from '../modules/analytics';
 import _ from 'lodash';
 import example from '../../files/bastion-install-messages-example.json';
 import storage from '../modules/storage';
@@ -80,6 +81,7 @@ _actions.onboardSetVpcs = Flux.statics.addAction('onboardSetVpcs');
 
 _actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
   (data) => {
+    analytics.event('Onboard', 'bastion-install', {data});
     return request
     .post(`${config.api}/bastions/launch`)
     .set('Authorization', storage.get('user').auth)
