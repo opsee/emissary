@@ -34,8 +34,8 @@ const Install = React.createClass({
     if (config.demo || this.props.example){
       return this.props.actions.onboardExampleInstall();
     }
-    if(this.isDataComplete()){
-     this.props.actions.install(); 
+    if(this.props.redux.onboard.installData){
+     return this.props.actions.install();
     }
     return this.props.history.pushState(null, '/start/region-select');
   },

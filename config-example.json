@@ -6,5 +6,11 @@
   //change the appearance of the application as if the user was in ghosting mode
   "ghosting": false,
   //set a millisecond delay on all api calls, for testing
-  "apiDelay": 0
+  "apiDelay": 0,
+  //default AWS region for easy install
+  "region": "",
+  //default AWS access-key for easy install
+  "access-key": "",
+  //default AWS secret-key for easy install
+  "secret-key": ""
 }

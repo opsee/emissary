@@ -12,7 +12,8 @@ import {
   ONBOARD_INSTALL,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
-  ONBOARD_GET_BASTION_LAUNCH_STATUS
+  ONBOARD_GET_BASTION_LAUNCH_STATUS,
+  ONBOARD_SET_INSTALL_DATA
 } from './constants';
 import storage from '../modules/storage';
 
@@ -103,6 +104,9 @@ export function vpcSelect(payload){
       type: ONBOARD_VPC_SELECT,
       payload
     });
+    dispatch({
+      type: ONBOARD_SET_INSTALL_DATA
+    });
     setTimeout(() => {
       dispatch(pushState(null, '/start/install'));
     }, 100);
@@ -129,51 +133,16 @@ export function getBastionLaunchStatus(data) {
   }
 }
 
-function getFinalInstallData(state){
-  const data = state().onboard;
-
-  const regions = _.chain(data.vpcs).filter('selected');
-
-  let relation = data.vpcs.map((v) => {
-    let newVpc;
-    Store.getAvailableVpcs().forEach(r => {
-      r.vpcs.forEach(rvpc => {
-        if (rvpc['vpc-id'] === v){
-          /* eslint-disable camelcase */
-          const subnet_id = _.chain(rvpc.subnets).sortByAll([(t)=>t.state === 'available', 'default-for-az', 'available-ip-address-count']).last().get('subnet-id').value();
-          newVpc = {id: v, region: r.region, subnet_id};
-          /* eslint-enable camelcase */
-        }
-      });
-    });
-    return newVpc.id ? newVpc : false;
-  });
-  if (!_.every(relation) || !relation.length){
-    return false;
-  }
-  //TODO fix this so it works with multiple vpcs later
-  relation = relation.map(r => {
-    return {
-      region: r.region,
-      vpcs: [{id: r.id, subnet_id: r.subnet_id}]
-    };
-  });
-  let aggregate = _.assign({}, data, {regions: relation}, {'instance-size': 't2.micro'});
-  delete aggregate.vpcs;
-  return aggregate;
-}
-
 function isBastionLaunching(state){
   return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length;
 }
 
 function launch(state, resolve, reject){
   analytics.event('Onboard', 'bastion-install');
-  const data = _.assign({}, state().onboard);
   request
   .post(`${config.api}/bastions/launch`)
   .set('Authorization', state().user.get('auth'))
-  .send(data)
+  .send(state().onboard.installData)
   .then(resolve, reject)
 }
 
@@ -186,7 +155,7 @@ export function install(){
           return resolve();
         }
         setTimeout(() => {
-          return isBastionLaunching() ? resolve() : launch(state, resolve, reject);
+          return isBastionLaunching(state) ? resolve() : launch(state, resolve, reject);
         }, 17000)
       })
     })

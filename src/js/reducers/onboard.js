@@ -8,10 +8,41 @@ import config from '../modules/config';
 const initial = {
   'access-key': config['access-key'] || undefined,
   'secret-key': config['secret-key'] || undefined,
-  region: undefined,
+  region: config.region || undefined,
   regionsWithVpcs: [],
   vpcsForSelection: [],
-  bastionLaunching: undefined
+  bastionLaunching: undefined,
+  installData: undefined
+}
+
+function mapRegionsForInstall(region){
+  'use strict';
+  let obj = _.pick(region, ['region', 'vpcs']);
+  obj.vpcs = obj.vpcs.map(vpc => {
+    const subnet_id = _.chain(vpc.subnets)
+    .sortByAll([
+      (t) => t.state === 'available', 
+      'default-for-az', 
+      'available-ip-address-count'
+      ])
+    .last().get('subnet-id').value();
+    return {
+      id: vpc['vpc-id'],
+      subnet_id
+    }
+  });
+  return obj;
+}
+
+function getFinalInstallData(state){
+  'use strict';
+  const initial = {
+    'instance-size': 't2.micro'
+  }
+  const regions = _.chain(state.regionsWithVpcs).filter(region => {
+    return _.find(region.vpcs, v => v.selected);
+  }).map(mapRegionsForInstall).value();
+  return _.assign({}, initial, _.pick(state, ['access-key', 'secret-key']), {regions});
 }
 
 export default handleActions({
@@ -55,6 +86,12 @@ export default handleActions({
         return _.assign({}, parent, {vpcs: children});
       });
       return _.assign({}, state, {regionsWithVpcs});
+    }
+  },
+  ONBOARD_SET_INSTALL_DATA: {
+    next(state, action){
+      const installData = getFinalInstallData(state);
+      return _.assign({}, state, {installData});      
     }
   },
   ONBOARD_GET_BASTION_LAUNCH_STATUS: {
