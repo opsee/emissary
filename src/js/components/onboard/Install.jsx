@@ -13,7 +13,7 @@ import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {onboard as actions, env as envActions} from '../../reduxactions';
+import {onboard as actions} from '../../reduxactions';
 
 const statics = {
   checkedInstallStatus: false
@@ -32,8 +32,12 @@ const Install = React.createClass({
   },
   componentWillMount(){
     if (config.demo || this.props.example){
-      this.props.actions.onboardExampleInstall();
+      return this.props.actions.onboardExampleInstall();
     }
+    if(this.isDataComplete()){
+     this.props.actions.install(); 
+    }
+    return this.props.history.pushState(null, '/start/region-select');
   },
   storeDidChange(){
     let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command: 'launch-bastion'}).filter(m => {
@@ -167,7 +171,7 @@ const Install = React.createClass({
     return <div/>;
   },
   renderText(){
-    if (this.props.redux.onboard.bastionLaunching === undefined && this.props.redux.env.bastions.length){
+    if (this.props.redux.onboard.bastionLaunching === undefined && !this.props.redux.env.bastions.length){
       return (
         <p>Checking installation status...</p>
       );
