@@ -134,7 +134,7 @@ function getFinalInstallData(state){
 
   const regions = _.chain(data.vpcs).filter('selected');
 
-  let relation = _installData.vpcs.map((v) => {
+  let relation = data.vpcs.map((v) => {
     let newVpc;
     Store.getAvailableVpcs().forEach(r => {
       r.vpcs.forEach(rvpc => {
