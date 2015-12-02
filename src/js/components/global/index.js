@@ -1,4 +1,5 @@
 import Analytics from './Analytics.jsx';
+import BastionRequirement from './BastionRequirement.jsx';
 import ContextMenu from './ContextMenu.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
@@ -21,6 +22,7 @@ import Toolbar from './Toolbar.jsx';
 
 export {
   Analytics,
+  BastionRequirement,
   ContextMenu,
   Header,
   Highlight,

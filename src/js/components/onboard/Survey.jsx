@@ -85,7 +85,6 @@ const Survey = React.createClass({
   },
   isDataComplete(){
     return false;
-    // return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
   },
   isDisabled(){
     return !this.state.info.isValid();

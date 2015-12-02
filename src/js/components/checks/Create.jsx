@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {History} from 'react-router';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
@@ -8,10 +7,11 @@ import {StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
 
 const CheckCreate = React.createClass({
-  mixins: [CheckStore.mixin, History],
+  mixins: [CheckStore.mixin],
   propTypes: {
     location: PropTypes.object,
-    children: PropTypes.node
+    children: PropTypes.node,
+    redux: PropTypes.object.isRequired
   },
   getInitialState(){
     return this.getState();
@@ -20,7 +20,6 @@ const CheckCreate = React.createClass({
     const state = this.getState(true);
     if (state.createStatus === 'success'){
       UserActions.userPutUserData('hasDismissedCheckCreationHelp');
-      this.history.pushState(null, '/');
     }else if (state.createStatus && state.createStatus !== 'pending'){
       GlobalActions.globalModalMessage({
         html: status.body && status.body.message || 'Something went wrong.',
@@ -62,7 +61,8 @@ const CheckCreate = React.createClass({
         {React.cloneElement(this.props.children, _.assign({
           onChange: this.setData,
           onSubmit: this.handleSubmit,
-          onFilterChange: this.handleFilterChange
+          onFilterChange: this.handleFilterChange,
+          redux: this.props.redux
         }, this.state)
         )}
         <Grid>

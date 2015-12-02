@@ -18,7 +18,7 @@ const OnboardCreate = React.createClass({
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        signupCreate: PropTypes.object
+        onboardSignupCreate: PropTypes.object
       })
     })
   },

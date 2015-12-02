@@ -12,5 +12,9 @@
   //default AWS access-key for easy install
   "access-key": "",
   //default AWS secret-key for easy install
-  "secret-key": ""
+  "secret-key": "",
+  //simulate vpc scan error
+  "onboardVpcScanError": false,
+  //simulate onboard install error
+  "onboardInstallError": false
 }

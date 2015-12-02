@@ -1,92 +1,51 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {List} from 'immutable';
-import {History} from 'react-router';
+import {Map, List} from 'immutable';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-import {CheckActions, GroupActions} from '../../actions';
 import {Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
-import {CheckStore, GroupStore} from '../../stores';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponse from './CheckResponse';
+import {checks as actions} from '../../reduxactions';
 
-function getState(){
-  return {
-    check: CheckStore.getCheck(),
-    status: CheckStore.getGetCheckStatus(),
-    sgStatus: GroupStore.getGetGroupSecurityStatus(),
-    elbStatus: GroupStore.getGetGroupELBStatus(),
-    group: GroupStore.getNewGroup(),
-    responseStatus: CheckStore.getTestCheckStatus()
-  };
-}
-
-const Single = React.createClass({
-  mixins: [CheckStore.mixin, GroupStore.mixin, History],
+const CheckSingle = React.createClass({
   propTypes: {
-    params: PropTypes.object
+    params: PropTypes.object,
+    actions: PropTypes.shape({
+      getCheck: PropTypes.func.isRequired,
+      deleteCheck: PropTypes.func.isRequired
+    }),
+    redux: PropTypes.shape({
+      checks: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        getCheck: PropTypes.object
+      })
+    })
   },
   componentWillMount(){
-    this.getData();
+    this.props.actions.getCheck(this.props.params.id);
   },
-  getInitialState(){
-    return _.assign(getState(), {
-      response: null,
-      results: null
-    });
-  },
-  storeDidChange() {
-    let state = getState();
-    if (CheckStore.getDeleteCheckStatus() === 'success'){
-      this.history.pushState(null, '/');
-    }
-    if (state.status === 'success'){
-      const target = state.check.get('target');
-      if (target){
-        switch (target.type){
-        case 'sg':
-          GroupActions.getGroupSecurity(target.id);
-          break;
-        case 'elb':
-          GroupActions.getGroupELB(target.id);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    if (state.sgStatus === 'success' || state.elbStatus === 'success'){
-      state.group = GroupStore.getGroup(this.state.check.get('target'));
-      state.results = state.group.get('results');
-    }
-    if (state.responseStatus === 'success'){
-      state.response = CheckStore.getResponse();
-    }
-    this.setState(state);
-  },
-  getData(){
-    CheckActions.getCheck(this.props.params.id);
-  },
-  getCheckJS(){
-    return this.state.check.toJS();
-  },
-  getTarget(){
-    GroupStore.getGroupFromFilter();
+  getCheck(){
+    return this.props.redux.checks.find(c => {
+      return c.get('id') === this.props.params.id;
+    }) || new Map({id: this.props.params.id});
   },
   getLink(){
-    const group = this.state.group.toJS();
+    const group = this.getCheck().get('target');
     return (
       <span>{group.name || group.id}</span>
     );
   },
   getResponses(){
-    if (this.state.results && this.state.results.size){
-      const results = this.state.results.toJS();
-      const failing = _.filter(results, r => {
+    const results = this.getCheck().get('results');
+    if (results && results.size){
+      const failing = _.filter(results.toJS(), r => {
         return !r.passing;
       });
       return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
@@ -105,16 +64,16 @@ const Single = React.createClass({
     return val;
   },
   runRemoveCheck(){
-    CheckActions.deleteCheck(this.props.params.id);
+    this.props.actions.deleteCheck(this.props.params.id);
   },
   renderInner(){
-    const spec = this.getCheckJS().check_spec.value;
-    if (!this.state.error && this.state.check.get('name')){
+    if (this.getCheck().get('name')){
+      const spec = this.getCheck().get('check_spec').value;
       return (
         <div>
           <Padding b={1}>
             <h3>Target</h3>
-            <GroupItem target={this.state.check.get('target')}/>
+            <GroupItem target={this.getCheck().get('target')}/>
           </Padding>
           <Padding b={1}>
             <h3>HTTP Request</h3>
@@ -124,7 +83,7 @@ const Single = React.createClass({
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>
-            <AssertionItemList assertions={this.state.check.get('assertions')} response={this.getSingleResponse()}/>
+            <AssertionItemList assertions={this.getCheck().get('assertions')} response={this.getSingleResponse()}/>
           </Padding>
           <Padding b={1}>
             <h3>Response</h3>
@@ -133,7 +92,7 @@ const Single = React.createClass({
           <Padding b={1}>
             <h3>Notifications</h3>
             <ul className="list-unstyled">
-            {this.state.check.get('notifications').map((n, i) => {
+            {this.getCheck().get('notifications').map((n, i) => {
               return (
                 <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
               );
@@ -144,15 +103,13 @@ const Single = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.state.status}>
-        <h3>No Checks Applied</h3>
-      </StatusHandler>
+      <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>
     );
   },
   renderLink(){
-    if (this.state.check && this.state.check.get('id')){
+    if (this.getCheck() && this.getCheck().get('id')){
       return (
-        <Button to={`/check/edit/${this.props.params.id}`} color="info" fab title={`Edit ${this.state.check.name}`}>
+        <Button to={`/check/edit/${this.props.params.id}`} color="info" fab title={`Edit ${this.getCheck().get('name')}`}>
           <Edit btn/>
         </Button>
       );
@@ -162,7 +119,7 @@ const Single = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={this.state.check.name || this.state.check.id || ''}>
+        <Toolbar title={this.getCheck().get('name') || this.getCheck().get('id') || ''}>
           {this.renderLink()}
         </Toolbar>
         <Grid>
@@ -182,4 +139,8 @@ const Single = React.createClass({
   }
 });
 
-export default Single;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckSingle);

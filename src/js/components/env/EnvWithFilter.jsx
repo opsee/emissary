@@ -5,7 +5,6 @@ import {bindActionCreators} from 'redux';
 import forms from 'newforms';
 import fuzzy from 'fuzzy';
 import {List} from 'immutable';
-import {Link} from 'react-router';
 
 import analytics from '../../modules/analytics';
 import {Alert, Row, Col} from '../../modules/bootstrap';
@@ -14,8 +13,6 @@ import {SetInterval} from '../../modules/mixins';
 import {BoundField, Button} from '../forms';
 import {StatusHandler} from '../global';
 import {Search, Circle} from '../icons';
-import {OnboardActions} from '../../actions';
-import {OnboardStore} from '../../stores';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
@@ -42,7 +39,7 @@ const FilterForm = forms.Form.extend({
 });
 
 const EnvWithFilter = React.createClass({
-  mixins: [SetInterval, OnboardStore.mixin],
+  mixins: [SetInterval],
   propTypes: {
     include: PropTypes.array,
     filter: PropTypes.string,
@@ -61,6 +58,7 @@ const EnvWithFilter = React.createClass({
         instances: PropTypes.shape({
           ecc: PropTypes.object
         }),
+        bastions: PropTypes.array,
         search: PropTypes.string
       })
     })
@@ -110,7 +108,6 @@ const EnvWithFilter = React.createClass({
     this.props.actions.getGroupsSecurity();
     this.props.actions.getGroupsElb();
     this.props.actions.getInstancesEcc();
-    OnboardActions.getBastions();
   },
   getAll(){
     let arr = new List();
@@ -165,11 +162,7 @@ const EnvWithFilter = React.createClass({
     return this.getFilteredItems(this.props.redux.env.instances.ecc, ignoreButtonState);
   },
   isFinishedAttempt(){
-    const case1 = !!(
-      OnboardStore.getGetBastionsHistory().length
-      );
-    const case2 = !!this.props.redux.env.groups.security.size;
-    return case1 || case2;
+    return !!this.props.redux.env.groups.security.size;
   },
   shouldButtonsRender(){
     const arr = [this.getNumberUnmonitored(), this.getNumberFailing(), this.getNumberPassing()];
@@ -301,29 +294,26 @@ const EnvWithFilter = React.createClass({
   render(){
     const self = this;
     if (this.isFinishedAttempt()){
-      if (OnboardStore.getBastions().length){
-        return (
-          <form name="envWithFilterForm">
-            {this.state.filter.render()}
-            {this.renderFilterButtons()}
-            {this.props.include.map(i => {
-              return self[`render${_.capitalize(i)}`]();
-            })}
-          </form>
-        );
-      }
       return (
-        <Alert bsStyle="danger">
-          Bastion is disconnected or offline. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
-        </Alert>
+        <form name="envWithFilterForm">
+          {this.state.filter.render()}
+          {this.renderFilterButtons()}
+          {this.props.include.map(i => {
+            return self[`render${_.capitalize(i)}`]();
+          })}
+        </form>
       );
     }
     return <StatusHandler status="pending"/>;
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(EnvWithFilter);
+export default connect(mapStateToProps, mapDispatchToProps)(EnvWithFilter);

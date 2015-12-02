@@ -45,7 +45,7 @@ const GroupSecurity = React.createClass({
   getGroup(){
     return this.props.redux.env.groups.security.find(g => {
       return g.get('id') === this.props.params.id;
-    }) || new Map();
+    }) || new Map({id: this.props.params.id});
   },
   getInstanceIds(){
     if (this.getGroup().get('name')){

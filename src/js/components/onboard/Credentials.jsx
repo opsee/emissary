@@ -2,13 +2,12 @@ import React, {PropTypes} from 'react';
 import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
-import _ from 'lodash';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import config from '../../modules/config';
 import {onboard as actions} from '../../reduxactions';
 
 const InfoForm = forms.Form.extend({
@@ -33,7 +32,22 @@ const Credentials = React.createClass({
     actions: PropTypes.shape({
       setCredentials: PropTypes.func,
       vpcScan: PropTypes.func
-    })
+    }),
+    history: PropTypes.object,
+    redux: PropTypes.shape({
+      onboard: PropTypes.shape({
+        region: PropTypes.string,
+        'access-key': PropTypes.string,
+        'secret-key': PropTypes.string
+      }),
+      app: PropTypes.shape({
+        socketMessages: PropTypes.array
+      }),
+      env: PropTypes.shape({
+        bastions: PropTypes.array
+      }),
+      asyncActions: PropTypes.object
+    }).isRequired
   },
   componentWillMount(){
     if (!this.props.redux.onboard.region){

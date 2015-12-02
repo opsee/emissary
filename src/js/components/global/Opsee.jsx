@@ -13,8 +13,7 @@ import {Padding} from '../layout';
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
-import {app as appActions} from '../../reduxactions';
-import {user as userActions} from '../../reduxactions';
+import {app as appActions, user as userActions, env as envActions} from '../../reduxactions';
 /* eslint-enable no-unused-vars */
 
 const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
@@ -31,7 +30,10 @@ const Opsee = React.createClass({
     userActions: PropTypes.shape({
       refresh: PropTypes.func
     }),
-    redux: PropTypes.object
+    redux: PropTypes.object,
+    envActions: PropTypes.shape({
+      getBastions: PropTypes.func.isRequired
+    })
   },
   getInitialState(){
     return {
@@ -40,7 +42,9 @@ const Opsee = React.createClass({
   },
   componentWillMount(){
     this.props.appActions.initialize();
+    this.props.envActions.getBastions();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
+    this.setInterval(this.props.envActions.getBastions, (1000 * 60 * 3));
   },
   componentWillReceiveProps(nextProps) {
     //user log out
@@ -116,7 +120,8 @@ const Opsee = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  envActions: bindActionCreators(envActions, dispatch)
 });
 
 const mapStateToProps = (state) => ({

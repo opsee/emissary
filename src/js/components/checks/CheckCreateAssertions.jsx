@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
-import {Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {History} from 'react-router';
 
 import assertionTypes from 'slate/src/types';
@@ -287,19 +287,21 @@ const CheckCreateAssertions = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding b={1}>
-                {this.renderHelperText()}
-              </Padding>
-              <Padding b={1}>
-                <h3>Response to Your Request</h3>
-                <p>The complete response that came back from your request.</p>
-                <Padding tb={1}>
-                  <CheckResponse check={this.props.check}/>
+              <BastionRequirement>
+                <Padding b={1}>
+                  {this.renderHelperText()}
                 </Padding>
-              </Padding>
-              <Padding tb={1}>
-                {this.renderInner()}
-              </Padding>
+                <Padding b={1}>
+                  <h3>Response to Your Request</h3>
+                  <p>The complete response that came back from your request.</p>
+                  <Padding tb={1}>
+                    <CheckResponse check={this.props.check}/>
+                  </Padding>
+                </Padding>
+                <Padding tb={1}>
+                  {this.renderInner()}
+                </Padding>
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>

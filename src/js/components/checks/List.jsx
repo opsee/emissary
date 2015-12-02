@@ -1,53 +1,52 @@
-import React from 'react';
-import {CheckActions, OnboardActions} from '../../actions';
-import {Toolbar, StatusHandler} from '../global';
-import {CheckStore, OnboardStore} from '../../stores';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+
+import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
-
-function getState(){
-  return {
-    checks: CheckStore.getChecks(),
-    status: CheckStore.getGetChecksStatus(),
-    bastionStatus: OnboardStore.getGetBastionsStatus(),
-    bastions: OnboardStore.getBastions(),
-    gotBastions: OnboardStore.getBastions().length || false
-  };
-}
+import {checks as actions} from '../../reduxactions';
 
 const CheckList = React.createClass({
-  mixins: [CheckStore.mixin, OnboardStore.mixin],
-  getInitialState(){
-    return getState();
+  propTypes: {
+    actions: PropTypes.shape({
+      getChecks: PropTypes.func.isRequired
+    }),
+    redux: PropTypes.shape({
+      checks: PropTypes.object,
+      env: PropTypes.shape({
+        bastions: PropTypes.array
+      }),
+      asyncActions: PropTypes.shape({
+        getChecks: PropTypes.object,
+        deleteCheck: PropTypes.object
+      })
+    })
   },
   componentWillMount(){
-    this.getData();
+    this.props.actions.getChecks();
   },
-  storeDidChange() {
-    let state = getState();
-    if (CheckStore.getDeleteCheckStatus() === 'success'){
-      this.getData();
+  componentWillUpdate(nextProps) {
+    const oldStatus = this.props.redux.asyncActions.deleteCheck.status;
+    const newStatus = nextProps.redux.asyncActions.deleteCheck.status;
+    if (oldStatus !== newStatus && newStatus === 'success'){
+      this.props.actions.getChecks();
     }
-    this.setState(state);
-  },
-  getData(){
-    CheckActions.getChecks();
-    OnboardActions.getBastions();
   },
   renderChecks(){
-    if (this.state.checks.size){
+    if (this.props.redux.checks.size){
       return (
         <div>
-          <h3>All Checks ({this.state.checks.size})</h3>
-          <CheckItemList checks={this.state.checks}/>
+          <h3>All Checks ({this.props.redux.checks.size})</h3>
+          <CheckItemList checks={this.props.redux.checks}/>
         </div>
       );
     }
     return (
-      <StatusHandler status={this.state.status}>
+      <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
         <p>You don&rsquo;t have any Checks yet. <Link to="/check-create" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
 
         <p>Try creating a check like this to start:</p>
@@ -60,25 +59,20 @@ const CheckList = React.createClass({
       </StatusHandler>
     );
   },
-  renderButton(){
-    if (this.state.bastions.length){
-      return (
-        <Button color="primary" fab to="/check-create" title="Create New Check">
-          <Add btn/>
-        </Button>
-      );
-    }
-  },
   render() {
     return (
       <div>
         <Toolbar title="Checks">
-          {this.renderButton()}
+          <Button color="primary" fab to="/check-create" title="Create New Check">
+            <Add btn/>
+          </Button>
         </Toolbar>
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderChecks()}
+              <BastionRequirement>
+                {this.renderChecks()}
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>
@@ -87,4 +81,8 @@ const CheckList = React.createClass({
   }
 });
 
-export default CheckList;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckList);

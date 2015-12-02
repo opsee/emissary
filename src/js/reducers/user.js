@@ -15,7 +15,8 @@ const User = Record({
   admin_id: 0,
   intercom_hmac: null,
   auth: null,
-  ghosting: false
+  ghosting: false,
+  customerId: undefined
 });
 
 function getAuth(data){
@@ -68,7 +69,7 @@ export default handleActions({
   USER_EDIT: {
     next: setUser
   },
-  USER_SET_PASSWORD:{
+  USER_SET_PASSWORD: {
     next: setUser
   },
   USER_LOGOUT: {
@@ -83,6 +84,14 @@ export default handleActions({
     },
     throw(){
       return new User();
+    }
+  },
+  USER_GET_CUSTOMER: {
+    next(state, action){
+      return new User(_.assign({}, state.toJS(), action.payload));
+    },
+    throw(state){
+      return state;
     }
   }
 }, initial);

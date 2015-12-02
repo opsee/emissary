@@ -14,12 +14,12 @@ const OnboardPassword = React.createClass({
   propTypes: {
     location: PropTypes.object,
     actions: PropTypes.shape({
-      signupCreate: PropTypes.func
+      setPassword: PropTypes.func
     }),
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        signupCreate: PropTypes.object
+        userSetPassword: PropTypes.object
       })
     })
   },

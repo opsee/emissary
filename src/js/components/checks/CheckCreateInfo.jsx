@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
 import {StepCounter} from '../global';
@@ -251,10 +251,12 @@ const CheckCreateInfo = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-            <Padding b={3}>
-              {this.renderHelperText()}
-            </Padding>
-            {this.renderInner()}
+              <BastionRequirement>
+                <Padding b={3}>
+                  {this.renderHelperText()}
+                </Padding>
+                {this.renderInner()}
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>

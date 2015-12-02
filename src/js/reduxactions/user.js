@@ -8,7 +8,8 @@ import {
   USER_LOGOUT,
   USER_REFRESH,
   USER_EDIT,
-  USER_SET_PASSWORD
+  USER_SET_PASSWORD,
+  USER_GET_CUSTOMER
 } from './constants';
 import storage from '../modules/storage';
 
@@ -34,7 +35,7 @@ export function login(data) {
 }
 
 export function setPassword(data) {
-  return (dispatch, state) => {
+  return (dispatch) => {
     dispatch({
       type: USER_SET_PASSWORD,
       payload: new Promise((resolve, reject) => {
@@ -105,6 +106,31 @@ export function edit(data) {
           setTimeout(() => {
             dispatch(pushState(null, '/profile'));
           }, 100);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function getCustomer(){
+  return (dispatch, state) => {
+    dispatch({
+      type: USER_GET_CUSTOMER,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/customer`)
+        .set('Authorization', state().user.get('auth'))
+        .then((res) => {
+          let body = _.get(res, 'body.body');
+          if (body){
+            try {
+              body = JSON.parse(body);
+              return resolve({customerId: body.customer.id});
+            }catch (err){
+              _.noop();
+            }
+          }
+          return reject(new Error('Could not parse JSON.'));
         }, reject);
       })
     });

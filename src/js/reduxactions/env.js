@@ -64,23 +64,7 @@ export function getGroupsSecurity(){
         .get(`${config.api}/groups/security`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          request
-          .get(`${config.api}/checks`)
-          .set('Authorization', state().user.get('auth'))
-          .then(checkRes => {
-            let groups = res.body.groups;
-            let checks = _.get(checkRes, 'body.checks');
-            if (checks && checks.length){
-              groups = groups.map(data => {
-                let group = _.cloneDeep(data);
-                group.group.checks = _.filter(checks, c => {
-                  return c.target.id === group.group.GroupId;
-                });
-                return group;
-              });
-            }
-            resolve(groups);
-          }, reject);
+          resolve(res.body.groups);
         }, reject);
       })
     });
@@ -121,23 +105,7 @@ export function getGroupsElb(){
         .get(`${config.api}/groups/elb`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          request
-          .get(`${config.api}/checks`)
-          .set('Authorization', state().user.get('auth'))
-          .then(checkRes => {
-            let groups = res.body.groups;
-            let checks = _.get(checkRes, 'body.checks');
-            if (checks && checks.length){
-              groups = groups.map(data => {
-                let group = _.cloneDeep(data);
-                group.group.checks = _.filter(checks, c => {
-                  return c.target.id === group.group.LoadBalancerName;
-                });
-                return group;
-              });
-            }
-            resolve(groups);
-          }, reject);
+          resolve(res.body.groups);
         }, reject);
       })
     });
@@ -178,6 +146,9 @@ export function getInstancesEcc(){
 
 export function getBastions(){
   return (dispatch, state) => {
+    if (!state().user.get('auth')){
+      return Promise.resolve();
+    }
     dispatch({
       type: ENV_GET_BASTIONS,
       payload: new Promise((resolve, reject) => {
@@ -186,7 +157,7 @@ export function getBastions(){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           const arr = _.get(res, 'body.bastions');
-          if(!arr && config.env !== 'production'){
+          if (!arr && config.env !== 'production'){
             console.error('No array from GET /bastions');
           }
           resolve(arr || []);

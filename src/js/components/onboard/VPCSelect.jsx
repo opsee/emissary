@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import forms from 'newforms';
-import _ from 'lodash';
 
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
@@ -29,6 +28,22 @@ const InfoForm = forms.Form.extend({
 });
 
 const VPCSelect = React.createClass({
+  propTypes: {
+    history: PropTypes.object,
+    actions: PropTypes.shape({
+      vpcSelect: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      onboard: PropTypes.shape({
+        regionsWithVpcs: PropTypes.array,
+        vpcsForSelection: PropTypes.array
+      }),
+      asyncActions: PropTypes.shape({
+        envGetBastions: PropTypes.func.isRequired
+      }),
+      user: PropTypes.object
+    })
+  },
   componentWillMount(){
     if (!this.props.redux.onboard.regionsWithVpcs.length){
       this.props.history.replaceState(null, '/start/region-select');

@@ -25,12 +25,9 @@ const StatusHandler = React.createClass({
       attempts: 0
     };
   },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState);
-  },
   componentWillReceiveProps(nextProps){
     let state = {};
-    if(this.props.status !== nextProps.status){
+    if (this.props.status !== nextProps.status){
       state.dismissed = false;
     }
     if (nextProps.status === 'success'){
@@ -38,14 +35,17 @@ const StatusHandler = React.createClass({
     }
     this.setState(state);
   },
-  isError(){
-    return !!(this.props.status && typeof this.props.status !== 'string');
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState);
   },
   getErrorText(){
     return _.get(this.props, 'status.message') ||
     _.get(this.props, 'status.response.body.message') ||
-    this.props.errorText || 
+    this.props.errorText ||
     'Something went wrong.';
+  },
+  isError(){
+    return !!(this.props.status && typeof this.props.status !== 'string');
   },
   handleDismiss(){
     if (this.props.onDismiss){
@@ -56,7 +56,7 @@ const StatusHandler = React.createClass({
     });
   },
   render(){
-    if(this.state.dismissed){
+    if (this.state.dismissed){
       return <div/>;
     }
     if (this.props.status === 'pending' && this.state.attempts < 1){

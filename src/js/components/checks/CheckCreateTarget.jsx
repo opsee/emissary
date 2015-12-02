@@ -6,7 +6,7 @@ import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Button} from '../forms';
-import {Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import {UserActions, GroupActions} from '../../actions';
@@ -136,7 +136,9 @@ const CheckCreateTarget = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <BastionRequirement>
                 {this.renderInner()}
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>

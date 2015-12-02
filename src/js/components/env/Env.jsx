@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
 import {env as actions} from '../../reduxactions';
@@ -49,7 +49,9 @@ const Env = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                <BastionRequirement>
+                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                </BastionRequirement>
               </Col>
             </Row>
           </Grid>

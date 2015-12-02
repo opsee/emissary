@@ -1,8 +1,5 @@
-import storage from '../modules/storage';
-import {Record} from 'immutable';
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
-import moment from 'moment';
 import config from '../modules/config';
 
 const initial = {
@@ -13,36 +10,36 @@ const initial = {
   vpcsForSelection: [],
   bastionLaunching: undefined,
   installData: undefined
-}
+};
 
 function mapRegionsForInstall(region){
-  'use strict';
   let obj = _.pick(region, ['region', 'vpcs']);
   obj.vpcs = obj.vpcs.map(vpc => {
+    /* eslint-disable camelcase */
     const subnet_id = _.chain(vpc.subnets)
+    /* eslint-enable camelcase */
     .sortByAll([
-      (t) => t.state === 'available', 
-      'default-for-az', 
+      (t) => t.state === 'available',
+      'default-for-az',
       'available-ip-address-count'
-      ])
+    ])
     .last().get('subnet-id').value();
     return {
       id: vpc['vpc-id'],
       subnet_id
-    }
+    };
   });
   return obj;
 }
 
 function getFinalInstallData(state){
-  'use strict';
-  const initial = {
+  const starter = {
     'instance-size': 't2.micro'
-  }
+  };
   const regions = _.chain(state.regionsWithVpcs).filter(region => {
     return _.find(region.vpcs, v => v.selected);
   }).map(mapRegionsForInstall).value();
-  return _.assign({}, initial, _.pick(state, ['access-key', 'secret-key']), {regions});
+  return _.assign({}, starter, _.pick(state, ['access-key', 'secret-key']), {regions});
 }
 
 export default handleActions({
@@ -74,6 +71,9 @@ export default handleActions({
       }).flatten().value();
 
       return _.assign({}, state, {regionsWithVpcs, vpcsForSelection});
+    },
+    throw(state){
+      return state;
     }
   },
   ONBOARD_VPC_SELECT: {
@@ -82,21 +82,16 @@ export default handleActions({
       const regionsWithVpcs = regions.map(parent => {
         const children = parent.vpcs.map(child => {
           return _.assign({}, child, {selected: child['vpc-id'] === action.payload});
-        })
+        });
         return _.assign({}, parent, {vpcs: children});
       });
       return _.assign({}, state, {regionsWithVpcs});
     }
   },
   ONBOARD_SET_INSTALL_DATA: {
-    next(state, action){
+    next(state){
       const installData = getFinalInstallData(state);
-      return _.assign({}, state, {installData});      
-    }
-  },
-  ONBOARD_GET_BASTION_LAUNCH_STATUS: {
-    next(state, action){
-      return _.assign({}, state, {bastionLaunching: action.payload});
+      return _.assign({}, state, {installData});
     }
   }
 }, initial);

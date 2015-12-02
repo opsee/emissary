@@ -35,3 +35,7 @@ export const GET_INSTANCES_RDS = 'GET_INSTANCES_RDS';
 export const ENV_GET_BASTIONS = 'ENV_GET_BASTIONS';
 export const ENV_SET_SEARCH = 'ENV_SET_SEARCH';
 export const FILTER_ENV = 'FILTER_ENV';
+
+export const GET_CHECK = 'GET_CHECK';
+export const GET_CHECKS = 'GET_CHECKS';
+export const DELETE_CHECK = 'DELETE_CHECK';

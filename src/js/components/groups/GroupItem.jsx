@@ -1,36 +1,42 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {Record, Map} from 'immutable';
+import {Map} from 'immutable';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {ListItem} from '../global';
 import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
 import {Button} from '../forms';
-import {GroupStore} from '../../stores';
-import {GroupActions} from '../../actions';
+import {env as actions} from '../../reduxactions';
 
 const GroupItem = React.createClass({
   propTypes: {
-    item: PropTypes.instanceOf(Record).isRequired,
+    item: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-    target: PropTypes.object
+    target: PropTypes.object,
+    groups: PropTypes.shape({
+      security: PropTypes.object,
+      elb: PropTypes.object,
+      rds: PropTypes.object
+    }),
+    actions: PropTypes.shape({
+      getGroupsElb: PropTypes.func,
+      getGroupsSecurity: PropTypes.func
+    })
   },
   getDefaultProps(){
     return {
-      item: GroupStore.getNewGroup()
+      item: new Map()
     };
   },
   componentWillMount(){
     if (_.get(this.props, 'target.type')){
       switch (this.props.target.type){
       case 'elb':
-        if (!GroupStore.getGroupsELB().size){
-          GroupActions.getGroupsELB();
-        }
+        this.props.actions.getGroupsElb();
         break;
       default:
-        if (!GroupStore.getGroupsSecurity().size){
-          GroupActions.getGroupsSecurity();
-        }
+        this.props.actions.getGroupsSecurity();
         break;
       }
     }
@@ -39,12 +45,12 @@ const GroupItem = React.createClass({
     if (_.get(this.props, 'target.type')){
       switch (this.props.target.type){
       case 'elb':
-        const elb = GroupStore.getGroupsELB().find(group => {
+        const elb = this.props.groups.elb.find(group => {
           return group.get('id') === this.props.target.id;
         });
         return elb || new Map();
       default:
-        const sg = GroupStore.getGroupsSecurity().find(group => {
+        const sg = this.props.groups.security.find(group => {
           return group.get('id') === this.props.target.id;
         });
         return sg || new Map();
@@ -101,4 +107,12 @@ const GroupItem = React.createClass({
   }
 });
 
-export default GroupItem;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+const mapStateToProps = (state) => ({
+  groups: state.env.groups
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupItem);
