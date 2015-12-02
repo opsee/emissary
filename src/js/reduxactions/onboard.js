@@ -66,18 +66,14 @@ export function vpcScan(data) {
         .set('Authorization', state().user.get('auth'))
         .send(sendData)
         .then((res) => {
-          resolve(res.body);
-          let vpcs = _.chain(res.body).map(r => {
-            return r.vpcs.map(v => {
-              return v['vpc-id'];
-            });
-          }).flatten().value();
-          if (vpcs.length){
-            if (vpcs.length === 1 && !config.showVpcScreen){
+          resolve(res.body.regions);
+          const subnets = _.chain(res.body.regions).pluck('subnets').flatten().value();
+          if (subnets.length){
+            if (subnets.length === 1 && !config.showVpcScreen){
               setTimeout(() => {
                 dispatch({
                   type: ONBOARD_VPC_SELECT,
-                  payload: vpcs[0]
+                  payload: subnets[0]
                 });
                 dispatch(pushState(null, '/start/install'));
               }, 100);

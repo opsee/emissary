@@ -9,10 +9,10 @@
   "apiDelay": 0,
   //default AWS region for easy install
   "region": "",
-  //default AWS access-key for easy install
-  "access-key": "",
-  //default AWS secret-key for easy install
-  "secret-key": "",
+  //default AWS access_key for easy install
+  "access_key": "",
+  //default AWS secret_key for easy install
+  "secret_key": "",
   //simulate vpc scan error
   "onboardVpcScanError": false,
   //simulate onboard install error

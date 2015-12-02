@@ -39,7 +39,7 @@ const VPCSelect = React.createClass({
         vpcsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
-        envGetBastions: PropTypes.func.isRequired
+        envGetBastions: PropTypes.object
       }),
       user: PropTypes.object
     })

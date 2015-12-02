@@ -11,14 +11,14 @@ import {Padding} from '../layout';
 import {onboard as actions} from '../../reduxactions';
 
 const InfoForm = forms.Form.extend({
-  'access-key': forms.CharField({
+  'access_key': forms.CharField({
     widget: forms.PasswordInput,
     label: 'Access Key ID',
     widgetAttrs: {
       placeholder: 'Your AWS Access Key ID'
     }
   }),
-  'secret-key': forms.CharField({
+  'secret_key': forms.CharField({
     widget: forms.PasswordInput,
     label: 'Secret Key',
     widgetAttrs: {
@@ -37,8 +37,8 @@ const Credentials = React.createClass({
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
         region: PropTypes.string,
-        'access-key': PropTypes.string,
-        'secret-key': PropTypes.string
+        'access_key': PropTypes.string,
+        'secret_key': PropTypes.string
       }),
       app: PropTypes.shape({
         socketMessages: PropTypes.array
@@ -74,7 +74,7 @@ const Credentials = React.createClass({
     return this.props.redux.asyncActions.onboardVpcScan.status;
   },
   isDataComplete(){
-    return this.props.redux.onboard['access-key'] && this.props.redux.onboard['secret-key'];
+    return this.props.redux.onboard.access_key && this.props.redux.onboard.secret_key;
   },
   isDisabled(){
     return !!(!this.state.info.isValid() || this.getStatus() === 'pending');
@@ -93,10 +93,10 @@ const Credentials = React.createClass({
               <form onSubmit={this.handleSubmit}>
                 <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during Bastion Instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
-                  <BoundField bf={this.state.info.boundField('access-key')}/>
+                  <BoundField bf={this.state.info.boundField('access_key')}/>
                 </Padding>
                 <Padding b={1}>
-                  <BoundField bf={this.state.info.boundField('secret-key')}/>
+                  <BoundField bf={this.state.info.boundField('secret_key')}/>
                 </Padding>
 
                 <Padding b={2}>
