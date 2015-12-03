@@ -20,9 +20,9 @@ let finalCreateStore;
 
 if (process.env.NODE_ENV === 'production') {
   finalCreateStore = compose(
-    applyMiddleware(...middleware)(createStore),
+    applyMiddleware(...middleware),
     reduxRouter
-  );
+  )(createStore);
 } else {
   finalCreateStore = compose(
     applyMiddleware(...middleware),

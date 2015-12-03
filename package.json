@@ -58,8 +58,9 @@
     "lint": "eslint src/. --ext .js,.jsx",
     "compare": "node visreg/compare",
     "fix": "npm install",
-    "casper": "casperjs test test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080",
-    "casper-debug": "npm run build && node connect & npm run casper"
+    "serve": "node connect",
+    "casper": "npm run serve | casperjs test test-deploy.js",
+    "casper-debug": "npm run serve | casperjs test test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",

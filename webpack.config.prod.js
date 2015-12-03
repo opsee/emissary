@@ -31,6 +31,7 @@ module.exports = {
   context:context_dir,
   entry: {
     'index': [
+      'babel-polyfill',
       './js/index.jsx'
     ],
     vendor:vendors
@@ -56,7 +57,7 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           plugins: ['transform-runtime'],
-          presets: ['es2015', 'stage-0', 'react'],
+          presets: ['es2015', 'react'],
         },
         include: [context_dir]
       },

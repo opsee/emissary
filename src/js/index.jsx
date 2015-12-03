@@ -3,9 +3,12 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import App from './components/global/App';
 import store from './modules/store';
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
+import config from './modules/config';
 
-render(
+if (config.env !== 'production'){
+  const tools = require('redux-devtools/lib/react');
+  const {DevTools, DebugPanel, LogMonitor} = tools;
+  render(
   (
     <div>
       <Provider store={store}>
@@ -16,3 +19,13 @@ render(
       </DebugPanel>
     </div>
   ), document.getElementById('main'));
+}else {
+  render(
+  (
+    <div>
+      <Provider store={store}>
+        <App/>
+      </Provider>
+    </div>
+  ), document.getElementById('main'));
+}
