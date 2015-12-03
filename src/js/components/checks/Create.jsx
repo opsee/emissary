@@ -1,10 +1,14 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {CheckActions, GlobalActions, UserActions} from '../../actions';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {CheckStore} from '../../stores';
+import {Check} from '../../modules/schemas';
+import {checks as actions} from '../../reduxactions';
 
 const CheckCreate = React.createClass({
   mixins: [CheckStore.mixin],
@@ -32,7 +36,7 @@ const CheckCreate = React.createClass({
   },
   getState(noCheck){
     const obj = {
-      check: CheckStore.newCheck({target: this.props.location.query}).toJS(),
+      check: new Check({target: this.props.location.query}).toJS(),
       response: CheckStore.getResponse(),
       createStatus: CheckStore.getCheckCreateStatus(),
       filter: null
@@ -79,4 +83,8 @@ const CheckCreate = React.createClass({
   }
 });
 
-export default CheckCreate;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckCreate);

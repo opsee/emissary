@@ -32,7 +32,7 @@ const CheckSingle = React.createClass({
     this.props.actions.getCheck(this.props.params.id);
   },
   getCheck(){
-    return this.props.redux.checks.find(c => {
+    return this.props.redux.checks.checks.find(c => {
       return c.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },

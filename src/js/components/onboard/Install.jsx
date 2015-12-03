@@ -70,7 +70,11 @@ const Install = React.createClass({
     }).value();
   },
   getBastionErrors(){
-    return _.filter(this.getBastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE');
+    const one = _.chain(this.props.redux.app.socketMessages)
+    .filter({command: 'launch-bastion'})
+    .filter({state: 'failed'})
+    .value();
+    return _.filter(this.getBastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE').concat(one);
   },
   getBastionSuccesses(){
     return _.filter(this.getBastionStatuses(), stat => stat === 'CREATE_COMPLETE');
@@ -121,12 +125,6 @@ const Install = React.createClass({
             </Button>
           </Padding>
         );
-      }else if (this.getBastionErrors().length){
-        return (
-          <Alert bsStyle="danger">
-            We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
-          </Alert>
-        );
       }else if (!this.isBastionConnected()){
         return (
           <Padding tb={3}>
@@ -134,6 +132,13 @@ const Install = React.createClass({
           </Padding>
         );
       }
+    }
+    if (this.getBastionErrors().length){
+      return (
+        <Alert bsStyle="danger">
+          We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+        </Alert>
+      );
     }
     return <div/>;
   },

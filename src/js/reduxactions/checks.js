@@ -1,11 +1,14 @@
 import {pushState} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
+import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import {
   GET_CHECK,
   GET_CHECKS,
-  DELETE_CHECK
+  DELETE_CHECK,
+  TEST_CHECK,
+  TEST_CHECK_RESET
 } from './constants';
 
 export function getCheck(id){
@@ -74,3 +77,33 @@ export function deleteCheck(id){
     });
   };
 }
+
+function formatCheckData(data){
+  let obj = _.cloneDeep(data);
+  if (obj.target.type === 'security'){
+    obj.target.type = 'sg';
+  }
+  if (obj.target.type === 'EC2'){
+    obj.target.type = 'instance';
+  }
+  return _.pick(obj, ['target', 'interval', 'check_spec']);
+}
+
+export function testCheck(data){
+  return (dispatch, state) => {
+    dispatch({
+      type: TEST_CHECK,
+      payload: new Promise((resolve, reject) => {
+        let newData = formatCheckData(data);
+        newData = _.assign(newData, {name: state().user.get('email')});
+        return request
+        .post(`${config.api}/bastions/test-check`)
+        .set('Authorization', state().user.get('auth'))
+        .send({check: newData, max_hosts: 3, deadline: '30s'})
+        .then(res => _.get(res, 'body.responses') || [], reject);
+      })
+    });
+  };
+}
+
+export const testCheckReset = createAction(TEST_CHECK_RESET);

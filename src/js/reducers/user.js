@@ -16,7 +16,8 @@ const User = Record({
   intercom_hmac: null,
   auth: null,
   ghosting: false,
-  customerId: undefined
+  customerId: undefined,
+  data: {}
 });
 
 function getAuth(data){
@@ -91,6 +92,17 @@ export default handleActions({
       return new User(_.assign({}, state.toJS(), action.payload));
     },
     throw(state){
+      return state;
+    }
+  },
+  USER_GET_DATA: {
+    next(state, action){
+      return new User(_.assign({}, state.toJS(), {data: action.payload}));
+    },
+    throw(state, action){
+      if (config.env === 'production'){
+        console.error(action);
+      }
       return state;
     }
   }

@@ -16,7 +16,9 @@ const CheckList = React.createClass({
       getChecks: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
-      checks: PropTypes.object,
+      checks: PropTypes.shape({
+        checks: PropTypes.object
+      }),
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),
@@ -37,11 +39,11 @@ const CheckList = React.createClass({
     }
   },
   renderChecks(){
-    if (this.props.redux.checks.size){
+    if (this.props.redux.checks.checks.size){
       return (
         <div>
-          <h3>All Checks ({this.props.redux.checks.size})</h3>
-          <CheckItemList checks={this.props.redux.checks}/>
+          <h3>All Checks ({this.props.redux.checks.checks.size})</h3>
+          <CheckItemList checks={this.props.redux.checks.checks}/>
         </div>
       );
     }

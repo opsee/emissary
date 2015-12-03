@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import StatusHandler from './StatusHandler';
 import {Link} from 'react-router';
 import {Alert} from '../../modules/bootstrap';
+import config from '../../modules/config';
 
 const BastionRequirement = React.createClass({
   propTypes: {
@@ -17,7 +18,7 @@ const BastionRequirement = React.createClass({
     })
   },
   render() {
-    if (this.props.redux.env.bastions.length){
+    if (this.props.redux.env.bastions.length || config.skipBastionRequirement){
       return this.props.children;
     }
     return (

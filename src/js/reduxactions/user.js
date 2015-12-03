@@ -9,7 +9,9 @@ import {
   USER_REFRESH,
   USER_EDIT,
   USER_SET_PASSWORD,
-  USER_GET_CUSTOMER
+  USER_GET_CUSTOMER,
+  USER_GET_DATA,
+  USER_PUT_DATA
 } from './constants';
 import storage from '../modules/storage';
 
@@ -131,6 +133,56 @@ export function getCustomer(){
             }
           }
           return reject(new Error('Could not parse JSON.'));
+        }, reject);
+      })
+    });
+  };
+}
+
+export function getData(){
+  return (dispatch, state) => {
+    dispatch({
+      type: USER_GET_DATA,
+      payload: new Promise((resolve, reject) => {
+        request
+        .get(`${config.authApi}/users/${state().user.get('id')}/data`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => resolve(res.body), reject);
+      })
+    });
+  };
+}
+
+export function putUserData(key, data, reset){
+  return (dispatch, state) => {
+    dispatch({
+      type: USER_PUT_DATA,
+      payload: new Promise((resolve, reject) => {
+        getData()(dispatch, state).then((user = {}) => {
+          let history = user[key];
+          let index;
+          if (history && Array.isArray(history) && history.length){
+            index = history.length - 1;
+          }else {
+            index = 0;
+            user[key] = [];
+          }
+          let record = user[key][index];
+          if (record && record.revision !== config.revision){
+            index++;
+          }
+          user[key][index] = {
+            revision: config.revision,
+            data: data
+          };
+          if (reset){
+            user[key] = false;
+          }
+          return request
+          .put(`${config.authApi}/users/${state().user.get('id')}/data`)
+          .set('Authorization', state().user.get('auth'))
+          .send(user)
+          .then(res => res.body, reject);
         }, reject);
       })
     });

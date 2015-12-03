@@ -1,51 +1,12 @@
 import _ from 'lodash';
-import {Record, List, Map} from 'immutable';
+import {List} from 'immutable';
 import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
+import {Check} from '../modules/schemas';
 
 /* eslint-disable no-use-before-define */
 
-const Target = Record({
-  name: undefined,
-  type: 'sg',
-  id: undefined
-});
-
-const Check = Record({
-  id: undefined,
-  name: undefined,
-  target: Target(),
-  assertions: List([
-    {
-      key: 'code',
-      operand: 200,
-      relationship: 'equal'
-    }
-  ]),
-  notifications: List(),
-  instances: List(),
-  health: undefined,
-  state: 'initializing',
-  silenceDate: undefined,
-  silenceDuration: undefined,
-  interval: 30,
-  results: List(),
-  passing: undefined,
-  total: undefined,
-  check_spec: Map({
-    type_url: 'HttpCheck',
-    value: Map({
-      name: undefined,
-      path: undefined,
-      protocol: 'http',
-      port: undefined,
-      verb: undefined,
-      body: undefined,
-      headers: new List()
-    })
-  })
-});
 const statics = {
   checkFromJS(data){
     const legit = data.instance || data;
@@ -57,19 +18,24 @@ const statics = {
   }
 };
 
-const initial = new List();
+const initial = {
+  checks: new List()
+};
 
 export default handleActions({
   GET_CHECK: {
     next(state, action){
       const single = statics.checkFromJS(action.payload);
+      let checks;
       const index = state.findIndex(item => {
         return item.get('id') === single.get('id');
       });
       if (index > -1){
-        return state.update(index, () => single);
+        checks = state.checks.update(index, () => single);
+      }else {
+        checks = state.checks.concat(new List([single]));
       }
-      return state.concat(new List([single]));
+      return _.assign({}, state, {checks});
     },
     throw(state){
       return state;
@@ -80,7 +46,7 @@ export default handleActions({
       const checks = new List(action.payload.map(c => {
         return statics.checkFromJS(c);
       }));
-      return checks;
+      return _.assign({}, state, {checks});
     },
     throw(state){
       return state;

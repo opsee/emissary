@@ -11,7 +11,8 @@ import {user as actions} from '../../reduxactions';
 const System = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getCustomer: PropTypes.func
+      getCustomer: PropTypes.func,
+      getData: PropTypes.func
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -30,6 +31,7 @@ const System = React.createClass({
   },
   componentWillMount(){
     this.props.actions.getCustomer();
+    this.props.actions.getData();
   },
   renderBastionList(){
     if (this.props.redux.env.bastions.length){

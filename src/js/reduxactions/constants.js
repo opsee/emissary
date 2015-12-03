@@ -19,6 +19,8 @@ export const USER_REFRESH = 'USER_REFRESH';
 export const USER_EDIT = 'USER_EDIT';
 export const USER_GET_CUSTOMER = 'USER_GET_CUSTOMER';
 export const USER_SET_PASSWORD = 'USER_SET_PASSWORD';
+export const USER_GET_DATA = 'USER_GET_DATA';
+export const USER_PUT_DATA = 'USER_PUT_DATA';
 
 export const GET_GROUP_SECURITY = 'GET_GROUP_SECURITY';
 export const GET_GROUPS_SECURITY = 'GET_GROUPS_SECURITY';
@@ -39,3 +41,5 @@ export const FILTER_ENV = 'FILTER_ENV';
 export const GET_CHECK = 'GET_CHECK';
 export const GET_CHECKS = 'GET_CHECKS';
 export const DELETE_CHECK = 'DELETE_CHECK';
+export const TEST_CHECK = 'TEST_CHECK';
+export const TEST_CHECK_RESET = 'TEST_CHECK_RESET';

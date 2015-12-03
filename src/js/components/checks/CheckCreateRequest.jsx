@@ -3,18 +3,24 @@ import _ from 'lodash';
 import forms from 'newforms';
 import colors from 'seedling/colors';
 import {History} from 'react-router';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
 import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {CheckActions, GroupActions, InstanceActions, UserActions} from '../../actions';
 import {GroupStore, InstanceStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
+import {
+  env as envActions,
+  checks as checkActions,
+  user as userActions
+} from '../../reduxactions';
 
 const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 
@@ -90,7 +96,18 @@ const CheckCreateRequest = React.createClass({
     check: PropTypes.object,
     renderAsInclude: PropTypes.bool,
     onChange: PropTypes.func,
-    onTargetClick: PropTypes.func
+    onTargetClick: PropTypes.func,
+    envActions: PropTypes.shape({
+      getGroupsSecurity: PropTypes.func,
+      getGroupsElb: PropTypes.func,
+      getInstancesEcc: PropTypes.func
+    }),
+    checkActions: PropTypes.shape({
+      testCheckReset: PropTypes.func
+    }),
+    userActions: PropTypes.shape({
+      putData: PropTypes.func
+    })
   },
   getInitialState() {
     const self = this;
@@ -144,16 +161,10 @@ const CheckCreateRequest = React.createClass({
     });
   },
   componentWillMount(){
-    if (!GroupStore.getGroupsSecurity().size){
-      GroupActions.getGroupsSecurity();
-    }
-    if (!GroupStore.getGroupsELB().size){
-      GroupActions.getGroupsELB();
-    }
-    if (!InstanceStore.getInstancesECC().size){
-      InstanceActions.getInstancesECC();
-    }
-    CheckActions.resetTestCheck();
+    this.props.envActions.getGroupsSecurity();
+    this.props.envActions.getGroupsElb();
+    this.props.envActions.getInstancesEcc();
+    this.props.checkActions.testCheckReset();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
@@ -211,7 +222,7 @@ const CheckCreateRequest = React.createClass({
     this.props.onChange(data, this.isDisabled(), 1);
   },
   runDismissHelperText(){
-    UserActions.userPutUserData('hasDismissedCheckRequestHelp');
+    this.props.userActions.putData('hasDismissedCheckRequestHelp');
   },
   handleSubmit(e){
     e.preventDefault();
@@ -373,4 +384,10 @@ const CheckCreateRequest = React.createClass({
   }
 });
 
-export default CheckCreateRequest;
+const mapDispatchToProps = (dispatch) => ({
+  envActions: bindActionCreators(envActions, dispatch),
+  checkActions: bindActionCreators(checkActions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckCreateRequest);

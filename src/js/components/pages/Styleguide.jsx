@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {Padding} from '../layout';
 import {Alert, Grid, Row, Col, Modal} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader, ListItemTest} from '../global';
 
-import {CheckStore, GroupStore} from '../../stores';
 import {GlobalActions} from '../../actions';
 
 import {Add, Key} from '../icons';
@@ -15,12 +16,12 @@ import * as icons from '../icons';
 import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
 import {GroupItemList} from '../groups';
+import {env as envActions, checks as checkActions} from '../../reduxactions';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
 
 function getState(){
   return {
-    checks: CheckStore.getChecks(),
     toggles: [{on: true}, {on: false}, {on: true}],
     radios: _.range(3).map(i => {
       return {id: `radio-${i}`, on: false};
@@ -70,8 +71,22 @@ const InfoForm = forms.Form.extend({
   validation: 'auto'
 });
 
-export default React.createClass({
-  mixins: [CheckStore.mixin],
+const Styleguide = React.createClass({
+  propTypes: {
+    checkActions: PropTypes.shape({
+      getChecks: PropTypes.func
+    }),
+    envActions: PropTypes.shape({
+      getGroupsSecurity: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object
+        })
+      })
+    })
+  },
   getInitialState(){
     const self = this;
     return _.extend(getState(), {
@@ -85,8 +100,9 @@ export default React.createClass({
       showMenu: false
     });
   },
-  storeDidChange() {
-    this.setState(getState());
+  componentWillMount(){
+    this.props.checkActions.getChecks();
+    this.props.envActions.getGroupsSecurity();
   },
   getDefaultProps() {
     return getState();
@@ -265,7 +281,7 @@ export default React.createClass({
             <hr/>
 
             <h3>Example Group Items</h3>
-            <GroupItemList groups={GroupStore.getExampleGroupsElb()}/>
+            <GroupItemList groups={this.props.redux.env.groups.security} redux={this.props.redux}/>
             <hr/>
             <h3>Cards</h3>
             <Row>
@@ -398,3 +414,10 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  envActions: bindActionCreators(envActions, dispatch),
+  checkActions: bindActionCreators(checkActions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Styleguide);

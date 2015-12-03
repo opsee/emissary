@@ -1,67 +1,11 @@
 import _ from 'lodash';
-import Immutable, {Record, List, Map} from 'immutable';
+import Immutable, {List} from 'immutable';
 import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
+import {InstanceEcc, InstanceRds, GroupSecurity, GroupElb} from '../modules/schemas';
 
 /* eslint-disable no-use-before-define */
-
-const baseItem = {
-  foo: false,
-  id: null,
-  name: null,
-  lastChecked: null,
-  silenceDate: null,
-  silenceDuration: null,
-  state: 'running',
-  health: undefined,
-  type: null,
-  checks: List(),
-  results: List(),
-  passing: 0,
-  total: 0
-};
-
-const InstanceEcc = Record(_.assign(baseItem, {
-  meta: new Map({
-    created: new Date(),
-    instanceSize: 't2-micro'
-  }),
-  type: 'EC2',
-  groups: List(),
-  LaunchTime: null,
-  InstanceType: null,
-  Placement: null,
-  SecurityGroups: List()
-}));
-
-const InstanceRds = Record(_.assign(baseItem, {
-  meta: new Map({
-    created: new Date(),
-    instanceSize: 't2-micro'
-  }),
-  type: 'RDS',
-  groups: List(),
-  LaunchTime: null,
-  InstanceType: null,
-  Placement: null,
-  SecurityGroups: List()
-}));
-
-const GroupSecurity = Record(_.assign(baseItem, {
-  type: 'security',
-  Description: undefined,
-  instance_count: undefined,
-  instances: List()
-}));
-
-const GroupElb = Record(_.assign(baseItem, {
-  type: 'elb',
-  Description: undefined,
-  CreatedTime: undefined,
-  instance_count: undefined,
-  instances: List()
-}));
 
 const statics = {
   // getGroupSecurityPending(state, data){
@@ -364,45 +308,3 @@ export default handleActions({
     }
   }
 }, initial);
-
-// const _public = {
-//   getInstanceEcc(){
-//     return _data.instanceECC;
-//   },
-//   getInstanceFromFilter(target = {type: null, id: null}){
-//     return _public.getInstancesEcc().filter(instance => instance.get('id') === target.id).get(0);
-//   },
-//   getInstancesEcc(groupId){
-//     if (groupId){
-//       return _data.instancesEcc.filter(instance => {
-//         const groups = instance.get('groups');
-//         return _.findWhere(groups.toJS(), {id: groupId});
-//       });
-//     }
-//     return _data.instancesEcc;
-//   },
-//   getInstanceRds(){
-//     return _data.instanceRds;
-//   },
-//   getInstancesRds(){
-//     return _data.instancesRDS;
-//   },
-//   instanceEccFromJS: statics.instanceEccFromJS
-// };
-
-// const initial = {
-//   instanceECC: new Instance(),
-//   instancesEcc: new List(),
-//   instanceRds: new Instance(),
-//   instancesRDS: new List()
-// }
-
-// export default handleActions({
-//   GET_INSTANCES_ECC: {
-//     next(state, action){
-//       // const groupsSecurity = statics.getGroupsSecuritySuccess(state, action.payload);
-//       // return _.assign({}, state, {groupsSecurity});
-//       return state;
-//     }
-//   }
-// }, initial);

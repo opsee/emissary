@@ -16,5 +16,7 @@
   //simulate vpc scan error
   "onboardVpcScanError": false,
   //simulate onboard install error
-  "onboardInstallError": false
+  "onboardInstallError": false,
+  //see beyond bastion-gated errors
+  "skipBastionRequirement": false
 }
