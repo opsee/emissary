@@ -50,12 +50,6 @@ export default React.createClass({
                   <td>{this.state.instance.get('state')}</td>
                 </tr>
                 <tr>
-                  <td><strong>Last Checked</strong></td>
-                  <td title={`Last Checked: ${this.state.instance.get('lastChecked').toISOString()}`}>
-                    <TimeAgo date={this.state.instance.get('lastChecked')}/>
-                  </td>
-                </tr>
-                <tr>
                   <td><strong>Launched</strong></td>
                   <td>
                     <TimeAgo date={this.state.instance.get('LaunchTime')}/>

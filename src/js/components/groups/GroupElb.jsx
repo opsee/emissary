@@ -60,20 +60,6 @@ export default React.createClass({
     }
     return <tr/>;
   },
-  renderLastChecked(){
-    const d = this.state.group.lastChecked;
-    if (d){
-      return (
-        <tr>
-          <td><strong>Last Checked</strong></td>
-          <td title={`Last Checked: ${d.toISOString()}`}>
-            <TimeAgo date={this.state.group.get('lastChecked')}/>
-          </td>
-        </tr>
-      );
-    }
-    return <tr/>;
-  },
   renderInner(){
     if (this.state.group.get('name')){
       return (
@@ -90,7 +76,6 @@ export default React.createClass({
                 <td><strong>Created</strong></td>
                 <td><TimeAgo date={new Date(this.state.group.get('CreatedTime'))}/></td>
               </tr>
-              {this.renderLastChecked()}
               {this.renderDescription()}
             </Table>
           </Padding>
