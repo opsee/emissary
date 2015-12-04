@@ -41,6 +41,8 @@ export const FILTER_ENV = 'FILTER_ENV';
 
 export const GET_CHECK = 'GET_CHECK';
 export const GET_CHECKS = 'GET_CHECKS';
-export const DELETE_CHECK = 'DELETE_CHECK';
-export const TEST_CHECK = 'TEST_CHECK';
-export const TEST_CHECK_RESET = 'TEST_CHECK_RESET';
+export const CHECK_CREATE = 'CHECK_CREATE';
+export const CHECK_EDIT = 'CHECK_EDIT';
+export const CHECK_DELETE = 'CHECK_DELETE';
+export const CHECK_TEST = 'CHECK_TEST';
+export const CHECK_TEST_RESET = 'CHECK_TEST_RESET';

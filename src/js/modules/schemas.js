@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {Record, List, Map} from 'immutable';
+import config from './config';
 
 const baseEnvItem = {
   id: null,
@@ -88,9 +89,9 @@ export const Check = Record({
     type_url: 'HttpCheck',
     value: Map({
       name: undefined,
-      path: undefined,
+      path: config.checkDefaultPath || undefined,
       protocol: 'http',
-      port: undefined,
+      port: config.checkDefaultPort || undefined,
       verb: undefined,
       body: undefined,
       headers: new List()

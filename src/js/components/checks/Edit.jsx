@@ -1,25 +1,23 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import colors from 'seedling/colors';
-import {History} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {Toolbar, StatusHandler} from '../global';
-import {CheckStore} from '../../stores';
-import CheckCreateRequest from '../checks/CheckCreateRequest.jsx';
-import CheckCreateAssertions from '../checks/CheckCreateAssertions.jsx';
-import CheckCreateInfo from '../checks/CheckCreateInfo.jsx';
+import CheckCreateRequest from './CheckCreateRequest.jsx';
+import CheckCreateAssertions from './CheckCreateAssertions.jsx';
+import CheckCreateInfo from './CheckCreateInfo.jsx';
 import {Checkmark, Close, Delete} from '../icons';
-import {CheckActions, GlobalActions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {EnvWithFilter} from '../env';
 import {Button} from '../forms';
+import {checks as actions, env as envActions} from '../../reduxactions';
+import {Check} from '../../modules/schemas';
 
 function getState(){
   return {
-    status: CheckStore.getGetCheckStatus(),
-    response: CheckStore.getResponse(),
-    editStatus: CheckStore.getCheckEditStatus(),
     step1: {
       disabled: false
     },
@@ -33,47 +31,47 @@ function getState(){
 }
 
 const CheckEdit = React.createClass({
-  mixins: [CheckStore.mixin, History],
   propTypes: {
     params: PropTypes.object,
     onFilterChange: PropTypes.func,
-    filter: PropTypes.string
+    filter: PropTypes.string,
+    actions: PropTypes.shape({
+      getCheck: PropTypes.func,
+      deleteCheck: PropTypes.func,
+      edit: PropTypes.func
+    }),
+    envActions: PropTypes.shape({
+      getGroupsSecurity: PropTypes.func,
+      getGroupsElb: PropTypes.func,
+      getInstancesEcc: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      checks: PropTypes.shape({
+        checks: PropTypes.object
+      }),
+      asyncActions: PropTypes.shape({
+        checkEdit: PropTypes.object,
+        getCheck: PropTypes.object
+      })
+    })
   },
   getInitialState() {
     return _.assign(getState(), {
-      check: CheckStore.newCheck(),
+      check: null,
       showEnv: false
     });
   },
-  getDefaultProps() {
-    return getState();
-  },
   componentWillMount(){
-    this.getData();
+    this.props.actions.getCheck(this.props.params.id);
+    this.props.envActions.getGroupsSecurity();
+    this.props.envActions.getGroupsElb();
+    this.props.envActions.getInstancesEcc();
   },
-  storeDidChange(){
-    let state = getState();
-    if (state.editStatus === 'success'){
-      this.history.pushState(null, '/');
-    }else if (state.editStatus && state.editStatus !== 'pending'){
-      GlobalActions.globalModalMessage({
-        html: status.body && status.body.message || 'Something went wrong.',
-        style: 'danger'
-      });
-    }
-    if (state.status === 'success'){
-      state.check = CheckStore.getCheck().toJS();
-    }
-    if (CheckStore.getDeleteCheckStatus() === 'success'){
-      this.history.pushState(null, '/');
-    }
-    this.setState(state);
-  },
-  getFinalData(){
-    return this.state.check;
-  },
-  getData(){
-    CheckActions.getCheck(this.props.params.id);
+  getCheck(){
+    const check = this.props.redux.checks.checks.find(g => {
+      return g.get('id') === this.props.params.id;
+    }) || new Check();
+    return this.state.check || check.toJS();
   },
   getCheckTitle(){
     return _.get(this, 'state.check.check_spec.value.name') || 'Check';
@@ -82,7 +80,7 @@ const CheckEdit = React.createClass({
     return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
   },
   runRemoveCheck(){
-    CheckActions.deleteCheck(this.props.params.id);
+    this.props.actions.deleteCheck(this.props.params.id);
   },
   setData(data, disabled, num){
     let obj = {};
@@ -95,10 +93,10 @@ const CheckEdit = React.createClass({
     this.setState({showEnv: !bool});
   },
   handleSubmit(){
-    CheckActions.checkEdit(this.getFinalData());
+    return this.props.actions.edit(this.getCheck());
   },
   handleTargetSelect(id, type){
-    let check = _.cloneDeep(this.state.check);
+    let check = _.cloneDeep(this.getCheck());
     check.target.id = id;
     check.target.type = type || 'sg';
     this.setData(check);
@@ -115,29 +113,30 @@ const CheckEdit = React.createClass({
     return <div/>;
   },
   renderLink(){
-    return this.state.check.id ?
+    return this.getCheck().id ?
     (
-      <Button to={`/check/${this.state.check.id}`} icon flat title="Return to Check">
+      <Button to={`/check/${this.getCheck().id}`} icon flat title="Return to Check">
         <Close btn/>
       </Button>
     )
      : <div/>;
   },
   renderInner(){
-    if (this.state.check.id){
+    if (this.getCheck().id){
       return (
         <div>
           {this.renderEnv()}
           <Padding tb={1}>
-            <CheckCreateRequest {...this.state} onChange={this.setData} renderAsInclude/>
+            <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           </Padding>
           <Padding tb={1}>
-            <CheckCreateAssertions {...this.state} onChange={this.setData} renderAsInclude/>
+            <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           </Padding>
           <Padding tb={1}>
-            <CheckCreateInfo {...this.state} onChange={this.setData} renderAsInclude/>
+            <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           </Padding>
           <Padding t={1}>
+          <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
             Finish <Checkmark inline fill={colors.success}/>
           </Button>
@@ -153,7 +152,7 @@ const CheckEdit = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.state.status}>
+      <StatusHandler status={this.props.redux.asyncActions.getCheck.status}>
         <h2>Check not found.</h2>
       </StatusHandler>
     );
@@ -176,4 +175,9 @@ const CheckEdit = React.createClass({
   }
 });
 
-export default CheckEdit;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  envActions: bindActionCreators(envActions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckEdit);

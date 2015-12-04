@@ -6,9 +6,11 @@ import _ from 'lodash';
 import {
   GET_CHECK,
   GET_CHECKS,
-  DELETE_CHECK,
-  TEST_CHECK,
-  TEST_CHECK_RESET
+  CHECK_DELETE,
+  CHECK_CREATE,
+  CHECK_EDIT,
+  CHECK_TEST,
+  CHECK_TEST_RESET
 } from './constants';
 
 export function getCheck(id){
@@ -40,7 +42,7 @@ export function getCheck(id){
   };
 }
 
-export function getChecks(redirect){
+export function getChecks(){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECKS,
@@ -50,11 +52,6 @@ export function getChecks(redirect){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(_.get(res.body, 'checks'));
-          if (redirect){
-            setTimeout(() => {
-              dispatch(pushState(null, '/start/thanks'));
-            }, 100);
-          }
         }, reject);
       })
     });
@@ -64,7 +61,7 @@ export function getChecks(redirect){
 export function deleteCheck(id){
   return (dispatch, state) => {
     dispatch({
-      type: DELETE_CHECK,
+      type: CHECK_DELETE,
       payload: new Promise((resolve, reject) => {
         return request
         .del(`${config.api}/checks/${id}`)
@@ -86,13 +83,13 @@ function formatCheckData(data){
   if (obj.target.type === 'EC2'){
     obj.target.type = 'instance';
   }
-  return _.pick(obj, ['target', 'interval', 'check_spec']);
+  return _.pick(obj, ['target', 'interval', 'check_spec', 'name']);
 }
 
-export function testCheck(data){
+export function test(data){
   return (dispatch, state) => {
     dispatch({
-      type: TEST_CHECK,
+      type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
         let newData = formatCheckData(data);
         newData = _.assign(newData, {name: state().user.get('email')});
@@ -100,10 +97,81 @@ export function testCheck(data){
         .post(`${config.api}/bastions/test-check`)
         .set('Authorization', state().user.get('auth'))
         .send({check: newData, max_hosts: 3, deadline: '30s'})
-        .then(res => _.get(res, 'body.responses') || [], reject);
+        .then(res => resolve(_.get(res, 'body.responses')) || [], reject);
       })
     });
   };
 }
 
-export const testCheckReset = createAction(TEST_CHECK_RESET);
+export const testCheckReset = createAction(CHECK_TEST_RESET);
+
+function saveNotifications(state, data, checkId, isEditing){
+  return request
+  [isEditing ? 'put' : 'post'](`${config.api}/notifications${isEditing ? '/' + checkId : ''}`)
+  .set('Authorization', state().user.get('auth'))
+  .send({
+    'check-id': checkId,
+    notifications: data.notifications
+  });
+}
+
+function saveAssertions(state, data, checkId, isEditing){
+  return request
+  [isEditing ? 'put' : 'post'](`${config.api}/assertions${isEditing ? '/' + checkId : ''}`)
+  .set('Authorization', state().user.get('auth'))
+  .send({
+    'check-id': checkId,
+    assertions: data.assertions
+  });
+}
+
+function checkCreateOrEdit(state, data, isEditing){
+  return new Promise((resolve, reject) => {
+    const d = formatCheckData(data);
+    request
+    [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/' + data.id : ''}`)
+    .set('Authorization', state().user.get('auth'))
+    .send(d).then(checkRes =>{
+      saveNotifications(state, data, _.get(checkRes, 'body.id') || data.id, isEditing)
+      .then(() => {
+        saveAssertions(state, data, _.get(checkRes, 'body.id') || data.id, isEditing).then(() => {
+          resolve(checkRes);
+        }).catch(reject);
+      }).catch(reject);
+    }).catch(reject);
+  });
+}
+
+export function create(data){
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECK_CREATE,
+      payload: new Promise((resolve, reject) => {
+        checkCreateOrEdit(state, data)
+        .then(res => {
+          resolve(res.body);
+          setTimeout(() => {
+            dispatch(pushState(null, '/'));
+          }, 100);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function edit(data){
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECK_EDIT,
+      payload: new Promise((resolve, reject) => {
+        checkCreateOrEdit(state, data, true)
+        .then(res => {
+          resolve(res.body);
+          setTimeout(() => {
+            dispatch(pushState(null, '/'));
+          }, 100);
+        }, reject);
+      })
+    });
+  };
+}

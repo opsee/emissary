@@ -19,7 +19,11 @@ const BastionRequirement = React.createClass({
   },
   render() {
     if (this.props.redux.env.bastions.length || config.skipBastionRequirement){
-      return this.props.children;
+      return (
+        <div>
+          {this.props.children}
+        </div>
+      );
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.envGetBastions.status}>

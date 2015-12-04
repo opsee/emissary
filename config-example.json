@@ -18,5 +18,9 @@
   //simulate onboard install error
   "onboardInstallError": false,
   //see beyond bastion-gated errors
-  "skipBastionRequirement": false
+  "skipBastionRequirement": false,
+  //check default path
+  "checkDefaultPath": "",
+  //check default port
+  "checkDefaultPort": ""
 }

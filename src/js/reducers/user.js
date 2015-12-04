@@ -17,7 +17,7 @@ const User = Record({
   auth: null,
   ghosting: false,
   customerId: undefined,
-  data: {}
+  data: undefined
 });
 
 function getAuth(data){
@@ -104,6 +104,11 @@ export default handleActions({
         console.error(action);
       }
       return state;
+    }
+  },
+  UESR_PUT_DATA: {
+    next(state, action){
+      return new User(_.assign({}, state.toJS(), {data: action.payload}));
     }
   }
 }, initial);

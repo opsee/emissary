@@ -66,7 +66,7 @@ export default {
       health: undefined,
       results: fromJS(data).results || new List()
     };
-    if (obj.results && obj.results.size){
+    if (obj.results && obj.results.size && obj.results.get(0)){
       //this works for groups
       const boolArray = _.chain(obj.results.toJS()).pluck('responses').flatten().pluck('passing').value();
       //this works for instances

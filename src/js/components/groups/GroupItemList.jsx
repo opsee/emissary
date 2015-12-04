@@ -96,9 +96,9 @@ const GroupItemList = React.createClass({
   },
   getEnvLink(){
     const type = this.getGroupType();
-    let string = 'env-groups-security';
+    let string = '/env-groups-security';
     if (type === 'elb'){
-      string = 'env-groups-elb';
+      string = '/env-groups-elb';
     }
     return string;
   },

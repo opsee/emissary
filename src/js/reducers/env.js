@@ -66,6 +66,9 @@ const statics = {
         return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
       });
     }
+    if (instances.size){
+      instances = instances.toJS();
+    }
     if (instances.length){
       newData.instances = new List(instances.map(instance => {
         const results = instance.results;
@@ -92,6 +95,9 @@ const statics = {
       instances = state.instances.ecc.toJS().filter(instance => {
         return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
       });
+    }
+    if (instances.size){
+      instances = instances.toJS();
     }
     if (instances.length){
       newData.instances = new List(instances.map(instance => {

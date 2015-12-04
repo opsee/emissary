@@ -4,18 +4,19 @@ import forms from 'newforms';
 import _ from 'lodash';
 import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {History} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {UserActions} from '../../actions';
 import AssertionCounter from './AssertionCounter.jsx';
 import CheckResponse from './CheckResponse.jsx';
-import {CheckStore} from '../../stores';
 import {Padding} from '../layout';
 import {Button} from '../forms';
+import {user as userActions} from '../../reduxactions';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -89,7 +90,20 @@ const CheckCreateAssertions = React.createClass({
     check: PropTypes.object,
     response: PropTypes.object,
     onChange: PropTypes.func,
-    renderAsInclude: PropTypes.bool
+    renderAsInclude: PropTypes.bool,
+    userActions: PropTypes.shape({
+      putData: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      checks: PropTypes.shape({
+        response: PropTypes.object
+      })
+    })
+  },
+  componentWillMount(){
+    if (!this.props.check.target.type){
+      this.history.pushState(null, '/check-create/target');
+    }
   },
   getInitialState() {
     const self = this;
@@ -117,9 +131,6 @@ const CheckCreateAssertions = React.createClass({
     }, 50);
     return obj;
   },
-  getFormattedResponse(){
-    return CheckStore.getFormattedResponse(this.props.response);
-  },
   getAssertionsForms(){
     return _.reject(this.state.assertions.forms(), f => {
       return f.cleanedData.DELETE;
@@ -135,10 +146,10 @@ const CheckCreateAssertions = React.createClass({
     return check;
   },
   getResponse(){
-    const data = CheckStore.getResponse();
+    const data = this.props.redux.checks.response;
     let val;
     if (data){
-      let response = CheckStore.getResponse().toJS();
+      let response = data.toJS();
       if (response && response.length){
         val = _.get(response[0], 'response.value');
       }
@@ -155,7 +166,7 @@ const CheckCreateAssertions = React.createClass({
     this.props.onChange(this.getFinalData(), this.isDisabled(), 2);
   },
   runDismissHelperText(){
-    UserActions.userPutUserData('hasDismissedCheckAssertionsHelp');
+    this.props.userActions.putData('hasDismissedCheckAssertionsHelp');
   },
   handleSubmit(e){
     e.preventDefault();
@@ -313,4 +324,12 @@ const CheckCreateAssertions = React.createClass({
   }
 });
 
-export default CheckCreateAssertions;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  userActions: bindActionCreators(userActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateAssertions);

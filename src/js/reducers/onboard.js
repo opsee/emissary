@@ -67,8 +67,8 @@ if (config.env !== 'production'){
 //     /* eslint-enable camelcase */
 //     .sortByAll([
 //       (t) => t.state === 'available',
-//       'default-for-az',
-//       'available-ip-address-count'
+//       'default_for_az',
+//       'available_ip_address-count'
 //     ])
 //     .last().get('subnet-id').value();
 //     return {

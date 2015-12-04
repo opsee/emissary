@@ -24,7 +24,11 @@ const InlineRadioSelect = React.createClass({
     };
   },
   isWidgetActive(w){
-    return this.props.bf.value()[0] === w.choiceValue;
+    const val = this.props.bf.value();
+    if (val && Array.isArray(val)){
+      return val[0] === w.choiceValue;
+    }
+    return false;
   },
   handleChange(id, bool){
     const data = bool ? [id] : [];

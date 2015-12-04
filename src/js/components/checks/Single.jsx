@@ -43,9 +43,9 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    const results = this.getCheck().get('results');
-    if (results && results.size){
-      const failing = _.filter(results.toJS(), r => {
+    const results = this.getCheck().get('results').toJS();
+    if (results && results.length){
+      const failing = _.filter(results, r => {
         return !r.passing;
       });
       return failing.length ? new List(failing[0].responses) : new List(results[0].responses);

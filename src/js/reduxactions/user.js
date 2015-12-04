@@ -153,12 +153,16 @@ export function getData(){
   };
 }
 
-export function putUserData(key, data, reset){
+export function putData(key, data, reset){
   return (dispatch, state) => {
     dispatch({
       type: USER_PUT_DATA,
       payload: new Promise((resolve, reject) => {
-        getData()(dispatch, state).then((user = {}) => {
+        request
+        .get(`${config.authApi}/users/${state().user.get('id')}/data`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => {
+          let user = res.body;
           let history = user[key];
           let index;
           if (history && Array.isArray(history) && history.length){
@@ -182,7 +186,7 @@ export function putUserData(key, data, reset){
           .put(`${config.authApi}/users/${state().user.get('id')}/data`)
           .set('Authorization', state().user.get('auth'))
           .send(user)
-          .then(res => res.body, reject);
+          .then(res2 => res2.body, reject);
         }, reject);
       })
     });

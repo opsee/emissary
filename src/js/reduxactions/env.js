@@ -44,12 +44,8 @@ export function getGroupSecurity(id){
           .then((res2) => {
             group.instances = res2.body && res2.body.instances;
             resolve(group);
-          }, errRes2 => {
-            reject(errRes2);
-          });
-        }, errRes => {
-          reject(errRes);
-        });
+          }, reject);
+        }, reject);
       })
     });
   };

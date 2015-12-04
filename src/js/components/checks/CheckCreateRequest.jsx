@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
 import colors from 'seedling/colors';
-import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -11,7 +10,6 @@ import {BoundField, Button} from '../forms';
 import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {GroupStore, InstanceStore} from '../../stores';
 import CheckResponse from './CheckResponse.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
@@ -91,7 +89,6 @@ const InfoForm = forms.Form.extend({
 });
 
 const CheckCreateRequest = React.createClass({
-  mixins: [GroupStore.mixin, History],
   propTypes: {
     check: PropTypes.object,
     renderAsInclude: PropTypes.bool,
@@ -107,6 +104,13 @@ const CheckCreateRequest = React.createClass({
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
+    }),
+    history: PropTypes.object,
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        instances: PropTypes.object,
+        groups: PropTypes.object
+      })
     })
   },
   getInitialState() {
@@ -119,7 +123,6 @@ const CheckCreateRequest = React.createClass({
     initialData = _.mapValues(initialData, val => {
       return val || null;
     });
-    console.log(initialData);
     const obj = {
       info: new InfoForm(_.assign({
         onChange: self.runChange,
@@ -161,22 +164,11 @@ const CheckCreateRequest = React.createClass({
     });
   },
   componentWillMount(){
-    this.props.envActions.getGroupsSecurity();
-    this.props.envActions.getGroupsElb();
-    this.props.envActions.getInstancesEcc();
     this.props.checkActions.testCheckReset();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
       this.runChange();
-    }
-  },
-  storeDidChange(){
-    const cond1 = GroupStore.getGetGroupsSecurityStatus() === 'success';
-    const cond2 = GroupStore.getGetGroupsELBStatus() === 'success';
-    const cond3 = InstanceStore.getInstancesECC() === 'success';
-    if (cond1 || cond2 || cond3){
-      this.forceUpdate();
     }
   },
   getHeaderForms(){
@@ -226,10 +218,10 @@ const CheckCreateRequest = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.history.pushState(null, '/check-create/assertions');
+    this.props.history.pushState(null, '/check-create/assertions');
   },
   handleTargetClick(){
-    this.history.pushState(null, '/check-create/target');
+    this.props.history.pushState(null, '/check-create/target');
   },
   renderHeaderForm(){
     return (
@@ -281,12 +273,23 @@ const CheckCreateRequest = React.createClass({
       ) : <div/>;
   },
   renderTargetSelection(){
-    let selection = GroupStore.getGroupFromFilter(this.props.check.target);
-    if (!selection){
-      selection = InstanceStore.getInstanceFromFilter(this.props.check.target);
+    let selection;
+    const target = this.props.check.target;
+    const type = target.type;
+    if (!type){
+      return <div/>;
+    }
+    if (type.match('security|elb')){
+      selection = this.props.redux.env.groups[type].find(g => {
+        return g.get('id') === target.id;
+      }) || new Map();
+    }else {
+      selection = this.props.redux.env.instances.ecc.find(g => {
+        return g.get('id') === target.id;
+      }) || new Map();
     }
     if (selection && selection.get('id')){
-      if (this.props.check.target.type.match('EC2|instance')){
+      if (type.match('EC2|instance')){
         return (
           <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
         );
@@ -384,10 +387,14 @@ const CheckCreateRequest = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   envActions: bindActionCreators(envActions, dispatch),
   checkActions: bindActionCreators(checkActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(CheckCreateRequest);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateRequest);

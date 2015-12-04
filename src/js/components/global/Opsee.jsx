@@ -118,14 +118,14 @@ const Opsee = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
   envActions: bindActionCreators(envActions, dispatch)
-});
-
-const mapStateToProps = (state) => ({
-  redux: state
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Opsee);
