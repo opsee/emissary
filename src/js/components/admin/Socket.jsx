@@ -3,7 +3,7 @@ import {Toolbar} from '../global';
 import {GlobalStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-export default React.createClass({
+const Socket = React.createClass({
   mixins: [GlobalStore.mixin],
   storeDidChange() {
     const messages = GlobalStore.getSocketMessages();
@@ -37,3 +37,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Socket;

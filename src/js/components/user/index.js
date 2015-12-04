@@ -1,5 +1,5 @@
 import UserDataRequirement from './UserDataRequirement.jsx';
 
-export default {
+export {
   UserDataRequirement
 };

@@ -6,6 +6,10 @@ export default {
     }catch (err){
       local = null;
     }
+    //TODO remove after all the storage.get('user').auth calls are gone
+    if (!local && string === 'user'){
+      return {};
+    }
     return local;
   },
   set(string, data){

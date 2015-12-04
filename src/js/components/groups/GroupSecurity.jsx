@@ -1,22 +1,34 @@
 import React, {PropTypes} from 'react';
-import Immutable from 'immutable';
+import {Map} from 'immutable';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
-import {GroupStore} from '../../stores';
-import {GroupActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
 import {Padding} from '../layout';
+import {env as actions} from '../../reduxactions';
 
 const GroupSecurity = React.createClass({
-  mixins: [GroupStore.mixin, SetInterval],
+  mixins: [SetInterval],
   propTypes: {
-    params: PropTypes.object
+    params: PropTypes.object,
+    actions: PropTypes.shape({
+      getGroupSecurity: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object
+        })
+      })
+    })
   },
   componentWillMount(){
     this.getData();
@@ -24,51 +36,40 @@ const GroupSecurity = React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !Immutable.is(this.state.group, nextState.group);
-  },
-  getInitialState(){
-    return this.getState();
-  },
-  storeDidChange() {
-    const state = this.getState();
-    this.setState(state);
-  },
+  // shouldComponentUpdate(nextProps) {
+  //   return !Immutable.is(this.props.group, nextProps.group);
+  // },
   getData(){
-    GroupActions.getGroupSecurity(this.props.params.id);
+    this.props.actions.getGroupSecurity(this.props.params.id);
   },
-  getState(){
-    return {
-      group: GroupStore.getGroup({
-        type: 'security',
-        id: this.props.params.id
-      }),
-      status: GroupStore.getGetGroupSecurityStatus()
-    };
+  getGroup(){
+    return this.props.redux.env.groups.security.find(g => {
+      return g.get('id') === this.props.params.id;
+    }) || new Map({id: this.props.params.id});
   },
   getInstanceIds(){
-    if (this.state.group.get('name')){
-      return _.pluck(this.state.group.instances.toJS(), 'id');
+    if (this.getGroup().get('name')){
+      return _.pluck(this.getGroup().get('instances').toJS(), 'id');
     }
   },
   renderDescription(){
-    const desc = this.state.group.get('Description');
+    const desc = this.getGroup().get('Description');
     if (desc && desc !== ''){
       return <span>{desc}</span>;
     }
     return <div/>;
   },
   renderInner(){
-    if (this.state.group.get('name')){
+    if (this.getGroup().get('name')){
       return (
         <div>
           <Padding b={2}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.state.group.get('id')}&type=security&name=${this.state.group.get('name')}`} title="Create New Check">
+            <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=security&name=${this.getGroup().get('name')}`} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
           <Padding b={1}>
-            <h3>{this.state.group.get('id')} Information</h3>
+            <h3>{this.getGroup().get('id')} Information</h3>
             <Table>
               <tr>
                 <td><strong>Description</strong></td>
@@ -78,21 +79,21 @@ const GroupSecurity = React.createClass({
           </Padding>
           <Padding b={1}>
             <h3>Checks</h3>
-            <CheckItemList type="groupSecurity" target={this.props.params.id}/>
+            <CheckItemList type="groupSecurity" target={this.props.params.id} redux={this.props.redux}/>
           </Padding>
           <Padding b={1}>
             <h3>Instances</h3>
-            <InstanceItemList ids={this.getInstanceIds()}/>
+            <InstanceItemList ids={this.getInstanceIds()} redux={this.props.redux}/>
           </Padding>
         </div>
       );
     }
-    return <StatusHandler status={this.state.status}/>;
+    return <StatusHandler status={this.props.redux.asyncActions.getGroupSecurity.status}/>;
   },
   render() {
     return (
       <div>
-        <Toolbar title={`Group: ${this.state.group.get('name') || this.state.group.get('id') || this.props.params.id}`} />
+        <Toolbar title={`Group: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
         <Grid>
           <Row>
             <Col xs={12}>
@@ -105,4 +106,8 @@ const GroupSecurity = React.createClass({
   }
 });
 
-export default GroupSecurity;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(GroupSecurity);

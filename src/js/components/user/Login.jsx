@@ -1,47 +1,35 @@
 import React, {PropTypes} from 'react';
-import {UserStore} from '../../stores';
-import {UserActions, GlobalActions} from '../../actions';
-import {Toolbar, LogoColor} from '../global';
-import {Link, History} from 'react-router';
-import UserInputs from '../user/UserInputs.jsx';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {Link} from 'react-router';
+
+import {Toolbar, LogoColor, StatusHandler} from '../global';
+import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {user as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [UserStore.mixin, History],
+const Login = React.createClass({
   propTypes: {
-    location: PropTypes.object
-  },
-  storeDidChange(){
-    const status = UserStore.getUserLoginStatus();
-    this.setState({status});
-    if (status === 'success'){
-      const next = _.get(this.props, 'location.state.nextPathname');
-      if (next){
-        return this.history.replaceState(null, next);
-      }
-      return this.history.pushState(null, '/');
-    }else if (status && status !== 'pending'){
-      GlobalActions.globalModalMessage({
-        html: status.message || 'Something went wrong.',
-        style: 'danger'
-      });
-    }
+    location: PropTypes.object,
+    redux: PropTypes.object.isRequired,
+    actions: PropTypes.shape({
+      login: PropTypes.func
+    }).isRequired
   },
   getInitialState(){
     return {
-      data: UserStore.getUser(),
-      status: UserStore.getUserLoginStatus()
+      data: this.props.redux.user.toJS()
     };
   },
   getButtonText(){
-    return this.state.status === 'pending' ? 'Logging In...' : 'Log In';
+    return this.props.redux.asyncActions.userLogin.status === 'pending' ? 'Logging In...' : 'Log In';
   },
   isDisabled(){
     const incomplete = !(this.state.data.email && this.state.data.password);
-    return incomplete || this.state.status === 'pending';
+    return incomplete || this.props.redux.asyncActions.userLogin.status === 'pending';
   },
   setUserData(data){
     this.setState({
@@ -50,14 +38,11 @@ export default React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
     let data = this.state.data;
     if (this.props.location.query.as){
       data.as = _.parseInt(this.props.location.query.as, 10);
     }
-    UserActions.userLogin(data);
+    this.props.actions.login(data);
   },
   render() {
     return (
@@ -69,13 +54,14 @@ export default React.createClass({
               <LogoColor/>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
+                <StatusHandler status={this.props.redux.asyncActions.userLogin.status}/>
                 <Padding t={1}>
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
                   </Button>
                 </Padding>
                 <Padding tb={2}>
-                  <p><Link to="/password/forgot">Forgot your password?</Link></p>
+                  <p><Link to="/password-forgot">Forgot your password?</Link></p>
                   <p>Need an account? <Link to="/start">Sign up!</Link></p>
                 </Padding>
               </form>
@@ -86,3 +72,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Login);

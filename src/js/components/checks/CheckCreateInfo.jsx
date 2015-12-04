@@ -1,16 +1,18 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
-import {StepCounter} from '../global';
-import {CheckStore, UserStore} from '../../stores';
+import {StatusHandler, StepCounter} from '../global';
 import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
-import {UserActions} from '../../actions';
 import {Padding} from '../layout';
+import {checks as actions, user as userActions} from '../../reduxactions';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
@@ -53,12 +55,23 @@ const InfoForm = forms.Form.extend({
 });
 
 const CheckCreateInfo = React.createClass({
-  mixins: [CheckStore.mixin],
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
     renderAsInclude: PropTypes.bool,
-    onSubmit: PropTypes.func
+    onSubmit: PropTypes.func,
+    history: PropTypes.shape({
+      pushState: PropTypes.func
+    }),
+    userActions: PropTypes.shape({
+      putData: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      user: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        checkCreate: PropTypes.object
+      })
+    })
   },
   getInitialState() {
     const self = this;
@@ -67,7 +80,7 @@ const CheckCreateInfo = React.createClass({
     if (!initialNotifs.length){
       initialNotifs.push({
         type: 'email',
-        value: UserStore.getUser().get('email')
+        value: this.props.redux.user.get('email')
       });
     }
 
@@ -86,7 +99,6 @@ const CheckCreateInfo = React.createClass({
         minNum: !initialNotifs.length ? 1 : 0,
         extra: 0
       }),
-      submitting: false,
       hasSetNotifications: !self.isDataComplete()
     };
 
@@ -102,17 +114,14 @@ const CheckCreateInfo = React.createClass({
     }, 50);
     return obj;
   },
+  componentWillMount(){
+    if (!this.props.check.assertions.length || !this.props.check.target.id){
+      this.props.history.pushState(null, '/check-create/target');
+    }
+  },
   componentDidMount(){
     if (this.props.renderAsInclude){
       this.runChange();
-    }
-  },
-  storeDidChange() {
-    const status = CheckStore.getCheckCreateStatus();
-    if (status !== 'pending'){
-      this.setState({
-        submitting: false
-      });
     }
   },
   getNotificationsForms(){
@@ -143,20 +152,17 @@ const CheckCreateInfo = React.createClass({
   },
   isDisabled(){
     let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
-    return !(this.state.info.isComplete() && notifsComplete) || this.state.submitting;
+    return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
   },
   runDismissHelperText(){
-    UserActions.userPutUserData('hasDismissedCheckInfoHelp');
+    this.props.userActions.putData('hasDismissedCheckInfoHelp');
   },
   handleSubmit(e) {
     analytics.event('Onboard', 'check-created');
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
     this.props.onSubmit();
   },
   renderRemoveNotificationButton(form, index){
@@ -210,6 +216,7 @@ const CheckCreateInfo = React.createClass({
       return (
         <div>
           <Padding t={2}>
+            <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
             <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Finish</Button>
           </Padding>
           <StepCounter active={4} steps={4}/>
@@ -251,10 +258,12 @@ const CheckCreateInfo = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-            <Padding b={3}>
-              {this.renderHelperText()}
-            </Padding>
-            {this.renderInner()}
+              <BastionRequirement>
+                <Padding b={3}>
+                  {this.renderHelperText()}
+                </Padding>
+                {this.renderInner()}
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>
@@ -266,4 +275,13 @@ const CheckCreateInfo = React.createClass({
   }
 });
 
-export default CheckCreateInfo;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateInfo);

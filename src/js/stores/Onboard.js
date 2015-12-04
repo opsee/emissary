@@ -13,8 +13,8 @@ let _teamData = {
 
 let _installData = {
   regions: [],
-  'access-key': null,
-  'secret-key': null,
+  'access_key': null,
+  'secret_key': null,
   vpcs: []
 };
 
@@ -49,8 +49,8 @@ const _public = {
   },
   getVpcScanData(){
     return {
-      'access-key': _installData['access-key'],
-      'secret-key': _installData['secret-key'],
+      'access_key': _installData.access_key,
+      'secret_key': _installData.secret_key,
       regions: _installData.regions
     };
   },
@@ -68,7 +68,7 @@ const _public = {
       let newVpc;
       Store.getAvailableVpcs().forEach(r => {
         r.vpcs.forEach(rvpc => {
-          if (rvpc['vpc-id'] === v){
+          if (rvpc.vpc_id === v){
             /* eslint-disable camelcase */
             const subnet_id = _.chain(rvpc.subnets).sortByAll([(t)=>t.state === 'available', 'default-for-az', 'available-ip-address-count']).last().get('subnet-id').value();
             newVpc = {id: v, region: r.region, subnet_id};
@@ -88,7 +88,7 @@ const _public = {
         vpcs: [{id: r.id, subnet_id: r.subnet_id}]
       };
     });
-    let aggregate = _.assign({}, _installData, {regions: relation}, {'instance-size': 't2.micro'});
+    let aggregate = _.assign({}, _installData, {regions: relation}, {'instance_size': 't2.micro'});
     delete aggregate.vpcs;
     return aggregate;
   }

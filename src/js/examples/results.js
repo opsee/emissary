@@ -1,4 +1,4 @@
-export default {
+export {
   'results': [
     {
       'check_id': '39TbkyFhQwVFANFtudhW2P',

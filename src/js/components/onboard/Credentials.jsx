@@ -1,24 +1,24 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import forms from 'newforms';
-import {History} from 'react-router';
-import {StatusHandler, Toolbar} from '../global';
-import {OnboardActions} from '../../actions';
-import {OnboardStore} from '../../stores';
-import {BoundField, Button} from '../forms';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+
+import {StatusHandler, Toolbar} from '../global';
+import {BoundField, Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import config from '../../modules/config';
+import {onboard as actions} from '../../reduxactions';
 
 const InfoForm = forms.Form.extend({
-  'access-key': forms.CharField({
+  'access_key': forms.CharField({
     widget: forms.PasswordInput,
     label: 'Access Key ID',
     widgetAttrs: {
       placeholder: 'Your AWS Access Key ID'
     }
   }),
-  'secret-key': forms.CharField({
+  'secret_key': forms.CharField({
     widget: forms.PasswordInput,
     label: 'Secret Key',
     widgetAttrs: {
@@ -28,40 +28,38 @@ const InfoForm = forms.Form.extend({
 });
 
 const Credentials = React.createClass({
-  mixins: [OnboardStore.mixin, History],
-  componentWillMount(){
-    if (!OnboardStore.getInstallData().regions.length){
-      this.history.replaceState(null, '/start/region-select');
-    }
+  propTypes: {
+    actions: PropTypes.shape({
+      setCredentials: PropTypes.func,
+      vpcScan: PropTypes.func
+    }),
+    history: PropTypes.object,
+    redux: PropTypes.shape({
+      onboard: PropTypes.shape({
+        region: PropTypes.string,
+        'access_key': PropTypes.string,
+        'secret_key': PropTypes.string
+      }),
+      app: PropTypes.shape({
+        socketMessages: PropTypes.array
+      }),
+      env: PropTypes.shape({
+        bastions: PropTypes.array
+      }),
+      asyncActions: PropTypes.object
+    }).isRequired
   },
-  storeDidChange(){
-    const vpcScanStatus = OnboardStore.getOnboardVpcScanStatus();
-    if (vpcScanStatus === 'success'){
-      const regionsWithVpcs = OnboardStore.getAvailableVpcs();
-      let vpcs = _.chain(regionsWithVpcs).map(r => {
-        return r.vpcs.map(v => {
-          return v['vpc-id'];
-        });
-      }).flatten().value();
-      if (vpcs.length){
-        if (vpcs.length === 1 && !config.showVpcScreen){
-          OnboardActions.onboardSetVpcs(vpcs);
-          this.history.pushState(null, '/start/install');
-        }else {
-          this.history.pushState(null, '/start/vpc-select');
-        }
-      }
-    }else if (vpcScanStatus !== 'pending'){
-      this.setState({submitting: false});
+  componentWillMount(){
+    if (!this.props.redux.onboard.region){
+      this.props.history.replaceState(null, '/start/region-select');
     }
   },
   getInitialState() {
     const self = this;
-    const data = OnboardStore.getInstallData();
     return {
       info: new InfoForm(_.extend({
         onChange(){
-          OnboardActions.onboardSetCredentials(self.state.info.cleanedData);
+          self.props.actions.setCredentials(self.state.info.cleanedData);
           self.forceUpdate();
         },
         labelSuffix: '',
@@ -69,23 +67,21 @@ const Credentials = React.createClass({
           on: 'blur change',
           onChangeDelay: 100
         }
-      }, self.isDataComplete() ? {data: data} :  null)),
-      submitting: false
+      }, self.isDataComplete() ? {data: this.props.redux.onboard} :  null))
     };
   },
+  getStatus(){
+    return this.props.redux.asyncActions.onboardVpcScan.status;
+  },
   isDataComplete(){
-    return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
+    return this.props.redux.onboard.access_key && this.props.redux.onboard.secret_key;
   },
   isDisabled(){
-    return !this.state.info.isValid() || this.state.submitting;
+    return !!(!this.state.info.isValid() || this.getStatus() === 'pending');
   },
   handleSubmit(e){
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
-    OnboardActions.onboardSetCredentials(this.state.info.cleanedData);
-    OnboardActions.onboardVpcScan(OnboardStore.getVpcScanData());
+    this.props.actions.vpcScan(this.state.info.cleanedData);
   },
   render() {
     return (
@@ -97,17 +93,17 @@ const Credentials = React.createClass({
               <form onSubmit={this.handleSubmit}>
                 <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during Bastion Instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
-                  <BoundField bf={this.state.info.boundField('access-key')}/>
+                  <BoundField bf={this.state.info.boundField('access_key')}/>
                 </Padding>
                 <Padding b={1}>
-                  <BoundField bf={this.state.info.boundField('secret-key')}/>
+                  <BoundField bf={this.state.info.boundField('secret_key')}/>
                 </Padding>
 
                 <Padding b={2}>
                 <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible. You can learn more about the <a href="/docs/Cloudformation">Bastion Instance CloudFormation template</a> permissions and IAM role in our documentation.</p>
                 </Padding>
-                <StatusHandler status={OnboardStore.getOnboardVpcScanStatus()} timeout={1500}/>
-                <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.state.submitting ? 'Submitting...' : 'Next'}</Button>
+                <StatusHandler status={this.getStatus()} timeout={1500}/>
+                <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.getStatus() === 'pending' ? 'Submitting...' : 'Next'}</Button>
               </form>
             </Col>
           </Row>
@@ -117,4 +113,8 @@ const Credentials = React.createClass({
   }
 });
 
-export default Credentials;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Credentials);

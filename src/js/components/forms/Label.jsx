@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-export default React.createClass({
+const Label = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired,
     children: PropTypes.node
@@ -47,3 +47,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Label;

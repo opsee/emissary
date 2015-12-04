@@ -23,11 +23,13 @@ const Highlight = React.createClass({
     this.runHighlightCode();
   },
   runHighlightCode() {
-    const domNode = ReactDOM.findDOMNode(this);
-    const nodes = domNode.querySelectorAll('pre code');
-    if (nodes.length > 0) {
-      for (let i = 0; i < nodes.length; i = i + 1) {
-        hljs.highlightBlock(nodes[i]);
+    if (this.isMounted()){
+      const domNode = ReactDOM.findDOMNode(this);
+      const nodes = domNode.querySelectorAll('pre code');
+      if (nodes.length > 0) {
+        for (let i = 0; i < nodes.length; i = i + 1) {
+          hljs.highlightBlock(nodes[i]);
+        }
       }
     }
   },

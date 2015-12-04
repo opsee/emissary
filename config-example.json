@@ -6,5 +6,21 @@
   //change the appearance of the application as if the user was in ghosting mode
   "ghosting": false,
   //set a millisecond delay on all api calls, for testing
-  "apiDelay": 0
+  "apiDelay": 0,
+  //default AWS region for easy install
+  "region": "",
+  //default AWS access_key for easy install
+  "access_key": "",
+  //default AWS secret_key for easy install
+  "secret_key": "",
+  //simulate vpc scan error
+  "onboardVpcScanError": false,
+  //simulate onboard install error
+  "onboardInstallError": false,
+  //see beyond bastion-gated errors
+  "skipBastionRequirement": false,
+  //check default path
+  "checkDefaultPath": "",
+  //check default port
+  "checkDefaultPort": ""
 }

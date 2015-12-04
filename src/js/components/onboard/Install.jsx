@@ -1,50 +1,47 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
-import {Toolbar} from '../global';
-import {OnboardStore, GlobalStore} from '../../stores';
-import {OnboardActions} from '../../actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import {History} from 'react-router';
+
+import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-
-const statics = {
-  checkedInstallStatus: false
-};
+import {onboard as actions} from '../../reduxactions';
 
 const Install = React.createClass({
-  mixins: [OnboardStore.mixin, GlobalStore.mixin, History],
   propTypes: {
     path: PropTypes.string,
     location: PropTypes.object,
-    example: PropTypes.bool
+    example: PropTypes.bool,
+    actions: PropTypes.shape({
+      setCredentials: PropTypes.func,
+      vpcScan: PropTypes.func,
+      onboardExampleInstall: PropTypes.func,
+      install: PropTypes.func.isRequired
+    }),
+    redux: PropTypes.shape({
+      app: PropTypes.shape({
+        socketMessages: PropTypes.array
+      }),
+      env: PropTypes.shape({
+        bastions: PropTypes.array
+      }),
+      asyncActions: PropTypes.object
+    }).isRequired
   },
   componentWillMount(){
     if (config.demo || this.props.example){
-      OnboardActions.onboardExampleInstall().then(() => {
-        statics.checkedInstallStatus = true;
-      });
-    }else {
-      OnboardStore.getBastionHasLaunchedPromise().then((started) => {
-        statics.checkedInstallStatus = true;
-        const data = OnboardStore.getFinalInstallData();
-        if (data && !started){
-          const dataHasValues = _.chain(data).values().every(_.identity).value();
-          if (dataHasValues && data.regions.length){
-            OnboardActions.onboardInstall(data);
-          }
-        }else if (!data && !started){
-          this.history.replaceState(null, '/start/region-select');
-        }
-      });
+      return this.props.actions.onboardExampleInstall();
     }
+    return this.props.actions.install();
   },
-  storeDidChange(){
-    let msgs = _.chain(GlobalStore.getSocketMessages()).filter({command: 'launch-bastion'}).filter(m => {
+  getBastionMessages(){
+    let msgs = _.chain(this.props.redux.app.socketMessages).filter({command: 'launch-bastion'}).filter(m => {
       return m.attributes && m.attributes.ResourceType;
     }).value();
 
@@ -54,18 +51,7 @@ const Install = React.createClass({
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }
     }
-    const installStatus = OnboardStore.getOnboardInstallStatus();
-    if (installStatus && typeof installStatus === 'object'){
-      if (this.state.launchAttempts < 3){
-        this.setState({launchAttempts: this.state.launchAttempts + 1});
-        setTimeout(() => {
-          OnboardActions.onboardInstall(OnboardStore.getFinalInstallData());
-        }, 3000);
-      }else if (!this.state.showError){
-        this.setState({showError: true});
-      }
-    }
-    const bastions = _.chain(msgs)
+    return _.chain(msgs)
     .reject(reject)
     .groupBy('instance_id').map((value, key) => {
       return {
@@ -75,94 +61,89 @@ const Install = React.createClass({
         }).value()
       };
     }).value();
-    if (OnboardStore.getGetBastionsStatus() === 'success'){
-      if (!OnboardStore.getBastions().length){
-        setTimeout(OnboardActions.getBastions, 12000);
-      }
-    }
-    if (OnboardStore.getGetCustomerStatus() === 'success'){
-      if (!OnboardStore.getCustomer().id){
-        setTimeout(OnboardActions.getCustomer, 12000);
-      }
-    }
-    this.setState({bastions});
-  },
-  componentDidUpdate(){
-    if (this.areBastionsComplete() && !this.state.startedPolling){
-      OnboardActions.getBastions();
-      OnboardActions.getCustomer();
-      /* eslint-disable react/no-did-update-set-state*/
-      this.setState({startedPolling: true});
-    }
-  },
-  getInitialState() {
-    return {
-      bastions: [],
-      startedPolling: false,
-      launchAttempts: 0,
-      showError: false
-    };
   },
   getBastionStatuses(){
-    return _.chain(this.state.bastions).pluck('messages').map(bastionMsgs => {
+    return _.chain(this.getBastionMessages()).pluck('messages').map(bastionMsgs => {
       return _.chain(bastionMsgs).filter({ResourceType: 'AWS::CloudFormation::Stack'}).filter(msg => {
         return msg.ResourceStatus === 'CREATE_COMPLETE' || msg.ResourceStatus === 'ROLLBACK_COMPLETE';
       }).pluck('ResourceStatus').first().value();
     }).value();
   },
   getBastionErrors(){
-    return _.filter(this.getBastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE');
+    const one = _.chain(this.props.redux.app.socketMessages)
+    .filter({command: 'launch-bastion'})
+    .filter({state: 'failed'})
+    .value();
+    return _.filter(this.getBastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE').concat(one);
   },
   getBastionSuccesses(){
     return _.filter(this.getBastionStatuses(), stat => stat === 'CREATE_COMPLETE');
+  },
+  getDiscoveryStatus(){
+    return _.chain(this.props.redux.app.socketMessages).filter({command: 'discovery'}).last().get('state').value();
+  },
+  getBastionConnectionStatus(){
+    return _.chain(this.props.redux.app.socketMessages).filter({command: 'connect-bastion'}).last().get('state').value();
+  },
+  isInstallError(){
+    const status = this.props.redux.asyncActions.onboardInstall.status;
+    return status && typeof status !== 'string';
+  },
+  isBastionLaunching(){
+    return !!(_.filter(this.props.redux.app.socketMessages, {command: 'launch-bastion'}).length);
+  },
+  isDiscoveryComplete(){
+    return this.getDiscoveryStatus() === 'complete';
+  },
+  isBastionConnected(){
+    return this.getBastionConnectionStatus() === 'complete';
+  },
+  isComplete(){
+    return this.isBastionConnected() && this.isDiscoveryComplete();
   },
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
     return _.every(stats) && stats.length;
   },
-  areBastionsConnected(){
-    return OnboardStore.getBastions().length && !this.getBastionErrors().length;
-  },
   renderSurvey(){
-    if (!config.demo){
-      return (
-        <Padding t={3}>
-          <hr/>
-          <h2>Opsee Customer Survey</h2>
-          <Survey/>
-        </Padding>
-      );
-    }
-    return <div/>;
+    return (
+      <Padding t={3}>
+        <hr/>
+        <h2>Opsee Customer Survey</h2>
+        <Survey/>
+      </Padding>
+    );
   },
   renderBtn(){
     if (this.areBastionsComplete()){
-      if (this.getBastionErrors().length){
+      if (this.isComplete()){
         return (
-          <Alert bsStyle="danger">
-            We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
-          </Alert>
+          <Padding tb={3}>
+            <p>All clear!</p>
+            <Button to="/check-create" color="primary" block chevron>
+              Create a Check
+            </Button>
+          </Padding>
         );
-      }else if (!this.areBastionsConnected()){
+      }else if (!this.isBastionConnected()){
         return (
           <Padding tb={3}>
             <p>Your bastion has been installed, waiting for successful connection...</p>
           </Padding>
         );
       }
+    }
+    if (this.getBastionErrors().length){
       return (
-        <Padding tb={3}>
-          <p>All clear!</p>
-          <Button to="/check-create" color="primary" block chevron>
-            Create a Check
-          </Button>
-        </Padding>
+        <Alert bsStyle="danger">
+          We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+        </Alert>
       );
     }
     return <div/>;
   },
   renderText(){
-    if (!statics.checkedInstallStatus && !this.state.bastions.length){
+    if (!this.isBastionLaunching() && !this.props.redux.env.bastions.length){
       return (
         <p>Checking installation status...</p>
       );
@@ -188,11 +169,17 @@ const Install = React.createClass({
     // }
   },
   renderInner(){
-    if (!this.state.showError){
+    if (this.getBastionConnectionStatus() === 'failed'){
+      return (
+        <Alert bsStyle="danger">
+          The bastion failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
+        </Alert>
+      );
+    }else if (!this.isInstallError()){
       return (
         <div>
           {this.renderText()}
-          {this.state.bastions.map((b, i) => {
+          {this.getBastionMessages().map((b, i) => {
             return (
               <Padding b={1} key={`bastion-installer-${i}`}>
                 <BastionInstaller {...b}/>
@@ -226,4 +213,8 @@ const Install = React.createClass({
   }
 });
 
-export default Install;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Install);

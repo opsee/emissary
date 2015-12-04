@@ -1,22 +1,34 @@
 import React, {PropTypes} from 'react';
 import TimeAgo from 'react-timeago';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
-import {GroupStore} from '../../stores';
-import {GroupActions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Add} from '../icons';
 import {Padding} from '../layout';
+import {env as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [GroupStore.mixin, SetInterval],
+const GroupElb = React.createClass({
+  mixins: [SetInterval],
   propTypes: {
-    params: PropTypes.object
+    params: PropTypes.object,
+    actions: PropTypes.shape({
+      getGroupElb: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          elb: PropTypes.object
+        })
+      })
+    })
   },
   componentWillMount(){
     this.getData();
@@ -24,32 +36,21 @@ export default React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  getInitialState(){
-    return this.getState();
-  },
-  storeDidChange() {
-    const state = this.getState();
-    this.setState(state);
-  },
   getData(){
-    GroupActions.getGroupELB(this.props.params.id);
+    this.props.actions.getGroupElb(this.props.params.id);
   },
-  getState(){
-    return {
-      group: GroupStore.getGroup({
-        type: 'elb',
-        id: this.props.params.id
-      }),
-      status: GroupStore.getGetGroupELBStatus()
-    };
+  getGroup(){
+    return this.props.redux.env.groups.elb.find(g => {
+      return g.get('id') === this.props.params.id;
+    }) || new Map();
   },
   getInstanceIds(){
-    if (this.state.group.get('name')){
-      return _.pluck(this.state.group.instances.toJS(), 'id');
+    if (this.getGroup().get('name')){
+      return _.pluck(this.getGroup().get('instances').toJS(), 'id');
     }
   },
   renderDescription(){
-    const desc = this.state.group.get('Description');
+    const desc = this.getGroup().get('Description');
     if (desc && desc !== ''){
       return (
         <tr>
@@ -61,42 +62,42 @@ export default React.createClass({
     return <tr/>;
   },
   renderInner(){
-    if (this.state.group.get('name')){
+    if (this.getGroup().get('name')){
       return (
         <div>
           <Padding b={2}>
-            <Button color="primary" flat to={`/check-create/request?target=${this.state.group.get('id')}&type=elb`} title="Create New Check">
+            <Button color="primary" flat to={`/check-create/request?target=${this.getGroup().get('id')}&type=elb`} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
           <Padding b={1}>
-            <h3>{this.state.group.get('id')} Information</h3>
+            <h3>{this.getGroup().get('id')} Information</h3>
             <Table>
               <tr>
                 <td><strong>Created</strong></td>
-                <td><TimeAgo date={new Date(this.state.group.get('CreatedTime'))}/></td>
+                <td><TimeAgo date={new Date(this.getGroup().get('CreatedTime'))}/></td>
               </tr>
               {this.renderDescription()}
             </Table>
           </Padding>
           <Padding b={1}>
             <h3>Checks</h3>
-            <CheckItemList type="groupELB" target={this.props.params.id}/>
+            <CheckItemList type="groupELB" target={this.props.params.id} redux={this.props.redux}/>
           </Padding>
           <Padding b={1}>
-            <h3>Instances ({this.state.group.get('instances').size})</h3>
-            <InstanceItemList ids={this.getInstanceIds()}/>
+            <h3>Instances ({this.getGroup().get('instances').size})</h3>
+            <InstanceItemList ids={this.getInstanceIds()} redux={this.props.redux}/>
           </Padding>
 
         </div>
       );
     }
-    return <StatusHandler status={this.state.status}/>;
+    return <StatusHandler status={this.props.redux.asyncActions.getGroupElb.status}/>;
   },
   render() {
     return (
       <div>
-        <Toolbar title={`ELB: ${this.state.group.get('name') || this.state.group.get('id') || this.props.params.id}`} />
+        <Toolbar title={`ELB: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
         <Grid>
           <Row>
             <Col xs={12}>
@@ -108,3 +109,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(GroupElb);

@@ -3,6 +3,7 @@ import config from '../modules/config';
 import Flux from '../modules/flux';
 import request from '../modules/request';
 import {UserStore, CheckStore} from '../stores';
+import storage from '../modules/storage';
 
 let _actions = {};
 
@@ -24,7 +25,7 @@ _statics.formatCheckData = (data) => {
 _statics.saveNotifications = (data, checkId, isEditing) => {
   return request
   [isEditing ? 'put' : 'post'](`${config.api}/notifications${isEditing ? '/' + checkId : ''}`)
-  .set('Authorization', UserStore.getAuth())
+  .set('Authorization', storage.get('user').auth)
   .send({
     'check-id': checkId,
     notifications: data.notifications
@@ -34,7 +35,7 @@ _statics.saveNotifications = (data, checkId, isEditing) => {
 _statics.saveAssertions = (data, checkId, isEditing) => {
   return request
   [isEditing ? 'put' : 'post'](`${config.api}/assertions${isEditing ? '/' + checkId : ''}`)
-  .set('Authorization', UserStore.getAuth())
+  .set('Authorization', storage.get('user').auth)
   .send({
     'check-id': checkId,
     assertions: data.assertions
@@ -46,7 +47,7 @@ _statics.checkCreateOrEdit = (data, isEditing) => {
     const d = _statics.formatCheckData(data);
     request
     [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/' + data.id : ''}`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .send(d).then(checkRes =>{
       _statics.saveNotifications(data, _.get(checkRes, 'body.id') || data.id, isEditing)
       .then(() => {
@@ -79,17 +80,17 @@ _actions.getCheck = Flux.statics.addAsyncAction('getCheck',
     return new Promise((resolve, reject) => {
       request
       .get(`${config.api}/checks/${id}`)
-      .set('Authorization', UserStore.getAuth())
+      .set('Authorization', storage.get('user').auth)
       .then((checkRes) => {
         let check = checkRes.body;
         request
         .get(`${config.api}/notifications/${id}`)
-        .set('Authorization', UserStore.getAuth())
+        .set('Authorization', storage.get('user').auth)
         .then(notifRes => {
           check.notifications = notifRes.body.notifications;
           request
           .get(`${config.api}/assertions/${id}`)
-          .set('Authorization', UserStore.getAuth())
+          .set('Authorization', storage.get('user').auth)
           .then(assertionRes => {
             check.assertions = assertionRes.body.assertions;
             resolve(check);
@@ -109,7 +110,7 @@ _actions.deleteCheck = Flux.statics.addAsyncAction('deleteCheck',
   (id) => {
     return request
     .del(`${config.api}/checks/${id}`)
-    .set('Authorization', UserStore.getAuth());
+    .set('Authorization', storage.get('user').auth);
   },
   res => res.body,
   res => _.get(res.body) || res
@@ -120,7 +121,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
     return new Promise((resolve, reject) => {
       request
       .get(`${config.api}/bastions`)
-      .set('Authorization', UserStore.getAuth())
+      .set('Authorization', storage.get('user').auth)
       .then(bastionRes => {
         const bastions = _.get(bastionRes, 'body.bastions') || [];
         if (!bastions.length){
@@ -128,7 +129,7 @@ _actions.getChecks = Flux.statics.addAsyncAction('getChecks',
         }
         request
         .get(`${config.api}/checks`)
-        .set('Authorization', UserStore.getAuth())
+        .set('Authorization', storage.get('user').auth)
         .then(res => {
           return resolve(_.get(res.body, 'checks') || res.body);
         }, reject);
@@ -150,7 +151,7 @@ _actions.testCheck = Flux.statics.addAsyncAction('testCheck',
     newData = _.assign(newData, {name: UserStore.getUser().get('email')});
     return request
     .post(`${config.api}/bastions/test-check`)
-    .set('Authorization', UserStore.getAuth())
+    .set('Authorization', storage.get('user').auth)
     .send({check: newData, max_hosts: 3, deadline: '30s'});
   },
   res => _.get(res, 'body.responses') || [],

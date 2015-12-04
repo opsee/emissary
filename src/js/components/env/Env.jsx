@@ -1,14 +1,30 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
-import _ from 'lodash';
+import {env as actions} from '../../reduxactions';
 
-export default React.createClass({
+const Env = React.createClass({
   mixins: [State],
   propTypes: {
-    location: PropTypes.object
+    location: PropTypes.object,
+    actions: PropTypes.shape({
+      envSetSearch: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        search: PropTypes.string
+      })
+    })
+  },
+  componentWillMount(){
+    if (this.props.location.query.search && !this.props.redux.env.search){
+      this.props.actions.envSetSearch(this.props.location.query.search);
+    }
   },
   getInitialState(){
     const path = this.props.location.pathname;
@@ -33,7 +49,9 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={this.state.include} filter={_.get(this.props.location.query, 'filter')} limit={this.state.include.length === 1 ? 1000 : null}/>
+                <BastionRequirement>
+                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                </BastionRequirement>
               </Col>
             </Row>
           </Grid>
@@ -41,3 +59,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Env);

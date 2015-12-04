@@ -1,72 +1,54 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {Analytics, Header, MessageModal, Toolbar} from '../global';
+import {Analytics, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
-import {GlobalActions, UserActions} from '../../actions';
-import {GlobalStore, UserStore, OnboardStore} from '../../stores';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
+import {app as appActions, user as userActions, env as envActions} from '../../reduxactions';
 /* eslint-enable no-unused-vars */
 
 const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
 
-function initialize(){
-  if (UserStore.hasUser() && !window.userRefreshTokenInterval){
-    window.Intercom('boot', {
-      app_id: 'mrw1z4dm',
-      email: UserStore.getUser().get('email'),
-      user_hash: UserStore.getUser().get('intercom_hmac')
-    });
-    GlobalActions.globalSocketStart();
-    //refresh user token every 5 minutes
-    window.userRefreshTokenInterval = setInterval(UserActions.userRefreshToken, (60 * 1000 * 5));
-  }
-  if (config.demo){
-    console.info('In Demo Mode.');
-  }
-}
-initialize();
-
-export default React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin, GlobalStore.mixin, SetInterval],
+const Opsee = React.createClass({
+  mixins: [SetInterval],
   propTypes: {
     location: PropTypes.object,
-    children: PropTypes.node
-  },
-  getInitialState(){
-    return {
-      socketError: null,
-      showNav: GlobalStore.getShowNav()
-    };
+    children: PropTypes.node,
+    appActions: PropTypes.shape({
+      initialize: PropTypes.func,
+      shutdown: PropTypes.func
+    }),
+    userActions: PropTypes.shape({
+      refresh: PropTypes.func
+    }),
+    redux: PropTypes.object,
+    envActions: PropTypes.shape({
+      getBastions: PropTypes.func.isRequired
+    })
   },
   componentWillMount(){
-    if (this.props.location.query.err){
-      config.error = true;
-    }
+    this.props.appActions.initialize();
+    this.props.envActions.getBastions();
+    this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
+    this.setInterval(this.props.envActions.getBastions, (1000 * 60 * 3));
   },
-  storeDidChange(){
-    const status1 = OnboardStore.getOnboardSetPasswordStatus();
-    const status2 = UserStore.getUserLoginStatus();
-    if (status1 === 'success' || status2 === 'success'){
-      initialize();
+  componentWillReceiveProps(nextProps) {
+    //user log out
+    if (!nextProps.redux.user.get('auth') && this.props.redux.user.get('auth')){
+      this.props.appActions.shutdown();
     }
-    let stateObj = {
-      showNav: GlobalStore.getShowNav()
-    };
-    const socketError = GlobalStore.getGlobalSocketError();
-    if (socketError){
-      stateObj.socketError = socketError;
-      setTimeout(GlobalActions.globalSocketStart, 10000);
-    }else {
-      stateObj.socketError = null;
+    //user log in
+    if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
+      this.props.appActions.initialize();
     }
-    this.setState(stateObj);
   },
   getMeatClass(){
     return this.shouldHideNav() ? style.meatUp : style.meat;
@@ -74,30 +56,40 @@ export default React.createClass({
   shouldHideNav(){
     return !!(_.find(hideNavList, string => this.props.location.pathname.match(string)));
   },
+  renderSocketError(){
+    return (
+      <div>
+        <Toolbar title="Error"/>
+        <Grid>
+          <Col xs={12}>
+            <Padding t={2}>
+              <Alert bsStyle="danger">
+                Could not connect to Opsee. Attempting to reconnect...
+              </Alert>
+            </Padding>
+          </Col>
+        </Grid>
+      </div>
+    );
+  },
   renderInner(){
-    if (this.state.socketError && !config.debug){
-      return (
-        <div>
-          <Toolbar title="Error"/>
-          <Grid>
-            <Col xs={12}>
-              <Padding t={2}>
-                <Alert bsStyle="danger">
-                  Could not connect to Opsee. Attempting to reconnect...
-                </Alert>
-              </Padding>
-            </Col>
-          </Grid>
-        </div>
-      );
+    if (!this.props.redux.app.ready){
+      return <div/>;
     }
-    return this.props.children;
+    if (this.props.redux.app.socketError && !config.debug){
+      return this.renderSocketError();
+    }
+    return React.cloneElement(this.props.children, _.assign({},
+      {
+        redux: this.props.redux
+      })
+    );
   },
   render() {
     return (
       <div>
         <DocumentTitle title="Opsee"/>
-        <Header hide={this.shouldHideNav()}/>
+        <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {
@@ -113,3 +105,15 @@ export default React.createClass({
     );
   }
 });
+
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  appActions: bindActionCreators(appActions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch),
+  envActions: bindActionCreators(envActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Opsee);

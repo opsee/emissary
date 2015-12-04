@@ -1,8 +1,9 @@
-import React from 'react';
-import {UserActions} from '../../actions';
-import {UserStore} from '../../stores';
+import React, {PropTypes} from 'react';
 import forms from 'newforms';
 import {BoundField, Button} from '../forms';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {user as actions} from '../../reduxactions';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
 
@@ -38,6 +39,11 @@ const InfoForm = forms.Form.extend({
 });
 
 const Survey = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      putData: PropTypes.func
+    })
+  },
   getInitialState() {
     const self = this;
     return {
@@ -54,9 +60,6 @@ const Survey = React.createClass({
       }),
       step: 0
     };
-  },
-  componentWillMount(){
-    UserActions.userGetUserData(UserStore.getUser().toJS());
   },
   getSteps(){
     return [(
@@ -85,13 +88,12 @@ const Survey = React.createClass({
   },
   isDataComplete(){
     return false;
-    // return _.chain(OnboardStore.getInstallData()).values().every(_.identity).value();
   },
   isDisabled(){
     return !this.state.info.isValid();
   },
   onDataChange(){
-    UserActions.userPutUserData('bastionInstallSurvey', this.state.info.cleanedData);
+    this.props.actions.putData('bastionInstallSurvey', this.state.info.cleanedData);
   },
   handleNextClick(){
     this.setState({
@@ -116,4 +118,8 @@ const Survey = React.createClass({
   }
 });
 
-export default Survey;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Survey);

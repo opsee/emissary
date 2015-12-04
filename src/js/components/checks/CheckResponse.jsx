@@ -1,31 +1,37 @@
 import React, {PropTypes} from 'react';
-import {Alert} from '../../modules/bootstrap';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+
+import {Alert} from '../../modules/bootstrap';
 import Highlight from '../global/Highlight.jsx';
-import {CheckStore} from '../../stores';
-import {CheckActions} from '../../actions';
 import {ChevronUp, ChevronDown} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
-
-function getState(){
-  return {
-    status: CheckStore.getTestCheckStatus(),
-    response: CheckStore.getResponse()
-  };
-}
+import {checks as actions} from '../../reduxactions';
 
 const CheckResponse = React.createClass({
-  mixins: [CheckStore.mixin],
   propTypes: {
     check: PropTypes.object,
-    response: PropTypes.object
+    response: PropTypes.object,
+    actions: PropTypes.shape({
+      test: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      checks: PropTypes.shape({
+        response: PropTypes.object,
+        responseFormatted: PropTypes.object
+      }),
+      asyncActions: PropTypes.shape({
+        checkTest: PropTypes.object
+      })
+    })
   },
   getInitialState() {
-    return _.assign(getState(), {
+    return {
       complete: false,
       expanded: false
-    });
+    };
   },
   componentDidMount(){
     this.runTestCheck(this.props);
@@ -39,15 +45,6 @@ const CheckResponse = React.createClass({
       }
     }
   },
-  storeDidChange(){
-    let state = getState();
-    if (state.status && typeof state.status !== 'string'){
-      state.error = true;
-    }else if (state.status){
-      state.error = false;
-    }
-    this.setState(state);
-  },
   getArrayFromData(data){
     let arr = _.map(['port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
@@ -60,11 +57,13 @@ const CheckResponse = React.createClass({
     return arr;
   },
   getFormattedResponse(){
-    const data = this.props.response || CheckStore.getResponse();
-    return CheckStore.getFormattedResponse(data);
+    return this.props.redux.checks.responseFormatted;
   },
   getResponseClass(){
     return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
+  },
+  getStatus(){
+    return this.props.redux.asyncActions.checkTest.status;
   },
   isCheckComplete(check){
     const condition1 = check.target.id;
@@ -77,8 +76,8 @@ const CheckResponse = React.createClass({
     }
     const complete = this.isCheckComplete(props.check);
     if (complete){
-      if (this.state.status !== 'pending'){
-        CheckActions.testCheck(props.check);
+      if (this.getStatus() !== 'pending'){
+        this.props.actions.test(props.check);
       }
     }
     this.setState({complete: true});
@@ -101,11 +100,11 @@ const CheckResponse = React.createClass({
     );
   },
   renderWaitingResponse(){
-    if (this.state.status && this.state.status === 'pending'){
+    if (this.getStatus() === 'pending'){
       return (
         <div className={style.checkResponseWaiting}>Sending request...</div>
       );
-    }else if (this.state.error){
+    }else if (this.getStatus() && typeof this.getStatus() !== 'string'){
       return (
         <Alert bsStyle="danger">There was an error sending your request.</Alert>
       );
@@ -139,12 +138,12 @@ const CheckResponse = React.createClass({
     );
   },
   render() {
-    if (_.get(this.state, 'status') === 'pending'){
+    if (this.getStatus() === 'pending'){
       return this.renderWaiting();
     }
     if (this.props.response && !this.props.response.size){
       return this.renderWaiting();
-    }else if (this.props.response || (CheckStore.getResponse() && this.state.complete)){
+    }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
       if (this.getFormattedResponse() && this.getFormattedResponse().error){
         return this.renderError();
       }
@@ -154,4 +153,12 @@ const CheckResponse = React.createClass({
   }
 });
 
-export default CheckResponse;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckResponse);

@@ -1,18 +1,21 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import fuzzy from 'fuzzy';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Button} from '../forms';
-import {Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
-import {UserActions, GroupActions} from '../../actions';
-import {CheckStore} from '../../stores';
+import {GroupActions} from '../../actions';
 import {EnvWithFilter} from '../env';
 import {Padding} from '../layout';
+import {Check} from '../../modules/schemas';
+import {checks as actions, user as userActions} from '../../reduxactions';
 
 const CheckCreateTarget = React.createClass({
   mixins: [History],
@@ -21,7 +24,10 @@ const CheckCreateTarget = React.createClass({
     onChange: PropTypes.func,
     renderAsInclude: PropTypes.bool,
     filter: PropTypes.string,
-    onFilterChange: PropTypes.func
+    onFilterChange: PropTypes.func,
+    userActions: PropTypes.shape({
+      putData: PropTypes.func
+    })
   },
   getInitialState() {
     const obj = {
@@ -41,7 +47,7 @@ const CheckCreateTarget = React.createClass({
     }
   },
   getFinalData(){
-    let check = this.props.check ? _.cloneDeep(this.props.check) : CheckStore.newCheck().toJS();
+    let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target.id = this.state.selected;
     check.target.type = this.state.selectedType;
     return check;
@@ -73,14 +79,14 @@ const CheckCreateTarget = React.createClass({
     this.props.onChange(data, this.isDisabled(), 1);
   },
   runDismissHelperText(){
-    UserActions.userPutUserData('hasDismissedCheckCreationHelp');
+    this.props.userActions.putData('hasDismissedCheckCreationHelp');
   },
   handleSubmit(e){
     e.preventDefault();
     this.history.pushState(null, '/check-create/request');
   },
   handleTargetSelect(item){
-    let check = this.props.check ? _.cloneDeep(this.props.check) : CheckStore.newCheck().toJS();
+    let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target.id = item.get('id');
     check.target.type = item.get('type') || 'sg';
     check.target.name = item.get('name');
@@ -136,7 +142,9 @@ const CheckCreateTarget = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <BastionRequirement>
                 {this.renderInner()}
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>
@@ -148,4 +156,13 @@ const CheckCreateTarget = React.createClass({
   }
 });
 
-export default CheckCreateTarget;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateTarget);

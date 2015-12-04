@@ -1,16 +1,17 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import Immutable, {List} from 'immutable';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import {List} from 'immutable';
 import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Link} from 'react-router';
-import {GroupActions} from '../../actions';
-import {GroupStore} from '../../stores';
 import {StatusHandler} from '../global';
+import {env as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [GroupStore.mixin],
+const GroupItemList = React.createClass({
   propTypes: {
     groups: PropTypes.instanceOf(List),
     offset: PropTypes.number,
@@ -20,7 +21,20 @@ export default React.createClass({
     type: PropTypes.string,
     title: PropTypes.string,
     instanceIds: PropTypes.array,
-    noFallback: PropTypes.bool
+    noFallback: PropTypes.bool,
+    actions: PropTypes.shape({
+      getGroupsElb: PropTypes.func,
+      getGroupsSecurity: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object,
+          elb: PropTypes.object
+        })
+      })
+    }).isRequired
   },
   getDefaultProps(){
     return {
@@ -31,36 +45,22 @@ export default React.createClass({
     if (!this.props.groups){
       switch (this.props.type){
       case 'elb':
-        GroupActions.getGroupsSecurity();
+        this.props.actions.getGroupsElb();
         break;
       default:
-        GroupActions.getGroupsELB();
+        this.props.actions.getGroupsSecurity();
         break;
       }
     }
   },
-  shouldComponentUpdate(nextProps, nextState){
-    return !Immutable.is(this.props.groups, nextProps.groups) || nextState !== this.state;
-  },
-  storeDidChange(){
-    const state = this.getState();
-    this.setState(state);
-  },
-  getState(){
-    return {
-      status: this.props.type === 'elb' ? GroupStore.getGetGroupsELBStatus() : GroupStore.getGetGroupsSecurityStatus(),
-      groups: this.props.type === 'elb' ? GroupStore.getGroupsELB() : GroupStore.getGroupsSecurity()
-    };
-  },
   getInitialState(){
     return {
       offset: this.props.offset || 0,
-      limit: this.props.limit || 8,
-      groups: List()
+      limit: this.props.limit || 8
     };
   },
   getGroups(noFilter){
-    let data = this.props.groups ? this.props.groups : this.state.groups;
+    let data = this.props.groups || this.props.redux.env.groups[this.props.type];
     if (noFilter){
       return data;
     }
@@ -96,11 +96,19 @@ export default React.createClass({
   },
   getEnvLink(){
     const type = this.getGroupType();
-    let string = 'env-groups-security';
+    let string = '/env-groups-security';
     if (type === 'elb'){
-      string = 'env-groups-elb';
+      string = '/env-groups-elb';
     }
     return string;
+  },
+  getStatus(){
+    switch (this.props.type){
+    case 'elb':
+      return this.props.redux.asyncActions.getGroupsElb.status;
+    default:
+      return this.props.redux.asyncActions.getGroupsSecurity.status;
+    }
   },
   isSelected(id){
     return this.props.selected && this.props.selected === id;
@@ -142,9 +150,15 @@ export default React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.state.status} noFallback={this.props.noFallback}>
+      <StatusHandler status={this.getStatus()} noFallback={this.props.noFallback}>
         <Alert bsStyle="default">No groups found</Alert>
       </StatusHandler>
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(GroupItemList);

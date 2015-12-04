@@ -1,50 +1,55 @@
-import React from 'react';
-import {Toolbar} from '../global';
-import {OnboardStore, AWSStore} from '../../stores';
-import {OnboardActions} from '../../actions';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import forms from 'newforms';
+
+import {bindActionCreators} from 'redux';
+import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import _ from 'lodash';
-import {History} from 'react-router';
 import analytics from '../../modules/analytics';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-
-const regions = AWSStore.getRegions();
+import {onboard as actions} from '../../reduxactions';
 
 const InfoForm = forms.Form.extend({
   vpcs: forms.ChoiceField({
-    choices: [],
     widget: forms.RadioSelect,
     widgetAttrs: {
       widgetType: 'RadioSelect'
     }
-  })
+  }),
+  constructor(choices, kwargs){
+    forms.Form.call(this, kwargs);
+    this.fields.vpcs.setChoices(choices);
+  }
 });
 
-const Team = React.createClass({
-  mixins: [OnboardStore.mixin, History],
-  componentWillMount(){
-    const data = OnboardStore.getInstallData();
-    const dataHasValues = _.chain(data).values().every(_.identity).value();
-    if (!dataHasValues || !data.regions.length){
-      this.history.replaceState(null, '/start/region-select');
-    }
+const VPCSelect = React.createClass({
+  propTypes: {
+    history: PropTypes.object,
+    actions: PropTypes.shape({
+      vpcSelect: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      onboard: PropTypes.shape({
+        regionsWithVpcs: PropTypes.array,
+        vpcsForSelection: PropTypes.array
+      }),
+      asyncActions: PropTypes.shape({
+        envGetBastions: PropTypes.object
+      }),
+      user: PropTypes.object
+    })
   },
-  storeDidChange(){
-    this.runSetVpcs();
-    const data = OnboardStore.getInstallData();
-    const dataHasValues = _.chain(data).values().every(_.identity).value();
-    if (dataHasValues && data.regions.length && data.vpcs.length){
-      // OnboardActions.onboardSetVpcs()
-      this.history.pushState(null, '/start/install');
+  componentWillMount(){
+    if (!this.props.redux.onboard.regionsWithVpcs.length){
+      this.props.history.replaceState(null, '/start/region-select');
     }
   },
   getInitialState() {
     const self = this;
     const obj = {
-      info: new InfoForm({
+      info: new InfoForm(this.props.redux.onboard.vpcsForSelection, {
         onChange(){
           self.forceUpdate();
         },
@@ -55,54 +60,18 @@ const Team = React.createClass({
         }
       })
     };
-    return _.extend(obj, {
-      status: 'pending',
-      vpcs: []
-    });
+    return obj;
   },
   isDisabled(){
     return !this.state.info.cleanedData.vpcs;
   },
-  runSetVpcs(){
-    const regionsWithVpcs = OnboardStore.getAvailableVpcs();
-    analytics.event('Onboard', 'vpc-select', {regionsWithVpcs});
-    if (regionsWithVpcs.length){
-      let vpcs = regionsWithVpcs.map(r => {
-        return r.vpcs.map(v => {
-          let name = v['vpc-id'];
-          if (v.tags){
-            let nameTag = _.findWhere(v.tags, {key: 'Name'});
-            if (nameTag){
-              name = `${nameTag.value}`;
-              // name = `${nameTag.value} - ${v['vpc-id']}`;
-            }
-          }
-          return [v['vpc-id'], `${name} (${v.count} Instances)`];
-          // return [v['vpc-id'], `${name} (${r.region})`];
-        });
-      });
-      vpcs = _.flatten(vpcs);
-      this.state.info.fields.vpcs.setChoices(vpcs);
-      this.setState({vpcs: vpcs});
-    }
-  },
-  runToggleAll(value){
-    if (value){
-      this.state.info.updateData({
-        regions: regions.map(r => {
-          return r.id;
-        })
-      });
-    }else {
-      this.state.info.updateData({regions: []});
-    }
-  },
   handleSubmit(e){
     e.preventDefault();
-    OnboardActions.onboardSetVpcs(this.state.info.cleanedData.vpcs);
+    analytics.event('Onboard', 'vpc-select');
+    this.props.actions.vpcSelect(this.state.info.cleanedData.vpcs);
   },
   renderInner(){
-    if (this.state.vpcs.length){
+    if (this.props.redux.onboard.vpcsForSelection.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>
@@ -137,4 +106,8 @@ const Team = React.createClass({
   }
 });
 
-export default Team;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(VPCSelect);

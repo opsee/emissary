@@ -1,40 +1,41 @@
-import React from 'react';
-import {History} from 'react-router';
-import {Toolbar, LogoColor} from '../global';
-import UserInputs from '../user/UserInputs.jsx';
-import {OnboardStore} from '../../stores';
-import {OnboardActions, GlobalActions} from '../../actions';
-import {UserStore} from '../../stores';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+
+import {Toolbar, LogoColor, StatusHandler} from '../global';
+import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {onboard as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [UserStore.mixin, OnboardStore.mixin, History],
-  storeDidChange(){
-    const status = OnboardStore.getOnboardSignupCreateStatus();
-    this.setState({status});
-    if (status === 'success'){
-      this.history.pushState(null, '/start/thanks');
-    }else if (status && status !== 'pending'){
-      GlobalActions.globalModalMessage({
-        html: status.body && status.body.message
-      });
-    }
+const OnboardCreate = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      signupCreate: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      user: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        onboardSignupCreate: PropTypes.object
+      })
+    })
   },
   getInitialState(){
     return {
-      data: UserStore.getUser().toJS(),
-      status: OnboardStore.getOnboardSignupCreateStatus()
+      data: this.props.redux.user.toJS()
     };
   },
   getButtonText(){
-    return this.state.status === 'pending' ? 'Creating...' : 'Add me to the list';
+    return this.getStatus() === 'pending' ? 'Creating...' : 'Create Account';
+  },
+  getStatus(){
+    return this.props.redux.asyncActions.onboardSignupCreate.status;
   },
   isDisabled(){
     const incomplete = !(this.state.data.name && this.state.data.email);
-    return incomplete || this.state.status === 'pending';
+    return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
     this.setState({
@@ -46,7 +47,7 @@ export default React.createClass({
     this.setState({
       submitting: true
     });
-    OnboardActions.onboardSignupCreate(this.state.data);
+    this.props.actions.signupCreate(this.state.data);
   },
   render() {
     return (
@@ -59,6 +60,7 @@ export default React.createClass({
               <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
+                <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
@@ -76,3 +78,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(OnboardCreate);

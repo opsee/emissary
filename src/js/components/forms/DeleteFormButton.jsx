@@ -3,7 +3,7 @@ import Button from './Button.jsx';
 import {Delete} from '../icons';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const DeleteFormButton = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
@@ -28,3 +28,5 @@ export default React.createClass({
     );
   }
 });
+
+export default DeleteFormButton;

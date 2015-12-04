@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import ToggleWithLabel from './ToggleWithLabel.jsx';
 import _ from 'lodash';
 
-export default React.createClass({
+const MultiToggle = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
@@ -39,3 +39,5 @@ export default React.createClass({
     );
   }
 });
+
+export default MultiToggle;

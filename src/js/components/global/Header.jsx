@@ -2,23 +2,15 @@ import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
 import {Person, Checkmark, Help, Cloud, Login} from '../icons';
-import {UserStore} from '../../stores';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
-import config from '../../modules/config';
 
 import style from './header.css';
 
 const Header = React.createClass({
-  mixins: [UserStore.mixin],
   propTypes: {
+    user: PropTypes.object.isRequired,
     hide: PropTypes.bool
-  },
-  storeDidChange(){
-    this.setState({
-      ghosting: UserStore.getUser().get('admin_id') > 0 || config.ghosting
-    });
-    this.forceUpdate();
   },
   getInitialState(){
     return {
@@ -27,13 +19,13 @@ const Header = React.createClass({
   },
   getHeaderStyle(){
     let obj = {};
-    if (this.state.ghosting){
+    if (this.props.user.get('ghosting')){
       obj.background = colors.danger;
     }
     return obj;
   },
   renderLoginLink(){
-    if (UserStore.hasUser()){
+    if (this.props.user.get('auth')){
       return (
         <Link to="/profile" className={style.navbarLink} activeClassName="active">
           <Person nav/>&nbsp;

@@ -1,41 +1,41 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {History} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-import {CheckActions, GlobalActions, UserActions} from '../../actions';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
-import {CheckStore} from '../../stores';
+import {Check} from '../../modules/schemas';
+import {checks as actions, user as userActions, env as envActions} from '../../reduxactions';
 
 const CheckCreate = React.createClass({
-  mixins: [CheckStore.mixin, History],
   propTypes: {
     location: PropTypes.object,
-    children: PropTypes.node
+    children: PropTypes.node,
+    redux: PropTypes.object.isRequired,
+    actions: PropTypes.shape({
+      create: PropTypes.func
+    }),
+    userActions: PropTypes.shape({
+      putData: PropTypes.func
+    }),
+    envActions: PropTypes.shape({
+      getGroupsSecurity: PropTypes.func,
+      getGroupsElb: PropTypes.func,
+      getInstancesEcc: PropTypes.func
+    })
+  },
+  componentWillMount(){
+    this.props.envActions.getGroupsSecurity();
+    this.props.envActions.getGroupsElb();
+    this.props.envActions.getInstancesEcc();
   },
   getInitialState(){
     return this.getState();
   },
-  storeDidChange() {
-    const state = this.getState(true);
-    if (state.createStatus === 'success'){
-      UserActions.userPutUserData('hasDismissedCheckCreationHelp');
-      this.history.pushState(null, '/');
-    }else if (state.createStatus && state.createStatus !== 'pending'){
-      GlobalActions.globalModalMessage({
-        html: status.body && status.body.message || 'Something went wrong.',
-        style: 'danger'
-      });
-    }
-    if (this.isMounted()){
-      this.setState(state);
-    }
-  },
   getState(noCheck){
     const obj = {
-      check: CheckStore.newCheck({target: this.props.location.query}).toJS(),
-      response: CheckStore.getResponse(),
-      createStatus: CheckStore.getCheckCreateStatus(),
+      check: new Check({target: this.props.location.query}).toJS(),
       filter: null
     };
     return _.omit(obj, noCheck ? 'check' : null);
@@ -54,7 +54,8 @@ const CheckCreate = React.createClass({
     });
   },
   handleSubmit(){
-    CheckActions.checkCreate(this.state.check);
+    this.props.actions.create(this.state.check);
+    this.props.userActions.putData('hasDismissedCheckCreationHelp');
   },
   render() {
     return (
@@ -68,9 +69,7 @@ const CheckCreate = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <StatusHandler status={this.state.createStatus}>
-                <Alert bsStyle="danger">Something went wrong.</Alert>
-              </StatusHandler>
+              <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
             </Col>
           </Row>
         </Grid>
@@ -79,4 +78,10 @@ const CheckCreate = React.createClass({
   }
 });
 
-export default CheckCreate;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch),
+  envActions: bindActionCreators(envActions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckCreate);

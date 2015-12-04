@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Toolbar} from '../global';
 import {Link} from 'react-router';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Mail, Slack, Chat} from '../icons';
-import {UserStore} from '../../stores';
 
 export default React.createClass({
+  propTypes: {
+    redux: PropTypes.shape({
+      user: PropTypes.object
+    })
+  },
   renderAdminLinks(){
-    if (UserStore.getUser().get('admin')){
+    if (this.props.redux.user.get('admin')){
       return (
         <Padding b={1}>
           <h3>Onboarding Pages</h3>

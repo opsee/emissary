@@ -1,15 +1,17 @@
-import React from 'react';
-import {History} from 'react-router';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import {Toolbar} from '../global';
-import {OnboardStore, AWSStore} from '../../stores';
 import {OnboardActions} from '../../actions';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {onboard as actions} from '../../reduxactions';
+import regions from '../../modules/regions';
 
-const regions = AWSStore.getRegions();
 const regionChoices = regions.map(r => {
   return [r.id, `${r.id} - ${r.name}`];
 });
@@ -25,10 +27,21 @@ const InfoForm = forms.Form.extend({
 });
 
 const RegionSelect = React.createClass({
-  mixins: [OnboardStore.mixin, History],
+  propTypes: {
+    actions: PropTypes.shape({
+      setRegion: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        bastions: PropTypes.array
+      }),
+      onboard: PropTypes.shape({
+        region: PropTypes.string
+      })
+    })
+  },
   getInitialState() {
     const self = this;
-    const data = OnboardStore.getInstallData();
     const obj = {
       info: new InfoForm({
         onChange(){
@@ -38,14 +51,13 @@ const RegionSelect = React.createClass({
         },
         labelSuffix: '',
         data: {
-          regions: data.regions
+          regions: [this.props.redux.onboard.region]
         },
         validation: {
           on: 'blur change',
           onChangeDelay: 100
         }
-      }),
-      bastions: []
+      })
     };
     setTimeout(() => {
       obj.info.validate();
@@ -54,15 +66,6 @@ const RegionSelect = React.createClass({
   },
   componentWillMount(){
     OnboardActions.getBastions();
-  },
-  storeDidChange(){
-    const bastionStatus = OnboardStore.getGetBastionsStatus();
-    if (bastionStatus === 'success'){
-      const bastions = OnboardStore.getBastions();
-      if (this.isMounted()){
-        this.setState({bastions});
-      }
-    }
   },
   isDisabled(){
     return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
@@ -80,14 +83,10 @@ const RegionSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    OnboardActions.onboardSetRegions(this.state.info.cleanedData.regions);
-    //redo this later, make install be a parent page instead of this bull
-    setTimeout(() => {
-      this.history.pushState(null, '/start/credentials');
-    }, 100);
+    this.props.actions.setRegion(this.state.info.cleanedData.regions);
   },
   renderInner(){
-    if (!this.state.bastions.length){
+    if (!this.props.redux.env.bastions.length){
       return (
         <form name="loginForm" onSubmit={this.handleSubmit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
@@ -125,4 +124,8 @@ const RegionSelect = React.createClass({
   }
 });
 
-export default RegionSelect;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(RegionSelect);

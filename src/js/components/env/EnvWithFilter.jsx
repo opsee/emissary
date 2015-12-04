@@ -1,9 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import forms from 'newforms';
 import fuzzy from 'fuzzy';
 import {List} from 'immutable';
-import {Link} from 'react-router';
 
 import analytics from '../../modules/analytics';
 import {Alert, Row, Col} from '../../modules/bootstrap';
@@ -12,11 +13,10 @@ import {SetInterval} from '../../modules/mixins';
 import {BoundField, Button} from '../forms';
 import {StatusHandler} from '../global';
 import {Search, Circle} from '../icons';
-import {GroupActions, InstanceActions, OnboardActions} from '../../actions';
-import {GroupStore, InstanceStore, OnboardStore} from '../../stores';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
+import {env as actions} from '../../reduxactions';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
@@ -39,14 +39,29 @@ const FilterForm = forms.Form.extend({
 });
 
 const EnvWithFilter = React.createClass({
-  mixins: [GroupStore.mixin, InstanceStore.mixin, SetInterval, OnboardStore.mixin],
+  mixins: [SetInterval],
   propTypes: {
     include: PropTypes.array,
     filter: PropTypes.string,
     onFilterChange: PropTypes.func,
     onTargetSelect: PropTypes.func,
     noModal: PropTypes.bool,
-    limit: PropTypes.number
+    limit: PropTypes.number,
+    actions: PropTypes.object,
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.object,
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object,
+          elb: PropTypes.object
+        }),
+        instances: PropTypes.shape({
+          ecc: PropTypes.object
+        }),
+        bastions: PropTypes.array,
+        search: PropTypes.string
+      })
+    })
   },
   getDefaultProps(){
     return {
@@ -63,16 +78,16 @@ const EnvWithFilter = React.createClass({
           on: 'blur change',
           onChangeDelay: 50
         }
-      }, this.props.filter ? {data: {filter: this.props.filter}} : null)),
+      }, this.getFilter() ? {data: {filter: this.getFilter()}} : null)),
       attemptedGroupsSecurity: false,
       attemptedGroupsELB: false,
       attemptedInstancesECC: false,
       selected: _.get(this.props, 'check.target.id') || null
     };
     //this is a workaround because the library is not working correctly with initial + data formset
-    if (this.props.filter){
+    if (this.getFilter()){
       setTimeout(() => {
-        this.state.filter.setData({filter: this.props.filter});
+        this.state.filter.setData({filter: this.getFilter()});
       }, 50);
     }
     return _.extend(obj, {
@@ -81,34 +96,18 @@ const EnvWithFilter = React.createClass({
   },
   componentWillMount(){
     this.getData();
-    this.setInterval(this.getData, 15000);
+    this.setInterval(this.getData, 25000);
   },
   storeDidChange(){
-    const getGroupsSecurityStatus = GroupStore.getGetGroupsSecurityStatus();
-    const getGroupsELBStatus = GroupStore.getGetGroupsELBStatus();
-    const getInstancesECCStatus = InstanceStore.getGetInstancesECCStatus();
-    let stateObj = {};
-    if (getGroupsSecurityStatus === 'success' || typeof getGroupsSecurityStatus === 'object'){
-      stateObj.attemptedGroupsSecurity = true;
-    }
-    if (getGroupsELBStatus === 'success' || typeof getGroupsELBStatus === 'object'){
-      stateObj.attemptedGroupsELB = true;
-    }
-    if (getInstancesECCStatus === 'success' || typeof getInstancesECCStatus === 'object'){
-      stateObj.attemptedInstancesECC = true;
-    }
-    // const allData = this.getAll();
-    this.setState(_.assign(stateObj, {
-      getGroupsSecurityStatus,
-      getGroupsELBStatus,
-      getInstancesECCStatus
-    }));
+    this.forceUpdate();
+  },
+  getFilter(){
+    return this.props.redux.env.search || this.props.filter;
   },
   getData(){
-    GroupActions.getGroupsSecurity();
-    GroupActions.getGroupsELB();
-    InstanceActions.getInstancesECC();
-    OnboardActions.getBastions();
+    this.props.actions.getGroupsSecurity();
+    this.props.actions.getGroupsElb();
+    this.props.actions.getInstancesEcc();
   },
   getAll(){
     let arr = new List();
@@ -137,7 +136,7 @@ const EnvWithFilter = React.createClass({
     }).size;
   },
   getFilteredItems(items, ignoreButtonState){
-    const string = this.state.filter.cleanedData.filter;
+    const string = this.props.redux.env.search || this.state.filter.cleanedData.filter;
     let data = items.sortBy(item => {
       return item.get('health') || 101;
     });
@@ -154,43 +153,16 @@ const EnvWithFilter = React.createClass({
     return data;
   },
   getGroupsSecurity(ignoreButtonState){
-    return this.getFilteredItems(GroupStore.getGroupsSecurity(), ignoreButtonState);
+    return this.getFilteredItems(this.props.redux.env.groups.security, ignoreButtonState);
   },
   getGroupsELB(ignoreButtonState){
-    return this.getFilteredItems(GroupStore.getGroupsELB(), ignoreButtonState);
+    return this.getFilteredItems(this.props.redux.env.groups.elb, ignoreButtonState);
   },
   getInstances(ignoreButtonState){
-    return this.getFilteredItems(InstanceStore.getInstancesECC(), ignoreButtonState);
-  },
-  getItemTypeFromSlug(slug){
-    switch (slug){
-    case 'groupsSecurity':
-      return {
-        name: 'Security Groups',
-        fn: GroupStore.getGroupsSecurity
-      };
-    case 'groupsELB':
-      return {
-        name: 'ELB Groups',
-        fn: GroupStore.getGroupsELB
-      };
-    case 'instancesECC':
-      return {
-        name: 'Instances',
-        fn: InstanceStore.getInstancesECC
-      };
-    default:
-      break;
-    }
+    return this.getFilteredItems(this.props.redux.env.instances.ecc, ignoreButtonState);
   },
   isFinishedAttempt(){
-    const case1 = !!(this.state.attemptedGroupsSecurity &&
-      this.state.attemptedGroupsELB &&
-      this.state.attemptedInstancesECC &&
-      OnboardStore.getGetBastionsHistory().length
-      );
-    const case2 = !!GroupStore.getGroupsSecurity().size;
-    return case1 || case2;
+    return !!this.props.redux.env.groups.security.size;
   },
   shouldButtonsRender(){
     const arr = [this.getNumberUnmonitored(), this.getNumberFailing(), this.getNumberPassing()];
@@ -200,6 +172,7 @@ const EnvWithFilter = React.createClass({
     this.forceUpdate();
     const data =  this.state.filter.cleanedData.filter;
     analytics.event('EnvWithFilter', 'filter-change', {data});
+    this.props.actions.envSetSearch(data);
     if (this.props.onFilterChange){
       this.props.onFilterChange.call(null, data);
     }
@@ -215,17 +188,17 @@ const EnvWithFilter = React.createClass({
     this.setState(obj);
   },
   renderGroupsSecurity(){
-    if (GroupStore.getGroupsSecurity().size){
+    if (this.props.redux.env.groups.security.size){
       return (
         <div key="groupsSecurity">
           <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
           <hr/>
         </div>
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
+      <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
         <h3>Security Groups</h3>
         <Alert bsStyle="default">
           No security groups found
@@ -235,31 +208,31 @@ const EnvWithFilter = React.createClass({
     );
   },
   renderGroupsELB(){
-    if (GroupStore.getGroupsELB().size){
+    if (this.props.redux.env.groups.security.size){
       return (
         <div key="groupsELB">
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
           <hr/>
         </div>
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get ELB Groups." key="groupsELBStatus"/>
+      <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status} errorText="Something went wrong trying to get ELB Groups." key="groupsELBStatus"/>
     );
   },
   renderInstancesECC(){
-    if (InstanceStore.getInstancesECC().size){
+    if (this.props.redux.env.instances.ecc.size){
       return (
         <div key="instancesECC">
           <h3>Instances ({this.getInstances().size})</h3>
-          <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
           <hr/>
         </div>
       );
     }
     return (
-      <StatusHandler status={GroupStore.getGetGroupsSecurityStatus()} errorText="Something went wrong trying to get EC2 Instances." key="instancesECCStatus">
+      <StatusHandler status={this.props.redux.asyncActions.getInstancesEcc.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesECCStatus">
         <h3>EC2 Instances</h3>
         <Alert bsStyle="default">
           No EC2 Instances found
@@ -321,25 +294,26 @@ const EnvWithFilter = React.createClass({
   render(){
     const self = this;
     if (this.isFinishedAttempt()){
-      if (OnboardStore.getBastions().length){
-        return (
-          <form name="envWithFilterForm">
-            {this.state.filter.render()}
-            {this.renderFilterButtons()}
-            {this.props.include.map(i => {
-              return self[`render${_.capitalize(i)}`]();
-            })}
-          </form>
-        );
-      }
       return (
-        <Alert bsStyle="danger">
-          Bastion is disconnected or offline. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
-        </Alert>
+        <form name="envWithFilterForm">
+          {this.state.filter.render()}
+          {this.renderFilterButtons()}
+          {this.props.include.map(i => {
+            return self[`render${_.capitalize(i)}`]();
+          })}
+        </form>
       );
     }
     return <StatusHandler status="pending"/>;
   }
 });
 
-export default EnvWithFilter;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnvWithFilter);

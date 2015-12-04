@@ -1,40 +1,49 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {UserStore} from '../../stores';
-import {UserActions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
+import {user as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [UserStore.mixin],
-  storeDidChange(){
-    const status = UserStore.getUserSendResetEmailStatus();
-    this.setState({status});
+const PasswordForgot = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      sendResetEmail: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      user: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        userSendResetEmail: PropTypes.object
+      })
+    })
   },
   getInitialState(){
     return {
-      data: UserStore.getUser().toJS(),
-      status: UserStore.getUserSendResetEmailStatus()
+      data: this.props.redux.user.toJS()
     };
   },
+  getStatus(){
+    return this.props.redux.asyncActions.userSendResetEmail.status;
+  },
   getButtonText(){
-    return this.state.status === 'pending' ? 'Sending...' : 'Send Reset Email';
+    return this.getStatus() === 'pending' ? 'Sending...' : 'Send Reset Email';
   },
   isDisabled(){
-    return !this.state.data.email || this.state.status === 'pending';
+    return !this.state.data.email || this.getStatus() === 'pending';
   },
   setUserData(data){
     this.setState({
-      data: data
+      data
     });
   },
   handleSubmit(e){
     e.preventDefault();
-    UserActions.userSendResetEmail(this.state.data);
+    this.props.actions.sendResetEmail(this.state.data);
   },
   renderInner(){
-    if (this.state.status === 'success'){
+    if (this.getStatus() === 'success'){
       return (
         <p>Success. Check your email.</p>
       );
@@ -64,3 +73,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(PasswordForgot);

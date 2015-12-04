@@ -12,7 +12,7 @@ import Tab from 'react-bootstrap/lib/Tab';
 // import {GridRow as Row} from 'react-flexboxgrid';
 // import {GridColumn as Col} from 'react-flexboxgrid';
 
-export default {
+export {
   Alert,
   Col,
   Dropdown,

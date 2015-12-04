@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import {Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-export default React.createClass({
+const IAM = React.createClass({
   render() {
     return (
       <div>
@@ -29,7 +29,7 @@ export default React.createClass({
                 <ol>
                   <li>If for some reason you are not already signed in, sign in to the AWS Management Console and open the IAM console at <a target="_blank" href="https://console.aws.amazon.com/iam/">https://console.aws.amazon.com/iam/</a></li>
                   <li>In the navigation pane, click <strong>Users</strong></li>
-                  <li>If you don't already have a user ready for this purpose, click <strong>Create New Users</strong></li>
+                  <li>If you don&rsquo;t already have a user ready for this purpose, click <strong>Create New Users</strong></li>
                   <li>Click the name of the IAM user you created for the onboarding process, then scroll down to the tab/section called Permissions</li>
                   <li>Expand the <em>Inline Policies</em> section, and click <strong>Create User Policy</strong></li>
                   <li>Choose <em>Custom Policy</em> and click <strong>Select</strong></li>
@@ -120,3 +120,5 @@ export default React.createClass({
     );
   }
 });
+
+export default IAM;

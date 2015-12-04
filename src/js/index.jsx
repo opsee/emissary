@@ -1,22 +1,31 @@
 import React from 'react';
-import Perf from 'react-addons-perf';
-// import router from './modules/router.js';
-import _ from 'lodash';
-import config from './modules/config';
 import {render} from 'react-dom';
-import {routes} from './components/global/Routes.jsx';
-import {Router} from 'react-router';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-import {useStandardScroll} from 'scroll-behavior';
-
-const history = useStandardScroll(createBrowserHistory)();
+import {Provider} from 'react-redux';
+import App from './components/global/App';
+import store from './modules/store';
+import config from './modules/config';
 
 if (config.env !== 'production'){
-  window._ = _;
-  window.Perf = Perf;
-  window.Perf.start();
+  const tools = require('redux-devtools/lib/react');
+  const {DevTools, DebugPanel, LogMonitor} = tools;
+  render(
+  (
+    <div>
+      <Provider store={store}>
+        <App/>
+      </Provider>
+      <DebugPanel top right bottom>
+        <DevTools store={store} monitor={LogMonitor} visibleOnLoad={false}/>
+      </DebugPanel>
+    </div>
+  ), document.getElementById('main'));
+}else {
+  render(
+  (
+    <div>
+      <Provider store={store}>
+        <App/>
+      </Provider>
+    </div>
+  ), document.getElementById('main'));
 }
-
-render(
-  <Router history={history}>{routes}</Router>, document.getElementById('main')
-);

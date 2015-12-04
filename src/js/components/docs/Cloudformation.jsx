@@ -4,7 +4,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Highlight} from '../global';
 import {Padding} from '../layout';
 
-export default React.createClass({
+const Cloudformation = React.createClass({
   render() {
     return (
       <div>
@@ -1024,3 +1024,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Cloudformation;

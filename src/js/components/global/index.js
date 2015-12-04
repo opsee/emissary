@@ -1,4 +1,5 @@
 import Analytics from './Analytics.jsx';
+import BastionRequirement from './BastionRequirement.jsx';
 import ContextMenu from './ContextMenu.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
@@ -19,8 +20,9 @@ import StepCounter from './StepCounter.jsx';
 import Table from './Table.jsx';
 import Toolbar from './Toolbar.jsx';
 
-export default {
+export {
   Analytics,
+  BastionRequirement,
   ContextMenu,
   Header,
   Highlight,

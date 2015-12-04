@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Label from './Label.jsx';
 import cx from 'classnames';
 
-export default React.createClass({
+const InputWithLabel = React.createClass({
   propTypes: {
     children: PropTypes.node,
     bf: PropTypes.object.isRequired
@@ -21,3 +21,5 @@ export default React.createClass({
     );
   }
 });
+
+export default InputWithLabel;

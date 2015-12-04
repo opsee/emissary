@@ -4,9 +4,10 @@ import {Toolbar} from '../global';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import _ from 'lodash';
 
-export default React.createClass({
+const EnvGroupsSecurity = React.createClass({
   propTypes: {
-    location: PropTypes.object
+    location: PropTypes.object,
+    redux: PropTypes.object.isRequired
   },
   render() {
     return (
@@ -15,7 +16,7 @@ export default React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={['groupsSecurity']} filter={_.get(this.props.location.query, 'filter')} limit={1000}/>
+                <EnvWithFilter include={['groupsSecurity']} filter={_.get(this.props.location.query, 'filter')} limit={1000} redux={this.props.redux}/>
               </Col>
             </Row>
           </Grid>
@@ -23,3 +24,5 @@ export default React.createClass({
     );
   }
 });
+
+export default EnvGroupsSecurity;

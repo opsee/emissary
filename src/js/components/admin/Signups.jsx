@@ -1,38 +1,40 @@
-import React from 'react';
-import {History} from 'react-router';
+import React, {PropTypes} from 'react';
 import colors from 'seedling/colors';
 import _ from 'lodash';
-import {Toolbar} from '../global';
-import {AdminActions, GlobalActions, UserActions} from '../../actions';
-import {AdminStore} from '../../stores';
-import {Checkmark, Person, Mail, Ghost} from '../icons';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
+
+import {Toolbar} from '../global';
+import {GlobalActions} from '../../actions';
+import {Checkmark, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {admin as actions, user as userActions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [AdminStore.mixin, History],
-  getInitialState(){
-    return this.getState();
+const Signups = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      getSignups: PropTypes.func,
+      activateSignup: PropTypes.func,
+      getUsers: PropTypes.func
+    }),
+    userActions: PropTypes.shape({
+      logout: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      admin: PropTypes.shape({
+        signups: PropTypes.object
+      })
+    })
   },
   componentWillMount(){
-    AdminActions.adminGetSignups();
-    AdminActions.adminGetUsers();
-  },
-  storeDidChange() {
-    const data = this.getState();
-    this.setState(data);
-    if (data.approveStatus === 'success'){
-      AdminActions.adminGetSignups();
-      GlobalActions.globalModalMessage({
-        html: 'User activated. Email sent.',
-        style: 'success'
-      });
-    }
+    this.props.actions.getSignups();
+    this.props.actions.getUsers();
   },
   getData(){
-    const signups = AdminStore.getSignups().toJS();
+    const signups = this.props.redux.admin.signups.toJS();
     return _.chain(signups).map(s => {
       s.created_at = new Date(Date.parse(s.created_at));
       return s;
@@ -40,20 +42,14 @@ export default React.createClass({
       return -1 * s.created_at;
     }).value();
   },
-  getState(){
-    return {
-      signups: this.getData(),
-      approveStatus: AdminStore.getAdminActivateSignupStatus()
-    };
-  },
   getUnapproved(){
-    return _.filter(this.state.signups, this.isUnapprovedSignup);
+    return _.filter(this.getData(), this.isUnapprovedSignup);
   },
   getApproved(){
-    return _.filter(this.state.signups, this.isApprovedSignup);
+    return _.filter(this.getData(), this.isApprovedSignup);
   },
   getUsers(){
-    return _.filter(this.state.signups, this.isUser);
+    return _.filter(this.getData(), this.isUser);
   },
   isUnapprovedSignup(s){
     return !s.claimed && !s.activated;
@@ -64,17 +60,20 @@ export default React.createClass({
   isUser(s){
     return s.claimed;
   },
-  runActivateSignup: AdminActions.adminActivateSignup,
+  runActivateSignup(signup){
+    this.props.actions.activateSignup(signup);
+    GlobalActions.globalModalMessage({
+      html: `${signup.email} approved.`
+    });
+  },
   runGhostAccount(signup){
-    UserActions.userLogOut();
-    //revisit this, params isn't working so using query atm
-    this.history.pushState(null, 'login', {as: signup.id});
+    this.props.userActions.logout({as: signup.id});
   },
   renderIcon(signup){
     if (this.isUser(signup)){
-      return <Person fill={colors.textColorSecondary} inline/>;
+      return <Person fill="textSecondary" inline/>;
     } else if (this.isApprovedSignup(signup)){
-      return <Checkmark fill={colors.textColorSecondary} inline/>;
+      return <Checkmark fill="textSecondary" inline/>;
     }
     return <span/>;
   },
@@ -156,3 +155,10 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Signups);

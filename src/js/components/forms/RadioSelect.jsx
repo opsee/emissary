@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import RadioWithLabel from './RadioWithLabel.jsx';
 import _ from 'lodash';
 
-export default React.createClass({
+const RadioSelect = React.createClass({
   propTypes: {
     bf: PropTypes.object.isRequired
   },
@@ -36,3 +36,5 @@ export default React.createClass({
     );
   }
 });
+
+export default RadioSelect;
