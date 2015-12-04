@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {UserStore} from '../../stores';
 import config from '../../modules/config';
 import _ from 'lodash';
 import {connect} from 'react-redux';
@@ -7,7 +6,6 @@ import {bindActionCreators} from 'redux';
 import {user as actions} from '../../reduxactions';
 
 const UserDataRequirement = React.createClass({
-  mixins: [UserStore.mixin],
   propTypes: {
     hideIf: PropTypes.string,
     showIf: PropTypes.string,

@@ -57,13 +57,6 @@ import NotFound from '../pages/NotFound';
 
 import {auth} from '../global/Authenticator';
 
-// import {UserStore} from '../../stores';
-// function auth(nextState, replaceState) {
-//   if (!UserStore.hasUser()){
-//     replaceState({ nextPathname: nextState.location.pathname }, '/login');
-//   }
-// }
-
 const routes = (
   <Route component={Opsee}>
     <Route path="styleguide" component={Styleguide}/>
@@ -105,9 +98,6 @@ const routes = (
     </Route>
 
     <Route path="/start/profile" component={auth(Help)}/>
-    {
-    // <Route path="/start/team" component={auth(OnboardTeam)}/>
-    }
     <Route path="/start/region-select" component={auth(OnboardRegionSelect)}/>
     <Route path="/start/credentials" component={auth(OnboardCredentials)}/>
     <Route path="/start/vpc-select" component={auth(OnboardVPCSelect)}/>

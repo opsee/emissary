@@ -4,6 +4,16 @@ import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {InstanceEcc, InstanceRds, GroupSecurity, GroupElb} from '../modules/schemas';
+import {
+  ENV_SET_SEARCH,
+  ENV_GET_BASTIONS,
+  GET_GROUP_SECURITY,
+  GET_GROUPS_SECURITY,
+  GET_GROUP_ELB,
+  GET_GROUPS_ELB,
+  GET_INSTANCE_ECC,
+  GET_INSTANCES_ECC
+} from '../reduxactions/constants';
 
 /* eslint-disable no-use-before-define */
 
@@ -261,54 +271,54 @@ export default handleActions({
   //     return _.assign({}, state, {groups: data});
   //   }
   // },
-  ENV_SET_SEARCH: {
+  [ENV_SET_SEARCH]: {
     next(state, action){
       return _.assign({}, state, {search: action.payload});
     }
   },
-  GET_GROUP_SECURITY: {
+  [GET_GROUP_SECURITY]: {
     next(state, action){
       const security = statics.getGroupSecuritySuccess(state, action.payload);
       const data = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups: data});
     }
   },
-  GET_GROUPS_SECURITY: {
+  [GET_GROUPS_SECURITY]: {
     next(state, action){
       const security = statics.getGroupsSecuritySuccess(state, action.payload);
       const data = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups: data});
     }
   },
-  GET_GROUP_ELB: {
+  [GET_GROUP_ELB]: {
     next(state, action){
       const elb = statics.getGroupElbSuccess(state, action.payload);
       const data = _.assign({}, state.groups, {elb});
       return _.assign({}, state, {groups: data});
     }
   },
-  GET_GROUPS_ELB: {
+  [GET_GROUPS_ELB]: {
     next(state, action){
       const elb = statics.getGroupsElbSuccess(state, action.payload);
       const data = _.assign({}, state.groups, {elb});
       return _.assign({}, state, {groups: data});
     }
   },
-  GET_INSTANCE_ECC: {
+  [GET_INSTANCE_ECC]: {
     next(state, action){
       const ecc = statics.getInstanceEccSuccess(state, action.payload);
       const data = _.assign({}, state.instances, {ecc});
       return _.assign({}, state, {instances: data});
     }
   },
-  GET_INSTANCES_ECC: {
+  [GET_INSTANCES_ECC]: {
     next(state, action){
       const ecc = statics.getInstancesEccSuccess(state, action.payload);
       const data = _.assign({}, state.instances, {ecc});
       return _.assign({}, state, {instances: data});
     }
   },
-  ENV_GET_BASTIONS: {
+  [ENV_GET_BASTIONS]: {
     next(state, action){
       return _.assign({}, state, {bastions: action.payload});
     }

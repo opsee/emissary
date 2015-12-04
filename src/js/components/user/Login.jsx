@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import {Link} from 'react-router';
 
-import {UserStore} from '../../stores';
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Col, Row} from '../../modules/bootstrap';
@@ -22,7 +21,7 @@ const Login = React.createClass({
   },
   getInitialState(){
     return {
-      data: UserStore.getUser()
+      data: this.props.redux.user.toJS()
     };
   },
   getButtonText(){
@@ -62,7 +61,7 @@ const Login = React.createClass({
                   </Button>
                 </Padding>
                 <Padding tb={2}>
-                  <p><Link to="/password/forgot">Forgot your password?</Link></p>
+                  <p><Link to="/password-forgot">Forgot your password?</Link></p>
                   <p>Need an account? <Link to="/start">Sign up!</Link></p>
                 </Padding>
               </form>

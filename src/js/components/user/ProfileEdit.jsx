@@ -1,12 +1,11 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {UserStore} from '../../stores';
-import {StatusHandler, Toolbar} from '../global';
 import _ from 'lodash';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
-import {History} from 'react-router';
+
+import {StatusHandler, Toolbar} from '../global';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
@@ -32,7 +31,6 @@ const PasswordForm = forms.Form.extend({
 });
 
 const ProfileEdit = React.createClass({
-  mixins: [UserStore.mixin, History],
   propTypes: {
     actions: PropTypes.shape({
       edit: PropTypes.func
@@ -40,13 +38,14 @@ const ProfileEdit = React.createClass({
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         userEdit: PropTypes.object
-      })
+      }),
+      user: PropTypes.object
     })
   },
   getInitialState() {
     // return this.getForm();
     return {
-      user: UserStore.getUser().toJS(),
+      user: this.props.redux.user.toJS(),
       passwordForm: this.getForm()
     };
   },
@@ -63,8 +62,12 @@ const ProfileEdit = React.createClass({
       }
     });
   },
+  getStatus(){
+    return this.props.redux.asyncActions.userEdit.status;
+  },
   isDisabled(){
-    return !(this.state.user.email && this.state.user.name) || UserStore.getUserEditStatus() === 'pending';
+    return !(this.state.user.email && this.state.user.name) ||
+    this.getStatus() === 'pending';
   },
   handleUserData(data){
     let user = _.clone(this.state.user);
@@ -94,10 +97,10 @@ const ProfileEdit = React.createClass({
             <form onSubmit={this.handleSubmit}>
               <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
-              <StatusHandler status={this.props.redux.asyncActions.userEdit.status}/>
+              <StatusHandler status={this.getStatus()}/>
               <Padding t={2}>
                 <Button color="success" type="submit" disabled={this.isDisabled()}>
-                  {UserStore.getUserEditStatus() === 'pending' ? 'Updating...' : 'Update Profile'}
+                  {this.getStatus() === 'pending' ? 'Updating...' : 'Update Profile'}
                 </Button>
               </Padding>
             </form>

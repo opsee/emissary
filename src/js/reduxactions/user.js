@@ -1,4 +1,5 @@
 import {pushState} from 'redux-router';
+import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
@@ -11,7 +12,9 @@ import {
   USER_SET_PASSWORD,
   USER_GET_CUSTOMER,
   USER_GET_DATA,
-  USER_PUT_DATA
+  USER_PUT_DATA,
+  USER_SEND_RESET_EMAIL,
+  USER_APPLY
 } from './constants';
 import storage from '../modules/storage';
 
@@ -55,14 +58,14 @@ export function setPassword(data) {
   };
 }
 
-export function logout(){
+export function logout(query){
   return (dispatch) => {
     storage.remove('user');
     analytics.event('User', 'logout');
     dispatch({
       type: USER_LOGOUT
     });
-    dispatch(pushState(null, '/login'));
+    dispatch(pushState(null, '/login', query));
   };
 }
 
@@ -92,6 +95,8 @@ export function refresh() {
     });
   };
 }
+
+export const userApply = createAction(USER_APPLY);
 
 export function edit(data) {
   return (dispatch, state) => {
@@ -188,6 +193,20 @@ export function putData(key, data, reset){
           .send(user)
           .then(res2 => res2.body, reject);
         }, reject);
+      })
+    });
+  };
+}
+
+export function sendResetEmail(data) {
+  return (dispatch) => {
+    dispatch({
+      type: USER_SEND_RESET_EMAIL,
+      payload: new Promise((resolve, reject) => {
+        request
+        .post(`${config.authApi}/authenticate/token`)
+        .send(data)
+        .then(res => resolve(res.body), reject);
       })
     });
   };

@@ -2,6 +2,21 @@ import _ from 'lodash';
 import {Record, List, Map} from 'immutable';
 import config from './config';
 
+export const User = Record({
+  name: null,
+  email: null,
+  id: null,
+  token: null,
+  loginDate: null,
+  admin: false,
+  admin_id: 0,
+  intercom_hmac: null,
+  auth: null,
+  ghosting: false,
+  customerId: undefined,
+  data: undefined
+});
+
 const baseEnvItem = {
   id: null,
   name: null,
@@ -89,9 +104,9 @@ export const Check = Record({
     type_url: 'HttpCheck',
     value: Map({
       name: undefined,
-      path: config.checkDefaultPath || undefined,
+      path: config.checkDefaultPath,
       protocol: 'http',
-      port: config.checkDefaultPort || undefined,
+      port: config.checkDefaultPort,
       verb: undefined,
       body: undefined,
       headers: new List()

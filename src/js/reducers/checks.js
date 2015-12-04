@@ -4,6 +4,11 @@ import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {Check} from '../modules/schemas';
+import {
+  GET_CHECK,
+  GET_CHECKS,
+  CHECK_TEST
+} from '../reduxactions/constants';
 
 /* eslint-disable no-use-before-define */
 
@@ -64,7 +69,7 @@ const initial = {
 };
 
 export default handleActions({
-  GET_CHECK: {
+  [GET_CHECK]: {
     next(state, action){
       const single = statics.checkFromJS(action.payload);
       let checks;
@@ -82,7 +87,7 @@ export default handleActions({
       return state;
     }
   },
-  GET_CHECKS: {
+  [GET_CHECKS]: {
     next(state, action){
       const checks = new List(action.payload.map(c => {
         return statics.checkFromJS(c);
@@ -93,7 +98,7 @@ export default handleActions({
       return state;
     }
   },
-  CHECK_TEST: {
+  [CHECK_TEST]: {
     next(state, action){
       const response = Immutable.fromJS(action.payload);
       const responseFormatted = statics.getFormattedResponse(response);

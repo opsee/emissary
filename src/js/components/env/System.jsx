@@ -19,7 +19,7 @@ const System = React.createClass({
         bastions: PropTypes.array.isRequired
       }),
       asyncActions: PropTypes.shape({
-        envGetBastions: PropTypes.func.isRequired
+        envGetBastions: PropTypes.object.isRequired
       }),
       user: PropTypes.object
     })

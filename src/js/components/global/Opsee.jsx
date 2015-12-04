@@ -6,7 +6,6 @@ import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
 import {Analytics, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
-import {GlobalStore} from '../../stores';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
@@ -19,7 +18,7 @@ import {app as appActions, user as userActions, env as envActions} from '../../r
 const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
 
 const Opsee = React.createClass({
-  mixins: [GlobalStore.mixin, SetInterval],
+  mixins: [SetInterval],
   propTypes: {
     location: PropTypes.object,
     children: PropTypes.node,
@@ -34,11 +33,6 @@ const Opsee = React.createClass({
     envActions: PropTypes.shape({
       getBastions: PropTypes.func.isRequired
     })
-  },
-  getInitialState(){
-    return {
-      showNav: GlobalStore.getShowNav()
-    };
   },
   componentWillMount(){
     this.props.appActions.initialize();
@@ -55,12 +49,6 @@ const Opsee = React.createClass({
     if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
       this.props.appActions.initialize();
     }
-  },
-  storeDidChange(){
-    let stateObj = {
-      showNav: GlobalStore.getShowNav()
-    };
-    this.setState(stateObj);
   },
   getMeatClass(){
     return this.shouldHideNav() ? style.meatUp : style.meat;

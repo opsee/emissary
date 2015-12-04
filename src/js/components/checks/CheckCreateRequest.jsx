@@ -275,10 +275,11 @@ const CheckCreateRequest = React.createClass({
   renderTargetSelection(){
     let selection;
     const target = this.props.check.target;
-    const type = target.type;
+    let type = target.type;
     if (!type){
       return <div/>;
     }
+    type = type === 'sg' ? 'security' : type;
     if (type.match('security|elb')){
       selection = this.props.redux.env.groups[type].find(g => {
         return g.get('id') === target.id;

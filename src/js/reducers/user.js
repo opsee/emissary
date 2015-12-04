@@ -1,24 +1,20 @@
 import storage from '../modules/storage';
-import {Record} from 'immutable';
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import moment from 'moment';
 import config from '../modules/config';
-
-const User = Record({
-  name: null,
-  email: null,
-  id: null,
-  token: null,
-  loginDate: null,
-  admin: false,
-  admin_id: 0,
-  intercom_hmac: null,
-  auth: null,
-  ghosting: false,
-  customerId: undefined,
-  data: undefined
-});
+import {User} from '../modules/schemas';
+import {
+  USER_LOGIN,
+  USER_LOGOUT,
+  USER_REFRESH,
+  USER_EDIT,
+  USER_SET_PASSWORD,
+  USER_GET_CUSTOMER,
+  USER_GET_DATA,
+  USER_PUT_DATA,
+  USER_APPLY
+} from '../reduxactions/constants';
 
 function getAuth(data){
   const date = data.loginDate;
@@ -64,21 +60,21 @@ function setUser(state, action){
 }
 
 export default handleActions({
-  USER_LOGIN: {
+  [USER_LOGIN]: {
     next: setUser
   },
-  USER_EDIT: {
+  [USER_EDIT]: {
     next: setUser
   },
-  USER_SET_PASSWORD: {
+  [USER_SET_PASSWORD]: {
     next: setUser
   },
-  USER_LOGOUT: {
+  [USER_LOGOUT]: {
     next(){
       return new User();
     }
   },
-  USER_REFRESH: {
+  [USER_REFRESH]: {
     next(state, action){
       const data = _.assign({}, action.payload, {loginDate: new Date()});
       return setUser(state, {payload: data});
@@ -87,7 +83,7 @@ export default handleActions({
       return new User();
     }
   },
-  USER_GET_CUSTOMER: {
+  [USER_GET_CUSTOMER]: {
     next(state, action){
       return new User(_.assign({}, state.toJS(), action.payload));
     },
@@ -95,7 +91,7 @@ export default handleActions({
       return state;
     }
   },
-  USER_GET_DATA: {
+  [USER_GET_DATA]: {
     next(state, action){
       return new User(_.assign({}, state.toJS(), {data: action.payload}));
     },
@@ -106,9 +102,14 @@ export default handleActions({
       return state;
     }
   },
-  UESR_PUT_DATA: {
+  [USER_PUT_DATA]: {
     next(state, action){
       return new User(_.assign({}, state.toJS(), {data: action.payload}));
+    }
+  },
+  [USER_APPLY]: {
+    next(state, action){
+      return setUser(state, action);
     }
   }
 }, initial);

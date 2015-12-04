@@ -1,11 +1,18 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
+import {
+  ONBOARD_SET_REGION,
+  ONBOARD_SET_CREDENTIALS,
+  ONBOARD_VPC_SCAN,
+  ONBOARD_VPC_SELECT,
+  ONBOARD_SET_INSTALL_DATA
+} from '../reduxactions/constants';
 
 const initial = {
-  'access_key': config.access_key || undefined,
-  'secret_key': config.secret_key || undefined,
-  region: config.region || undefined,
+  'access_key': config.access_key,
+  'secret_key': config.secret_key,
+  region: config.region,
   regionsWithVpcs: [],
   vpcsForSelection: [],
   bastionLaunching: undefined,
@@ -103,17 +110,17 @@ function getFinalInstallData(state){
 }
 
 export default handleActions({
-  ONBOARD_SET_REGION: {
+  [ONBOARD_SET_REGION]: {
     next(state, action){
       return _.assign({}, state, action.payload);
     }
   },
-  ONBOARD_SET_CREDENTIALS: {
+  [ONBOARD_SET_CREDENTIALS]: {
     next(state, action){
       return _.assign({}, state, action.payload);
     }
   },
-  ONBOARD_VPC_SCAN: {
+  [ONBOARD_VPC_SCAN]: {
     next(state, action){
       const regionsWithVpcs = action.payload;
 
@@ -149,7 +156,7 @@ export default handleActions({
       return state;
     }
   },
-  ONBOARD_VPC_SELECT: {
+  [ONBOARD_VPC_SELECT]: {
     next(state, action){
       const regions = _.cloneDeep(state.regionsWithVpcs);
       const regionsWithVpcs = regions.map(parent => {
@@ -161,7 +168,7 @@ export default handleActions({
       return _.assign({}, state, {regionsWithVpcs});
     }
   },
-  ONBOARD_SET_INSTALL_DATA: {
+  [ONBOARD_SET_INSTALL_DATA]: {
     next(state){
       const installData = getFinalInstallData(state);
       return _.assign({}, state, {installData});

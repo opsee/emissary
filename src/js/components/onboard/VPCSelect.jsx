@@ -4,15 +4,12 @@ import forms from 'newforms';
 
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
-import {AWSStore} from '../../stores';
 import {BoundField} from '../forms';
 import analytics from '../../modules/analytics';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {onboard as actions} from '../../reduxactions';
-
-const regions = AWSStore.getRegions();
 
 const InfoForm = forms.Form.extend({
   vpcs: forms.ChoiceField({
@@ -67,17 +64,6 @@ const VPCSelect = React.createClass({
   },
   isDisabled(){
     return !this.state.info.cleanedData.vpcs;
-  },
-  runToggleAll(value){
-    if (value){
-      this.state.info.updateData({
-        regions: regions.map(r => {
-          return r.id;
-        })
-      });
-    }else {
-      this.state.info.updateData({regions: []});
-    }
   },
   handleSubmit(e){
     e.preventDefault();

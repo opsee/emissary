@@ -1,72 +1,58 @@
 import React, {PropTypes} from 'react';
-import {History} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import {Toolbar} from '../global';
+
+import {StatusHandler, Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {UserStore} from '../../stores';
-import {UserActions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
+import {user as actions} from '../../reduxactions';
 
-export default React.createClass({
-  mixins: [UserStore.mixin, History],
+const PasswordChange = React.createClass({
   propTypes: {
-    location: PropTypes.object
+    location: PropTypes.object,
+    history: PropTypes.object.isRequired,
+    actions: PropTypes.shape({
+      edit: PropTypes.func.isRequired,
+      userApply: PropTypes.func.isRequired
+    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        userEdit: PropTypes.object
+      })
+    })
   },
   getInitialState(){
     return {
-      status: null,
       password: null
     };
   },
   componentWillMount(){
-    if (!this.props.location.query.id || !this.props.location.query.token){
-      this.history.replaceState(null, '/password-forgot');
+    const token = this.props.location.query.token;
+    if (!this.props.location.query.id || !token){
+      return this.props.history.replaceState(null, '/password-forgot');
     }
-    UserActions.userSet({
-      token: this.props.location.query.token,
-      user: _.assign(this.props.location.query, {
-        loginDate: new Date()
-      })
+    this.props.actions.userApply({
+      loginDate: new Date(),
+      token
     });
   },
-  storeDidChange(){
-    const status = UserStore.getUserEditStatus();
-    this.setState({status});
-    if (status === 'success'){
-      this.history.pushState(null, '/env');
-    }else if (status && status !== 'pending'){
-      console.error(status);
-    }
+  getStatus(){
+    return this.props.redux.asyncActions.userEdit.status;
   },
   getButtonText(){
-    return this.state.status === 'pending' ? 'Changing...' : 'Change';
+    return this.getStatus() === 'pending' ? 'Changing...' : 'Change';
   },
   isDisabled(){
-    return !this.state.password || this.state.status === 'pending';
+    return !this.state.password || this.getStatus() === 'pending';
   },
   setUserData(data){
-    this.setState({password: data.password});
+    this.setState(_.assign({}, data));
   },
   handleSubmit(e){
     e.preventDefault();
-    UserActions.userEdit({password: this.state.password, id: this.props.location.query.id});
-  },
-  renderInner(){
-    if (this.state.status === 'success'){
-      return (
-        <p>Success. Check your email.</p>
-      );
-    }
-    return (
-      <form name="loginForm" onSubmit={this.handleSubmit}>
-        <p>Enter your new password here.</p>
-        <UserInputs include={['password']}  onChange={this.setUserData}/>
-        <Button color="success" block type="submit" disabled={this.isDisabled()}>
-          {this.getButtonText()}
-        </Button>
-      </form>
-    );
+    this.props.actions.edit(_.assign(this.state, this.props.location.query));
   },
   render() {
     return (
@@ -75,7 +61,14 @@ export default React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <form name="loginForm" onSubmit={this.handleSubmit}>
+                <p>Enter your new password here.</p>
+                <UserInputs include={['password']}  onChange={this.setUserData}/>
+                <StatusHandler status={this.getStatus()}/>
+                <Button color="success" block type="submit" disabled={this.isDisabled()}>
+                  {this.getButtonText()}
+                </Button>
+              </form>
             </Col>
           </Row>
         </Grid>
@@ -83,3 +76,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(PasswordChange);

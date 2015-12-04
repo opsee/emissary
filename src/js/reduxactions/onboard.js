@@ -28,7 +28,11 @@ export function signupCreate(data) {
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
           }, 100);
-        }, reject);
+        }, err => {
+          let msg = _.get(err, 'response.body.message');
+          const r = msg ? new Error(msg) : err;
+          reject(r);
+        });
       })
     });
   };
