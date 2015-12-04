@@ -61,20 +61,6 @@ const GroupElb = React.createClass({
     }
     return <tr/>;
   },
-  renderLastChecked(){
-    const d = this.getGroup().get('lastChecked');
-    if (d){
-      return (
-        <tr>
-          <td><strong>Last Checked</strong></td>
-          <td title={`Last Checked: ${d.toISOString()}`}>
-            <TimeAgo date={this.getGroup().get('lastChecked')}/>
-          </td>
-        </tr>
-      );
-    }
-    return <tr/>;
-  },
   renderInner(){
     if (this.getGroup().get('name')){
       return (
@@ -91,7 +77,6 @@ const GroupElb = React.createClass({
                 <td><strong>Created</strong></td>
                 <td><TimeAgo date={new Date(this.getGroup().get('CreatedTime'))}/></td>
               </tr>
-              {this.renderLastChecked()}
               {this.renderDescription()}
             </Table>
           </Padding>

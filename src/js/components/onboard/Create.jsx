@@ -52,11 +52,12 @@ const OnboardCreate = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Create Your Account"/>
+        <Toolbar title="Sign up for Our Private Beta"/>
         <Grid>
           <Row>
             <Col xs={12}>
-              <LogoColor/>
+              <Padding b={2}><LogoColor/></Padding>
+              <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
                 <StatusHandler status={this.getStatus()}/>

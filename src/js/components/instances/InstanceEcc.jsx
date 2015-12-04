@@ -62,20 +62,6 @@ const InstanceEcc = React.createClass({
     }
     return <tr/>;
   },
-  renderLastChecked(){
-    const d = this.getInstance().get('lastChecked');
-    if (d){
-      return (
-        <tr>
-          <td><strong>Last Checked</strong></td>
-          <td title={`Last Checked: ${d.toISOString()}`}>
-            <TimeAgo date={this.getInstance().get('lastChecked')}/>
-          </td>
-        </tr>
-      );
-    }
-    return <tr/>;
-  },
   renderInner(){
     if (this.getInstance().get('name')){
       return (
@@ -100,7 +86,6 @@ const InstanceEcc = React.createClass({
                 <td>{this.getInstance().get('InstanceType')}</td>
               </tr>
               {this.renderAvailabilityZone()}
-              {this.renderLastChecked()}
             </Table>
           </Padding>
           <Padding b={1}>
