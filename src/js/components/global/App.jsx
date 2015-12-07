@@ -1,6 +1,4 @@
 import React from 'react';
-import Perf from 'react-addons-perf';
-// import router from './modules/router.js';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {pushState, ReduxRouter} from 'redux-router';
@@ -12,7 +10,7 @@ import routes from './Routes.jsx';
 
 if (config.env !== 'production'){
   window._ = _;
-  window.Perf = Perf;
+  window.Perf = require('react-addons-perf');
   window.Perf.start();
 }
 
