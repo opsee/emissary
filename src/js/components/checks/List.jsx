@@ -43,7 +43,7 @@ const CheckList = React.createClass({
       return (
         <div>
           <h3>All Checks ({this.props.redux.checks.checks.size})</h3>
-          <CheckItemList checks={this.props.redux.checks.checks}/>
+          <CheckItemList/>
         </div>
       );
     }

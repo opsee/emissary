@@ -96,8 +96,15 @@ function getFinalInstallData(state){
     return _.chain(region).pick(['region', 'subnets']).mapValues((value, key) => {
       if (key === 'subnets'){
         return _.chain(value).filter('selected').map(selected => {
-          return _.chain(selected).pick(['subnet_id', 'vpc_id']).mapKeys((childValue, childKey) => {
-            return childKey === 'vpc_id' ? 'id' : 'subnet_id';
+          return _.chain(selected).pick(['subnet_id', 'vpc_id', 'routing']).mapKeys((childValue, childKey) => {
+            switch (childKey){
+            case 'routing':
+              return 'subnet_routing';
+            case 'vpc_id':
+              return 'id';
+            default:
+              return childKey;
+            }
           }).value();
         }).value();
       }

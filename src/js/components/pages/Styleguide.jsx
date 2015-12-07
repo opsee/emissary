@@ -281,7 +281,7 @@ const Styleguide = React.createClass({
             <hr/>
 
             <h3>Example Group Items</h3>
-            <GroupItemList groups={this.props.redux.env.groups.security} redux={this.props.redux}/>
+            <GroupItemList groups={this.props.redux.env.groups.security}/>
             <hr/>
             <h3>Cards</h3>
             <Row>

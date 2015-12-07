@@ -98,7 +98,7 @@ const InstanceEcc = React.createClass({
           }
           </Padding>
           <Padding b={1}>
-            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback redux={this.props.redux}/>
+            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
           </Padding>
           {
             // <h2>{this.data().checks.length} Checks</h2>

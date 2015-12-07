@@ -10,8 +10,8 @@ import routes from './Routes.jsx';
 
 if (config.env !== 'production'){
   window._ = _;
-  window.Perf = require('react-addons-perf');
-  window.Perf.start();
+  // window.Perf = require('react-addons-perf');
+  // window.Perf.start();
 }
 
 const App = React.createClass({

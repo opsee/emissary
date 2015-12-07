@@ -1,17 +1,22 @@
 import React, {PropTypes} from 'react';
 import {Record} from 'immutable';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {ListItem} from '../global';
 import {Edit, Delete, ListCheckmark, ListClose} from '../icons';
 import {Button} from '../forms';
-import {CheckActions} from '../../actions';
+import {checks as actions} from '../../reduxactions';
 
 const CheckItem = React.createClass({
   mixins: [PureRenderMixin],
   propTypes: {
     item: PropTypes.instanceOf(Record).isRequired,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    actions: PropTypes.shape({
+      del: PropTypes.func.isRequired
+    })
   },
   getInfoText(){
     if (this.props.item.get('total')){
@@ -27,8 +32,7 @@ const CheckItem = React.createClass({
   },
   handleDeleteClick(e){
     e.preventDefault();
-    CheckActions.deleteCheck(this.props.item.get('id'));
-    this.setState({showModal: false});
+    this.props.actions.del(this.props.item.get('id'));
   },
   render(){
     if (this.props.item.get('name')){
@@ -51,4 +55,8 @@ const CheckItem = React.createClass({
   }
 });
 
-export default CheckItem;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(CheckItem);

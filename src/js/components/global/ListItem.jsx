@@ -21,10 +21,8 @@ const ListItem = React.createClass({
     menuTitle: PropTypes.string,
     onClick: PropTypes.func,
     params: PropTypes.object,
-    selected: PropTypes.string,
     title: PropTypes.string,
-    type: PropTypes.string,
-    query: PropTypes.object
+    type: PropTypes.string
   },
   getDefaultProps(){
     return {
