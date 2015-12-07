@@ -48,6 +48,7 @@ const Opsee = React.createClass({
     //user log in
     if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
       this.props.appActions.initialize();
+      this.props.envActions.getBastions();
     }
   },
   getMeatClass(){
