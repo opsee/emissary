@@ -37,7 +37,7 @@ const CheckEdit = React.createClass({
     filter: PropTypes.string,
     actions: PropTypes.shape({
       getCheck: PropTypes.func,
-      deleteCheck: PropTypes.func,
+      del: PropTypes.func,
       edit: PropTypes.func
     }),
     envActions: PropTypes.shape({
@@ -80,7 +80,7 @@ const CheckEdit = React.createClass({
     return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
   },
   runRemoveCheck(){
-    this.props.actions.deleteCheck(this.props.params.id);
+    this.props.actions.del(this.props.params.id);
   },
   setData(data, disabled, num){
     let obj = {};

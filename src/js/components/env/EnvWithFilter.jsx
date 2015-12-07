@@ -192,7 +192,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="groupsSecurity">
           <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
+          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
       );
@@ -212,7 +212,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="groupsELB">
           <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} redux={this.props.redux}/>
+          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
       );

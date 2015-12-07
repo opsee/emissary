@@ -58,7 +58,7 @@ export function getChecks(){
   };
 }
 
-export function deleteCheck(id){
+export function del(id){
   return (dispatch, state) => {
     dispatch({
       type: CHECK_DELETE,

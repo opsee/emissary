@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import StatusHandler from './StatusHandler';
 import {Link} from 'react-router';
+import _ from 'lodash';
+
 import {Alert} from '../../modules/bootstrap';
 import config from '../../modules/config';
 
@@ -18,7 +20,7 @@ const BastionRequirement = React.createClass({
     })
   },
   render() {
-    if (this.props.redux.env.bastions.length || config.skipBastionRequirement){
+    if (_.find(this.props.redux.env.bastions, 'connected') || config.skipBastionRequirement){
       return (
         <div>
           {this.props.children}

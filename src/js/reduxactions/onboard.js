@@ -11,7 +11,8 @@ import {
   ONBOARD_INSTALL,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
-  ONBOARD_SET_INSTALL_DATA
+  ONBOARD_SET_INSTALL_DATA,
+  ONBOARD_SUBNET_SELECT
 } from './constants';
 
 export function signupCreate(data) {
@@ -102,6 +103,21 @@ export function vpcSelect(payload){
   return (dispatch) => {
     dispatch({
       type: ONBOARD_VPC_SELECT,
+      payload
+    });
+    dispatch({
+      type: ONBOARD_SET_INSTALL_DATA
+    });
+    setTimeout(() => {
+      dispatch(pushState(null, '/start/install'));
+    }, 100);
+  };
+}
+
+export function subnetSelect(payload){
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_SUBNET_SELECT,
       payload
     });
     dispatch({

@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import Immutable from 'immutable';
+import _ from 'lodash';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../../modules/bootstrap';
@@ -29,9 +31,13 @@ const CheckItemList = React.createClass({
     this.props.actions.getChecks();
     this.setInterval(this.props.actions.getChecks, 15000);
   },
-  shouldComponentUpdate() {
-    // return !Immutable.is(this.state.checks, nextState.checks) || nextState.status !== this.state.status;
-    return true;
+  shouldComponentUpdate(nextProps) {
+    const string1 = 'redux.asyncActions.getChecks.status';
+    const bool1 = _.get(nextProps, string1) !== _.get(this.props, string1);
+    const string2 = 'redux.checks.checks';
+    const bool2 = !Immutable.is(_.get(nextProps, string2), _.get(this.props, string2));
+    console.log(bool1 || bool2);
+    return bool1 || bool2;
   },
   getChecks(){
     let data = this.props.redux.checks.checks;
@@ -43,6 +49,7 @@ const CheckItemList = React.createClass({
     return data;
   },
   render() {
+    console.log('checkitemlistrender');
     if (this.getChecks().size){
       return (
         <div>

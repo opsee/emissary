@@ -19,7 +19,7 @@ const CheckSingle = React.createClass({
     params: PropTypes.object,
     actions: PropTypes.shape({
       getCheck: PropTypes.func.isRequired,
-      deleteCheck: PropTypes.func.isRequired
+      del: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       checks: PropTypes.object,
@@ -64,7 +64,7 @@ const CheckSingle = React.createClass({
     return val;
   },
   runRemoveCheck(){
-    this.props.actions.deleteCheck(this.props.params.id);
+    this.props.actions.del(this.props.params.id);
   },
   renderInner(){
     if (this.getCheck().get('name')){

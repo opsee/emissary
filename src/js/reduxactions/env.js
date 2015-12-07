@@ -149,7 +149,7 @@ export function getBastions(){
       type: ENV_GET_BASTIONS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/bastions`)
+        .get(`${config.api}/vpcs/bastions`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           const arr = _.get(res, 'body.bastions');

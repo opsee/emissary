@@ -108,7 +108,7 @@ const InstanceRds = React.createClass({
             <CheckItemList type="instance" target={this.props.params.id} redux={this.props.redux}/>
           </Padding>
           <Padding tb={1}>
-            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback redux={this.props.redux}/>
+            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
           </Padding>
         </div>
       );
