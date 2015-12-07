@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import {Toolbar} from '../global';
 import {OnboardActions} from '../../actions';
@@ -86,7 +87,7 @@ const RegionSelect = React.createClass({
     this.props.actions.setRegion(this.state.info.cleanedData.regions);
   },
   renderInner(){
-    if (!this.props.redux.env.bastions.length){
+    if (!_.find(this.props.redux.env.bastions, 'connected')){
       return (
         <form name="loginForm" onSubmit={this.handleSubmit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>

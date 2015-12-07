@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -34,7 +35,7 @@ const System = React.createClass({
     this.props.actions.getData();
   },
   renderBastionList(){
-    if (this.props.redux.env.bastions.length){
+    if (_.find(this.props.redux.env.bastions, 'connected').length){
       return (
         <div>
           <h3>Connected Bastions</h3>
