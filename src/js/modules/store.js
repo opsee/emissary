@@ -3,12 +3,16 @@ import thunk from 'redux-thunk';
 import reducer from '../reducers';
 import {reduxReactRouter} from 'redux-router';
 import routes from '../components/global/Routes';
+// import {createHistory} from 'history';
 import {createHistory} from 'history';
+import useSimpleScroll from 'scroll-behavior/lib/useSimpleScroll';
 import {promiseMiddleware} from './promiseMiddleware';
+
+const scrollableHistory = useSimpleScroll(createHistory);
 
 const reduxRouter = reduxReactRouter({
   routes,
-  createHistory
+  scrollableHistory
 });
 
 const middleware = [
