@@ -38,7 +38,6 @@ const Opsee = React.createClass({
     this.props.appActions.initialize();
     this.props.envActions.getBastions();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
-    this.setInterval(this.props.envActions.getBastions, (1000 * 60 * 3));
   },
   componentWillReceiveProps(nextProps) {
     //user log out

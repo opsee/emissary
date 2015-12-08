@@ -7,13 +7,16 @@ import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import config from '../../modules/config';
-import {user as actions} from '../../reduxactions';
+import {user as actions, env as envActions} from '../../reduxactions';
 
 const System = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
       getCustomer: PropTypes.func,
       getData: PropTypes.func
+    }),
+    envActions: PropTypes.shape({
+      getBastions: PropTypes.func
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -33,15 +36,17 @@ const System = React.createClass({
   componentWillMount(){
     this.props.actions.getCustomer();
     this.props.actions.getData();
+    this.props.envActions.getBastions();
   },
   renderBastionList(){
-    if (_.find(this.props.redux.env.bastions, 'connected')){
+    const bastions = _.filter(this.props.redux.env.bastions, 'connected');
+    if (bastions.length){
       return (
         <div>
           <h3>Connected Bastions</h3>
           <ul>
-            {this.props.redux.env.bastions.map(bastion => {
-              return <li key={`bastion-${bastion}`}>EC2 Instance ID: {bastion}</li>;
+            {bastions.map((bastion, i) => {
+              return <li key={`bastion-${i}`}>EC2 Instance ID: {bastion.id}</li>;
             })}
           </ul>
         </div>
@@ -85,7 +90,8 @@ const System = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  envActions: bindActionCreators(envActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(System);

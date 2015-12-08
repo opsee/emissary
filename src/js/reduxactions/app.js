@@ -92,7 +92,9 @@ export function initialize(){
         email: state().user.get('email'),
         user_hash: state().user.get('intercom_hmac')
       });
-      socketStart(dispatch, state);
+      setTimeout(() => {
+        socketStart(dispatch, state);
+      }, config.socketStartDelay || 0);
     }
     dispatch({
       type: APP_INITIALIZE
