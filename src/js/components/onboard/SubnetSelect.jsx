@@ -12,7 +12,7 @@ import {Padding} from '../layout';
 import {onboard as actions} from '../../reduxactions';
 
 const InfoForm = forms.Form.extend({
-  vpcs: forms.ChoiceField({
+  subnets: forms.ChoiceField({
     widget: forms.RadioSelect,
     widgetAttrs: {
       widgetType: 'RadioSelect'
@@ -20,11 +20,11 @@ const InfoForm = forms.Form.extend({
   }),
   constructor(choices, kwargs){
     forms.Form.call(this, kwargs);
-    this.fields.vpcs.setChoices(choices);
+    this.fields.subnets.setChoices(choices);
   }
 });
 
-const VPCSelect = React.createClass({
+const SubnetSelect = React.createClass({
   propTypes: {
     history: PropTypes.object,
     actions: PropTypes.shape({
@@ -32,7 +32,6 @@ const VPCSelect = React.createClass({
     }),
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
-        regionsWithVpcs: PropTypes.array,
         subnetsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
@@ -42,40 +41,50 @@ const VPCSelect = React.createClass({
     })
   },
   componentWillMount(){
-    if (!this.props.redux.onboard.regionsWithVpcs.length){
+    if (!this.props.redux.onboard.subnetsForSelection.length){
       this.props.history.replaceState(null, '/start/region-select');
     }
   },
   getInitialState() {
     const self = this;
-    const obj = {
-      info: new InfoForm(this.props.redux.onboard.subnetsForSelection, {
-        onChange(){
-          self.forceUpdate();
-        },
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 100
-        }
-      })
-    };
+    const data = this.props.redux.onboard.subnetsForSelection;
+    let obj = {};
+    if (data.length){
+      obj = {
+        info: new InfoForm(data, {
+          onChange(){
+            self.forceUpdate();
+          },
+          labelSuffix: '',
+          validation: {
+            on: 'blur change',
+            onChangeDelay: 100
+          },
+          data: {
+            subnets: [data[0][0]]
+          }
+        })
+      };
+      setTimeout(() => {
+        obj.info.validate();
+      }, 30);
+    }
     return obj;
   },
   isDisabled(){
-    return !this.state.info.cleanedData.vpcs;
+    return !this.state.info.cleanedData.subnets;
   },
   handleSubmit(e){
     e.preventDefault();
     analytics.event('Onboard', 'subnet-select');
-    this.props.actions.subnetSelect(this.state.info.cleanedData.vpcs);
+    this.props.actions.subnetSelect(this.state.info.cleanedData.subnets);
   },
   renderInner(){
     if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
           <p>Choose which Subnet you&rsquo;d like to install a Bastion in.</p>
-          <BoundField bf={this.state.info.boundField('vpcs')}/>
+          <BoundField bf={this.state.info.boundField('subnets')}/>
           <Padding t={1}>
             <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
           </Padding>
@@ -84,7 +93,7 @@ const VPCSelect = React.createClass({
     }
     return (
       <Alert type="danger">
-        Either you have no active VPCs or something else went wrong.
+        Either you have no active Subnets or something else went wrong.
       </Alert>
     );
   },
@@ -110,4 +119,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(VPCSelect);
+export default connect(null, mapDispatchToProps)(SubnetSelect);

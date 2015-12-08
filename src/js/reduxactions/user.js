@@ -191,7 +191,7 @@ export function putData(key, data, reset){
           .put(`${config.authApi}/users/${state().user.get('id')}/data`)
           .set('Authorization', state().user.get('auth'))
           .send(user)
-          .then(res2 => res2.body, reject);
+          .then(res2 => resolve(res2.body), reject);
         }, reject);
       })
     });
