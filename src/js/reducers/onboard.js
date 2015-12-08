@@ -1,12 +1,14 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
+import colors from 'seedling/colors';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
-  ONBOARD_SET_INSTALL_DATA
+  ONBOARD_SET_INSTALL_DATA,
+  ONBOARD_SUBNET_SELECT
 } from '../reduxactions/constants';
 
 const initial = {
@@ -15,6 +17,7 @@ const initial = {
   region: config.region,
   regionsWithVpcs: [],
   vpcsForSelection: [],
+  subnetsForSelection: [],
   bastionLaunching: undefined,
   installData: undefined
 };
@@ -116,6 +119,21 @@ function getFinalInstallData(state){
   return _.assign({}, starter, _.pick(state, ['access_key', 'secret_key']), {regions});
 }
 
+function generateSubnetsForSelection(regions){
+  return _.chain(regions).map(region => {
+    return _.chain(region.subnets).map(subnet => {
+      let subnetName = subnet.subnet_id;
+      if (subnet.tags.length){
+        subnetName = _.chain(subnet.tags).findWhere({key: 'Name'}).get('value').value() || subnetName;
+      }
+      return [subnet.subnet_id, `
+      <strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${subnet.subnet_id}<br/>
+      <span style="color:${colors.textColorSecondary}">${subnet.instance_count} Instances (${subnet.routing})</span>
+      `];
+    }).value();
+  }).flatten().value();
+}
+
 export default handleActions({
   [ONBOARD_SET_REGION]: {
     next(state, action){
@@ -145,17 +163,16 @@ export default handleActions({
       // }).flatten().value();
 
       const vpcsForSelection = _.chain(regionsWithVpcs).map(region => {
-        return _.chain(region.subnets).map(s => {
-          const vpc = _.find(region.vpcs, {vpc_id: s.vpc_id});
+        return _.chain(region.vpcs).map(vpc => {
           let vpcName = vpc.vpc_id;
-          if (vpc.tags){
-            vpcName = _.chain(vpc.tags).findWhere({key: 'Name'}).get('value').value();
+          if (vpc.tags.length){
+            vpcName = _.chain(vpc.tags).findWhere({key: 'Name'}).get('value').value() || vpcName;
           }
-          return [s.subnet_id, `
-          <strong>${s.availability_zone}</strong> - ${vpcName} - ${s.subnet_id} - (${vpc.instance_count || 0} Instances)
+          return [vpc.vpc_id, `
+          <strong>${vpcName}</strong> (${vpc.instance_count || 0} Instances)
           `];
         }).value();
-      }).flatten().sortBy(s => s[0]).value();
+      }).flatten().value();
 
       return _.assign({}, state, {regionsWithVpcs, vpcsForSelection});
     },
@@ -164,6 +181,19 @@ export default handleActions({
     }
   },
   [ONBOARD_VPC_SELECT]: {
+    next(state, action){
+      const regions = _.cloneDeep(state.regionsWithVpcs);
+      const regionsWithVpcs = regions.map(parent => {
+        const children = parent.vpcs.map(child => {
+          return _.assign({}, child, {selected: child.vpc_id === action.payload});
+        });
+        return _.assign({}, parent, {vpcs: children});
+      });
+      const subnetsForSelection = generateSubnetsForSelection(regionsWithVpcs);
+      return _.assign({}, state, {regionsWithVpcs, subnetsForSelection});
+    }
+  },
+  [ONBOARD_SUBNET_SELECT]: {
     next(state, action){
       const regions = _.cloneDeep(state.regionsWithVpcs);
       const regionsWithVpcs = regions.map(parent => {

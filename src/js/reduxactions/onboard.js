@@ -105,11 +105,8 @@ export function vpcSelect(payload){
       type: ONBOARD_VPC_SELECT,
       payload
     });
-    dispatch({
-      type: ONBOARD_SET_INSTALL_DATA
-    });
     setTimeout(() => {
-      dispatch(pushState(null, '/start/install'));
+      dispatch(pushState(null, '/start/subnet-select'));
     }, 100);
   };
 }

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import RadioWithLabel from './RadioWithLabel.jsx';
 import _ from 'lodash';
+import {Padding} from '../layout';
 
 const RadioSelect = React.createClass({
   propTypes: {
@@ -28,7 +29,9 @@ const RadioSelect = React.createClass({
         {this.props.bf.subWidgets().map((w, i) => {
           return (
             <li key={i}>
-              <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+              <Padding b={1}>
+                <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+              </Padding>
             </li>
           );
         })}
