@@ -47,6 +47,7 @@ const CheckList = React.createClass({
         </div>
       );
     }
+    //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
     return (
       <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
         <p>You don&rsquo;t have any Checks yet. <Link to="/check-create" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
