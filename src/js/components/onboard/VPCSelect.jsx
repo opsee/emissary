@@ -48,18 +48,28 @@ const VPCSelect = React.createClass({
   },
   getInitialState() {
     const self = this;
-    const obj = {
-      info: new InfoForm(this.props.redux.onboard.vpcsForSelection, {
-        onChange(){
-          self.forceUpdate();
-        },
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 100
-        }
-      })
-    };
+    let obj = {};
+    const data = this.props.redux.onboard.vpcsForSelection;
+    if (data.length){
+      obj = {
+        info: new InfoForm(data, {
+          onChange(){
+            self.forceUpdate();
+          },
+          labelSuffix: '',
+          validation: {
+            on: 'blur change',
+            onChangeDelay: 100
+          },
+          data: {
+            vpcs: [data[0][0]]
+          }
+        })
+      };
+      setTimeout(() => {
+        obj.info.validate();
+      }, 30);
+    }
     return obj;
   },
   isDisabled(){
