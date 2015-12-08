@@ -12,7 +12,7 @@ import {
 
 /* eslint-disable no-use-before-define */
 
-const statics = {
+export const statics = {
   checkFromJS(data){
     const legit = data.instance || data;
     let newData = _.assign({}, legit, legit.check_spec.value);
