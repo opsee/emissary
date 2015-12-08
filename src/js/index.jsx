@@ -4,8 +4,6 @@ import {Provider} from 'react-redux';
 import App from './components/global/App';
 import store from './modules/store';
 import config from './modules/config';
-import routes from './components/global/Routes';
-import {ReduxRouter} from 'redux-router';
 
 if (config.env !== 'production'){
   const tools = require('redux-devtools/lib/react');

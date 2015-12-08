@@ -5,8 +5,6 @@ import {pushState, ReduxRouter} from 'redux-router';
 
 import config from '../../modules/config';
 import routes from './Routes.jsx';
-// import createBrowserHistory from 'history/lib/createBrowserHistory';
-// import {useStandardScroll} from 'scroll-behavior';
 
 if (config.env !== 'production'){
   window._ = _;
