@@ -68,11 +68,11 @@ const CheckEdit = React.createClass({
     this.props.envActions.getInstancesEcc();
   },
   componentWillReceiveProps(nextProps) {
-    const data = this.props.redux.checks.checks.find(g => {
-        return g.get('id') === this.props.params.id;
-      }) || new Check();
+    const data = nextProps.redux.checks.checks.find(g => {
+      return g.get('id') === this.props.params.id;
+    }) || new Check();
     const check = data.toJS();
-    if(!this.state.check && check.assertions.length){
+    if (!this.state.check && check.assertions.length){
       this.setState({
         check
       });
@@ -158,7 +158,7 @@ const CheckEdit = React.createClass({
           </Padding>
         </div>
       );
-    }else if(!this.getCheck().assertions.length){
+    }else if (!this.getCheck().assertions.length){
       return <StatusHandler status="pending"/>;
     }
     return (
