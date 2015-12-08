@@ -5,11 +5,13 @@ import {
   APP_INITIALIZE,
   APP_SOCKET_OPEN,
   APP_SOCKET_MSG,
-  APP_SOCKET_ERROR
+  APP_SOCKET_ERROR,
+  APP_SHUTDOWN
 } from '../reduxactions/constants';
 
 const initial = {
-  socketMessages: []
+  socketMessages: [],
+  ready: false
 };
 
 export default handleActions({
@@ -36,6 +38,14 @@ export default handleActions({
     next(state){
       return _.assign({}, state, {
         socketError: true
+      });
+    }
+  },
+  [APP_SHUTDOWN]: {
+    next(state){
+      return _.assign({}, state, {
+        socketMessages: [],
+        socketError: undefined
       });
     }
   }

@@ -24,7 +24,6 @@ const Profile = React.createClass({
   },
   handleLogout(){
     this.props.actions.logout();
-    this.props.appActions.shutdown();
   },
   render() {
     const user = this.props.redux.user.toJS();

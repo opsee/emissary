@@ -65,7 +65,9 @@ export function logout(query){
     dispatch({
       type: USER_LOGOUT
     });
-    dispatch(pushState(null, '/login', query));
+    setTimeout(() => {
+      dispatch(pushState(null, '/login', query));
+    }, 30);
   };
 }
 

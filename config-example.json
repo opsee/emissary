@@ -22,5 +22,7 @@
   //check default path
   "checkDefaultPath": "",
   //check default port
-  "checkDefaultPort": ""
+  "checkDefaultPort": "",
+  //socket start delay (for simulating slow connection startup)
+  "socketStartDelay": 0
 }
