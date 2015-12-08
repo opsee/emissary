@@ -42,7 +42,7 @@ export function getCheck(id){
   };
 }
 
-export function getChecks(){
+export function getChecks(redirect){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECKS,
@@ -52,6 +52,11 @@ export function getChecks(){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(_.get(res.body, 'checks'));
+          if (redirect){
+            setTimeout(() => {
+              dispatch(pushState(null, '/'));
+            }, 100);
+          }
         }, reject);
       })
     });

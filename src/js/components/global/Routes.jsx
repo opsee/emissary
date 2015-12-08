@@ -45,6 +45,7 @@ import OnboardTutorial3 from '../onboard/Tutorial3';
 import OnboardRegionSelect from '../onboard/RegionSelect';
 import OnboardCredentials from '../onboard/Credentials';
 import OnboardVPCSelect from '../onboard/VPCSelect';
+import OnboardSubnetSelect from '../onboard/SubnetSelect';
 import OnboardInstall from '../onboard/Install';
 
 import AdminSignups from '../admin/Signups';
@@ -101,6 +102,7 @@ const routes = (
     <Route path="/start/region-select" component={auth(OnboardRegionSelect)}/>
     <Route path="/start/credentials" component={auth(OnboardCredentials)}/>
     <Route path="/start/vpc-select" component={auth(OnboardVPCSelect)}/>
+    <Route path="/start/subnet-select" component={auth(OnboardSubnetSelect)}/>
     <Route path="/start/install" component={auth(OnboardInstall)}/>
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 

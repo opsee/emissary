@@ -36,7 +36,6 @@ const CheckItemList = React.createClass({
     const bool1 = _.get(nextProps, string1) !== _.get(this.props, string1);
     const string2 = 'redux.checks.checks';
     const bool2 = !Immutable.is(_.get(nextProps, string2), _.get(this.props, string2));
-    console.log(bool1 || bool2);
     return bool1 || bool2;
   },
   getChecks(){
@@ -49,7 +48,6 @@ const CheckItemList = React.createClass({
     return data;
   },
   render() {
-    console.log('checkitemlistrender');
     if (this.getChecks().size){
       return (
         <div>

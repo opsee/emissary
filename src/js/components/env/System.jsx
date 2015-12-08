@@ -35,7 +35,7 @@ const System = React.createClass({
     this.props.actions.getData();
   },
   renderBastionList(){
-    if (_.find(this.props.redux.env.bastions, 'connected').length){
+    if (_.find(this.props.redux.env.bastions, 'connected')){
       return (
         <div>
           <h3>Connected Bastions</h3>

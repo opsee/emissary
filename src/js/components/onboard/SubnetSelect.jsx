@@ -28,12 +28,12 @@ const VPCSelect = React.createClass({
   propTypes: {
     history: PropTypes.object,
     actions: PropTypes.shape({
-      vpcSelect: PropTypes.func
+      subnetSelect: PropTypes.func
     }),
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
         regionsWithVpcs: PropTypes.array,
-        vpcsForSelection: PropTypes.array
+        subnetsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
         envGetBastions: PropTypes.object
@@ -49,7 +49,7 @@ const VPCSelect = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      info: new InfoForm(this.props.redux.onboard.vpcsForSelection, {
+      info: new InfoForm(this.props.redux.onboard.subnetsForSelection, {
         onChange(){
           self.forceUpdate();
         },
@@ -67,14 +67,14 @@ const VPCSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    analytics.event('Onboard', 'vpc-select');
-    this.props.actions.vpcSelect(this.state.info.cleanedData.vpcs);
+    analytics.event('Onboard', 'subnet-select');
+    this.props.actions.subnetSelect(this.state.info.cleanedData.vpcs);
   },
   renderInner(){
-    if (this.props.redux.onboard.vpcsForSelection.length){
+    if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
-          <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>
+          <p>Choose which Subnet you&rsquo;d like to install a Bastion in.</p>
           <BoundField bf={this.state.info.boundField('vpcs')}/>
           <Padding t={1}>
             <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
@@ -91,7 +91,7 @@ const VPCSelect = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Select a VPC"/>
+        <Toolbar title="Select a Subnet"/>
         <Grid>
           <Row>
             <Col xs={12}>
