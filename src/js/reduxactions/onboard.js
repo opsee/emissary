@@ -72,24 +72,27 @@ export function vpcScan(data) {
         .send(sendData)
         .then((res) => {
           resolve(res.body.regions);
-          const subnets = _.chain(res.body.regions).pluck('subnets').flatten().value();
-          if (subnets.length){
-            if (subnets.length === 1 && !config.showVpcScreen){
-              setTimeout(() => {
-                dispatch({
-                  type: ONBOARD_VPC_SELECT,
-                  payload: subnets[0]
-                });
-                dispatch(pushState(null, '/start/install'));
-              }, 100);
-            }else {
-              setTimeout(() => {
-                dispatch(pushState(null, '/start/vpc-select'));
-              }, 100);
-            }
-          }else {
-            return reject(new Error('No vpcs found.'));
-          }
+          setTimeout(() => {
+            dispatch(pushState(null, '/start/vpc-select'));
+          }, 100);
+          // const subnets = _.chain(res.body.regions).pluck('subnets').flatten().value();
+          // if (subnets.length){
+          //   if (subnets.length === 1 && !config.showVpcScreen){
+          //     setTimeout(() => {
+          //       dispatch({
+          //         type: ONBOARD_VPC_SELECT,
+          //         payload: subnets[0]
+          //       });
+          //       dispatch(pushState(null, '/start/install'));
+          //     }, 100);
+          //   }else {
+          //     setTimeout(() => {
+          //       dispatch(pushState(null, '/start/vpc-select'));
+          //     }, 100);
+          //   }
+          // }else {
+          //   return reject(new Error('No vpcs found.'));
+          // }
         }, (err) => {
           let message = _.get(err, 'response.body.error') || err.response;
           return reject({message});

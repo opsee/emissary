@@ -63,7 +63,8 @@ const CheckSingle = React.createClass({
     }
     return val;
   },
-  runRemoveCheck(){
+  runRemoveCheck(e){
+    e.preventDefault();
     this.props.actions.del(this.props.params.id);
   },
   renderInner(){
