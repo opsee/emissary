@@ -83,13 +83,14 @@ export const Check = Record({
   id: undefined,
   name: undefined,
   target: Target(),
-  assertions: List([
-    {
-      key: 'code',
-      operand: 200,
-      relationship: 'equal'
-    }
-  ]),
+  // assertions: List([
+  //   {
+  //     key: 'code',
+  //     operand: 200,
+  //     relationship: 'equal'
+  //   }
+  // ]),
+  assertions: List(),
   notifications: List(),
   instances: List(),
   health: undefined,
