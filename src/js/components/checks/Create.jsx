@@ -35,7 +35,16 @@ const CheckCreate = React.createClass({
   },
   getState(noCheck){
     const obj = {
-      check: new Check({target: this.props.location.query}).toJS(),
+      check: new Check({
+        target: this.props.location.query,
+        assertions: [
+          {
+            key: 'code',
+            operand: 200,
+            relationship: 'equal'
+          }
+        ]
+      }).toJS(),
       filter: null
     };
     return _.omit(obj, noCheck ? 'check' : null);
