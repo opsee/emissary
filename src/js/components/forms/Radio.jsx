@@ -1,6 +1,4 @@
 import React, {PropTypes} from 'react';
-
-import {Padding} from '../layout';
 import style from './radio.css';
 
 const Radio = React.createClass({
@@ -23,9 +21,7 @@ const Radio = React.createClass({
   render(){
     return (
       <div onClick={this.handleClick} onTouchEnd={this.handleTouch} style={{cursor: 'pointer'}}>
-        <Padding b={1}>
-          <button className={this.props.on ? style.radioActive : style.radio} type="button" onClick={this.handleClick} id={this.props.id}/>
-        </Padding>
+        <button className={this.props.on ? style.radioActive : style.radio} type="button" onClick={this.handleClick} id={this.props.id}/>
       </div>
     );
   }

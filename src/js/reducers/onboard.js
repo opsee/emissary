@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
+import colors from 'seedling/colors';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
@@ -126,7 +127,8 @@ function generateSubnetsForSelection(regions){
         subnetName = _.chain(subnet.tags).findWhere({key: 'Name'}).get('value').value() || subnetName;
       }
       return [subnet.subnet_id, `
-      <strong>${subnet.availability_zone}</strong> - ${subnet.subnet_id} - (${subnet.instance_count} Instances)
+      <strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${subnet.subnet_id}<br/>
+      <span style="color:${colors.textColorSecondary}">${subnet.instance_count} Instances (${subnet.routing})</span>
       `];
     }).value();
   }).flatten().value();
