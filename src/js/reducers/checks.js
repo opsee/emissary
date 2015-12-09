@@ -21,10 +21,9 @@ export const statics = {
     _.assign(newData, result.getFormattedData(data));
     return new Check(newData);
   },
-  getFormattedResponse(data){
-    if (data && data.size){
-      const first = data.toJS()[0];
-      let response = _.cloneDeep(first);
+  formatResponse(singleResponse){
+    if (singleResponse && singleResponse.toJS){
+      let response = singleResponse.toJS();
       const headers = _.get(response, 'response.value.headers');
       if (headers){
         response.response.value.headers = headers.map(h => {
@@ -59,13 +58,16 @@ export const statics = {
       // return _.omit(response, 'response.value.metrics');
     }
     return {error: 'Something went wrong'};
+  },
+  getFormattedResponses(data){
+    return data.map(d => statics.formatResponse(d)).toJS();
   }
 };
 
 const initial = {
   checks: new List(),
   response: undefined,
-  responseFormatted: undefined
+  responsesFormatted: []
 };
 
 export default handleActions({
@@ -101,8 +103,8 @@ export default handleActions({
   [CHECK_TEST]: {
     next(state, action){
       const response = Immutable.fromJS(action.payload);
-      const responseFormatted = statics.getFormattedResponse(response);
-      return _.assign({}, state, {response, responseFormatted});
+      const responsesFormatted = statics.getFormattedResponses(response);
+      return _.assign({}, state, {response, responsesFormatted});
     }
   }
 }, initial);

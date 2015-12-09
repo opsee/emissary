@@ -10,7 +10,7 @@ import {BoundField, Button} from '../forms';
 import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import CheckResponse from './CheckResponse.jsx';
+import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
@@ -354,8 +354,8 @@ const CheckCreateRequest = React.createClass({
         </Padding>
         <hr/>
         <Padding b={1}>
-          <h3>Your Response</h3>
-          <CheckResponse check={this.getCheck()}/>
+          <h3>Your Responses</h3>
+          <CheckResponsePaginate check={this.getCheck()}/>
         </Padding>
         <Padding b={1}>
           {this.renderSubmitButton()}

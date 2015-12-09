@@ -11,7 +11,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
-import CheckResponse from './CheckResponse';
+import CheckResponsePaginate from './CheckResponsePaginate';
 import {checks as actions} from '../../reduxactions';
 
 const CheckSingle = React.createClass({
@@ -88,7 +88,7 @@ const CheckSingle = React.createClass({
           </Padding>
           <Padding b={1}>
             <h3>Response</h3>
-            <CheckResponse response={this.getResponses()}/>
+            <CheckResponsePaginate response={this.getResponses()}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>

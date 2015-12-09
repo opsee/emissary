@@ -13,7 +13,7 @@ import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import AssertionCounter from './AssertionCounter.jsx';
-import CheckResponse from './CheckResponse.jsx';
+import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../reduxactions';
@@ -306,7 +306,7 @@ const CheckCreateAssertions = React.createClass({
                   <h3>Response to Your Request</h3>
                   <p>The complete response that came back from your request.</p>
                   <Padding tb={1}>
-                    <CheckResponse check={this.props.check}/>
+                    <CheckResponsePaginate check={this.props.check}/>
                   </Padding>
                 </Padding>
                 <Padding tb={1}>

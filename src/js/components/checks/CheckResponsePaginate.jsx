@@ -11,7 +11,7 @@ import style from './checkResponse.css';
 import {checks as actions} from '../../reduxactions';
 import {statics} from '../../reducers/checks';
 
-const CheckResponse = React.createClass({
+const CheckResponsePaginate = React.createClass({
   propTypes: {
     check: PropTypes.object,
     response: PropTypes.object,
@@ -31,7 +31,8 @@ const CheckResponse = React.createClass({
   getInitialState() {
     return {
       complete: false,
-      expanded: false
+      expanded: false,
+      activeItem: 0
     };
   },
   componentDidMount(){
@@ -69,6 +70,10 @@ const CheckResponse = React.createClass({
   getStatus(){
     return this.props.redux.asyncActions.checkTest.status;
   },
+  getTotalNumberOfResponses(){
+    const item = this.props.response ? this.props.response : this.props.redux.checks.response;
+    return item.size;
+  },
   isCheckComplete(check){
     const condition1 = check.target.id;
     const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
@@ -85,6 +90,22 @@ const CheckResponse = React.createClass({
       }
     }
     this.setState({complete: true});
+  },
+  runNext(){
+    const activeItem = this.state.activeItem + 1;
+    if (activeItem < this.getTotalNumberOfResponses()){
+      this.setState({
+        activeItem
+      });
+    }
+  },
+  runPrev(){
+    const activeItem = this.state.activeItem - 1;
+    if (activeItem > -1){
+      this.setState({
+        activeItem
+      });
+    }
   },
   handleToggle(){
     this.setState({expanded: !this.state.expanded});
@@ -127,6 +148,24 @@ const CheckResponse = React.createClass({
       </div>
     );
   },
+  renderItem(){
+    const res = this.getFormattedResponses()[this.state.activeItem];
+    if (res.error){
+      return (
+        <div className={style.checkResponseWaiting}>
+          <Alert bsStyle="danger">{res.error}</Alert>
+        </div>
+      );
+    }
+    return (
+      <div className={this.getResponseClass()}>
+        <Highlight>
+          {JSON.stringify(_.get(res, 'response.value'), null, ' ')}
+        </Highlight>
+        {this.renderButton()}
+      </div>
+    );
+  },
   renderWaiting(){
     return (
       <div className={this.getResponseClass()}>
@@ -141,6 +180,14 @@ const CheckResponse = React.createClass({
       </div>
     );
   },
+  renderNextButton(){
+    const active = this.state.activeItem < this.getTotalNumberOfResponses() - 1;
+    return <Button color="primary" onClick={this.runNext} disabled={!active}>Next</Button>;
+  },
+  renderPrevButton(){
+    const active = this.state.activeItem === this.getTotalNumberOfResponses() - 1;
+    return <Button color="primary" onClick={this.runPrev} disabled={!active}>Previous</Button>;
+  },
   render() {
     if (this.getStatus() === 'pending'){
       return this.renderWaiting();
@@ -148,10 +195,20 @@ const CheckResponse = React.createClass({
     if (this.props.response && !this.props.response.size){
       return this.renderWaiting();
     }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
-      if (this.getFormattedResponses() && this.getFormattedResponses().error){
-        return this.renderError();
-      }
-      return this.renderCode();
+      return (
+        <div>
+          {this.state.activeItem + 1} / {this.getTotalNumberOfResponses()}
+          &nbsp;&nbsp;Instance {this.getFormattedResponses()[this.state.activeItem].target.id}
+          {this.renderItem()}
+          {
+          //   this.getFormattedResponses().map(res => {
+          //   return this.renderItem(res);
+          // })
+          }
+          {this.renderPrevButton()}
+          {this.renderNextButton()}
+        </div>
+      );
     }
     return this.renderWaiting();
   }
@@ -165,4 +222,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CheckResponse);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckResponsePaginate);

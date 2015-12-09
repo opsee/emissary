@@ -55,7 +55,7 @@ export function getChecks(redirect){
           if (redirect){
             setTimeout(() => {
               dispatch(pushState(null, '/'));
-            }, 100);
+            }, 30);
           }
         }, reject);
       })
