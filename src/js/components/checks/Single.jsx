@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {Map, List} from 'immutable';
+import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -43,14 +43,15 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    const results = this.getCheck().get('results').toJS();
-    if (results && results.length){
-      const failing = _.filter(results, r => {
-        return !r.passing;
-      });
-      return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
-    }
-    return new List();
+    return this.getCheck().get('results').get(0).get('responses');
+    // const results = this.getCheck().get('results').toJS();
+    // if (results && results.length){
+    //   const failing = _.filter(results, r => {
+    //     return !r.passing;
+    //   });
+    //   return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
+    // }
+    // return new List();
   },
   getSingleResponse(){
     const data = this.getResponses();
@@ -83,12 +84,12 @@ const CheckSingle = React.createClass({
             </Alert>
           </Padding>
           <Padding b={1}>
-            <h3>Assertions</h3>
-            <AssertionItemList assertions={this.getCheck().get('assertions')} response={this.getSingleResponse()}/>
-          </Padding>
-          <Padding b={1}>
             <h3>Response</h3>
             <CheckResponsePaginate response={this.getResponses()}/>
+          </Padding>
+          <Padding b={1}>
+            <h3>Assertions</h3>
+            <AssertionItemList assertions={this.getCheck().get('assertions')} response={this.getSingleResponse()}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>

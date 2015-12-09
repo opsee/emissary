@@ -7,7 +7,8 @@ import {Check} from '../modules/schemas';
 import {
   GET_CHECK,
   GET_CHECKS,
-  CHECK_TEST
+  CHECK_TEST,
+  CHECK_TEST_SELECT_RESPONSE
 } from '../reduxactions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -22,8 +23,13 @@ export const statics = {
     return new Check(newData);
   },
   formatResponse(singleResponse){
-    if (singleResponse && singleResponse.toJS){
-      let response = singleResponse.toJS();
+    // let response = _.cloneDeep(singleResponse);
+    // if(response.toJS){
+    //   response = response.toJS();
+    // }
+    // return {error: 'Something went wrong'};
+    let response = singleResponse.toJS();
+    if (_.get(response, 'response.value')){
       const headers = _.get(response, 'response.value.headers');
       if (headers){
         response.response.value.headers = headers.map(h => {
@@ -67,7 +73,8 @@ export const statics = {
 const initial = {
   checks: new List(),
   response: undefined,
-  responsesFormatted: []
+  responsesFormatted: [],
+  selectedResponse: 0
 };
 
 export default handleActions({
@@ -83,7 +90,9 @@ export default handleActions({
       }else {
         checks = state.checks.concat(new List([single]));
       }
-      return _.assign({}, state, {checks});
+      const responses = single.get('results').get(0).get('responses');
+      const responsesFormatted = statics.getFormattedResponses(responses);
+      return _.assign({}, state, {checks, responsesFormatted});
     },
     throw(state){
       return state;
@@ -102,9 +111,16 @@ export default handleActions({
   },
   [CHECK_TEST]: {
     next(state, action){
-      const response = Immutable.fromJS(action.payload);
+      let response = action.payload.responses ? action.payload.responses : action.payload;
+      response = Immutable.fromJS(response);
       const responsesFormatted = statics.getFormattedResponses(response);
       return _.assign({}, state, {response, responsesFormatted});
+    }
+  },
+  [CHECK_TEST_SELECT_RESPONSE]: {
+    next(state, action){
+      const selectedResponse = action.payload;
+      return _.assign({}, state, {selectedResponse});
     }
   }
 }, initial);

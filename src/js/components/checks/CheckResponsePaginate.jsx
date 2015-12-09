@@ -9,24 +9,31 @@ import {ChevronUp, ChevronDown} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../reduxactions';
-import {statics} from '../../reducers/checks';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
     check: PropTypes.object,
     response: PropTypes.object,
     actions: PropTypes.shape({
-      test: PropTypes.func
+      test: PropTypes.func,
+      selectResponse: PropTypes.func
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         response: PropTypes.object,
-        responsesFormatted: PropTypes.object
+        responsesFormatted: PropTypes.array,
+        selectedResponse: PropTypes.number
       }),
       asyncActions: PropTypes.shape({
         checkTest: PropTypes.object
       })
-    })
+    }),
+    showBoolArea: PropTypes.bool
+  },
+  getDefaultProps() {
+    return {
+      showBoolArea: true
+    };
   },
   getInitialState() {
     return {
@@ -59,9 +66,9 @@ const CheckResponsePaginate = React.createClass({
     return arr;
   },
   getFormattedResponses(){
-    if (this.props.response){
-      return statics.getFormattedResponses(this.props.response);
-    }
+    // if (this.props.response){
+    //   return statics.getFormattedResponses(this.props.response);
+    // }
     return this.props.redux.checks.responsesFormatted;
   },
   getResponseClass(){
@@ -71,8 +78,13 @@ const CheckResponsePaginate = React.createClass({
     return this.props.redux.asyncActions.checkTest.status;
   },
   getTotalNumberOfResponses(){
-    const item = this.props.response ? this.props.response : this.props.redux.checks.response;
-    return item.size;
+    return this.props.redux.checks.responsesFormatted.length;
+  },
+  getNumberPassing(){
+    return _.filter(this.props.redux.checks.responsesFormatted, 'passing').length;
+  },
+  getNumberFailing(){
+    return this.getTotalNumberOfResponses() - this.getNumberPassing();
   },
   isCheckComplete(check){
     const condition1 = check.target.id;
@@ -92,19 +104,15 @@ const CheckResponsePaginate = React.createClass({
     this.setState({complete: true});
   },
   runNext(){
-    const activeItem = this.state.activeItem + 1;
+    const activeItem = this.props.redux.checks.selectedResponse + 1;
     if (activeItem < this.getTotalNumberOfResponses()){
-      this.setState({
-        activeItem
-      });
+      this.props.actions.selectResponse(activeItem);
     }
   },
   runPrev(){
-    const activeItem = this.state.activeItem - 1;
+    const activeItem = this.props.redux.checks.selectedResponse - 1;
     if (activeItem > -1){
-      this.setState({
-        activeItem
-      });
+      this.props.actions.selectResponse(activeItem);
     }
   },
   handleToggle(){
@@ -149,7 +157,7 @@ const CheckResponsePaginate = React.createClass({
     );
   },
   renderItem(){
-    const res = this.getFormattedResponses()[this.state.activeItem];
+    const res = this.getFormattedResponses()[this.props.redux.checks.selectedResponse];
     if (res.error){
       return (
         <div className={style.checkResponseWaiting}>
@@ -176,29 +184,55 @@ const CheckResponsePaginate = React.createClass({
   renderError(){
     return (
       <div className={style.checkResponseWaiting}>
-        <Alert bsStyle="danger">{this.getFormattedResponses().error}</Alert>
+        <Alert bsStyle="danger">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
       </div>
     );
   },
   renderNextButton(){
-    const active = this.state.activeItem < this.getTotalNumberOfResponses() - 1;
+    const active = this.props.redux.checks.selectedResponse < this.getTotalNumberOfResponses() - 1;
     return <Button color="primary" onClick={this.runNext} disabled={!active}>Next</Button>;
   },
   renderPrevButton(){
-    const active = this.state.activeItem === this.getTotalNumberOfResponses() - 1;
+    const active = this.props.redux.checks.selectedResponse === this.getTotalNumberOfResponses() - 1;
     return <Button color="primary" onClick={this.runPrev} disabled={!active}>Previous</Button>;
   },
-  render() {
-    if (this.getStatus() === 'pending'){
-      return this.renderWaiting();
+  renderBoolArea(){
+    if (this.props.showBoolArea){
+      const passing = this.getNumberPassing();
+      const failing = this.getNumberFailing();
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>{passing ? `${this.getNumberPassing()} Passing` : ''}</td>
+              <td>{failing ? `${this.getNumberFailing()} Failing` : ''}</td>
+            </tr>
+          </tbody>
+        </table>
+      );
     }
-    if (this.props.response && !this.props.response.size){
+    return <div/>;
+  },
+  renderTopArea(){
+    const arr = this.getFormattedResponses();
+    if (arr.length){
+      return (
+        <div>
+          {this.renderBoolArea()}
+          {this.props.redux.checks.selectedResponse + 1} / {arr.length}
+          &nbsp;&nbsp;Instance {_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}
+        </div>
+      );
+    }
+    return <div/>;
+  },
+  render() {
+    if (this.getStatus() === 'pending' || (this.props.response && !this.props.response.size)){
       return this.renderWaiting();
     }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
       return (
         <div>
-          {this.state.activeItem + 1} / {this.getTotalNumberOfResponses()}
-          &nbsp;&nbsp;Instance {this.getFormattedResponses()[this.state.activeItem].target.id}
+          {this.renderTopArea()}
           {this.renderItem()}
           {
           //   this.getFormattedResponses().map(res => {

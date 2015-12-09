@@ -10,7 +10,8 @@ import {
   CHECK_CREATE,
   CHECK_EDIT,
   CHECK_TEST,
-  CHECK_TEST_RESET
+  CHECK_TEST_RESET,
+  CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
 export function getCheck(id){
@@ -109,6 +110,8 @@ export function test(data){
 }
 
 export const testCheckReset = createAction(CHECK_TEST_RESET);
+
+export const selectResponse = createAction(CHECK_TEST_SELECT_RESPONSE);
 
 function saveNotifications(state, data, checkId, isEditing){
   return request
