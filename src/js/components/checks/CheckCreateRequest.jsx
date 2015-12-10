@@ -354,7 +354,6 @@ const CheckCreateRequest = React.createClass({
         </Padding>
         <hr/>
         <Padding b={1}>
-          <h3>Responses</h3>
           <CheckResponsePaginate check={this.getCheck()} showBoolArea={false}/>
         </Padding>
         <Padding b={1}>

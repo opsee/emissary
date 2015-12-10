@@ -84,7 +84,6 @@ const CheckSingle = React.createClass({
             </Alert>
           </Padding>
           <Padding b={1}>
-            <h3>Response</h3>
             <CheckResponsePaginate response={this.getResponses()}/>
           </Padding>
           <Padding b={1}>

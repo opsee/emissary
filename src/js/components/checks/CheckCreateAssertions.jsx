@@ -304,11 +304,7 @@ const CheckCreateAssertions = React.createClass({
                   {this.renderHelperText()}
                 </Padding>
                 <Padding b={1}>
-                  <h3>Response to Your Request</h3>
-                  <p>The complete response that came back from your request.</p>
-                  <Padding tb={1}>
-                    <CheckResponsePaginate check={this.props.check}/>
-                  </Padding>
+                  <CheckResponsePaginate check={this.props.check} showBoolArea={false}/>
                 </Padding>
                 <Padding tb={1}>
                   {this.renderInner()}

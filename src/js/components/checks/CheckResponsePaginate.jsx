@@ -10,6 +10,7 @@ import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../reduxactions';
+import {ListCheckmark, ListClose} from '../icons';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -67,9 +68,6 @@ const CheckResponsePaginate = React.createClass({
     return arr;
   },
   getFormattedResponses(){
-    // if (this.props.response){
-    //   return statics.getFormattedResponses(this.props.response);
-    // }
     return this.props.redux.checks.responsesFormatted;
   },
   getResponseClass(){
@@ -104,13 +102,15 @@ const CheckResponsePaginate = React.createClass({
     }
     this.setState({complete: true});
   },
-  runNext(){
+  runNext(e){
+    e.preventDefault();
     const activeItem = this.props.redux.checks.selectedResponse + 1;
     if (activeItem < this.getTotalNumberOfResponses()){
       this.props.actions.selectResponse(activeItem);
     }
   },
-  runPrev(){
+  runPrev(e){
+    e.preventDefault();
     const activeItem = this.props.redux.checks.selectedResponse - 1;
     if (activeItem > -1){
       this.props.actions.selectResponse(activeItem);
@@ -158,7 +158,6 @@ const CheckResponsePaginate = React.createClass({
     );
   },
   renderItem(){
-    const arr = this.getFormattedResponses();
     const res = this.getFormattedResponses()[this.props.redux.checks.selectedResponse];
     if (res.error){
       return (
@@ -168,14 +167,11 @@ const CheckResponsePaginate = React.createClass({
       );
     }
     return (
-      <div>
-        <div style={{background: '#212121', padding: '8px'}}><strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})</div>
-        <div className={this.getResponseClass()}>
+      <div className={this.getResponseClass()}>
         <Highlight>
           {JSON.stringify(_.get(res, 'response.value'), null, ' ')}
         </Highlight>
         {this.renderButton()}
-      </div>
       </div>
     );
   },
@@ -198,34 +194,61 @@ const CheckResponsePaginate = React.createClass({
     return <Button title="Next Response" flat color="primary" onClick={this.runNext} disabled={!active}><ChevronRight fill={!active ? 'textSecondary' : 'primary'} inline/></Button>;
   },
   renderPrevButton(){
-    const active = this.props.redux.checks.selectedResponse === this.getTotalNumberOfResponses() - 1;
+    const active = this.props.redux.checks.selectedResponse > 0;
     return <Button title="Previous Response" flat color="primary" onClick={this.runPrev} disabled={!active}><ChevronLeft fill={!active ? 'textSecondary' : 'primary'} inline/></Button>;
   },
   renderBoolArea(){
     if (this.props.showBoolArea){
-      const passing = this.getNumberPassing();
-      const failing = this.getNumberFailing();
       return (
-        <table>
-          <tbody>
-            <tr>
-              <td>{passing ? `${this.getNumberPassing()} Passing` : ''}</td>
-              <td>{failing ? `${this.getNumberFailing()} Failing` : ''}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <Padding b={1}>
+            <span>
+              <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
+            </span>&nbsp;&nbsp;
+            <span>
+              <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
+            </span>
+          </Padding>
+          <div className="clearfix"/>
+        </div>
       );
     }
     return <div/>;
   },
+  // renderBoolArea(){
+  //   if (this.props.showBoolArea){
+  //     const passing = this.getNumberPassing();
+  //     const failing = this.getNumberFailing();
+  //     return (
+  //       <table style={{'textAlign':'center',width:'100%'}}>
+  //       <tbody>
+  //       <tr>
+  //       <td style={{border:'1px solid #555'}}>
+  //       <Padding a={1}>
+  //         <div>{this.getNumberPassing()}</div>
+  //         Passing
+  //       </Padding>
+  //           </td>
+  //       <td style={{border:'1px solid #555'}}>
+  //       <Padding a={1}>
+  //         <div>{this.getNumberFailing()}</div>
+  //         Failing
+  //       </Padding>
+  //           </td>
+  //         </tr>
+  //       </tbody>
+  //     </table>
+  //     );
+  //   }
+  //   return <div/>;
+  // },
   renderTopArea(){
     const arr = this.getFormattedResponses();
     if (arr.length){
       return (
-        <div>
-          {this.renderBoolArea()}
-          <p>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</p>
-        </div>
+        <Padding a={0.5}>
+          <strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+        </Padding>
       );
     }
     return <div/>;
@@ -236,18 +259,19 @@ const CheckResponsePaginate = React.createClass({
     }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
       return (
         <div>
-          {
-            //{this.renderTopArea()}
-          }
-          {this.renderItem()}
+        <Padding t={1}>
+          <h3>Responses</h3>
+        </Padding>
+        {this.renderBoolArea()}
+          <div style={{background: '#212121'}}>
+            <Padding a={0.5}>
+              {this.renderTopArea()}
+              {this.renderItem()}
+            </Padding>
+          </div>
           <Padding tb={1}>
             {this.renderPrevButton()}&nbsp;&nbsp;{this.renderNextButton()}
           </Padding>
-          {
-          //   this.getFormattedResponses().map(res => {
-          //   return this.renderItem(res);
-          // })
-          }
         </div>
       );
     }

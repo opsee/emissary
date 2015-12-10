@@ -6,7 +6,8 @@ const OuterResponse = Record({
   check_id: undefined,
   passing: undefined,
   response: undefined,
-  target: undefined
+  target: undefined,
+  error: undefined
 });
 
 const InnerResponse = Record({
