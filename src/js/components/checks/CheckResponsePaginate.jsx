@@ -5,7 +5,8 @@ import _ from 'lodash';
 
 import {Alert} from '../../modules/bootstrap';
 import Highlight from '../global/Highlight.jsx';
-import {ChevronUp, ChevronDown} from '../icons';
+import {Padding} from '../layout';
+import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../reduxactions';
@@ -157,6 +158,7 @@ const CheckResponsePaginate = React.createClass({
     );
   },
   renderItem(){
+    const arr = this.getFormattedResponses();
     const res = this.getFormattedResponses()[this.props.redux.checks.selectedResponse];
     if (res.error){
       return (
@@ -166,11 +168,14 @@ const CheckResponsePaginate = React.createClass({
       );
     }
     return (
-      <div className={this.getResponseClass()}>
+      <div>
+        <div style={{background: '#212121', padding: '8px'}}><strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})</div>
+        <div className={this.getResponseClass()}>
         <Highlight>
           {JSON.stringify(_.get(res, 'response.value'), null, ' ')}
         </Highlight>
         {this.renderButton()}
+      </div>
       </div>
     );
   },
@@ -190,11 +195,11 @@ const CheckResponsePaginate = React.createClass({
   },
   renderNextButton(){
     const active = this.props.redux.checks.selectedResponse < this.getTotalNumberOfResponses() - 1;
-    return <Button color="primary" onClick={this.runNext} disabled={!active}>Next</Button>;
+    return <Button title="Next Response" flat color="primary" onClick={this.runNext} disabled={!active}><ChevronRight fill={!active ? 'textSecondary' : 'primary'} inline/></Button>;
   },
   renderPrevButton(){
     const active = this.props.redux.checks.selectedResponse === this.getTotalNumberOfResponses() - 1;
-    return <Button color="primary" onClick={this.runPrev} disabled={!active}>Previous</Button>;
+    return <Button title="Previous Response" flat color="primary" onClick={this.runPrev} disabled={!active}><ChevronLeft fill={!active ? 'textSecondary' : 'primary'} inline/></Button>;
   },
   renderBoolArea(){
     if (this.props.showBoolArea){
@@ -219,8 +224,7 @@ const CheckResponsePaginate = React.createClass({
       return (
         <div>
           {this.renderBoolArea()}
-          {this.props.redux.checks.selectedResponse + 1} / {arr.length}
-          &nbsp;&nbsp;Instance {_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}
+          <p>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</p>
         </div>
       );
     }
@@ -232,15 +236,18 @@ const CheckResponsePaginate = React.createClass({
     }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
       return (
         <div>
-          {this.renderTopArea()}
+          {
+            //{this.renderTopArea()}
+          }
           {this.renderItem()}
+          <Padding tb={1}>
+            {this.renderPrevButton()}&nbsp;&nbsp;{this.renderNextButton()}
+          </Padding>
           {
           //   this.getFormattedResponses().map(res => {
           //   return this.renderItem(res);
           // })
           }
-          {this.renderPrevButton()}
-          {this.renderNextButton()}
         </div>
       );
     }
