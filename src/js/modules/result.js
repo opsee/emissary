@@ -5,7 +5,8 @@ import moment from 'moment';
 const OuterResponse = Record({
   check_id: undefined,
   passing: undefined,
-  response: undefined
+  response: undefined,
+  target: undefined
 });
 
 const InnerResponse = Record({
