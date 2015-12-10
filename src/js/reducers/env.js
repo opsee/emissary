@@ -69,22 +69,22 @@ const statics = {
   },
   groupElbFromJS(state, data){
     let newData = data.group || data;
-    let instances = data.instances || data.Instances || newData.instances || newData.Instances;
+    // let instances = data.instances || data.Instances || newData.instances || newData.Instances;
     newData.instance_count = data.instance_count;
-    if (!instances){
-      instances = state.instances.ecc.toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
-      });
-    }
-    if (instances.size){
-      instances = instances.toJS();
-    }
-    if (instances.length){
-      newData.instances = new List(instances.map(instance => {
-        const results = instance.results;
-        return statics.instanceEccFromJS({instance, results});
-      }));
-    }
+    // if (!instances){
+    //   instances = state.instances.ecc.toJS().filter(instance => {
+    //     return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
+    //   });
+    // }
+    // if (instances.size){
+    //   instances = instances.toJS();
+    // }
+    // if (instances.length){
+    //   newData.instances = new List(instances.map(instance => {
+    //     const results = instance.results;
+    //     return statics.instanceEccFromJS({instance, results});
+    //   }));
+    // }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;
     _.assign(newData, result.getFormattedData(data));

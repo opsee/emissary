@@ -13,7 +13,10 @@ import {
   GET_INSTANCES_ECC,
   FILTER_ENV,
   ENV_SET_SEARCH,
-  ENV_GET_BASTIONS
+  ENV_GET_BASTIONS,
+  AWS_REBOOT_INSTANCES,
+  AWS_START_INSTANCES,
+  AWS_STOP_INSTANCES
   // GET_INSTANCE_RDS,
   // GET_INSTANCES_RDS
 } from './constants';
@@ -157,6 +160,57 @@ export function getBastions(){
             console.error('No array from GET /bastions');
           }
           resolve(arr || []);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function rebootInstances(InstanceIds){
+  return (dispatch, state) => {
+    dispatch({
+      type: AWS_REBOOT_INSTANCES,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/aws/reboot-instances`)
+        .set('Authorization', state().user.get('auth'))
+        .send({InstanceIds})
+        .then(res => {
+          resolve(res.body);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function stopInstances(InstanceIds){
+  return (dispatch, state) => {
+    dispatch({
+      type: AWS_STOP_INSTANCES,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/aws/stop-instances`)
+        .set('Authorization', state().user.get('auth'))
+        .send({InstanceIds})
+        .then(res => {
+          resolve(res.body);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function startInstances(InstanceIds){
+  return (dispatch, state) => {
+    dispatch({
+      type: AWS_START_INSTANCES,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/aws/start-instances`)
+        .set('Authorization', state().user.get('auth'))
+        .send({InstanceIds})
+        .then(res => {
+          resolve(res.body);
         }, reject);
       })
     });

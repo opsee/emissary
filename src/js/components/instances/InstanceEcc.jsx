@@ -27,6 +27,9 @@ const InstanceEcc = React.createClass({
       env: PropTypes.shape({
         instances: PropTypes.shape({
           ecc: PropTypes.object
+        }),
+        groups: PropTypes.shape({
+          elb: PropTypes.object
         })
       })
     })
@@ -45,10 +48,23 @@ const InstanceEcc = React.createClass({
       return i.get('id') === this.props.params.id;
     }) || new Map();
   },
-  getGroupIds(){
+  getGroupsSecurity(){
     if (this.getInstance().get('name')){
-      return _.pluck(this.getInstance().groups.toJS(), 'id');
+      return _.pluck(this.getInstance().toJS().SecurityGroups, 'GroupId');
     }
+    return [];
+  },
+  getGroupsELB(){
+    if (this.getInstance().get('name')){
+      return _.chain(this.props.redux.env.groups.elb.toJS()).filter(elb => {
+        return _.chain(elb.Instances).pluck('InstanceId').flatten().indexOf(this.getInstance().get('id')).value() > -1;
+      }).pluck('id').value();
+    }
+    return [];
+  },
+  getTargets(){
+    const initial = [this.props.params.id];
+    return initial.concat(this.getGroupsSecurity()).concat(this.getGroupsELB());
   },
   renderAvailabilityZone(){
     const az = _.get(this.getInstance().get('Placement'), 'AvailabilityZone');
@@ -90,12 +106,10 @@ const InstanceEcc = React.createClass({
           </Padding>
           <Padding b={1}>
             <h3>Checks</h3>
-            <CheckItemList type="instance" target={this.props.params.id} redux={this.props.redux}/>
+            <CheckItemList type="instance" target={this.getTargets()}/>
           </Padding>
           <Padding b={1}>
-          {
-            // <GroupItemList ids={this.getGroupIds()} title="Security Groups"/>
-          }
+            <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>
           </Padding>
           <Padding b={1}>
             <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>

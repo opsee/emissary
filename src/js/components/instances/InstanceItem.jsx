@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Record} from 'immutable';
 
 import {ListItem} from '../global';
-import {Add, ListCheckmark, Close} from '../icons';
+import {Add, Close, ListCheckmark, Play, Refresh, Stop} from '../icons';
 import {Button} from '../forms';
 
 const InstanceItem = React.createClass({
@@ -39,6 +39,15 @@ const InstanceItem = React.createClass({
           <div key="menu">
             <Button color="primary" text="left" to={`/check-create/request?id=${this.props.item.get('id')}&type=${this.props.item.get('type')}&name=${this.props.item.get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check
+            </Button>
+            <Button color="primary" text="left" block flat onClick={this.handleStartClick}>
+              <Play inline fill="primary"/> Start
+            </Button>
+            <Button color="primary" text="left" block flat onClick={this.handleStopClick}>
+              <Stop inline fill="primary"/> Stop
+            </Button>
+            <Button color="primary" text="left" block flat onClick={this.handleRebootClick}>
+              <Refresh inline fill="primary"/> Reboot
             </Button>
           </div>
             <div key="line1">{this.props.item.get('name')}</div>
