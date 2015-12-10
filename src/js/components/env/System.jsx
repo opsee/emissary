@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -46,7 +47,17 @@ const System = React.createClass({
           <h3>Connected Bastions</h3>
           <ul>
             {bastions.map((bastion, i) => {
-              return <li key={`bastion-${i}`}>EC2 Instance ID: {bastion.id}</li>;
+              return (
+                <li key={`bastion-${i}`}>
+                  <strong>Created:</strong> <TimeAgo date={new Date(bastion.created_at)}/><br/>
+                  <strong>ID:</strong> {bastion.id}<br/>
+                  <strong>Group</strong>: {bastion.group_id.String}<br/>
+                  <strong>Instance</strong>: {bastion.instance_id.String}<br/>
+                  <strong>VPC</strong>: {bastion.vpc_id}<br/>
+                  <strong>Subnet</strong>: {bastion.subnet_id}<br/>
+                  <strong>Routing</strong>: {bastion.subnet_routing}
+                </li>
+                );
             })}
           </ul>
         </div>

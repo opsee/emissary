@@ -41,8 +41,9 @@ const CheckItemList = React.createClass({
   getChecks(){
     let data = this.props.redux.checks.checks;
     if (this.props.target){
+      let tar = !Array.isArray(this.props.target) ? [this.props.target] : this.props.target;
       data = data.filter(c => {
-        return c.get('target').id === this.props.target;
+        return tar.indexOf(c.get('target').id) > -1;
       });
     }
     return data;

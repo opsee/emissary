@@ -46,8 +46,9 @@ const GroupElb = React.createClass({
   },
   getInstanceIds(){
     if (this.getGroup().get('name')){
-      return _.pluck(this.getGroup().get('instances').toJS(), 'id');
+      return _.chain(this.getGroup()).get('Instances').pluck('InstanceId').flatten().value();
     }
+    return [];
   },
   renderDescription(){
     const desc = this.getGroup().get('Description');
@@ -66,7 +67,7 @@ const GroupElb = React.createClass({
       return (
         <div>
           <Padding b={2}>
-            <Button color="primary" flat to={`/check-create/request?target=${this.getGroup().get('id')}&type=elb`} title="Create New Check">
+            <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=elb&name=${this.getGroup().get('name')}`}>
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>

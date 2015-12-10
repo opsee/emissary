@@ -25,7 +25,8 @@ const Signups = React.createClass({
     }),
     redux: PropTypes.shape({
       admin: PropTypes.shape({
-        signups: PropTypes.object
+        signups: PropTypes.object,
+        users: PropTypes.object
       })
     })
   },
@@ -35,8 +36,10 @@ const Signups = React.createClass({
   },
   getData(){
     const signups = this.props.redux.admin.signups.toJS();
+    const users = this.props.redux.admin.users.toJS();
     return _.chain(signups).map(s => {
       s.created_at = new Date(Date.parse(s.created_at));
+      s.userId = _.chain(users).find({email: s.email}).get('id').value();
       return s;
     }).sortBy(s => {
       return -1 * s.created_at;
@@ -67,7 +70,7 @@ const Signups = React.createClass({
     });
   },
   runGhostAccount(signup){
-    this.props.userActions.logout({as: signup.id});
+    this.props.userActions.logout({as: signup.userId});
   },
   renderIcon(signup){
     if (this.isUser(signup)){
@@ -102,7 +105,7 @@ const Signups = React.createClass({
               </h3>
               <Padding b={1}>
                 <div><a href={'mailto:' + signup.email}>{signup.email}</a></div>
-                <span>#{signup.id} - <TimeAgo date={signup.created_at}/></span>
+                <span>#{`${signup.userId || signup.id}`} - <TimeAgo date={signup.created_at}/></span>
               </Padding>
               <div>
                 {this.renderButton(signup)}

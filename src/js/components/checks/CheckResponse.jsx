@@ -9,6 +9,7 @@ import {ChevronUp, ChevronDown} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../reduxactions';
+import {statics} from '../../reducers/checks';
 
 const CheckResponse = React.createClass({
   propTypes: {
@@ -57,6 +58,9 @@ const CheckResponse = React.createClass({
     return arr;
   },
   getFormattedResponse(){
+    if (this.props.response){
+      return statics.getFormattedResponse(this.props.response);
+    }
     return this.props.redux.checks.responseFormatted;
   },
   getResponseClass(){

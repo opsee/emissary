@@ -20,7 +20,7 @@ export default handleActions({
   },
   [ADMIN_GET_USERS]: {
     next(state, action){
-      return _.assign({}, state, {users: action.payload});
+      return _.assign({}, state, {users: new List(action.payload)});
     }
   },
   [ADMIN_ACTIVATE_SIGNUP]: {
