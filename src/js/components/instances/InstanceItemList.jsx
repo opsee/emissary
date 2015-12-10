@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
@@ -13,9 +14,11 @@ import {env as actions} from '../../reduxactions';
 const InstanceItemList = React.createClass({
   propTypes: {
     instances: PropTypes.instanceOf(List),
+    groupSecurity: PropTypes.string,
     offset: PropTypes.number,
     limit: PropTypes.number,
     ids: PropTypes.array,
+    title: PropTypes.bool,
     noFallback: PropTypes.bool,
     actions: PropTypes.shape({
       getInstancesEcc: PropTypes.func
@@ -50,6 +53,11 @@ const InstanceItemList = React.createClass({
         return this.props.ids.indexOf(d.id) > -1;
       });
     }
+    if (this.props.groupSecurity){
+      data = data.filter(d => {
+        return _.chain(d.toJS()).get('SecurityGroups').pluck('GroupId').indexOf(this.props.groupSecurity).value() > -1;
+      });
+    }
     data = data.sortBy(item => {
       return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
@@ -72,10 +80,17 @@ const InstanceItemList = React.createClass({
     }
     return <span/>;
   },
+  renderTitle(){
+    if (this.props.title){
+      return <h3>Instances ({this.getInstances().size})</h3>;
+    }
+    return <div/>;
+  },
   render(){
     if (this.getInstances().size){
       return (
         <div>
+          {this.renderTitle()}
           {this.getInstances().map(instance => {
             return <InstanceItem item={instance} key={instance.get('id')} {...this.props}/>;
           })}
@@ -91,8 +106,12 @@ const InstanceItemList = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(InstanceItemList);
+export default connect(mapStateToProps, mapDispatchToProps)(InstanceItemList);

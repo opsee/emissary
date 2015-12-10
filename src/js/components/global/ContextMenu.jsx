@@ -1,63 +1,44 @@
 import React, {PropTypes} from 'react';
-import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {Grid, Row} from '../../modules/bootstrap';
 import Modal from './Modal';
 import {Padding} from '../layout';
+import {app as actions} from '../../reduxactions';
 
 const ContextMenu = React.createClass({
   propTypes: {
     title: PropTypes.string,
     onHide: PropTypes.func,
-    show: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
+    id: PropTypes.string.isRequired,
+    openId: PropTypes.string,
+    actions: PropTypes.shape({
+      closeContextMenu: PropTypes.func
+    })
   },
   getDefaultProps(){
     return {
       title: 'Menu'
     };
   },
-  getInitialState(){
-    return {
-      show: !!(this.props.show)
-    };
-  },
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      show: nextProps.show
-    });
-  },
-  getChildren(){
-    return React.cloneElement(this.props.children, _.assign({},
-      {
-        onClick: this.handleButtonClick
-      })
-    );
-  },
-  handleButtonClick(){
-    this.setState({
-      show: false
-    });
-  },
   handleHide(){
+    this.props.actions.closeContextMenu();
     if (typeof this.props.onHide === 'function'){
       this.props.onHide.call();
     }
-    this.setState({show: false});
   },
   render(){
     return (
-      <Modal show={this.state.show} onHide={this.handleHide} className="context" style="default" key="modal">
+      <Modal show={this.props.openId === this.props.id} onHide={this.handleHide} className="context" style="default" key="modal">
         <Grid fluid>
           <Row>
             <div className="flex-1">
               <Padding lr={1}>
                 <h3>{this.props.title}</h3>
               </Padding>
-              {this.getChildren()}
-              {
-                // this.props.children
-              }
+              {this.props.children}
             </div>
           </Row>
         </Grid>
@@ -66,4 +47,12 @@ const ContextMenu = React.createClass({
   }
 });
 
-export default ContextMenu;
+const mapStateToProps = (state) => ({
+  openId: state.app.openContextMenu
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContextMenu);

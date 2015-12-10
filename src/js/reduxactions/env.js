@@ -172,7 +172,7 @@ export function rebootInstances(InstanceIds){
       type: AWS_REBOOT_INSTANCES,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/aws/reboot-instances`)
+        .post(`${config.api}/aws/reboot-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
         .then(res => {
@@ -189,7 +189,7 @@ export function stopInstances(InstanceIds){
       type: AWS_STOP_INSTANCES,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/aws/stop-instances`)
+        .post(`${config.api}/aws/stop-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
         .then(res => {
@@ -206,7 +206,7 @@ export function startInstances(InstanceIds){
       type: AWS_START_INSTANCES,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/aws/start-instances`)
+        .post(`${config.api}/aws/start-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
         .then(res => {

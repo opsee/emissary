@@ -82,12 +82,10 @@ const GroupElb = React.createClass({
             </Table>
           </Padding>
           <Padding b={1}>
-            <h3>Checks</h3>
-            <CheckItemList type="groupELB" target={this.props.params.id} redux={this.props.redux}/>
+            <CheckItemList type="groupELB" target={this.props.params.id} title/>
           </Padding>
           <Padding b={1}>
-            <h3>Instances ({this.getGroup().get('instances').size})</h3>
-            <InstanceItemList ids={this.getInstanceIds()} redux={this.props.redux}/>
+            <InstanceItemList ids={this.getInstanceIds()} redux={this.props.redux} title/>
           </Padding>
 
         </div>
