@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import analytics from '../../modules/analytics';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Settings, NewWindow} from '../icons';
@@ -11,6 +13,7 @@ import {Padding} from '../layout';
 import cx from 'classnames';
 import ContextMenu from './ContextMenu';
 import RadialGraph from './RadialGraph';
+import {app as actions} from '../../reduxactions';
 
 const ListItem = React.createClass({
   propTypes: {
@@ -22,7 +25,11 @@ const ListItem = React.createClass({
     onClick: PropTypes.func,
     params: PropTypes.object,
     title: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    onClose: PropTypes.func,
+    actions: PropTypes.shape({
+      openContextMenu: PropTypes.func
+    })
   },
   getDefaultProps(){
     return {
@@ -30,24 +37,10 @@ const ListItem = React.createClass({
       type: 'GroupItem'
     };
   },
-  getInitialState(){
-    return _.assign({}, {
-      showMenu: false
-    });
-  },
   runMenuOpen(e){
     e.preventDefault();
+    this.props.actions.openContextMenu(this.props.item.get('id'));
     analytics.event(this.props.type, 'menu-open');
-    this.setState({
-      showMenu: true
-    });
-  },
-  runMenuClose(){
-    analytics.event(this.props.type, 'menu-close');
-    this.setState({showMenu: false});
-  },
-  runAction(action){
-    console.log(action);
   },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
@@ -106,7 +99,7 @@ const ListItem = React.createClass({
     return (
       <div className={listItem.item}>
         <Padding b={1}>
-          <ContextMenu title={this.props.menuTitle} show={this.state.showMenu} onHide={this.runMenuClose}>
+          <ContextMenu title={this.props.menuTitle} id={this.props.item.get('id')}>
             {_.find(this.props.children, {key: 'menu'})}
           </ContextMenu>
           <Grid fluid>
@@ -132,4 +125,12 @@ const ListItem = React.createClass({
   }
 });
 
-export default ListItem;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListItem);

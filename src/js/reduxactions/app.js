@@ -1,4 +1,5 @@
 import config from '../modules/config';
+import {createAction} from 'redux-actions';
 import {
   APP_INITIALIZE,
   APP_SHUTDOWN,
@@ -6,7 +7,9 @@ import {
   APP_SOCKET_MSG,
   APP_SOCKET_ERROR,
   APP_SOCKET_OPEN,
-  APP_SOCKET_CLOSE
+  APP_SOCKET_CLOSE,
+  APP_OPEN_CONTEXT_MENU,
+  APP_CLOSE_CONTEXT_MENU
 } from './constants';
 
 function socketStart(dispatch, state){
@@ -101,3 +104,6 @@ export function initialize(){
     });
   };
 }
+
+export const openContextMenu = createAction(APP_OPEN_CONTEXT_MENU);
+export const closeContextMenu = createAction(APP_CLOSE_CONTEXT_MENU);

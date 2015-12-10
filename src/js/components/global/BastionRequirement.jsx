@@ -22,9 +22,28 @@ const BastionRequirement = React.createClass({
       })
     })
   },
+  getInitialState() {
+    return {
+      disconnected: false
+    };
+  },
+  componentDidMount() {
+    setTimeout(() => {
+      if (!this.getFirstMsg()){
+        this.setState({
+          disconnected: true
+        });
+      }
+    }, 15000);
+  },
+  getFirstMsg(){
+    return _.find(this.props.redux.app.socketMessages, {command: 'bastions'});
+  },
   getStatus(){
-    const first = _.find(this.props.redux.app.socketMessages, {command: 'bastions'});
-    return first ? 'success' : 'pending';
+    if (this.getFirstMsg() || this.state.disconnected){
+      return 'success';
+    }
+    return 'pending';
   },
   isBastionConnected(){
     return _.chain(this.props.redux.app.socketMessages)
@@ -33,6 +52,20 @@ const BastionRequirement = React.createClass({
       return _.chain(msg).get('attributes.bastions').find('connected').value();
     })
     .value();
+  },
+  renderInner(){
+    if (this.state.disconnected){
+      return (
+        <Alert bsStyle="danger">
+          Opsee is having trouble talking to the Bastion.
+        </Alert>
+      );
+    }
+    return (
+      <Alert bsStyle="danger">
+        Bastion is disconnected or has been deleted. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+      </Alert>
+    );
   },
   render() {
     if (this.isBastionConnected() || config.skipBastionRequirement){
@@ -44,9 +77,7 @@ const BastionRequirement = React.createClass({
     }
     return (
       <StatusHandler status={this.getStatus()}>
-        <Alert bsStyle="danger">
-          Bastion is disconnected or has been deleted. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
-        </Alert>
+        {this.renderInner()}
       </StatusHandler>
     );
   }

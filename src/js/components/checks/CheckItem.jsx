@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {ListItem} from '../global';
 import {Edit, Delete, ListCheckmark, ListClose} from '../icons';
 import {Button} from '../forms';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions, app as appActions} from '../../reduxactions';
 
 const CheckItem = React.createClass({
   mixins: [PureRenderMixin],
@@ -16,6 +16,9 @@ const CheckItem = React.createClass({
     onClick: PropTypes.func,
     actions: PropTypes.shape({
       del: PropTypes.func.isRequired
+    }),
+    appActions: PropTypes.shape({
+      closeContextMenu: PropTypes.func
     })
   },
   getInfoText(){
@@ -33,6 +36,7 @@ const CheckItem = React.createClass({
   handleDeleteClick(e){
     e.preventDefault();
     this.props.actions.del(this.props.item.get('id'));
+    this.props.appActions.closeContextMenu();
   },
   render(){
     if (this.props.item.get('name')){
@@ -56,7 +60,8 @@ const CheckItem = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckItem);

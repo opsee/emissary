@@ -15,6 +15,7 @@ const CheckItemList = React.createClass({
   propTypes: {
     type: PropTypes.string,
     target: PropTypes.string,
+    title: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func
     }),
@@ -48,10 +49,17 @@ const CheckItemList = React.createClass({
     }
     return data;
   },
+  renderTitle(){
+    if (this.props.title){
+      return <h3>Checks ({this.getChecks().size})</h3>;
+    }
+    return <div/>;
+  },
   render() {
     if (this.getChecks().size){
       return (
         <div>
+          {this.renderTitle()}
           {this.getChecks().map(c => {
             return <CheckItem item={c} key={c.get('id')}/>;
           })}
