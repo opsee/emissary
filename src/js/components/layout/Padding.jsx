@@ -3,7 +3,9 @@ import style from './padding.css';
 import cx from 'classnames';
 
 const availProps = ['t', 'b', 'tb', 'l', 'r', 'lr', 'a'];
-let types = {};
+let types = {
+  inline: PropTypes.bool
+};
 availProps.forEach(string => {
   types[string] = PropTypes.number;
 });
@@ -31,6 +33,13 @@ const Padding = React.createClass({
     return cx(arr);
   },
   render(){
+    if (this.props.inline){
+      return (
+        <span className={this.getClass()}>
+          {this.props.children}
+        </span>
+      );
+    }
     return (
       <div className={this.getClass()}>
         {this.props.children}

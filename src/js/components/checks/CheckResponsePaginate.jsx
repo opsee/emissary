@@ -15,14 +15,14 @@ import {ListCheckmark, ListClose} from '../icons';
 const CheckResponsePaginate = React.createClass({
   propTypes: {
     check: PropTypes.object,
-    response: PropTypes.object,
+    responses: PropTypes.object,
     actions: PropTypes.shape({
       test: PropTypes.func,
       selectResponse: PropTypes.func
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        response: PropTypes.object,
+        responses: PropTypes.object,
         responsesFormatted: PropTypes.array,
         selectedResponse: PropTypes.number
       }),
@@ -48,7 +48,7 @@ const CheckResponsePaginate = React.createClass({
     this.runTestCheck(this.props);
   },
   componentWillReceiveProps(nextProps){
-    if (!this.props.response){
+    if (!this.props.responses){
       const old = this.getArrayFromData(this.props.check);
       const data = this.getArrayFromData(nextProps.check);
       if (!_.isEqual(old, data)){
@@ -91,7 +91,7 @@ const CheckResponsePaginate = React.createClass({
     return condition1 && condition2;
   },
   runTestCheck(props){
-    if (this.props.response){
+    if (this.props.responses){
       return this.setState({complete: true});
     }
     const complete = this.isCheckComplete(props.check);
@@ -159,6 +159,9 @@ const CheckResponsePaginate = React.createClass({
   },
   renderItem(){
     const res = this.getFormattedResponses()[this.props.redux.checks.selectedResponse];
+    if (!res){
+      return <div/>;
+    }
     if (res.error){
       return (
         <div className={style.checkResponseWaiting}>
@@ -197,17 +200,39 @@ const CheckResponsePaginate = React.createClass({
     const active = this.props.redux.checks.selectedResponse > 0;
     return <Button title="Previous Response" flat color="primary" onClick={this.runPrev} disabled={!active}><ChevronLeft fill={!active ? 'textSecondary' : 'primary'} inline/></Button>;
   },
+  renderPassing(){
+    const passing = this.getNumberPassing();
+    if (passing){
+      return (
+        <span>
+          <Padding r={1} inline>
+            <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
+          </Padding>
+        </span>
+      );
+    }
+    return <span/>;
+  },
+  renderFailing(){
+    const failing = this.getNumberFailing();
+    if (failing){
+      return (
+        <span>
+          <Padding r={1} inline>
+            <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
+          </Padding>
+        </span>
+      );
+    }
+    return <span/>;
+  },
   renderBoolArea(){
     if (this.props.showBoolArea){
       return (
         <div>
           <Padding b={1}>
-            <span>
-              <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
-            </span>&nbsp;&nbsp;
-            <span>
-              <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
-            </span>
+            {this.renderPassing()}
+            {this.renderFailing()}
           </Padding>
           <div className="clearfix"/>
         </div>
@@ -254,9 +279,9 @@ const CheckResponsePaginate = React.createClass({
     return <div/>;
   },
   render() {
-    if (this.getStatus() === 'pending' || (this.props.response && !this.props.response.size)){
+    if (this.getStatus() === 'pending' || (this.props.responses && !this.props.responses.size)){
       return this.renderWaiting();
-    }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
+    }else if (this.props.responses || (this.props.redux.checks.responses && this.state.complete)){
       return (
         <div>
         <Padding t={1}>
