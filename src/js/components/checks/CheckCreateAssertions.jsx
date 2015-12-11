@@ -13,7 +13,7 @@ import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import AssertionCounter from './AssertionCounter.jsx';
-import CheckResponse from './CheckResponse.jsx';
+import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../reduxactions';
@@ -96,7 +96,8 @@ const CheckCreateAssertions = React.createClass({
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        response: PropTypes.object
+        response: PropTypes.object,
+        selectedResponse: PropTypes.number
       })
     })
   },
@@ -151,7 +152,7 @@ const CheckCreateAssertions = React.createClass({
     if (data){
       let response = data.toJS();
       if (response && response.length){
-        val = _.get(response[0], 'response.value');
+        val = _.get(response[this.props.redux.checks.selectedResponse], 'response.value');
       }
     }
     return val;
@@ -303,11 +304,7 @@ const CheckCreateAssertions = React.createClass({
                   {this.renderHelperText()}
                 </Padding>
                 <Padding b={1}>
-                  <h3>Response to Your Request</h3>
-                  <p>The complete response that came back from your request.</p>
-                  <Padding tb={1}>
-                    <CheckResponse check={this.props.check}/>
-                  </Padding>
+                  <CheckResponsePaginate check={this.props.check} showBoolArea={false}/>
                 </Padding>
                 <Padding tb={1}>
                   {this.renderInner()}

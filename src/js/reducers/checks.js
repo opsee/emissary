@@ -7,7 +7,8 @@ import {Check} from '../modules/schemas';
 import {
   GET_CHECK,
   GET_CHECKS,
-  CHECK_TEST
+  CHECK_TEST,
+  CHECK_TEST_SELECT_RESPONSE
 } from '../reduxactions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -21,10 +22,14 @@ export const statics = {
     _.assign(newData, result.getFormattedData(data));
     return new Check(newData);
   },
-  getFormattedResponse(data){
-    if (data && data.size){
-      const first = data.toJS()[0];
-      let response = _.cloneDeep(first);
+  formatResponse(singleResponse){
+    // let response = _.cloneDeep(singleResponse);
+    // if(response.toJS){
+    //   response = response.toJS();
+    // }
+    // return {error: 'Something went wrong'};
+    let response = singleResponse.toJS();
+    if (_.get(response, 'response.value')){
       const headers = _.get(response, 'response.value.headers');
       if (headers){
         response.response.value.headers = headers.map(h => {
@@ -59,13 +64,17 @@ export const statics = {
       // return _.omit(response, 'response.value.metrics');
     }
     return {error: 'Something went wrong'};
+  },
+  getFormattedResponses(data){
+    return data.map(d => statics.formatResponse(d)).toJS();
   }
 };
 
 const initial = {
   checks: new List(),
   response: undefined,
-  responseFormatted: undefined
+  responsesFormatted: [],
+  selectedResponse: 0
 };
 
 export default handleActions({
@@ -81,7 +90,9 @@ export default handleActions({
       }else {
         checks = state.checks.concat(new List([single]));
       }
-      return _.assign({}, state, {checks});
+      const responses = single.get('results').get(0).get('responses');
+      const responsesFormatted = statics.getFormattedResponses(responses);
+      return _.assign({}, state, {checks, responsesFormatted});
     },
     throw(state){
       return state;
@@ -100,9 +111,16 @@ export default handleActions({
   },
   [CHECK_TEST]: {
     next(state, action){
-      const response = Immutable.fromJS(action.payload);
-      const responseFormatted = statics.getFormattedResponse(response);
-      return _.assign({}, state, {response, responseFormatted});
+      let response = action.payload.responses ? action.payload.responses : action.payload;
+      response = Immutable.fromJS(response);
+      const responsesFormatted = statics.getFormattedResponses(response);
+      return _.assign({}, state, {response, responsesFormatted});
+    }
+  },
+  [CHECK_TEST_SELECT_RESPONSE]: {
+    next(state, action){
+      const selectedResponse = action.payload;
+      return _.assign({}, state, {selectedResponse});
     }
   }
 }, initial);

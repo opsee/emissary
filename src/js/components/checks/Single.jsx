@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {Map, List} from 'immutable';
+import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -11,7 +11,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
-import CheckResponse from './CheckResponse';
+import CheckResponsePaginate from './CheckResponsePaginate';
 import {checks as actions} from '../../reduxactions';
 
 const CheckSingle = React.createClass({
@@ -43,14 +43,15 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    const results = this.getCheck().get('results').toJS();
-    if (results && results.length){
-      const failing = _.filter(results, r => {
-        return !r.passing;
-      });
-      return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
-    }
-    return new List();
+    return this.getCheck().get('results').get(0).get('responses');
+    // const results = this.getCheck().get('results').toJS();
+    // if (results && results.length){
+    //   const failing = _.filter(results, r => {
+    //     return !r.passing;
+    //   });
+    //   return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
+    // }
+    // return new List();
   },
   getSingleResponse(){
     const data = this.getResponses();
@@ -83,12 +84,11 @@ const CheckSingle = React.createClass({
             </Alert>
           </Padding>
           <Padding b={1}>
-            <h3>Assertions</h3>
-            <AssertionItemList assertions={this.getCheck().get('assertions')} response={this.getSingleResponse()}/>
+            <CheckResponsePaginate response={this.getResponses()}/>
           </Padding>
           <Padding b={1}>
-            <h3>Response</h3>
-            <CheckResponse response={this.getResponses()}/>
+            <h3>Assertions</h3>
+            <AssertionItemList assertions={this.getCheck().get('assertions')} response={this.getSingleResponse()}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>

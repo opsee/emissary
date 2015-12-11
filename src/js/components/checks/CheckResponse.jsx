@@ -21,7 +21,7 @@ const CheckResponse = React.createClass({
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         response: PropTypes.object,
-        responseFormatted: PropTypes.object
+        responsesFormatted: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
         checkTest: PropTypes.object
@@ -57,11 +57,11 @@ const CheckResponse = React.createClass({
     }
     return arr;
   },
-  getFormattedResponse(){
+  getFormattedResponses(){
     if (this.props.response){
-      return statics.getFormattedResponse(this.props.response);
+      return statics.getFormattedResponses(this.props.response);
     }
-    return this.props.redux.checks.responseFormatted;
+    return this.props.redux.checks.responsesFormatted;
   },
   getResponseClass(){
     return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
@@ -121,7 +121,7 @@ const CheckResponse = React.createClass({
     return (
       <div className={this.getResponseClass()}>
         <Highlight>
-          {JSON.stringify(_.get(this.getFormattedResponse(), 'response.value'), null, ' ')}
+          {JSON.stringify(_.get(this.getFormattedResponses(), 'response.value'), null, ' ')}
         </Highlight>
         {this.renderButton()}
       </div>
@@ -137,7 +137,7 @@ const CheckResponse = React.createClass({
   renderError(){
     return (
       <div className={style.checkResponseWaiting}>
-        <Alert bsStyle="danger">{this.getFormattedResponse().error}</Alert>
+        <Alert bsStyle="danger">{this.getFormattedResponses().error}</Alert>
       </div>
     );
   },
@@ -148,7 +148,7 @@ const CheckResponse = React.createClass({
     if (this.props.response && !this.props.response.size){
       return this.renderWaiting();
     }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
-      if (this.getFormattedResponse() && this.getFormattedResponse().error){
+      if (this.getFormattedResponses() && this.getFormattedResponses().error){
         return this.renderError();
       }
       return this.renderCode();
