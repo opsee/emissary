@@ -75,7 +75,7 @@ export const statics = {
 
 const initial = {
   checks: new List(),
-  response: new List(),
+  responses: new List(),
   responsesFormatted: [],
   selectedResponse: 0
 };
