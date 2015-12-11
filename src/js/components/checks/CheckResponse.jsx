@@ -14,13 +14,13 @@ import {statics} from '../../reducers/checks';
 const CheckResponse = React.createClass({
   propTypes: {
     check: PropTypes.object,
-    response: PropTypes.object,
+    responses: PropTypes.object,
     actions: PropTypes.shape({
       test: PropTypes.func
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        response: PropTypes.object,
+        responses: PropTypes.object,
         responsesFormatted: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
@@ -38,7 +38,7 @@ const CheckResponse = React.createClass({
     this.runTestCheck(this.props);
   },
   componentWillReceiveProps(nextProps){
-    if (!this.props.response){
+    if (!this.props.responses){
       const old = this.getArrayFromData(this.props.check);
       const data = this.getArrayFromData(nextProps.check);
       if (!_.isEqual(old, data)){
@@ -58,8 +58,8 @@ const CheckResponse = React.createClass({
     return arr;
   },
   getFormattedResponses(){
-    if (this.props.response){
-      return statics.getFormattedResponses(this.props.response);
+    if (this.props.responses){
+      return statics.getFormattedResponses(this.props.responses);
     }
     return this.props.redux.checks.responsesFormatted;
   },
@@ -75,7 +75,7 @@ const CheckResponse = React.createClass({
     return condition1 && condition2;
   },
   runTestCheck(props){
-    if (this.props.response){
+    if (this.props.responses){
       return this.setState({complete: true});
     }
     const complete = this.isCheckComplete(props.check);
@@ -145,9 +145,9 @@ const CheckResponse = React.createClass({
     if (this.getStatus() === 'pending'){
       return this.renderWaiting();
     }
-    if (this.props.response && !this.props.response.size){
+    if (this.props.responses && !this.props.responses.size){
       return this.renderWaiting();
-    }else if (this.props.response || (this.props.redux.checks.response && this.state.complete)){
+    }else if (this.props.responses || (this.props.redux.checks.responses && this.state.complete)){
       if (this.getFormattedResponses() && this.getFormattedResponses().error){
         return this.renderError();
       }

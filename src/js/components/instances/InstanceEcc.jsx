@@ -105,7 +105,7 @@ const InstanceEcc = React.createClass({
             </Table>
           </Padding>
           <Padding b={1}>
-            <CheckItemList type="instance" target={this.getTargets()}/>
+            <CheckItemList type="instance" target={this.getTargets()} title/>
           </Padding>
           <Padding b={1}>
             <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>

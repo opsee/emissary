@@ -25,12 +25,18 @@ const AssertionCounter = React.createClass({
     }
     return style.counterWaiting;
   },
+  getResponse(){
+    if (this.props.response && this.props.response.toJS){
+      return _.get(this.props.response.toJS(), 'response.value');
+    }
+    return this.props.response;
+  },
   isPassing(){
     const test = this.runTest();
     return test && test.success;
   },
   runTest(){
-    return slate(_.assign({}, _.cloneDeep(this.props), {key: this.props.keyData}), _.cloneDeep(this.props.response));
+    return slate(_.assign({}, this.props, {key: this.props.keyData}), this.getResponse());
   },
   renderIcon(){
     return this.isPassing() ? (

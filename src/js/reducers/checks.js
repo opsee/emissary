@@ -63,6 +63,9 @@ export const statics = {
       return response;
       // return _.omit(response, 'response.value.metrics');
     }
+    if (response.error){
+      return {error: response.error};
+    }
     return {error: 'Something went wrong'};
   },
   getFormattedResponses(data){
@@ -72,7 +75,7 @@ export const statics = {
 
 const initial = {
   checks: new List(),
-  response: undefined,
+  response: new List(),
   responsesFormatted: [],
   selectedResponse: 0
 };
@@ -92,7 +95,11 @@ export default handleActions({
       }
       const responses = single.get('results').get(0).get('responses');
       const responsesFormatted = statics.getFormattedResponses(responses);
-      return _.assign({}, state, {checks, responsesFormatted});
+      return _.assign({}, state, {
+        checks,
+        responses,
+        responsesFormatted
+      });
     },
     throw(state){
       return state;
@@ -111,10 +118,10 @@ export default handleActions({
   },
   [CHECK_TEST]: {
     next(state, action){
-      let response = action.payload.responses ? action.payload.responses : action.payload;
-      response = Immutable.fromJS(response);
-      const responsesFormatted = statics.getFormattedResponses(response);
-      return _.assign({}, state, {response, responsesFormatted});
+      let responses = action.payload.responses ? action.payload.responses : action.payload;
+      responses = Immutable.fromJS(responses);
+      const responsesFormatted = statics.getFormattedResponses(responses);
+      return _.assign({}, state, {responses, responsesFormatted});
     }
   },
   [CHECK_TEST_SELECT_RESPONSE]: {

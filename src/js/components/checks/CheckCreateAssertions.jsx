@@ -96,7 +96,7 @@ const CheckCreateAssertions = React.createClass({
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        response: PropTypes.object,
+        responses: PropTypes.object,
         selectedResponse: PropTypes.number
       })
     })
@@ -147,12 +147,12 @@ const CheckCreateAssertions = React.createClass({
     return check;
   },
   getResponse(){
-    const data = this.props.redux.checks.response;
+    const data = this.props.redux.checks.responses;
     let val;
     if (data){
-      let response = data.toJS();
-      if (response && response.length){
-        val = _.get(response[this.props.redux.checks.selectedResponse], 'response.value');
+      let responses = data.toJS();
+      if (responses && responses.length){
+        val = _.get(responses[this.props.redux.checks.selectedResponse], 'response.value');
       }
     }
     return val;

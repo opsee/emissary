@@ -84,11 +84,11 @@ const CheckSingle = React.createClass({
             </Alert>
           </Padding>
           <Padding b={1}>
-            <CheckResponsePaginate response={this.getResponses()}/>
+            <CheckResponsePaginate responses={this.getResponses()}/>
           </Padding>
           <Padding b={1}>
             <h3>Assertions</h3>
-            <AssertionItemList assertions={this.getCheck().get('assertions')} response={this.getSingleResponse()}/>
+            <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
           <Padding b={1}>
             <h3>Notifications</h3>
