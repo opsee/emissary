@@ -39,6 +39,17 @@ const BastionRequirement = React.createClass({
   getFirstMsg(){
     return _.find(this.props.redux.app.socketMessages, {command: 'bastions'});
   },
+  getBastionState(){
+    const msg = this.getFirstMsg();
+    if (msg && _.get(msg, 'attributes.bastions')){
+      const bastion = _.last(msg.attributes.bastions);
+      if (bastion && bastion.state){
+        return bastion.state;
+      }
+      return false;
+    }
+    return false;
+  },
   getStatus(){
     if (this.getFirstMsg() || this.state.disconnected){
       return 'success';
@@ -53,8 +64,29 @@ const BastionRequirement = React.createClass({
     })
     .value();
   },
+  renderReason(){
+    const state = this.getBastionState();
+    if (state === 'launching'){
+      return (
+        <div>
+          Your Opsee Bastion is currently installing. You can visit the <Link to="/start/install" style={{color: 'white', textDecoration: 'underline'}}>Install Page</Link> to view progress.
+        </div>
+      );
+    }else if (state === 'active'){
+      return (
+        <div>
+          Your Opsee Bastion is disconnected or has been removed. If you need to install another, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        </div>
+      );
+    }
+    return (
+      <div>
+        Opsee requires a <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>Bastion Instance</Link>. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+      </div>
+    );
+  },
   renderInner(){
-    if (this.state.disconnected){
+    if (this.state.disconnected && !this.getFirstMsg()){
       return (
         <Alert bsStyle="danger">
           Opsee is having trouble talking to the Bastion.
@@ -63,7 +95,7 @@ const BastionRequirement = React.createClass({
     }
     return (
       <Alert bsStyle="danger">
-        Bastion is disconnected or has been deleted. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        {this.renderReason()}
       </Alert>
     );
   },
