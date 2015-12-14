@@ -126,8 +126,9 @@ function generateSubnetsForSelection(regions){
       if (subnet.tags.length){
         subnetName = _.chain(subnet.tags).findWhere({key: 'Name'}).get('value').value() || subnetName;
       }
+      const nameString = subnetName !== subnet.subnet_id ? `${subnetName}&nbsp;(${subnet.subnet_id})` : subnet.subnet_id;
       return [subnet.subnet_id, `
-      <strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${subnet.subnet_id}<br/>
+      <strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${nameString}<br/>
       <span style="color:${colors.textColorSecondary}">${subnet.instance_count} Instances (${subnet.routing})</span>
       `];
     }).value();
