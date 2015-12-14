@@ -1,5 +1,6 @@
 import React from 'react';
-import {Toolbar} from '../global';
+
+import {BastionRequirement, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 const Bastion = React.createClass({
@@ -10,6 +11,7 @@ const Bastion = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <BastionRequirement/>
               <p>Here are some frequently asked questions and answers about the Opsee Bastion Instance:</p>
 
                 <h3>What is the Opsee Bastion Instance?</h3>
