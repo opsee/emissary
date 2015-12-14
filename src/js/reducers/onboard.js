@@ -150,27 +150,15 @@ export default handleActions({
     next(state, action){
       const regionsWithVpcs = action.payload;
 
-      // let vpcsForSelection = _.chain(regionsWithVpcs).map(r => {
-      //   return r.vpcs.map(v => {
-      //     let name = v.vpc_id;
-      //     if (v.tags){
-      //       let nameTag = _.findWhere(v.tags, {key: 'Name'});
-      //       if (nameTag){
-      //         name = `${nameTag.value}`;
-      //       }
-      //     }
-      //     return [v.vpc_id, `${name} (${v.count || 0} Instances)`];
-      //   });
-      // }).flatten().value();
-
       const vpcsForSelection = _.chain(regionsWithVpcs).map(region => {
         return _.chain(region.vpcs).map(vpc => {
           let vpcName = vpc.vpc_id;
           if (vpc.tags.length){
             vpcName = _.chain(vpc.tags).findWhere({key: 'Name'}).get('value').value() || vpcName;
           }
+          const identifier = vpcName === vpc.vpc_id ? `<strong>${vpcName}</strong>` : `<strong>${vpcName}</strong> - ${vpc.vpc_id}`;
           return [vpc.vpc_id, `
-          <strong>${vpcName}</strong> (${vpc.instance_count || 0} Instances)
+          ${identifier} (${vpc.instance_count || 0} Instances)
           `];
         }).value();
       }).flatten().value();

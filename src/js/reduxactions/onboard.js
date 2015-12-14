@@ -94,7 +94,7 @@ export function vpcScan(data) {
           //   return reject(new Error('No vpcs found.'));
           // }
         }, (err) => {
-          let message = _.get(err, 'response.body.error') || err.response;
+          let message = err.message || err.response;
           return reject({message});
         });
       })
