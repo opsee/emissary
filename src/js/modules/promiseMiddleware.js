@@ -21,7 +21,7 @@ export function promiseMiddleware({ dispatch }) {
         type: aType,
         payload: {
           status: 'pending',
-          time: Date.now(),
+          time: new Date(),
           id
         }
       });
@@ -30,7 +30,7 @@ export function promiseMiddleware({ dispatch }) {
           dispatch({
             type: aType,
             payload: {
-              time: Date.now(),
+              time: new Date(),
               status: 'success',
               id
             }
@@ -46,7 +46,7 @@ export function promiseMiddleware({ dispatch }) {
           dispatch({
             type: aType,
             payload: {
-              time: Date.now(),
+              time: new Date(),
               status: error,
               id
             }

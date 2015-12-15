@@ -29,9 +29,9 @@ const StatusHandler = React.createClass({
     let state = {};
     if (this.props.status !== nextProps.status){
       state.dismissed = false;
-    }
-    if (nextProps.status === 'success'){
-      state.attempts = this.state.attempts + 1;
+      if (nextProps.status === 'success'){
+        state.attempts = this.state.attempts + 1;
+      }
     }
     this.setState(state);
   },

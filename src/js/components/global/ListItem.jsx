@@ -27,6 +27,7 @@ const ListItem = React.createClass({
     title: PropTypes.string,
     type: PropTypes.string,
     onClose: PropTypes.func,
+    noMenu: PropTypes.bool,
     actions: PropTypes.shape({
       openContextMenu: PropTypes.func
     })
@@ -95,13 +96,21 @@ const ListItem = React.createClass({
       </Button>
     );
   },
+  renderMenu(){
+    if (this.props.noMenu){
+      return _.find(this.props.children, {key: 'menu'}) || <div/>;
+    }
+    return (
+      <ContextMenu title={this.props.menuTitle} id={this.props.item.get('id')}>
+        {_.find(this.props.children, {key: 'menu'})}
+      </ContextMenu>
+    );
+  },
   render(){
     return (
       <div className={listItem.item}>
         <Padding b={1}>
-          <ContextMenu title={this.props.menuTitle} id={this.props.item.get('id')}>
-            {_.find(this.props.children, {key: 'menu'})}
-          </ContextMenu>
+          {this.renderMenu()}
           <Grid fluid>
             <Row>
               <Col xs={2} sm={1}>

@@ -162,7 +162,7 @@ const EnvWithFilter = React.createClass({
     return this.getFilteredItems(this.props.redux.env.instances.ecc, ignoreButtonState);
   },
   isFinishedAttempt(){
-    return !!this.props.redux.env.groups.security.size;
+    return this.props.redux.asyncActions.getGroupsSecurity.status;
   },
   shouldButtonsRender(){
     const arr = [this.getNumberUnmonitored(), this.getNumberFailing(), this.getNumberPassing()];
@@ -198,7 +198,7 @@ const EnvWithFilter = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
+      <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
         <h3>Security Groups</h3>
         <Alert bsStyle="default">
           No security groups found
@@ -293,18 +293,18 @@ const EnvWithFilter = React.createClass({
   },
   render(){
     const self = this;
-    if (this.isFinishedAttempt()){
-      return (
-        <form name="envWithFilterForm">
-          {this.state.filter.render()}
-          {this.renderFilterButtons()}
-          {this.props.include.map(i => {
-            return self[`render${_.capitalize(i)}`]();
-          })}
-        </form>
-      );
-    }
-    return <StatusHandler status="pending"/>;
+    // if (this.isFinishedAttempt()){
+    return (
+      <form name="envWithFilterForm">
+        {this.state.filter.render()}
+        {this.renderFilterButtons()}
+        {this.props.include.map(i => {
+          return self[`render${_.capitalize(i)}`]();
+        })}
+      </form>
+    );
+    // }
+    // return <StatusHandler status="pending"/>;
   }
 });
 

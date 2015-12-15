@@ -2700,6 +2700,7 @@ to prevent collapsing during animation*/
   }
 }
 .modal.context .modal-body {
+  color:var(--colorText);
   padding: 0;
 }
 
