@@ -39,7 +39,9 @@ const ListItem = React.createClass({
     };
   },
   runMenuOpen(e){
-    e.preventDefault();
+    if (e){
+      e.preventDefault();
+    }
     this.props.actions.openContextMenu(this.props.item.get('id'));
     analytics.event(this.props.type, 'menu-open');
   },
