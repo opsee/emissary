@@ -9,7 +9,7 @@ import {
   ONBOARD_VPC_SELECT,
   ONBOARD_SET_INSTALL_DATA,
   ONBOARD_SUBNET_SELECT
-} from '../reduxactions/constants';
+} from '../actions/constants';
 
 const initial = {
   'access_key': config.access_key,

@@ -13,7 +13,7 @@ import {
   GET_GROUPS_ELB,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC
-} from '../reduxactions/constants';
+} from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
 

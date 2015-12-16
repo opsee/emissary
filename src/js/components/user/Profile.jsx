@@ -7,8 +7,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
-import * as actions from '../../reduxactions/user';
-import * as appActions from '../../reduxactions/app';
+import {user as actions, app as appActions} from '../../actions';
 
 const Profile = React.createClass({
   propTypes: {

@@ -9,7 +9,7 @@ import {Padding} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
 
 const CheckResponsePaginate = React.createClass({

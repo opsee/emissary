@@ -8,7 +8,7 @@ import {StatusHandler} from '../global';
 import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions} from '../../actions';
 
 const CheckItemList = React.createClass({
   mixins: [SetInterval],

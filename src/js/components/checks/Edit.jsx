@@ -13,7 +13,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {EnvWithFilter} from '../env';
 import {Button} from '../forms';
-import {checks as actions, env as envActions} from '../../reduxactions';
+import {checks as actions, env as envActions} from '../../actions';
 import {Check} from '../../modules/schemas';
 
 function getState(){

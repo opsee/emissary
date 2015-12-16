@@ -11,7 +11,7 @@ import {Checkmark, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {admin as actions, user as userActions} from '../../reduxactions';
+import {admin as actions, user as userActions} from '../../actions';
 
 const Signups = React.createClass({
   propTypes: {

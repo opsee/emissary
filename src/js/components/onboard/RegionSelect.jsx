@@ -10,7 +10,7 @@ import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {onboard as actions} from '../../reduxactions';
+import {onboard as actions} from '../../actions';
 import regions from '../../modules/regions';
 
 const regionChoices = regions.map(r => {

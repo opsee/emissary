@@ -7,7 +7,7 @@ import {StatusHandler, Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {user as actions} from '../../reduxactions';
+import {user as actions} from '../../actions';
 
 const PasswordChange = React.createClass({
   propTypes: {

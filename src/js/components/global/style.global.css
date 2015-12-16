@@ -2615,8 +2615,59 @@ to prevent collapsing during animation*/
   opacity: 0;
 }
 
-.ng-hide {
-  display: none;
+.slide-forward-enter, .slide-forward-leave {
+  /*transition: all var(--transitionEaseOut);*/
+  transition: all 15000ms;
+}
+
+.slide-forward-leave{
+  position: absolute;
+  top:0;
+  left:0;
+}
+
+.slide-forward-enter {
+  transform: translateX(101%);
+}
+
+.slide-forward-enter, .slide-forward-leave-active {
+  opacity: 0;
+}
+
+.slide-forward-enter-active, .slide-forward-leave {
+  opacity: 1;
+  transform: none;
+}
+
+.slide-forward-leave-active {
+  transform: translateX(-101%);
+  opacity: 0;
+}
+
+.slide-reverse-enter, .slide-reverse-leave {
+  /*transition: all var(--transitionEaseOut);*/
+  transition: all 15000ms;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.slide-reverse-enter {
+  transform: translateX(-101%);
+}
+
+.slide-reverse-enter, .slide-reverse-leave-active {
+  opacity: 0;
+}
+
+.slide-reverse-enter-active, .slide-reverse-leave {
+  opacity: 1;
+  transform: none;
+}
+
+.slide-reverse-leave-active {
+  transform: translateX(101%);
+  opacity: 0;
 }
 
 .bg-gray-900 {
@@ -2700,6 +2751,7 @@ to prevent collapsing during animation*/
   }
 }
 .modal.context .modal-body {
+  color:var(--colorText);
   padding: 0;
 }
 

@@ -49,7 +49,6 @@ import OnboardSubnetSelect from '../onboard/SubnetSelect';
 import OnboardInstall from '../onboard/Install';
 
 import AdminSignups from '../admin/Signups';
-import AdminSocket from '../admin/Socket';
 
 import Help from '../pages/Help';
 import Styleguide from '../pages/Styleguide';
@@ -107,7 +106,6 @@ const routes = (
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 
     <Route path="/admin/signups" component={auth(AdminSignups)}/>
-    <Route path="/admin/socket" component={auth(AdminSocket)}/>
     <Route path="/system" component={auth(System)}/>
 
     <Route path="/profile" component={auth(Profile)}/>

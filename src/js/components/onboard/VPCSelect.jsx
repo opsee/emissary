@@ -9,7 +9,7 @@ import analytics from '../../modules/analytics';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {onboard as actions} from '../../reduxactions';
+import {onboard as actions} from '../../actions';
 
 const InfoForm = forms.Form.extend({
   vpcs: forms.ChoiceField({

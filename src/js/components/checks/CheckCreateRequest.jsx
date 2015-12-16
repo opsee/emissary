@@ -18,7 +18,7 @@ import {
   env as envActions,
   checks as checkActions,
   user as userActions
-} from '../../reduxactions';
+} from '../../actions';
 
 const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
 

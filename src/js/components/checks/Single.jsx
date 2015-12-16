@@ -12,7 +12,7 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions} from '../../actions';
 
 const CheckSingle = React.createClass({
   propTypes: {

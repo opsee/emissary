@@ -5,10 +5,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Padding} from '../layout';
-import {Alert, Grid, Row, Col, Modal} from '../../modules/bootstrap';
-import {Table, Toolbar, Loader, ListItemTest} from '../global';
-
-import {GlobalActions} from '../../actions';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Table, Toolbar, Loader} from '../global';
 
 import {Add, Key} from '../icons';
 
@@ -16,7 +14,7 @@ import * as icons from '../icons';
 import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
 import {GroupItemList} from '../groups';
-import {env as envActions, checks as checkActions} from '../../reduxactions';
+import {env as envActions, checks as checkActions, app as appActions} from '../../actions';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
 
@@ -73,6 +71,9 @@ const InfoForm = forms.Form.extend({
 
 const Styleguide = React.createClass({
   propTypes: {
+    appActions: PropTypes.shape({
+      modalMessageOpen: PropTypes.func
+    }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
     }),
@@ -144,15 +145,20 @@ const Styleguide = React.createClass({
     // buttonToggles[index].on = bool;
     // this.setState({buttonToggles});
   },
-  runNotify(style){
-    console.log(`run notify ${style}`);
-    GlobalActions.globalModalMessage({
-      html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
-      style: style
+  runNotify(color){
+    console.log(`run notify ${color}`);
+    this.props.appActions.modalMessageOpen({
+      html: `This is a ${color} test of the notification system, <a href="http://google.com" target="_blank">even including html</a>`,
+      color
     });
   },
   runToggleContextMenu(){
     this.setState({showMenu: !this.state.showMenu});
+  },
+  handlePressUp(){
+    /*eslint-disable no-alert*/
+    alert('you pressed it.');
+    /*eslint-enable no-alert*/
   },
   render() {
     return (
@@ -273,10 +279,12 @@ const Styleguide = React.createClass({
 
             <hr/>
 
-            <h3>List Items</h3>
-            <ListItemTest state="passing" passing={2} total={2}/>
-            <ListItemTest state="failing" passing={1} total={2}/>
-            <ListItemTest state="running"/>
+            {
+            // <h3>List Items</h3>
+            // <ListItemTest state="passing" passing={2} total={2}/>
+            // <ListItemTest state="failing" passing={1} total={2}/>
+            // <ListItemTest state="running"/>
+            }
 
             <hr/>
 
@@ -349,6 +357,9 @@ const Styleguide = React.createClass({
                 </p>
                 <Padding t={2}>
                   <Button block>Block</Button>
+                  <Padding t={1}>
+                    <Button block onPressUp={this.handlePressUp} color="primary">Block, Press and Hold</Button>
+                  </Padding>
                 </Padding>
               </Padding>
 
@@ -369,7 +380,15 @@ const Styleguide = React.createClass({
                 </Padding>
               </Padding>
               <Padding b={2}>
-                <Button flat noPad primary>NO PAD</Button>
+                <Padding className="pull-left">
+                  <Button flat noPad primary>NO PAD</Button>
+                </Padding>
+                <Padding className="pull-left">
+                  <Button flat color="danger" onPressUp={this.handlePressUp}>Flat, Press and Hold</Button>
+                </Padding>
+                <Padding t={1}>
+                  <Button flat color="primary" block onPressUp={this.handlePressUp}>Flat, Press and Hold</Button>
+                </Padding>
               </Padding>
             </form>
 
@@ -386,20 +405,22 @@ const Styleguide = React.createClass({
             <Loader/>
             <h3>Context Menu</h3>
             <Button onClick={this.runToggleContextMenu} color="primary">Toggle</Button>
-            <Modal show={this.state.showMenu} onHide={this.runToggleContextMenu} className="context" style="default">
-              <Grid fluid>
-                <Row>
-                  <div className="flex-1">
-                    <Padding lr={1}>
-                      <h3>Actions</h3>
-                    </Padding>
-                    <Button text="left" color="primary" block flat>
-                      <Add inline fill="primary"/> Add Item
-                    </Button>
-                  </div>
-                </Row>
-              </Grid>
-            </Modal>
+            {
+            // <Modal show={this.state.showMenu} onHide={this.runToggleContextMenu} className="context" style="default">
+            //   <Grid fluid>
+            //     <Row>
+            //       <div className="flex-1">
+            //         <Padding lr={1}>
+            //           <h3>Actions</h3>
+            //         </Padding>
+            //         <Button text="left" color="primary" block flat>
+            //           <Add inline fill="primary"/> Add Item
+            //         </Button>
+            //       </div>
+            //     </Row>
+            //   </Grid>
+            // </Modal>
+            }
             <h3>Global Notifcations</h3>
             <Padding b={1}>
               <Button color="danger" onClick={this.runNotify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
@@ -416,6 +437,7 @@ const Styleguide = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  appActions: bindActionCreators(appActions, dispatch),
   envActions: bindActionCreators(envActions, dispatch),
   checkActions: bindActionCreators(checkActions, dispatch)
 });

@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {ListItem} from '../global';
 import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
 import {Button} from '../forms';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const GroupItem = React.createClass({
   propTypes: {
@@ -92,7 +92,7 @@ const GroupItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} title={`${this.getItem().get('name')} - ${this.getItem().get('instance_count')} instances`}>
+        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} title={`${this.getItem().get('name')} - ${this.getItem().get('instance_count')} instances`} menuTitle={`${this.getItem().get('name')} Actions`}>
           <div key="menu">
             <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check

@@ -9,7 +9,7 @@ import {List} from 'immutable';
 import {Padding} from '../layout';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const InstanceItemList = React.createClass({
   propTypes: {

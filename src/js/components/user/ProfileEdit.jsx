@@ -10,7 +10,7 @@ import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
 import {Padding} from '../layout';
-import {user as actions} from '../../reduxactions';
+import {user as actions} from '../../actions';
 
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({

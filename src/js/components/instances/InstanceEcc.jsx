@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Map} from 'immutable';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import TimeAgo from 'react-timeago';
@@ -10,10 +9,12 @@ import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Button} from '../forms';
-import {Add} from '../icons';
+import {Add, Settings} from '../icons';
 import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
-import {env as actions} from '../../reduxactions';
+import {env as actions, app as appActions} from '../../actions';
+import {InstanceEcc as Schema} from '../../modules/schemas';
+import InstanceMenu from './InstanceMenu';
 
 const InstanceEcc = React.createClass({
   mixins: [SetInterval],
@@ -21,6 +22,9 @@ const InstanceEcc = React.createClass({
     params: PropTypes.object,
     actions: PropTypes.shape({
       getInstanceEcc: PropTypes.func
+    }),
+    appActions: PropTypes.shape({
+      openContextMenu: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
@@ -46,7 +50,7 @@ const InstanceEcc = React.createClass({
   getInstance(){
     return this.props.redux.env.instances.ecc.find(i => {
       return i.get('id') === this.props.params.id;
-    }) || new Map();
+    }) || new Schema();
   },
   getGroupsSecurity(){
     if (this.getInstance().get('name')){
@@ -65,6 +69,9 @@ const InstanceEcc = React.createClass({
   getTargets(){
     const initial = [this.props.params.id];
     return initial.concat(this.getGroupsSecurity()).concat(this.getGroupsELB());
+  },
+  handleActionsClick(){
+    this.props.appActions.openContextMenu(this.getInstance().get('id'));
   },
   renderAvailabilityZone(){
     const az = _.get(this.getInstance().get('Placement'), 'AvailabilityZone');
@@ -113,18 +120,6 @@ const InstanceEcc = React.createClass({
           <Padding b={1}>
             <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
           </Padding>
-          {
-            // <h2>{this.data().checks.length} Checks</h2>
-            // <ul className="list-unstyled">
-            //   {this.getInstance().get('checks').map(i => {
-            //     return (
-            //       <li key={i.get('id')}>
-            //         <CheckItem item={i}/>
-            //       </li>
-            //       )
-            //   })}
-            // </ul>
-          }
         </div>
       );
     }
@@ -133,7 +128,12 @@ const InstanceEcc = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
+        <Toolbar title={`Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}>
+          <Button onClick={this.handleActionsClick} color="info" fab title={`${this.getInstance().get('name')} Actions`}>
+            <Settings btn/>
+          </Button>
+        </Toolbar>
+        <InstanceMenu item={this.getInstance()}/>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -147,7 +147,8 @@ const InstanceEcc = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(InstanceEcc);

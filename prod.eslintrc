@@ -164,9 +164,9 @@
 /**
  * JSX style
  */
+    "jsx-quotes": [2, "prefer-double"],
     "react/display-name": 0,
     "react/jsx-boolean-value": 2,
-    "react/jsx-quotes": [2, "double"],
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-no-undef": 2,
     "react/jsx-sort-props": 0,
@@ -195,7 +195,6 @@
         "componentWillReceiveProps",
         "shouldComponentUpdate",
         "componentWillUpdate",
-        "storeDidChange",
         "componentDidUpdate",
         "componentWillUnmount",
         "/^get.+$/",

@@ -9,7 +9,7 @@ import {
   GET_CHECKS,
   CHECK_TEST,
   CHECK_TEST_SELECT_RESPONSE
-} from '../reduxactions/constants';
+} from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
 

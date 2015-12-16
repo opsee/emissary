@@ -8,7 +8,7 @@ import Highlight from '../global/Highlight.jsx';
 import {ChevronUp, ChevronDown} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions} from '../../actions';
 import {statics} from '../../reducers/checks';
 
 const CheckResponse = React.createClass({

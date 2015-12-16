@@ -30,9 +30,11 @@ const BastionRequirement = React.createClass({
   componentDidMount() {
     setTimeout(() => {
       if (!this.getFirstMsg()){
-        this.setState({
-          disconnected: true
-        });
+        if (this.isMounted()){
+          this.setState({
+            disconnected: true
+          });
+        }
       }
     }, 15000);
   },

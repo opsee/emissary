@@ -14,7 +14,7 @@ import {
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_APPLY
-} from '../reduxactions/constants';
+} from '../actions/constants';
 
 function getAuth(data){
   const date = data.loginDate;

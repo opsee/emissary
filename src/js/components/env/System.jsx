@@ -8,7 +8,7 @@ import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import config from '../../modules/config';
-import {user as actions, env as envActions} from '../../reduxactions';
+import {user as actions, env as envActions} from '../../actions';
 
 const System = React.createClass({
   propTypes: {

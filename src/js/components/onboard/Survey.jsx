@@ -3,7 +3,7 @@ import forms from 'newforms';
 import {BoundField, Button} from '../forms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {user as actions} from '../../reduxactions';
+import {user as actions} from '../../actions';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
 

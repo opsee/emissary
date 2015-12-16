@@ -8,7 +8,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {StatusHandler} from '../global';
-import {user as actions} from '../../reduxactions';
+import {user as actions} from '../../actions';
 
 const OnboardPassword = React.createClass({
   propTypes: {

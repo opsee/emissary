@@ -4,11 +4,10 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {ListItem} from '../global';
-import {Add, Close, ListCheckmark, Play, Refresh, Stop} from '../icons';
-import {Button} from '../forms';
-import {Padding} from '../layout';
-import {env as actions, app as appActions} from '../../reduxactions';
+import {Close, ListCheckmark} from '../icons';
+import {env as actions, app as appActions} from '../../actions';
 import style from '../global/contextMenu.css';
+import InstanceMenu from './InstanceMenu';
 
 const InstanceItem = React.createClass({
   propTypes: {
@@ -82,44 +81,8 @@ const InstanceItem = React.createClass({
   render(){
     if (this.props.item.get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} onClick={this.props.onClick} state={this.props.item.state} item={this.props.item} onClose={this.runResetPageState}>
-          <div key="menu">
-            <div className={this.getPageClass('page1')}>
-              <Button color="primary" text="left" to={`/check-create/request?id=${this.props.item.get('id')}&type=${this.props.item.get('type')}&name=${this.props.item.get('name')}`} block flat>
-                <Add inline fill="primary"/> Create Check
-              </Button>
-              <Button color="primary" text="left" block flat onClick={this.handleStartClick}>
-                <Play inline fill="primary"/> Start
-              </Button>
-              <Button color="primary" text="left" block flat onClick={this.handleStopClick}>
-                <Stop inline fill="primary"/> Stop
-              </Button>
-              <Button color="primary" text="left" block flat onClick={this.handleRebootClick}>
-                <Refresh inline fill="primary"/> Reboot
-              </Button>
-            </div>
-            <div className={this.getPageClass('page2')}>
-              <Padding lr={1}>
-                <h3>Start this Instance?</h3>
-              </Padding>
-              <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
-              <Button color="primary" text="left" block flat onClick={this.runStartConfirm}>Yes</Button>
-            </div>
-            <div className={this.getPageClass('page3')}>
-              <Padding lr={1}>
-                <h3>Stop this Instance?</h3>
-              </Padding>
-              <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
-              <Button color="primary" text="left" block flat onClick={this.runStopConfirm}>Yes</Button>
-            </div>
-            <div className={this.getPageClass('page4')}>
-              <Padding lr={1}>
-                <h3>Reboot this Instance?</h3>
-              </Padding>
-              <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
-              <Button color="primary" text="left" block flat onClick={this.runRebootConfirm}>Yes</Button>
-            </div>
-          </div>
+        <ListItem type="Group" link={this.getLink()} params={{id: this.props.item.get('id'), name: this.props.item.get('name')}} onClick={this.props.onClick} state={this.props.item.state} item={this.props.item} onClose={this.runResetPageState} noMenu>
+          <InstanceMenu item={this.props.item} key="menu"/>
           <div key="line1">{this.props.item.get('name')}</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>

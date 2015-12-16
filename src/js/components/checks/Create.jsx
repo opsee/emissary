@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {Check} from '../../modules/schemas';
-import {checks as actions, user as userActions, env as envActions} from '../../reduxactions';
+import {checks as actions, user as userActions, env as envActions} from '../../actions';
 
 const CheckCreate = React.createClass({
   propTypes: {

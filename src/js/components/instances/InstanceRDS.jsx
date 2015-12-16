@@ -13,7 +13,7 @@ import {Button} from '../forms';
 import {Add} from '../icons';
 import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const InstanceRds = React.createClass({
   mixins: [SetInterval],

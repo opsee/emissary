@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row} from '../../modules/bootstrap';
 import Modal from './Modal';
 import {Padding} from '../layout';
-import {app as actions} from '../../reduxactions';
+import {app as actions} from '../../actions';
 
 const ContextMenu = React.createClass({
   propTypes: {
@@ -16,7 +16,8 @@ const ContextMenu = React.createClass({
     openId: PropTypes.string,
     actions: PropTypes.shape({
       closeContextMenu: PropTypes.func
-    })
+    }),
+    noTitle: PropTypes.bool
   },
   getDefaultProps(){
     return {
@@ -29,15 +30,23 @@ const ContextMenu = React.createClass({
       this.props.onHide.call();
     }
   },
+  renderTitle(){
+    if (!this.props.noTitle){
+      return (
+        <Padding lr={1}>
+          <h3>{this.props.title}</h3>
+        </Padding>
+      );
+    }
+    return <div/>;
+  },
   render(){
     return (
       <Modal show={this.props.openId === this.props.id} onHide={this.handleHide} className="context" style="default" key="modal">
         <Grid fluid>
           <Row>
             <div className="flex-1">
-              <Padding lr={1}>
-                <h3>{this.props.title}</h3>
-              </Padding>
+              {this.renderTitle()}
               {this.props.children}
             </div>
           </Row>
