@@ -43,7 +43,7 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    return this.getCheck().get('results').get(0).get('responses');
+    return _.get(this.getCheck().get('results').get(0), 'responses');
     // const results = this.getCheck().get('results').toJS();
     // if (results && results.length){
     //   const failing = _.filter(results, r => {

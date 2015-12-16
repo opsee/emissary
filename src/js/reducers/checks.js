@@ -93,7 +93,8 @@ export default handleActions({
       }else {
         checks = state.checks.concat(new List([single]));
       }
-      const responses = single.get('results').get(0).get('responses');
+      let responses = _.get(single.get('results').get(0), 'responses');
+      responses = responses && responses.toJS ? responses : new List();
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {
         checks,
