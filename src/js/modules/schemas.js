@@ -13,7 +13,7 @@ export const User = Record({
   intercom_hmac: null,
   auth: null,
   ghosting: false,
-  customerId: undefined,
+  customer_id: undefined,
   data: undefined
 });
 

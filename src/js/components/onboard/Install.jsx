@@ -103,7 +103,7 @@ const Install = React.createClass({
   },
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
-    return _.every(stats) && stats.length;
+    return (_.every(stats) && stats.length) ||  _.filter(this.props.redux.app.socketMessages, {command: 'connect-bastion'}).length;
   },
   renderSurvey(){
     return (
@@ -143,16 +143,14 @@ const Install = React.createClass({
     return <div/>;
   },
   renderText(){
-    if (!this.isBastionLaunching() && !this.props.redux.env.bastions.length){
-      return (
-        <p>Checking installation status...</p>
-      );
-    }else if (!this.areBastionsComplete().length && !this.getBastionErrors().length){
+    if (this.isBastionLaunching() && !this.areBastionsComplete().length && !this.getBastionErrors().length){
       return (
         <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
       );
+    }else if (this.areBastionsComplete()){
+      return <div/>;
     }
-    return <div/>;
+    return <p>Checking installation status...</p>;
     // if (this.areBastionsComplete()){
     //   const bastionErrors = this.getBastionErrors();
     //   const bastionSuccesses = this.getBastionSuccesses();

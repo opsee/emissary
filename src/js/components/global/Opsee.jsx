@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
 import {Analytics, Header, MessageModal, Toolbar} from './';
@@ -36,7 +37,6 @@ const Opsee = React.createClass({
   },
   componentWillMount(){
     this.props.appActions.initialize();
-    this.props.envActions.getBastions();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
   },
   componentWillReceiveProps(nextProps) {

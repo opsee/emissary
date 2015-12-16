@@ -57,6 +57,9 @@ const CheckResponsePaginate = React.createClass({
     }
   },
   getArrayFromData(data){
+    if (!data){
+      return [];
+    }
     let arr = _.map(['port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
     let headers = _.get(data, 'check_spec.value.headers');
@@ -86,6 +89,9 @@ const CheckResponsePaginate = React.createClass({
     return this.getTotalNumberOfResponses() - this.getNumberPassing();
   },
   isCheckComplete(check){
+    if (!check){
+      return false;
+    }
     const condition1 = check.target.id;
     const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
     return condition1 && condition2;

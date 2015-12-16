@@ -1,5 +1,7 @@
 import config from '../modules/config';
 import {createAction} from 'redux-actions';
+import uuid from 'node-uuid';
+
 import {
   APP_INITIALIZE,
   APP_SHUTDOWN,
@@ -90,14 +92,35 @@ export function shutdown(){
 export function initialize(){
   return (dispatch, state) => {
     if (state().user.get('token')){
-      window.Intercom('boot', {
-        app_id: 'mrw1z4dm',
-        email: state().user.get('email'),
-        user_hash: state().user.get('intercom_hmac')
-      });
+      const user = state().user.toJS();
+      if (window.Intercom){
+        window.Intercom('boot', {
+          app_id: 'mrw1z4dm',
+          email: user.email,
+          user_hash: user.intercom_hmac
+        });
+      }
+      if (window.ldclient){
+        window.ldclient.identify({
+          firstName: user.name,
+          lasName: user.name,
+          key: user.id,
+          email: user.email,
+          custom: {
+            customer_id: user.customer_id,
+            id: user.id
+          }
+        });
+      }
       setTimeout(() => {
         socketStart(dispatch, state);
       }, config.socketStartDelay || 0);
+    }
+    if (window.ldclient){
+      window.ldclient.identify({
+        key: uuid.v4(),
+        anonymous: true
+      });
     }
     dispatch({
       type: APP_INITIALIZE
