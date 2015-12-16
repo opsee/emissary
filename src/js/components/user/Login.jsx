@@ -9,7 +9,7 @@ import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Col, Row} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {user as actions} from '../../reduxactions';
+import {user as actions} from '../../actions';
 
 const Login = React.createClass({
   propTypes: {

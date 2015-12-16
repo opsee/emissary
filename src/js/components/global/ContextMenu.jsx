@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row} from '../../modules/bootstrap';
 import Modal from './Modal';
 import {Padding} from '../layout';
-import {app as actions} from '../../reduxactions';
+import {app as actions} from '../../actions';
 
 const ContextMenu = React.createClass({
   propTypes: {

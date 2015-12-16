@@ -12,7 +12,7 @@ import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions} from '../../actions';
 
 const CheckSingle = React.createClass({
   propTypes: {
@@ -43,7 +43,7 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    return this.getCheck().get('results').get(0).get('responses');
+    return _.get(this.getCheck().get('results').get(0), 'responses');
     // const results = this.getCheck().get('results').toJS();
     // if (results && results.length){
     //   const failing = _.filter(results, r => {

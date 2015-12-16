@@ -8,15 +8,13 @@ import {Padding} from '../layout';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Table, Toolbar, Loader} from '../global';
 
-import {GlobalActions} from '../../actions';
-
 import {Add, Key} from '../icons';
 
 import * as icons from '../icons';
 import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
 import {GroupItemList} from '../groups';
-import {env as envActions, checks as checkActions} from '../../reduxactions';
+import {env as envActions, checks as checkActions, app as appActions} from '../../actions';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
 
@@ -73,6 +71,9 @@ const InfoForm = forms.Form.extend({
 
 const Styleguide = React.createClass({
   propTypes: {
+    appActions: PropTypes.shape({
+      modalMessageOpen: PropTypes.func
+    }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
     }),
@@ -144,11 +145,11 @@ const Styleguide = React.createClass({
     // buttonToggles[index].on = bool;
     // this.setState({buttonToggles});
   },
-  runNotify(style){
-    console.log(`run notify ${style}`);
-    GlobalActions.globalModalMessage({
-      html: 'This is a test of the notification system, <a href="http://google.com" target="_blank">even including html</a>',
-      style: style
+  runNotify(color){
+    console.log(`run notify ${color}`);
+    this.props.appActions.modalMessageOpen({
+      html: `This is a ${color} test of the notification system, <a href="http://google.com" target="_blank">even including html</a>`,
+      color
     });
   },
   runToggleContextMenu(){
@@ -436,6 +437,7 @@ const Styleguide = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  appActions: bindActionCreators(appActions, dispatch),
   envActions: bindActionCreators(envActions, dispatch),
   checkActions: bindActionCreators(checkActions, dispatch)
 });

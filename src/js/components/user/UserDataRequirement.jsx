@@ -3,7 +3,7 @@ import config from '../../modules/config';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {user as actions} from '../../reduxactions';
+import {user as actions} from '../../actions';
 
 const UserDataRequirement = React.createClass({
   propTypes: {

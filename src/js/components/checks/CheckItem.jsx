@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {ListItem} from '../global';
 import {Edit, Delete, ListCheckmark, ListClose} from '../icons';
 import {Button} from '../forms';
-import {checks as actions, app as appActions} from '../../reduxactions';
+import {checks as actions, app as appActions} from '../../actions';
 
 const CheckItem = React.createClass({
   mixins: [PureRenderMixin],

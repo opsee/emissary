@@ -9,7 +9,7 @@ import {ContextMenu, StatusHandler} from '../global';
 import {Add, Play, Refresh, Stop} from '../icons';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {env as actions, app as appActions} from '../../reduxactions';
+import {env as actions, app as appActions} from '../../actions';
 
 const InstanceMenu = React.createClass({
   propTypes: {

@@ -8,7 +8,7 @@ import {Add} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
-import {checks as actions} from '../../reduxactions';
+import {checks as actions} from '../../actions';
 
 const CheckList = React.createClass({
   propTypes: {

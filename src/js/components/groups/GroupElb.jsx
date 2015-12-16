@@ -12,7 +12,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Add} from '../icons';
 import {Padding} from '../layout';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const GroupElb = React.createClass({
   mixins: [SetInterval],

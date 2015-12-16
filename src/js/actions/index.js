@@ -1,17 +1,15 @@
-import AdminActions from './Admin';
-import CheckActions from './Check';
-import GlobalActions from './Global';
-import GroupActions from './Group';
-import InstanceActions from './Instance';
-import OnboardActions from './Onboard';
-import UserActions from './User';
+import * as admin from './admin';
+import * as app from './app';
+import * as user from './user';
+import * as env from './env';
+import * as onboard from './onboard';
+import * as checks from './checks';
 
 export {
-  AdminActions,
-  CheckActions,
-  GlobalActions,
-  GroupActions,
-  InstanceActions,
-  OnboardActions,
-  UserActions
+  admin,
+  app,
+  checks,
+  env,
+  onboard,
+  user
 };

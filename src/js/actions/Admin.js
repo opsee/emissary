@@ -1,42 +1,58 @@
 import config from '../modules/config';
-import Flux from '../modules/flux';
 import request from '../modules/request';
-import _ from 'lodash';
-import storage from '../modules/storage';
+import {
+  ADMIN_GET_SIGNUPS,
+  ADMIN_GET_USERS,
+  ADMIN_ACTIVATE_SIGNUP
+} from './constants';
 
-let _actions = {};
-
-_actions.adminGetSignups = Flux.statics.addAsyncAction('adminGetSignups',
-  () => {
-    return request
-    .get(`${config.authApi}/signups`)
-    .set('Authorization', storage.get('user').auth)
-    .query({
-      per_page: 1000
+export function getSignups() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ADMIN_GET_SIGNUPS,
+      payload: new Promise((resolve, reject) => {
+        request
+        .get(`${config.authApi}/signups`)
+        .set('Authorization', state().user.get('auth'))
+        .query({
+          per_page: 1000
+        })
+        .then(res => resolve(res.body), reject);
+      })
     });
-  },
-  res => res && res.body,
-  res => res && res.response
-);
+  };
+}
 
-_actions.adminActivateSignup = Flux.statics.addAsyncAction('adminActivateSignup',
-  (signup) => {
-    return request
-    .put(`${config.authApi}/signups/${signup.id}/activate`)
-    .set('Authorization', storage.get('user').auth);
-  },
-  res => res && res.body,
-  res => res && res.response
-);
+export function activateSignup(signup) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ADMIN_ACTIVATE_SIGNUP,
+      payload: new Promise((resolve, reject) => {
+        request
+        .put(`${config.authApi}/signups/${signup.id}/activate`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => {
+          resolve(res.body);
+          getSignups()(dispatch, state);
+        }, reject);
+      })
+    });
+  };
+}
 
-_actions.adminGetUsers = Flux.statics.addAsyncAction('adminGetUsers',
-  () => {
-    return request
-    .get(`${config.authApi}/users`)
-    .set('Authorization', storage.get('user').auth);
-  },
-  res => res && res.body,
-  res => res && res.response
-);
-
-export default _.assign({}, ..._.values(_actions));
+export function getUsers() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ADMIN_GET_USERS,
+      payload: new Promise((resolve) => {
+        request
+        .get(`${config.authApi}/users`)
+        .set('Authorization', state().user.get('auth'))
+        .query({
+          per_page: 1000
+        })
+        .then(res => resolve(res.body));
+      })
+    });
+  };
+}

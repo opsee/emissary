@@ -1,133 +1,178 @@
+import {pushState} from 'redux-router';
 import config from '../modules/config';
-import Flux from '../modules/flux';
 import request from '../modules/request';
-import analytics from '../modules/analytics';
+import {createAction} from 'redux-actions';
 import _ from 'lodash';
-import example from '../../files/bastion-install-messages-example.json';
-import storage from '../modules/storage';
+import analytics from '../modules/analytics';
+import {
+  ONBOARD_SIGNUP_CREATE,
+  ONBOARD_VPC_SCAN,
+  ONBOARD_VPC_SELECT,
+  ONBOARD_INSTALL,
+  ONBOARD_SET_CREDENTIALS,
+  ONBOARD_SET_REGION,
+  ONBOARD_SET_INSTALL_DATA,
+  ONBOARD_SUBNET_SELECT
+} from './constants';
 
-let _actions = {};
-
-_actions.subdomainAvailability = Flux.statics.addAsyncAction('subdomainAvailability',
-  (subdomain, date) => {
-    return request
-    .get(`${config.api}/orgs/subdomain/${subdomain}`)
-    .set('Authorization', storage.get('user').auth)
-    .send({date: date});
-  },
-  res => {
-    if (res && res.body){
-      return {
-        available: res.body.available,
-        date: res.req._data.date
-      };
-    }
-  },
-  res => res && res.response
-);
-
-_actions.onboardCreateOrg = Flux.statics.addAsyncAction('onboardCreateOrg',
-  (data) => {
-    return request
-    .post(`${config.api}/orgs`)
-    .set('Authorization', storage.get('user').auth)
-    .send(data);
-  },
-  res => res && res.body,
-  res => res && res.response
-);
-
-_actions.onboardSetRegions = Flux.statics.addAction('onboardSetRegions');
-
-_actions.onboardSetRegions = Flux.statics.addAction('onboardSetRegions');
-
-_actions.onboardSetCredentials = Flux.statics.addAction('onboardSetCredentials');
-
-_actions.onboardVpcScan = Flux.statics.addAsyncAction('onboardVpcScan',
-  (data) => {
-    return request
-    .post(`${config.api}/scan-vpcs`)
-    .set('Authorization', storage.get('user').auth)
-    .send(data);
-  },
-  res => res && res.body,
-  res => {
-    let message = _.get(res, 'response.body.error') || res.response;
-    return {message};
-  }
-);
-
-_actions.onboardSetVpcs = Flux.statics.addAction('onboardSetVpcs');
-
-_actions.onboardInstall = Flux.statics.addAsyncAction('onboardInstall',
-  (data) => {
-    analytics.event('Onboard', 'bastion-install');
-    return request
-    .post(`${config.api}/bastions/launch`)
-    .set('Authorization', storage.get('user').auth)
-    .send(data);
-  },
-  res => res && res.body,
-  res => _.get(res, 'response') || res
-);
-
-_actions.getBastions = Flux.statics.addAsyncAction('getBastions',
-  () => {
-    return request
-    .get(`${config.api}/bastions`)
-    .set('Authorization', storage.get('user').auth);
-  },
-  res => _.get(res, 'body.bastions') || [],
-  res => res
-);
-
-_actions.getCustomer = Flux.statics.addAsyncAction('getCustomer',
-  () => {
-    return request
-    .get(`${config.api}/customer`)
-    .set('Authorization', storage.get('user').auth);
-  },
-  res => {
-    let body = _.get(res, 'body.body');
-    if (body){
-      try {
-        body = JSON.parse(body);
-        return body.customer;
-      }catch (err){
-        return {};
-      }
-    }
-    return {};
-  },
-  res => res
-);
-
-// let tried = 0;
-// _actions.getBastions = Flux.statics.addAsyncAction('getBastions',
-//   (data) => {
-//     return new Promise((resolve, reject) => {
-//       return setTimeout(() => {
-//         tried++;
-//         if (tried > 20){
-//           resolve({body:{bastions:['foo']}});
-//         }else{
-//           resolve({body:{bastions:[]}});
-//         }
-//       },4000);
-//     })
-//   },
-//   res => _.get(res, 'body.bastions') || [],
-//   res => res && res.response
-// );
-
-_actions.onboardExampleInstall = Flux.statics.addAsyncAction('onboardExampleInstall',
-  () => {
-    return new Promise((resolve) => {
-      return resolve(example);
+export function signupCreate(data) {
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_SIGNUP_CREATE,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.authApi}/signups`)
+        .send(data)
+        .then((res) => {
+          resolve(res.body);
+          //TODO remove timeout somehow
+          setTimeout(() => {
+            dispatch(pushState(null, '/start/thanks'));
+          }, 100);
+        }, err => {
+          let msg = _.get(err, 'response.body.message');
+          const r = msg ? new Error(msg) : err;
+          reject(r);
+        });
+      })
     });
-  },
-  res => res,
-  res => res
-);
+  };
+}
 
-export default _.assign({}, ..._.values(_actions));
+export function setRegion(data) {
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_SET_REGION,
+      payload: {region: data}
+    });
+    setTimeout(() => {
+      dispatch(pushState(null, '/start/credentials'));
+    }, 100);
+  };
+}
+
+export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
+
+export function vpcScan(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_CREDENTIALS,
+      payload: data
+    });
+    const sendData = _.assign({}, data, {regions: [state().onboard.region]});
+    dispatch({
+      type: ONBOARD_VPC_SCAN,
+      payload: new Promise((resolve, reject) => {
+        if (config.onboardVpcScanError){
+          return reject(new Error('config.onboardVpcScanError'));
+        }
+        return request
+        .post(`${config.api}/vpcs/scan`)
+        .set('Authorization', state().user.get('auth'))
+        .send(sendData)
+        .then((res) => {
+          resolve(res.body.regions);
+          setTimeout(() => {
+            dispatch(pushState(null, '/start/vpc-select'));
+          }, 100);
+          // const subnets = _.chain(res.body.regions).pluck('subnets').flatten().value();
+          // if (subnets.length){
+          //   if (subnets.length === 1 && !config.showVpcScreen){
+          //     setTimeout(() => {
+          //       dispatch({
+          //         type: ONBOARD_VPC_SELECT,
+          //         payload: subnets[0]
+          //       });
+          //       dispatch(pushState(null, '/start/install'));
+          //     }, 100);
+          //   }else {
+          //     setTimeout(() => {
+          //       dispatch(pushState(null, '/start/vpc-select'));
+          //     }, 100);
+          //   }
+          // }else {
+          //   return reject(new Error('No vpcs found.'));
+          // }
+        }, (err) => {
+          let message = err.message || err.response;
+          return reject({message});
+        });
+      })
+    });
+  };
+}
+
+export function vpcSelect(payload){
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_VPC_SELECT,
+      payload
+    });
+    setTimeout(() => {
+      dispatch(pushState(null, '/start/subnet-select'));
+    }, 100);
+  };
+}
+
+export function subnetSelect(payload){
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_SUBNET_SELECT,
+      payload
+    });
+    dispatch({
+      type: ONBOARD_SET_INSTALL_DATA
+    });
+    setTimeout(() => {
+      dispatch(pushState(null, '/start/install'));
+    }, 100);
+  };
+}
+
+function isBastionLaunching(state){
+  return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length;
+}
+
+// let launchAttempts = 0;
+
+function launch(state, resolve, reject){
+  // launchAttempts ++;
+  analytics.event('Onboard', 'bastion-install');
+  if (config.onboardInstallError){
+    return reject(new Error('config.onboardInstallError'));
+  }
+  request
+  .post(`${config.api}/vpcs/launch`)
+  .set('Authorization', state().user.get('auth'))
+  .send(state().onboard.installData)
+  .then(resolve, (err) => {
+    //save this for retrying later
+    // if (launchAttempts < 0){
+    //   return setTimeout(() => {
+    //     launch(state, resolve, reject);
+    //   }, 5000);
+    // }
+    return reject(err);
+  });
+}
+
+export function install(retry){
+  return (dispatch, state) => {
+    return dispatch({
+      type: ONBOARD_INSTALL,
+      payload: new Promise((resolve, reject) => {
+        if (isBastionLaunching(state)){
+          return resolve();
+        }
+        setTimeout(() => {
+          if (isBastionLaunching(state)){
+            return resolve();
+          }else if (state().onboard.installData){
+            return launch(state, resolve, reject);
+          }
+          return dispatch(pushState(null, '/start/region-select'));
+        }, retry ? 6000 : 17000);
+      })
+    });
+  };
+}

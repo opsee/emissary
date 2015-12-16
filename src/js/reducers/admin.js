@@ -5,7 +5,7 @@ import {
   ADMIN_GET_SIGNUPS,
   ADMIN_GET_USERS,
   ADMIN_ACTIVATE_SIGNUP
-} from '../reduxactions/constants';
+} from '../actions/constants';
 
 let initial = {
   signups: new List(),

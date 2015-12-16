@@ -11,7 +11,7 @@ import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {onboard as actions} from '../../reduxactions';
+import {onboard as actions} from '../../actions';
 
 const Install = React.createClass({
   propTypes: {

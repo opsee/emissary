@@ -5,7 +5,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const Env = React.createClass({
   mixins: [State],

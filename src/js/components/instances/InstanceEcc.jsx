@@ -12,7 +12,7 @@ import {Button} from '../forms';
 import {Add, Settings} from '../icons';
 import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
-import {env as actions, app as appActions} from '../../reduxactions';
+import {env as actions, app as appActions} from '../../actions';
 import {InstanceEcc as Schema} from '../../modules/schemas';
 import InstanceMenu from './InstanceMenu';
 

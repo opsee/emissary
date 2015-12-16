@@ -1,55 +1,50 @@
-import React from 'react';
-import {Modal} from '../../modules/bootstrap';
-import {GlobalStore} from '../../stores';
-import {GlobalActions} from '../../actions';
+import React, {PropTypes} from 'react';
 import colors from 'seedling/colors';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-function getState(){
-  return {
-    options: GlobalStore.getModalMessage(),
-    showModal: false
-  };
-}
+import {Modal} from '../../modules/bootstrap';
+import {app as actions} from '../../actions';
 
-export default React.createClass({
-  mixins: [GlobalStore.mixin],
-  storeDidChange() {
-    const obj = getState();
-    if (obj && obj.options){
-      this.setState({
-        msg: {
-          __html: obj.options.html
-        },
-        showModal: true,
-        style: obj.options.style,
-        type: obj.options.type
-      });
-      GlobalActions.globalModalMessageConsume();
-    }
+const MessageModal = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      modalMessageClose: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      app: PropTypes.shape({
+        modalMessage: PropTypes.shape({
+          html: PropTypes.object,
+          color: PropTypes.object,
+          show: PropTypes.bool
+        })
+      })
+    })
   },
-  getInitialState: getState,
   getStyle(){
+    const color = this.props.redux.app.modalMessage.color;
     return {
-      background: this.state.style ? colors[this.state.style] : colors.warning
+      background: color ? colors[color] : colors.warning
     };
   },
   getClassName(){
-    return this.state.type || 'notify';
+    return 'notify';
+    // return this.state.type || 'notify';
   },
   handleHide(){
-    this.setState({ showModal: false });
+    this.props.actions.modalMessageClose();
   },
   render() {
     return (
       <div>
-        <Modal show={this.state.showModal} onHide={this.handleHide} className={this.getClassName()}>
+        <Modal show={!!this.props.redux.app.modalMessage.show} onHide={this.handleHide} className={this.getClassName()}>
         {
           // <Modal.Header closeButton>
           //   <Modal.Title>Modal heading</Modal.Title>
           // </Modal.Header>
         }
           <Modal.Body style={this.getStyle()}>
-            <div dangerouslySetInnerHTML={this.state.msg}/>
+            <div dangerouslySetInnerHTML={{__html: this.props.redux.app.modalMessage.html}}/>
           </Modal.Body>
           {
           // <Modal.Footer>
@@ -61,3 +56,13 @@ export default React.createClass({
     );
   }
 });
+
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageModal);

@@ -91,7 +91,6 @@
     "history": "^1.13.1",
     "immutable": "^3.7.4",
     "lodash": "^3.10.0",
-    "mcfly": "0.0.10",
     "moment": "^2.10.3",
     "newforms": "^0.13.2",
     "node-uuid": "^1.4.7",

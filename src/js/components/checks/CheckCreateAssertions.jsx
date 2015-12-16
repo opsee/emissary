@@ -16,7 +16,7 @@ import AssertionCounter from './AssertionCounter.jsx';
 import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {Padding} from '../layout';
 import {Button} from '../forms';
-import {user as userActions} from '../../reduxactions';
+import {user as userActions} from '../../actions';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);

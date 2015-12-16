@@ -15,7 +15,7 @@ import {GroupActions} from '../../actions';
 import {EnvWithFilter} from '../env';
 import {Padding} from '../layout';
 import {Check} from '../../modules/schemas';
-import {checks as actions, user as userActions} from '../../reduxactions';
+import {checks as actions, user as userActions} from '../../actions';
 
 const CheckCreateTarget = React.createClass({
   mixins: [History],

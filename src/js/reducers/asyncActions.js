@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as constants from '../reduxactions/constants';
+import * as constants from '../actions/constants';
 
 export default function asyncActions(state, action = {type: null}) {
   let initial = {};

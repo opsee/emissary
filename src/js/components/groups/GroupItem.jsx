@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {ListItem} from '../global';
 import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
 import {Button} from '../forms';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const GroupItem = React.createClass({
   propTypes: {

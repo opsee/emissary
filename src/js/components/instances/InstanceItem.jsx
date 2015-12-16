@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import {ListItem} from '../global';
 import {Close, ListCheckmark} from '../icons';
-import {env as actions, app as appActions} from '../../reduxactions';
+import {env as actions, app as appActions} from '../../actions';
 import style from '../global/contextMenu.css';
 import InstanceMenu from './InstanceMenu';
 

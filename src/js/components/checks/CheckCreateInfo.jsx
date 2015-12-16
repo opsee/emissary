@@ -12,7 +12,7 @@ import {StatusHandler, StepCounter} from '../global';
 import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
-import {checks as actions, user as userActions} from '../../reduxactions';
+import {checks as actions, user as userActions} from '../../actions';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 

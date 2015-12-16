@@ -16,7 +16,7 @@ import {Search, Circle} from '../icons';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
-import {env as actions} from '../../reduxactions';
+import {env as actions} from '../../actions';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
@@ -97,9 +97,6 @@ const EnvWithFilter = React.createClass({
   componentWillMount(){
     this.getData();
     this.setInterval(this.getData, 25000);
-  },
-  storeDidChange(){
-    this.forceUpdate();
   },
   getFilter(){
     return this.props.redux.env.search || this.props.filter;

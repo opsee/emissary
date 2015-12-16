@@ -8,13 +8,20 @@ import {
   APP_SOCKET_ERROR,
   APP_SHUTDOWN,
   APP_OPEN_CONTEXT_MENU,
-  APP_CLOSE_CONTEXT_MENU
-} from '../reduxactions/constants';
+  APP_CLOSE_CONTEXT_MENU,
+  APP_MODAL_MESSAGE_OPEN,
+  APP_MODAL_MESSAGE_CLOSE
+} from '../actions/constants';
 
 const initial = {
   socketMessages: [],
   ready: false,
-  openContextMenu: undefined
+  openContextMenu: undefined,
+  modalMessage: {
+    color: undefined,
+    html: undefined,
+    show: false
+  }
 };
 
 export default handleActions({
@@ -71,6 +78,21 @@ export default handleActions({
       return _.assign({}, state, {
         openContextMenu: undefined
       });
+    }
+  },
+  [APP_MODAL_MESSAGE_OPEN]: {
+    next(state, action){
+      return _.assign({}, state, {
+        modalMessage: _.assign({}, action.payload, {show: true})
+      });
+    }
+  },
+  [APP_MODAL_MESSAGE_CLOSE]: {
+    next(state){
+      const modalMessage = _.assign({}, state.modalMessage, {
+        show: false
+      });
+      return _.assign({}, state, {modalMessage});
     }
   }
 }, initial);

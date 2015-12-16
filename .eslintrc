@@ -195,7 +195,6 @@
         "componentWillReceiveProps",
         "shouldComponentUpdate",
         "componentWillUpdate",
-        "storeDidChange",
         "componentDidUpdate",
         "componentWillUnmount",
         "/^get.+$/",

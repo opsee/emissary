@@ -9,7 +9,7 @@ import {
   GET_CHECKS,
   CHECK_TEST,
   CHECK_TEST_SELECT_RESPONSE
-} from '../reduxactions/constants';
+} from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
 
@@ -93,7 +93,8 @@ export default handleActions({
       }else {
         checks = state.checks.concat(new List([single]));
       }
-      const responses = single.get('results').get(0).get('responses');
+      let responses = _.get(single.get('results').get(0), 'responses');
+      responses = responses && responses.toJS ? responses : new List();
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {
         checks,

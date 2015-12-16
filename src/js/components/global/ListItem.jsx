@@ -13,7 +13,7 @@ import {Padding} from '../layout';
 import cx from 'classnames';
 import ContextMenu from './ContextMenu';
 import RadialGraph from './RadialGraph';
-import {app as actions} from '../../reduxactions';
+import {app as actions} from '../../actions';
 
 const ListItem = React.createClass({
   propTypes: {
