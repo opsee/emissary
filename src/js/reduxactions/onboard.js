@@ -130,7 +130,8 @@ export function subnetSelect(payload){
 }
 
 function isBastionLaunching(state){
-  return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length;
+  return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length ||
+  !!_.filter(state().app.socketMessages, {command: 'connect-bastion'}).length;
 }
 
 // let launchAttempts = 0;
