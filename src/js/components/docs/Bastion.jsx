@@ -1,5 +1,6 @@
 import React from 'react';
-import {Toolbar} from '../global';
+
+import {BastionRequirement, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 const Bastion = React.createClass({
@@ -10,6 +11,7 @@ const Bastion = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <BastionRequirement/>
               <p>Here are some frequently asked questions and answers about the Opsee Bastion Instance:</p>
 
                 <h3>What is the Opsee Bastion Instance?</h3>
@@ -29,6 +31,7 @@ const Bastion = React.createClass({
                 <ul>
                   <li>Opsee currently supports 1 Bastion Instance per customer. Your Bastion instance can only communicate within the region you choose for installation, so multiple regions are not supported</li>
                   <li>The Bastion Instance must communicate with Opsee to report on your health checks. If your Bastion Instance is in a VPC or subnet that cannot talk to Opsee servers, it will not work</li>
+                  <li>The Bastion cannot be installed in an EC2 Classic location. It must be installed in a VPC and subnet</li>
                   <li>If you have more than 1 VPC in your chosen region, you must choose a VPC to install your Bastion Instance. It is possible that the Bastion will not be able to communicate with other VPCs in your region, depending on your VPC configuration</li>
                   <li>The Bastion Instance automatically installs into the default subnet in your chosen VPC. If you are running multiple subnets, communication outside of the default subnet may not work, depending on your subnet configuration</li>
                 </ul>
