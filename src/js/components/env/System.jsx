@@ -73,10 +73,10 @@ const System = React.createClass({
     return <StatusHandler status={status}/>;
   },
   renderCustomerInfo(){
-    if (this.props.redux.user.get('customerId')){
+    if (this.props.redux.user.get('customer_id')){
       return (
         <Padding t={3}>
-          <div><strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customerId')}</span></div>
+          <div><strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customer_id')}</span></div>
         </Padding>
       );
     }
