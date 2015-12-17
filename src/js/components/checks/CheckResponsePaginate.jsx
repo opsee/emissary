@@ -109,7 +109,7 @@ const CheckResponsePaginate = React.createClass({
     this.setState({complete: true});
   },
   runNext(e){
-    if(e){
+    if (e){
       e.preventDefault();
     }
     const activeItem = this.props.redux.checks.selectedResponse + 1;
@@ -118,7 +118,7 @@ const CheckResponsePaginate = React.createClass({
     }
   },
   runPrev(e){
-    if(e){
+    if (e){
       e.preventDefault();
     }
     const activeItem = this.props.redux.checks.selectedResponse - 1;
