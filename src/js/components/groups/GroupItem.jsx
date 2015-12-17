@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {Map} from 'immutable';
+import Immutable, {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -40,6 +40,12 @@ const GroupItem = React.createClass({
         break;
       }
     }
+  },
+  shouldComponentUpdate(nextProps) {
+    if (this.props.target){
+      return !Immutable.is(this.props.groups, nextProps.groups);
+    }
+    return !Immutable.is(this.props.item, nextProps.item);
   },
   getItem(){
     if (_.get(this.props, 'target.type')){
