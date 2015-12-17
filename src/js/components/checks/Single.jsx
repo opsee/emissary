@@ -4,7 +4,7 @@ import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Toolbar, StatusHandler} from '../global';
+import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
@@ -64,8 +64,7 @@ const CheckSingle = React.createClass({
     }
     return val;
   },
-  runRemoveCheck(e){
-    e.preventDefault();
+  runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
   },
   renderInner(){
@@ -126,12 +125,14 @@ const CheckSingle = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding b={3}>
-                {this.renderInner()}
-              </Padding>
-              <Button onClick={this.runRemoveCheck} flat color="danger">
-                <Delete inline fill="danger"/> Delete Check
-              </Button>
+              <BastionRequirement>
+                <Padding b={3}>
+                  {this.renderInner()}
+                </Padding>
+                <Button onClick={this.runRemoveCheck} flat color="danger">
+                  <Delete inline fill="danger"/> Delete Check
+                </Button>
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>

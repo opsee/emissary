@@ -108,19 +108,13 @@ const CheckResponsePaginate = React.createClass({
     }
     this.setState({complete: true});
   },
-  runNext(e){
-    if (e){
-      e.preventDefault();
-    }
+  runNext(){
     const activeItem = this.props.redux.checks.selectedResponse + 1;
     if (activeItem < this.getTotalNumberOfResponses()){
       this.props.actions.selectResponse(activeItem);
     }
   },
-  runPrev(e){
-    if (e){
-      e.preventDefault();
-    }
+  runPrev(){
     const activeItem = this.props.redux.checks.selectedResponse - 1;
     if (activeItem > -1){
       this.props.actions.selectResponse(activeItem);

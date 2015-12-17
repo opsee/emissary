@@ -38,16 +38,15 @@ const ListItem = React.createClass({
       type: 'GroupItem'
     };
   },
-  runMenuOpen(e){
-    if (e){
-      e.preventDefault();
-    }
+  runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
     analytics.event(this.props.type, 'menu-open');
   },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
-      e.preventDefault();
+      if (e){
+        e.preventDefault();
+      }
       this.props.onClick.call(null, this.props.item);
     }
   },

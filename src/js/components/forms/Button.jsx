@@ -73,10 +73,7 @@ const Button = React.createClass({
       }
     };
   },
-  runResetPressing(e){
-    if (e){
-      e.preventDefault();
-    }
+  runResetPressing(){
     if (this.isMounted()){
       this.setState({
         pressing: 0

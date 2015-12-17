@@ -34,8 +34,7 @@ const CheckItem = React.createClass({
     }
     return 'Initializing';
   },
-  handleDeleteClick(e){
-    e.preventDefault();
+  handleDeleteClick(){
     this.props.actions.del(this.props.item.get('id'));
     this.props.appActions.closeContextMenu();
   },
