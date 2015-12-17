@@ -76,7 +76,7 @@ const Opsee = React.createClass({
     if (!this.props.redux.app.ready){
       return <div/>;
     }
-    if (this.props.redux.app.socketError && !config.debug){
+    if (this.props.redux.app.socketError && !config.bypassSocketError){
       return this.renderSocketError();
     }
     return React.cloneElement(this.props.children, _.assign({},

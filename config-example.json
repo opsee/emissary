@@ -24,5 +24,7 @@
   //check default port
   "checkDefaultPort": "",
   //socket start delay (for simulating slow connection startup)
-  "socketStartDelay": 0
+  "socketStartDelay": 0,
+  //allow usage of the app even when socket is erroring
+  "bypassSocketError": false
 }
