@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Record} from 'immutable';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+import Immutable, {Record} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -10,7 +9,6 @@ import {Button} from '../forms';
 import {checks as actions, app as appActions} from '../../actions';
 
 const CheckItem = React.createClass({
-  mixins: [PureRenderMixin],
   propTypes: {
     item: PropTypes.instanceOf(Record).isRequired,
     onClick: PropTypes.func,
@@ -20,6 +18,9 @@ const CheckItem = React.createClass({
     appActions: PropTypes.shape({
       closeContextMenu: PropTypes.func
     })
+  },
+  shouldComponentUpdate(nextProps) {
+    return !Immutable.is(this.props.item, nextProps.item);
   },
   getInfoText(){
     if (this.props.item.get('total')){
