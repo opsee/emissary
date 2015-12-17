@@ -4,11 +4,22 @@ var cssnext = require('cssnext');
 
 var source = './src/js/components/global/vars.css';
 var input = fs.readFileSync(source, 'utf8');
-var output = postcss()
-.use(cssnext())
-.use((css) => {
-  console.log(css.Root.nodes[0]);
+
+var filter = postcss.plugin('filter', opts => {
+  return function (css, result){
+    css.walkDecls((decl) => {
+      console.log(decl.prop + decl.value);
+    });
+  }
 })
-.process(input);
+
+var output = postcss([cssnext])
+// .use(cssnext())
+// .use(filter())
+.process(input)
+.then(result => {
+  console.log(result.root);
+  // console.log(result);
+})
 
 fs.writeFileSync('foo.css', output);
