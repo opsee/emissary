@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {Toolbar} from '../global';
-import {OnboardActions} from '../../actions';
 import forms from 'newforms';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
@@ -64,9 +63,6 @@ const RegionSelect = React.createClass({
       obj.info.validate();
     }, 10);
     return obj;
-  },
-  componentWillMount(){
-    OnboardActions.getBastions();
   },
   isDisabled(){
     return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;

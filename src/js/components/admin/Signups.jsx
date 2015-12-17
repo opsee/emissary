@@ -6,12 +6,11 @@ import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
 
 import {Toolbar} from '../global';
-import {GlobalActions} from '../../actions';
 import {Checkmark, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {admin as actions, user as userActions} from '../../actions';
+import {admin as actions, user as userActions, app as appActions} from '../../actions';
 
 const Signups = React.createClass({
   propTypes: {
@@ -19,6 +18,9 @@ const Signups = React.createClass({
       getSignups: PropTypes.func,
       activateSignup: PropTypes.func,
       getUsers: PropTypes.func
+    }),
+    appActions: PropTypes.shape({
+      modalMessageOpen: PropTypes.func
     }),
     userActions: PropTypes.shape({
       logout: PropTypes.func
@@ -65,9 +67,9 @@ const Signups = React.createClass({
   },
   runActivateSignup(signup){
     this.props.actions.activateSignup(signup);
-    GlobalActions.globalModalMessage({
-      html: `${signup.email} approved.`
-    });
+    // this.props.appActions.modalMessageOpen({
+    //   html: `${signup.email} approved.`
+    // });
   },
   runGhostAccount(signup){
     this.props.userActions.logout({as: signup.userId});
@@ -161,7 +163,8 @@ const Signups = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Signups);
