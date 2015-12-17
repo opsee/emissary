@@ -11,7 +11,6 @@ import {Button} from '../forms';
 import {BastionRequirement, Toolbar, StepCounter} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
-import {GroupActions} from '../../actions';
 import {EnvWithFilter} from '../env';
 import {Padding} from '../layout';
 import {Check} from '../../modules/schemas';
@@ -36,10 +35,6 @@ const CheckCreateTarget = React.createClass({
     return _.extend(obj, {
       cleanedData: null
     });
-  },
-  componentWillMount(){
-    GroupActions.getGroupsSecurity();
-    GroupActions.getGroupsELB();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){

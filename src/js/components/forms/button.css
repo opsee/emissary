@@ -19,6 +19,8 @@
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
 .btn svg {
   transition: fill var(--transitionEaseOut)
@@ -311,4 +313,74 @@
 .btnSm{
   padding:.2em;
   line-height:1.2em;
+}
+
+.inner{
+  position: relative;
+}
+
+.progress {
+  display: block;
+  position: absolute;
+  top:0;
+  left:0;
+  width:101%;
+  height:100%;
+  z-index:0;
+  transform: translateX(-102%);
+}
+
+.progressPressing {
+  transition: 1500ms linear transform;
+  transform: translateX(0);
+}
+
+.progressPrimary {
+  composes: progress;
+  background: color(var(--colorPrimary) shade(70%));
+}
+
+.progressPrimaryPressing {
+  composes: progressPrimary;
+  composes: progressPressing;
+}
+
+.progressSuccess {
+  composes: progress;
+  background: color(var(--colorSuccess) shade(70%));
+}
+
+.progressSuccessPressing {
+  composes: progressSuccess;
+  composes: progressPressing;
+}
+
+.progressDanger {
+  composes: progress;
+  background: color(var(--colorDanger) shade(70%));
+}
+
+.progressDangerPressing {
+  composes: progressDanger;
+  composes: progressPressing;
+}
+
+.progressInfo {
+  composes: progress;
+  background: color(var(--colorInfo) shade(70%));
+}
+
+.progressInfoPressing {
+  composes: progressInfo;
+  composes: progressPressing;
+}
+
+.progressWarning {
+  composes: progress;
+  background: color(var(--colorWarning) shade(70%));
+}
+
+.progressWarningPressing {
+  composes: progressWarning;
+  composes: progressPressing;
 }
