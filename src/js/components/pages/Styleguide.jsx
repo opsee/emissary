@@ -357,8 +357,24 @@ const Styleguide = React.createClass({
                 </p>
                 <Padding t={2}>
                   <Button block>Block</Button>
-                  <Padding t={1}>
+                </Padding>
+
+                <p><strong>Press and Hold:</strong></p>
+                <Padding t={2}>
+                  <Padding b={1}>
                     <Button block onPressUp={this.handlePressUp} color="primary">Block, Press and Hold</Button>
+                  </Padding>
+                  <Padding b={1}>
+                    <Button block onPressUp={this.handlePressUp} color="success">Block, Press and Hold</Button>
+                  </Padding>
+                  <Padding b={1}>
+                    <Button block onPressUp={this.handlePressUp} color="warning">Block, Press and Hold</Button>
+                  </Padding>
+                  <Padding b={1}>
+                    <Button block onPressUp={this.handlePressUp} color="danger">Block, Press and Hold</Button>
+                  </Padding>
+                  <Padding b={1}>
+                    <Button block onPressUp={this.handlePressUp} color="info">Block, Press and Hold</Button>
                   </Padding>
                 </Padding>
               </Padding>

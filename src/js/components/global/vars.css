@@ -2,6 +2,7 @@
 :root{
   --bodyBg:#303030;
   --colorPrimary:#42A5F5; /*blue400*/
+  --colorPrimaryDark: color(var(--colorPrimary) shade(20%));
   --colorSuccess:#7CB342; /*lightGreen600*/
   --colorInfo:#01579B; /*lightBlue900*/
   --colorWarning:#FFA726; /*orange400*/
