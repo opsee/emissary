@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -43,15 +43,7 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    return _.get(this.getCheck().get('results').get(0), 'responses');
-    // const results = this.getCheck().get('results').toJS();
-    // if (results && results.length){
-    //   const failing = _.filter(results, r => {
-    //     return !r.passing;
-    //   });
-    //   return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
-    // }
-    // return new List();
+    return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
   },
   getSingleResponse(){
     const data = this.getResponses();
@@ -66,6 +58,24 @@ const CheckSingle = React.createClass({
   },
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
+  },
+  renderNotifications(){
+    const notifs = this.getCheck().get('notifications');
+    if (notifs.length){
+      return (
+        <Padding b={1}>
+          <h3>Notifications</h3>
+          <ul className="list-unstyled">
+          {this.getCheck().get('notifications').map((n, i) => {
+            return (
+              <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
+            );
+          })}
+          </ul>
+        </Padding>
+      );
+    }
+    return <div/>;
   },
   renderInner(){
     if (this.getCheck().get('name')){
@@ -89,16 +99,7 @@ const CheckSingle = React.createClass({
             <h3>Assertions</h3>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
-          <Padding b={1}>
-            <h3>Notifications</h3>
-            <ul className="list-unstyled">
-            {this.getCheck().get('notifications').map((n, i) => {
-              return (
-                <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
-              );
-            })}
-            </ul>
-          </Padding>
+          {this.renderNotifications()}
         </div>
       );
     }

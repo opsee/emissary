@@ -8,6 +8,7 @@ import {
   GET_CHECK,
   GET_CHECKS,
   CHECK_TEST,
+  CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE
 } from '../actions/constants';
 
@@ -122,10 +123,21 @@ export default handleActions({
   },
   [CHECK_TEST]: {
     next(state, action){
-      let responses = action.payload.responses ? action.payload.responses : action.payload;
+      let responses = _.get(action.payload, 'responses') ? action.payload.responses : action.payload;
+      if (!responses){
+        return state;
+      }
       responses = Immutable.fromJS(responses);
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {responses, responsesFormatted});
+    },
+    throw(state){
+      return _.assign({}, state, {responses: new List(), responsesFormatted: []});
+    }
+  },
+  [CHECK_TEST_RESET]: {
+    next(state){
+      return _.assign({}, state, {responses: new List(), responsesFormatted: []});
     }
   },
   [CHECK_TEST_SELECT_RESPONSE]: {

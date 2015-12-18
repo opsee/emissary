@@ -23,9 +23,14 @@ export function getCheck(id){
         .get(`${config.api}/checks/${id}`)
         .set('Authorization', state().user.get('auth'));
 
-        const r2 = request
-        .get(`${config.api}/notifications/${id}`)
-        .set('Authorization', state().user.get('auth'));
+        const r2 = new Promise((r2resolve) => {
+          request
+          .get(`${config.api}/notifications/${id}`)
+          .set('Authorization', state().user.get('auth'))
+          .then(r2resolve, () => {
+            r2resolve({body: {notifications: []}});
+          });
+        });
 
         const r3 = request
         .get(`${config.api}/assertions/${id}`)
@@ -103,7 +108,10 @@ export function test(data){
         .post(`${config.api}/bastions/test-check`)
         .set('Authorization', state().user.get('auth'))
         .send({check: newData, max_hosts: 3, deadline: '30s'})
-        .then(res => resolve(_.get(res, 'body.responses')) || [], reject);
+        .then(res => {
+          const responses = _.get(res, 'body.responses');
+          responses ? resolve(responses) : reject(res.body);
+        }, reject);
       })
     });
   };

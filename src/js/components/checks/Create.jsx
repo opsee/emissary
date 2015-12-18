@@ -14,7 +14,8 @@ const CheckCreate = React.createClass({
     children: PropTypes.node,
     redux: PropTypes.object.isRequired,
     actions: PropTypes.shape({
-      create: PropTypes.func
+      create: PropTypes.func,
+      testCheckReset: PropTypes.func
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
@@ -29,6 +30,7 @@ const CheckCreate = React.createClass({
     this.props.envActions.getGroupsSecurity();
     this.props.envActions.getGroupsElb();
     this.props.envActions.getInstancesEcc();
+    this.props.actions.testCheckReset();
   },
   getInitialState(){
     return this.getState();
