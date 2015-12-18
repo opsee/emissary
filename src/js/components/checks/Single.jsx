@@ -59,6 +59,24 @@ const CheckSingle = React.createClass({
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
   },
+  renderNotifications(){
+    const notifs = this.getCheck().get('notifications');
+    if (notifs.length){
+      return (
+        <Padding b={1}>
+          <h3>Notifications</h3>
+          <ul className="list-unstyled">
+          {this.getCheck().get('notifications').map((n, i) => {
+            return (
+              <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
+            );
+          })}
+          </ul>
+        </Padding>
+      );
+    }
+    return <div/>;
+  },
   renderInner(){
     if (this.getCheck().get('name')){
       const spec = this.getCheck().get('check_spec').value;
@@ -81,16 +99,7 @@ const CheckSingle = React.createClass({
             <h3>Assertions</h3>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
-          <Padding b={1}>
-            <h3>Notifications</h3>
-            <ul className="list-unstyled">
-            {this.getCheck().get('notifications').map((n, i) => {
-              return (
-                <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
-              );
-            })}
-            </ul>
-          </Padding>
+          {this.renderNotifications()}
         </div>
       );
     }

@@ -23,9 +23,14 @@ export function getCheck(id){
         .get(`${config.api}/checks/${id}`)
         .set('Authorization', state().user.get('auth'));
 
-        const r2 = request
-        .get(`${config.api}/notifications/${id}`)
-        .set('Authorization', state().user.get('auth'));
+        const r2 = new Promise((r2resolve) => {
+          request
+          .get(`${config.api}/notifications/${id}`)
+          .set('Authorization', state().user.get('auth'))
+          .then(r2resolve, () => {
+            r2resolve({body: {notifications: []}});
+          });
+        });
 
         const r3 = request
         .get(`${config.api}/assertions/${id}`)
