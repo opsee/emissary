@@ -19,11 +19,17 @@ const InstanceItem = React.createClass({
   },
   renderInfoText(){
     if (this.props.item.get('total')){
+      const passing = this.props.item.get('passing');
+      const failing = this.props.item.get('total') - passing;
       return (
         <span>
-          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
+            <ListCheckmark inline fill="textSecondary"/>{passing}
+          </span>
           &nbsp;&nbsp;
-          <Close inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
+          <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
+            <Close inline fill="textSecondary"/>{failing}
+          </span>
         </span>
       );
     }else if (this.props.item.get('checks').size){

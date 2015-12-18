@@ -68,19 +68,33 @@ const GroupItem = React.createClass({
     const type = this.getItem().get('type').toLowerCase();
     return `/group/${type}/${this.getItem().get('id')}`;
   },
-  getInfoText(){
+  renderInstanceCount(){
+    const count = this.getItem().get('instance_count');
+    return (
+      <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
+        <ListInstance inline fill="textSecondary"/>
+        {count}
+      </span>
+    );
+  },
+  renderInfoText(){
     if (this.getItem().get('total')){
+      const passing = this.getItem().get('passing');
+      const failing = this.getItem().get('total') - passing;
       return  (
         <span>
           <span>
-            <ListCheckmark inline fill="textSecondary"/>
-            {this.getItem().get('passing')}
+            <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
+              <ListCheckmark inline fill="textSecondary"/>
+              {passing}
+            </span>
             &nbsp;&nbsp;
-            <ListClose inline fill="textSecondary"/>
-            {this.getItem().get('total') - this.getItem().get('passing')}
+            <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
+              <ListClose inline fill="textSecondary"/>
+              {failing}
+            </span>
             &nbsp;&nbsp;
-            <ListInstance inline fill="textSecondary"/>
-            {this.getItem().get('instance_count')}
+            {this.renderInstanceCount()}
           </span>
         </span>
       );
@@ -91,21 +105,21 @@ const GroupItem = React.createClass({
       <span>
         <ListCheckmark inline fill="textSecondary"/>No checks
         &nbsp;
-        <ListInstance inline fill="textSecondary"/>{this.getItem().get('instance_count')}
+        {this.renderInstanceCount()}
       </span>
     );
   },
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} title={`${this.getItem().get('name')} - ${this.getItem().get('instance_count')} instances`} menuTitle={`${this.getItem().get('name')} Actions`}>
+        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
           <div key="menu">
             <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check
             </Button>
           </div>
             <div key="line1">{this.getItem().get('name')}</div>
-            <div key="line2">{this.getInfoText()}</div>
+            <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
     }

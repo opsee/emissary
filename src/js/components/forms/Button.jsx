@@ -63,6 +63,9 @@ const Button = React.createClass({
     const pressing = this.state.pressing ? 'Pressing' : '';
     return style[`progress${ _.startCase(this.props.color)}${pressing}`];
   },
+  getInnerClass(){
+    return this.props.onPressUp ? style.inner : '';
+  },
   getHammerOptions(){
     return {
       recognizers: {
@@ -136,7 +139,7 @@ const Button = React.createClass({
   },
   renderInner(){
     return (
-      <span className={style.inner}>
+      <span className={this.getInnerClass()}>
         {this.props.children}
         {this.renderChevron()}
       </span>

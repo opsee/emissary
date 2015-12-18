@@ -11,6 +11,7 @@ import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
+import color from '../type/color.css';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -274,9 +275,10 @@ const CheckResponsePaginate = React.createClass({
   renderTopArea(){
     const arr = this.getFormattedResponses();
     if (arr.length){
+      const passing = _.get(arr[this.props.redux.checks.selectedResponse], 'passing');
       return (
         <Padding a={0.5}>
-          <strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          <strong className={passing ? color.success : color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
         </Padding>
       );
     }

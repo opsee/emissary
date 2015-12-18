@@ -57,22 +57,23 @@ function fromJS(data){
       newData.results = new List(newResults);
     }
   }
-  return newData;
+  return newData.results;
 }
 
 export default {
-  getFormattedData(data){
+  getFormattedData(data, useTestsInsteadOfChecks){
     let obj = {
       passing: undefined,
       total: undefined,
       health: undefined,
-      results: fromJS(data).results || new List()
+      results: fromJS(data) || new List()
     };
     if (obj.results && obj.results.size && obj.results.get(0)){
       //this works for groups
-      const boolArray = _.chain(obj.results.toJS()).pluck('responses').flatten().pluck('passing').value();
-      //this works for instances
-      // const boolArray = _.chain(obj.results.toJS()).pluck('passing').value();
+      let boolArray = _.chain(obj.results.toJS()).pluck('passing').value();
+      if (useTestsInsteadOfChecks){
+        boolArray = _.chain(obj.results.toJS()).pluck('responses').flatten().pluck('passing').value();
+      }
       const passing = _.compact(boolArray);
       obj.passing = passing.length;
       obj.total = boolArray.length;

@@ -24,11 +24,17 @@ const CheckItem = React.createClass({
   },
   getInfoText(){
     if (this.props.item.get('total')){
+      const passing = this.props.item.get('passing');
+      const failing = this.props.item.get('total') - passing;
       return (
         <span>
-          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          <span title={`${passing} instance${passing === 1 ? '' : 's'} passing`}>
+            <ListCheckmark inline fill="textSecondary"/>{passing}
+          </span>
           &nbsp;&nbsp;
-          <ListClose inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
+          <span title={`${failing} instance${failing === 1 ? '' : 's'} failing`}>
+            <ListClose inline fill="textSecondary"/>{failing}
+          </span>
         </span>
       );
     }
