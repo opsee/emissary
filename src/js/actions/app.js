@@ -1,6 +1,6 @@
 import config from '../modules/config';
 import {createAction} from 'redux-actions';
-// import uuid from 'node-uuid';
+import uuid from 'node-uuid';
 
 import {
   APP_INITIALIZE,
@@ -118,12 +118,12 @@ export function initialize(){
         socketStart(dispatch, state);
       }, config.socketStartDelay || 0);
     }
-    // if (window.ldclient){
-    //   window.ldclient.identify({
-    //     key: uuid.v4(),
-    //     anonymous: true
-    //   });
-    // }
+    if (window.ldclient){
+      window.ldclient.identify({
+        key: uuid.v4(),
+        anonymous: true
+      });
+    }
     dispatch({
       type: APP_INITIALIZE
     });
