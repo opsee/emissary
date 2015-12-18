@@ -103,7 +103,10 @@ export function test(data){
         .post(`${config.api}/bastions/test-check`)
         .set('Authorization', state().user.get('auth'))
         .send({check: newData, max_hosts: 3, deadline: '30s'})
-        .then(res => resolve(_.get(res, 'body.responses')) || [], reject);
+        .then(res => {
+          const responses = _.get(res, 'body.responses');
+          responses ? resolve(responses) : reject(res.body);
+        }, reject);
       })
     });
   };

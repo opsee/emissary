@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -43,15 +43,7 @@ const CheckSingle = React.createClass({
     );
   },
   getResponses(){
-    return _.get(this.getCheck().get('results').get(0), 'responses');
-    // const results = this.getCheck().get('results').toJS();
-    // if (results && results.length){
-    //   const failing = _.filter(results, r => {
-    //     return !r.passing;
-    //   });
-    //   return failing.length ? new List(failing[0].responses) : new List(results[0].responses);
-    // }
-    // return new List();
+    return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
   },
   getSingleResponse(){
     const data = this.getResponses();

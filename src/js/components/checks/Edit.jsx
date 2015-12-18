@@ -38,7 +38,8 @@ const CheckEdit = React.createClass({
     actions: PropTypes.shape({
       getCheck: PropTypes.func,
       del: PropTypes.func,
-      edit: PropTypes.func
+      edit: PropTypes.func,
+      testCheckReset: PropTypes.func
     }),
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
@@ -66,6 +67,7 @@ const CheckEdit = React.createClass({
     this.props.envActions.getGroupsSecurity();
     this.props.envActions.getGroupsElb();
     this.props.envActions.getInstancesEcc();
+    this.props.actions.testCheckReset();
   },
   componentWillReceiveProps(nextProps) {
     const data = nextProps.redux.checks.checks.find(g => {

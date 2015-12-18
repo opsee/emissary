@@ -89,6 +89,14 @@ const CheckResponsePaginate = React.createClass({
   getNumberFailing(){
     return this.getTotalNumberOfResponses() - this.getNumberPassing();
   },
+  getResponses(){
+    if (this.props.responses){
+      return this.props.responses;
+    }else if (this.state.complete){
+      return this.props.redux.checks.responses;
+    }
+    return [];
+  },
   isCheckComplete(check){
     if (!check){
       return false;
@@ -97,15 +105,18 @@ const CheckResponsePaginate = React.createClass({
     const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
     return condition1 && condition2;
   },
+  isWaiting(){
+    return this.getStatus() === 'pending';
+  },
   runTestCheck(props){
     if (this.props.responses){
       return this.setState({complete: true});
     }
     const complete = this.isCheckComplete(props.check);
     if (complete){
-      if (this.getStatus() !== 'pending'){
-        this.props.actions.test(props.check);
-      }
+      // if (this.getStatus() !== 'pending'){
+      this.props.actions.test(props.check);
+      // }
     }
     this.setState({complete: true});
   },
@@ -147,6 +158,8 @@ const CheckResponsePaginate = React.createClass({
       return (
         <Alert bsStyle="danger">There was an error sending your request.</Alert>
       );
+    }else if (this.props.responses){
+      return <div/>;
     }
     return (
       <div className={style.checkResponseWaiting}>Your response will appear here</div>
@@ -272,10 +285,27 @@ const CheckResponsePaginate = React.createClass({
   //   }
   //   return <div/>;
   // },
+  renderFlippers(){
+    if (this.getResponses().size > 1){
+      return (
+        <Padding tb={1}>
+          {this.renderPrevButton()}&nbsp;&nbsp;{this.renderNextButton()}
+        </Padding>
+      );
+    }
+    return <div/>;
+  },
   renderTopArea(){
     const arr = this.getFormattedResponses();
     if (arr.length){
       const passing = _.get(arr[this.props.redux.checks.selectedResponse], 'passing');
+      if (!this.props.showBoolArea){
+        return (
+          <Padding a={0.5}>
+          <strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          </Padding>
+        );
+      }
       return (
         <Padding a={0.5}>
           <strong className={passing ? color.success : color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
@@ -285,13 +315,15 @@ const CheckResponsePaginate = React.createClass({
     return <div/>;
   },
   render() {
-    if (this.getStatus() === 'pending' || (this.props.responses && !this.props.responses.size)){
+    if (this.props.responses && !this.props.responses.size){
+      return <div/>;
+    }else if (this.isWaiting()){
       return this.renderWaiting();
-    }else if (this.props.responses || (this.props.redux.checks.responses && this.state.complete)){
+    }else if (this.getResponses().size){
       return (
         <div>
         <Padding t={1}>
-          <h3>Responses</h3>
+          <h3>Response{this.getResponses().size > 1 ? 's' : ''}</h3>
         </Padding>
         {this.renderBoolArea()}
           <div style={{background: '#212121'}}>
@@ -300,9 +332,7 @@ const CheckResponsePaginate = React.createClass({
               {this.renderItem()}
             </Padding>
           </div>
-          <Padding tb={1}>
-            {this.renderPrevButton()}&nbsp;&nbsp;{this.renderNextButton()}
-          </Padding>
+          {this.renderFlippers()}
         </div>
       );
     }
