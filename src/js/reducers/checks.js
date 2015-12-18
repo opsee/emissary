@@ -19,7 +19,7 @@ export const statics = {
     let newData = _.assign({}, legit, legit.check_spec.value);
     newData.name = newData.name || newData.check_spec.value.name;
     newData.check_spec.value.headers = newData.check_spec.value.headers || [];
-    _.assign(newData, result.getFormattedData(data));
+    _.assign(newData, result.getFormattedData(data, true));
     return new Check(newData);
   },
   formatResponse(singleResponse){
@@ -95,6 +95,9 @@ export default handleActions({
       }
       let responses = _.get(single.get('results').get(0), 'responses');
       responses = responses && responses.toJS ? responses : new List();
+      responses = responses.sortBy(r => {
+        return r.passing;
+      });
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {
         checks,

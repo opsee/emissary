@@ -90,7 +90,7 @@ export const Check = Record({
   //     relationship: 'equal'
   //   }
   // ]),
-  assertions: List(),
+  assertions: [],
   notifications: List(),
   instances: List(),
   health: undefined,

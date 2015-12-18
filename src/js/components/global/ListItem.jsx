@@ -38,16 +38,15 @@ const ListItem = React.createClass({
       type: 'GroupItem'
     };
   },
-  runMenuOpen(e){
-    if (e){
-      e.preventDefault();
-    }
+  runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
     analytics.event(this.props.type, 'menu-open');
   },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
-      e.preventDefault();
+      if (e){
+        e.preventDefault();
+      }
       this.props.onClick.call(null, this.props.item);
     }
   },
@@ -71,7 +70,7 @@ const ListItem = React.createClass({
   renderInfo(){
     if (this.props.onClick){
       return (
-        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick} title={this.props.title}>
+        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
           <div>{_.find(this.props.children, {key: 'line1'})}</div>
           <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
         </div>

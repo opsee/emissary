@@ -15,6 +15,7 @@ import {
 
 const initial = {
   socketMessages: [],
+  socketError: undefined,
   ready: false,
   openContextMenu: undefined,
   modalMessage: {

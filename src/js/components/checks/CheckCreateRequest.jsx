@@ -260,7 +260,7 @@ const CheckCreateRequest = React.createClass({
       return (
         <div>
           <Padding tb={1}/>
-          <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
+          <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           <StepCounter active={2} steps={4}/>
         </div>
       );

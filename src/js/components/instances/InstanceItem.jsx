@@ -1,72 +1,35 @@
 import React, {PropTypes} from 'react';
-import {Record} from 'immutable';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import Immutable, {Record} from 'immutable';
 
 import {ListItem} from '../global';
 import {Close, ListCheckmark} from '../icons';
-import {env as actions, app as appActions} from '../../actions';
-import style from '../global/contextMenu.css';
 import InstanceMenu from './InstanceMenu';
 
 const InstanceItem = React.createClass({
   propTypes: {
     item: PropTypes.instanceOf(Record).isRequired,
-    onClick: PropTypes.func,
-    actions: PropTypes.shape({
-      startInstances: PropTypes.func,
-      stopInstances: PropTypes.func,
-      rebootInstances: PropTypes.func
-    }),
-    appActions: PropTypes.shape({
-      closeContextMenu: PropTypes.func
-    })
+    onClick: PropTypes.func
   },
-  getInitialState() {
-    return {
-      activePage: 'page1'
-    };
-  },
-  getPageClass(string){
-    return this.state.activePage === string ? style.pageActive : style.page;
+  shouldComponentUpdate(nextProps) {
+    return !Immutable.is(this.props.item, nextProps.item);
   },
   getLink(){
     const type = this.props.item.get('type').toLowerCase();
     return `/instance/${type}/${this.props.item.get('id')}`;
   },
-  runStartConfirm(){
-    this.props.actions.startInstances([this.props.item.get('id')]);
-    this.props.appActions.closeContextMenu();
-  },
-  runStopConfirm(){
-    this.props.actions.stopInstances([this.props.item.get('id')]);
-    this.props.appActions.closeContextMenu();
-  },
-  runRebootConfirm(){
-    this.props.actions.rebootInstances([this.props.item.get('id')]);
-    this.props.appActions.closeContextMenu();
-  },
-  runResetPageState(){
-    this.setState({
-      activePage: 'page1'
-    });
-  },
-  handleStartClick(){
-    this.setState({activePage: 'page2'});
-  },
-  handleStopClick(){
-    this.setState({activePage: 'page3'});
-  },
-  handleRebootClick(){
-    this.setState({activePage: 'page4'});
-  },
   renderInfoText(){
     if (this.props.item.get('total')){
+      const passing = this.props.item.get('passing');
+      const failing = this.props.item.get('total') - passing;
       return (
         <span>
-          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
+            <ListCheckmark inline fill="textSecondary"/>{passing}
+          </span>
           &nbsp;&nbsp;
-          <Close inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
+          <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
+            <Close inline fill="textSecondary"/>{failing}
+          </span>
         </span>
       );
     }else if (this.props.item.get('checks').size){
@@ -92,13 +55,4 @@ const InstanceItem = React.createClass({
   }
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch)
-});
-
-const mapStateToProps = (state) => ({
-  redux: state
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(InstanceItem);
+export default InstanceItem;

@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Record} from 'immutable';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+import Immutable, {Record} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -10,7 +9,6 @@ import {Button} from '../forms';
 import {checks as actions, app as appActions} from '../../actions';
 
 const CheckItem = React.createClass({
-  mixins: [PureRenderMixin],
   propTypes: {
     item: PropTypes.instanceOf(Record).isRequired,
     onClick: PropTypes.func,
@@ -21,20 +19,28 @@ const CheckItem = React.createClass({
       closeContextMenu: PropTypes.func
     })
   },
+  shouldComponentUpdate(nextProps) {
+    return !Immutable.is(this.props.item, nextProps.item);
+  },
   getInfoText(){
     if (this.props.item.get('total')){
+      const passing = this.props.item.get('passing');
+      const failing = this.props.item.get('total') - passing;
       return (
         <span>
-          <ListCheckmark inline fill="textSecondary"/>{this.props.item.get('passing')}
+          <span title={`${passing} instance${passing === 1 ? '' : 's'} passing`}>
+            <ListCheckmark inline fill="textSecondary"/>{passing}
+          </span>
           &nbsp;&nbsp;
-          <ListClose inline fill="textSecondary"/>{this.props.item.get('total') - this.props.item.get('passing')}
+          <span title={`${failing} instance${failing === 1 ? '' : 's'} failing`}>
+            <ListClose inline fill="textSecondary"/>{failing}
+          </span>
         </span>
       );
     }
     return 'Initializing';
   },
-  handleDeleteClick(e){
-    e.preventDefault();
+  handleDeleteClick(){
     this.props.actions.del(this.props.item.get('id'));
     this.props.appActions.closeContextMenu();
   },

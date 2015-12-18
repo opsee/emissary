@@ -128,7 +128,9 @@ const CheckCreateAssertions = React.createClass({
           form.setData(data);
         }
       });
-      self.setState({hasSetAssertions: true});
+      if (self.isMounted()){
+        self.setState({hasSetAssertions: true});
+      }
     }, 50);
     return obj;
   },
