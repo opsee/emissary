@@ -117,8 +117,7 @@ export function initialize(){
       setTimeout(() => {
         socketStart(dispatch, state);
       }, config.socketStartDelay || 0);
-    }
-    if (window.ldclient){
+    }else if (window.ldclient){
       window.ldclient.identify({
         key: uuid.v4(),
         anonymous: true
