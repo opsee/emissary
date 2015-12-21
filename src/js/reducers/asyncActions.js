@@ -15,7 +15,14 @@ export default function asyncActions(state, action = {type: null}) {
   if (typeof action.type === 'string' && action.type.match('_ASYNC$')){
     const stripped = _.camelCase(action.type.replace(/_ASYNC$/, ''));
     let obj = {};
-    obj[stripped] = action.payload;
+    if (action.payload.status !== 'pending'){
+      //this allows the most recent pending request to trump all previous if the service is slow for some reason
+      if (state[stripped] && state[stripped].id === action.payload.id){
+        obj[stripped] = action.payload;
+      }
+    }else {
+      obj[stripped] = action.payload;
+    }
     return _.assign({}, state, obj);
   }
   return state;
