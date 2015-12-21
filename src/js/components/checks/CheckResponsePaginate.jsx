@@ -61,7 +61,7 @@ const CheckResponsePaginate = React.createClass({
     if (!data){
       return [];
     }
-    let arr = _.map(['port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
+    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
     arr.push(_.get(data, 'target.id'));
     let headers = _.get(data, 'check_spec.value.headers');
     if (headers){
