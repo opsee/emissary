@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Toolbar} from '../global';
+import {Loader, Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
@@ -128,7 +128,10 @@ const Install = React.createClass({
       }else if (!this.isBastionConnected()){
         return (
           <Padding tb={3}>
-            <p>Your bastion has been installed, waiting for successful connection...</p>
+            <Loader/>
+            <p>Your bastion has been installed, waiting for successful connection...<br/>
+              (This also takes plenty of time)
+            </p>
           </Padding>
         );
       }
