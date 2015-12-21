@@ -6,6 +6,7 @@ import {bindActionCreators} from 'redux';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
+import {InstanceItem} from '../instances';
 import {Edit, Delete, Mail} from '../icons';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -60,7 +61,8 @@ const CheckSingle = React.createClass({
     this.props.actions.del(this.props.params.id);
   },
   renderNotifications(){
-    const notifs = this.getCheck().get('notifications');
+    let notifs = this.getCheck().get('notifications');
+    notifs = notifs.toJS ? notifs.toJS() : notifs;
     if (notifs.length){
       return (
         <Padding b={1}>
@@ -77,19 +79,34 @@ const CheckSingle = React.createClass({
     }
     return <div/>;
   },
+  renderTarget(){
+    const target = this.getCheck().get('target');
+    let el;
+    switch (target.type){
+    case 'instance':
+      el = <InstanceItem target={target}/>;
+      break;
+    default:
+      el = <GroupItem target={target}/>;
+      break;
+    }
+    return (
+      <Padding b={1}>
+        <h3>Target</h3>
+        {el}
+      </Padding>
+    );
+  },
   renderInner(){
     if (this.getCheck().get('name')){
       const spec = this.getCheck().get('check_spec').value;
       return (
         <div>
-          <Padding b={1}>
-            <h3>Target</h3>
-            <GroupItem target={this.getCheck().get('target')}/>
-          </Padding>
+          {this.renderTarget()}
           <Padding b={1}>
             <h3>HTTP Request</h3>
             <Alert bsStyle="default" style={{wordBreak: 'break-all'}}>
-              <strong>{spec.verb}</strong> http://{this.getLink()}:<span>{spec.port}</span>{spec.path}
+              <strong>{spec.verb}</strong> {spec.protocol}://{this.getLink()}:<span>{spec.port}</span>{spec.path}
             </Alert>
           </Padding>
           <Padding b={1}>

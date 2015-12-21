@@ -106,7 +106,7 @@ export const Check = Record({
     value: Map({
       name: undefined,
       path: config.checkDefaultPath,
-      protocol: 'http',
+      protocol: config.checkDefaultProtocol,
       port: config.checkDefaultPort,
       verb: undefined,
       body: undefined,

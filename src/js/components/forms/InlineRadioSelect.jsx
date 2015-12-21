@@ -14,7 +14,7 @@ const InlineRadioSelect = React.createClass({
       obj[this.props.bf.name] = val;
       this.props.bf.form.updateData(obj);
     }
-    if (this.props.bf.field.initial && Array.isArray(this.props.bf.field.initial)){
+    if (this.props.bf.field.initial && Array.isArray(this.props.bf.field.initial) && !this.props.bf.data()){
       this.handleChange(this.props.bf.field.initial[0], true);
     }
   },
@@ -41,7 +41,7 @@ const InlineRadioSelect = React.createClass({
   render(){
     return (
       <div className="form-group">
-        <label className="label">Method</label>
+        <label className="label">{this.props.bf.label}</label>
         <Padding a={0.5}>
           <ul className="list-unstyled flex-wrap">
             {this.props.bf.subWidgets().map((w, i) => {

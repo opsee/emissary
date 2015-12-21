@@ -41,19 +41,28 @@ const HeaderFormSet = forms.FormSet.extend({
 });
 
 const InfoForm = forms.Form.extend({
+  protocol: forms.ChoiceField({
+    choices: ['http', 'https'].map(name => [name, name]),
+    widget: forms.RadioSelect,
+    widgetAttrs: {
+      widgetType: 'InlineRadioSelect'
+    },
+    initial: ['http']
+  }),
+  verb: forms.ChoiceField({
+    choices: verbOptions,
+    widget: forms.RadioSelect,
+    label: 'Method',
+    widgetAttrs: {
+      widgetType: 'InlineRadioSelect'
+    },
+    initial: ['GET']
+  }),
   port: forms.CharField({
     widgetAttrs: {
       placeholder: 'e.g. 8080'
     },
     widget: forms.NumberInput
-  }),
-  verb: forms.ChoiceField({
-    choices: verbOptions,
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['GET']
   }),
   body: forms.CharField({
     widget: forms.Textarea,
@@ -67,6 +76,9 @@ const InfoForm = forms.Form.extend({
       placeholder: 'e.g. /healthcheck'
     }
   }),
+  constructor(data, kwargs){
+    forms.Form.call(this, kwargs);
+  },
   render() {
     return (
       <div>
@@ -117,20 +129,24 @@ const CheckCreateRequest = React.createClass({
     const self = this;
     const initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
     let initialData = _.cloneDeep(_.get(self.props, 'check.check_spec.value') || {});
-    if (initialData.verb && typeof initialData.verb === 'string'){
+    if (typeof initialData.verb === 'string'){
       initialData.verb = [initialData.verb];
+    }
+    if (typeof initialData.protocol === 'string'){
+      initialData.protocol = [initialData.protocol];
     }
     initialData = _.mapValues(initialData, val => {
       return val || null;
     });
     const obj = {
-      info: new InfoForm(_.assign({
+      info: new InfoForm(initialData, _.assign({
         onChange: self.runChange,
         labelSuffix: '',
         validation: {
           on: 'blur change',
           onChangeDelay: 700
-        }
+        },
+        initial: self.isDataComplete() ? initialData : null
       }, self.isDataComplete() ? {data: initialData} : null)),
       headers: new HeaderFormSet({
         onChange: self.runChange,
@@ -239,7 +255,7 @@ const CheckCreateRequest = React.createClass({
                     <BoundField bf={form.boundField('value')}/>
                   </Col>
                   <Col xs={2}>
-                    <Padding t={2}>
+                    <Padding t={3}>
                       <BoundField bf={form.boundField('DELETE')}/>
                     </Padding>
                   </Col>
@@ -324,6 +340,9 @@ const CheckCreateRequest = React.createClass({
     return (
       <div>
         <h3>Define Your HTTP Request</h3>
+        <Padding b={1}>
+          <BoundField bf={this.state.info.boundField('protocol')} key={`bound-field-protocol`}/>
+        </Padding>
         <Padding b={1}>
           <BoundField bf={this.state.info.boundField('verb')} key={`bound-field-verb`}/>
         </Padding>
