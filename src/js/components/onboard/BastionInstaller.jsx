@@ -8,15 +8,20 @@ const itemTypes = ['AWS::CloudFormation::Stack', 'AWS::IAM::Role', 'AWS::EC2::Se
 
 const BastionInstaller = React.createClass({
   propTypes: {
-    messages: PropTypes.array
+    messages: PropTypes.array,
+    connected: PropTypes.bool
   },
   getDefaultProps(){
     return {
       id: null,
-      messages: []
+      messages: [],
+      connected: PropTypes.bool
     };
   },
   getInProgressItem(){
+    if (this.props.connected){
+      return 'Connected';
+    }
     const items = this.getItems();
 
     const rollback = _.findWhere(items, {status: 'ROLLBACK_COMPLETE'});
@@ -48,7 +53,7 @@ const BastionInstaller = React.createClass({
   getPercentComplete(){
     const num = this.getText().num;
     if (num && num > 0){
-      return (num / 7) * 100;
+      return (num / 8) * 100;
     }
     return num;
   },
@@ -69,6 +74,10 @@ const BastionInstaller = React.createClass({
     let num;
     let string;
     switch (item){
+    case 'Connected':
+      num = 8;
+      string = 'Bastion installed and connected.';
+      break;
     case 'Reading':
       num = 1;
       string = 'Reading CloudFormation template';
@@ -95,7 +104,7 @@ const BastionInstaller = React.createClass({
       break;
     case 'Complete':
       num = 7;
-      string = 'Bastion successfully installed.';
+      string = 'Bastion successfully installed. Waiting for connection...';
       break;
     case 'Deleting':
       num = 0;
@@ -108,8 +117,8 @@ const BastionInstaller = React.createClass({
     default:
       break;
     }
-    if (num && num < 7 && num > 0){
-      string = `(${num}/7) ${string}`;
+    if (num && num < 8 && num > 0){
+      string = `(${num}/8) ${string}`;
     }
     return {string, num};
   },
@@ -117,7 +126,7 @@ const BastionInstaller = React.createClass({
     return (
       <Padding b={2}>
         <h2>{this.id}</h2>
-        <ProgressBar percentage={this.getPercentComplete()} steps={7}/>
+        <ProgressBar percentage={this.getPercentComplete()} steps={8}/>
         <div style={{textAlign: 'center'}}>
         {this.getText().string}
         </div>

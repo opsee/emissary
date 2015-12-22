@@ -64,17 +64,18 @@ function socketStart(dispatch, state){
         type: APP_SOCKET_ERROR,
         payload: event
       });
-      window.socket.close();
-      delete window.socket;
-      console.info('Socket Error. Retrying in 30sec.');
-      setTimeout(() => {
-        socketStart(dispatch, state);
-      }, 30000);
+      console.info('Socket Error.');
     };
-    window.socket.onclose = () => {
+    window.socket.onclose = (event) => {
       dispatch({
         type: APP_SOCKET_CLOSE
       });
+      if (event && typeof event.code === 'number' && event.code !== 1000){
+        console.info(`Socket event code ${event.code}. Retrying in 30sec.`);
+        setTimeout(() => {
+          socketStart(dispatch, state);
+        }, 30000);
+      }
       console.info('Socket closed.');
       delete window.socket;
     };
@@ -99,13 +100,13 @@ export function initialize(){
         window.Intercom('boot', {
           app_id: 'mrw1z4dm',
           email: user.email,
-          user_hash: user.intercom_hmac
+          user_hash: user.intercom_hmac,
+          name: user.name
         });
       }
       if (window.ldclient){
         window.ldclient.identify({
           firstName: user.name,
-          lasName: user.name,
           key: user.id,
           email: user.email,
           custom: {
