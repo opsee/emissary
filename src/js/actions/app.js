@@ -70,7 +70,7 @@ function socketStart(dispatch, state){
       dispatch({
         type: APP_SOCKET_CLOSE
       });
-      if (event && typeof event.code === 'number' && event.code !== 1000){
+      if (event && typeof event.code === 'number' && !event.code.toString().match('1000|1005')){
         console.info(`Socket event code ${event.code}. Retrying in 30sec.`);
         setTimeout(() => {
           socketStart(dispatch, state);
@@ -107,7 +107,7 @@ export function initialize(){
       if (window.ldclient){
         window.ldclient.identify({
           firstName: user.name,
-          key: user.id,
+          key: user.id.toString(),
           email: user.email,
           custom: {
             customer_id: user.customer_id,
