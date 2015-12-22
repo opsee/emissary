@@ -69,6 +69,24 @@ const InstanceMenu = React.createClass({
       direction: 'forward'
     });
   },
+  renderActions(){
+    if (window.ldclient.toggle('instance-ecc-actions')) {
+      return (
+        <div>
+          <Button color="primary" text="left" block flat onClick={this.handleStartClick}>
+            <Play inline fill="primary"/> Start
+          </Button>
+          <Button color="primary" text="left" block flat onClick={this.handleStopClick}>
+            <Stop inline fill="primary"/> Stop
+          </Button>
+          <Button color="primary" text="left" block flat onClick={this.handleRebootClick}>
+            <Refresh inline fill="primary"/> Reboot
+          </Button>
+        </div>
+      );
+    }
+    return <div/>;
+  },
   renderPage0(){
     const {item} = this.props;
     return (
@@ -79,15 +97,7 @@ const InstanceMenu = React.createClass({
         <Button color="primary" text="left" to={`/check-create/request?id=${item.get('id')}&type=${item.get('type')}&name=${item.get('name')}`} block flat>
           <Add inline fill="primary"/> Create Check
         </Button>
-        <Button color="primary" text="left" block flat onClick={this.handleStartClick}>
-          <Play inline fill="primary"/> Start
-        </Button>
-        <Button color="primary" text="left" block flat onClick={this.handleStopClick}>
-          <Stop inline fill="primary"/> Stop
-        </Button>
-        <Button color="primary" text="left" block flat onClick={this.handleRebootClick}>
-          <Refresh inline fill="primary"/> Reboot
-        </Button>
+        {this.renderActions()}
       </div>
     );
   },
