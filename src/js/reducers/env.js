@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Immutable, {List} from 'immutable';
+import {fromJS, List} from 'immutable';
 import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
@@ -41,7 +41,7 @@ const statics = {
     }).sortBy(d => {
       return d.group.GroupName.toLowerCase();
     }).value();
-    const changed = newData && newData.length ? Immutable.fromJS(newData.map(g => {
+    const changed = newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupSecurityFromJS(state, g);
     })) : new List();
     return changed;
@@ -62,7 +62,7 @@ const statics = {
     .sortBy(d => {
       return d.group.LoadBalancerName.toLowerCase();
     }).value();
-    const changed = newData && newData.length ? Immutable.fromJS(newData.map(g => {
+    const changed = newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupElbFromJS(state, g);
     })) : new List();
     return changed;
@@ -71,6 +71,11 @@ const statics = {
     let newData = data.group || data;
     // let instances = data.instances || data.Instances || newData.instances || newData.Instances;
     newData.instance_count = data.instance_count;
+    if (Array.isArray(newData.Instances)){
+      newData.Instances = new List(newData.Instances.map(i => fromJS(i)));
+    }else {
+      newData.Instances = new List();
+    }
     // if (!instances){
     //   instances = state.instances.ecc.toJS().filter(instance => {
     //     return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
@@ -116,7 +121,7 @@ const statics = {
       }));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
-    newData.meta = Immutable.fromJS(newData.meta);
+    newData.meta = fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
     _.assign(newData, result.getFormattedData(data));
@@ -165,7 +170,7 @@ const statics = {
     .sortBy(i => {
       return i.name.toLowerCase();
     }).value();
-    return newData && newData.length ? Immutable.fromJS(newData) : List();
+    return newData && newData.length ? fromJS(newData) : List();
   },
   getInstanceRdsSuccess(state, data){
     if (data && data.instances){
@@ -182,7 +187,7 @@ const statics = {
     .sortBy(i => {
       return i.name.toLowerCase();
     }).value();
-    return newData && newData.length ? Immutable.fromJS(newData) : List();
+    return newData && newData.length ? fromJS(newData) : List();
   },
   getCreatedTime(time){
     let launchTime;
@@ -213,6 +218,8 @@ const statics = {
     if (newData.Tags && newData.Tags.length){
       name = _.chain(newData.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
     }
+    newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
+    newData.Placement = fromJS(newData.Placement);
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
@@ -225,7 +232,7 @@ const statics = {
     //   newData.groups = new List(newData.SecurityGroups.map(group => statics.groupSecurityFromJS(group)));
     // }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
-    newData.meta = Immutable.fromJS(newData.meta);
+    newData.meta = fromJS(newData.meta);
     return new InstanceEcc(newData);
   }
   // runInstanceAction(state, data){
@@ -233,7 +240,7 @@ const statics = {
   //     if (instance.get('id') === data.id){
   //       let changed = instance.toJS();
   //       changed.state = 'restarting';
-  //       return Immutable.fromJS(changed);
+  //       return fromJS(changed);
   //     }
   //     return instance;
   //   });

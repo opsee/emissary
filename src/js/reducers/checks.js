@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Immutable, {List} from 'immutable';
+import {fromJS, List} from 'immutable';
 import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
@@ -127,7 +127,7 @@ export default handleActions({
       if (!responses){
         return state;
       }
-      responses = Immutable.fromJS(responses);
+      responses = fromJS(responses);
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {responses, responsesFormatted});
     },

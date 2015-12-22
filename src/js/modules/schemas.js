@@ -32,20 +32,24 @@ const baseEnvItem = {
   total: 0
 };
 
-export const InstanceEcc = Record(_.assign(baseEnvItem, {
+export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
   meta: new Map({
     created: new Date(),
     instanceSize: 't2-micro'
   }),
   type: 'EC2',
-  groups: List(),
+  // groups: List(),
   LaunchTime: null,
   InstanceType: null,
-  Placement: null,
+  Placement: new Map({
+    AvailabilityZone: undefined,
+    GroupName: undefined,
+    Tenancy: undefined
+  }),
   SecurityGroups: List()
 }));
 
-export const InstanceRds = Record(_.assign(baseEnvItem, {
+export const InstanceRds = Record(_.assign({}, baseEnvItem, {
   meta: new Map({
     created: new Date(),
     instanceSize: 't2-micro'
@@ -58,14 +62,14 @@ export const InstanceRds = Record(_.assign(baseEnvItem, {
   SecurityGroups: List()
 }));
 
-export const GroupSecurity = Record(_.assign(baseEnvItem, {
+export const GroupSecurity = Record(_.assign({}, baseEnvItem, {
   type: 'security',
   Description: undefined,
   instance_count: undefined,
   instances: List()
 }));
 
-export const GroupElb = Record(_.assign(baseEnvItem, {
+export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
