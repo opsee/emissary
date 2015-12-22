@@ -107,7 +107,7 @@ export function initialize(){
       if (window.ldclient){
         window.ldclient.identify({
           firstName: user.name,
-          key: user.id,
+          key: user.id.toString(),
           email: user.email,
           custom: {
             customer_id: user.customer_id,
