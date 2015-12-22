@@ -100,13 +100,13 @@ export function initialize(){
         window.Intercom('boot', {
           app_id: 'mrw1z4dm',
           email: user.email,
-          user_hash: user.intercom_hmac
+          user_hash: user.intercom_hmac,
+          name: user.name
         });
       }
       if (window.ldclient){
         window.ldclient.identify({
           firstName: user.name,
-          lasName: user.name,
           key: user.id,
           email: user.email,
           custom: {

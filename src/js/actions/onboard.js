@@ -5,10 +5,12 @@ import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import analytics from '../modules/analytics';
 import {
+  APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
   ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
   ONBOARD_INSTALL,
+  ONBOARD_EXAMPLE_INSTALL,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
   ONBOARD_SET_INSTALL_DATA,
@@ -177,3 +179,38 @@ export function install(retry){
     });
   };
 }
+
+let exampleMessages;
+let exampleInstallFn;
+if (config.env !== 'production'){
+  const msgs = require('../../files/bastion-install-messages-example.json');
+  exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
+  exampleInstallFn = () => {
+    return (dispatch) => {
+      return dispatch({
+        type: ONBOARD_EXAMPLE_INSTALL,
+        payload: new Promise(() => {
+          exampleMessages.forEach((payload, i) => {
+            setTimeout(() => {
+              dispatch({
+                type: APP_SOCKET_MSG,
+                payload
+              });
+            }, i * 400);
+          });
+          setTimeout(() => {
+            dispatch({
+              type: APP_SOCKET_MSG,
+              payload: {
+                command: 'connect-bastion',
+                state: 'complete'
+              }
+            });
+          }, (exampleMessages.length + 5) * 400);
+        })
+      });
+    };
+  };
+}
+
+export const exampleInstall = exampleInstallFn;

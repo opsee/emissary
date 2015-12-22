@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Loader, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import Survey from './Survey.jsx';
@@ -22,7 +22,8 @@ const Install = React.createClass({
       setCredentials: PropTypes.func,
       vpcScan: PropTypes.func,
       onboardExampleInstall: PropTypes.func,
-      install: PropTypes.func.isRequired
+      install: PropTypes.func.isRequired,
+      exampleInstall: PropTypes.func
     }),
     redux: PropTypes.shape({
       app: PropTypes.shape({
@@ -35,8 +36,8 @@ const Install = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    if (config.demo || this.props.example){
-      return this.props.actions.onboardExampleInstall();
+    if (this.props.location.pathname.match('install-example')){
+      return this.props.actions.exampleInstall();
     }
     return this.props.actions.install();
   },
@@ -93,6 +94,9 @@ const Install = React.createClass({
     return !!(_.filter(this.props.redux.app.socketMessages, {command: 'launch-bastion'}).length);
   },
   isDiscoveryComplete(){
+    if (this.props.location.pathname.match('install-example')){
+      return true;
+    }
     return this.getDiscoveryStatus() === 'complete';
   },
   isBastionConnected(){
@@ -119,22 +123,22 @@ const Install = React.createClass({
       if (this.isComplete()){
         return (
           <Padding tb={3}>
-            <p>All clear!</p>
             <Button to="/check-create" color="primary" block chevron>
               Create a Check
             </Button>
           </Padding>
         );
-      }else if (!this.isBastionConnected()){
-        return (
-          <Padding tb={3}>
-            <Loader/>
-            <p>Your bastion has been installed, waiting for successful connection...<br/>
-              (This also takes plenty of time)
-            </p>
-          </Padding>
-        );
       }
+      // else if (!this.isBastionConnected()){
+      //   return (
+      //     <Padding tb={3}>
+      //       <Loader/>
+      //       <p>Your bastion has been installed, waiting for successful connection...<br/>
+      //         (This also takes plenty of time)
+      //       </p>
+      //     </Padding>
+      //   );
+      // }
     }
     if (this.getBastionErrors().length){
       return (
@@ -146,7 +150,7 @@ const Install = React.createClass({
     return <div/>;
   },
   renderText(){
-    if (this.isBastionLaunching() && !this.areBastionsComplete().length && !this.getBastionErrors().length){
+    if (this.isBastionLaunching() && !this.areBastionsComplete() && !this.getBastionErrors().length){
       return (
         <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
       );
@@ -183,7 +187,7 @@ const Install = React.createClass({
           {this.getBastionMessages().map((b, i) => {
             return (
               <Padding b={1} key={`bastion-installer-${i}`}>
-                <BastionInstaller {...b}/>
+                <BastionInstaller {...b} connected={this.isBastionConnected()}/>
               </Padding>
             );
           })}
