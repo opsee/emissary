@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Immutable, {Record} from 'immutable';
+import {is, Record} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -20,7 +20,7 @@ const CheckItem = React.createClass({
     })
   },
   shouldComponentUpdate(nextProps) {
-    return !Immutable.is(this.props.item, nextProps.item);
+    return !is(this.props.item, nextProps.item);
   },
   getInfoText(){
     if (this.props.item.get('total')){

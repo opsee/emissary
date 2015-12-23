@@ -46,7 +46,7 @@ const GroupElb = React.createClass({
   },
   getInstanceIds(){
     if (this.getGroup().get('name')){
-      return _.chain(this.getGroup()).get('Instances').pluck('InstanceId').flatten().value();
+      return _.chain(this.getGroup().toJS()).get('Instances').pluck('InstanceId').flatten().value();
     }
     return [];
   },

@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
-import {Record} from 'immutable';
+import {Record, is} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
+import _ from 'lodash';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 
 import {ContextMenu, StatusHandler} from '../global';
@@ -23,8 +24,10 @@ const InstanceMenu = React.createClass({
     appActions: PropTypes.shape({
       closeContextMenu: PropTypes.func
     }),
-    redux: PropTypes.shape({
-      asyncActions: PropTypes.object
+    asyncActions: PropTypes.shape({
+      awsStartInstances: PropTypes.object,
+      awsStopInstances: PropTypes.object,
+      awsRebootInstances: PropTypes.object
     })
   },
   getInitialState() {
@@ -32,6 +35,16 @@ const InstanceMenu = React.createClass({
       activePage: 0,
       direction: 'forward'
     };
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    const async1 = this.props.asyncActions;
+    const async2 = nextProps.asyncActions;
+    const cond1 = !is(this.props.item, nextProps.item);
+    const cond2 = async1.awsStartInstances.status !== async2.awsStartInstances.status;
+    const cond3 = async1.awsStopInstances.status !== async2.awsStopInstances.status;
+    const cond4 = async1.awsRebootInstances.status !== async2.awsRebootInstances.status;
+    const cond5 = !_.isEqual(this.state, nextState);
+    return (cond1 || cond2 || cond3 || cond4 || cond5);
   },
   runStartConfirm(){
     this.props.actions.startInstances([this.props.item.get('id')]);
@@ -102,7 +115,7 @@ const InstanceMenu = React.createClass({
     );
   },
   renderPage1(){
-    const {asyncActions} = this.props.redux;
+    const {asyncActions} = this.props;
     return (
       <div key="page1">
         <Padding lr={1}>
@@ -120,7 +133,7 @@ const InstanceMenu = React.createClass({
     );
   },
   renderPage2(){
-    const {asyncActions} = this.props.redux;
+    const {asyncActions} = this.props;
     return (
       <div key="page2">
         <Padding lr={1}>
@@ -138,7 +151,7 @@ const InstanceMenu = React.createClass({
     );
   },
   renderPage3(){
-    const {asyncActions} = this.props.redux;
+    const {asyncActions} = this.props;
     return (
       <div key="page3">
         <Padding lr={1}>
@@ -179,7 +192,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  asyncActions: state.asyncActions
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(InstanceMenu);

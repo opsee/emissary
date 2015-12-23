@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Immutable, {List} from 'immutable';
+import {fromJS, List} from 'immutable';
 import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
@@ -18,11 +18,6 @@ import {
 /* eslint-disable no-use-before-define */
 
 const statics = {
-  // getGroupSecurityPending(state, data){
-  //   if (_data.groupSecurity.get('id') !== data){
-  //     _data.groupSecurity = new GroupSecurity();
-  //   }
-  // },
   getGroupSecuritySuccess(state, data){
     const arr = state.groups.security;
     const single = statics.groupSecurityFromJS(state, data);
@@ -41,7 +36,7 @@ const statics = {
     }).sortBy(d => {
       return d.group.GroupName.toLowerCase();
     }).value();
-    const changed = newData && newData.length ? Immutable.fromJS(newData.map(g => {
+    const changed = newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupSecurityFromJS(state, g);
     })) : new List();
     return changed;
@@ -62,36 +57,23 @@ const statics = {
     .sortBy(d => {
       return d.group.LoadBalancerName.toLowerCase();
     }).value();
-    const changed = newData && newData.length ? Immutable.fromJS(newData.map(g => {
+    const changed = newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupElbFromJS(state, g);
     })) : new List();
     return changed;
   },
   groupElbFromJS(state, data){
     let newData = data.group || data;
-    // let instances = data.instances || data.Instances || newData.instances || newData.Instances;
     newData.instance_count = data.instance_count;
-    // if (!instances){
-    //   instances = state.instances.ecc.toJS().filter(instance => {
-    //     return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
-    //   });
-    // }
-    // if (instances.size){
-    //   instances = instances.toJS();
-    // }
-    // if (instances.length){
-    //   newData.instances = new List(instances.map(instance => {
-    //     const results = instance.results;
-    //     return statics.instanceEccFromJS({instance, results});
-    //   }));
-    // }
+    if (Array.isArray(newData.Instances)){
+      newData.Instances = new List(newData.Instances.map(i => fromJS(i)));
+    }else {
+      newData.Instances = new List();
+    }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;
     _.assign(newData, result.getFormattedData(data));
     newData.checks = new List(newData.checks);
-    // newData.checks = CheckStore.getChecks().filter(check => {
-    //   return check.target.id === newData.id;
-    // });
     if (newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
     }
@@ -116,7 +98,7 @@ const statics = {
       }));
     }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
-    newData.meta = Immutable.fromJS(newData.meta);
+    newData.meta = fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
     _.assign(newData, result.getFormattedData(data));
@@ -126,22 +108,6 @@ const statics = {
     }
     return new GroupSecurity(newData);
   },
-  // populateGroupInstances(state){
-  //   let groupsSecurity = _data.groupsSecurity;
-  //   _data.groupsSecurity = groupsSecurity.map(sg => {
-  //     const instances = state.instances.ecc.filter(instance => {
-  //       return _.findWhere(instance.SecurityGroups, {GroupId: sg.id});
-  //     });
-  //     const newSg = sg.set('instances', new List(instances));
-  //     return newSg;
-  //   });
-  // },
-  // getInstancePending(state, data){
-  //   if (_data.instance.get('id') !== data){
-  //     _data.instance = new Instance();
-  //     Store.emitChange();
-  //   }
-  // },
   getInstanceEccSuccess(state, data){
     const arr = state.instances.ecc;
     const single = statics.instanceEccFromJS(data);
@@ -152,12 +118,6 @@ const statics = {
       return arr.update(index, () => single);
     }
     return arr.concat(new List([single]));
-
-    // if (data && data.instance){
-    //   let newInstance = data.instance;
-    //   newInstance.type = 'EC2';
-    //   return statics.instanceEccFromJS({instance: newInstance, results: data.results});
-    // }
   },
   getInstancesEccSuccess(state, data){
     let newData = _.chain(data)
@@ -165,7 +125,7 @@ const statics = {
     .sortBy(i => {
       return i.name.toLowerCase();
     }).value();
-    return newData && newData.length ? Immutable.fromJS(newData) : List();
+    return newData && newData.length ? fromJS(newData) : List();
   },
   getInstanceRdsSuccess(state, data){
     if (data && data.instances){
@@ -182,7 +142,7 @@ const statics = {
     .sortBy(i => {
       return i.name.toLowerCase();
     }).value();
-    return newData && newData.length ? Immutable.fromJS(newData) : List();
+    return newData && newData.length ? fromJS(newData) : List();
   },
   getCreatedTime(time){
     let launchTime;
@@ -213,6 +173,8 @@ const statics = {
     if (newData.Tags && newData.Tags.length){
       name = _.chain(newData.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
     }
+    newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
+    newData.Placement = fromJS(newData.Placement);
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
     newData.type = 'EC2';
@@ -220,24 +182,10 @@ const statics = {
     if (newData.checks && newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
     }
-    // TODO Possibly re-enable this
-    // if (newData.SecurityGroups && newData.SecurityGroups.length){
-    //   newData.groups = new List(newData.SecurityGroups.map(group => statics.groupSecurityFromJS(group)));
-    // }
     //TODO - make sure status starts working when coming from api, have to code it like meta below
-    newData.meta = Immutable.fromJS(newData.meta);
+    newData.meta = fromJS(newData.meta);
     return new InstanceEcc(newData);
   }
-  // runInstanceAction(state, data){
-  //   _data.instancesEcc = _data.instancesEcc.map(instance => {
-  //     if (instance.get('id') === data.id){
-  //       let changed = instance.toJS();
-  //       changed.state = 'restarting';
-  //       return Immutable.fromJS(changed);
-  //     }
-  //     return instance;
-  //   });
-  // }
 };
 
 const initial = {
@@ -255,22 +203,6 @@ const initial = {
 };
 
 export default handleActions({
-  // FILTER_ENV: {
-  //   next(state, action){
-  //     const type = action.payload.type;
-  //     const items = _.get(state, type);
-  //     const strings = action.payload.type.split('.');
-  //     if (!items){
-  //       return state;
-  //     }
-  //     let data;
-  //     if (action.payload.id){
-  //     }
-  //     const security = statics.getGroupSecuritySuccess(state, action.payload);
-  //     const data = _.assign({}, state.groups, {security});
-  //     return _.assign({}, state, {groups: data});
-  //   }
-  // },
   [ENV_SET_SEARCH]: {
     next(state, action){
       return _.assign({}, state, {search: action.payload});

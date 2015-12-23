@@ -109,15 +109,6 @@ const Install = React.createClass({
     const stats = this.getBastionStatuses();
     return (_.every(stats) && stats.length) ||  _.filter(this.props.redux.app.socketMessages, {command: 'connect-bastion'}).length;
   },
-  renderSurvey(){
-    return (
-      <Padding t={3}>
-        <hr/>
-        <h2>Opsee Customer Survey</h2>
-        <Survey/>
-      </Padding>
-    );
-  },
   renderBtn(){
     if (this.areBastionsComplete()){
       if (this.isComplete()){
@@ -129,16 +120,6 @@ const Install = React.createClass({
           </Padding>
         );
       }
-      // else if (!this.isBastionConnected()){
-      //   return (
-      //     <Padding tb={3}>
-      //       <Loader/>
-      //       <p>Your bastion has been installed, waiting for successful connection...<br/>
-      //         (This also takes plenty of time)
-      //       </p>
-      //     </Padding>
-      //   );
-      // }
     }
     if (this.getBastionErrors().length){
       return (
@@ -158,20 +139,6 @@ const Install = React.createClass({
       return <div/>;
     }
     return <p>Checking installation status...</p>;
-    // if (this.areBastionsComplete()){
-    //   const bastionErrors = this.getBastionErrors();
-    //   const bastionSuccesses = this.getBastionSuccesses();
-    //   if (bastionErrors.length && !bastionSuccesses.length){
-    //     return (
-    //       <p>{bastionErrors.length > 1 ? bastionErrors.length : ''} Bastion{bastionErrors.length > 1 ? 's' : ''} failed to install correctly</p>
-    //     );
-    //   }else if (bastionErrors.length){
-    //     return (
-    //       <p>{bastionErrors.length} Bastions failed to install correctly, while {bastionSuccesses.length} completed successfully.</p>
-    //     );
-    //   }
-    //   return <div/>;
-    // }
   },
   renderInner(){
     if (this.getBastionConnectionStatus() === 'failed'){
@@ -192,7 +159,7 @@ const Install = React.createClass({
             );
           })}
           {this.renderBtn()}
-          {this.renderSurvey()}
+          <Survey/>
         </div>
       );
     }

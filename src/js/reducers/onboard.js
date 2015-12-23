@@ -69,26 +69,6 @@ if (config.env !== 'production'){
 }
 /*eslint-enable no-unused-vars*/
 
-// function mapRegionsForInstall(region){
-//   let obj = _.pick(region, ['region']);
-//   obj.vpcs = obj.subnets.map(vpc => {
-//     /* eslint-disable camelcase */
-//     const subnet_id = _.chain(vpc.subnets)
-//     /* eslint-enable camelcase */
-//     .sortByAll([
-//       (t) => t.state === 'available',
-//       'default_for_az',
-//       'available_ip_address-count'
-//     ])
-//     .last().get('subnet-id').value();
-//     return {
-//       id: vpc.vpc_id,
-//       subnet_id
-//     };
-//   });
-//   return obj;
-// }
-
 function getFinalInstallData(state){
   const starter = {
     instance_size: 't2.micro'
