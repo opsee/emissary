@@ -4,6 +4,7 @@ import {BoundField, Button} from '../forms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {user as actions} from '../../actions';
+import {Padding} from '../layout';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
 
@@ -109,12 +110,19 @@ const Survey = React.createClass({
     return <div/>;
   },
   render() {
-    return (
-      <form>
-        {this.getSteps()[this.state.step]}
-        {this.renderButton()}
-      </form>
-    );
+    if (window.ldclient.toggle('onboard-install-survey')) {
+      return (
+        <Padding t={3}>
+          <form>
+            <hr/>
+            <h2>Opsee Customer Survey</h2>
+            {this.getSteps()[this.state.step]}
+            {this.renderButton()}
+          </form>
+        </Padding>
+      );
+    }
+    return <div/>;
   }
 });
 

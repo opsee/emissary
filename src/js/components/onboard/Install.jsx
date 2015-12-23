@@ -109,15 +109,6 @@ const Install = React.createClass({
     const stats = this.getBastionStatuses();
     return (_.every(stats) && stats.length) ||  _.filter(this.props.redux.app.socketMessages, {command: 'connect-bastion'}).length;
   },
-  renderSurvey(){
-    return (
-      <Padding t={3}>
-        <hr/>
-        <h2>Opsee Customer Survey</h2>
-        <Survey/>
-      </Padding>
-    );
-  },
   renderBtn(){
     if (this.areBastionsComplete()){
       if (this.isComplete()){
@@ -168,7 +159,7 @@ const Install = React.createClass({
             );
           })}
           {this.renderBtn()}
-          {this.renderSurvey()}
+          <Survey/>
         </div>
       );
     }

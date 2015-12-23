@@ -39,7 +39,8 @@ const Signups = React.createClass({
   getData(){
     const signups = this.props.redux.admin.signups.toJS();
     const users = this.props.redux.admin.users.toJS();
-    return _.chain(signups).map(s => {
+    const combined = [].concat(signups).concat(users);
+    return _.chain(combined).map(s => {
       s.created_at = new Date(Date.parse(s.created_at));
       s.userId = _.chain(users).find({email: s.email}).get('id').value();
       return s;
@@ -57,13 +58,13 @@ const Signups = React.createClass({
     return _.filter(this.getData(), this.isUser);
   },
   isUnapprovedSignup(s){
-    return !s.claimed && !s.activated;
+    return !s.customer_id && !s.activated;
   },
   isApprovedSignup(s){
     return s.activated && !s.claimed;
   },
   isUser(s){
-    return s.claimed;
+    return s.customer_id;
   },
   runActivateSignup(signup){
     this.props.actions.activateSignup(signup);
