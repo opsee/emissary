@@ -144,7 +144,7 @@ const EnvWithFilter = React.createClass({
     }
     if (string){
       return data.filter(item => {
-        return fuzzy.filter(string, [item.get('name')]).length;
+        return fuzzy.filter(string, [item.get('name'), item.get('id')]).length;
       });
     }
     return data;

@@ -66,9 +66,9 @@ const statics = {
     let newData = data.group || data;
     newData.instance_count = data.instance_count;
     if (Array.isArray(newData.Instances)){
-      newData.Instances = new List(newData.Instances.map(i => fromJS(i)));
+      newData.instances = new List(_.pluck(newData.Instances, 'InstanceId'));
     }else {
-      newData.Instances = new List();
+      newData.instances = new List();
     }
     newData.name = newData.LoadBalancerName;
     newData.id = newData.LoadBalancerName;

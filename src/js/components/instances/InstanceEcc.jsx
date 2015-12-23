@@ -61,7 +61,7 @@ const InstanceEcc = React.createClass({
   getGroupsELB(){
     if (this.getInstance().get('name')){
       return _.chain(this.props.redux.env.groups.elb.toJS()).filter(elb => {
-        return _.chain(elb.Instances).pluck('InstanceId').flatten().indexOf(this.getInstance().get('id')).value() > -1;
+        return _.chain(elb.instances).indexOf(this.getInstance().get('id')).value() > -1;
       }).pluck('id').value();
     }
     return [];

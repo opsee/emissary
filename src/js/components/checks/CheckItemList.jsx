@@ -40,7 +40,8 @@ const CheckItemList = React.createClass({
     const bool1 = _.get(nextProps, string1) !== _.get(this.props, string1);
     const string2 = 'redux.checks.checks';
     const bool2 = !Immutable.is(_.get(nextProps, string2), _.get(this.props, string2));
-    return bool1 || bool2;
+    const bool3 = _.isEqual(this.props.target, nextProps.target);
+    return bool1 || bool2 || bool3;
   },
   getChecks(){
     let data = this.props.redux.checks.checks;
