@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import TimeAgo from 'react-timeago';
-import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -44,12 +43,6 @@ const GroupElb = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Map();
   },
-  getInstanceIds(){
-    if (this.getGroup().get('name')){
-      return _.chain(this.getGroup().toJS()).get('Instances').pluck('InstanceId').flatten().value();
-    }
-    return [];
-  },
   renderDescription(){
     const desc = this.getGroup().get('Description');
     if (desc && desc !== ''){
@@ -85,7 +78,7 @@ const GroupElb = React.createClass({
             <CheckItemList type="groupELB" target={this.props.params.id} title/>
           </Padding>
           <Padding b={1}>
-            <InstanceItemList ids={this.getInstanceIds()} redux={this.props.redux} title/>
+            <InstanceItemList ids={this.getGroup().get('instances').toJS()} redux={this.props.redux} title/>
           </Padding>
 
         </div>

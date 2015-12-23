@@ -71,7 +71,7 @@ const GroupItemList = React.createClass({
     }
     if (this.props.instanceIds){
       data = data.filter(d => {
-        return _.intersection(this.props.instanceIds, _.pluck(d.get('instances').toJS(), 'id')).length;
+        return _.intersection(this.props.instanceIds, d.get('instances').toJS()).length;
       });
     }
     data = data.sortBy(item => {
