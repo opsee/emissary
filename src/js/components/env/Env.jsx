@@ -6,18 +6,21 @@ import {BastionRequirement, Toolbar} from '../global';
 import EnvWithFilter from './EnvWithFilter.jsx';
 import {State} from 'react-router';
 import {env as actions} from '../../actions';
+import _ from 'lodash';
 
 const Env = React.createClass({
   mixins: [State],
   propTypes: {
     location: PropTypes.object,
     actions: PropTypes.shape({
-      envSetSearch: PropTypes.func
+      envSetSearch: PropTypes.func,
+      getBastions: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       env: PropTypes.shape({
-        search: PropTypes.string
+        search: PropTypes.string,
+        bastions: PropTypes.array
       })
     })
   },
@@ -25,6 +28,10 @@ const Env = React.createClass({
     if (this.props.location.query.search && !this.props.redux.env.search){
       this.props.actions.envSetSearch(this.props.location.query.search);
     }
+    this.props.actions.getBastions();
+  },
+  getBastionVpc(){
+    return _.chain(this.props.redux.env.bastions).filter('connected').last().get('vpc_id').value() || '';
   },
   getInitialState(){
     const path = this.props.location.pathname;
@@ -45,7 +52,7 @@ const Env = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Environment"/>
+        <Toolbar title={`Environment ${this.getBastionVpc()}`}/>
           <Grid>
             <Row>
               <Col xs={12}>
