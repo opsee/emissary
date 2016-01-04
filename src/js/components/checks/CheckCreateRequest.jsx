@@ -173,13 +173,18 @@ const CheckCreateRequest = React.createClass({
         };
         form.setData(data);
       });
-      this.setState({hasSetHeaders: true});
+      if (this.isMounted()){
+        this.setState({hasSetHeaders: true});
+      }
     }, 50);
     return _.extend(obj, {
       cleanedData: null
     });
   },
   componentWillMount(){
+    if (!this.props.check.target.id){
+      return this.props.history.pushState(null, '/check-create/target');
+    }
     this.props.checkActions.testCheckReset();
   },
   componentDidMount(){

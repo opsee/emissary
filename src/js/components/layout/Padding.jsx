@@ -4,7 +4,9 @@ import cx from 'classnames';
 
 const availProps = ['t', 'b', 'tb', 'l', 'r', 'lr', 'a'];
 let types = {
-  inline: PropTypes.bool
+  inline: PropTypes.bool,
+  className: PropTypes.string,
+  children: PropTypes.node
 };
 availProps.forEach(string => {
   types[string] = PropTypes.number;

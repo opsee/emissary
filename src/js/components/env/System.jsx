@@ -100,9 +100,13 @@ const System = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   envActions: bindActionCreators(envActions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(System);
+export default connect(mapStateToProps, mapDispatchToProps)(System);
