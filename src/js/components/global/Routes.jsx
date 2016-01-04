@@ -50,7 +50,7 @@ import OnboardInstall from '../onboard/Install';
 
 import AdminSignups from '../admin/Signups';
 
-import Help from '../pages/Help';
+import Help from 'react-router-proxy!../pages/Help';
 import Styleguide from '../pages/Styleguide';
 import System from '../env/System';
 import NotFound from '../pages/NotFound';
@@ -114,7 +114,7 @@ const routes = (
     <Route path="/password-forgot" component={PasswordForgot}/>
     <Route path="/password-change" component={PasswordChange}/>
 
-    <Route path="/help" component={Help}/>
+    <Route path="/help" component={Help.default}/>
 
     <Route path="/docs" component={Docs}/>
     <Route path="/docs/bastion" component={DocsBastion}/>
