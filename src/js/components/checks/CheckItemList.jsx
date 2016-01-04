@@ -13,11 +13,11 @@ import {checks as actions} from '../../actions';
 const CheckItemList = React.createClass({
   mixins: [SetInterval],
   propTypes: {
-    type: PropTypes.oneOfType([
+    type: PropTypes.string,
+    target: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.array
     ]),
-    target: PropTypes.string,
     title: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func
