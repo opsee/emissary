@@ -19,9 +19,9 @@ export function getCheckFromNotificaption(id) {
   const port = config.notificaption.port;
   const filename = `${id}.json`;
 
-  const checkURI = `http://${hostname}:${port}/tmp/checks/${filename}`;
+  const checkURI = `http://${hostname}:${port}/checks/${filename}`;
 
-  return (dispatch, state) => {
+  return dispatch => {
     dispatch({
       type: GET_CHECK,
       payload: request.get(checkURI)

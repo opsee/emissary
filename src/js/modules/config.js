@@ -14,7 +14,7 @@ let config = {
   ghosting: false,
 
   notificaption: {
-    hostname: "localhost",
+    hostname: 'localhost',
     port: 8888
   },
 
