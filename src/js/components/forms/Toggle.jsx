@@ -5,7 +5,10 @@ const Toggle = React.createClass({
   propTypes: {
     on: PropTypes.bool.isRequired,
     onChange: PropTypes.func,
-    id: PropTypes.string
+    id: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ])
   },
   getToggleClass(){
     return this.props.on ? style.toggleSwitchActive : style.toggleSwitch;

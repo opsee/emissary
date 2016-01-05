@@ -239,7 +239,7 @@ const Styleguide = React.createClass({
                 {this.state.toggles.map((t, i) => {
                   return (
                     <li key={`toggle-${i}`}>
-                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={`toggle-${i}`} label="Item"/>
+                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={i} label="Item"/>
                     </li>
                   );
                 })}

@@ -37,8 +37,7 @@ module.exports = function(){
           if (paths.indexOf(item) === paths.length - 1){
             return run(item).then(() => {
               console.log('Captured all screenshots.');
-              nightmare.end();
-              setTimeout(masterResolve, 3000);
+              nightmare.end(masterResolve);
             })
           }
           return run(item);
