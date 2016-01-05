@@ -25,6 +25,9 @@ export function getCheckFromNotificaption(id) {
     dispatch({
       type: GET_CHECK,
       payload: request.get(checkURI)
+        .then(resp => {
+          return resp.body;
+        })
     });
   };
 }
