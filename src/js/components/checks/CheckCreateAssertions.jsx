@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
-import {BastionRequirement, Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -261,7 +261,6 @@ const CheckCreateAssertions = React.createClass({
           <div>
             <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Next</Button>
           </div>
-          <StepCounter active={3} steps={4}/>
         </div>
       );
     }

@@ -8,7 +8,7 @@ import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Button} from '../forms';
-import {BastionRequirement, Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import {EnvWithFilter} from '../env';
@@ -99,7 +99,6 @@ const CheckCreateTarget = React.createClass({
           <Padding t={2}>
             <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           </Padding>
-          <StepCounter active={1} steps={3}/>
         </div>
       );
     }
@@ -122,7 +121,6 @@ const CheckCreateTarget = React.createClass({
         {this.renderHelperText()}
         <h3>Choose a Target for your Check</h3>
         <EnvWithFilter onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
-        <StepCounter active={1} steps={4}/>
       </div>
     );
   },
