@@ -1,3 +1,4 @@
+import config from '../../modules/config';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {pushState} from 'redux-router';
@@ -16,6 +17,10 @@ export function auth(Component){
       this.runCheckAuth();
     },
     isAuthenticated(){
+      if (config.screenshotMode) {
+        return true;
+      }
+
       return !!(this.props.redux.user.get('token'));
     },
     runCheckAuth() {
