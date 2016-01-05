@@ -11,6 +11,7 @@ import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
 import {Padding} from '../layout';
 import {user as actions} from '../../actions';
+import {AddToSlackButton} from '../integrations';
 
 const PasswordForm = forms.Form.extend({
   password: forms.CharField({
@@ -97,6 +98,7 @@ const ProfileEdit = React.createClass({
             <form onSubmit={this.handleSubmit}>
               <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
               {this.state.passwordForm.render()}
+              <AddToSlackButton/>
               <StatusHandler status={this.getStatus()}/>
               <Padding t={2}>
                 <Button color="success" type="submit" disabled={this.isDisabled()}>

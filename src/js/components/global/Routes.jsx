@@ -17,6 +17,8 @@ import DocsCloudformation from '../docs/Cloudformation';
 import DocsIAM from '../docs/IAM';
 import DocsChecks from '../docs/Checks.jsx';
 
+import Slack from '../integrations/Slack';
+
 import CheckCreateTarget from '../checks/CheckCreateTarget';
 import CheckCreateRequest from '../checks/CheckCreateRequest';
 import CheckCreateAssertions from '../checks/CheckCreateAssertions';
@@ -121,6 +123,8 @@ const routes = (
     <Route path="/docs/cloudformation" component={DocsCloudformation}/>
     <Route path="/docs/IAM" component={DocsIAM}/>
     <Route path="/docs/checks" component={DocsChecks}/>
+
+    <Route path="/integrations/slack" component={Slack}/>
 
     <Route path="*" component={NotFound}/>
   </Route>
