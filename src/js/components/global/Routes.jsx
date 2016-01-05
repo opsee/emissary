@@ -6,21 +6,21 @@ import Env from '../env/Env';
 import EnvGroupsSecurity from '../env/EnvGroupsSecurity';
 import EnvGroupsELB from '../env/EnvGroupsELB';
 import EnvInstancesEC2 from '../env/EnvInstancesEC2';
-import CheckList from '../checks/List';
-import CheckSingle from '../checks/Single';
-import CheckEdit from '../checks/Edit';
-import CheckCreate from '../checks/Create';
+import CheckList from 'react-proxy?name=checks!../checks/List';
+import CheckSingle from 'react-proxy?name=checks!../checks/Single';
+import CheckEdit from 'react-proxy?name=checks!../checks/Edit';
 
-import Docs from '../docs/Docs';
-import DocsBastion from '../docs/Bastion';
-import DocsCloudformation from '../docs/Cloudformation';
-import DocsIAM from '../docs/IAM';
-import DocsChecks from '../docs/Checks.jsx';
+import Docs from 'react-proxy!../docs/Docs';
+import DocsBastion from 'react-proxy!../docs/Bastion';
+import DocsCloudformation from 'react-proxy!../docs/Cloudformation';
+import DocsIAM from 'react-proxy!../docs/IAM';
+import DocsChecks from 'react-proxy!../docs/Checks.jsx';
 
-import CheckCreateTarget from '../checks/CheckCreateTarget';
-import CheckCreateRequest from '../checks/CheckCreateRequest';
-import CheckCreateAssertions from '../checks/CheckCreateAssertions';
-import CheckCreateInfo from '../checks/CheckCreateInfo';
+import CheckCreate from 'react-proxy?name=checkCreate!../checks/Create';
+import CheckCreateTarget from 'react-proxy?name=checkCreate!../checks/CheckCreateTarget';
+import CheckCreateRequest from 'react-proxy?name=checkCreate!../checks/CheckCreateRequest';
+import CheckCreateAssertions from 'react-proxy?name=checkCreate!../checks/CheckCreateAssertions';
+import CheckCreateInfo from 'react-proxy?name=checkCreate!../checks/CheckCreateInfo';
 
 import GroupSecurity from '../groups/GroupSecurity';
 import GroupELB from '../groups/GroupElb';
@@ -29,31 +29,30 @@ import InstanceEcc from '../instances/InstanceEcc';
 import InstanceRDS from '../instances/InstanceRDS';
 
 import Login from '../user/Login';
-import PasswordForgot from '../user/PasswordForgot';
-import PasswordChange from '../user/PasswordChange';
-import Profile from '../user/Profile';
-import ProfileEdit from '../user/ProfileEdit';
+import PasswordForgot from 'react-proxy!../user/PasswordForgot';
+import PasswordChange from 'react-proxy!../user/PasswordChange';
+import Profile from 'react-proxy!../user/Profile';
+import ProfileEdit from 'react-proxy!../user/ProfileEdit';
 
-import OnboardCreate from '../onboard/Create';
-import OnboardThanks from '../onboard/Thanks';
-import OnboardPassword from '../onboard/Password';
-import OnboardTutorial from '../onboard/Tutorial';
-import OnboardTutorial1 from '../onboard/Tutorial1';
-import OnboardTutorial2 from '../onboard/Tutorial2';
-import OnboardTutorial3 from '../onboard/Tutorial3';
-// import OnboardTeam from '../onboard/Team';
-import OnboardRegionSelect from '../onboard/RegionSelect';
-import OnboardCredentials from '../onboard/Credentials';
-import OnboardVPCSelect from '../onboard/VPCSelect';
-import OnboardSubnetSelect from '../onboard/SubnetSelect';
-import OnboardInstall from '../onboard/Install';
+import OnboardCreate from 'react-proxy?name=onboard!../onboard/Create';
+import OnboardThanks from 'react-proxy?name=onboard!../onboard/Thanks';
+import OnboardPassword from 'react-proxy?name=onboard!../onboard/Password';
+import OnboardTutorial from 'react-proxy?name=onboard!../onboard/Tutorial';
+import OnboardTutorial1 from 'react-proxy?name=onboard!../onboard/Tutorial1';
+import OnboardTutorial2 from 'react-proxy?name=onboard!../onboard/Tutorial2';
+import OnboardTutorial3 from 'react-proxy?name=onboard!../onboard/Tutorial3';
+import OnboardRegionSelect from 'react-proxy?name=onboard!../onboard/RegionSelect';
+import OnboardCredentials from 'react-proxy?name=onboard!../onboard/Credentials';
+import OnboardVPCSelect from 'react-proxy?name=onboard!../onboard/VPCSelect';
+import OnboardSubnetSelect from 'react-proxy?name=onboard!../onboard/SubnetSelect';
+import OnboardInstall from 'react-proxy?name=onboard!../onboard/Install';
 
-import AdminSignups from '../admin/Signups';
+import AdminSignups from 'react-proxy!../admin/Signups';
 
-import Help from '../pages/Help';
-import Styleguide from '../pages/Styleguide';
-import System from '../env/System';
-import NotFound from '../pages/NotFound';
+import Help from 'react-proxy!../pages/Help';
+import Styleguide from 'react-proxy!../pages/Styleguide';
+import System from 'react-proxy!../env/System';
+import NotFound from 'react-proxy!../pages/NotFound';
 
 import {auth} from '../global/Authenticator';
 
