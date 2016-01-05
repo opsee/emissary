@@ -39,10 +39,10 @@ function run(){
       if (paths.indexOf(item) === paths.length - 1){
         return compare(item).then(() => {
           console.log('Compared all images.');
-          const len = _.compact(resultsArray).length;
-          let string = len === 0 ? 'No changes found.'.green : 'Changes found, exiting.'.red;
+          const num = _.compact(resultsArray).length ? 1 : 0;
+          let string = !num ? 'No changes found.'.green : 'Changes found, exiting.'.red;
           console.log(string);
-          process.exit(len);
+          process.exit(num);
           // masterResolve();
         })
       }
