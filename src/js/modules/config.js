@@ -12,6 +12,12 @@ let config = {
   error: false,
   env: process.env.NODE_ENV,
   ghosting: false,
+
+  notificaption: {
+    hostname: "localhost",
+    port: 8888
+  },
+
   revision: __REVISION__,
 
   /**

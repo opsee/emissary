@@ -16,7 +16,7 @@ export function auth(Component){
     componentWillReceiveProps() {
       this.runCheckAuth();
     },
-    isAuthenticated(){
+    isAuthenticated() {
       if (config.screenshotMode) {
         return true;
       }
