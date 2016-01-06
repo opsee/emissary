@@ -30,8 +30,11 @@ const Env = React.createClass({
     }
     this.props.actions.getBastions();
   },
-  getBastionVpc(){
-    return _.chain(this.props.redux.env.bastions).filter('connected').last().get('vpc_id').value() || '';
+  getTitle(){
+    const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};
+    const region = bastion.region || 'Environment';
+    const vpcId = bastion.vpc_id || '';
+    return `${region} - ${vpcId}`;
   },
   getInitialState(){
     const path = this.props.location.pathname;
@@ -52,7 +55,7 @@ const Env = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Environment ${this.getBastionVpc()}`}/>
+        <Toolbar title={this.getTitle()}/>
           <Grid>
             <Row>
               <Col xs={12}>

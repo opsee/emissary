@@ -51,7 +51,9 @@ const CheckItemList = React.createClass({
         return tar.indexOf(c.get('target').id) > -1;
       });
     }
-    return data;
+    return data.sortBy(item => {
+      return item.get('health');
+    });
   },
   renderTitle(){
     if (this.props.title){
