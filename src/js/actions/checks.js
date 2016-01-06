@@ -32,10 +32,6 @@ export function getCheckFromNotificaption(id) {
 }
 
 export function getCheck(id){
-  if (config.screenshotMode) {
-    return getCheckFromNotificaption(id);
-  }
-
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECK,
