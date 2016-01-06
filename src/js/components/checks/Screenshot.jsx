@@ -7,6 +7,8 @@ import {Padding} from '../layout';
 import {List, Map} from 'immutable';
 import {Toolbar} from '../global';
 import AssertionItemList from './AssertionItemList';
+import NotificationItemList from './NotificationItemList';
+import HttpRequestItem from './HttpRequestItem';
 
 const CheckScreenshot = React.createClass({
 
@@ -31,6 +33,7 @@ const CheckScreenshot = React.createClass({
 
     if (check.get('name')) {
       const spec = check.get('check_spec').value;
+      const target = check.get('target');
 
       return (
         <div>
@@ -40,6 +43,7 @@ const CheckScreenshot = React.createClass({
 
           <Padding b={1}>
             <h3>HTTP Request</h3>
+            <HttpRequestItem spec={spec} target={target} />
           </Padding>
 
           <Padding b={1}>
@@ -53,6 +57,7 @@ const CheckScreenshot = React.createClass({
 
           <Padding b={1}>
             <h3>Notifications</h3>
+            <NotificationItemList notifications={check.get('notifications')} />
           </Padding>
         </div>
       );
