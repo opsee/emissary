@@ -8,12 +8,13 @@ import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Edit, Delete, Mail} from '../icons';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import {checks as actions} from '../../actions';
+import HttpRequestItem from './HttpRequestItem';
 
 const CheckSingle = React.createClass({
   propTypes: {
@@ -89,14 +90,14 @@ const CheckSingle = React.createClass({
   renderInner(){
     if (this.getCheck().get('name')){
       const spec = this.getCheck().get('check_spec').value;
+      const target = this.getCheck().get('target');
+
       return (
         <div>
           {this.renderTarget()}
           <Padding b={1}>
             <h3>HTTP Request</h3>
-            <Alert bsStyle="default" style={{wordBreak: 'break-all'}}>
-              <strong>{spec.verb}</strong> {spec.protocol}://{this.getLink()}:<span>{spec.port}</span>{spec.path}
-            </Alert>
+            <HttpRequestItem spec={spec} target={target} />
           </Padding>
           <Padding b={1}>
             <CheckResponsePaginate responses={this.getResponses()}/>
