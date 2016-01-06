@@ -8,6 +8,7 @@ import EnvGroupsELB from '../env/EnvGroupsELB';
 import EnvInstancesEC2 from '../env/EnvInstancesEC2';
 import CheckList from '../checks/List';
 import CheckSingle from '../checks/Single';
+import CheckScreenshot from '../checks/Screenshot';
 import CheckEdit from '../checks/Edit';
 import CheckCreate from '../checks/Create';
 
@@ -82,6 +83,7 @@ const routes = (
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
     <Route path="/check/:id" component={auth(CheckSingle)}/>
+    <Route path="/check/:id/screenshot" component={CheckScreenshot}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
