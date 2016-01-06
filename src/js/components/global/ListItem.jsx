@@ -84,6 +84,9 @@ const ListItem = React.createClass({
     );
   },
   renderMenuButton(){
+    if (this.props.noMenu){
+      return <div/>;
+    }
     if (this.props.onClick){
       return (
         <Button icon flat to={this.props.link} target="_blank">

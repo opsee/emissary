@@ -20,8 +20,10 @@ const InstanceItemList = React.createClass({
     ids: PropTypes.array,
     title: PropTypes.bool,
     noFallback: PropTypes.bool,
+    type: PropTypes.string,
     actions: PropTypes.shape({
-      getInstancesEcc: PropTypes.func
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
@@ -34,8 +36,16 @@ const InstanceItemList = React.createClass({
   },
   componentWillMount(){
     if (!this.props.instances){
-      this.props.actions.getInstancesEcc();
+      if (this.props.type === 'RDS'){
+        return this.props.actions.getInstancesRds();
+      }
+      return this.props.actions.getInstancesEcc();
     }
+  },
+  getDefaultProps() {
+    return {
+      type: 'EC2'
+    };
   },
   getInitialState(){
     return {
@@ -44,7 +54,8 @@ const InstanceItemList = React.createClass({
     };
   },
   getInstances(noFilter){
-    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances.ecc;
+    const type = this.props.type;
+    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances[this.props.type.toLowerCase()];
     if (noFilter){
       return data;
     }
@@ -55,6 +66,9 @@ const InstanceItemList = React.createClass({
     }
     if (this.props.groupSecurity){
       data = data.filter(d => {
+        if (type === 'RDS'){
+          return _.chain(d.toJS()).get('VpcSecurityGroups').pluck('VpcSecurityGroupId').indexOf(this.props.groupSecurity).value() > -1;
+        }
         return _.chain(d.toJS()).get('SecurityGroups').pluck('GroupId').indexOf(this.props.groupSecurity).value() > -1;
       });
     }
@@ -82,7 +96,7 @@ const InstanceItemList = React.createClass({
   },
   renderTitle(){
     if (this.props.title){
-      return <h3>Instances ({this.getInstances().size})</h3>;
+      return <h3>{this.props.type} Instances ({this.getInstances().size})</h3>;
     }
     return <div/>;
   },
@@ -92,7 +106,7 @@ const InstanceItemList = React.createClass({
         <div>
           {this.renderTitle()}
           {this.getInstances().map(instance => {
-            return <InstanceItem item={instance} key={instance.get('id')} {...this.props}/>;
+            return <InstanceItem item={instance} key={instance.get('id')} {...this.props} noMenu={instance.type !== 'EC2'}/>;
           })}
           {this.renderLink()}
         </div>
@@ -100,7 +114,7 @@ const InstanceItemList = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getInstancesEcc.status} noFallback={this.props.noFallback}>
-        <Alert bsStyle="default">No instances found</Alert>
+        <Alert bsStyle="default">No {this.props.type} instances found</Alert>
       </StatusHandler>
     );
   }

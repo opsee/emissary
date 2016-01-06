@@ -81,7 +81,10 @@ const GroupSecurity = React.createClass({
             <CheckItemList type="groupSecurity" target={this.props.params.id} redux={this.props.redux} title/>
           </Padding>
           <Padding b={1}>
-            <InstanceItemList groupSecurity={this.props.params.id} title/>
+            <InstanceItemList groupSecurity={this.props.params.id} type="ECC" title/>
+          </Padding>
+          <Padding b={1}>
+            <InstanceItemList groupSecurity={this.props.params.id} type="RDS" title/>
           </Padding>
         </div>
       );
