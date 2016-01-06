@@ -104,7 +104,7 @@ const BastionInstaller = React.createClass({
       break;
     case 'Complete':
       num = 7;
-      string = 'Bastion successfully installed. Waiting for connection...';
+      string = 'Bastion successfully installed. Waiting for connection to Opsee...';
       break;
     case 'Deleting':
       num = 0;
