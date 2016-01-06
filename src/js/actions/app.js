@@ -94,7 +94,7 @@ export function shutdown(){
 
 export function initialize(){
   return (dispatch, state) => {
-    if (state().user.get('token')){
+    if (state().user.get('token') && state().user.get('id')){
       const user = state().user.toJS();
       if (window.Intercom){
         window.Intercom('boot', {

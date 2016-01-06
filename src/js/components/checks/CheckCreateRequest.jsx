@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
-import {BastionRequirement, Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate.jsx';
@@ -282,7 +282,6 @@ const CheckCreateRequest = React.createClass({
         <div>
           <Padding tb={1}/>
           <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
-          <StepCounter active={2} steps={4}/>
         </div>
       );
     }

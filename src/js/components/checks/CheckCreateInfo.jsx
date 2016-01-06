@@ -8,7 +8,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
-import {StatusHandler, StepCounter} from '../global';
+import {StatusHandler} from '../global';
 import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
@@ -219,7 +219,6 @@ const CheckCreateInfo = React.createClass({
             <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
             <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Finish</Button>
           </Padding>
-          <StepCounter active={4} steps={4}/>
         </div>
       );
     }
