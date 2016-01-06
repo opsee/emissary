@@ -29,10 +29,10 @@ import InstanceEcc from '../instances/InstanceEcc';
 import InstanceRDS from '../instances/InstanceRDS';
 
 import Login from '../user/Login';
-import PasswordForgot from 'react-proxy!../user/PasswordForgot';
-import PasswordChange from 'react-proxy!../user/PasswordChange';
-import Profile from 'react-proxy!../user/Profile';
-import ProfileEdit from 'react-proxy!../user/ProfileEdit';
+import PasswordForgot from 'react-proxy?name=password!../user/PasswordForgot';
+import PasswordChange from 'react-proxy?name=password!../user/PasswordChange';
+import Profile from 'react-proxy?name=profile!../user/Profile';
+import ProfileEdit from 'react-proxy?name=profile!../user/ProfileEdit';
 
 import OnboardCreate from 'react-proxy?name=onboard!../onboard/Create';
 import OnboardThanks from 'react-proxy?name=onboard!../onboard/Thanks';
