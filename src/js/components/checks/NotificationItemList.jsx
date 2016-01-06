@@ -5,7 +5,7 @@ import {Mail} from '../icons';
 export default React.createClass({
   propTypes: {
     notifications: PropTypes.arrayOf(PropTypes.shape({
-      email: PropTypes.string.isRequired
+      value: PropTypes.string.isRequired
     })).isRequired
   },
   render() {
