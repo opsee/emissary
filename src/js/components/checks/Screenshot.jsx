@@ -27,7 +27,36 @@ const CheckScreenshot = React.createClass({
   },
   renderInner() {
     const check = this.getCheck();
-    const spec = check.get('check_spec').value;
+
+    if (check.get('name')) {
+      const spec = check.get('check_spec').value;
+
+      return (
+        <div>
+          <Padding b={1}>
+            <h3>Target</h3>
+          </Padding>
+
+          <Padding b={1}>
+            <h3>HTTP Request</h3>
+          </Padding>
+
+          <Padding b={1}>
+            <h3>Responses</h3>
+          </Padding>
+
+          <Padding b={1}>
+            <h3>Assertions</h3>
+          </Padding>
+
+          <Padding b={1}>
+            <h3>Notifications</h3>
+          </Padding>
+        </div>
+      );
+    }
+
+    return null;
   },
   render() {
     const check = this.getCheck();
@@ -40,11 +69,7 @@ const CheckScreenshot = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-
-
-
-
-              just hanging out
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>
