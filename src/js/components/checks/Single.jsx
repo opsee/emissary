@@ -7,13 +7,14 @@ import {bindActionCreators} from 'redux';
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Edit, Delete, Mail} from '../icons';
+import {Edit, Delete} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import {checks as actions} from '../../actions';
+import NotificationItemList from './NotificationItemList';
 import HttpRequestItem from './HttpRequestItem';
 
 const CheckSingle = React.createClass({
@@ -38,12 +39,6 @@ const CheckSingle = React.createClass({
       return c.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
-  getLink(){
-    const group = this.getCheck().get('target');
-    return (
-      <span>{group.name || group.id}</span>
-    );
-  },
   getResponses(){
     return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
   },
@@ -57,13 +52,7 @@ const CheckSingle = React.createClass({
       return (
         <Padding b={1}>
           <h3>Notifications</h3>
-          <ul className="list-unstyled">
-          {this.getCheck().get('notifications').map((n, i) => {
-            return (
-              <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
-            );
-          })}
-          </ul>
+          <NotificationItemList notifications={notifs} />
         </Padding>
       );
     }
@@ -106,6 +95,7 @@ const CheckSingle = React.createClass({
             <h3>Assertions</h3>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
+
           {this.renderNotifications()}
         </div>
       );
