@@ -91,6 +91,7 @@ const CheckSingle = React.createClass({
     if (this.getCheck().get('name')){
       const spec = this.getCheck().get('check_spec').value;
       const target = this.getCheck().get('target');
+
       return (
         <div>
           {this.renderTarget()}
