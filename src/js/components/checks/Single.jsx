@@ -7,13 +7,15 @@ import {bindActionCreators} from 'redux';
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Edit, Delete, Mail} from '../icons';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Edit, Delete} from '../icons';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import {checks as actions} from '../../actions';
+import NotificationItemList from './NotificationItemList';
+import HttpRequestItem from './HttpRequestItem';
 
 const CheckSingle = React.createClass({
   propTypes: {
@@ -37,25 +39,8 @@ const CheckSingle = React.createClass({
       return c.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
-  getLink(){
-    const group = this.getCheck().get('target');
-    return (
-      <span>{group.name || group.id}</span>
-    );
-  },
   getResponses(){
     return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
-  },
-  getSingleResponse(){
-    const data = this.getResponses();
-    let val;
-    if (data && data.size){
-      let response = this.getResponses().toJS();
-      if (response && response.length){
-        val = _.get(response[0], 'response.value');
-      }
-    }
-    return val;
   },
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
@@ -67,13 +52,7 @@ const CheckSingle = React.createClass({
       return (
         <Padding b={1}>
           <h3>Notifications</h3>
-          <ul className="list-unstyled">
-          {this.getCheck().get('notifications').map((n, i) => {
-            return (
-              <li key={`notif-${i}`}><Mail fill="text" inline/> {n.value}</li>
-            );
-          })}
-          </ul>
+          <NotificationItemList notifications={notifs} />
         </Padding>
       );
     }
@@ -100,14 +79,14 @@ const CheckSingle = React.createClass({
   renderInner(){
     if (this.getCheck().get('name')){
       const spec = this.getCheck().get('check_spec').value;
+      const target = this.getCheck().get('target');
+
       return (
         <div>
           {this.renderTarget()}
           <Padding b={1}>
             <h3>HTTP Request</h3>
-            <Alert bsStyle="default" style={{wordBreak: 'break-all'}}>
-              <strong>{spec.verb}</strong> {spec.protocol}://{this.getLink()}:<span>{spec.port}</span>{spec.path}
-            </Alert>
+            <HttpRequestItem spec={spec} target={target} />
           </Padding>
           <Padding b={1}>
             <CheckResponsePaginate responses={this.getResponses()}/>
@@ -116,6 +95,7 @@ const CheckSingle = React.createClass({
             <h3>Assertions</h3>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
+
           {this.renderNotifications()}
         </div>
       );
