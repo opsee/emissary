@@ -6,6 +6,7 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {List, Map} from 'immutable';
 import {Toolbar} from '../global';
+import AssertionItemList from './AssertionItemList';
 
 const CheckScreenshot = React.createClass({
 
@@ -47,6 +48,7 @@ const CheckScreenshot = React.createClass({
 
           <Padding b={1}>
             <h3>Assertions</h3>
+            <AssertionItemList assertions={check.get('assertions')}/>
           </Padding>
 
           <Padding b={1}>
