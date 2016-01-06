@@ -54,8 +54,9 @@ const InstanceItemList = React.createClass({
     };
   },
   getInstances(noFilter){
-    const type = this.props.type;
-    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances[this.props.type.toLowerCase()];
+    const {type} = this.props;
+    const translated = type === 'EC2' ? 'ECC' : type;
+    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances[translated.toLowerCase()];
     if (noFilter){
       return data;
     }
