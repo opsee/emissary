@@ -19,7 +19,8 @@ const BastionRequirement = React.createClass({
       }),
       asyncActions: PropTypes.shape({
         envGetBastions: PropTypes.object
-      })
+      }),
+      user: PropTypes.object
     })
   },
   getInitialState() {
@@ -102,7 +103,7 @@ const BastionRequirement = React.createClass({
     );
   },
   render() {
-    if (this.isBastionConnected() || config.skipBastionRequirement){
+    if (this.isBastionConnected() || config.skipBastionRequirement || !this.props.redux.user.get('id')){
       return (
         <div>
           {this.props.children}
