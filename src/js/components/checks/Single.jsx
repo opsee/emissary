@@ -46,17 +46,6 @@ const CheckSingle = React.createClass({
   getResponses(){
     return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
   },
-  getSingleResponse(){
-    const data = this.getResponses();
-    let val;
-    if (data && data.size){
-      let response = this.getResponses().toJS();
-      if (response && response.length){
-        val = _.get(response[0], 'response.value');
-      }
-    }
-    return val;
-  },
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
   },
