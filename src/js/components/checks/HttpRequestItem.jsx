@@ -8,8 +8,7 @@ export default React.createClass({
     target: PropTypes.object.isRequired
   },
   render() {
-    const spec = this.props.spec;
-    const target = this.props.target;
+    const {spec, target} = this.props;
     const targetLabel = target.name || target.id;
 
     return (
