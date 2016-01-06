@@ -39,12 +39,6 @@ const CheckSingle = React.createClass({
       return c.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
-  getLink(){
-    const group = this.getCheck().get('target');
-    return (
-      <span>{group.name || group.id}</span>
-    );
-  },
   getResponses(){
     return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
   },
