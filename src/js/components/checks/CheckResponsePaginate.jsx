@@ -258,33 +258,6 @@ const CheckResponsePaginate = React.createClass({
     }
     return <div/>;
   },
-  // renderBoolArea(){
-  //   if (this.props.showBoolArea){
-  //     const passing = this.getNumberPassing();
-  //     const failing = this.getNumberFailing();
-  //     return (
-  //       <table style={{'textAlign':'center',width:'100%'}}>
-  //       <tbody>
-  //       <tr>
-  //       <td style={{border:'1px solid #555'}}>
-  //       <Padding a={1}>
-  //         <div>{this.getNumberPassing()}</div>
-  //         Passing
-  //       </Padding>
-  //           </td>
-  //       <td style={{border:'1px solid #555'}}>
-  //       <Padding a={1}>
-  //         <div>{this.getNumberFailing()}</div>
-  //         Failing
-  //       </Padding>
-  //           </td>
-  //         </tr>
-  //       </tbody>
-  //     </table>
-  //     );
-  //   }
-  //   return <div/>;
-  // },
   renderFlippers(){
     if (this.getResponses().size > 1){
       return (
