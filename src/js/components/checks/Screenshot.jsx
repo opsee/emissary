@@ -46,6 +46,7 @@ const CheckScreenshot = React.createClass({
         <div>
           <Padding b={1}>
             <h3>Target</h3>
+            <div>{target.name || target.id}</div>
           </Padding>
 
           <Padding b={1}>
