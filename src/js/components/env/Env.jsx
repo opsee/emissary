@@ -38,7 +38,7 @@ const Env = React.createClass({
   },
   getInitialState(){
     const path = this.props.location.pathname;
-    let include = ['groupsSecurity', 'groupsELB', 'instancesECC'];
+    let include;
     if (path){
       if (path.match('groups-security')){
         include = ['groupsSecurity'];
@@ -60,7 +60,7 @@ const Env = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
                 </BastionRequirement>
               </Col>
             </Row>

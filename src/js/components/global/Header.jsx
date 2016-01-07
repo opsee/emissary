@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checkmark, Help, Cloud, Login} from '../icons';
+import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import colors from 'seedling/colors';
 
@@ -45,7 +45,7 @@ const Header = React.createClass({
       <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
-           <Checkmark nav/>&nbsp;
+           <Checks nav/>&nbsp;
            <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
