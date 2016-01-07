@@ -12,7 +12,9 @@ import {
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
   GET_INSTANCE_ECC,
-  GET_INSTANCES_ECC
+  GET_INSTANCES_ECC,
+  GET_INSTANCE_RDS,
+  GET_INSTANCES_RDS
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -80,24 +82,23 @@ const statics = {
     return new GroupElb(newData);
   },
   groupSecurityFromJS(state, data){
-    let instances = data.instances;
     let newData = data.group || data;
     newData.instance_count = data.instance_count;
-    if (!instances){
-      instances = state.instances.ecc.toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
-      });
-    }
-    if (instances.size){
-      instances = instances.toJS();
-    }
-    if (instances.length){
-      newData.instances = new List(instances.map(instance => {
-        const results = instance.results;
-        return statics.instanceEccFromJS({instance, results});
-      }));
-    }
-    //TODO - make sure status starts working when coming from api, have to code it like meta below
+    // let instances = data.instances;
+    // if (!instances){
+    //   instances = state.instances.ecc.toJS().filter(instance => {
+    //     return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
+    //   });
+    // }
+    // if (instances.size){
+    //   instances = instances.toJS();
+    // }
+    // if (instances.length){
+    //   newData.instances = new List(instances.map(instance => {
+    //     const results = instance.results;
+    //     return statics.instanceEccFromJS({instance, results});
+    //   }));
+    // }
     newData.meta = fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
@@ -128,16 +129,18 @@ const statics = {
     return newData && newData.length ? fromJS(newData) : List();
   },
   getInstanceRdsSuccess(state, data){
-    if (data && data.instances){
-      let newData = data.instances;
-      newData.type = 'RDS';
-      newData.groups = newData.SecurityGroups;
-      return statics.instanceRdsFromJS(newData);
+    const arr = state.instances.rds;
+    const single = statics.instanceRdsFromJS(data);
+    const index = arr.findIndex(item => {
+      return item.get('id') === single.get('id');
+    });
+    if (index > -1){
+      return arr.update(index, () => single);
     }
+    return arr.concat(new List([single]));
   },
   getInstancesRdsSuccess(state, data){
     let newData = _.chain(data)
-    .uniq('InstanceId')
     .map(statics.instanceRdsFromJS)
     .sortBy(i => {
       return i.name.toLowerCase();
@@ -152,19 +155,29 @@ const statics = {
     }
     return launchTime;
   },
-  instanceRdsFromJS(data){
-    let newData = data.instance || data;
-    newData.id = newData.DbiResourceId;
-    newData.name = newData.DBName;
+  instanceRdsFromJS(raw){
+    let data = raw.instance;
+    let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
+    if (!newData.results){
+      newData.results = raw.results || data.results;
+    }
+    newData.id = newData.name = newData.DBInstanceIdentifier;
+    if (newData.DBName !== newData.id){
+      newData.name = `${newData.DBName} - ${newData.id}`;
+    }
     newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
+    newData.type = 'RDS';
+    newData.VpcSecurityGroups = new List(newData.VpcSecurityGroups.map(g => fromJS(g)));
+    _.assign(newData, result.getFormattedData(newData));
+    if (newData.checks && newData.checks.size && !newData.results.size){
+      newData.state = 'initializing';
+    }
+    newData.meta = fromJS(newData.meta);
     return new InstanceRds(newData);
   },
   instanceEccFromJS(raw){
     let data = raw.instance;
     let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
-    if (newData.DBInstanceIdentifier){
-      return statics.instanceRdsFromJS(newData);
-    }
     if (!newData.results){
       newData.results = raw.results || data.results;
     }
@@ -247,6 +260,20 @@ export default handleActions({
     next(state, action){
       const ecc = statics.getInstancesEccSuccess(state, action.payload);
       const data = _.assign({}, state.instances, {ecc});
+      return _.assign({}, state, {instances: data});
+    }
+  },
+  [GET_INSTANCE_RDS]: {
+    next(state, action){
+      const rds = statics.getInstanceRdsSuccess(state, action.payload);
+      const data = _.assign({}, state.instances, {rds});
+      return _.assign({}, state, {instances: data});
+    }
+  },
+  [GET_INSTANCES_RDS]: {
+    next(state, action){
+      const rds = statics.getInstancesRdsSuccess(state, action.payload);
+      const data = _.assign({}, state.instances, {rds});
       return _.assign({}, state, {instances: data});
     }
   },

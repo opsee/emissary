@@ -50,17 +50,11 @@ const InstanceRds = React.createClass({
       return _.pluck(this.getInstance().groups.toJS(), 'id');
     }
   },
-  renderAvailabilityZone(){
-    const az = _.get(this.getInstance().get('Placement'), 'AvailabilityZone');
-    if (az){
-      return (
-        <tr>
-          <td><strong>Availability Zone</strong></td>
-          <td>{az}</td>
-        </tr>
-      );
+  getGroupsSecurity(){
+    if (this.getInstance().get('name')){
+      return _.pluck(this.getInstance().toJS().VpcSecurityGroups, 'VpcSecurityGroupId');
     }
-    return <tr/>;
+    return [];
   },
   renderLastChecked(){
     const d = this.getInstance().get('lastChecked');
@@ -76,16 +70,33 @@ const InstanceRds = React.createClass({
     }
     return <tr/>;
   },
+  renderCreateCheckButton(){
+    if (window.ldclient.toggle('rds-checks')) {
+      return (
+        <Padding b={2}>
+          <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=RDS&name=${this.getInstance().get('name')}`} title="Create New Check">
+            <Add fill="primary" inline/> Create a Check
+          </Button>
+        </Padding>
+      );
+    }
+    return <div/>;
+  },
+  renderChecks(){
+    if (window.ldclient.toggle('rds-checks')) {
+      return (
+        <Padding b={1}>
+          <CheckItemList type="instance" target={this.props.params.id} title/>
+        </Padding>
+      );
+    }
+    return <div/>;
+  },
   renderInner(){
     if (this.getInstance().get('name')){
       return (
         <div>
-          <Padding b={2}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=EC2&name=${this.getInstance().get('name')}`} title="Create New Check">
-              <Add fill="primary" inline/> Create a Check
-            </Button>
-          </Padding>
-
+          {this.renderCreateCheckButton()}
           <Padding b={1}>
             <h3>{this.props.params.id} Information</h3>
             <Table>
@@ -96,15 +107,27 @@ const InstanceRds = React.createClass({
                 </td>
               </tr>
               <tr>
-                <td><strong>Instance Type</strong></td>
-                <td>{this.getInstance().get('InstanceType')}</td>
+                <td><strong>Public</strong></td>
+                <td>{this.getInstance().get('PubliclyAccessible') ? 'Yes' : 'No'}</td>
               </tr>
-              {this.renderAvailabilityZone()}
+              <tr>
+                <td><strong>Engine</strong></td>
+                <td>{this.getInstance().get('Engine')} {this.getInstance().get('EngineVersion')}</td>
+              </tr>
+              <tr>
+                <td><strong>Instance Type</strong></td>
+                <td>{this.getInstance().get('DBInstanceClass')}</td>
+              </tr>
+              <tr>
+                <td><strong>Availability Zone</strong></td>
+                <td>{this.getInstance().get('AvailabilityZone')}</td>
+              </tr>
               {this.renderLastChecked()}
             </Table>
           </Padding>
+          {this.renderChecks()}
           <Padding b={1}>
-            <CheckItemList type="instance" target={this.props.params.id} title/>
+            <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>
           </Padding>
           <Padding tb={1}>
             <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
@@ -117,7 +140,7 @@ const InstanceRds = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
+        <Toolbar title={`RDS DB Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
         <Grid>
           <Row>
             <Col xs={12}>

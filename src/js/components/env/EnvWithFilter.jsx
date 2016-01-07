@@ -47,7 +47,13 @@ const EnvWithFilter = React.createClass({
     onTargetSelect: PropTypes.func,
     noModal: PropTypes.bool,
     limit: PropTypes.number,
-    actions: PropTypes.object,
+    actions: PropTypes.shape({
+      getGroupsSecurity: PropTypes.func,
+      getGroupsElb: PropTypes.func,
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func,
+      envSetSearch: PropTypes.func
+    }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       env: PropTypes.shape({
@@ -56,7 +62,8 @@ const EnvWithFilter = React.createClass({
           elb: PropTypes.object
         }),
         instances: PropTypes.shape({
-          ecc: PropTypes.object
+          ecc: PropTypes.object,
+          rds: PropTypes.object
         }),
         bastions: PropTypes.array,
         search: PropTypes.string
@@ -65,7 +72,7 @@ const EnvWithFilter = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groupsSecurity', 'groupsELB', 'instancesECC']
+      include: ['groupsSecurity', 'groupsELB', 'instancesRds', 'instancesECC']
     };
   },
   getInitialState() {
@@ -105,11 +112,12 @@ const EnvWithFilter = React.createClass({
     this.props.actions.getGroupsSecurity();
     this.props.actions.getGroupsElb();
     this.props.actions.getInstancesEcc();
+    this.props.actions.getInstancesRds();
   },
   getAll(){
     let arr = new List();
-    const dataArray = [this.getGroupsSecurity(true), this.getGroupsELB(true), this.getInstances(true)];
-    const includes = ['groupsSecurity', 'groupsELB', 'instancesECC'];
+    const dataArray = [this.getGroupsSecurity(true), this.getGroupsELB(true), this.getInstancesECC(true), this.getInstancesRds(true)];
+    const includes = ['groupsSecurity', 'groupsELB', 'instancesECC', 'instancesRds'];
     includes.forEach((include, i) => {
       if (this.props.include.indexOf(include) > -1){
         arr = arr.concat(dataArray[i]);
@@ -155,8 +163,11 @@ const EnvWithFilter = React.createClass({
   getGroupsELB(ignoreButtonState){
     return this.getFilteredItems(this.props.redux.env.groups.elb, ignoreButtonState);
   },
-  getInstances(ignoreButtonState){
+  getInstancesECC(ignoreButtonState){
     return this.getFilteredItems(this.props.redux.env.instances.ecc, ignoreButtonState);
+  },
+  getInstancesRds(ignoreButtonState){
+    return this.getFilteredItems(this.props.redux.env.instances.rds, ignoreButtonState);
   },
   isFinishedAttempt(){
     return this.props.redux.asyncActions.getGroupsSecurity.status;
@@ -222,8 +233,8 @@ const EnvWithFilter = React.createClass({
     if (this.props.redux.env.instances.ecc.size){
       return (
         <div key="instancesECC">
-          <h3>Instances ({this.getInstances().size})</h3>
-          <InstanceItemList instances={this.getInstances()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
+          <h3>EC2 Instances ({this.getInstancesECC().size})</h3>
+          <InstanceItemList instances={this.getInstancesECC()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
       );
@@ -233,6 +244,26 @@ const EnvWithFilter = React.createClass({
         <h3>EC2 Instances</h3>
         <Alert bsStyle="default">
           No EC2 Instances found
+        </Alert>
+        <hr/>
+      </StatusHandler>
+    );
+  },
+  renderInstancesRds(){
+    if (this.props.redux.env.instances.ecc.size){
+      return (
+        <div key="instancesRds">
+          <h3>RDS DB Instances ({this.getInstancesRds().size})</h3>
+          <InstanceItemList instances={this.getInstancesRds()} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit}/>
+          <hr/>
+        </div>
+      );
+    }
+    return (
+      <StatusHandler status={this.props.redux.asyncActions.getInstancesRds.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesRdsStatus">
+        <h3>RDS DB Instances</h3>
+        <Alert bsStyle="default">
+          No RDS Instances found
         </Alert>
         <hr/>
       </StatusHandler>

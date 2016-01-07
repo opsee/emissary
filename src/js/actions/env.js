@@ -11,14 +11,14 @@ import {
   GET_GROUPS_ELB,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
+  GET_INSTANCE_RDS,
+  GET_INSTANCES_RDS,
   FILTER_ENV,
   ENV_SET_SEARCH,
   ENV_GET_BASTIONS,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
   AWS_STOP_INSTANCES
-  // GET_INSTANCE_RDS,
-  // GET_INSTANCES_RDS
 } from './constants';
 
 export function getGroupSecurity(id){
@@ -137,6 +137,38 @@ export function getInstancesEcc(){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body.instances);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function getInstancesRds(){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_INSTANCES_RDS,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/instances/rds`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => {
+          resolve(res.body.instances);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function getInstanceRds(id){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_INSTANCE_RDS,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.api}/instances/rds/${id}`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => {
+          resolve(res.body);
         }, reject);
       })
     });
