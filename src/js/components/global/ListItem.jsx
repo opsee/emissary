@@ -11,7 +11,6 @@ import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
 import cx from 'classnames';
-import ContextMenu from './ContextMenu';
 import RadialGraph from './RadialGraph';
 import {app as actions} from '../../actions';
 
@@ -84,7 +83,8 @@ const ListItem = React.createClass({
     );
   },
   renderMenuButton(){
-    if (this.props.noMenu){
+    const menu = _.find(this.props.children, {key: 'menu'});
+    if (!menu){
       return <div/>;
     }
     if (this.props.onClick){
@@ -101,14 +101,7 @@ const ListItem = React.createClass({
     );
   },
   renderMenu(){
-    if (this.props.noMenu){
-      return _.find(this.props.children, {key: 'menu'}) || <div/>;
-    }
-    return (
-      <ContextMenu title={this.props.menuTitle} id={this.props.item.get('id')}>
-        {_.find(this.props.children, {key: 'menu'})}
-      </ContextMenu>
-    );
+    return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
   render(){
     return (
