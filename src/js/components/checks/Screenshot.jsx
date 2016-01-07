@@ -2,9 +2,9 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {checks as actions} from '../../actions';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import {List, Map} from 'immutable';
+import {Map} from 'immutable';
 import {Toolbar} from '../global';
 import AssertionItemList from './AssertionItemList';
 import NotificationItemList from './NotificationItemList';
@@ -33,8 +33,7 @@ const CheckScreenshot = React.createClass({
     const check = this.getCheck();
     const responses = check.get('results').first().get('responses');
 
-    return responses
-      .filter(response => !response.passing)
+    return responses.filter(response => !response.passing);
   },
   renderInner() {
     const check = this.getCheck();
@@ -55,7 +54,6 @@ const CheckScreenshot = React.createClass({
           </Padding>
 
           <Padding b={1}>
-            <h3>Responses</h3>
             <CheckResponsePaginate responses={this.getFailingResponses().take(1)} />
           </Padding>
 
