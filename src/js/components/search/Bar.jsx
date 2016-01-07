@@ -12,13 +12,15 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Search, Circle} from '../icons';
 import {Padding} from '../layout';
 import {search as actions} from '../../actions';
+import style from './bar.css';
 
 const SearchForm = forms.Form.extend({
   search: forms.CharField({
     label: 'Search',
     widgetAttrs: {
       placeholder: 'What are you looking for?',
-      noLabel: true
+      noLabel: true,
+      id: 'universal-search'
     },
     required: false
   }),
@@ -38,12 +40,15 @@ const SearchBar = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      search: new SearchForm(null, _.assign({
+      search: new SearchForm({search: this.props.redux.search.string}, _.assign({
         onChange: self.handleSearch,
         labelSuffix: '',
         validation: {
           on: 'blur change',
           onChangeDelay: 250
+        },
+        initial: {
+          search: this.props.redux.search.string
         }
       })),
     };
@@ -52,19 +57,25 @@ const SearchBar = React.createClass({
     });
   },
   handleSearch(){
-    this.props.actions.set(this.state.search.cleanedData);
+    this.props.actions.set(this.state.search.cleanedData.search);
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    this.props.actions.set(this.state.search.cleanedData.search);
   },
   render(){
     return (
-      <Grid>
-        <Row>
-          <Col xs={12}>
-            <form name="envWithFilterForm">
-              {this.state.search.render()}
-            </form>
-          </Col>
-        </Row>
-      </Grid>
+      <form name="envWithFilterForm" className={style.form} onSubmit={this.handleSubmit}>
+        <label htmlFor="universal-search" className={style.label}>
+          <Grid>
+            <Row>
+              <Col xs={12}>
+                {this.state.search.render()}
+              </Col>
+            </Row>
+          </Grid>
+        </label>
+      </form>
     );
   }
 });

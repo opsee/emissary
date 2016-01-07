@@ -105,9 +105,9 @@ const GroupItemList = React.createClass({
   getStatus(){
     switch (this.props.type){
     case 'elb':
-      return this.props.redux.asyncActions.getGroupsElb.status;
+      return this.props.redux.asyncActions.getGroupsElb;
     default:
-      return this.props.redux.asyncActions.getGroupsSecurity.status;
+      return this.props.redux.asyncActions.getGroupsSecurity;
     }
   },
   isSelected(id){
@@ -150,7 +150,7 @@ const GroupItemList = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.getStatus()} noFallback={this.props.noFallback}>
+      <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
         <Alert bsStyle="default">No groups found</Alert>
       </StatusHandler>
     );

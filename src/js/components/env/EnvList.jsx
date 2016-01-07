@@ -18,27 +18,7 @@ import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
 import {env as actions} from '../../actions';
 
-const FilterForm = forms.Form.extend({
-  filter: forms.CharField({
-    label: 'Filter',
-    widgetAttrs: {
-      placeholder: 'What are you looking for?',
-      noLabel: true
-    },
-    required: false
-  }),
-  render() {
-    return (
-      <Padding b={1}>
-        <BoundField bf={this.boundField('filter')}>
-          <Search className="icon"/>
-        </BoundField>
-      </Padding>
-    );
-  }
-});
-
-const EnvWithFilter = React.createClass({
+const EnvList = React.createClass({
   mixins: [SetInterval],
   propTypes: {
     include: PropTypes.array,
@@ -78,35 +58,15 @@ const EnvWithFilter = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      filter: new FilterForm(_.assign({
-        onChange: self.onFilterChange,
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 50
-        }
-      }, this.getFilter() ? {data: {filter: this.getFilter()}} : null)),
       attemptedGroupsSecurity: false,
       attemptedGroupsELB: false,
-      attemptedInstancesECC: false,
-      selected: _.get(this.props, 'check.target.id') || null
+      attemptedInstancesECC: false
     };
-    //this is a workaround because the library is not working correctly with initial + data formset
-    if (this.getFilter()){
-      setTimeout(() => {
-        this.state.filter.setData({filter: this.getFilter()});
-      }, 50);
-    }
-    return _.extend(obj, {
-      cleanedData: null
-    });
+    return obj;
   },
   componentWillMount(){
     this.getData();
     this.setInterval(this.getData, 25000);
-  },
-  getFilter(){
-    return this.props.redux.env.search || this.props.filter;
   },
   getData(){
     this.props.actions.getGroupsSecurity();
@@ -141,7 +101,7 @@ const EnvWithFilter = React.createClass({
     }).size;
   },
   getFilteredItems(items, ignoreButtonState){
-    const string = this.props.redux.env.search || this.state.filter.cleanedData.filter;
+    const string = this.props.filter;
     let data = items.sortBy(item => {
       return item.get('health') || 101;
     });
@@ -179,7 +139,7 @@ const EnvWithFilter = React.createClass({
   onFilterChange(){
     this.forceUpdate();
     const data =  this.state.filter.cleanedData.filter;
-    analytics.event('EnvWithFilter', 'filter-change', {data});
+    analytics.event('EnvList', 'filter-change', {data});
     this.props.actions.envSetSearch(data);
     if (this.props.onFilterChange){
       this.props.onFilterChange.call(null, data);
@@ -321,18 +281,13 @@ const EnvWithFilter = React.createClass({
   },
   render(){
     const self = this;
-    // if (this.isFinishedAttempt()){
     return (
       <form name="envWithFilterForm">
-        {this.state.filter.render()}
-        {this.renderFilterButtons()}
         {this.props.include.map(i => {
           return self[`render${_.capitalize(i)}`]();
         })}
       </form>
     );
-    // }
-    // return <StatusHandler status="pending"/>;
   }
 });
 
@@ -344,4 +299,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnvWithFilter);
+export default connect(mapStateToProps, mapDispatchToProps)(EnvList);

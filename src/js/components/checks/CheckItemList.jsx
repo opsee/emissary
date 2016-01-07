@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import _ from 'lodash';
+import fuzzy from 'fuzzy';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../../modules/bootstrap';
@@ -18,6 +19,7 @@ const CheckItemList = React.createClass({
       PropTypes.string,
       PropTypes.array
     ]),
+    filter: PropTypes.string,
     title: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -45,10 +47,16 @@ const CheckItemList = React.createClass({
   },
   getChecks(){
     let data = this.props.redux.checks.checks;
+    const {filter} = this.props;
     if (this.props.target){
       let tar = !Array.isArray(this.props.target) ? [this.props.target] : this.props.target;
       data = data.filter(c => {
         return tar.indexOf(c.get('target').id) > -1;
+      });
+    }
+    if (filter){
+      return data.filter(item => {
+        return fuzzy.filter(filter, [item.get('name'), item.get('id')]).length;
       });
     }
     return data.sortBy(item => {
@@ -73,9 +81,12 @@ const CheckItemList = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-        <Alert bsStyle="default">No checks applied</Alert>
-      </StatusHandler>
+      <div>
+        {this.renderTitle()}
+        <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
+          <Alert bsStyle="default">No checks found</Alert>
+        </StatusHandler>
+      </div>
     );
   }
 });

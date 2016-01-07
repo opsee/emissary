@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
 import {handleActions} from 'redux-actions';
+import {parse} from 'query-string';
 import {
   SEARCH_SET
 } from '../actions/constants';
 
 const initial = {
-  string: undefined
+  string: parse(location.search).s
 };
 
 export default handleActions({

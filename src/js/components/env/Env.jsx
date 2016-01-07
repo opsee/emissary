@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
-import EnvWithFilter from './EnvWithFilter.jsx';
+import EnvList from './EnvList.jsx';
 import {State} from 'react-router';
 import {env as actions} from '../../actions';
 import _ from 'lodash';
@@ -60,7 +60,7 @@ const Env = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                  <EnvList include={this.state.include} filter={this.props.location.query.search} limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
                 </BastionRequirement>
               </Col>
             </Row>

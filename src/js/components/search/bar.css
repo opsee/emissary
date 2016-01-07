@@ -1,0 +1,11 @@
+@import '../global/vars.css';
+
+.form input:hover, .form input:active, .form input:focus{
+  background-color: var(--gray900) !important;
+}
+
+.label{
+  display: block;
+  width:100%;
+  background-color: var(--gray900);
+}

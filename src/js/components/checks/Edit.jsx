@@ -11,7 +11,7 @@ import CheckCreateInfo from './CheckCreateInfo.jsx';
 import {Checkmark, Close, Delete} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import {EnvWithFilter} from '../env';
+import {EnvList} from '../env';
 import {Button} from '../forms';
 import {checks as actions, env as envActions} from '../../actions';
 import {Check} from '../../modules/schemas';
@@ -116,7 +116,7 @@ const CheckEdit = React.createClass({
     if (this.state.showEnv){
       return (
         <Padding tb={1}>
-          <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
+          <EnvList onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         </Padding>
       );
     }

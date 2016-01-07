@@ -1,4 +1,4 @@
-import {pushState} from 'redux-router';
+import {pushState, replaceState} from 'redux-router';
 
 import config from '../modules/config';
 import request from '../modules/request';
@@ -13,7 +13,11 @@ export function set(string){
       payload: new Promise((resolve, reject) => {
         if (state().router.location.pathname !== '/search'){
           setTimeout(() => {
-            dispatch(pushState(null, '/search'));
+            dispatch(pushState(null, `/search?s=${string}`));
+          }, 40);
+        }else {
+          setTimeout(() => {
+            dispatch(replaceState(null, `/search?s=${string}`));
           }, 40);
         }
         return resolve(string);
