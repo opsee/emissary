@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {user as actions} from '../../actions';
 import {Padding} from '../layout';
+import {flag} from '../../modules';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
 
@@ -110,7 +111,7 @@ const Survey = React.createClass({
     return <div/>;
   },
   render() {
-    if (window.ldclient.toggle('onboard-install-survey')) {
+    if (flag('onboard-install-survey')) {
       return (
         <Padding t={3}>
           <form>
