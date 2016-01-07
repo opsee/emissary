@@ -15,6 +15,7 @@ export const AlarmOff = i('AlarmOff', 'M12 6c3.87 0 7 3.13 7 7 0 .84-.16 1.65-.4
 export const ArrowRight = i('ArrowRight', 'M12,4l-1.4,1.4l5.6,5.6H4v2h12.2l-5.6,5.6L12,20l8-8L12,4z');
 export const Box = i('Box', 'M20.8,3.2v17.6H3.2V3.2H20.8 M22.5,1.5h-1.7H3.2H1.5v1.7v17.6v1.7h1.7h17.6h1.7v-1.7V3.2V1.5 L22.5,1.5z');
 export const Chat = i('Chat', 'M20,2H4C2.9,2,2,2.9,2,4l0,18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z M6,9h12v2H6V9z M14,14H6v-2h8V14z M18,8H6V6h12V8z');
+export const Checks = i('Checks', 'M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M12,20v-3.2l-1.8,1.8l-6-6L7.8,9l2.4,2.4L12,9.6V4c4.4,0,8,3.6,8,8C20,16.4,16.4,20,12,20z M6.3,12.6l1.5-1.5l2.4,2.4l6-6L17.7,9l-7.5,7.5L6.3,12.6z');
 export const Checkmark = i('Checkmark', 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z');
 export const ChevronDown = i('ChevronDown', 'M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z');
 export const ChevronLeft = i('ChevronLeft', 'M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z');
