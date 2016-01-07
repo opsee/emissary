@@ -161,8 +161,10 @@ const statics = {
     if (!newData.results){
       newData.results = raw.results || data.results;
     }
-    newData.id = newData.DBInstanceIdentifier;
-    newData.name = `${newData.DBName} - ${newData.id}`;
+    newData.id = newData.name = newData.DBInstanceIdentifier;
+    if (newData.DBName !== newData.id){
+      newData.name = `${newData.DBName} - ${newData.id}`;
+    }
     newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
     newData.type = 'RDS';
     newData.VpcSecurityGroups = new List(newData.VpcSecurityGroups.map(g => fromJS(g)));
