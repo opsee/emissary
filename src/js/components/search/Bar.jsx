@@ -1,11 +1,17 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import colors from 'seedling/colors';
-import {BoundField} from '../forms';
+import forms from 'newforms';
+import _ from 'lodash';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
+import {BoundField} from '../forms';
 import {Person, Checkmark, Help, Cloud, Login} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Search, Circle} from '../icons';
+import {Padding} from '../layout';
+import {search as actions} from '../../actions';
 
 const SearchForm = forms.Form.extend({
   search: forms.CharField({
@@ -16,43 +22,37 @@ const SearchForm = forms.Form.extend({
     },
     required: false
   }),
+  constructor(data, kwargs){
+    forms.Form.call(this, kwargs);
+  },
   render() {
     return (
-      <Padding b={1}>
-        <BoundField bf={this.boundField('search')}>
-          <Search className="icon"/>
-        </BoundField>
-      </Padding>
+      <BoundField bf={this.boundField('search')}>
+        <Search className="icon"/>
+      </BoundField>
     );
-  }
+  },
 });
 
-const Header = React.createClass({
-  propTypes: {
-    user: PropTypes.object.isRequired,
-    hide: PropTypes.bool
-  },
+const SearchBar = React.createClass({
   getInitialState() {
     const self = this;
     const obj = {
-      search: new SearchForm(_.assign({
-        onChange: self.onFilterChange,
+      search: new SearchForm(null, _.assign({
+        onChange: self.handleSearch,
         labelSuffix: '',
         validation: {
           on: 'blur change',
-          onChangeDelay: 50
+          onChangeDelay: 250
         }
-      }, this.getFilter() ? {data: {filter: this.getFilter()}} : null)),
+      })),
     };
-    //this is a workaround because the library is not working correctly with initial + data formset
-    if (this.getFilter()){
-      setTimeout(() => {
-        this.state.filter.setData({filter: this.getFilter()});
-      }, 50);
-    }
     return _.extend(obj, {
       cleanedData: null
     });
+  },
+  handleSearch(){
+    this.props.actions.set(this.state.search.cleanedData);
   },
   render(){
     return (
@@ -69,4 +69,12 @@ const Header = React.createClass({
   }
 });
 
-export default Header;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
