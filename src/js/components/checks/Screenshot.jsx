@@ -9,6 +9,7 @@ import {Toolbar} from '../global';
 import AssertionItemList from './AssertionItemList';
 import NotificationItemList from './NotificationItemList';
 import HttpRequestItem from './HttpRequestItem';
+import CheckResponsePaginate from './CheckResponsePaginate';
 
 const CheckScreenshot = React.createClass({
 
@@ -27,6 +28,13 @@ const CheckScreenshot = React.createClass({
   getCheck() {
     const check = this.props.redux.checks.checks.first();
     return check || new Map({id: this.props.params.id});
+  },
+  getFailingResponses() {
+    const check = this.getCheck();
+    const responses = check.get('results').first().get('responses');
+
+    return responses
+      .filter(response => !response.passing)
   },
   renderInner() {
     const check = this.getCheck();
@@ -48,6 +56,7 @@ const CheckScreenshot = React.createClass({
 
           <Padding b={1}>
             <h3>Responses</h3>
+            <CheckResponsePaginate responses={this.getFailingResponses().take(1)} />
           </Padding>
 
           <Padding b={1}>
