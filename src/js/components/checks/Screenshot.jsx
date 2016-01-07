@@ -55,7 +55,8 @@ const CheckScreenshot = React.createClass({
           </Padding>
 
           <Padding b={1}>
-            <CheckResponsePaginate responses={this.getFailingResponses().take(1)} />
+            <CheckResponsePaginate responses={this.getFailingResponses().take(1)}
+              allowCollapse={false} />
           </Padding>
 
           <Padding b={1}>
