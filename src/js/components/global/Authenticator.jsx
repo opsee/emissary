@@ -15,7 +15,7 @@ export function auth(Component){
     componentWillReceiveProps() {
       this.runCheckAuth();
     },
-    isAuthenticated() {
+    isAuthenticated(){
       return !!(this.props.redux.user.get('token'));
     },
     runCheckAuth() {

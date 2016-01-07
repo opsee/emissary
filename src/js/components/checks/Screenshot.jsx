@@ -79,7 +79,6 @@ const CheckScreenshot = React.createClass({
 
     return (
       <div>
-
         <Toolbar title={check.get('name') || check.get('id')} />
 
         <Grid>
