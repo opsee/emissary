@@ -11,6 +11,7 @@ import {Add, Play, Refresh, Stop} from '../icons';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {env as actions, app as appActions} from '../../actions';
+import {flag} from '../../modules';
 
 const InstanceMenu = React.createClass({
   propTypes: {
@@ -83,7 +84,7 @@ const InstanceMenu = React.createClass({
     });
   },
   renderActions(){
-    if (window.ldclient.toggle('instance-ecc-actions')) {
+    if (flag('instance-ecc-actions')) {
       return (
         <div>
           <Button color="primary" text="left" block flat onClick={this.handleStartClick}>
