@@ -12,21 +12,11 @@ let config = {
   error: false,
   env: process.env.NODE_ENV,
   ghosting: false,
-
   notificaption: {
     hostname: 'localhost',
     port: 8888
   },
-
   revision: __REVISION__,
-
-  /**
-   * When Emissary is in screenshot mode, the Authenticator middleware will not
-   * be used in order for the /check page to be accessible to the notificaption
-   * service.
-   */
-  screenshotMode: true, // FIXME use env variable
-
   slackClientSecret: window.slackClientSecret,
   socket: 'wss://api.opsee.com/stream/'
 };
