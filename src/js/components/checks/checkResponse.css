@@ -25,6 +25,10 @@
   width: 100%;
 }
 
+.checkResponse pre {
+  white-space: pre-wrap;
+}
+
 .checkResponseWaiting {
   composes: checkResponse;
   align-items: center;
