@@ -140,7 +140,7 @@ const InstanceRds = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
+        <Toolbar title={`RDS DB Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
         <Grid>
           <Row>
             <Col xs={12}>

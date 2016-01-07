@@ -72,7 +72,7 @@ const EnvWithFilter = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groupsSecurity', 'groupsELB', 'instancesECC', 'instancesRds']
+      include: ['groupsSecurity', 'groupsELB', 'instancesRds', 'instancesECC']
     };
   },
   getInitialState() {
@@ -253,7 +253,7 @@ const EnvWithFilter = React.createClass({
     if (this.props.redux.env.instances.ecc.size){
       return (
         <div key="instancesRds">
-          <h3>RDS Instances ({this.getInstancesRds().size})</h3>
+          <h3>RDS DB Instances ({this.getInstancesRds().size})</h3>
           <InstanceItemList instances={this.getInstancesRds()} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
@@ -261,7 +261,7 @@ const EnvWithFilter = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getInstancesRds.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesRdsStatus">
-        <h3>RDS Instances</h3>
+        <h3>RDS DB Instances</h3>
         <Alert bsStyle="default">
           No RDS Instances found
         </Alert>
