@@ -45,11 +45,6 @@ const CheckScreenshot = React.createClass({
       return (
         <div>
           <Padding b={1}>
-            <h3>Target</h3>
-            <div>{target.name || target.id}</div>
-          </Padding>
-
-          <Padding b={1}>
             <h3>HTTP Request</h3>
             <HttpRequestItem spec={spec} target={target} />
           </Padding>
