@@ -80,7 +80,7 @@ const System = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
     return (

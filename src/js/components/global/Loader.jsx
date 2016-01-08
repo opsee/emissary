@@ -29,7 +29,7 @@ const Loader = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

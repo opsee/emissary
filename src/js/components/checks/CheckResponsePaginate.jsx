@@ -172,7 +172,7 @@ const CheckResponsePaginate = React.createClass({
         <Alert bsStyle="danger">There was an error sending your request.</Alert>
       );
     }else if (this.props.responses){
-      return <div/>;
+      return null;
     }
     return (
       <div className={style.checkResponseWaiting}>Your response will appear here</div>
@@ -191,7 +191,7 @@ const CheckResponsePaginate = React.createClass({
   renderItem(){
     const res = this.getFormattedResponses()[this.props.redux.checks.selectedResponse];
     if (!res){
-      return <div/>;
+      return null;
     }
     if (res.error){
       return (
@@ -242,7 +242,7 @@ const CheckResponsePaginate = React.createClass({
         </span>
       );
     }
-    return <span/>;
+    return null;
   },
   renderFailing(){
     const failing = this.getNumberFailing();
@@ -255,7 +255,7 @@ const CheckResponsePaginate = React.createClass({
         </span>
       );
     }
-    return <span/>;
+    return null;
   },
   renderBoolArea(){
     if (this.props.showBoolArea){
@@ -269,7 +269,7 @@ const CheckResponsePaginate = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderFlippers(){
     if (this.getResponses().size > 1){
@@ -279,7 +279,7 @@ const CheckResponsePaginate = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderTopArea(){
     const arr = this.getFormattedResponses();
@@ -298,11 +298,11 @@ const CheckResponsePaginate = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
     if (this.props.responses && !this.props.responses.size){
-      return <div/>;
+      return null;
     }else if (this.isWaiting()){
       return this.renderWaiting();
     }else if (this.getResponses().size){

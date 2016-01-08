@@ -128,7 +128,7 @@ const Install = React.createClass({
         </Alert>
       );
     }
-    return <div/>;
+    return null;
   },
   renderText(){
     if (this.isBastionLaunching() && !this.areBastionsComplete() && !this.getBastionErrors().length){
@@ -138,7 +138,7 @@ const Install = React.createClass({
         </Padding>
       );
     }else if (this.areBastionsComplete()){
-      return <div/>;
+      return null;
     }
     return <p>Checking installation status...</p>;
   },

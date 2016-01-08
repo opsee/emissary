@@ -61,7 +61,7 @@ const CheckItem = React.createClass({
         </ListItem>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 
