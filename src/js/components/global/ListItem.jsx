@@ -85,7 +85,7 @@ const ListItem = React.createClass({
   renderMenuButton(){
     const menu = _.find(this.props.children, {key: 'menu'});
     if (!menu){
-      return <div/>;
+      return null;
     }
     if (this.props.onClick){
       return (

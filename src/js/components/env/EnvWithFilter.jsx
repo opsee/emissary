@@ -317,7 +317,7 @@ const EnvWithFilter = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render(){
     const self = this;

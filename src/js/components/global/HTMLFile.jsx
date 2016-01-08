@@ -30,6 +30,6 @@ export default React.createClass({
     }else if (this.state.html){
       return <div dangerouslySetInnerHTML={{__html: this.state.html}}/>;
     }
-    return <div/>;
+    return null;
   }
 });

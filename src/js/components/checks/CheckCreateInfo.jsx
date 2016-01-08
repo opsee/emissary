@@ -222,7 +222,7 @@ const CheckCreateInfo = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (

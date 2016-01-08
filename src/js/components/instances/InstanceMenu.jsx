@@ -99,7 +99,7 @@ const InstanceMenu = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderPage0(){
     const {item} = this.props;
@@ -183,7 +183,7 @@ const InstanceMenu = React.createClass({
         </ContextMenu>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

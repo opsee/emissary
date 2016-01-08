@@ -102,7 +102,7 @@ const CheckCreateTarget = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (

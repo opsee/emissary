@@ -56,7 +56,7 @@ const CheckSingle = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderTarget(){
     const target = this.getCheck().get('target');
@@ -112,7 +112,7 @@ const CheckSingle = React.createClass({
         </Button>
       );
     }
-    return <span/>;
+    return null;
   },
   render() {
     return (

@@ -74,7 +74,7 @@ const Opsee = React.createClass({
   },
   renderInner(){
     if (!this.props.redux.app.ready){
-      return <div/>;
+      return null;
     }
     if (this.props.redux.app.socketError && !config.bypassSocketError){
       return this.renderSocketError();

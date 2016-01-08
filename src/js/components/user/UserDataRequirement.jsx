@@ -42,7 +42,7 @@ const UserDataRequirement = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

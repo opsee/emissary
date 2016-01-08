@@ -285,7 +285,7 @@ const CheckCreateRequest = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderLink(){
     return this.state.check.id ? (
@@ -297,7 +297,7 @@ const CheckCreateRequest = React.createClass({
     const target = this.props.check.target;
     let type = target.type;
     if (!type){
-      return <div/>;
+      return null;
     }
     type = type === 'sg' ? 'security' : type;
     if (type.match('security|elb')){
@@ -319,7 +319,7 @@ const CheckCreateRequest = React.createClass({
         <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (
@@ -338,7 +338,7 @@ const CheckCreateRequest = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderInfoForm(){
     return (

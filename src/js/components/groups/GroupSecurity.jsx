@@ -57,7 +57,7 @@ const GroupSecurity = React.createClass({
     if (desc && desc !== ''){
       return <span>{desc}</span>;
     }
-    return <div/>;
+    return null;
   },
   renderInner(){
     if (this.getGroup().get('name')){

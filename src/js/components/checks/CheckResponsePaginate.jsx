@@ -31,11 +31,19 @@ const CheckResponsePaginate = React.createClass({
         checkTest: PropTypes.object
       })
     }),
-    showBoolArea: PropTypes.bool
+    showBoolArea: PropTypes.bool,
+
+    /**
+     * If true, the response body will be collapsed by default and can be
+     * expanded with a button click. If false, the entire response body will
+     * be shown, and the expansion button will be hidden.
+     */
+    allowCollapse: PropTypes.bool
   },
   getDefaultProps() {
     return {
-      showBoolArea: true
+      showBoolArea: true,
+      allowCollapse: true
     };
   },
   getInitialState() {
@@ -75,7 +83,8 @@ const CheckResponsePaginate = React.createClass({
     return this.props.redux.checks.responsesFormatted;
   },
   getResponseClass(){
-    return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
+    const shouldExpand = !this.props.allowCollapse || this.state.expanded;
+    return shouldExpand ? style.checkResponseExpanded : style.checkResponse;
   },
   getStatus(){
     return this.props.redux.asyncActions.checkTest.status;
@@ -136,6 +145,10 @@ const CheckResponsePaginate = React.createClass({
     this.setState({expanded: !this.state.expanded});
   },
   renderButton(){
+    if (!this.props.allowCollapse) {
+      return null;
+    }
+
     if (this.state.expanded){
       return (
         <Button color="info" onClick={this.handleToggle} className={style.checkResponseButton} title="Close Reponse">
@@ -159,7 +172,7 @@ const CheckResponsePaginate = React.createClass({
         <Alert bsStyle="danger">There was an error sending your request.</Alert>
       );
     }else if (this.props.responses){
-      return <div/>;
+      return null;
     }
     return (
       <div className={style.checkResponseWaiting}>Your response will appear here</div>
@@ -178,7 +191,7 @@ const CheckResponsePaginate = React.createClass({
   renderItem(){
     const res = this.getFormattedResponses()[this.props.redux.checks.selectedResponse];
     if (!res){
-      return <div/>;
+      return null;
     }
     if (res.error){
       return (
@@ -229,7 +242,7 @@ const CheckResponsePaginate = React.createClass({
         </span>
       );
     }
-    return <span/>;
+    return null;
   },
   renderFailing(){
     const failing = this.getNumberFailing();
@@ -242,7 +255,7 @@ const CheckResponsePaginate = React.createClass({
         </span>
       );
     }
-    return <span/>;
+    return null;
   },
   renderBoolArea(){
     if (this.props.showBoolArea){
@@ -256,7 +269,7 @@ const CheckResponsePaginate = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderFlippers(){
     if (this.getResponses().size > 1){
@@ -266,7 +279,7 @@ const CheckResponsePaginate = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderTopArea(){
     const arr = this.getFormattedResponses();
@@ -285,11 +298,11 @@ const CheckResponsePaginate = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
     if (this.props.responses && !this.props.responses.size){
-      return <div/>;
+      return null;
     }else if (this.isWaiting()){
       return this.renderWaiting();
     }else if (this.getResponses().size){

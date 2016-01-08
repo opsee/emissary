@@ -38,7 +38,7 @@ const ContextMenu = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render(){
     return (

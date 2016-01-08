@@ -108,7 +108,7 @@ const Survey = React.createClass({
         <Button color="info" block className="pull-right" onClick={this.handleNextClick}>Next</Button>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
     if (flag('onboard-install-survey')) {
@@ -123,7 +123,7 @@ const Survey = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

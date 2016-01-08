@@ -126,7 +126,7 @@ const GroupItemList = React.createClass({
         </Padding>
       );
     }
-    return <span/>;
+    return null;
   },
   renderTitle(){
     if (this.props.title){
@@ -135,7 +135,7 @@ const GroupItemList = React.createClass({
       }
       return <h3>{this.props.title} ({this.getGroups().size})</h3>;
     }
-    return <span/>;
+    return null;
   },
   render() {
     if (this.getGroups().size){

@@ -39,6 +39,6 @@ export default React.createClass({
       </Grid>
       );
     }
-    return <div/>;
+    return null;
   }
 });

@@ -77,7 +77,7 @@ const InstanceItem = React.createClass({
     if (!this.props.noMenu){
       return <InstanceMenu item={this.getItem()} key="menu"/>;
     }
-    return <div/>;
+    return null;
   },
   render(){
     if (this.getItem().get('name')){
@@ -89,7 +89,7 @@ const InstanceItem = React.createClass({
         </ListItem>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

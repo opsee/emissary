@@ -80,7 +80,7 @@ const Dropdown = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   render(){
     return (
