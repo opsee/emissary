@@ -15,8 +15,7 @@ import {
 } from './constants';
 
 export function getCheckFromNotificaption(id) {
-  const hostname = config.notificaption.hostname;
-  const port = config.notificaption.port;
+  const {hostname, port} = config.notificaption;
   const filename = `${id}.json`;
   const checkURI = `http://${hostname}:${port}/checks/${filename}`;
 
@@ -24,9 +23,7 @@ export function getCheckFromNotificaption(id) {
     dispatch({
       type: GET_CHECK,
       payload: request.get(checkURI)
-        .then(resp => {
-          return resp.body;
-        })
+        .then(resp => res.body)
     });
   };
 }
