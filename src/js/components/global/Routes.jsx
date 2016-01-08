@@ -21,6 +21,7 @@ import CheckCreateTarget from 'react-proxy?name=checkCreate!../checks/CheckCreat
 import CheckCreateRequest from 'react-proxy?name=checkCreate!../checks/CheckCreateRequest';
 import CheckCreateAssertions from 'react-proxy?name=checkCreate!../checks/CheckCreateAssertions';
 import CheckCreateInfo from 'react-proxy?name=checkCreate!../checks/CheckCreateInfo';
+import CheckScreenshot from 'react-proxy?name=checkCreate!../checks/Screenshot';
 
 import GroupSecurity from '../groups/GroupSecurity';
 import GroupELB from '../groups/GroupElb';
@@ -83,6 +84,7 @@ const routes = (
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
     <Route path="/check/:id" component={auth(CheckSingle)}/>
+    <Route path="/check/:id/screenshot" component={CheckScreenshot}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
