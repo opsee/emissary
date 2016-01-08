@@ -23,7 +23,7 @@ export function getCheckFromNotificaption(id) {
     dispatch({
       type: GET_CHECK,
       payload: request.get(checkURI)
-        .then(resp => res.body)
+        .then(res => res.body)
     });
   };
 }
