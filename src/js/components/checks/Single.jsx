@@ -89,11 +89,11 @@ const CheckSingle = React.createClass({
             <HttpRequestItem spec={spec} target={target} />
           </Padding>
           <Padding b={1}>
-            <CheckResponsePaginate responses={this.getResponses()}/>
-          </Padding>
-          <Padding b={1}>
             <h3>Assertions</h3>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
+          </Padding>
+          <Padding b={1}>
+            <CheckResponsePaginate responses={this.getResponses()}/>
           </Padding>
 
           {this.renderNotifications()}

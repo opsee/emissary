@@ -14,6 +14,20 @@ import {
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
+export function getCheckFromNotificaption(id) {
+  const {hostname, port} = config.notificaption;
+  const filename = `${id}.json`;
+  const checkURI = `http://${hostname}:${port}/checks/${filename}`;
+
+  return dispatch => {
+    dispatch({
+      type: GET_CHECK,
+      payload: request.get(checkURI)
+        .then(res => res.body)
+    });
+  };
+}
+
 export function getCheck(id){
   return (dispatch, state) => {
     dispatch({

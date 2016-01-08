@@ -16,7 +16,7 @@ import style from './opsee.css';
 import {app as appActions, user as userActions, env as envActions} from '../../actions';
 /* eslint-enable no-unused-vars */
 
-const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
+const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot', '^\/check\/\\w+\/screenshot'];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],

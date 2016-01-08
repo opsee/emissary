@@ -25,6 +25,11 @@
   width: 100%;
 }
 
+.checkResponse pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 .checkResponseWaiting {
   composes: checkResponse;
   align-items: center;
@@ -34,7 +39,7 @@
   composes: checkResponse;
   align-items: flex-start;
   height: auto;
-  max-height: 100rem;
+  max-height: none;
 }
 .checkResponseExpanded:after {
   display: none;

@@ -31,11 +31,19 @@ const CheckResponsePaginate = React.createClass({
         checkTest: PropTypes.object
       })
     }),
-    showBoolArea: PropTypes.bool
+    showBoolArea: PropTypes.bool,
+
+    /**
+     * If true, the response body will be collapsed by default and can be
+     * expanded with a button click. If false, the entire response body will
+     * be shown, and the expansion button will be hidden.
+     */
+    allowCollapse: PropTypes.bool
   },
   getDefaultProps() {
     return {
-      showBoolArea: true
+      showBoolArea: true,
+      allowCollapse: true
     };
   },
   getInitialState() {
@@ -75,7 +83,8 @@ const CheckResponsePaginate = React.createClass({
     return this.props.redux.checks.responsesFormatted;
   },
   getResponseClass(){
-    return this.state.expanded ? style.checkResponseExpanded : style.checkResponse;
+    const shouldExpand = !this.props.allowCollapse || this.state.expanded;
+    return shouldExpand ? style.checkResponseExpanded : style.checkResponse;
   },
   getStatus(){
     return this.props.redux.asyncActions.checkTest.status;
@@ -136,6 +145,10 @@ const CheckResponsePaginate = React.createClass({
     this.setState({expanded: !this.state.expanded});
   },
   renderButton(){
+    if (!this.props.allowCollapse) {
+      return null;
+    }
+
     if (this.state.expanded){
       return (
         <Button color="info" onClick={this.handleToggle} className={style.checkResponseButton} title="Close Reponse">
