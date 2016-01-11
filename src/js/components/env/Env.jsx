@@ -60,7 +60,7 @@ const Env = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvList include={this.state.include} filter={this.props.location.query.search} limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                  <EnvList include={this.state.include} filter limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
                 </BastionRequirement>
               </Col>
             </Row>

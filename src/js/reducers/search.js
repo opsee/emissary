@@ -1,19 +1,26 @@
 import _ from 'lodash';
-import {fromJS, List} from 'immutable';
 import {handleActions} from 'redux-actions';
 import {parse} from 'query-string';
+import tokenizer from 'search-text-tokenizer';
+
 import {
-  SEARCH_SET
+  SEARCH_SET_STRING
 } from '../actions/constants';
 
+const initialString = parse(window.location.search).s || '';
+const intialTokens = tokenizer(initialString);
+
 const initial = {
-  string: parse(location.search).s
+  string: initialString,
+  tokens: intialTokens
 };
 
 export default handleActions({
-  [SEARCH_SET]: {
+  [SEARCH_SET_STRING]: {
     next(state, action){
-      return _.assign({}, state, {string: action.payload});
+      const string = action.payload;
+      const tokens = tokenizer(string);
+      return _.assign({}, state, {string, tokens});
     }
   }
 }, initial);

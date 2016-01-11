@@ -3,13 +3,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
 import _ from 'lodash';
-import fuzzy from 'fuzzy';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 import {checks as actions} from '../../actions';
+import {itemsFilter} from '../../modules';
 
 const CheckItemList = React.createClass({
   mixins: [SetInterval],
@@ -19,7 +19,7 @@ const CheckItemList = React.createClass({
       PropTypes.string,
       PropTypes.array
     ]),
-    filter: PropTypes.string,
+    filter: PropTypes.bool,
     title: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -27,6 +27,9 @@ const CheckItemList = React.createClass({
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         checks: PropTypes.object
+      }),
+      search: PropTypes.shape({
+        string: PropTypes.string
       }),
       asyncActions: PropTypes.shape({
         getChecks: PropTypes.object
@@ -47,17 +50,14 @@ const CheckItemList = React.createClass({
   },
   getChecks(){
     let data = this.props.redux.checks.checks;
-    const {filter} = this.props;
     if (this.props.target){
       let tar = !Array.isArray(this.props.target) ? [this.props.target] : this.props.target;
       data = data.filter(c => {
         return tar.indexOf(c.get('target').id) > -1;
       });
     }
-    if (filter){
-      return data.filter(item => {
-        return fuzzy.filter(filter, [item.get('name'), item.get('id')]).length;
-      });
+    if (this.props.filter){
+      data = itemsFilter(data, this.props.redux.search);
     }
     return data.sortBy(item => {
       return item.get('health');

@@ -2,17 +2,16 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import forms from 'newforms';
-import fuzzy from 'fuzzy';
 import {List} from 'immutable';
 
 import analytics from '../../modules/analytics';
 import {Alert, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
+import {itemsFilter} from '../../modules';
 
-import {BoundField, Button} from '../forms';
+import {Button} from '../forms';
 import {StatusHandler} from '../global';
-import {Search, Circle} from '../icons';
+import {Circle} from '../icons';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
@@ -22,7 +21,7 @@ const EnvList = React.createClass({
   mixins: [SetInterval],
   propTypes: {
     include: PropTypes.array,
-    filter: PropTypes.string,
+    filter: PropTypes.bool,
     onFilterChange: PropTypes.func,
     onTargetSelect: PropTypes.func,
     noModal: PropTypes.bool,
@@ -36,6 +35,9 @@ const EnvList = React.createClass({
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
+      search: PropTypes.shape({
+        string: PropTypes.string
+      }),
       env: PropTypes.shape({
         groups: PropTypes.shape({
           security: PropTypes.object,
@@ -56,13 +58,11 @@ const EnvList = React.createClass({
     };
   },
   getInitialState() {
-    const self = this;
-    const obj = {
+    return {
       attemptedGroupsSecurity: false,
       attemptedGroupsELB: false,
       attemptedInstancesECC: false
     };
-    return obj;
   },
   componentWillMount(){
     this.getData();
@@ -101,7 +101,6 @@ const EnvList = React.createClass({
     }).size;
   },
   getFilteredItems(items, ignoreButtonState){
-    const string = this.props.filter;
     let data = items.sortBy(item => {
       return item.get('health') || 101;
     });
@@ -110,10 +109,8 @@ const EnvList = React.createClass({
         return item.get('state') === this.state.buttonSelected;
       });
     }
-    if (string){
-      return data.filter(item => {
-        return fuzzy.filter(string, [item.get('name'), item.get('id')]).length;
-      });
+    if (this.props.filter){
+      data = itemsFilter(data, this.props.redux.search);
     }
     return data;
   },

@@ -1,70 +1,62 @@
 import React, {PropTypes} from 'react';
-import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import forms from 'newforms';
-import fuzzy from 'fuzzy';
-import {List} from 'immutable';
+import _ from 'lodash';
 
-import analytics from '../../modules/analytics';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {SetInterval} from '../../modules/mixins';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 
-import {BoundField, Button} from '../forms';
-import {BastionRequirement, StatusHandler, Toolbar} from '../global';
-import {Search, Circle} from '../icons';
-import {GroupItemList} from '../groups';
-import {InstanceItemList} from '../instances';
+import {Button} from '../forms';
+import {BastionRequirement, Toolbar} from '../global';
+import {Circle} from '../icons';
 import {Padding} from '../layout';
 import {search as actions} from '../../actions';
 import {EnvList} from '../env';
 import {CheckItemList} from '../checks';
 
 const SearchAll = React.createClass({
-  componentWillMount(){
-    this.props.actions.set(this.props.location.query.s);
+  propTypes: {
+    actions: PropTypes.shape({
+      setTokens: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      search: PropTypes.shape({
+        string: PropTypes.string,
+        tokens: PropTypes.array
+      })
+    })
   },
-  getSearchOptions(){
-    return this.props.redux.search.options;
+  isStateSelected(state){
+    return state === _.chain(this.props.redux.search.tokens).filter({tag: 'state'}).first().get('term').value();
+  },
+  runState(term){
+    this.props.actions.setTokens([{tag: 'state', term}]);
   },
   renderPassingButton(){
-    return <Button>Passing</Button>;
-    if (this.getNumberPassing() > 0){
-      return (
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button flat={this.state.buttonSelected !== 'passing'} color="success" onClick={this.runToggleButtonState.bind(null, 'passing')}><Circle fill={this.state.buttonSelected !== 'passing' ? 'success' : ''} inline/> Passing</Button>
-          </Padding>
-        </Col>
-      );
-    }
-    return <Col/>;
+    return (
+      <Col className="col-xs">
+        <Padding b={1}>
+          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/> Passing</Button>
+        </Padding>
+      </Col>
+    );
   },
   renderFailingButton(){
-    return <Button>Failing</Button>;
-    if (this.getNumberFailing() > 0){
-      return (
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button flat={this.state.buttonSelected !== 'failing'} color="danger" onClick={this.runToggleButtonState.bind(null, 'failing')}><Circle fill={this.state.buttonSelected !== 'failing' ? 'danger' : ''} inline/> {this.getNumberFailing()} Failing</Button>
-          </Padding>
-        </Col>
-      );
-    }
-    return <Col/>;
+    return (
+      <Col className="col-xs">
+        <Padding b={1}>
+          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>Failing</Button>
+        </Padding>
+      </Col>
+    );
   },
   renderUnmonitoredButton(){
-    return <Button>Unmonitored</Button>;
-    if (this.getNumberUnmonitored() > 0){
-      return (
-        <Col className="col-xs">
-          <Padding b={1}>
-            <Button flat={this.state.buttonSelected !== 'running'} onClick={this.runToggleButtonState.bind(null, 'running')}><Circle fill={this.state.buttonSelected !== 'running' ? 'text' : ''} inline/> {this.getNumberUnmonitored()} Unmonitored</Button>
-          </Padding>
-        </Col>
-      );
-    }
-    return <Col/>;
+    return (
+      <Col className="col-xs">
+        <Padding b={1}>
+          <Button flat={!this.isStateSelected('running')} onClick={this.runState.bind(null, 'running')}><Circle fill={!this.isStateSelected('running') ? 'text' : ''} inline/>Unmonitored</Button>
+        </Padding>
+      </Col>
+    );
   },
   renderFilterButtons(){
     return (
@@ -78,7 +70,6 @@ const SearchAll = React.createClass({
     );
   },
   render(){
-    const {string} = this.props.redux.search;
     return (
       <div>
         <Toolbar title="Search"/>
@@ -87,8 +78,8 @@ const SearchAll = React.createClass({
               <Col xs={12}>
                 <BastionRequirement>
                   {this.renderFilterButtons()}
-                  <EnvList filter={string}/>
-                  <CheckItemList filter={string} title/>
+                  <EnvList filter/>
+                  <CheckItemList filter title/>
                 </BastionRequirement>
               </Col>
             </Row>
