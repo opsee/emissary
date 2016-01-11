@@ -67,7 +67,7 @@ const CheckItemList = React.createClass({
     if (this.props.title){
       return <h3>Checks ({this.getChecks().size})</h3>;
     }
-    return <div/>;
+    return null;
   },
   render() {
     if (this.getChecks().size){

@@ -28,7 +28,7 @@ export function auth(Component){
       if (this.isAuthenticated()){
         return <Component {...this.props}/>;
       }
-      return <div/>;
+      return null;
     }
   });
   return connect(null, {pushState})(Authenticator);

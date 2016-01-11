@@ -53,7 +53,7 @@ const SearchBox = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

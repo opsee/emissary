@@ -63,7 +63,7 @@ const StatusHandler = React.createClass({
   },
   render(){
     if (this.state.dismissed){
-      return <div/>;
+      return null;
     }
     if (this.props.status === 'pending' && this.state.attempts < 1){
       return <Loader timeout={this.props.timeout}/>;
@@ -80,7 +80,7 @@ const StatusHandler = React.createClass({
         <div>{this.props.children}</div>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

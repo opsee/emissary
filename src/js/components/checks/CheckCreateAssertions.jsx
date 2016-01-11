@@ -182,7 +182,7 @@ const CheckCreateAssertions = React.createClass({
         <BoundField bf={form.boundField('operand')}/>
       );
     }
-    return <div/>;
+    return null;
   },
   renderValue(form){
     const data = form.cleanedData;
@@ -191,7 +191,7 @@ const CheckCreateAssertions = React.createClass({
         <BoundField bf={form.boundField('value')}/>
       );
     }
-    return <div/>;
+    return null;
   },
   renderDeleteAssertionButton(form, index){
     if (index > 0){
@@ -201,7 +201,7 @@ const CheckCreateAssertions = React.createClass({
         </Col>
       );
     }
-    return <span/>;
+    return null;
   },
   renderAssertionsForm(){
     return (
@@ -264,7 +264,7 @@ const CheckCreateAssertions = React.createClass({
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (

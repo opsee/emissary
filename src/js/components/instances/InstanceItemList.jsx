@@ -93,13 +93,13 @@ const InstanceItemList = React.createClass({
         </Padding>
       );
     }
-    return <span/>;
+    return null;
   },
   renderTitle(){
     if (this.props.title){
       return <h3>{this.props.type} Instances ({this.getInstances().size})</h3>;
     }
-    return <div/>;
+    return null;
   },
   render(){
     if (this.getInstances().size){

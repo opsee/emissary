@@ -126,7 +126,7 @@ const GroupItem = React.createClass({
         </ListItem>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

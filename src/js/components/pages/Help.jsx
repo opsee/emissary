@@ -32,7 +32,7 @@ export default React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
     return (

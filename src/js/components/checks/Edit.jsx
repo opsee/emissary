@@ -120,7 +120,7 @@ const CheckEdit = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderLink(){
     return this.getCheck().id ?

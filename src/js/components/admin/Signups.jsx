@@ -81,7 +81,7 @@ const Signups = React.createClass({
     } else if (this.isApprovedSignup(signup)){
       return <Checkmark fill="textSecondary" inline/>;
     }
-    return <span/>;
+    return null;
   },
   renderButton(signup){
     if (this.isUnapprovedSignup(signup)){

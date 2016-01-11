@@ -80,7 +80,7 @@ const InstanceRds = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderChecks(){
     if (window.ldclient.toggle('rds-checks')) {
@@ -90,7 +90,7 @@ const InstanceRds = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderInner(){
     if (this.getInstance().get('name')){
