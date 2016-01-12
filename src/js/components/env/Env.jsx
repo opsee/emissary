@@ -36,7 +36,7 @@ const Env = React.createClass({
     const vpcId = bastion.vpc_id || '';
     return `${region} - ${vpcId}`;
   },
-  getInitialState(){
+  getIncludes(){
     const path = this.props.location.pathname;
     let include;
     if (path){
@@ -48,9 +48,7 @@ const Env = React.createClass({
         include = ['instancesECC'];
       }
     }
-    return {
-      include
-    };
+    return include;
   },
   render() {
     return (
@@ -60,7 +58,7 @@ const Env = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvList include={this.state.include} filter limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                  <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux}/>
                 </BastionRequirement>
               </Col>
             </Row>

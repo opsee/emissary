@@ -2,10 +2,11 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {List, is} from 'immutable';
 
+import {itemsFilter} from '../../modules';
 import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
-import {List} from 'immutable';
 import {Padding} from '../layout';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
@@ -21,12 +22,16 @@ const InstanceItemList = React.createClass({
     title: PropTypes.bool,
     noFallback: PropTypes.bool,
     type: PropTypes.string,
+    filter: PropTypes.bool,
     actions: PropTypes.shape({
       getInstancesEcc: PropTypes.func,
       getInstancesRds: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
+      search: PropTypes.shape({
+        string: PropTypes.string
+      }),
       env: PropTypes.shape({
         instances: PropTypes.shape({
           ecc: PropTypes.object
@@ -36,11 +41,21 @@ const InstanceItemList = React.createClass({
   },
   componentWillMount(){
     if (!this.props.instances){
-      if (this.props.type === 'RDS'){
+      if (this.props.type === 'rds'){
         return this.props.actions.getInstancesRds();
       }
       return this.props.actions.getInstancesEcc();
     }
+  },
+  shouldComponentUpdate(nextProps) {
+    let arr = [];
+    const {props} = this;
+    const {redux} = props;
+    const action = this.getAction();
+    arr.push(!is(nextProps.redux.env.instances[props.type], redux.env.instances[props.type]));
+    arr.push(nextProps.redux.search.string !== redux.search.string);
+    arr.push(nextProps.redux.asyncActions[action].status !== redux.asyncActions[action].status);
+    return _.some(arr);
   },
   getDefaultProps() {
     return {
@@ -67,7 +82,7 @@ const InstanceItemList = React.createClass({
     }
     if (this.props.groupSecurity){
       data = data.filter(d => {
-        if (type === 'RDS'){
+        if (type === 'rds'){
           return _.chain(d.toJS()).get('VpcSecurityGroups').pluck('VpcSecurityGroupId').indexOf(this.props.groupSecurity).value() > -1;
         }
         return _.chain(d.toJS()).get('SecurityGroups').pluck('GroupId').indexOf(this.props.groupSecurity).value() > -1;
@@ -76,19 +91,30 @@ const InstanceItemList = React.createClass({
     data = data.sortBy(item => {
       return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
-    return data.slice(this.state.offset, this.state.limit);
+    if (this.props.filter){
+      data = itemsFilter(data, this.props.redux.search);
+    }
+    return data.slice(this.props.offset, this.props.limit);
   },
-  getMore(){
-    this.setState({
-      limit: 1000
-    });
+  getEnvLink(){
+    let string = '/env-instances-ec2';
+    if (this.props.type === 'rds'){
+      string = '/env-instances-rds';
+    }
+    return string;
+  },
+  getAction(){
+    return `getInstances${_.capitalize(this.props.type)}`;
+  },
+  getStatus(){
+    return this.props.redux.asyncActions[this.getAction()];
   },
   renderLink(){
-    if (this.props.instances && this.state.limit < this.getInstances(true).size){
+    if (this.getInstances(true).size && this.props.limit < this.getInstances(true).size){
       return (
         <Padding t={1}>
-          <Link to="/env-instances-ec2">
-            Show {this.getInstances(true).size - this.state.limit} more
+          <Link to={this.getEnvLink()}>
+            Show {this.getInstances(true).size - this.props.limit} more
           </Link>
         </Padding>
       );
@@ -96,7 +122,7 @@ const InstanceItemList = React.createClass({
     return null;
   },
   renderTitle(){
-    if (this.props.title){
+    if (this.props.title && !this.props.noFallback){
       return <h3>{this.props.type} Instances ({this.getInstances().size})</h3>;
     }
     return null;
@@ -114,9 +140,12 @@ const InstanceItemList = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getInstancesEcc.status} noFallback={this.props.noFallback}>
-        <Alert bsStyle="default">No {this.props.type} instances found</Alert>
-      </StatusHandler>
+      <div>
+        {this.renderTitle()}
+        <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
+          <Alert bsStyle="default">No {this.props.type} instances found</Alert>
+        </StatusHandler>
+      </div>
     );
   }
 });

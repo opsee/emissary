@@ -5,12 +5,11 @@ import {bindActionCreators} from 'redux';
 import {List} from 'immutable';
 
 import analytics from '../../modules/analytics';
-import {Alert, Row, Col} from '../../modules/bootstrap';
+import {Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 import {itemsFilter} from '../../modules';
 
 import {Button} from '../forms';
-import {StatusHandler} from '../global';
 import {Circle} from '../icons';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
@@ -54,7 +53,8 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groupsSecurity', 'groupsELB', 'instancesRds', 'instancesECC']
+      include: ['groupsSecurity', 'groupsELB', 'instancesRds', 'instancesECC'],
+      limit: 1000
     };
   },
   getInitialState() {
@@ -63,16 +63,6 @@ const EnvList = React.createClass({
       attemptedGroupsELB: false,
       attemptedInstancesECC: false
     };
-  },
-  componentWillMount(){
-    this.getData();
-    this.setInterval(this.getData, 25000);
-  },
-  getData(){
-    this.props.actions.getGroupsSecurity();
-    this.props.actions.getGroupsElb();
-    this.props.actions.getInstancesEcc();
-    this.props.actions.getInstancesRds();
   },
   getAll(){
     let arr = new List();
@@ -153,77 +143,37 @@ const EnvList = React.createClass({
     this.setState(obj);
   },
   renderGroupsSecurity(){
-    if (this.props.redux.env.groups.security.size){
-      return (
-        <div key="groupsSecurity">
-          <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
-          <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
-          <hr/>
-        </div>
-      );
-    }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
-        <h3>Security Groups</h3>
-        <Alert bsStyle="default">
-          No security groups found
-        </Alert>
+      <div key="groupsSecurity">
+        <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups"/>
         <hr/>
-      </StatusHandler>
+      </div>
     );
   },
   renderGroupsELB(){
-    if (this.props.redux.env.groups.security.size){
-      return (
-        <div key="groupsELB">
-          <h3>ELBs ({this.getGroupsELB().size})</h3>
-          <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
-          <hr/>
-        </div>
-      );
-    }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status} errorText="Something went wrong trying to get ELB Groups." key="groupsELBStatus"/>
+      <div key="groupsELB">
+        <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs"/>
+        <hr/>
+      </div>
     );
   },
   renderInstancesECC(){
-    if (this.props.redux.env.instances.ecc.size){
-      return (
-        <div key="instancesECC">
-          <h3>EC2 Instances ({this.getInstancesECC().size})</h3>
-          <InstanceItemList instances={this.getInstancesECC()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
-          <hr/>
-        </div>
-      );
-    }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getInstancesEcc.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesECCStatus">
-        <h3>EC2 Instances</h3>
-        <Alert bsStyle="default">
-          No EC2 Instances found
-        </Alert>
+      <div key="instancesECC">
+        <h3>EC2 Instances ({this.getInstancesECC().size})</h3>
+        <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit} type="ecc"/>
         <hr/>
-      </StatusHandler>
+      </div>
     );
   },
   renderInstancesRds(){
-    if (this.props.redux.env.instances.ecc.size){
-      return (
-        <div key="instancesRds">
-          <h3>RDS DB Instances ({this.getInstancesRds().size})</h3>
-          <InstanceItemList instances={this.getInstancesRds()} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="RDS"/>
-          <hr/>
-        </div>
-      );
-    }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getInstancesRds.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesRdsStatus">
-        <h3>RDS DB Instances</h3>
-        <Alert bsStyle="default">
-          No RDS Instances found
-        </Alert>
+      <div key="instancesRds">
+        <h3>RDS DB Instances ({this.getInstancesRds().size})</h3>
+        <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="rds"/>
         <hr/>
-      </StatusHandler>
+      </div>
     );
   },
   renderPassingButton(){

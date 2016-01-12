@@ -38,7 +38,9 @@ export function setTokens(payloadTokens = []){
           const found = _.find(payloadTokens, {tag});
           return found || oldToken;
         });
-        const combined = _.uniq([].concat(payloadTokens, newTokens), 'tag');
+        const combined = _.uniq([].concat(payloadTokens, newTokens), token => {
+          return token.tag || token.term;
+        });
         const string = stringFromTokens(combined);
         dispatch({
           type: SEARCH_SET_STRING,

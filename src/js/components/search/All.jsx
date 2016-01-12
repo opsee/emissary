@@ -28,7 +28,8 @@ const SearchAll = React.createClass({
   isStateSelected(state){
     return state === _.chain(this.props.redux.search.tokens).filter({tag: 'state'}).first().get('term').value();
   },
-  runState(term){
+  runState(string){
+    const term = this.isStateSelected(string) ? null : string;
     this.props.actions.setTokens([{tag: 'state', term}]);
   },
   renderPassingButton(){
@@ -53,7 +54,7 @@ const SearchAll = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('running')} onClick={this.runState.bind(null, 'running')}><Circle fill={!this.isStateSelected('running') ? 'text' : ''} inline/>Unmonitored</Button>
+          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>Unmonitored</Button>
         </Padding>
       </Col>
     );
@@ -78,7 +79,7 @@ const SearchAll = React.createClass({
               <Col xs={12}>
                 <BastionRequirement>
                   {this.renderFilterButtons()}
-                  <EnvList filter/>
+                  <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
                   <CheckItemList filter title/>
                 </BastionRequirement>
               </Col>

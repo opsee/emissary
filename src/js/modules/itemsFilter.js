@@ -18,8 +18,8 @@ export default function(items = new List(), search = {string: '', tokens: []}){
     if (_.filter(tokens, 'tag').length){
       newItems = newItems.filter(item => {
         if (item.get){
-          let isMatching = false;
-          tokens.forEach(token => {
+          const boolArray = _.filter(tokens, 'tag').map(token => {
+            let isMatching;
             let {tag = '', term} = token;
             switch (term){
             case 'true':
@@ -34,11 +34,18 @@ export default function(items = new List(), search = {string: '', tokens: []}){
             if (tag.match('passing|failing')){
               isMatching = item.get('state') === tag;
             }
+            if (tag === 'state' && term === 'unmonitored'){
+              term = 'running';
+            }
+            if (tag === 'health'){
+              term = parseInt(term, 10);
+            }
             if (item.get(tag) === term){
               isMatching = true;
             }
+            return isMatching;
           });
-          return isMatching;
+          return _.every(boolArray);
         }
       });
     }
