@@ -50,7 +50,7 @@ const SearchBar = React.createClass({
         controlled: true,
         validation: {
           on: 'blur change',
-          onChangeDelay: 550
+          onChangeDelay: 300
         },
         initial: {string: this.props.string}
       })

@@ -13,9 +13,14 @@ body {
   transition:transform var(--transitionEaseOut);
 }
 
+.meatUp{
+  composes:meat;
+  transform:translateY(-46px);
+}
+
 @media (min-width: 768px) {
   .meatUp{
     composes: meat;
-    transform:translateY(-54px);
+    transform:translateY(-100px);
   }
 }

@@ -122,8 +122,19 @@ const InstanceItemList = React.createClass({
     return null;
   },
   renderTitle(){
-    if (this.props.title && !this.props.noFallback){
-      return <h3>{this.props.type} Instances ({this.getInstances().size})</h3>;
+    if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getInstances().size))){
+      let title = '';
+      switch (this.props.type){
+      case 'rds':
+        title = 'RDS DB';
+        break;
+      case 'ecc':
+        title = 'EC2';
+        break;
+      default:
+        break;
+      }
+      return <h3>{title} Instances ({this.getInstances().size})</h3>;
     }
     return null;
   },

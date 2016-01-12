@@ -121,7 +121,7 @@ const GroupItemList = React.createClass({
     return null;
   },
   renderTitle(){
-    if (this.props.title && !this.props.noFallback){
+    if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getGroups().size))){
       if (this.props.groups){
         return <h3>{this.props.title} ({this.getGroups(true).size})</h3>;
       }

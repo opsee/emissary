@@ -84,7 +84,7 @@ const GroupSecurity = React.createClass({
             <InstanceItemList groupSecurity={this.props.params.id} type="ecc" title/>
           </Padding>
           <Padding b={1}>
-            <InstanceItemList groupSecurity={this.props.params.id} type="rds" title/>
+            <InstanceItemList groupSecurity={this.props.params.id} type="rds" title noFallback/>
           </Padding>
         </div>
       );
