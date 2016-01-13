@@ -12,18 +12,20 @@ import style from './bar.css';
 
 const SearchForm = forms.Form.extend({
   string: forms.CharField({
-    label: 'Search',
+    label: ' ',
     widgetAttrs: {
       placeholder: 'What are you looking for?',
-      noLabel: true,
-      id: 'universal-search'
+      id: 'universal-search',
+      labelInside: true
     },
     required: false
   }),
   render() {
     return (
       <BoundField bf={this.boundField('string')}>
-        <Search className="icon"/>
+        <label htmlFor="universal-search" className={style.iconLabel}>
+          <Search className="icon"/>
+        </label>
       </BoundField>
     );
   }
@@ -79,15 +81,13 @@ const SearchBar = React.createClass({
   render(){
     return (
       <form name="envWithFilterForm" className={style.form} onSubmit={this.handleSubmit}>
-        <label htmlFor="universal-search" className={style.label}>
-          <Grid>
-            <Row>
-              <Col xs={12}>
-                {this.state.form.render()}
-              </Col>
-            </Row>
-          </Grid>
-        </label>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              {this.state.form.render()}
+            </Col>
+          </Row>
+        </Grid>
       </form>
     );
   }
