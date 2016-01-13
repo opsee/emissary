@@ -109,6 +109,20 @@ const InstanceItemList = React.createClass({
   getStatus(){
     return this.props.redux.asyncActions[this.getAction()];
   },
+  getTitle(){
+    let title = this.props.type || '';
+    switch (this.props.type){
+    case 'rds':
+      title = 'RDS DB';
+      break;
+    case 'ecc':
+      title = 'EC2';
+      break;
+    default:
+      break;
+    }
+    return title;
+  },
   renderLink(){
     if (this.getInstances(true).size && this.props.limit < this.getInstances(true).size){
       return (
@@ -123,18 +137,13 @@ const InstanceItemList = React.createClass({
   },
   renderTitle(){
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getInstances().size))){
-      let title = '';
-      switch (this.props.type){
-      case 'rds':
-        title = 'RDS DB';
-        break;
-      case 'ecc':
-        title = 'EC2';
-        break;
-      default:
-        break;
-      }
-      return <h3>{title} Instances ({this.getInstances().size})</h3>;
+      return <h3>{this.getTitle()} Instances ({this.getInstances().size})</h3>;
+    }
+    return null;
+  },
+  renderNoMatch(){
+    if (!this.getInstances(true).size){
+      return <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>;
     }
     return null;
   },
@@ -146,6 +155,7 @@ const InstanceItemList = React.createClass({
           {this.getInstances().map(instance => {
             return <InstanceItem item={instance} key={instance.get('id')} {...this.props} noMenu={instance.type !== 'EC2'}/>;
           })}
+          {this.renderNoMatch()}
           {this.renderLink()}
         </div>
       );
@@ -154,7 +164,7 @@ const InstanceItemList = React.createClass({
       <div>
         {this.renderTitle()}
         <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
-          <Alert bsStyle="default">No {this.props.type} instances found</Alert>
+          <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>
         </StatusHandler>
       </div>
     );

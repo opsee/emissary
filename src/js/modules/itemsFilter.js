@@ -8,11 +8,18 @@ export default function(items = new List(), search = {string: '', tokens: []}){
   if (tokens.length){
     //do fuzzy searching first
     const stringQuery = _.chain(tokens).reject('tag').pluck('term').join(' ').value();
-    newItems = newItems.filter(item => {
-      if (item.get){
-        const fields = [item.get('name'), item.get('id')];
-        return fuzzy.filter(stringQuery, fields).length;
-      }
+    const results = newItems.toJS().map(item => {
+      const fields = [item.name, item.id];
+      const hits = fuzzy.filter(stringQuery, fields);
+      return {
+        score: _.chain(hits).pluck('score').reduce((total, n) => total + n).value() || 0,
+        id: item.id
+      };
+    });
+    newItems = newItems.sortBy((item, index) => {
+      return -1 * results[index].score;
+    }).filter(item => {
+      return _.chain(results).find({id: item.get('id')}).get('score').value();
     });
     //now let's run through the tags
     if (_.filter(tokens, 'tag').length){

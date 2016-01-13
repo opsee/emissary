@@ -130,7 +130,7 @@ const GroupItemList = React.createClass({
     return null;
   },
   renderNoMatch(){
-    if (!this.getGroups().size){
+    if (!this.getGroups(true).size){
       return <Alert bsStyle="default">No groups found</Alert>;
     }
     return null;
