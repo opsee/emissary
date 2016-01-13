@@ -18,9 +18,12 @@ export default function(items = new List(), search = {string: '', tokens: []}){
     });
     newItems = newItems.sortBy((item, index) => {
       return -1 * results[index].score;
-    }).filter(item => {
-      return _.chain(results).find({id: item.get('id')}).get('score').value();
     });
+    if(stringQuery){
+      newItems = newItems.filter(item => {
+        return _.chain(results).find({id: item.get('id')}).get('score').value();
+      });
+    }
     //now let's run through the tags
     if (_.filter(tokens, 'tag').length){
       newItems = newItems.filter(item => {
