@@ -26,11 +26,12 @@ const SearchAll = React.createClass({
     })
   },
   isStateSelected(state){
-    return state === _.chain(this.props.redux.search.tokens).filter({tag: 'state'}).first().get('term').value();
+    const {tokens} = this.props.redux.search;
+    return _.filter(tokens, {tag: 'state', term: state}).length;
   },
-  runState(string){
-    const term = this.isStateSelected(string) ? null : string;
-    this.props.actions.setTokens([{tag: 'state', term}]);
+  runState(term){
+    const remove = this.isStateSelected(term);
+    this.props.actions.setTokens([{tag: 'state', term, remove}]);
   },
   renderPassingButton(){
     return (

@@ -19,7 +19,7 @@ export default function(items = new List(), search = {string: '', tokens: []}){
     newItems = newItems.sortBy((item, index) => {
       return -1 * results[index].score;
     });
-    if(stringQuery){
+    if (stringQuery){
       newItems = newItems.filter(item => {
         return _.chain(results).find({id: item.get('id')}).get('score').value();
       });
@@ -55,7 +55,7 @@ export default function(items = new List(), search = {string: '', tokens: []}){
             }
             return isMatching;
           });
-          return _.every(boolArray);
+          return _.some(boolArray);
         }
       });
     }

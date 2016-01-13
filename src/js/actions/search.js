@@ -33,14 +33,12 @@ export function setTokens(payloadTokens = []){
       type: SEARCH_SET_TOKENS,
       payload: new Promise((resolve) => {
         const oldTokens = state().search.tokens;
-        let newTokens = oldTokens.map(oldToken => {
-          const {tag} = oldToken;
-          const found = _.find(payloadTokens, {tag});
-          return found || oldToken;
-        });
-        const combined = _.uniq([].concat(payloadTokens, newTokens), token => {
-          return token.tag || token.term;
-        });
+        const combined = _.chain([].concat(payloadTokens, oldTokens)).uniq(token => {
+          if (token.tag){
+            return token.tag + token.term;
+          }
+          return token.term;
+        }).reject('remove').value();
         const string = stringFromTokens(combined);
         dispatch({
           type: SEARCH_SET_STRING,
