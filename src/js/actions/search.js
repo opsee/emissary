@@ -12,14 +12,12 @@ export function setString(string){
     dispatch({
       type: SEARCH_SET_STRING,
       payload: new Promise((resolve) => {
-        if (state().router.location.pathname !== '/search'){
-          setTimeout(() => {
+        if (string){
+          if (state().router.location.pathname !== '/search'){
             dispatch(pushState(null, `/search?s=${string}`));
-          }, 40);
-        }else {
-          setTimeout(() => {
+          }else {
             dispatch(replaceState(null, `/search?s=${string}`));
-          }, 40);
+          }
         }
         return resolve(string);
       })

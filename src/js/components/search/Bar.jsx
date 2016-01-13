@@ -54,14 +54,14 @@ const SearchBar = React.createClass({
           on: 'blur change',
           onChangeDelay: 300
         },
-        initial: {string: this.props.string}
+        initial: {string: this.props.string || ''}
       })
     };
   },
   componentWillReceiveProps(nextProps) {
     if (nextProps.string !== this.state.form.data.string){
       this.state.form.updateData({
-        string: nextProps.string
+        string: nextProps.string || ''
       });
     }
   },
@@ -94,7 +94,9 @@ const SearchBar = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  string: state.search.string
+  location: state.router.location,
+  string: state.router.location.query.s
+  // query: state.router.location.query
 });
 
 const mapDispatchToProps = (dispatch) => ({
