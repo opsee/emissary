@@ -23,7 +23,10 @@ export function getCheckFromNotificaption(id) {
     dispatch({
       type: GET_CHECK,
       payload: request.get(checkURI)
-        .then(res => res.body)
+        .then(res => {
+          window.callPhantom('takeShot');
+          return res.body;
+        })
     });
   };
 }
