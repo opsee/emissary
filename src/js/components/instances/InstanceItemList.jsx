@@ -59,7 +59,7 @@ const InstanceItemList = React.createClass({
   },
   getDefaultProps() {
     return {
-      type: 'EC2'
+      type: 'ecc'
     };
   },
   getInitialState(){
@@ -142,7 +142,7 @@ const InstanceItemList = React.createClass({
     return null;
   },
   renderNoMatch(){
-    if (!this.getInstances(true).size){
+    if (!this.getInstances().size){
       return <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>;
     }
     return null;
