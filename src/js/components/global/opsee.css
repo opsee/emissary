@@ -11,6 +11,7 @@ body {
 .meat{
   position: relative;
   transition:transform var(--transitionEaseOut);
+  z-index:3;
 }
 
 .meatUp{
