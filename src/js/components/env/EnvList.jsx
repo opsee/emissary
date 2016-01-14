@@ -34,6 +34,16 @@ const EnvList = React.createClass({
           ecc: PropTypes.object,
           rds: PropTypes.object
         }),
+        filtered: PropTypes.shape({
+          groups: PropTypes.shape({
+            security: PropTypes.object,
+            elb: PropTypes.object
+          }),
+          instances: PropTypes.shape({
+            ecc: PropTypes.object,
+            rds: PropTypes.object
+          })
+        }),
         bastions: PropTypes.array,
         search: PropTypes.string
       })
@@ -80,7 +90,7 @@ const EnvList = React.createClass({
   render(){
     const self = this;
     let {include} = this.props;
-    if(this.props.filter){
+    if (this.props.filter){
       include = _.sortBy(include, i => {
         return -1 * (_.get(this.props.redux.env.filtered, `${i}.size`) || 0);
       });

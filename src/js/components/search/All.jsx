@@ -22,6 +22,30 @@ const SearchAll = React.createClass({
       search: PropTypes.shape({
         string: PropTypes.string,
         tokens: PropTypes.array
+      }),
+      checks: PropTypes.shape({
+        checks: PropTypes.object,
+        filtered: PropTypes.object
+      }),
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object,
+          elb: PropTypes.object
+        }),
+        instances: PropTypes.shape({
+          ecc: PropTypes.object,
+          rds: PropTypes.object
+        }),
+        filtered: PropTypes.shape({
+          groups: PropTypes.shape({
+            security: PropTypes.object,
+            elb: PropTypes.object
+          }),
+          instances: PropTypes.shape({
+            ecc: PropTypes.object,
+            rds: PropTypes.object
+          })
+        })
       })
     })
   },
@@ -77,20 +101,20 @@ const SearchAll = React.createClass({
       return _.get(this.props.redux.env.filtered, `${env}.size`) || 0;
     });
     const checksFirst = _.last(envSizes.sort()) < this.props.redux.checks.filtered.size;
-    if(checksFirst){
+    if (checksFirst){
       return (
         <div>
           <CheckItemList filter title/>
           <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
         </div>
-      )
+      );
     }
     return (
       <div>
         <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
         <CheckItemList filter title/>
       </div>
-    )
+    );
   },
   render(){
     return (

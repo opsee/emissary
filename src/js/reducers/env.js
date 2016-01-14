@@ -5,7 +5,6 @@ import {itemsFilter} from '../modules';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {InstanceEcc, InstanceRds, GroupSecurity, GroupElb} from '../modules/schemas';
-import tokenizer from 'search-text-tokenizer';
 import {
   ENV_GET_BASTIONS,
   GET_GROUP_SECURITY,
@@ -173,7 +172,11 @@ const statics = {
     if (newData.Tags && newData.Tags.length){
       name = _.chain(newData.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
     }
-    newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
+    if (Array.isArray(newData.SecurityGroups)){
+      newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
+    }else {
+      newData.SecurityGroups = new List();
+    }
     newData.Placement = fromJS(newData.Placement);
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
@@ -283,6 +286,11 @@ export default handleActions({
       return _.assign({}, state, {instances, filtered});
     }
   },
+  [ENV_GET_BASTIONS]: {
+    next(state, action){
+      return _.assign({}, state, {bastions: action.payload});
+    }
+  },
   [ENV_SET_FILTERED]: {
     next(state, action = {payload: {string: '', tokens: []}}){
       const {groups, instances} = state;
@@ -295,7 +303,7 @@ export default handleActions({
           ecc: itemsFilter(instances.ecc, action.payload, 'instances.ecc'),
           rds: itemsFilter(instances.rds, action.payload, 'instances.rds')
         }
-      }
+      };
       return _.assign({}, state, {filtered});
     }
   }

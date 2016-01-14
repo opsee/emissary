@@ -11,8 +11,7 @@ import {
   CHECK_EDIT,
   CHECK_TEST,
   CHECK_TEST_RESET,
-  CHECK_TEST_SELECT_RESPONSE,
-  CHECKS_SET_FILTERED
+  CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
 export function getCheckFromNotificaption(id) {

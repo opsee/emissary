@@ -34,6 +34,12 @@ const InstanceItemList = React.createClass({
       env: PropTypes.shape({
         instances: PropTypes.shape({
           ecc: PropTypes.object
+        }),
+        filtered: PropTypes.shape({
+          instances: PropTypes.shape({
+            ecc: PropTypes.object,
+            rds: PropTypes.object
+          })
         })
       })
     }).isRequired
@@ -74,7 +80,7 @@ const InstanceItemList = React.createClass({
     if (noFilter){
       return data;
     }
-    if(this.props.filter){
+    if (this.props.filter){
       data = this.props.redux.env.filtered.instances[translated];
     }
     if (this.props.ids){

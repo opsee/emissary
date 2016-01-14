@@ -35,8 +35,14 @@ const GroupItemList = React.createClass({
         groups: PropTypes.shape({
           security: PropTypes.object,
           elb: PropTypes.object
+        }),
+        filtered: PropTypes.shape({
+          groups: PropTypes.shape({
+            security: PropTypes.object,
+            elb: PropTypes.object
+          })
         })
-      }),
+      })
     }).isRequired
   },
   getDefaultProps(){
@@ -73,7 +79,7 @@ const GroupItemList = React.createClass({
     if (noFilter){
       return data;
     }
-    if(this.props.filter){
+    if (this.props.filter){
       data = this.props.redux.env.filtered.groups[this.props.type];
     }
     if (this.props.ids){
@@ -106,9 +112,6 @@ const GroupItemList = React.createClass({
   },
   renderLink(){
     if (this.getGroups(true).size && this.props.limit < this.getGroups(true).size){
-      if(this.props.type === 'security'){
-        console.log(this.props.limit);
-      }
       return (
         <Padding t={1}>
           <Link to={this.getEnvLink()}>

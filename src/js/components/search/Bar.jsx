@@ -36,7 +36,10 @@ const SearchBar = React.createClass({
     actions: PropTypes.shape({
       setString: PropTypes.func
     }),
-    string: PropTypes.string
+    string: PropTypes.string,
+    location: PropTypes.shape({
+      pathname: PropTypes.string
+    })
   },
   getInitialState() {
     const self = this;
@@ -44,10 +47,13 @@ const SearchBar = React.createClass({
       form: new SearchForm({
         onChange(){
           self.forceUpdate();
-          if (self.state.form.cleanedData.string === self.state.form.data.string){
+          const {form} = self.state;
+          if (form.cleanedData.string === form.data.string){
+            if (!form.cleanedData.string && self.props.location.pathname !== '/search'){
+              //this allows us to move between pages that aren't search
+              return true;
+            }
             self.handleSearch();
-          }else {
-            console.log(self.state.form.cleanedData.string, self.state.form.data.string);
           }
         },
         labelSuffix: '',
@@ -61,10 +67,10 @@ const SearchBar = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    if (nextProps.string != this.state.form.data.string){
+    if (nextProps.string !== this.state.form.data.string){
       this.state.form.updateData({
         string: nextProps.string || ''
-      }, {validate: false});
+      }, {validate: this.props.location.pathname !== '/search'});
     }
   },
   shouldComponentUpdate(nextProps, nextState) {

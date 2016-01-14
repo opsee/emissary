@@ -9,7 +9,6 @@ import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 import {checks as actions} from '../../actions';
-import {itemsFilter} from '../../modules';
 
 const CheckItemList = React.createClass({
   mixins: [SetInterval],
@@ -26,7 +25,8 @@ const CheckItemList = React.createClass({
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        checks: PropTypes.object
+        checks: PropTypes.object,
+        filtered: PropTypes.object
       }),
       search: PropTypes.shape({
         string: PropTypes.string
