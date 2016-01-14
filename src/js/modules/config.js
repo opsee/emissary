@@ -12,6 +12,11 @@ let config = {
   error: false,
   env: process.env.NODE_ENV,
   ghosting: false,
+  notificaption: { // Production server
+    protocol: 'https',
+    hostname: 'notificaption.in.opsee.com',
+    port: null
+  },
   revision: __REVISION__,
   slackClientSecret: window.slackClientSecret,
   socket: 'wss://api.opsee.com/stream/'
