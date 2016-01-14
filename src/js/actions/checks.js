@@ -13,11 +13,17 @@ import {
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
+import URL from 'url';
 
 export function getCheckFromNotificaption(id) {
-  const {hostname, port} = config.notificaption;
+  const {hostname, port, protocol} = config.notificaption;
   const filename = `${id}.json`;
-  const checkURI = `http://${hostname}:${port}/checks/${filename}`;
+  const checkURI = URL.format({
+    protocol: protocol,
+    hostname: hostname,
+    port: port,
+    pathname: `/checks/${filename}`
+  });
 
   return dispatch => {
     dispatch({
