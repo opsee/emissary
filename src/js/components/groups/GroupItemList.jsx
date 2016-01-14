@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {List, is} from 'immutable';
 
-import {itemsFilter} from '../../modules';
 import GroupItem from './GroupItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
@@ -38,9 +37,6 @@ const GroupItemList = React.createClass({
           elb: PropTypes.object
         })
       }),
-      search: PropTypes.shape({
-        string: PropTypes.string
-      })
     }).isRequired
   },
   getDefaultProps(){
@@ -62,7 +58,7 @@ const GroupItemList = React.createClass({
     const nextRedux = nextProps.redux;
     const action = this.getAction();
     arr.push(!is(nextRedux.env.groups[props.type], redux.env.groups[props.type]));
-    arr.push(nextRedux.search.string !== redux.search.string);
+    arr.push(!is(nextRedux.env.filtered.groups[props.type], redux.env.filtered.groups[props.type]));
     arr.push(nextRedux.asyncActions[action].status !== redux.asyncActions[action].status);
     return _.some(arr);
   },
@@ -77,6 +73,9 @@ const GroupItemList = React.createClass({
     if (noFilter){
       return data;
     }
+    if(this.props.filter){
+      data = this.props.redux.env.filtered.groups[this.props.type];
+    }
     if (this.props.ids){
       data = data.filter(d => {
         return this.props.ids.indexOf(d.id) > -1;
@@ -90,9 +89,6 @@ const GroupItemList = React.createClass({
     data = data.sortBy(item => {
       return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
-    if (this.props.filter){
-      data = itemsFilter(data, this.props.redux.search);
-    }
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){
@@ -110,6 +106,9 @@ const GroupItemList = React.createClass({
   },
   renderLink(){
     if (this.getGroups(true).size && this.props.limit < this.getGroups(true).size){
+      if(this.props.type === 'security'){
+        console.log(this.props.limit);
+      }
       return (
         <Padding t={1}>
           <Link to={this.getEnvLink()}>

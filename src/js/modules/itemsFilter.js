@@ -2,9 +2,13 @@ import {List} from 'immutable';
 import fuzzy from 'fuzzy';
 import _ from 'lodash';
 
-export default function(items = new List(), search = {string: '', tokens: []}){
+export default function(items = new List(), search = {string: '', tokens: []}, type){
+  console.log('itemsfilter', search.string, type);
   let newItems = items;
   const {tokens} = search;
+  if(!tokens){
+    debugger;
+  }
   if (tokens.length){
     //do fuzzy searching first
     const stringQuery = _.chain(tokens).reject('tag').pluck('term').join(' ').value();

@@ -71,6 +71,27 @@ const SearchAll = React.createClass({
       </Padding>
     );
   },
+  renderLists(){
+    const envArr = ['groups.security', 'groups.elb', 'instances.rds', 'instances.ecc'];
+    const envSizes = envArr.map(env => {
+      return _.get(this.props.redux.env.filtered, `${env}.size`) || 0;
+    });
+    const checksFirst = _.last(envSizes.sort()) < this.props.redux.checks.filtered.size;
+    if(checksFirst){
+      return (
+        <div>
+          <CheckItemList filter title/>
+          <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
+        </div>
+      )
+    }
+    return (
+      <div>
+        <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
+        <CheckItemList filter title/>
+      </div>
+    )
+  },
   render(){
     return (
       <div>
@@ -80,8 +101,7 @@ const SearchAll = React.createClass({
               <Col xs={12}>
                 <BastionRequirement>
                   {this.renderFilterButtons()}
-                  <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
-                  <CheckItemList filter title/>
+                  {this.renderLists()}
                 </BastionRequirement>
               </Col>
             </Row>

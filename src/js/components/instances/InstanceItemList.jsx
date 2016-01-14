@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import {List, is} from 'immutable';
 
-import {itemsFilter} from '../../modules';
 import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
@@ -70,10 +69,13 @@ const InstanceItemList = React.createClass({
   },
   getInstances(noFilter){
     const {type} = this.props;
-    const translated = type === 'EC2' ? 'ECC' : type;
-    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances[translated.toLowerCase()];
+    const translated = (type === 'EC2' ? 'ECC' : type).toLowerCase();
+    let data = this.props.instances ? this.props.instances : this.props.redux.env.instances[translated];
     if (noFilter){
       return data;
+    }
+    if(this.props.filter){
+      data = this.props.redux.env.filtered.instances[translated];
     }
     if (this.props.ids){
       data = data.filter(d => {
@@ -91,9 +93,6 @@ const InstanceItemList = React.createClass({
     data = data.sortBy(item => {
       return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
-    if (this.props.filter){
-      data = itemsFilter(data, this.props.redux.search);
-    }
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){

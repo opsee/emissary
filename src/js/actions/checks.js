@@ -11,7 +11,8 @@ import {
   CHECK_EDIT,
   CHECK_TEST,
   CHECK_TEST_RESET,
-  CHECK_TEST_SELECT_RESPONSE
+  CHECK_TEST_SELECT_RESPONSE,
+  CHECKS_SET_FILTERED
 } from './constants';
 
 export function getCheckFromNotificaption(id) {
@@ -55,7 +56,10 @@ export function getCheck(id){
           const {notifications} = values[1].body;
           const {assertions} = values[2].body;
           const obj = _.assign({}, check, {notifications, assertions});
-          resolve(obj);
+          resolve({
+            data: obj,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -71,7 +75,10 @@ export function getChecks(redirect){
         .get(`${config.api}/checks`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(_.get(res.body, 'checks'));
+          resolve({
+            data: _.get(res.body, 'checks'),
+            search: state().search
+          });
           if (redirect){
             setTimeout(() => {
               dispatch(pushState(null, '/'));

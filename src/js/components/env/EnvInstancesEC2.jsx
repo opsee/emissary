@@ -14,7 +14,7 @@ const EnvInstancesEC2 = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvList include={['instancesECC']} limit={1000}/>
+                <EnvList include={['instances.ecc']} limit={1000}/>
               </Col>
             </Row>
           </Grid>

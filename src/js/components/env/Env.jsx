@@ -25,9 +25,6 @@ const Env = React.createClass({
     })
   },
   componentWillMount(){
-    if (this.props.location.query.search && !this.props.redux.env.search){
-      this.props.actions.envSetSearch(this.props.location.query.search);
-    }
     this.props.actions.getBastions();
   },
   getTitle(){
@@ -41,11 +38,11 @@ const Env = React.createClass({
     let include;
     if (path){
       if (path.match('groups-security')){
-        include = ['groupsSecurity'];
+        include = ['groups.security'];
       }else if (path.match('groups-elb')){
-        include = ['groupsELB'];
+        include = ['groups.elb'];
       }else if (path.match('instances-ec2')){
-        include = ['instancesECC'];
+        include = ['instances.ecc'];
       }
     }
     return include;

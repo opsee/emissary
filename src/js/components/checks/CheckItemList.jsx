@@ -41,12 +41,15 @@ const CheckItemList = React.createClass({
     this.setInterval(this.props.actions.getChecks, 15000);
   },
   shouldComponentUpdate(nextProps) {
+    let arr = [];
     const string1 = 'redux.asyncActions.getChecks.status';
-    const bool1 = _.get(nextProps, string1) !== _.get(this.props, string1);
+    arr.push(_.get(nextProps, string1) !== _.get(this.props, string1));
     const string2 = 'redux.checks.checks';
-    const bool2 = !Immutable.is(_.get(nextProps, string2), _.get(this.props, string2));
-    const bool3 = _.isEqual(this.props.target, nextProps.target);
-    return bool1 || bool2 || bool3;
+    arr.push(!Immutable.is(_.get(nextProps, string2), _.get(this.props, string2)));
+    const string3 = 'redux.checks.filtered';
+    arr.push(!Immutable.is(_.get(nextProps, string3), _.get(this.props, string3)));
+    arr.push(!_.isEqual(this.props.target, nextProps.target));
+    return _.some(arr);
   },
   getChecks(){
     let data = this.props.redux.checks.checks;
@@ -57,7 +60,7 @@ const CheckItemList = React.createClass({
       });
     }
     if (this.props.filter){
-      data = itemsFilter(data, this.props.redux.search);
+      data = this.props.redux.checks.filtered;
     }
     return data.sortBy(item => {
       return item.get('health');

@@ -15,7 +15,7 @@ const EnvGroupsSecurity = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvList include={['groupsSecurity']} limit={1000} redux={this.props.redux}/>
+                <EnvList include={['groups.security']} limit={1000} redux={this.props.redux}/>
               </Col>
             </Row>
           </Grid>

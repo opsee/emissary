@@ -15,7 +15,7 @@ const EnvGroupsELB = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvList include={['groupsELB']} limit={1000} redux={this.props.redux}/>
+                <EnvList include={['groups.elb']} limit={1000} redux={this.props.redux}/>
               </Col>
             </Row>
           </Grid>

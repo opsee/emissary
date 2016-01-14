@@ -46,23 +46,25 @@ const SearchBar = React.createClass({
           self.forceUpdate();
           if (self.state.form.cleanedData.string === self.state.form.data.string){
             self.handleSearch();
+          }else {
+            console.log(self.state.form.cleanedData.string, self.state.form.data.string);
           }
         },
         labelSuffix: '',
         controlled: true,
         validation: {
           on: 'blur change',
-          onChangeDelay: 300
+          onChangeDelay: 450
         },
         initial: {string: this.props.string || ''}
       })
     };
   },
   componentWillReceiveProps(nextProps) {
-    if (nextProps.string !== this.state.form.data.string){
+    if (nextProps.string != this.state.form.data.string){
       this.state.form.updateData({
         string: nextProps.string || ''
-      });
+      }, {validate: false});
     }
   },
   shouldComponentUpdate(nextProps, nextState) {

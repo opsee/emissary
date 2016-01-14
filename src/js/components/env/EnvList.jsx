@@ -9,7 +9,12 @@ import {InstanceItemList} from '../instances';
 const EnvList = React.createClass({
   mixins: [SetInterval],
   propTypes: {
-    include: PropTypes.array,
+    include: PropTypes.arrayOf(PropTypes.oneOf([
+      'groups.security',
+      'groups.elb',
+      'instances.ecc',
+      'instances.rds'
+    ])),
     filter: PropTypes.bool,
     onFilterChange: PropTypes.func,
     onTargetSelect: PropTypes.func,
@@ -36,7 +41,7 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groupsSecurity', 'groupsELB', 'instancesRds', 'instancesECC'],
+      include: ['groups.security', 'groups.elb', 'instances.rds', 'instances.ecc'],
       limit: 1000
     };
   },
@@ -48,7 +53,7 @@ const EnvList = React.createClass({
       </div>
     );
   },
-  renderGroupsELB(){
+  renderGroupsElb(){
     return (
       <div key="groupsELB">
         <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs"/>
@@ -56,7 +61,7 @@ const EnvList = React.createClass({
       </div>
     );
   },
-  renderInstancesECC(){
+  renderInstancesEcc(){
     return (
       <div key="instancesECC">
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="ecc" title/>
@@ -74,10 +79,17 @@ const EnvList = React.createClass({
   },
   render(){
     const self = this;
+    let {include} = this.props;
+    if(this.props.filter){
+      include = _.sortBy(include, i => {
+        return -1 * (_.get(this.props.redux.env.filtered, `${i}.size`) || 0);
+      });
+    }
     return (
       <div>
-        {this.props.include.map(i => {
-          return self[`render${_.capitalize(i)}`]();
+        {include.map(i => {
+          const string = i.split('.').map(_.capitalize).reduce((total, n) => total + n);
+          return self[`render${string}`]();
         })}
       </div>
     );
