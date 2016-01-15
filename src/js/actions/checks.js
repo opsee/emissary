@@ -30,7 +30,6 @@ export function getCheckFromNotificaption(id) {
       type: GET_CHECK,
       payload: request.get(checkURI)
         .then(res => {
-          if (window.callPhantom) window.callPhantom('takeShot');
           return res.body;
         })
     });
