@@ -87,7 +87,9 @@ const SearchBar = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.setString(this.state.form.cleanedData.string);
+    if (this.state.form.data.string){
+      this.props.actions.setString(this.state.form.data.string);
+    }
   },
   render(){
     return (
