@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {SetInterval} from '../../modules/mixins';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
+import {FilterButtons} from '../search';
 
 const EnvList = React.createClass({
   mixins: [SetInterval],
@@ -20,6 +21,7 @@ const EnvList = React.createClass({
     onTargetSelect: PropTypes.func,
     noModal: PropTypes.bool,
     limit: PropTypes.number,
+    showFilterButtons: PropTypes.bool,
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       search: PropTypes.shape({
@@ -87,6 +89,12 @@ const EnvList = React.createClass({
       </div>
     );
   },
+  renderFilterButtons(){
+    if (this.props.showFilterButtons){
+      return <FilterButtons/>;
+    }
+    return null;
+  },
   render(){
     const self = this;
     let {include} = this.props;
@@ -97,6 +105,7 @@ const EnvList = React.createClass({
     }
     return (
       <div>
+        {this.renderFilterButtons()}
         {include.map(i => {
           const string = i.split('.').map(_.capitalize).reduce((total, n) => total + n);
           return self[`render${string}`]();

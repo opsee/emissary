@@ -20,6 +20,9 @@ const CheckItemList = React.createClass({
     ]),
     filter: PropTypes.bool,
     title: PropTypes.bool,
+    offset: PropTypes.bool,
+    limit: PropTypes.bool,
+    noFallback: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func
     }),
@@ -36,6 +39,12 @@ const CheckItemList = React.createClass({
       })
     })
   },
+  getDefaultProps() {
+    return {
+      limit: 1000,
+      offset: 0
+    };
+  },
   componentWillMount(){
     this.props.actions.getChecks();
     this.setInterval(this.props.actions.getChecks, 15000);
@@ -51,8 +60,14 @@ const CheckItemList = React.createClass({
     arr.push(!_.isEqual(this.props.target, nextProps.target));
     return _.some(arr);
   },
-  getChecks(){
+  getChecks(noFilter){
     let data = this.props.redux.checks.checks;
+    data = data.sortBy(item => {
+      return item.get('health');
+    });
+    if (noFilter){
+      return data;
+    }
     if (this.props.target){
       let tar = !Array.isArray(this.props.target) ? [this.props.target] : this.props.target;
       data = data.filter(c => {
@@ -62,13 +77,18 @@ const CheckItemList = React.createClass({
     if (this.props.filter){
       data = this.props.redux.checks.filtered;
     }
-    return data.sortBy(item => {
-      return item.get('health');
-    });
+    return data.slice(this.props.offset, this.props.limit);
   },
   renderTitle(){
-    if (this.props.title){
-      return <h3>Checks ({this.getChecks().size})</h3>;
+    let numbers = `(${this.getChecks(true).size})`;
+    if (this.getChecks().size < this.getChecks(true).size){
+      numbers = `(${this.getChecks().size} of ${this.getChecks(true).size})`;
+    }
+    if (!this.getChecks().size){
+      numbers = '';
+    }
+    if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getChecks().size))){
+      return <h3>Checks {numbers}</h3>;
     }
     return null;
   },

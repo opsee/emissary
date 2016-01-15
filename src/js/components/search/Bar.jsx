@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import forms from 'newforms';
-import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -48,15 +47,17 @@ const SearchBar = React.createClass({
         onChange(){
           self.forceUpdate();
           const {form} = self.state;
-          if (form.cleanedData.string === form.data.string){
-            if (!form.cleanedData.string && self.props.location.pathname !== '/search'){
-              return true;
-            }
+          if (
+            form.cleanedData.string === form.data.string ||
+            //weird situation with validation not firing on rapid location change, fuuuck
+            !form.cleanedData.string && form.data.string
+            ){
             self.handleSearch();
           }
         },
         labelSuffix: '',
         controlled: true,
+        emptyPermitted: true,
         validation: {
           on: 'blur change',
           onChangeDelay: 450
@@ -66,18 +67,11 @@ const SearchBar = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    if (nextProps.string !== this.state.form.data.string && this.state.form.data.string !== ''){
-      const shouldValidate = this.props.location.pathname !== '/search';
+    if (nextProps.string !== this.state.form.data.string){
       this.state.form.updateData({
         string: nextProps.string || ''
-      }, {
-        validate: shouldValidate,
-        clearValidation: shouldValidate
       });
     }
-  },
-  shouldComponentUpdate(nextProps, nextState) {
-    return !_.isEqual(nextState.form.cleanedData, this.state.form.cleanedData);
   },
   handleSearch(){
     const {string} = this.state.form.cleanedData;

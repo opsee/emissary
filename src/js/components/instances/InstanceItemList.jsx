@@ -151,8 +151,15 @@ const InstanceItemList = React.createClass({
     return null;
   },
   renderTitle(){
+    let numbers = `(${this.getInstances(true).size})`;
+    if (this.getInstances().size < this.getInstances(true).size){
+      numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+    }
+    if (!this.getInstances().size){
+      numbers = '';
+    }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getInstances().size))){
-      return <h3>{this.getTitle()} Instances ({this.getInstances(true).size})</h3>;
+      return <h3>{this.getTitle()} Instances {numbers}</h3>;
     }
     return null;
   },

@@ -5,13 +5,11 @@ import _ from 'lodash';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
-import {Circle} from '../icons';
-import {Padding} from '../layout';
 import {search as actions} from '../../actions';
 import {EnvList} from '../env';
 import {CheckItemList} from '../checks';
+import FilterButtons from './FilterButtons';
 
 const SearchAll = React.createClass({
   propTypes: {
@@ -49,52 +47,6 @@ const SearchAll = React.createClass({
       })
     })
   },
-  isStateSelected(state){
-    const {tokens} = this.props.redux.search;
-    return _.filter(tokens, {tag: 'state', term: state}).length;
-  },
-  runState(term){
-    const remove = this.isStateSelected(term);
-    this.props.actions.setTokens([{tag: 'state', term, remove}]);
-  },
-  renderPassingButton(){
-    return (
-      <Col className="col-xs">
-        <Padding b={1}>
-          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/> Passing</Button>
-        </Padding>
-      </Col>
-    );
-  },
-  renderFailingButton(){
-    return (
-      <Col className="col-xs">
-        <Padding b={1}>
-          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>Failing</Button>
-        </Padding>
-      </Col>
-    );
-  },
-  renderUnmonitoredButton(){
-    return (
-      <Col className="col-xs">
-        <Padding b={1}>
-          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>Unmonitored</Button>
-        </Padding>
-      </Col>
-    );
-  },
-  renderFilterButtons(){
-    return (
-      <Padding b={1}>
-        <Row>
-          {this.renderFailingButton()}
-          {this.renderPassingButton()}
-          {this.renderUnmonitoredButton()}
-        </Row>
-      </Padding>
-    );
-  },
   renderLists(){
     const envArr = ['groups.security', 'groups.elb', 'instances.rds', 'instances.ecc'];
     const envSizes = envArr.map(env => {
@@ -105,6 +57,7 @@ const SearchAll = React.createClass({
       return (
         <div>
           <CheckItemList filter title/>
+          <hr/>
           <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
         </div>
       );
@@ -124,7 +77,7 @@ const SearchAll = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  {this.renderFilterButtons()}
+                  <FilterButtons/>
                   {this.renderLists()}
                 </BastionRequirement>
               </Col>

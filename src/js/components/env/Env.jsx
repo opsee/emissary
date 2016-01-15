@@ -55,7 +55,7 @@ const Env = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux}/>
+                  <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux} showFilterButtons/>
                 </BastionRequirement>
               </Col>
             </Row>

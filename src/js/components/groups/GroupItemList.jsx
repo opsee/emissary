@@ -76,6 +76,9 @@ const GroupItemList = React.createClass({
   },
   getGroups(noFilter){
     let data = this.props.groups || this.props.redux.env.groups[this.props.type];
+    data = data.sortBy(item => {
+      return typeof item.get('health') === 'number' ? item.get('health') : 101;
+    });
     if (noFilter){
       return data;
     }
@@ -92,9 +95,6 @@ const GroupItemList = React.createClass({
         return _.intersection(this.props.instanceIds, d.get('instances').toJS()).length;
       });
     }
-    data = data.sortBy(item => {
-      return typeof item.get('health') === 'number' ? item.get('health') : 101;
-    });
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){
@@ -113,7 +113,7 @@ const GroupItemList = React.createClass({
   renderLink(){
     if (this.getGroups(true).size && this.props.limit < this.getGroups(true).size){
       return (
-        <Padding t={1}>
+        <Padding t={1} key="groupitemlist-link">
           <Link to={this.getEnvLink()}>
             Show {this.getGroups(true).size - this.props.limit} more
           </Link>
@@ -123,11 +123,15 @@ const GroupItemList = React.createClass({
     return null;
   },
   renderTitle(){
+    let numbers = `(${this.getGroups(true).size})`;
+    if (this.getGroups().size < this.getGroups(true).size){
+      numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+    }
+    if (!this.getGroups().size){
+      numbers = '';
+    }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getGroups().size))){
-      if (this.props.groups){
-        return <h3>{this.props.title} ({this.getGroups(true).size})</h3>;
-      }
-      return <h3>{this.props.title} ({this.getGroups(true).size})</h3>;
+      return <h3>{this.props.title} {numbers}</h3>;
     }
     return null;
   },

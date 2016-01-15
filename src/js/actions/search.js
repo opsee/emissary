@@ -15,10 +15,12 @@ export function setString(string){
     dispatch({
       type: SEARCH_SET_STRING,
       payload: new Promise((resolve) => {
-        if (state().router.location.pathname !== '/search'){
-          dispatch(pushState(null, `/search?s=${string}`));
-        }else {
-          dispatch(replaceState(null, `/search?s=${string}`));
+        if (string || state().router.location.pathname === 'search'){
+          if (state().router.location.pathname !== '/search'){
+            dispatch(pushState(null, `/search?s=${string}`));
+          }else {
+            dispatch(replaceState(null, `/search?s=${string}`));
+          }
         }
         resolve(string);
         const tokens = tokenizer(string);
@@ -61,13 +63,9 @@ export function setTokens(payloadTokens = []){
           payload: {string, tokens}
         });
         if (state().router.location.pathname !== '/search'){
-          setTimeout(() => {
-            dispatch(pushState(null, `/search?s=${string}`));
-          }, 40);
+          dispatch(pushState(null, `/search?s=${string}`));
         }else {
-          setTimeout(() => {
-            dispatch(replaceState(null, `/search?s=${string}`));
-          }, 40);
+          dispatch(replaceState(null, `/search?s=${string}`));
         }
         return resolve(true);
       })
