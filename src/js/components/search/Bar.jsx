@@ -50,7 +50,6 @@ const SearchBar = React.createClass({
           const {form} = self.state;
           if (form.cleanedData.string === form.data.string){
             if (!form.cleanedData.string && self.props.location.pathname !== '/search'){
-              //this allows us to move between pages that aren't search
               return true;
             }
             self.handleSearch();
@@ -67,10 +66,14 @@ const SearchBar = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    if (nextProps.string !== this.state.form.data.string){
+    if (nextProps.string !== this.state.form.data.string && this.state.form.data.string !== ''){
+      const shouldValidate = this.props.location.pathname !== '/search';
       this.state.form.updateData({
         string: nextProps.string || ''
-      }, {validate: this.props.location.pathname !== '/search'});
+      }, {
+        validate: shouldValidate,
+        clearValidation: shouldValidate
+      });
     }
   },
   shouldComponentUpdate(nextProps, nextState) {

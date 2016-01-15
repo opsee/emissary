@@ -8,10 +8,12 @@ import InstanceItem from './InstanceItem.jsx';
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Link} from 'react-router';
+import {SetInterval} from '../../modules/mixins';
 import {StatusHandler} from '../global';
 import {env as actions} from '../../actions';
 
 const InstanceItemList = React.createClass({
+  mixins: [SetInterval],
   propTypes: {
     instances: PropTypes.instanceOf(List),
     groupSecurity: PropTypes.string,
@@ -22,6 +24,7 @@ const InstanceItemList = React.createClass({
     noFallback: PropTypes.bool,
     type: PropTypes.string,
     filter: PropTypes.bool,
+    interval: PropTypes.number,
     actions: PropTypes.shape({
       getInstancesEcc: PropTypes.func,
       getInstancesRds: PropTypes.func
@@ -45,12 +48,8 @@ const InstanceItemList = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    if (!this.props.instances){
-      if (this.props.type === 'rds'){
-        return this.props.actions.getInstancesRds();
-      }
-      return this.props.actions.getInstancesEcc();
-    }
+    this.getData();
+    this.setInterval(this.getData, this.props.interval);
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
@@ -64,7 +63,10 @@ const InstanceItemList = React.createClass({
   },
   getDefaultProps() {
     return {
-      type: 'ecc'
+      type: 'ecc',
+      offset: 0,
+      limit: 1000,
+      interval: 30000
     };
   },
   getInitialState(){
@@ -72,6 +74,14 @@ const InstanceItemList = React.createClass({
       offset: this.props.offset || 0,
       limit: this.props.limit || 8
     };
+  },
+  getData(){
+    if (!this.props.instances){
+      if (this.props.type === 'rds'){
+        return this.props.actions.getInstancesRds();
+      }
+      return this.props.actions.getInstancesEcc();
+    }
   },
   getInstances(noFilter){
     const {type} = this.props;
@@ -147,7 +157,7 @@ const InstanceItemList = React.createClass({
     return null;
   },
   renderNoMatch(){
-    if (!this.getInstances().size){
+    if (!this.getInstances().size && !this.props.noFallback){
       return <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>;
     }
     return null;

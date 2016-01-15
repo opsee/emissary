@@ -116,7 +116,7 @@ const CheckEdit = React.createClass({
     if (this.state.showEnv){
       return (
         <Padding tb={1}>
-          <EnvList onTargetSelect={this.handleTargetSelect} include={['groups.security', 'groups.elb']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
+          <EnvList onTargetSelect={this.handleTargetSelect} include={['groups.elb', 'groups.security', 'instances.ecc']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         </Padding>
       );
     }

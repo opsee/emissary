@@ -51,7 +51,7 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groups.security', 'groups.elb', 'instances.rds', 'instances.ecc'],
+      include: ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc'],
       limit: 1000
     };
   },
