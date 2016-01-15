@@ -14,10 +14,6 @@
   background-color: var(--gray900) !important;
 }
 
-.form input:hover, .form input:active, .form input:focus{
-  /*background-color: var(--gray900) !important;*/
-}
-
 .form :global .form-group{
   position: static;
 }
@@ -40,12 +36,6 @@
 .form input:focus ~ label{
   background:black !important;
 }
-
-/*.label{
-  display: block;
-  width:100%;
-  background-color: var(--gray900);
-}*/
 
 .iconLabel{
   position: relative;
