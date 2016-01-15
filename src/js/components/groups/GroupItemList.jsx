@@ -127,7 +127,7 @@ const GroupItemList = React.createClass({
       if (this.props.groups){
         return <h3>{this.props.title} ({this.getGroups(true).size})</h3>;
       }
-      return <h3>{this.props.title} ({this.getGroups().size})</h3>;
+      return <h3>{this.props.title} ({this.getGroups(true).size})</h3>;
     }
     return null;
   },

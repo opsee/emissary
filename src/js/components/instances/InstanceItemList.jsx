@@ -152,7 +152,7 @@ const InstanceItemList = React.createClass({
   },
   renderTitle(){
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getInstances().size))){
-      return <h3>{this.getTitle()} Instances ({this.getInstances().size})</h3>;
+      return <h3>{this.getTitle()} Instances ({this.getInstances(true).size})</h3>;
     }
     return null;
   },
