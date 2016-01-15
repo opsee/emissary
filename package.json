@@ -120,7 +120,7 @@
     "regenerator": "^0.8.42",
     "scroll-behavior": "^0.3.0",
     "seedling": "git+ssh://git@github.com/opsee/seedling.git",
-    "slate": "git+ssh://git@github.com/opsee/slate.git",
+    "slate": "git+ssh://git@github.com/opsee/slate.git#ef7bbe690a4cdbeeb8f921d86511a214ba310d21",
     "superagent": "^1.3.0",
     "superagent-promise": "^1.0.3"
   }
