@@ -53,7 +53,7 @@ const SearchBar = React.createClass({
             !form.cleanedData.string && form.data.string
             ){
             self.handleSearch(form.cleanedData.string);
-          } else if(form.cleanedData.string && !form.data.string){
+          } else if (form.cleanedData.string && !form.data.string){
             self.handleSearch('');
           }
         },
