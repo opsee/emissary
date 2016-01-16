@@ -4,12 +4,14 @@ import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {Check} from '../modules/schemas';
+import {itemsFilter} from '../modules';
 import {
   GET_CHECK,
   GET_CHECKS,
   CHECK_TEST,
   CHECK_TEST_RESET,
-  CHECK_TEST_SELECT_RESPONSE
+  CHECK_TEST_SELECT_RESPONSE,
+  CHECKS_SET_FILTERED
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -78,13 +80,14 @@ const initial = {
   checks: new List(),
   responses: new List(),
   responsesFormatted: [],
-  selectedResponse: 0
+  selectedResponse: 0,
+  filtered: new List()
 };
 
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(action.payload);
+      const single = statics.checkFromJS(action.payload.data);
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -100,10 +103,12 @@ export default handleActions({
         return r.passing;
       });
       const responsesFormatted = statics.getFormattedResponses(responses);
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {
         checks,
         responses,
-        responsesFormatted
+        responsesFormatted,
+        filtered
       });
     },
     throw(state){
@@ -112,10 +117,11 @@ export default handleActions({
   },
   [GET_CHECKS]: {
     next(state, action){
-      const checks = new List(action.payload.map(c => {
+      const checks = new List(action.payload.data.map(c => {
         return statics.checkFromJS(c);
       }));
-      return _.assign({}, state, {checks});
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      return _.assign({}, state, {checks, filtered});
     },
     throw(state){
       return state;
@@ -144,6 +150,12 @@ export default handleActions({
     next(state, action){
       const selectedResponse = action.payload;
       return _.assign({}, state, {selectedResponse});
+    }
+  },
+  [CHECKS_SET_FILTERED]: {
+    next(state, action){
+      const filtered = itemsFilter(state.checks, action.payload, 'checks');
+      return _.assign({}, state, {filtered});
     }
   }
 }, initial);

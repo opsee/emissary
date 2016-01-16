@@ -11,11 +11,17 @@ body {
 .meat{
   position: relative;
   transition:transform var(--transitionEaseOut);
+  z-index:3;
+}
+
+.meatUp{
+  composes:meat;
+  transform:translateY(-46px);
 }
 
 @media (min-width: 768px) {
   .meatUp{
     composes: meat;
-    transform:translateY(-54px);
+    transform:translateY(-100px);
   }
 }

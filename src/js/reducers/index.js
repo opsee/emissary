@@ -6,6 +6,7 @@ import asyncActions from './asyncActions';
 import checks from './checks';
 import env from './env';
 import onboard from './onboard';
+import search from './search';
 import user from './user';
 
 export default combineReducers({
@@ -16,5 +17,6 @@ export default combineReducers({
   env,
   onboard,
   router,
+  search,
   user
 });

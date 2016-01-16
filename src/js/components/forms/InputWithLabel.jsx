@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Label from './Label.jsx';
 import cx from 'classnames';
+import _ from 'lodash';
 
 const InputWithLabel = React.createClass({
   propTypes: {
@@ -11,6 +12,15 @@ const InputWithLabel = React.createClass({
     let arr = ['flex-column'];
     if (this.props.children) {
       arr.push('has-icon');
+    }
+    if (_.get(this.props.bf, 'field.widgetAttrs.labelInside')){
+      return (
+        <div>
+          {this.props.bf.render()}
+          {this.props.children}
+          <Label bf={this.props.bf} />
+        </div>
+      );
     }
     return (
       <div className={cx(arr)}>

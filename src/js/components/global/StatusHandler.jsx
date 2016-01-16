@@ -16,13 +16,19 @@ const StatusHandler = React.createClass({
     ]),
     children: PropTypes.node,
     noFallback: PropTypes.bool,
-    onDismiss: PropTypes.func
+    onDismiss: PropTypes.func,
+    history: PropTypes.array
+  },
+  getDefaultProps() {
+    return {
+      history: []
+    };
   },
   getInitialState(){
     return {
       error: (this.props.status && typeof this.props.status === 'object') || false,
       success: false,
-      attempts: 0
+      attempts: this.props.history.length
     };
   },
   componentWillReceiveProps(nextProps){

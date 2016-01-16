@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
-import EnvWithFilter from './EnvWithFilter.jsx';
-import _ from 'lodash';
+import EnvList from './EnvList.jsx';
 
 const EnvInstancesEC2 = React.createClass({
   propTypes: {
@@ -15,7 +14,7 @@ const EnvInstancesEC2 = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={['instancesECC']} filter={_.get(this.props.location.query, 'filter')} limit={1000}/>
+                <EnvList include={['instances.ecc']} limit={1000}/>
               </Col>
             </Row>
           </Grid>

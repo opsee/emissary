@@ -1,5 +1,4 @@
 import {isFSA} from 'flux-standard-action';
-import uuid from 'node-uuid';
 import _ from 'lodash';
 import config from './config';
 
@@ -16,7 +15,7 @@ export function promiseMiddleware({ dispatch }) {
     }
     if (isPromise(action.payload)){
       const aType = `${action.type}_ASYNC`;
-      const id = uuid.v1();
+      const id = _.uniqueId();
       dispatch({
         type: aType,
         payload: {

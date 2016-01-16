@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
-import EnvWithFilter from './EnvWithFilter.jsx';
+import EnvList from './EnvList.jsx';
 import {State} from 'react-router';
 import {env as actions} from '../../actions';
 import _ from 'lodash';
@@ -25,9 +25,6 @@ const Env = React.createClass({
     })
   },
   componentWillMount(){
-    if (this.props.location.query.search && !this.props.redux.env.search){
-      this.props.actions.envSetSearch(this.props.location.query.search);
-    }
     this.props.actions.getBastions();
   },
   getTitle(){
@@ -36,21 +33,19 @@ const Env = React.createClass({
     const vpcId = bastion.vpc_id || '';
     return `${region} - ${vpcId}`;
   },
-  getInitialState(){
+  getIncludes(){
     const path = this.props.location.pathname;
     let include;
     if (path){
       if (path.match('groups-security')){
-        include = ['groupsSecurity'];
+        include = ['groups.security'];
       }else if (path.match('groups-elb')){
-        include = ['groupsELB'];
+        include = ['groups.elb'];
       }else if (path.match('instances-ec2')){
-        include = ['instancesECC'];
+        include = ['instances.ecc'];
       }
     }
-    return {
-      include
-    };
+    return include;
   },
   render() {
     return (
@@ -60,7 +55,7 @@ const Env = React.createClass({
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include && this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                  <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux} showFilterButtons/>
                 </BastionRequirement>
               </Col>
             </Row>

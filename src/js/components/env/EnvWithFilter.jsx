@@ -254,7 +254,7 @@ const EnvWithFilter = React.createClass({
       return (
         <div key="instancesRds">
           <h3>RDS DB Instances ({this.getInstancesRds().size})</h3>
-          <InstanceItemList instances={this.getInstancesRds()} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit}/>
+          <InstanceItemList instances={this.getInstancesRds()} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="RDS"/>
           <hr/>
         </div>
       );

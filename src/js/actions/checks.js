@@ -63,7 +63,10 @@ export function getCheck(id){
           const {notifications} = values[1].body;
           const {assertions} = values[2].body;
           const obj = _.assign({}, check, {notifications, assertions});
-          resolve(obj);
+          resolve({
+            data: obj,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -79,7 +82,10 @@ export function getChecks(redirect){
         .get(`${config.api}/checks`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(_.get(res.body, 'checks'));
+          resolve({
+            data: _.get(res.body, 'checks'),
+            search: state().search
+          });
           if (redirect){
             setTimeout(() => {
               dispatch(pushState(null, '/'));

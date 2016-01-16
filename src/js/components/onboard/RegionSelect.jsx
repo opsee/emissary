@@ -2,9 +2,9 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import forms from 'newforms';
 
 import {Toolbar} from '../global';
-import forms from 'newforms';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';

@@ -1,7 +1,6 @@
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
-import {createAction} from 'redux-actions';
 import {
   GET_GROUP_SECURITY,
   GET_GROUPS_SECURITY,
@@ -13,8 +12,6 @@ import {
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
-  FILTER_ENV,
-  ENV_SET_SEARCH,
   ENV_GET_BASTIONS,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -23,14 +20,6 @@ import {
 
 export function getGroupSecurity(id){
   return (dispatch, state) => {
-    // const filter = {
-    //   type: FILTER_ENV,
-    //   payload: {
-    //     type: 'groups.security',
-    //     id
-    //   }
-    // };
-    // dispatch(filter);
     dispatch({
       type: GET_GROUP_SECURITY,
       payload: new Promise((resolve, reject) => {
@@ -46,7 +35,10 @@ export function getGroupSecurity(id){
           .set('Authorization', state().user.get('auth'))
           .then((res2) => {
             group.instances = res2.body && res2.body.instances;
-            resolve(group);
+            resolve({
+              data: group,
+              search: state().search
+            });
           }, reject);
         }, reject);
       })
@@ -63,7 +55,10 @@ export function getGroupsSecurity(){
         .get(`${config.api}/groups/security`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(res.body.groups);
+          resolve({
+            data: res.body.groups,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -87,7 +82,10 @@ export function getGroupElb(id){
           .set('Authorization', state().user.get('auth'))
           .then((res2) => {
             group.instances = res2.body && res2.body.instances;
-            resolve(group);
+            resolve({
+              data: group,
+              search: state().search
+            });
           }, res2 => reject(res2));
         }, res => reject(res));
       })
@@ -104,7 +102,10 @@ export function getGroupsElb(){
         .get(`${config.api}/groups/elb`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(res.body.groups);
+          resolve({
+            data: res.body.groups,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -120,7 +121,10 @@ export function getInstanceEcc(id){
         .get(`${config.api}/instances/ec2/${id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(res.body);
+          resolve({
+            data: res.body,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -136,7 +140,10 @@ export function getInstancesEcc(){
         .get(`${config.api}/instances/ec2`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(res.body.instances);
+          resolve({
+            data: res.body.instances,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -152,7 +159,10 @@ export function getInstancesRds(){
         .get(`${config.api}/instances/rds`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(res.body.instances);
+          resolve({
+            data: res.body.instances,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -168,7 +178,10 @@ export function getInstanceRds(id){
         .get(`${config.api}/instances/rds/${id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(res.body);
+          resolve({
+            data: res.body,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -248,7 +261,3 @@ export function startInstances(InstanceIds){
     });
   };
 }
-
-export const filter = createAction(FILTER_ENV);
-
-export const envSetSearch = createAction(ENV_SET_SEARCH);

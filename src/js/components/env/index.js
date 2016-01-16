@@ -1,5 +1,5 @@
-import EnvWithFilter from './EnvWithFilter.jsx';
+import EnvList from './EnvList.jsx';
 
 export {
-  EnvWithFilter
+  EnvList
 };

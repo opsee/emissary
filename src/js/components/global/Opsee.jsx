@@ -14,6 +14,7 @@ import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
 import {app as appActions, user as userActions, env as envActions} from '../../actions';
+import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
 const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot', '^\/check\/\\w+\/screenshot'];
@@ -90,6 +91,7 @@ const Opsee = React.createClass({
       <div>
         <DocumentTitle title="Opsee"/>
         <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
+        <SearchBar/>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

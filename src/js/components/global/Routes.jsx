@@ -50,6 +50,8 @@ import OnboardInstall from 'react-proxy?name=onboard!../onboard/Install';
 
 import AdminSignups from 'react-proxy!../admin/Signups';
 
+import SearchAll from 'react-proxy!../search/All';
+
 import Help from 'react-proxy!../pages/Help';
 import Styleguide from 'react-proxy!../pages/Styleguide';
 import System from 'react-proxy!../env/System';
@@ -108,6 +110,8 @@ const routes = (
 
     <Route path="/admin/signups" component={auth(AdminSignups)}/>
     <Route path="/system" component={auth(System)}/>
+
+    <Route path="/search" component={auth(SearchAll)}/>
 
     <Route path="/profile" component={auth(Profile)}/>
     <Route path="/profile/edit" component={auth(ProfileEdit)}/>
