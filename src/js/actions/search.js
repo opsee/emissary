@@ -15,7 +15,7 @@ export function setString(string){
     dispatch({
       type: SEARCH_SET_STRING,
       payload: new Promise((resolve) => {
-        if(state().search.string !== string){
+        if (state().search.string !== string){
           console.log('setstring', string);
           if (string || state().router.location.pathname === '/search'){
             if (state().router.location.pathname !== '/search'){
@@ -53,7 +53,7 @@ export function setTokens(payloadTokens = []){
           return token.term;
         }).reject('remove').value();
         const string = stringFromTokens(tokens);
-        if(state().search.string !== string){
+        if (state().search.string !== string){
           dispatch({
             type: SEARCH_SET_STRING,
             payload: string
