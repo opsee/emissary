@@ -20,8 +20,8 @@ const CheckItemList = React.createClass({
     ]),
     filter: PropTypes.bool,
     title: PropTypes.bool,
-    offset: PropTypes.bool,
-    limit: PropTypes.bool,
+    offset: PropTypes.number,
+    limit: PropTypes.number,
     noFallback: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func

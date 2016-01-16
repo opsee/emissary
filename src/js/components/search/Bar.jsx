@@ -52,7 +52,9 @@ const SearchBar = React.createClass({
             //weird situation with validation not firing on rapid location change, fuuuck
             !form.cleanedData.string && form.data.string
             ){
-            self.handleSearch();
+            self.handleSearch(form.cleanedData.string);
+          } else if(form.cleanedData.string && !form.data.string){
+            self.handleSearch('');
           }
         },
         labelSuffix: '',
@@ -73,8 +75,7 @@ const SearchBar = React.createClass({
       });
     }
   },
-  handleSearch(){
-    const {string} = this.state.form.cleanedData;
+  handleSearch(string){
     if (this.props.string !== string){
       this.props.actions.setString(string);
     }

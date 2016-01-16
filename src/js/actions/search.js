@@ -15,7 +15,7 @@ export function setString(string){
     dispatch({
       type: SEARCH_SET_STRING,
       payload: new Promise((resolve) => {
-        if (string || state().router.location.pathname === 'search'){
+        if (string || state().router.location.pathname === '/search'){
           if (state().router.location.pathname !== '/search'){
             dispatch(pushState(null, `/search?s=${string}`));
           }else {
