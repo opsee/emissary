@@ -25,6 +25,8 @@ const InstanceItemList = React.createClass({
     type: PropTypes.string,
     filter: PropTypes.bool,
     interval: PropTypes.number,
+    //disable fetch data on component mount?
+    noFetch: PropTypes.bool,
     actions: PropTypes.shape({
       getInstancesEcc: PropTypes.func,
       getInstancesRds: PropTypes.func
@@ -48,8 +50,11 @@ const InstanceItemList = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    this.getData();
     this.setInterval(this.getData, this.props.interval);
+    if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
+      return true;
+    }
+    this.getData();
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];

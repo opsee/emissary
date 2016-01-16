@@ -120,7 +120,7 @@ const CheckCreateTarget = React.createClass({
       <div>
         {this.renderHelperText()}
         <h3>Choose a Target for your Check</h3>
-        <EnvList onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']}/>
+        <EnvList onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch/>
       </div>
     );
   },

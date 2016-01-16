@@ -6,7 +6,8 @@ export default function asyncActions(state, action = {type: null}) {
   _.keys(constants).forEach(c => {
     const name = _.camelCase(c.replace(/_ASYNC$/, ''));
     initial[name] = {
-      status: null
+      status: null,
+      history: []
     };
   });
   if (typeof state  === 'undefined'){

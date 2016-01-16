@@ -22,6 +22,8 @@ const EnvList = React.createClass({
     noModal: PropTypes.bool,
     limit: PropTypes.number,
     showFilterButtons: PropTypes.bool,
+    //disable fetch data on component mount?
+    noFetch: PropTypes.bool,
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       search: PropTypes.shape({
@@ -60,7 +62,7 @@ const EnvList = React.createClass({
   renderGroupsSecurity(){
     return (
       <div key="groupsSecurity">
-        <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups"/>
+        <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups" noFetch={this.props.noFetch}/>
         <hr/>
       </div>
     );
@@ -68,7 +70,7 @@ const EnvList = React.createClass({
   renderGroupsElb(){
     return (
       <div key="groupsELB">
-        <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs"/>
+        <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs" noFetch={this.props.noFetch}/>
         <hr/>
       </div>
     );
@@ -76,7 +78,7 @@ const EnvList = React.createClass({
   renderInstancesEcc(){
     return (
       <div key="instancesECC">
-        <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="ecc" title/>
+        <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="ecc" title noFetch={this.props.noFetch}/>
         <hr/>
       </div>
     );
@@ -84,7 +86,7 @@ const EnvList = React.createClass({
   renderInstancesRds(){
     return (
       <div key="instancesRds">
-        <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="rds" title/>
+        <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="rds" title noFetch={this.props.noFetch}/>
         <hr/>
       </div>
     );

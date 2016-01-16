@@ -22,9 +22,14 @@ const GroupItemList = React.createClass({
     type: PropTypes.string,
     title: PropTypes.string,
     instanceIds: PropTypes.array,
+    //display nothing if no groups found
     noFallback: PropTypes.bool,
+    //use search results?
     filter: PropTypes.bool,
+    //data fetching frequency (ms)
     interval: PropTypes.number,
+    //disable fetch data on component mount?
+    noFetch: PropTypes.bool,
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
       getGroupsSecurity: PropTypes.func
@@ -54,8 +59,11 @@ const GroupItemList = React.createClass({
     };
   },
   componentWillMount(){
-    this.getData();
     this.setInterval(this.getData, this.props.interval);
+    if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
+      return true;
+    }
+    this.getData();
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
