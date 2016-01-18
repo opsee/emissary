@@ -23,7 +23,10 @@ const CheckScreenshot = React.createClass({
     })
   },
   componentWillMount() {
-    this.props.actions.getCheckFromNotificaption(this.props.params.id);
+    // The JSON containing check data to populate the screenshot is uploaded
+    // to S3 by the Notificaption service (but any JSON URL would work)
+    const jsonURI = this.props.location.query.json;
+    this.props.actions.getCheckFromNotificaption(jsonURI);
   },
   getCheck() {
     const check = this.props.redux.checks.checks.first();

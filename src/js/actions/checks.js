@@ -15,20 +15,11 @@ import {
 } from './constants';
 import URL from 'url';
 
-export function getCheckFromNotificaption(id) {
-  const {hostname, port, protocol} = config.notificaption;
-  const filename = `${id}.json`;
-  const checkURI = URL.format({
-    protocol: protocol,
-    hostname: hostname,
-    port: port,
-    pathname: `/checks/${filename}`
-  });
-
+export function getCheckFromNotificaption(jsonURI) {
   return dispatch => {
     dispatch({
       type: GET_CHECK,
-      payload: request.get(checkURI)
+      payload: request.get(jsonURI)
         .then(res => {
           return res.body;
         })
