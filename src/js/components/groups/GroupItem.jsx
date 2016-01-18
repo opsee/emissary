@@ -115,7 +115,7 @@ const GroupItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
+        <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
           <ContextMenu title={`${this.props.item.get('name')} Actions`} id={this.getItem().get('id')} key="menu">
             <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check
