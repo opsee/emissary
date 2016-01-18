@@ -27,6 +27,7 @@ export function signupCreate(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
+          analytics.event('Onboard', 'signup');
           //TODO remove timeout somehow
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
