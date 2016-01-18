@@ -14,8 +14,7 @@ var server = new WebpackDevServer(webpack(config), {
     chunks: false,
     assets: false,
     hash: false,
-    version: false,
-    timings: false
+    version: false
   }
 });
 
