@@ -82,7 +82,7 @@ const InstanceItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState}>
+        <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState}>
           {this.renderMenu()}
           <div key="line1">{this.getItem().get('name')}</div>
           <div key="line2">{this.renderInfoText()}</div>
