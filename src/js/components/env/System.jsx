@@ -91,7 +91,7 @@ const System = React.createClass({
             <Col xs={12}>
               {this.renderBastionsInfo()}
               {this.renderCustomerInfo()}
-              <strong>App Revision:</strong>&nbsp;<span className="text-secondary">{config.revision}</span>
+              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{config.revision}</span>
             </Col>
           </Row>
         </Grid>
