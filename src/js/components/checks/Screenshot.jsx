@@ -15,6 +15,11 @@ const CheckScreenshot = React.createClass({
 
   propTypes: {
     params: PropTypes.object,
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        json: PropTypes.string.isRequired
+      })
+    }),
     actions: PropTypes.shape({
       getCheckFromNotificaption: PropTypes.func.isRequired
     }),

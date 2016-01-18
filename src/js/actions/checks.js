@@ -13,7 +13,6 @@ import {
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
-import URL from 'url';
 
 export function getCheckFromNotificaption(jsonURI) {
   return dispatch => {
