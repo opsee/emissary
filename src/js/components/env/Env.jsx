@@ -34,14 +34,14 @@ const Env = React.createClass({
     return `${region} - ${vpcId}`;
   },
   getIncludes(){
-    const path = this.props.location.pathname;
-    let include;
-    if (path){
-      if (path.match('groups-security')){
+    const {pathname} = this.props.location;
+    let include = ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc'];
+    if (pathname){
+      if (pathname.match('groups-security')){
         include = ['groups.security'];
-      }else if (path.match('groups-elb')){
+      }else if (pathname.match('groups-elb')){
         include = ['groups.elb'];
-      }else if (path.match('instances-ec2')){
+      }else if (pathname.match('instances-ec2')){
         include = ['instances.ecc'];
       }
     }

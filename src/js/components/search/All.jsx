@@ -1,14 +1,12 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
 import {BastionRequirement, Toolbar} from '../global';
 import {search as actions} from '../../actions';
 import {EnvList} from '../env';
-import {CheckItemList} from '../checks';
 import FilterButtons from './FilterButtons';
 
 const SearchAll = React.createClass({
@@ -47,28 +45,6 @@ const SearchAll = React.createClass({
       })
     })
   },
-  renderLists(){
-    const envArr = ['groups.security', 'groups.elb', 'instances.rds', 'instances.ecc'];
-    const envSizes = envArr.map(env => {
-      return _.get(this.props.redux.env.filtered, `${env}.size`) || 0;
-    });
-    const checksFirst = _.last(envSizes.sort()) < this.props.redux.checks.filtered.size;
-    if (checksFirst){
-      return (
-        <div>
-          <CheckItemList filter title/>
-          <hr/>
-          <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
-        </div>
-      );
-    }
-    return (
-      <div>
-        <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
-        <CheckItemList filter title/>
-      </div>
-    );
-  },
   render(){
     return (
       <div>
@@ -78,7 +54,7 @@ const SearchAll = React.createClass({
               <Col xs={12}>
                 <BastionRequirement>
                   <FilterButtons/>
-                  {this.renderLists()}
+                  <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
                 </BastionRequirement>
               </Col>
             </Row>
