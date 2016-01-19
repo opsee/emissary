@@ -26,15 +26,21 @@ const analytics = {
           email: 'sara@opsee.co'
         },
         data: data
-      });
+      })
+      .end();
   },
-  pageView(page, name){
+  pageView(path, name){
     if (config.ghosting){
       return false;
     }
+
     const title = name || document.title;
+    const user = { email: 'sara@opsee.co' };
+
     setTimeout(() => {
-      window.ga('send', 'pageview', {page, title});
+      request.post(`${ANALYTICS_API}/pageview`)
+        .send({ path, title, user })
+        .end();
     }, 0);
   }
 };
