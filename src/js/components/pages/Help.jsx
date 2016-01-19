@@ -61,6 +61,10 @@ export default React.createClass({
                 </ul>
 
               </Padding>
+
+              <Padding b={1}>
+                <Link to="/system">View System Information</Link>
+              </Padding>
               {this.renderAdminLinks()}
             </Col>
           </Row>
