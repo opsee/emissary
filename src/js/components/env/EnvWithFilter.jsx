@@ -16,6 +16,7 @@ import {Search, Circle} from '../icons';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
 const FilterForm = forms.Form.extend({
@@ -199,7 +200,7 @@ const EnvWithFilter = React.createClass({
     if (this.props.redux.env.groups.security.size){
       return (
         <div key="groupsSecurity">
-          <h3>Security Groups ({this.getGroupsSecurity().size})</h3>
+          <Heading level={3}>Security Groups ({this.getGroupsSecurity().size})</Heading>
           <GroupItemList groups={this.getGroupsSecurity()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
@@ -207,7 +208,7 @@ const EnvWithFilter = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status} errorText="Something went wrong trying to get Security Groups." key="groupsSecurityStatus">
-        <h3>Security Groups</h3>
+        <Heading level={3}>Security Groups</Heading>
         <Alert bsStyle="default">
           No security groups found
         </Alert>
@@ -219,7 +220,7 @@ const EnvWithFilter = React.createClass({
     if (this.props.redux.env.groups.security.size){
       return (
         <div key="groupsELB">
-          <h3>ELBs ({this.getGroupsELB().size})</h3>
+          <Heading level={3}>ELBs ({this.getGroupsELB().size})</Heading>
           <GroupItemList groups={this.getGroupsELB()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
@@ -233,7 +234,7 @@ const EnvWithFilter = React.createClass({
     if (this.props.redux.env.instances.ecc.size){
       return (
         <div key="instancesECC">
-          <h3>EC2 Instances ({this.getInstancesECC().size})</h3>
+          <Heading level={3}>EC2 Instances ({this.getInstancesECC().size})</Heading>
           <InstanceItemList instances={this.getInstancesECC()} onClick={this.props.onTargetSelect} selected={this.state.selected} noModal={this.props.noModal} limit={this.props.limit}/>
           <hr/>
         </div>
@@ -241,7 +242,7 @@ const EnvWithFilter = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getInstancesEcc.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesECCStatus">
-        <h3>EC2 Instances</h3>
+        <Heading level={3}>EC2 Instances</Heading>
         <Alert bsStyle="default">
           No EC2 Instances found
         </Alert>
@@ -253,7 +254,7 @@ const EnvWithFilter = React.createClass({
     if (this.props.redux.env.instances.ecc.size){
       return (
         <div key="instancesRds">
-          <h3>RDS DB Instances ({this.getInstancesRds().size})</h3>
+          <Heading level={3}>RDS DB Instances ({this.getInstancesRds().size})</Heading>
           <InstanceItemList instances={this.getInstancesRds()} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="RDS"/>
           <hr/>
         </div>
@@ -261,7 +262,7 @@ const EnvWithFilter = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getInstancesRds.status} errorText="Something went wrong trying to get EC2 Instances." key="instancesRdsStatus">
-        <h3>RDS DB Instances</h3>
+        <Heading level={3}>RDS DB Instances</Heading>
         <Alert bsStyle="default">
           No RDS Instances found
         </Alert>

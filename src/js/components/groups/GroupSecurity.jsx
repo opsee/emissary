@@ -12,6 +12,7 @@ import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
 const GroupSecurity = React.createClass({
@@ -69,7 +70,7 @@ const GroupSecurity = React.createClass({
             </Button>
           </Padding>
           <Padding b={1}>
-            <h3>{this.getGroup().get('id')} Information</h3>
+            <Heading level={3}>{this.getGroup().get('id')} Information</Heading>
             <Table>
               <tr>
                 <td><strong>Description</strong></td>

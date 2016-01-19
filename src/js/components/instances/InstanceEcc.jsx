@@ -2,12 +2,13 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
-import TimeAgo from 'react-timeago';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add, Settings} from '../icons';
 import {GroupItemList} from '../groups';
@@ -96,7 +97,7 @@ const InstanceEcc = React.createClass({
           </Padding>
 
           <Padding b={1}>
-            <h3>{this.props.params.id} Information</h3>
+            <Heading level={3}>{this.props.params.id} Information</Heading>
             <Table>
               <tr>
                 <td><strong>Launched</strong></td>

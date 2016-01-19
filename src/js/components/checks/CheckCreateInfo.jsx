@@ -12,6 +12,7 @@ import {StatusHandler} from '../global';
 import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {checks as actions, user as userActions} from '../../actions';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
@@ -182,7 +183,7 @@ const CheckCreateInfo = React.createClass({
   renderNotificationForm(){
     return (
       <Padding b={2}>
-        <h3>Notifications</h3>
+        <Heading level={3}>Notifications</Heading>
         {this.getNotificationsForms().map((form, index) => {
           return (
             <Padding b={2} key={`notif-form-${index}`}>

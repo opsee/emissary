@@ -14,6 +14,7 @@ import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {
   env as envActions,
   checks as checkActions,
@@ -78,25 +79,6 @@ const InfoForm = forms.Form.extend({
   }),
   constructor(data, kwargs){
     forms.Form.call(this, kwargs);
-  },
-  render() {
-    return (
-      <div>
-        <h3>Define HTTP Request</h3>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('body')} key={`bound-field-body`}/>
-        </Padding>
-      </div>
-    );
   }
 });
 
@@ -247,7 +229,7 @@ const CheckCreateRequest = React.createClass({
   renderHeaderForm(){
     return (
       <div>
-        <h3>Request Headers</h3>
+        <Heading level={3}>Request Headers</Heading>
         {this.getHeaderForms().map((form, index) => {
           return (
             <Padding b={2} key={`header-form-${index}`}>
@@ -341,21 +323,17 @@ const CheckCreateRequest = React.createClass({
     return null;
   },
   renderInfoForm(){
+    const self = this;
     return (
       <div>
-        <h3>Define Your HTTP Request</h3>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('protocol')} key={`bound-field-protocol`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('verb')} key={`bound-field-verb`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('path')} key={`bound-field-path`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('port')} key={`bound-field-port`}/>
-        </Padding>
+        <Heading level={3}>Define Your HTTP Request</Heading>
+        {['protocol', 'verb', 'path', 'port'].map(string => {
+          return (
+            <Padding b={1}>
+              <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
+            </Padding>
+          );
+        })}
         {this.renderBodyInput()}
       </div>
     );
@@ -367,7 +345,7 @@ const CheckCreateRequest = React.createClass({
           {this.renderHelperText()}
         </Padding>
         <Padding b={1}>
-          <h3>Your Target</h3>
+          <Heading level={3}>Your Target</Heading>
           {this.renderTargetSelection()}
           <hr/>
         </Padding>

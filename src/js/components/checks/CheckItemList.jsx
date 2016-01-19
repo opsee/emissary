@@ -9,6 +9,7 @@ import {Alert} from '../../modules/bootstrap';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 import {checks as actions} from '../../actions';
+import {Heading} from '../type';
 
 const CheckItemList = React.createClass({
   mixins: [SetInterval],
@@ -88,7 +89,7 @@ const CheckItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getChecks().size))){
-      return <h3>Checks {numbers}</h3>;
+      return <Heading level={3}>Checks {numbers}</Heading>;
     }
     return null;
   },

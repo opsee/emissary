@@ -13,6 +13,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
+import {Heading} from '../type';
 import {checks as actions, env as envActions} from '../../actions';
 import {Check} from '../../modules/schemas';
 
@@ -165,7 +166,7 @@ const CheckEdit = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getCheck.status}>
-        <h2>Check not found.</h2>
+        <Heading level={2}>Check not found.</Heading>
       </StatusHandler>
     );
   },

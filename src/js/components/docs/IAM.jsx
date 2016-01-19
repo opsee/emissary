@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router';
 import {Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Heading} from '../type';
 
 const IAM = React.createClass({
   render() {
@@ -12,17 +13,17 @@ const IAM = React.createClass({
           <Row>
             <Col xs={12}>
               <div>
-                <h2>Overview</h2>
+                <Heading level={2}>Overview</Heading>
                 <p>The Opsee onboarding process requires <em>temporary access to your AWS resources</em>. This access will only be used to install and start the Opsee Bastion EC2 Instance.  The Bastion is responsible for discovering and monitoring your AWS services. To learn more about the Bastion Instance <Link to="/docs/bastion" >see the FAQ</Link>.</p>
 
-                <h2>Setup via the creation of an IAM User</h2>
+                <Heading level={2}>Setup via the creation of an IAM User</Heading>
                 <p>This section describes how to complete the onboarding process by creating an IAM User and attaching an Access Policy to that user.</p>
 
-                <h3>Create an IAM User</h3>
+                <Heading level={3}>Create an IAM User</Heading>
                 <p>IAM Users allow you to delegate access to AWS services to third parties.  Opsee will utilize the IAM User you provide during the installation of the bastion. IAM Users are created via the IAM section of the AWS console.</p>
                 <p>If you have trouble creating an IAM User for the onboarding process, refer to the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html">AWS Guide on IAM User setup</a>.</p>
 
-                <h3>Create and attach and Access Policy to the IAM User</h3>
+                <Heading level={3}>Create and attach and Access Policy to the IAM User</Heading>
 
                 <p>The Access Policy you attach to the previously created IAM User limits what resources the User (in this case, Opsee) has access to. For more information on this Policy Element, refer to the section entitled Access Policy in the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html">AWS Policy Elements Documentation</a>. Follow the steps listed below to apply the policy to the user you created in the previous section.</p>
 
@@ -60,7 +61,7 @@ const IAM = React.createClass({
                 }, null, ' ')}
                 </Highlight>
 
-                <h3>Provide Opsee Your IAM User Credentials</h3>
+                <Heading level={3}>Provide Opsee Your IAM User Credentials</Heading>
                 <p>The final step of the process is to provide opsee with the credentials for the IAM User Account.  To do this, you will need to create an access key for the IAM User you have created.</p>
 
                 <ol>

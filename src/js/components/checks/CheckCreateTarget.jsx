@@ -13,6 +13,7 @@ import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import {EnvList} from '../env';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {Check} from '../../modules/schemas';
 import {checks as actions, user as userActions} from '../../actions';
 
@@ -119,7 +120,7 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         {this.renderHelperText()}
-        <h3>Choose a Target for your Check</h3>
+        <Heading level={3}>Choose a Target for your Check</Heading>
         <EnvList onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch/>
       </div>
     );

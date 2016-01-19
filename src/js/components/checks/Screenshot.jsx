@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
+
 import {checks as actions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import {Map} from 'immutable';
+import {Heading} from '../type';
 import {Toolbar} from '../global';
 import AssertionItemList from './AssertionItemList';
 import NotificationItemList from './NotificationItemList';
@@ -45,12 +47,12 @@ const CheckScreenshot = React.createClass({
       return (
         <div>
           <Padding b={1}>
-            <h3>HTTP Request</h3>
+            <Heading level={3}>HTTP Request</Heading>
             <HttpRequestItem spec={spec} target={target} />
           </Padding>
 
           <Padding b={1}>
-            <h3>Assertions</h3>
+            <Heading level={3}>Assertions</Heading>
             <AssertionItemList assertions={check.get('assertions')}/>
           </Padding>
 
@@ -60,7 +62,7 @@ const CheckScreenshot = React.createClass({
           </Padding>
 
           <Padding b={1}>
-            <h3>Notifications</h3>
+            <Heading level={3}>Notifications</Heading>
             <NotificationItemList notifications={check.get('notifications')} />
           </Padding>
         </div>

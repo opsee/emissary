@@ -12,6 +12,7 @@ import style from './checkResponse.css';
 import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
 import color from '../type/color.css';
+import {Heading} from '../type';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -309,7 +310,7 @@ const CheckResponsePaginate = React.createClass({
       return (
         <div>
         <Padding t={1}>
-          <h3>Response{this.getResponses().size > 1 ? 's' : ''}</h3>
+          <Heading level={3}>Response{this.getResponses().size > 1 ? 's' : ''}</Heading>
         </Padding>
         {this.renderBoolArea()}
           <div style={{background: '#212121'}}>

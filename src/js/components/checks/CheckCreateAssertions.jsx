@@ -17,6 +17,7 @@ import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
+import {Heading} from '../type';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -279,7 +280,7 @@ const CheckCreateAssertions = React.createClass({
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
         <Padding t={1}>
-          <h3>Assertions</h3>
+          <Heading level={3}>Assertions</Heading>
         </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
         <br />
