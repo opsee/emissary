@@ -16,7 +16,7 @@ const RadioWithLabel = React.createClass({
   },
   getStyle(){
     let style = {
-      marginTop: '0.1em'
+      paddingLeft: '1rem'
     };
     if (this.props.on){
       style.color = colors.primary;
