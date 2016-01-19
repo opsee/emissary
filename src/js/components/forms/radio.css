@@ -1,8 +1,13 @@
 @import '../global/vars';
 
+.wrapper {
+  height: 26px;
+  cursor: pointer;
+}
+
 .radio {
   box-sizing: border-box;
-  border-radius: 0.65em;
+  border-radius: 100%;
   user-select: none;
   background: none;
   border: 3px solid #9e9e9e;
@@ -11,7 +16,7 @@
   font-size: 1.2em;
   padding: 0 0;
   position: relative;
-  margin: 0 0.5em 0 0;
+  margin: 0;
   width: 26px;
 }
 .radio:after {
