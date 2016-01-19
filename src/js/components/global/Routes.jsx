@@ -108,7 +108,7 @@ const routes = (
     <Route path="/start/install" component={auth(OnboardInstall)}/>
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 
-    <Route path="/admin/signups" component={auth(AdminSignups)}/>
+    <Route path="/admin/signups" component={auth(AdminSignups, true)}/>
     <Route path="/system" component={auth(System)}/>
 
     <Route path="/search" component={auth(SearchAll)}/>

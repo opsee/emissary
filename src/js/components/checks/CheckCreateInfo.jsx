@@ -238,7 +238,7 @@ const CheckCreateInfo = React.createClass({
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
-        <Padding b={1}>
+        <Padding b={2}>
           {this.state.info.render()}
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>

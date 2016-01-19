@@ -16,12 +16,11 @@ const Hyphenate = React.createClass({
     };
   },
   getPadding(){
-    let padding = this.props.level < 3 ? 2 : 1;
+    let padding = this.props.level < 4 ? 2 : 1;
     if (this.props.noPadding){
       padding = 0;
     }
     return {
-      // t: padding,
       b: padding
     };
   },

@@ -325,7 +325,7 @@ const CheckCreateRequest = React.createClass({
   renderInfoForm(){
     const self = this;
     return (
-      <div>
+      <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
         {['protocol', 'verb', 'path', 'port'].map(string => {
           return (
@@ -335,13 +335,13 @@ const CheckCreateRequest = React.createClass({
           );
         })}
         {this.renderBodyInput()}
-      </div>
+      </Padding>
     );
   },
   renderInner(){
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
-        <Padding b={1}>
+        <Padding b={2}>
           {this.renderHelperText()}
         </Padding>
         <Padding b={1}>

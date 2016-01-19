@@ -64,12 +64,12 @@ const GroupSecurity = React.createClass({
     if (this.getGroup().get('name')){
       return (
         <div>
-          <Padding b={2}>
+          <Padding b={3}>
             <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=security&name=${this.getGroup().get('name')}`} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <Heading level={3}>{this.getGroup().get('id')} Information</Heading>
             <Table>
               <tr>
@@ -78,13 +78,13 @@ const GroupSecurity = React.createClass({
               </tr>
             </Table>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <CheckItemList type="groupSecurity" target={this.props.params.id} redux={this.props.redux} title/>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <InstanceItemList groupSecurity={this.props.params.id} type="ecc" title/>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <InstanceItemList groupSecurity={this.props.params.id} type="rds" title noFallback/>
           </Padding>
         </div>

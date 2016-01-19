@@ -85,7 +85,7 @@ const CheckSingle = React.createClass({
       return (
         <div>
           {this.renderTarget()}
-          <Padding b={1}>
+          <Padding b={2}>
             <Heading level={3}>HTTP Request</Heading>
             <HttpRequestItem spec={spec} target={target} />
           </Padding>
@@ -93,7 +93,7 @@ const CheckSingle = React.createClass({
             <Heading level={3}>Assertions</Heading>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <CheckResponsePaginate responses={this.getResponses()}/>
           </Padding>
 

@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import {Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
+import {Padding} from '../layout';
 
 const IAM = React.createClass({
   render() {
@@ -39,27 +40,29 @@ const IAM = React.createClass({
                   <li>If a validation error occurs, verify that you have copied the entire Policy from the box below. If you have trouble, contact us at <a href="mailto:support@opsee.com">support@opsee.com</a></li>
                   <li>If no errors have occurred, click <strong>Apply Policy</strong></li>
                 </ol>
-                <Highlight>
-                {JSON.stringify({
-                  'Version': '2012-10-17',
-                  'Statement': [
-                    {
-                      'Effect': 'Allow',
-                      'Action': [
-                        'autoscaling:*',
-                        'cloudformation:*',
-                        'ec2:*',
-                        'iam:*',
-                        'sns:*',
-                        'elasticloadbalancing:*',
-                        'sqs:*',
-                        'rds:*'
-                      ],
-                      'Resource': '*'
-                    }
-                  ]
-                }, null, ' ')}
-                </Highlight>
+                <Padding tb={1}>
+                  <Highlight>
+                  {JSON.stringify({
+                    'Version': '2012-10-17',
+                    'Statement': [
+                      {
+                        'Effect': 'Allow',
+                        'Action': [
+                          'autoscaling:*',
+                          'cloudformation:*',
+                          'ec2:*',
+                          'iam:*',
+                          'sns:*',
+                          'elasticloadbalancing:*',
+                          'sqs:*',
+                          'rds:*'
+                        ],
+                        'Resource': '*'
+                      }
+                    ]
+                  }, null, ' ')}
+                  </Highlight>
+                </Padding>
 
                 <Heading level={3}>Provide Opsee Your IAM User Credentials</Heading>
                 <p>The final step of the process is to provide opsee with the credentials for the IAM User Account.  To do this, you will need to create an access key for the IAM User you have created.</p>
