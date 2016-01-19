@@ -43,12 +43,14 @@ const GroupItem = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     const {props} = this;
-    let bool1 = _.isEqual(props.target, nextProps.target);
-    if (props.target && props.target.type){
-      const bool2 = !Immutable.is(props.groups[props.target.type], nextProps.groups[props.target.type]);
-      return bool1 || bool2;
+    const {target} = props;
+    let arr = [];
+    arr.push(!_.isEqual(target, nextProps.target));
+    if (target && target.type){
+      arr.push(!Immutable.is(props.groups[target.type], nextProps.groups[target.type]));
     }
-    return !Immutable.is(this.props.item, nextProps.item) || bool1;
+    arr.push(!Immutable.is(props.item, nextProps.item));
+    return _.some(arr);
   },
   getItem(){
     if (_.get(this.props, 'target.type')){

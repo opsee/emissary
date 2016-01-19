@@ -15,7 +15,8 @@ const EnvList = React.createClass({
       'groups.security',
       'groups.elb',
       'instances.ecc',
-      'instances.rds'
+      'instances.rds',
+      'checks.checks'
     ])),
     filter: PropTypes.bool,
     onFilterChange: PropTypes.func,
