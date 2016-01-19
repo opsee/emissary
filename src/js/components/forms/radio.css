@@ -18,6 +18,7 @@
   position: relative;
   margin: 0;
   width: 26px;
+  display: block;
 }
 .radio:after {
   /*transition: background-color var(--transitionEaseOut);*/
