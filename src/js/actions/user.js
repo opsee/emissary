@@ -27,6 +27,7 @@ export function login(data) {
         .post(`${config.authApi}/authenticate/password`)
         .send(data)
         .then((res) => {
+          analytics.event('User', 'login', {}, data);
           resolve(res.body);
           //TODO fix this somehow
           setTimeout(() => {
