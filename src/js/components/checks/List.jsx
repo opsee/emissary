@@ -8,6 +8,7 @@ import {Add} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
+import {Heading} from '../type';
 import {checks as actions} from '../../actions';
 
 const CheckList = React.createClass({
@@ -42,7 +43,7 @@ const CheckList = React.createClass({
     if (this.props.redux.checks.checks.size){
       return (
         <div>
-          <h3>All Checks ({this.props.redux.checks.checks.size})</h3>
+          <Heading level={3}>All Checks ({this.props.redux.checks.checks.size})</Heading>
           <CheckItemList/>
         </div>
       );

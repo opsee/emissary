@@ -87,9 +87,6 @@ const RegionSelect = React.createClass({
       return (
         <form name="loginForm" onSubmit={this.handleSubmit}>
          <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
-         {
-         // <h2 className="h3">All AWS regions - <Button flat color="primary" onClick={this.runToggleAll.bind(this, true)}>Select All</Button> - <Button flat color="warning"  onClick={this.runToggleAll.bind(null, false)}>Deselect All</Button></h2>
-         }
           <BoundField bf={this.state.info.boundField('regions')}/>
           <Padding t={1}>
             <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>

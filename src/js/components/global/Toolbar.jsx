@@ -3,7 +3,7 @@ import _ from 'lodash';
 import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './toolbar.css';
-import {Hyphenate} from '../type';
+import {Heading, Hyphenate} from '../type';
 
 const Toolbar = React.createClass({
   propTypes: {
@@ -39,9 +39,9 @@ const Toolbar = React.createClass({
         <Grid>
           <Row>
             <Col xs={12} className={style.inner}>
-              <h1 style={{margin: 0}}>
+              <Heading level={1} noPadding>
                 <Hyphenate>{this.props.title}</Hyphenate>
-              </h1>
+              </Heading>
                 <div className={this.getChildrenClass()}>
                 {this.props.children}
                 </div>

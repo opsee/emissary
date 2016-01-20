@@ -10,6 +10,7 @@ import {Padding} from '../layout';
 import {SetInterval} from '../../modules/mixins';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
+import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
 const GroupItemList = React.createClass({
@@ -139,7 +140,7 @@ const GroupItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getGroups().size))){
-      return <h3>{this.props.title} {numbers}</h3>;
+      return <Heading level={3}>{this.props.title} {numbers}</Heading>;
     }
     return null;
   },

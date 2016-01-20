@@ -14,6 +14,7 @@ import * as icons from '../icons';
 import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
 import {GroupItemList} from '../groups';
+import {Heading} from '../type';
 import {env as envActions, checks as checkActions, app as appActions} from '../../actions';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
@@ -173,13 +174,13 @@ const Styleguide = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3>Fab button (at top right)</h3>
+                <Heading level={3}>Fab button (at top right)</Heading>
                 <p>To be used as the primary action on application pages that have CRUD functionality. For example, in a list of health checks to add a new check, or on a profile page to edit the user profile. On screens like the tutorial with Next as the primary action, a Fab should not be used.</p>
                 <p>Additionally, color can be used to help communicate the purpose of the buton. Primary color for Add and Info color for Edit actions are standard across the app.</p>
               </Padding>
 
               <Padding b={1}>
-                <h3>Colors</h3>
+                <Heading level={3}>Colors</Heading>
                 {opseeColors.map(color => {
                   return (
                     <Row className="flex-vertical-align" key={`color-list-${color}`}>
@@ -197,15 +198,15 @@ const Styleguide = React.createClass({
               <hr/>
 
               <Padding b={1}>
-                <h3>Typography</h3>
+                <Heading level={3}>Typography</Heading>
 
-                <h1>Header Level 1: Instance Passing, Started Three Hours</h1>
-                <h2>Header Level 2: Resource Restarted, Checking Availability</h2>
-                <h3>Header Level 3: Check Currently Unmonitored</h3>
+                <Heading>Header Level 1: Instance Passing, Started Three Hours</Heading>
+                <Heading level={2}>Header Level 2: Resource Restarted, Checking Availability</Heading>
+                <Heading level={3}>Header Level 3: Check Currently Unmonitored</Heading>
 
                 <p>Paragraph. Wornall Homestead pork spare ribs maple mild BB's Lawnside smoked turkey Jack Stack mixed plate Crossroads hog heaven <span className="text-info">West Side strawberry soda</span> smoker drop. Entire loaf of white bread team Novel Restaurant chicken wings fun KC Strip chorizo Arthur Bryant's works ham River Market short end sandwiches baby back ribs rarely.</p>
 
-                <h3>Icons</h3>
+                <Heading level={3}>Icons</Heading>
                 <div>
                   {Object.keys(icons).map((key, i) => {
                     return React.createElement(icons[key], {fill: this.getColor(i), key: `icon-${i}`});
@@ -215,7 +216,7 @@ const Styleguide = React.createClass({
 
               <Padding b={1}>
 
-                  <h3>Unordered List</h3>
+                  <Heading level={3}>Unordered List</Heading>
                   <ul>
                   {[1, 2, 3, 4].map(i => {
                     return (
@@ -224,7 +225,7 @@ const Styleguide = React.createClass({
                   })}
                   </ul>
 
-                  <h3>Ordered List</h3>
+                  <Heading level={3}>Ordered List</Heading>
                   <ol>
                     {[1, 2, 3, 4].map(i => {
                       return (
@@ -234,7 +235,7 @@ const Styleguide = React.createClass({
                   </ol>
                 </Padding>
 
-                <h3>Toggle List</h3>
+                <Heading level={3}>Toggle List</Heading>
                 <ul className="list-unstyled">
                 {this.state.toggles.map((t, i) => {
                   return (
@@ -248,15 +249,15 @@ const Styleguide = React.createClass({
 
               <hr/>
 
-              <h3>Radio Select</h3>
+              <Heading level={3}>Radio Select</Heading>
               <BoundField bf={this.state.info.boundField('radio')}/>
               <hr/>
 
-          <h3>Button Toggles</h3>
+          <Heading level={3}>Button Toggles</Heading>
           <BoundField bf={this.state.info.boundField('services')}/>
             <hr/>
 
-            <h3>Data Tables</h3>
+            <Heading level={3}>Data Tables</Heading>
 
             <Table>
               <tr>
@@ -280,7 +281,7 @@ const Styleguide = React.createClass({
             <hr/>
 
             {
-            // <h3>List Items</h3>
+            // <Heading level={3}>List Items</Heading>
             // <ListItemTest state="passing" passing={2} total={2}/>
             // <ListItemTest state="failing" passing={1} total={2}/>
             // <ListItemTest state="running"/>
@@ -288,10 +289,10 @@ const Styleguide = React.createClass({
 
             <hr/>
 
-            <h3>Example Group Items</h3>
+            <Heading level={3}>Example Group Items</Heading>
             <GroupItemList groups={this.props.redux.env.groups.security}/>
             <hr/>
-            <h3>Cards</h3>
+            <Heading level={3}>Cards</Heading>
             <Row>
             {[1, 2, 3, 4].map(i => {
               return (
@@ -299,7 +300,7 @@ const Styleguide = React.createClass({
                   <Padding tb={1}>
                     <div className="bg-gray-900 md-shadow-bottom-z-1">
                       <div className="padding">
-                        <h2 className="margin-none">A title goes here</h2>
+                        <Heading level={2} className="margin-none">A title goes here</Heading>
                         <div>
                           <div><a href="mailto:">test@opsee.co</a></div>
                           <span>#352346 - Created on 12/05/15</span>
@@ -318,7 +319,7 @@ const Styleguide = React.createClass({
 
             <hr/>
 
-            <h3>Forms</h3>
+            <Heading level={3}>Forms</Heading>
 
             <form name="testform" id="testform">
 
@@ -334,7 +335,7 @@ const Styleguide = React.createClass({
                 <BoundField bf={this.state.info.boundField('body')}/>
               </Padding>
 
-              <h3>Buttons</h3>
+              <Heading level={3}>Buttons</Heading>
               <Padding b={2}>
                 <p><strong>Regular:</strong></p>
                 <p>Regular button styles are used less often than Flat buttons. Regular buttons can be used for primary actions on pages where it is not appropriate to use a Fab (use block styling as well in this case), such as the tutorial, of for form submission</p>
@@ -379,7 +380,7 @@ const Styleguide = React.createClass({
                 </Padding>
               </Padding>
 
-              <h3>Flat Buttons</h3>
+              <Heading level={3}>Flat Buttons</Heading>
               <p>Flat buttons are the workhorses of the app. They are the most common button style, used for secondary actions on any page, like Adding a check to an existing group on its detail page or Logging Out on the profile page.</p>
               <p>Flat buttons are also used in the context menu actions, and when combined with Block styling they lose their border.</p>
               <p>"Positive" actions such as creating a check will typically use the Primary color, while negative actions like deleting or logging out will use the Danger color.</p>
@@ -408,7 +409,7 @@ const Styleguide = React.createClass({
               </Padding>
             </form>
 
-            <h3>Alerts</h3>
+            <Heading level={3}>Alerts</Heading>
             <Padding b={2}>
               {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                 return (
@@ -417,9 +418,9 @@ const Styleguide = React.createClass({
               })}
             </Padding>
 
-            <h3>Loading State</h3>
+            <Heading level={3}>Loading State</Heading>
             <Loader/>
-            <h3>Context Menu</h3>
+            <Heading level={3}>Context Menu</Heading>
             <Button onClick={this.runToggleContextMenu} color="primary">Toggle</Button>
             {
             // <Modal show={this.state.showMenu} onHide={this.runToggleContextMenu} className="context" style="default">
@@ -427,7 +428,7 @@ const Styleguide = React.createClass({
             //     <Row>
             //       <div className="flex-1">
             //         <Padding lr={1}>
-            //           <h3>Actions</h3>
+            //           <Heading level={3}>Actions</Heading>
             //         </Padding>
             //         <Button text="left" color="primary" block flat>
             //           <Add inline fill="primary"/> Add Item
@@ -437,7 +438,7 @@ const Styleguide = React.createClass({
             //   </Grid>
             // </Modal>
             }
-            <h3>Global Notifcations</h3>
+            <Heading level={3}>Global Notifcations</Heading>
             <Padding b={1}>
               <Button color="danger" onClick={this.runNotify.bind(null, 'danger')}>Danger NOTIFICATION</Button>
             </Padding>

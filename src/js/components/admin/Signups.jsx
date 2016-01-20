@@ -10,6 +10,7 @@ import {Checkmark, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {admin as actions, user as userActions, app as appActions} from '../../actions';
 
 const Signups = React.createClass({
@@ -103,9 +104,9 @@ const Signups = React.createClass({
         <Padding tb={1}>
           <div className="bg-gray-900 md-shadow-bottom-z-1">
             <Padding a={1}>
-              <h3>
+              <Heading level={3}>
                 {this.renderIcon(signup)} {signup.name}
-              </h3>
+              </Heading>
               <Padding b={1}>
                 <div><a href={'mailto:' + signup.email}>{signup.email}</a></div>
                 <span>#{`${signup.userId || signup.id}`} - <TimeAgo date={signup.created_at}/></span>
@@ -127,7 +128,7 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3>Unapproved</h3>
+                <Heading level={3}>Unapproved</Heading>
                 <div className="display-flex-sm flex-wrap">
                   {this.getUnapproved().map(this.renderItem)}
                 </div>
@@ -138,7 +139,7 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3><Checkmark fill={colors.textColorSecondary} inline/> Approved</h3>
+                <Heading level={3}><Checkmark fill={colors.textColorSecondary} inline/> Approved</Heading>
                 <div className="display-flex-sm flex-wrap">
                   {this.getApproved().map(this.renderItem)}
                 </div>
@@ -149,7 +150,7 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3><Person fill={colors.textColorSecondary} inline/> Users</h3>
+                <Heading level={3}><Person fill={colors.textColorSecondary} inline/> Users</Heading>
                 <div className="display-flex-sm flex-wrap">
                   {this.getUsers().map(this.renderItem)}
                 </div>
