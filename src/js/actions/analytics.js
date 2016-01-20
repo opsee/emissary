@@ -64,16 +64,31 @@ export function trackEvent(category, action = '', data = {}) {
   };
 }
 
-export function updateUser(update) {
+export function updateUser(updatedUser) {
   return (dispatch, state) => {
-    const updatedUser = makeUserObject(update);
-    updatedUser.token = state().user.token;
+    // The user in state has attributes that updatedUser does not have, since
+    // the latter is only profile information. However, the profile information
+    // in state().user could be stale, so we only use that for token & id.
+    const user = state().user;
+
+    const update = {
+      id: user.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      token: user.token,
+      custom_attributes: {
+        customer_id: user.customer_id,
+        admin: user.admin,
+        admin_id: user.admin_id,
+        verified: user.verified
+      }
+    };
 
     dispatch({
       type: ANALYTICS_USER_UPDATE,
       payload: request
         .post(`${ANALYTICS_API}/user`)
-        .send({ user: updatedUser })
+        .send({ user: update })
     });
   };
 }
