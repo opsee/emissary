@@ -10,6 +10,7 @@ import {ContextMenu, StatusHandler} from '../global';
 import {Add, Play, Refresh, Stop} from '../icons';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {env as actions, app as appActions} from '../../actions';
 import {flag} from '../../modules';
 
@@ -106,7 +107,7 @@ const InstanceMenu = React.createClass({
     return (
       <div key="page0">
         <Padding lr={1}>
-          <h3>{this.props.item.get('name')} Actions</h3>
+          <Heading level={3}>{this.props.item.get('name')} Actions</Heading>
         </Padding>
         <Button color="primary" text="left" to={`/check-create/request?id=${item.get('id')}&type=${item.get('type')}&name=${item.get('name')}`} block flat>
           <Add inline fill="primary"/> Create Check
@@ -120,7 +121,7 @@ const InstanceMenu = React.createClass({
     return (
       <div key="page1">
         <Padding lr={1}>
-          <h3>Start this Instance?</h3>
+          <Heading level={3}>Start this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
         <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
@@ -138,7 +139,7 @@ const InstanceMenu = React.createClass({
     return (
       <div key="page2">
         <Padding lr={1}>
-          <h3>Stop this Instance?</h3>
+          <Heading level={3}>Stop this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
         <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
@@ -156,7 +157,7 @@ const InstanceMenu = React.createClass({
     return (
       <div key="page3">
         <Padding lr={1}>
-          <h3>Reboot this Instance?</h3>
+          <Heading level={3}>Reboot this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
         <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>

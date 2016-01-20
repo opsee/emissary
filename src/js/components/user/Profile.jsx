@@ -7,6 +7,7 @@ import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {user as actions, app as appActions} from '../../actions';
 
 const Profile = React.createClass({
@@ -37,7 +38,7 @@ const Profile = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <h3>Your Profile Information</h3>
+                <Heading level={3}>Your Profile Information</Heading>
                 <Table>
                   <tr>
                     <td><strong>Email</strong></td>

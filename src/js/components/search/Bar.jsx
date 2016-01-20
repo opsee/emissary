@@ -14,20 +14,11 @@ const SearchForm = forms.Form.extend({
     label: ' ',
     widgetAttrs: {
       placeholder: 'What are you looking for?',
-      id: 'universal-search',
+      // id: 'search-bar',
       labelInside: true
     },
     required: false
-  }),
-  render() {
-    return (
-      <BoundField bf={this.boundField('string')}>
-        <label htmlFor="universal-search" className={style.iconLabel}>
-          <Search className="icon"/>
-        </label>
-      </BoundField>
-    );
-  }
+  })
 });
 
 const SearchBar = React.createClass({
@@ -38,7 +29,14 @@ const SearchBar = React.createClass({
     string: PropTypes.string,
     location: PropTypes.shape({
       pathname: PropTypes.string
-    })
+    }),
+    noRedirect: PropTypes.bool,
+    id: PropTypes.string
+  },
+  getDefaultProps(){
+    return {
+      id: 'universal-search'
+    };
   },
   getInitialState() {
     const self = this;
@@ -47,43 +45,58 @@ const SearchBar = React.createClass({
         onChange(){
           self.forceUpdate();
           const {form} = self.state;
-          if (
-            form.cleanedData.string === form.data.string ||
-            //weird situation with validation not firing on rapid location change, fuuuck
-            !form.cleanedData.string && form.data.string
-            ){
+          /*eslint-disable eqeqeq*/
+          // I want (cleanedData.string = undefined) to equal (data.string = '') here
+          if (form.cleanedData.string == form.data.string){
             self.handleSearch(form.cleanedData.string);
           } else if (form.cleanedData.string && !form.data.string){
             self.handleSearch('');
           }
+          /*eslint-enable eqeqeq*/
         },
         labelSuffix: '',
+        autoId: this.props.id ? `${this.props.id}_{name}` : undefined,
         controlled: true,
         emptyPermitted: true,
         validation: {
           on: 'blur change',
           onChangeDelay: 450
         },
-        initial: {string: this.props.string || ''}
+        initial: {string: this.props.string || ''},
+        data: {string: this.props.string || ''}
       })
     };
   },
   componentWillReceiveProps(nextProps) {
-    if (nextProps.string !== this.state.form.data.string){
-      this.state.form.updateData({
+    const {form} = this.state;
+    if (nextProps.string !== form.data.string && nextProps.string !== this.props.string){
+      //the search string changed (prob clicked a filter button) and it is not equal to the input
+      form.updateData({
         string: nextProps.string || ''
-      });
+      }, {validate: false});
+    } else if (nextProps.location.pathname !== '/search' && this.props.location.pathname === '/search'){
+      //we have navigated away from the search page
+      this.props.actions.setString('', this.props.noRedirect);
+      form.updateData({
+        string: ''
+      }, {validate: false});
     }
+  },
+  componentWillUnmount(){
+    this.props.actions.setString('', true);
+  },
+  getFor(){
+    return this.props.id ? `${this.props.id}_string` : 'id_string';
   },
   handleSearch(string){
     if (this.props.string !== string){
-      this.props.actions.setString(string);
+      this.props.actions.setString(string, this.props.noRedirect);
     }
   },
   handleSubmit(e){
     e.preventDefault();
     if (this.state.form.data.string){
-      this.props.actions.setString(this.state.form.data.string);
+      this.props.actions.setString(this.state.form.data.string, this.props.noRedirect);
     }
   },
   render(){
@@ -92,7 +105,11 @@ const SearchBar = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.state.form.render()}
+              <BoundField bf={this.state.form.boundField('string')}>
+                <label htmlFor={this.getFor()} className={style.iconLabel}>
+                  <Search className="icon"/>
+                </label>
+              </BoundField>
             </Col>
           </Row>
         </Grid>
@@ -103,7 +120,8 @@ const SearchBar = React.createClass({
 
 const mapStateToProps = (state) => ({
   location: state.router.location,
-  string: state.router.location.query.s
+  string: state.search.string
+  // string: state.router.location.query.s
   // query: state.router.location.query
 });
 

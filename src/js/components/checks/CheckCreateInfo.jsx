@@ -11,6 +11,7 @@ import {Close, Add} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {
   checks as actions,
   user as userActions,
@@ -188,7 +189,7 @@ const CheckCreateInfo = React.createClass({
   renderNotificationForm(){
     return (
       <Padding b={2}>
-        <h3>Notifications</h3>
+        <Heading level={3}>Notifications</Heading>
         {this.getNotificationsForms().map((form, index) => {
           return (
             <Padding b={2} key={`notif-form-${index}`}>
@@ -243,7 +244,7 @@ const CheckCreateInfo = React.createClass({
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
-        <Padding b={1}>
+        <Padding b={2}>
           {this.state.info.render()}
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>

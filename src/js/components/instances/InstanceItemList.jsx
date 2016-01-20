@@ -11,6 +11,7 @@ import {Link} from 'react-router';
 import {SetInterval} from '../../modules/mixins';
 import {StatusHandler} from '../global';
 import {env as actions} from '../../actions';
+import {Heading} from '../type';
 
 const InstanceItemList = React.createClass({
   mixins: [SetInterval],
@@ -64,6 +65,7 @@ const InstanceItemList = React.createClass({
     arr.push(!is(nextProps.redux.env.instances[props.type], redux.env.instances[props.type]));
     arr.push(nextProps.redux.search.string !== redux.search.string);
     arr.push(nextProps.redux.asyncActions[action].status !== redux.asyncActions[action].status);
+    arr.push(nextProps.limit !== props.limit);
     return _.some(arr);
   },
   getDefaultProps() {
@@ -164,7 +166,7 @@ const InstanceItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getInstances().size))){
-      return <h3>{this.getTitle()} Instances {numbers}</h3>;
+      return <Heading level={3}>{this.getTitle()} Instances {numbers}</Heading>;
     }
     return null;
   },
