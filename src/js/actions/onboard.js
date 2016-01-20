@@ -3,7 +3,7 @@ import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import _ from 'lodash';
-import analytics from './analytics';
+import * as analytics from './analytics';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
@@ -18,7 +18,7 @@ import {
 } from './constants';
 
 export function signupCreate(data) {
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SIGNUP_CREATE,
       payload: new Promise((resolve, reject) => {
@@ -27,7 +27,7 @@ export function signupCreate(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
-          analytics.trackEvent('Onboard', 'signup');
+          analytics.trackEvent('Onboard', 'signup')(dispatch, state);
           //TODO remove timeout somehow
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
@@ -136,9 +136,10 @@ function isBastionLaunching(state){
 
 // let launchAttempts = 0;
 
-function launch(state, resolve, reject){
+function launch(dispatch, state, resolve, reject){
   // launchAttempts ++;
-  analytics.trackEvent('Onboard', 'bastion-install');
+  analytics.trackEvent('Onboard', 'bastion-install')(dispatch, state);
+
   if (config.onboardInstallError){
     return reject(new Error('config.onboardInstallError'));
   }
@@ -169,7 +170,7 @@ export function install(retry){
           if (isBastionLaunching(state)){
             return resolve();
           }else if (state().onboard.installData){
-            return launch(state, resolve, reject);
+            return launch(dispatch, state, resolve, reject);
           }
           return dispatch(pushState(null, '/start/region-select'));
         }, retry ? 6000 : 17000);
