@@ -3,12 +3,13 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
+import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
-import TimeAgo from 'react-timeago';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add} from '../icons';
 import {GroupItemList} from '../groups';
@@ -73,7 +74,7 @@ const InstanceRds = React.createClass({
   renderCreateCheckButton(){
     if (window.ldclient.toggle('rds-checks')) {
       return (
-        <Padding b={2}>
+        <Padding b={3}>
           <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=RDS&name=${this.getInstance().get('name')}`} title="Create New Check">
             <Add fill="primary" inline/> Create a Check
           </Button>
@@ -97,8 +98,8 @@ const InstanceRds = React.createClass({
       return (
         <div>
           {this.renderCreateCheckButton()}
-          <Padding b={1}>
-            <h3>{this.props.params.id} Information</h3>
+          <Padding b={2}>
+            <Heading level={3}>{this.props.params.id} Information</Heading>
             <Table>
               <tr>
                 <td><strong>Launched</strong></td>
@@ -126,10 +127,10 @@ const InstanceRds = React.createClass({
             </Table>
           </Padding>
           {this.renderChecks()}
-          <Padding b={1}>
+          <Padding b={2}>
             <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>
           </Padding>
-          <Padding tb={1}>
+          <Padding b={2}>
             <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
           </Padding>
         </div>

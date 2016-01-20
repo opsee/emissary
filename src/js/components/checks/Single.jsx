@@ -11,6 +11,7 @@ import {Edit, Delete} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import {checks as actions} from '../../actions';
@@ -51,7 +52,7 @@ const CheckSingle = React.createClass({
     if (notifs.length){
       return (
         <Padding b={1}>
-          <h3>Notifications</h3>
+          <Heading level={3}>Notifications</Heading>
           <NotificationItemList notifications={notifs} />
         </Padding>
       );
@@ -71,7 +72,7 @@ const CheckSingle = React.createClass({
     }
     return (
       <Padding b={1}>
-        <h3>Target</h3>
+        <Heading level={3}>Target</Heading>
         {el}
       </Padding>
     );
@@ -84,15 +85,15 @@ const CheckSingle = React.createClass({
       return (
         <div>
           {this.renderTarget()}
-          <Padding b={1}>
-            <h3>HTTP Request</h3>
+          <Padding b={2}>
+            <Heading level={3}>HTTP Request</Heading>
             <HttpRequestItem spec={spec} target={target} />
           </Padding>
           <Padding b={1}>
-            <h3>Assertions</h3>
+            <Heading level={3}>Assertions</Heading>
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <CheckResponsePaginate responses={this.getResponses()}/>
           </Padding>
 

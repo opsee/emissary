@@ -5,6 +5,7 @@ import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
+import {Padding} from '../layout';
 import {user as actions} from '../../actions';
 
 const PasswordForgot = React.createClass({
@@ -51,7 +52,9 @@ const PasswordForgot = React.createClass({
     return (
       <form name="loginForm" onSubmit={this.handleSubmit}>
         <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
-        <UserInputs include={['email']}  onChange={this.setUserData} email={this.state.data.email}/>
+        <Padding b={1}>
+          <UserInputs include={['email']}  onChange={this.setUserData} email={this.state.data.email}/>
+        </Padding>
         <Button type="submit" color="success" block disabled={this.isDisabled()}>
           {this.getButtonText()}
         </Button>
