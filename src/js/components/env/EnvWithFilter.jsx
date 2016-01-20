@@ -6,7 +6,6 @@ import forms from 'newforms';
 import fuzzy from 'fuzzy';
 import {List} from 'immutable';
 
-import analytics from '../../modules/analytics';
 import {Alert, Row, Col} from '../../modules/bootstrap';
 import {SetInterval} from '../../modules/mixins';
 
@@ -16,7 +15,7 @@ import {Search, Circle} from '../icons';
 import {GroupItemList} from '../groups';
 import {InstanceItemList} from '../instances';
 import {Padding} from '../layout';
-import {env as actions} from '../../actions';
+import {env as actions, analytics as analyticsActions} from '../../actions';
 
 const FilterForm = forms.Form.extend({
   filter: forms.CharField({
@@ -53,6 +52,9 @@ const EnvWithFilter = React.createClass({
       getInstancesEcc: PropTypes.func,
       getInstancesRds: PropTypes.func,
       envSetSearch: PropTypes.func
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
@@ -179,7 +181,7 @@ const EnvWithFilter = React.createClass({
   onFilterChange(){
     this.forceUpdate();
     const data =  this.state.filter.cleanedData.filter;
-    analytics.event('EnvWithFilter', 'filter-change', {data});
+    this.props.analyticsActions.trackEvent('EnvWithFilter', 'filter-change', {data});
     this.props.actions.envSetSearch(data);
     if (this.props.onFilterChange){
       this.props.onFilterChange.call(null, data);
@@ -341,7 +343,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EnvWithFilter);
