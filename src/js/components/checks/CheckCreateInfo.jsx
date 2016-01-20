@@ -9,10 +9,13 @@ import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
 import {StatusHandler} from '../global';
-import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
-import {checks as actions, user as userActions} from '../../actions';
+import {
+  checks as actions,
+  user as userActions,
+  analytics as analyticsActions
+} from '../../actions';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
 
@@ -62,6 +65,9 @@ const CheckCreateInfo = React.createClass({
     onSubmit: PropTypes.func,
     history: PropTypes.shape({
       pushState: PropTypes.func
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
@@ -161,7 +167,7 @@ const CheckCreateInfo = React.createClass({
     this.props.userActions.putData('hasDismissedCheckInfoHelp');
   },
   handleSubmit(e) {
-    analytics.event('Onboard', 'check-created');
+    this.props.analyticsActions.trackEvent('Onboard', 'check-created');
     e.preventDefault();
     this.props.onSubmit();
   },
@@ -280,7 +286,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateInfo);
