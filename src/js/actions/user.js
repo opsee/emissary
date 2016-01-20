@@ -3,7 +3,7 @@ import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
-import analytics from '../modules/analytics';
+import * as analytics from './analytics';
 import {
   USER_LOGIN,
   USER_LOGOUT,
@@ -27,7 +27,8 @@ export function login(data) {
         .post(`${config.authApi}/authenticate/password`)
         .send(data)
         .then((res) => {
-          analytics.event('User', 'login', {}, data);
+          analytics.trackEvent('User', 'login', {}, data)(dispatch, state);
+
           resolve(res.body);
           //TODO fix this somehow
           setTimeout(() => {
@@ -60,9 +61,9 @@ export function setPassword(data) {
 }
 
 export function logout(query){
-  return (dispatch) => {
+  return (dispatch, state) => {
     storage.remove('user');
-    analytics.event('User', 'logout');
+    analytics.trackEvent('User', 'logout')(dispatch, state);
     dispatch({
       type: USER_LOGOUT
     });

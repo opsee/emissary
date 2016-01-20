@@ -3,7 +3,7 @@ import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import _ from 'lodash';
-import analytics from '../modules/analytics';
+import analytics from './analytics';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
@@ -27,7 +27,7 @@ export function signupCreate(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
-          analytics.event('Onboard', 'signup');
+          analytics.trackEvent('Onboard', 'signup');
           //TODO remove timeout somehow
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
@@ -138,7 +138,7 @@ function isBastionLaunching(state){
 
 function launch(state, resolve, reject){
   // launchAttempts ++;
-  analytics.event('Onboard', 'bastion-install');
+  analytics.trackEvent('Onboard', 'bastion-install');
   if (config.onboardInstallError){
     return reject(new Error('config.onboardInstallError'));
   }
