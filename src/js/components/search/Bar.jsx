@@ -47,11 +47,8 @@ const SearchBar = React.createClass({
         onChange(){
           self.forceUpdate();
           const {form} = self.state;
-          if (
-            form.cleanedData.string === form.data.string ||
-            //weird situation with validation not firing on rapid location change, fuuuck
-            !form.cleanedData.string && form.data.string
-            ){
+          console.log(form.cleanedData.string, form.data.string);
+          if (form.cleanedData.string === form.data.string){
             self.handleSearch(form.cleanedData.string);
           } else if (form.cleanedData.string && !form.data.string){
             self.handleSearch('');
@@ -64,15 +61,23 @@ const SearchBar = React.createClass({
           on: 'blur change',
           onChangeDelay: 450
         },
-        initial: {string: this.props.string || ''}
+        initial: {string: this.props.string || ''},
+        data: {string: this.props.string || ''}
       })
     };
   },
   componentWillReceiveProps(nextProps) {
-    if (nextProps.string !== this.state.form.data.string){
-      this.state.form.updateData({
+    const {form} = this.state;
+    if (nextProps.string !== form.data.string && nextProps.string !== this.props.string){
+      console.log('updatedata1', nextProps.string);
+      form.updateData({
         string: nextProps.string || ''
-      });
+      }, {validate: false});
+    } else if (nextProps.location.pathname !== '/search' && this.props.location.pathname === '/search'){
+      console.log('updatedata2', '');
+      form.updateData({
+        string: ''
+      }, {validate: false});
     }
   },
   handleSearch(string){
@@ -103,7 +108,8 @@ const SearchBar = React.createClass({
 
 const mapStateToProps = (state) => ({
   location: state.router.location,
-  string: state.router.location.query.s
+  string: state.search.string
+  // string: state.router.location.query.s
   // query: state.router.location.query
 });
 

@@ -18,7 +18,7 @@ export function setString(string, noRedirect){
         if (state().search.string !== string){
           console.log('setstring', string);
           if (string || state().router.location.pathname === '/search'){
-            if(!noRedirect){
+            if (!noRedirect){
               if (state().router.location.pathname !== '/search'){
                 dispatch(pushState(null, `/search?s=${string}`));
               }else {
