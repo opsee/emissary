@@ -15,6 +15,7 @@ import {EnvList} from '../env';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {Check} from '../../modules/schemas';
+import {Bar as SearchBar} from '../search';
 import {checks as actions, user as userActions} from '../../actions';
 
 const CheckCreateTarget = React.createClass({
@@ -120,8 +121,11 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         {this.renderHelperText()}
-        <Heading level={3}>Choose a Target for your Check</Heading>
-        <EnvList onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch/>
+        <Padding b={2}>
+          <Heading level={3}>Choose a Target for your Check</Heading>
+          <SearchBar noRedirect id="check-create-search"/>
+        </Padding>
+        <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch filter/>
       </div>
     );
   },
