@@ -49,8 +49,8 @@ export function trackEvent(category, action = '', data = {}) {
     dispatch({
       type: ANALYTICS_EVENT,
       payload: request
-      .post(`${ANALYTICS_API}/event`)
-      .send({ category, action, user, data })
+        .post(`${ANALYTICS_API}/event`)
+        .send({ category, action, user, data })
     });
   };
 }
