@@ -74,6 +74,7 @@ const GroupItemList = React.createClass({
     arr.push(!is(nextRedux.env.groups[props.type], redux.env.groups[props.type]));
     arr.push(!is(nextRedux.env.filtered.groups[props.type], redux.env.filtered.groups[props.type]));
     arr.push(nextRedux.asyncActions[action].status !== redux.asyncActions[action].status);
+    arr.push(nextProps.limit !== props.limit);
     return _.some(arr);
   },
   getData(){

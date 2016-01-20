@@ -64,6 +64,7 @@ const InstanceItemList = React.createClass({
     arr.push(!is(nextProps.redux.env.instances[props.type], redux.env.instances[props.type]));
     arr.push(nextProps.redux.search.string !== redux.search.string);
     arr.push(nextProps.redux.asyncActions[action].status !== redux.asyncActions[action].status);
+    arr.push(nextProps.limit !== props.limit);
     return _.some(arr);
   },
   getDefaultProps() {
