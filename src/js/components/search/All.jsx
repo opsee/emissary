@@ -45,6 +45,12 @@ const SearchAll = React.createClass({
       })
     })
   },
+  componentWillMount(){
+    const {props} = this;
+    if (props.redux.search.string !== props.location.query.s && props.location.query.s){
+      props.actions.setString(props.location.query.s);
+    }
+  },
   render(){
     return (
       <div>
