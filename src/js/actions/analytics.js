@@ -10,10 +10,16 @@ import {
 const ANALYTICS_CONFIG = config.services.analytics;
 const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
 
-function makeUserObject(user) {
+function makeUserObject(userData) {
+  const user = userData.toJS ? userData.toJS() : userData;
+
   return {
-    email: user.get('email'),
-    name: user.get('name')
+    email: user.email,
+    name: user.name,
+    customer_id: user.customer_id,
+    id: user.id,
+    auth_token: user.token,
+    intercom_hmac: user.intercom_hmac
   };
 }
 
@@ -58,17 +64,16 @@ export function trackEvent(category, action = '', data = {}) {
   };
 }
 
-export function updateUser(userData) {
-  return (dispatch) => {
-    const user = {
-      email: userData.email
-    };
+export function updateUser(update) {
+  return (dispatch, state) => {
+    const updatedUser = makeUserObject(update);
+    updatedUser.token = state().user.token;
 
     dispatch({
       type: ANALYTICS_USER_UPDATE,
       payload: request
         .post(`${ANALYTICS_API}/user`)
-        .send({ user })
+        .send({ user: updatedUser })
     });
   };
 }
