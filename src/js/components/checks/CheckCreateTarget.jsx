@@ -121,8 +121,10 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         {this.renderHelperText()}
-        <Heading level={3}>Choose a Target for your Check</Heading>
-        <SearchBar noRedirect id="check-create-search"/>
+        <Padding b={2}>
+          <Heading level={3}>Choose a Target for your Check</Heading>
+          <SearchBar noRedirect id="check-create-search"/>
+        </Padding>
         <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch filter/>
       </div>
     );
