@@ -1,7 +1,14 @@
-import React from 'react';
-import analytics from '../../modules/analytics';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as actions from '../../actions/analytics';
 
 const Analytics = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      trackPageView: PropTypes.func.isRequired
+    })
+  },
   contextTypes: {
     history: React.PropTypes.object.isRequired
   },
@@ -30,9 +37,11 @@ const Analytics = React.createClass({
       return;
     }
     this.latestUrl = path;
+
     // wait for correct title
+    const trackPageView = this.props.actions.trackPageView;
     setTimeout(function wait() {
-      analytics.pageView(path, document.title);
+      trackPageView(path, document.title);
     }, 0);
   },
   render() {
@@ -40,4 +49,8 @@ const Analytics = React.createClass({
   }
 });
 
-export default Analytics;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Analytics);
