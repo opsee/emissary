@@ -23,7 +23,7 @@ function getAuth(data){
   // 720 minutes == 12 hours
   let minutes = 720;
   // 15 minutes for ghosting
-  if (data.admin_id > 0){
+  if (data.admin){
     minutes = 15;
   }
   const valid = !!(typeof diff === 'number' && diff < minutes && diff > -1);
@@ -49,7 +49,7 @@ function setUser(state, action){
       intercom_hmac: action.payload.intercom_hmac || state.intercom_hmac
     }
   );
-  obj.ghosting = obj.admin_id > 0 || config.ghosting;
+  obj.ghosting = obj.admin || config.ghosting;
   const auth = getAuth(obj);
   if (auth){
     obj = _.assign({}, obj, {auth});
