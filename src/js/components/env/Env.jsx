@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
-import EnvWithFilter from './EnvWithFilter.jsx';
+import EnvList from './EnvList.jsx';
 import {State} from 'react-router';
 import {env as actions} from '../../actions';
 import _ from 'lodash';
@@ -25,39 +25,37 @@ const Env = React.createClass({
     })
   },
   componentWillMount(){
-    if (this.props.location.query.search && !this.props.redux.env.search){
-      this.props.actions.envSetSearch(this.props.location.query.search);
-    }
     this.props.actions.getBastions();
   },
-  getBastionVpc(){
-    return _.chain(this.props.redux.env.bastions).filter('connected').last().get('vpc_id').value() || '';
+  getTitle(){
+    const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};
+    const region = bastion.region || 'Environment';
+    const vpcId = bastion.vpc_id || '';
+    return `${region} - ${vpcId}`;
   },
-  getInitialState(){
-    const path = this.props.location.pathname;
-    let include = ['groupsSecurity', 'groupsELB', 'instancesECC'];
-    if (path){
-      if (path.match('groups-security')){
-        include = ['groupsSecurity'];
-      }else if (path.match('groups-elb')){
-        include = ['groupsELB'];
-      }else if (path.match('instances-ec2')){
-        include = ['instancesECC'];
+  getIncludes(){
+    const {pathname} = this.props.location;
+    let include = ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc'];
+    if (pathname){
+      if (pathname.match('groups-security')){
+        include = ['groups.security'];
+      }else if (pathname.match('groups-elb')){
+        include = ['groups.elb'];
+      }else if (pathname.match('instances-ec2')){
+        include = ['instances.ecc'];
       }
     }
-    return {
-      include
-    };
+    return include;
   },
   render() {
     return (
       <div>
-        <Toolbar title={`Environment ${this.getBastionVpc()}`}/>
+        <Toolbar title={this.getTitle()}/>
           <Grid>
             <Row>
               <Col xs={12}>
                 <BastionRequirement>
-                  <EnvWithFilter include={this.state.include} filter={this.props.location.query.search} limit={this.state.include.length === 1 ? 1000 : null} redux={this.props.redux}/>
+                  <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux} showFilterButtons/>
                 </BastionRequirement>
               </Col>
             </Row>

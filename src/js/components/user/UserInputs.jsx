@@ -10,9 +10,10 @@ let include = [];
 const InfoForm = forms.Form.extend({
   email: forms.CharField({
     validators: [forms.validators.validateEmail],
-    // widget: forms.EmailInput,
     widgetAttrs: {
-      placeholder: 'address@domain.com'
+      placeholder: 'address@domain.com',
+      autoCapitalize: 'off',
+      autoCorrect: 'off'
     }
   }),
   name: forms.CharField({

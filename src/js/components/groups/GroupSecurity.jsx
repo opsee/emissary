@@ -12,6 +12,7 @@ import {Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
 const GroupSecurity = React.createClass({
@@ -57,19 +58,19 @@ const GroupSecurity = React.createClass({
     if (desc && desc !== ''){
       return <span>{desc}</span>;
     }
-    return <div/>;
+    return null;
   },
   renderInner(){
     if (this.getGroup().get('name')){
       return (
         <div>
-          <Padding b={2}>
+          <Padding b={3}>
             <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=security&name=${this.getGroup().get('name')}`} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
-          <Padding b={1}>
-            <h3>{this.getGroup().get('id')} Information</h3>
+          <Padding b={2}>
+            <Heading level={3}>{this.getGroup().get('id')} Information</Heading>
             <Table>
               <tr>
                 <td><strong>Description</strong></td>
@@ -77,11 +78,14 @@ const GroupSecurity = React.createClass({
               </tr>
             </Table>
           </Padding>
-          <Padding b={1}>
+          <Padding b={2}>
             <CheckItemList type="groupSecurity" target={this.props.params.id} redux={this.props.redux} title/>
           </Padding>
-          <Padding b={1}>
-            <InstanceItemList groupSecurity={this.props.params.id} title/>
+          <Padding b={2}>
+            <InstanceItemList groupSecurity={this.props.params.id} type="ecc" title/>
+          </Padding>
+          <Padding b={2}>
+            <InstanceItemList groupSecurity={this.props.params.id} type="rds" title noFallback/>
           </Padding>
         </div>
       );

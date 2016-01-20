@@ -11,7 +11,6 @@ import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
 import cx from 'classnames';
-import ContextMenu from './ContextMenu';
 import RadialGraph from './RadialGraph';
 import {app as actions} from '../../actions';
 
@@ -52,7 +51,7 @@ const ListItem = React.createClass({
   },
   renderGraph(){
     const graph = (
-      <RadialGraph state={this.props.item.get('state')} passing={this.props.item.get('passing')} total={this.props.item.get('total')}/>
+      <RadialGraph state={this.props.item.get('state')} passing={this.props.item.get('passing')} total={this.props.item.get('total')} type={this.props.type}/>
     );
     if (this.props.onClick){
       return (
@@ -84,9 +83,13 @@ const ListItem = React.createClass({
     );
   },
   renderMenuButton(){
+    const menu = _.find(this.props.children, {key: 'menu'});
+    if (!menu){
+      return null;
+    }
     if (this.props.onClick){
       return (
-        <Button icon flat to={this.props.link} target="_blank">
+        <Button icon flat to={this.props.link} target="_blank" title={`View this ${this.props.type} in a new window`}>
           <NewWindow btn fill="textSecondary"/>
         </Button>
       );
@@ -98,14 +101,7 @@ const ListItem = React.createClass({
     );
   },
   renderMenu(){
-    if (this.props.noMenu){
-      return _.find(this.props.children, {key: 'menu'}) || <div/>;
-    }
-    return (
-      <ContextMenu title={this.props.menuTitle} id={this.props.item.get('id')}>
-        {_.find(this.props.children, {key: 'menu'})}
-      </ContextMenu>
-    );
+    return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
   render(){
     return (

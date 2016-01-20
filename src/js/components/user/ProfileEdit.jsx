@@ -96,12 +96,14 @@ const ProfileEdit = React.createClass({
           <Row>
             <Col xs={12}>
             <form onSubmit={this.handleSubmit}>
-              <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
-              {this.state.passwordForm.render()}
-              <AddToSlackButton/>
+              <Padding b={2}>
+                <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
+                {this.state.passwordForm.render()}
+              </Padding>
               <StatusHandler status={this.getStatus()}/>
               <Padding t={2}>
-                <Button color="success" type="submit" disabled={this.isDisabled()}>
+                <AddToSlackButton/>
+                <Button color="success" type="submit" disabled={this.isDisabled()} style={{float:'right'}}>
                   {this.getStatus() === 'pending' ? 'Updating...' : 'Update Profile'}
                 </Button>
               </Padding>

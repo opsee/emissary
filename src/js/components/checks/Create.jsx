@@ -27,10 +27,12 @@ const CheckCreate = React.createClass({
     })
   },
   componentWillMount(){
-    this.props.envActions.getGroupsSecurity();
-    this.props.envActions.getGroupsElb();
-    this.props.envActions.getInstancesEcc();
     this.props.actions.testCheckReset();
+    if (!this.props.redux.asyncActions.getGroupsSecurity.history.length){
+      this.props.envActions.getGroupsSecurity();
+      this.props.envActions.getGroupsElb();
+      this.props.envActions.getInstancesEcc();
+    }
   },
   getInitialState(){
     return this.getState();

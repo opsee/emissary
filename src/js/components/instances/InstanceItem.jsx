@@ -23,6 +23,7 @@ const InstanceItem = React.createClass({
       id: PropTypes.string,
       type: PropTypes.string
     }),
+    noMenu: PropTypes.bool,
     onClick: PropTypes.func
   },
   componentWillMount(){
@@ -72,17 +73,23 @@ const InstanceItem = React.createClass({
       </span>
     );
   },
+  renderMenu(){
+    if (!this.props.noMenu){
+      return <InstanceMenu item={this.getItem()} key="menu"/>;
+    }
+    return null;
+  },
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState} noMenu>
-          <InstanceMenu item={this.getItem()} key="menu"/>
+        <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState}>
+          {this.renderMenu()}
           <div key="line1">{this.getItem().get('name')}</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

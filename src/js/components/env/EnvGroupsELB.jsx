@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
-import EnvWithFilter from './EnvWithFilter.jsx';
-import _ from 'lodash';
+import EnvList from './EnvList.jsx';
 
 const EnvGroupsELB = React.createClass({
   propTypes: {
@@ -16,7 +15,7 @@ const EnvGroupsELB = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvWithFilter include={['groupsELB']} filter={_.get(this.props.location.query, 'filter')} limit={1000} redux={this.props.redux}/>
+                <EnvList include={['groups.elb']} limit={1000} redux={this.props.redux}/>
               </Col>
             </Row>
           </Grid>

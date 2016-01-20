@@ -1,19 +1,21 @@
 import bootstrap from './bootstrap';
 import config from './config';
+import flag from './flag';
+import itemsFilter from './itemsFilter';
 import mixins from './mixins';
 import request from './request';
-import router from './router';
-import statics from './statics';
+import stringFromTokens from './stringFromTokens';
 import storage from './storage';
 import variables from './variables';
 
 export {
   bootstrap,
   config,
+  flag,
+  itemsFilter,
   mixins,
   request,
-  router,
-  statics,
+  stringFromTokens,
   storage,
   variables
 };

@@ -3,6 +3,7 @@ import {Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Highlight} from '../global';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 
 const Cloudformation = React.createClass({
   render() {
@@ -13,7 +14,7 @@ const Cloudformation = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding tb={1}>
-                <h3>The Opsee Bastion Instance CloudFormation Template</h3>
+                <Heading level={3}>The Opsee Bastion Instance CloudFormation Template</Heading>
                 <Highlight>
                 {JSON.stringify(
                   {
@@ -220,7 +221,7 @@ const Cloudformation = React.createClass({
                 </Highlight>
                 <div><br/></div>
 
-                  <h3>The IAM Role and Permissions</h3>
+                  <Heading level={3}>The IAM Role and Permissions</Heading>
 
                   <p>Here is a summary of the role and permissions for the Opsee Bastion Instance.</p>
 

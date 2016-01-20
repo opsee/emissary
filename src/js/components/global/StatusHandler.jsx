@@ -16,13 +16,20 @@ const StatusHandler = React.createClass({
     ]),
     children: PropTypes.node,
     noFallback: PropTypes.bool,
-    onDismiss: PropTypes.func
+    onDismiss: PropTypes.func,
+    history: PropTypes.array,
+    waitingText: PropTypes.string
+  },
+  getDefaultProps() {
+    return {
+      history: []
+    };
   },
   getInitialState(){
     return {
       error: (this.props.status && typeof this.props.status === 'object') || false,
       success: false,
-      attempts: 0
+      attempts: this.props.history.length
     };
   },
   componentWillReceiveProps(nextProps){
@@ -57,11 +64,19 @@ const StatusHandler = React.createClass({
   },
   render(){
     if (this.state.dismissed){
-      return <div/>;
+      return null;
     }
     if (this.props.status === 'pending' && this.state.attempts < 1){
+      if (this.props.waitingText){
+        return (
+          <div>
+            <Padding b={1}>{this.props.waitingText}</Padding>
+             <Loader timeout={this.props.timeout}/>
+          </div>
+        );
+      }
       return <Loader timeout={this.props.timeout}/>;
-    }else if (this.isError()){
+    } else if (this.isError()){
       return (
         <Padding b={1}>
           <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
@@ -69,12 +84,12 @@ const StatusHandler = React.createClass({
           </Alert>
         </Padding>
       );
-    }else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
+    } else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
       return (
         <div>{this.props.children}</div>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

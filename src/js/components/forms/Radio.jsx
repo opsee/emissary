@@ -20,7 +20,7 @@ const Radio = React.createClass({
   },
   render(){
     return (
-      <div onClick={this.handleClick} onTouchEnd={this.handleTouch} style={{cursor: 'pointer'}}>
+      <div className={style.wrapper}>
         <button className={this.props.on ? style.radioActive : style.radio} type="button" onClick={this.handleClick} id={this.props.id}/>
       </div>
     );

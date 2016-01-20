@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import {Padding} from '../layout';
 import {ProgressBar} from '../global';
+import {Heading} from '../type';
 
 const itemTypes = ['AWS::CloudFormation::Stack', 'AWS::IAM::Role', 'AWS::EC2::SecurityGroup', 'AWS::IAM::InstanceProfile', 'AWS::EC2::Instance'];
 
@@ -104,7 +105,7 @@ const BastionInstaller = React.createClass({
       break;
     case 'Complete':
       num = 7;
-      string = 'Bastion successfully installed. Waiting for connection...';
+      string = 'Bastion successfully installed. Waiting for connection to Opsee...';
       break;
     case 'Deleting':
       num = 0;
@@ -125,7 +126,7 @@ const BastionInstaller = React.createClass({
   render() {
     return (
       <Padding b={2}>
-        <h2>{this.id}</h2>
+        <Heading level={2}>{this.id}</Heading>
         <ProgressBar percentage={this.getPercentComplete()} steps={8}/>
         <div style={{textAlign: 'center'}}>
         {this.getText().string}

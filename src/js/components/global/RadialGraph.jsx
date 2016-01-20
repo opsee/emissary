@@ -53,10 +53,12 @@ const RadialGraph = React.createClass({
   },
   getTitle(){
     switch (this.state.state){
+    case 'passing':
+      return `This ${this.props.type} is passing.`;
     case 'failing':
       return this.state.silenceRemaining ?
       `This ${this.props.type} is running, but is ` :
-      `This ${this.props.type} is running and has a health of %`;
+      `This ${this.props.type} is failing with a health of ${this.getHealth()}%`;
     case 'running':
       return `This ${this.props.type} is currently unmonitored.`;
     case 'stopped':

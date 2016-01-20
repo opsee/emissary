@@ -4,7 +4,7 @@ import Immutable, {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {ListItem} from '../global';
+import {ContextMenu, ListItem} from '../global';
 import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
 import {Button} from '../forms';
 import {env as actions} from '../../actions';
@@ -43,12 +43,14 @@ const GroupItem = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     const {props} = this;
-    let bool1 = _.isEqual(props.target, nextProps.target);
-    if (props.target && props.target.type){
-      const bool2 = !Immutable.is(props.groups[props.target.type], nextProps.groups[props.target.type]);
-      return bool1 || bool2;
+    const {target} = props;
+    let arr = [];
+    arr.push(!_.isEqual(target, nextProps.target));
+    if (target && target.type){
+      arr.push(!Immutable.is(props.groups[target.type], nextProps.groups[target.type]));
     }
-    return !Immutable.is(this.props.item, nextProps.item) || bool1;
+    arr.push(!Immutable.is(props.item, nextProps.item));
+    return _.some(arr);
   },
   getItem(){
     if (_.get(this.props, 'target.type')){
@@ -115,18 +117,18 @@ const GroupItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="Group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
-          <div key="menu">
+        <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
+          <ContextMenu title={`${this.props.item.get('name')} Actions`} id={this.getItem().get('id')} key="menu">
             <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check
             </Button>
-          </div>
-            <div key="line1">{this.getItem().get('name')}</div>
-            <div key="line2">{this.renderInfoText()}</div>
+          </ContextMenu>
+          <div key="line1">{this.getItem().get('name')}</div>
+          <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

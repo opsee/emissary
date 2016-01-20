@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {pushState} from 'redux-router';
+import _ from 'lodash';
 
-export function auth(Component){
+export function auth(Component, adminRequired){
   const Authenticator = React.createClass({
     propTypes: {
       redux: PropTypes.object.isRequired,
@@ -16,7 +17,12 @@ export function auth(Component){
       this.runCheckAuth();
     },
     isAuthenticated(){
-      return !!(this.props.redux.user.get('token'));
+      let arr = [];
+      if (adminRequired){
+        arr.push(this.props.redux.user.get('admin_id') > 0);
+      }
+      arr.push(!!(this.props.redux.user.get('token')));
+      return _.every(arr);
     },
     runCheckAuth() {
       const redirect = this.props.location.pathname;
@@ -28,7 +34,7 @@ export function auth(Component){
       if (this.isAuthenticated()){
         return <Component {...this.props}/>;
       }
-      return <div/>;
+      return null;
     }
   });
   return connect(null, {pushState})(Authenticator);

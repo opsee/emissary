@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {user as actions} from '../../actions';
 import {Padding} from '../layout';
+import {Heading} from '../type';
+import {flag} from '../../modules';
 
 const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
 
@@ -65,25 +67,25 @@ const Survey = React.createClass({
   getSteps(){
     return [(
       <div>
-        <h3>Which services are you using?</h3>
+        <Heading level={3}>Which services are you using?</Heading>
         <BoundField bf={this.state.info.boundField('services')}/>
       </div>
     ),
     (
       <div>
-        <h3>What are you looking forward to most in Opsee?</h3>
+        <Heading level={3}>What are you looking forward to most in Opsee?</Heading>
         <BoundField bf={this.state.info.boundField('features')}/>
       </div>
     ),
     (
       <div>
-        <h3>What do you hate about monitoring today?</h3>
+        <Heading level={3}>What do you hate about monitoring today?</Heading>
         <BoundField bf={this.state.info.boundField('sucks')}/>
       </div>
     ),
     (
       <div>
-        <h3>Thanks for the feedback!</h3>
+        <Heading level={3}>Thanks for the feedback!</Heading>
       </div>
     )];
   },
@@ -107,22 +109,22 @@ const Survey = React.createClass({
         <Button color="info" block className="pull-right" onClick={this.handleNextClick}>Next</Button>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
-    if (window.ldclient.toggle('onboard-install-survey')) {
+    if (flag('onboard-install-survey')) {
       return (
         <Padding t={3}>
           <form>
             <hr/>
-            <h2>Opsee Customer Survey</h2>
+            <Heading level={2}>Opsee Customer Survey</Heading>
             {this.getSteps()[this.state.step]}
             {this.renderButton()}
           </form>
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   }
 });
 

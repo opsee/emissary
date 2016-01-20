@@ -9,14 +9,15 @@ export function slackAccess(code) {
     dispatch({
       type: INTEGRATIONS_SLACK_ACCESS,
       payload: new Promise((resolve, reject) => {
-        request
-        .get(`${config.api}/oauth/slack`)
-        .query({
-          code
-        })
-        .then((res) => {
-          resolve(res.body);
-        }, reject);
+        return setTimeout(resolve, 3000);
+        // request
+        // .get(`${config.api}/oauth/slack`)
+        // .query({
+        //   code
+        // })
+        // .then((res) => {
+        //   resolve(res.body);
+        // }, reject);
       })
     });
   };

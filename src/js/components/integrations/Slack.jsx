@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {StatusHandler, Toolbar} from '../global';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {integrations as actions} from '../../actions';
 
 const Slack = React.createClass({
@@ -15,11 +15,25 @@ const Slack = React.createClass({
     })
   },
   componentWillMount(){
-    console.log(this.props.location.query);
     const {query} = this.props.location;
     if (query.code){
       this.props.actions.slackAccess(query.code);
     }
+  },
+  renderInner(){
+    const {query} = this.props.location;
+    if (query.code){
+      return (
+        <StatusHandler status={this.props.redux.asyncActions.integrationsSlackAccess.status} waitingText="Finishing up authorization...">
+          Successful connection to Slack. Thanks!
+        </StatusHandler>
+      );
+    }
+    return (
+      <Alert bsStyle="danger">
+        Whoops, something must have gone wrong.
+      </Alert>
+    );
   },
   render() {
     return (
@@ -28,7 +42,7 @@ const Slack = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              Ya
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>

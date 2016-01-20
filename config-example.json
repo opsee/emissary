@@ -1,5 +1,8 @@
-//all options presented below are defaults, use your own config.json file to alter behavior.
-//you must restart the application for changes to apply
+// All options presented below are defaults, use your own config.json file to
+// alter behavior.
+//
+// For the changes to be applied, first delete all of the comments
+// and then restart the application.
 {
   //show the vpc select screen even if there is only 1 vpc found
   "showVpcScreen": false,

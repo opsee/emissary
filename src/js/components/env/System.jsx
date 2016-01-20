@@ -7,6 +7,7 @@ import TimeAgo from 'react-timeago';
 import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import config from '../../modules/config';
 import {user as actions, env as envActions} from '../../actions';
 
@@ -44,7 +45,7 @@ const System = React.createClass({
     if (bastions.length){
       return (
         <div>
-          <h3>Connected Bastions</h3>
+          <Heading level={3}>Connected Bastions</Heading>
           <ul>
             {bastions.map((bastion, i) => {
               return (
@@ -63,7 +64,7 @@ const System = React.createClass({
         </div>
       );
     }
-    return <h3>No Connected Bastions.</h3>;
+    return <Heading level={3}>No Connected Bastions.</Heading>;
   },
   renderBastionsInfo(){
     const status = this.props.redux.asyncActions.envGetBastions.status;
@@ -80,7 +81,7 @@ const System = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render() {
     return (
@@ -91,7 +92,7 @@ const System = React.createClass({
             <Col xs={12}>
               {this.renderBastionsInfo()}
               {this.renderCustomerInfo()}
-              <strong>App Revision:</strong>&nbsp;<span className="text-secondary">{config.revision}</span>
+              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{config.revision}</span>
             </Col>
           </Row>
         </Grid>

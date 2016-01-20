@@ -7,13 +7,14 @@ import {bindActionCreators} from 'redux';
 
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
-import {BastionRequirement, Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {
   env as envActions,
   checks as checkActions,
@@ -78,25 +79,6 @@ const InfoForm = forms.Form.extend({
   }),
   constructor(data, kwargs){
     forms.Form.call(this, kwargs);
-  },
-  render() {
-    return (
-      <div>
-        <h3>Define HTTP Request</h3>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('verb')} key={`bound-field-verb`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('path')} key={`bound-field-path`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('port')} key={`bound-field-port`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.boundField('body')} key={`bound-field-body`}/>
-        </Padding>
-      </div>
-    );
   }
 });
 
@@ -247,7 +229,7 @@ const CheckCreateRequest = React.createClass({
   renderHeaderForm(){
     return (
       <div>
-        <h3>Request Headers</h3>
+        <Heading level={3}>Request Headers</Heading>
         {this.getHeaderForms().map((form, index) => {
           return (
             <Padding b={2} key={`header-form-${index}`}>
@@ -282,11 +264,10 @@ const CheckCreateRequest = React.createClass({
         <div>
           <Padding tb={1}/>
           <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
-          <StepCounter active={2} steps={4}/>
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderLink(){
     return this.state.check.id ? (
@@ -298,7 +279,7 @@ const CheckCreateRequest = React.createClass({
     const target = this.props.check.target;
     let type = target.type;
     if (!type){
-      return <div/>;
+      return null;
     }
     type = type === 'sg' ? 'security' : type;
     if (type.match('security|elb')){
@@ -320,7 +301,7 @@ const CheckCreateRequest = React.createClass({
         <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (
@@ -339,36 +320,32 @@ const CheckCreateRequest = React.createClass({
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderInfoForm(){
+    const self = this;
     return (
-      <div>
-        <h3>Define Your HTTP Request</h3>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('protocol')} key={`bound-field-protocol`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('verb')} key={`bound-field-verb`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('path')} key={`bound-field-path`}/>
-        </Padding>
-        <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('port')} key={`bound-field-port`}/>
-        </Padding>
+      <Padding b={1}>
+        <Heading level={3}>Define Your HTTP Request</Heading>
+        {['protocol', 'verb', 'path', 'port'].map(string => {
+          return (
+            <Padding b={1}>
+              <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
+            </Padding>
+          );
+        })}
         {this.renderBodyInput()}
-      </div>
+      </Padding>
     );
   },
   renderInner(){
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
-        <Padding b={1}>
+        <Padding b={2}>
           {this.renderHelperText()}
         </Padding>
         <Padding b={1}>
-          <h3>Your Target</h3>
+          <Heading level={3}>Your Target</Heading>
           {this.renderTargetSelection()}
           <hr/>
         </Padding>

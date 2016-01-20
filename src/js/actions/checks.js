@@ -14,6 +14,18 @@ import {
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
+export function getCheckFromNotificaption(jsonURI) {
+  return dispatch => {
+    dispatch({
+      type: GET_CHECK,
+      payload: request.get(jsonURI)
+        .then(res => {
+          return res.body;
+        })
+    });
+  };
+}
+
 export function getCheck(id){
   return (dispatch, state) => {
     dispatch({
@@ -41,7 +53,10 @@ export function getCheck(id){
           const {notifications} = values[1].body;
           const {assertions} = values[2].body;
           const obj = _.assign({}, check, {notifications, assertions});
-          resolve(obj);
+          resolve({
+            data: obj,
+            search: state().search
+          });
         }, reject);
       })
     });
@@ -57,7 +72,10 @@ export function getChecks(redirect){
         .get(`${config.api}/checks`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve(_.get(res.body, 'checks'));
+          resolve({
+            data: _.get(res.body, 'checks'),
+            search: state().search
+          });
           if (redirect){
             setTimeout(() => {
               dispatch(pushState(null, '/'));

@@ -8,12 +8,14 @@ import {History} from 'react-router';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Button} from '../forms';
-import {BastionRequirement, Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
-import {EnvWithFilter} from '../env';
+import {EnvList} from '../env';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {Check} from '../../modules/schemas';
+import {Bar as SearchBar} from '../search';
 import {checks as actions, user as userActions} from '../../actions';
 
 const CheckCreateTarget = React.createClass({
@@ -99,11 +101,10 @@ const CheckCreateTarget = React.createClass({
           <Padding t={2}>
             <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
           </Padding>
-          <StepCounter active={1} steps={3}/>
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (
@@ -120,9 +121,11 @@ const CheckCreateTarget = React.createClass({
     return (
       <div>
         {this.renderHelperText()}
-        <h3>Choose a Target for your Check</h3>
-        <EnvWithFilter onTargetSelect={this.handleTargetSelect} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
-        <StepCounter active={1} steps={4}/>
+        <Padding b={2}>
+          <Heading level={3}>Choose a Target for your Check</Heading>
+          <SearchBar noRedirect id="check-create-search"/>
+        </Padding>
+        <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch filter/>
       </div>
     );
   },

@@ -59,7 +59,9 @@ const OnboardCreate = React.createClass({
               <Padding b={2}><LogoColor/></Padding>
               <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
               <form name="loginForm" onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
+                <Padding b={1}>
+                  <UserInputs include={['name', 'email']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
+                </Padding>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>

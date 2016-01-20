@@ -27,6 +27,7 @@ export function signupCreate(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
+          analytics.event('Onboard', 'signup');
           //TODO remove timeout somehow
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
@@ -73,28 +74,25 @@ export function vpcScan(data) {
         .set('Authorization', state().user.get('auth'))
         .send(sendData)
         .then((res) => {
-          resolve(res.body.regions);
-          setTimeout(() => {
-            dispatch(pushState(null, '/start/vpc-select'));
-          }, 100);
-          // const subnets = _.chain(res.body.regions).pluck('subnets').flatten().value();
-          // if (subnets.length){
-          //   if (subnets.length === 1 && !config.showVpcScreen){
-          //     setTimeout(() => {
-          //       dispatch({
-          //         type: ONBOARD_VPC_SELECT,
-          //         payload: subnets[0]
-          //       });
-          //       dispatch(pushState(null, '/start/install'));
-          //     }, 100);
-          //   }else {
-          //     setTimeout(() => {
-          //       dispatch(pushState(null, '/start/vpc-select'));
-          //     }, 100);
-          //   }
-          // }else {
-          //   return reject(new Error('No vpcs found.'));
-          // }
+          const regions = res.body.regions;
+          if (Array.isArray(regions)){
+            const bool = _.chain(regions).pluck('supported_platforms').map(platforms => {
+              return !(platforms.indexOf('VPC') > -1);
+            }).compact().some().value();
+            if (bool){
+              const message = 'One or more of the regions selected does not support VPCs. This probably indicates that a region in your account is AWS Classic. Opsee does not support Classic at this time. Please choose a different region or refer to our <a href="/help" target="_blank">Help Page</a>.';
+              return reject({
+                message
+              });
+            }
+            resolve(regions);
+            setTimeout(() => {
+              dispatch(pushState(null, '/start/vpc-select'));
+            }, 100);
+          }
+          return reject({
+            message: 'Something went wrong trying to get VPCs.'
+          });
         }, (err) => {
           let message = err.message || err.response;
           return reject({message});

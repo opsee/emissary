@@ -1,6 +1,5 @@
 import config from '../modules/config';
 import {createAction} from 'redux-actions';
-import uuid from 'node-uuid';
 
 import {
   APP_INITIALIZE,
@@ -94,7 +93,7 @@ export function shutdown(){
 
 export function initialize(){
   return (dispatch, state) => {
-    if (state().user.get('token')){
+    if (state().user.get('token') && state().user.get('id')){
       const user = state().user.toJS();
       if (window.Intercom){
         window.Intercom('boot', {
@@ -118,11 +117,6 @@ export function initialize(){
       setTimeout(() => {
         socketStart(dispatch, state);
       }, config.socketStartDelay || 0);
-    }else if (window.ldclient){
-      window.ldclient.identify({
-        key: uuid.v4(),
-        anonymous: true
-      });
     }
     dispatch({
       type: APP_INITIALIZE

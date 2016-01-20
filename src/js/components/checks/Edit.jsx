@@ -11,8 +11,9 @@ import CheckCreateInfo from './CheckCreateInfo.jsx';
 import {Checkmark, Close, Delete} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
-import {EnvWithFilter} from '../env';
+import {EnvList} from '../env';
 import {Button} from '../forms';
+import {Heading} from '../type';
 import {checks as actions, env as envActions} from '../../actions';
 import {Check} from '../../modules/schemas';
 
@@ -116,11 +117,11 @@ const CheckEdit = React.createClass({
     if (this.state.showEnv){
       return (
         <Padding tb={1}>
-          <EnvWithFilter onTargetSelect={this.handleTargetSelect} include={['groupsSecurity', 'groupsELB']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
+          <EnvList onTargetSelect={this.handleTargetSelect} include={['groups.elb', 'groups.security', 'instances.ecc']} filter={this.props.filter} onFilterChange={this.props.onFilterChange}/>
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   renderLink(){
     return this.getCheck().id ?
@@ -165,7 +166,7 @@ const CheckEdit = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getCheck.status}>
-        <h2>Check not found.</h2>
+        <Heading level={2}>Check not found.</Heading>
       </StatusHandler>
     );
   },

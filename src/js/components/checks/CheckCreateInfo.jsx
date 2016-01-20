@@ -8,10 +8,11 @@ import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close, Add} from '../icons';
-import {StatusHandler, StepCounter} from '../global';
+import {StatusHandler} from '../global';
 import analytics from '../../modules/analytics';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {checks as actions, user as userActions} from '../../actions';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
@@ -182,7 +183,7 @@ const CheckCreateInfo = React.createClass({
   renderNotificationForm(){
     return (
       <Padding b={2}>
-        <h3>Notifications</h3>
+        <Heading level={3}>Notifications</Heading>
         {this.getNotificationsForms().map((form, index) => {
           return (
             <Padding b={2} key={`notif-form-${index}`}>
@@ -219,11 +220,10 @@ const CheckCreateInfo = React.createClass({
             <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
             <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Finish</Button>
           </Padding>
-          <StepCounter active={4} steps={4}/>
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (
@@ -238,7 +238,7 @@ const CheckCreateInfo = React.createClass({
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
-        <Padding b={1}>
+        <Padding b={2}>
           {this.state.info.render()}
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>

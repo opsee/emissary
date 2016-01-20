@@ -1,18 +1,21 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
 import result from '../modules/result';
+import {itemsFilter} from '../modules';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {InstanceEcc, InstanceRds, GroupSecurity, GroupElb} from '../modules/schemas';
 import {
-  ENV_SET_SEARCH,
   ENV_GET_BASTIONS,
   GET_GROUP_SECURITY,
   GET_GROUPS_SECURITY,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
   GET_INSTANCE_ECC,
-  GET_INSTANCES_ECC
+  GET_INSTANCES_ECC,
+  GET_INSTANCE_RDS,
+  GET_INSTANCES_RDS,
+  ENV_SET_FILTERED
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -80,24 +83,8 @@ const statics = {
     return new GroupElb(newData);
   },
   groupSecurityFromJS(state, data){
-    let instances = data.instances;
     let newData = data.group || data;
     newData.instance_count = data.instance_count;
-    if (!instances){
-      instances = state.instances.ecc.toJS().filter(instance => {
-        return _.findWhere(instance.SecurityGroups, {GroupId: newData.LoadBalancerName});
-      });
-    }
-    if (instances.size){
-      instances = instances.toJS();
-    }
-    if (instances.length){
-      newData.instances = new List(instances.map(instance => {
-        const results = instance.results;
-        return statics.instanceEccFromJS({instance, results});
-      }));
-    }
-    //TODO - make sure status starts working when coming from api, have to code it like meta below
     newData.meta = fromJS(newData.meta);
     newData.id = newData.GroupId;
     newData.name = newData.GroupName;
@@ -128,16 +115,18 @@ const statics = {
     return newData && newData.length ? fromJS(newData) : List();
   },
   getInstanceRdsSuccess(state, data){
-    if (data && data.instances){
-      let newData = data.instances;
-      newData.type = 'RDS';
-      newData.groups = newData.SecurityGroups;
-      return statics.instanceRdsFromJS(newData);
+    const arr = state.instances.rds;
+    const single = statics.instanceRdsFromJS(data);
+    const index = arr.findIndex(item => {
+      return item.get('id') === single.get('id');
+    });
+    if (index > -1){
+      return arr.update(index, () => single);
     }
+    return arr.concat(new List([single]));
   },
   getInstancesRdsSuccess(state, data){
     let newData = _.chain(data)
-    .uniq('InstanceId')
     .map(statics.instanceRdsFromJS)
     .sortBy(i => {
       return i.name.toLowerCase();
@@ -152,19 +141,29 @@ const statics = {
     }
     return launchTime;
   },
-  instanceRdsFromJS(data){
-    let newData = data.instance || data;
-    newData.id = newData.DbiResourceId;
-    newData.name = newData.DBName;
+  instanceRdsFromJS(raw){
+    let data = raw.instance;
+    let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
+    if (!newData.results){
+      newData.results = raw.results || data.results;
+    }
+    newData.id = newData.name = newData.DBInstanceIdentifier;
+    if (newData.DBName !== newData.id){
+      newData.name = `${newData.DBName} - ${newData.id}`;
+    }
     newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
+    newData.type = 'RDS';
+    newData.VpcSecurityGroups = new List(newData.VpcSecurityGroups.map(g => fromJS(g)));
+    _.assign(newData, result.getFormattedData(newData));
+    if (newData.checks && newData.checks.size && !newData.results.size){
+      newData.state = 'initializing';
+    }
+    newData.meta = fromJS(newData.meta);
     return new InstanceRds(newData);
   },
   instanceEccFromJS(raw){
     let data = raw.instance;
     let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
-    if (newData.DBInstanceIdentifier){
-      return statics.instanceRdsFromJS(newData);
-    }
     if (!newData.results){
       newData.results = raw.results || data.results;
     }
@@ -173,7 +172,11 @@ const statics = {
     if (newData.Tags && newData.Tags.length){
       name = _.chain(newData.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
     }
-    newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
+    if (Array.isArray(newData.SecurityGroups)){
+      newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
+    }else {
+      newData.SecurityGroups = new List();
+    }
     newData.Placement = fromJS(newData.Placement);
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
@@ -185,6 +188,12 @@ const statics = {
     //TODO - make sure status starts working when coming from api, have to code it like meta below
     newData.meta = fromJS(newData.meta);
     return new InstanceEcc(newData);
+  },
+  getNewFiltered(data = new List(), state, action = {payload: {search: ''}}, type = ''){
+    const arr = type.split('.');
+    const filteredData = itemsFilter(data, action.payload.search, type);
+    //this looks nasty but all we are doing is creating a new filtered obj with fresh data
+    return _.assign({}, state.filtered, {[arr[0]]: _.assign({}, state.filtered[arr[0]], {[arr[1]]: filteredData})});
   }
 };
 
@@ -198,61 +207,104 @@ const initial = {
     ecc: new List(),
     rds: new List()
   },
-  search: null,
+  filtered: {
+    groups: {
+      security: new List(),
+      rds: new List(),
+      elb: new List()
+    },
+    instances: {
+      ecc: new List(),
+      rds: new List()
+    }
+  },
   bastions: []
 };
 
 export default handleActions({
-  [ENV_SET_SEARCH]: {
-    next(state, action){
-      return _.assign({}, state, {search: action.payload});
-    }
-  },
   [GET_GROUP_SECURITY]: {
     next(state, action){
-      const security = statics.getGroupSecuritySuccess(state, action.payload);
-      const data = _.assign({}, state.groups, {security});
-      return _.assign({}, state, {groups: data});
+      const security = statics.getGroupSecuritySuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
+      const groups = _.assign({}, state.groups, {security});
+      return _.assign({}, state, {groups, filtered});
     }
   },
   [GET_GROUPS_SECURITY]: {
     next(state, action){
-      const security = statics.getGroupsSecuritySuccess(state, action.payload);
-      const data = _.assign({}, state.groups, {security});
-      return _.assign({}, state, {groups: data});
+      const security = statics.getGroupsSecuritySuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
+      const groups = _.assign({}, state.groups, {security});
+      return _.assign({}, state, {groups, filtered});
     }
   },
   [GET_GROUP_ELB]: {
     next(state, action){
-      const elb = statics.getGroupElbSuccess(state, action.payload);
-      const data = _.assign({}, state.groups, {elb});
-      return _.assign({}, state, {groups: data});
+      const elb = statics.getGroupElbSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(elb, state, action, 'groups.elb');
+      const groups = _.assign({}, state.groups, {elb});
+      return _.assign({}, state, {groups, filtered});
     }
   },
   [GET_GROUPS_ELB]: {
     next(state, action){
-      const elb = statics.getGroupsElbSuccess(state, action.payload);
-      const data = _.assign({}, state.groups, {elb});
-      return _.assign({}, state, {groups: data});
+      const elb = statics.getGroupsElbSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(elb, state, action, 'groups.elb');
+      const groups = _.assign({}, state.groups, {elb});
+      return _.assign({}, state, {groups, filtered});
     }
   },
   [GET_INSTANCE_ECC]: {
     next(state, action){
-      const ecc = statics.getInstanceEccSuccess(state, action.payload);
-      const data = _.assign({}, state.instances, {ecc});
-      return _.assign({}, state, {instances: data});
+      const ecc = statics.getInstanceEccSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(ecc, state, action, 'instances.ecc');
+      const instances = _.assign({}, state.instances, {ecc});
+      return _.assign({}, state, {instances, filtered});
     }
   },
   [GET_INSTANCES_ECC]: {
     next(state, action){
-      const ecc = statics.getInstancesEccSuccess(state, action.payload);
-      const data = _.assign({}, state.instances, {ecc});
-      return _.assign({}, state, {instances: data});
+      const ecc = statics.getInstancesEccSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(ecc, state, action, 'instances.ecc');
+      const instances = _.assign({}, state.instances, {ecc});
+      return _.assign({}, state, {instances, filtered});
+    }
+  },
+  [GET_INSTANCE_RDS]: {
+    next(state, action){
+      const rds = statics.getInstanceRdsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
+      const instances = _.assign({}, state.instances, {rds});
+      return _.assign({}, state, {instances, filtered});
+    }
+  },
+  [GET_INSTANCES_RDS]: {
+    next(state, action){
+      const rds = statics.getInstancesRdsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
+      const instances = _.assign({}, state.instances, {rds});
+      return _.assign({}, state, {instances, filtered});
     }
   },
   [ENV_GET_BASTIONS]: {
     next(state, action){
       return _.assign({}, state, {bastions: action.payload});
+    }
+  },
+  [ENV_SET_FILTERED]: {
+    next(state, action = {payload: {string: '', tokens: []}}){
+      const {groups, instances} = state;
+      const filtered = {
+        groups: {
+          security: itemsFilter(groups.security, action.payload, 'groups.security'),
+          elb: itemsFilter(groups.elb, action.payload, 'groups.elb')
+        },
+        instances: {
+          ecc: itemsFilter(instances.ecc, action.payload, 'instances.ecc'),
+          rds: itemsFilter(instances.rds, action.payload, 'instances.rds')
+        }
+      };
+      return _.assign({}, state, {filtered});
     }
   }
 }, initial);

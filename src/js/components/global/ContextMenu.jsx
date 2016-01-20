@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row} from '../../modules/bootstrap';
 import Modal from './Modal';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {app as actions} from '../../actions';
 
 const ContextMenu = React.createClass({
@@ -34,11 +35,11 @@ const ContextMenu = React.createClass({
     if (!this.props.noTitle){
       return (
         <Padding lr={1}>
-          <h3>{this.props.title}</h3>
+          <Heading level={3}>{this.props.title}</Heading>
         </Padding>
       );
     }
-    return <div/>;
+    return null;
   },
   render(){
     return (

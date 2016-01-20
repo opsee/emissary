@@ -128,15 +128,17 @@ const Install = React.createClass({
         </Alert>
       );
     }
-    return <div/>;
+    return null;
   },
   renderText(){
     if (this.isBastionLaunching() && !this.areBastionsComplete() && !this.getBastionErrors().length){
       return (
-        <p>We are now installing the bastion in your selected VPC. This could take a few minutes.</p>
+        <Padding b={1}>
+          <p>We are now installing the bastion in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
+        </Padding>
       );
     }else if (this.areBastionsComplete()){
-      return <div/>;
+      return null;
     }
     return <p>Checking installation status...</p>;
   },

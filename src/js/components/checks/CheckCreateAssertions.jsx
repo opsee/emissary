@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import forms from 'newforms';
 import _ from 'lodash';
-import {BastionRequirement, Toolbar, StepCounter} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -17,6 +17,7 @@ import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
+import {Heading} from '../type';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -182,7 +183,7 @@ const CheckCreateAssertions = React.createClass({
         <BoundField bf={form.boundField('operand')}/>
       );
     }
-    return <div/>;
+    return null;
   },
   renderValue(form){
     const data = form.cleanedData;
@@ -191,7 +192,7 @@ const CheckCreateAssertions = React.createClass({
         <BoundField bf={form.boundField('value')}/>
       );
     }
-    return <div/>;
+    return null;
   },
   renderDeleteAssertionButton(form, index){
     if (index > 0){
@@ -201,7 +202,7 @@ const CheckCreateAssertions = React.createClass({
         </Col>
       );
     }
-    return <span/>;
+    return null;
   },
   renderAssertionsForm(){
     return (
@@ -261,11 +262,10 @@ const CheckCreateAssertions = React.createClass({
           <div>
             <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Next</Button>
           </div>
-          <StepCounter active={3} steps={4}/>
         </div>
       );
     }
-    return <div/>;
+    return null;
   },
   renderHelperText(){
     return (
@@ -280,7 +280,7 @@ const CheckCreateAssertions = React.createClass({
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
         <Padding t={1}>
-          <h3>Assertions</h3>
+          <Heading level={3}>Assertions</Heading>
         </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
         <br />
