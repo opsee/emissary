@@ -12,6 +12,7 @@ import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
+import {SlackConnect} from '../integrations';
 
 const Install = React.createClass({
   propTypes: {
@@ -32,6 +33,7 @@ const Install = React.createClass({
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),
+      user: PropTypes.object,
       asyncActions: PropTypes.object
     }).isRequired
   },
@@ -142,6 +144,15 @@ const Install = React.createClass({
     }
     return <p>Checking installation status...</p>;
   },
+  renderSlack(){
+    if (!this.props.redux.user.get('slack')){
+      return (
+        <Padding>
+          While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications there - if you&rsquo;re into that.
+        </Padding>
+      );
+    }
+  },
   renderInner(){
     if (this.getBastionConnectionStatus() === 'failed'){
       return (
@@ -161,6 +172,7 @@ const Install = React.createClass({
             );
           })}
           {this.renderBtn()}
+          {this.renderSlack()}
           <Survey/>
         </div>
       );

@@ -9,6 +9,7 @@ import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {user as actions, app as appActions} from '../../actions';
+import {SlackInfo} from '../integrations';
 
 const Profile = React.createClass({
   propTypes: {
@@ -47,6 +48,10 @@ const Profile = React.createClass({
                   <tr>
                     <td><strong>Password</strong></td>
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Slack</strong></td>
+                    <td><SlackInfo/></td>
                   </tr>
                 </Table>
               </Padding>

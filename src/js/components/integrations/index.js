@@ -1,5 +1,7 @@
-import AddToSlackButton from './AddToSlackButton.jsx';
+import SlackConnect from './SlackConnect.jsx';
+import SlackInfo from './SlackInfo.jsx';
 
 export {
-  AddToSlackButton
+  SlackConnect,
+  SlackInfo
 };
