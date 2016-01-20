@@ -8,9 +8,7 @@ const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
 
 function makeUserObject(user) {
   return {
-    email: user.get('email'),
-    customer_id: user.get('customer_id'),
-    intercom_hmac: user.get('intercom_hmac')
+    email: user.get('email')
   };
 }
 
