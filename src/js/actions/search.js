@@ -10,7 +10,7 @@ import {
   CHECKS_SET_FILTERED
 } from './constants';
 
-export function setString(string){
+export function setString(string, noRedirect){
   return (dispatch, state) => {
     dispatch({
       type: SEARCH_SET_STRING,
@@ -18,10 +18,12 @@ export function setString(string){
         if (state().search.string !== string){
           console.log('setstring', string);
           if (string || state().router.location.pathname === '/search'){
-            if (state().router.location.pathname !== '/search'){
-              dispatch(pushState(null, `/search?s=${string}`));
-            }else {
-              dispatch(replaceState(null, `/search?s=${string}`));
+            if(!noRedirect){
+              if (state().router.location.pathname !== '/search'){
+                dispatch(pushState(null, `/search?s=${string}`));
+              }else {
+                dispatch(replaceState(null, `/search?s=${string}`));
+              }
             }
           }
           const tokens = tokenizer(string);
