@@ -83,8 +83,9 @@ function socketStart(dispatch, state){
 
 export function shutdown(){
   return (dispatch) => {
-    window.Intercom('shutdown');
-    if (window.socket){window.socket.close();}
+    if (window.socket){
+      window.socket.close();
+    }
     dispatch({
       type: APP_SHUTDOWN
     });
@@ -95,14 +96,7 @@ export function initialize(){
   return (dispatch, state) => {
     if (state().user.get('token') && state().user.get('id')){
       const user = state().user.toJS();
-      if (window.Intercom){
-        window.Intercom('boot', {
-          app_id: 'mrw1z4dm',
-          email: user.email,
-          user_hash: user.intercom_hmac,
-          name: user.name
-        });
-      }
+
       if (window.ldclient){
         window.ldclient.identify({
           firstName: user.name,
