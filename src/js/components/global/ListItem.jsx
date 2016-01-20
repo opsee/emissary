@@ -89,7 +89,7 @@ const ListItem = React.createClass({
     }
     if (this.props.onClick){
       return (
-        <Button icon flat to={this.props.link} target="_blank">
+        <Button icon flat to={this.props.link} target="_blank" title={`View this ${this.props.type} in a new window`}>
           <NewWindow btn fill="textSecondary"/>
         </Button>
       );

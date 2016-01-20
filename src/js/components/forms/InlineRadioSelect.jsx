@@ -47,7 +47,7 @@ const InlineRadioSelect = React.createClass({
             {this.props.bf.subWidgets().map((w, i) => {
               return (
                 <li key={i} style={{marginRight: '1.8em'}}>
-                  <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '-.2rem', color: colors.textColor, paddingLeft: 0}}/>
+                  <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '-.2rem', color: colors.textColor}}/>
                 </li>
               );
             })}

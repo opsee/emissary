@@ -16,7 +16,6 @@ export function setString(string, noRedirect){
       type: SEARCH_SET_STRING,
       payload: new Promise((resolve) => {
         if (state().search.string !== string){
-          console.log('setstring', string);
           if (string || state().router.location.pathname === '/search'){
             if (!noRedirect){
               if (state().router.location.pathname !== '/search'){

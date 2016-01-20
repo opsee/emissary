@@ -10,11 +10,11 @@ import CheckList from 'react-proxy?name=checks!../checks/List';
 import CheckSingle from 'react-proxy?name=checks!../checks/Single';
 import CheckEdit from 'react-proxy?name=checks!../checks/Edit';
 
-import Docs from 'react-proxy!../docs/Docs';
-import DocsBastion from 'react-proxy!../docs/Bastion';
-import DocsCloudformation from 'react-proxy!../docs/Cloudformation';
-import DocsIAM from 'react-proxy!../docs/IAM';
-import DocsChecks from 'react-proxy!../docs/Checks.jsx';
+import Docs from 'react-proxy?name=docsDocs!../docs/Docs';
+import DocsBastion from 'react-proxy?name=docsBastion!../docs/Bastion';
+import DocsCloudformation from 'react-proxy?name=docsCloudformation!../docs/Cloudformation';
+import DocsIAM from 'react-proxy?name=docsIAM!../docs/IAM';
+import DocsChecks from 'react-proxy?name=docsChecks!../docs/Checks.jsx';
 
 import CheckCreate from 'react-proxy?name=checkCreate!../checks/Create';
 import CheckCreateTarget from 'react-proxy?name=checkCreate!../checks/CheckCreateTarget';
@@ -48,14 +48,14 @@ import OnboardVPCSelect from 'react-proxy?name=onboard!../onboard/VPCSelect';
 import OnboardSubnetSelect from 'react-proxy?name=onboard!../onboard/SubnetSelect';
 import OnboardInstall from 'react-proxy?name=onboard!../onboard/Install';
 
-import AdminSignups from 'react-proxy!../admin/Signups';
+import AdminSignups from 'react-proxy?adminSignups!../admin/Signups';
 
-import SearchAll from 'react-proxy!../search/All';
+import SearchAll from 'react-proxy?search!../search/All';
 
-import Help from 'react-proxy!../pages/Help';
-import Styleguide from 'react-proxy!../pages/Styleguide';
-import System from 'react-proxy!../env/System';
-import NotFound from 'react-proxy!../pages/NotFound';
+import Help from 'react-proxy?name=help!../pages/Help';
+import Styleguide from 'react-proxy?name=styleguide!../pages/Styleguide';
+import System from 'react-proxy?name=system!../env/System';
+import NotFound from 'react-proxy?name=notfound!../pages/NotFound';
 
 import {auth} from '../global/Authenticator';
 

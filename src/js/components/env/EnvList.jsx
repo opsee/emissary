@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 import {SetInterval} from '../../modules/mixins';
 import {GroupItemList} from '../groups';
+import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {FilterButtons} from '../search';
 
@@ -14,7 +15,8 @@ const EnvList = React.createClass({
       'groups.security',
       'groups.elb',
       'instances.ecc',
-      'instances.rds'
+      'instances.rds',
+      'checks.checks'
     ])),
     filter: PropTypes.bool,
     onFilterChange: PropTypes.func,
@@ -28,6 +30,10 @@ const EnvList = React.createClass({
       asyncActions: PropTypes.object,
       search: PropTypes.shape({
         string: PropTypes.string
+      }),
+      checks: PropTypes.shape({
+        checks: PropTypes.object,
+        filtered: PropTypes.object
       }),
       env: PropTypes.shape({
         groups: PropTypes.shape({
@@ -55,7 +61,7 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc'],
+      include: ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc', 'checks.checks'],
       limit: 1000
     };
   },
@@ -91,6 +97,14 @@ const EnvList = React.createClass({
       </div>
     );
   },
+  renderChecksChecks(){
+    return (
+      <div key="checks">
+        <CheckItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title noFetch={this.props.noFetch}/>
+        <hr/>
+      </div>
+    );
+  },
   renderFilterButtons(){
     if (this.props.showFilterButtons){
       return <FilterButtons/>;
@@ -102,7 +116,11 @@ const EnvList = React.createClass({
     let {include} = this.props;
     if (this.props.filter){
       include = _.sortBy(include, i => {
-        return -1 * (_.get(this.props.redux.env.filtered, `${i}.size`) || 0);
+        let size = _.get(this.props.redux.env.filtered, `${i}.size`);
+        if (i === 'checks.checks'){
+          size = this.props.redux.checks.filtered.size;
+        }
+        return (-1 * size) || 0;
       });
     }
     return (
