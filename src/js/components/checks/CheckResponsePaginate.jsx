@@ -6,7 +6,7 @@ import _ from 'lodash';
 import {Alert} from '../../modules/bootstrap';
 import Highlight from '../global/Highlight.jsx';
 import {Padding} from '../layout';
-import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight} from '../icons';
+import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../actions';
@@ -118,14 +118,14 @@ const CheckResponsePaginate = React.createClass({
   isWaiting(){
     return this.getStatus() === 'pending';
   },
-  runTestCheck(props){
+  runTestCheck(data = this.props){
     if (this.props.responses){
       return this.setState({complete: true});
     }
-    const complete = this.isCheckComplete(props.check);
+    const complete = this.isCheckComplete(data.check);
     if (complete){
       // if (this.getStatus() !== 'pending'){
-      this.props.actions.test(props.check);
+      this.props.actions.test(data.check);
       // }
     }
     this.setState({complete: true});
@@ -212,8 +212,11 @@ const CheckResponsePaginate = React.createClass({
   },
   renderWaiting(){
     return (
-      <div className={this.getResponseClass()}>
-        {this.renderWaitingResponse()}
+      <div>
+        {this.renderTitle()}
+        <div className={this.getResponseClass()}>
+          {this.renderWaitingResponse()}
+        </div>
       </div>
     );
   },
@@ -282,6 +285,14 @@ const CheckResponsePaginate = React.createClass({
     }
     return null;
   },
+  renderTitle(){
+    return (
+      <Padding t={1} className="display-flex">
+        <Heading level={3} className="flex-1">Response{this.getResponses().size > 1 ? 's' : ''}</Heading>
+        <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={this.getStatus() === 'pending'}><Refresh fill="primary"/></Button>
+      </Padding>
+    );
+  },
   renderTopArea(){
     const arr = this.getFormattedResponses();
     if (arr.length){
@@ -309,9 +320,7 @@ const CheckResponsePaginate = React.createClass({
     }else if (this.getResponses().size){
       return (
         <div>
-        <Padding t={1}>
-          <Heading level={3}>Response{this.getResponses().size > 1 ? 's' : ''}</Heading>
-        </Padding>
+        {this.renderTitle()}
         {this.renderBoolArea()}
           <div style={{background: '#212121'}}>
             <Padding a={0.5}>

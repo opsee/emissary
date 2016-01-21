@@ -7,7 +7,8 @@ const Hyphenate = React.createClass({
     children: PropTypes.node,
     level: PropTypes.oneOf([1, 2, 3, 4, 5]),
     style: PropTypes.object,
-    noPadding: PropTypes.bool
+    noPadding: PropTypes.bool,
+    className: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -31,7 +32,7 @@ const Hyphenate = React.createClass({
       style: this.props.style
     };
     return (
-      <Padding {...this.getPadding()}>
+      <Padding {...this.getPadding()} className={this.props.className}>
         {
           React.createElement(string, props, this.props.children)
         }
