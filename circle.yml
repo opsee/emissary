@@ -4,6 +4,7 @@ dependencies:
     - npm install
     - docker info
     - npm run deploy
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
 machine:
   services:
     - docker
@@ -14,10 +15,11 @@ test:
     - docker run -d -p 8080:80 quay.io/opsee/emissary:latest; sleep 10;
     - curl http://localhost:8080/
     - casperjs test test-deploy.js
+    - docker tag quay.io/opsee/emissary quay.io/opsee/emissary:$CIRCLE_SHA1
+    - docker push quay.io/opsee/emissary:$CIRCLE_SHA1
 deployment:
   hub:
     branch: master
     owner: opsee
     commands:
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
       - docker push quay.io/opsee/emissary:latest
