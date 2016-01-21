@@ -49,7 +49,7 @@ function setUser(state, action){
       intercom_hmac: action.payload.intercom_hmac || state.intercom_hmac
     }
   );
-  obj.ghosting = obj.admin || config.ghosting;
+  obj.ghosting = obj.admin_id > 0 || config.ghosting;
   const auth = getAuth(obj);
   if (auth){
     obj = _.assign({}, obj, {auth});
