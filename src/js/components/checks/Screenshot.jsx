@@ -23,7 +23,7 @@ const CheckScreenshot = React.createClass({
       })
     }),
     actions: PropTypes.shape({
-      getCheckFromNotificaption: PropTypes.func.isRequired
+      getCheckFromURI: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       checks: PropTypes.object
@@ -33,7 +33,7 @@ const CheckScreenshot = React.createClass({
     // The JSON containing check data to populate the screenshot is uploaded
     // to S3 by the Notificaption service (but any JSON URL would work)
     const jsonURI = this.props.location.query.json;
-    this.props.actions.getCheckFromNotificaption(jsonURI);
+    this.props.actions.getCheckFromURI(jsonURI);
   },
   getCheck() {
     const check = this.props.redux.checks.checks.first();
@@ -53,7 +53,7 @@ const CheckScreenshot = React.createClass({
       const target = check.get('target');
 
       return (
-        <div>
+        <div className="js-screenshot-results">
           <Padding b={1}>
             <Heading level={3}>HTTP Request</Heading>
             <HttpRequestItem spec={spec} target={target} />
