@@ -53,7 +53,7 @@ const CheckScreenshot = React.createClass({
       const target = check.get('target');
 
       return (
-        <div>
+        <div className='js-screenshot-results'>
           <Padding b={1}>
             <Heading level={3}>HTTP Request</Heading>
             <HttpRequestItem spec={spec} target={target} />
