@@ -1,3 +1,4 @@
+import analytics from '../modules/analytics';
 import config from '../modules/config';
 import request from '../modules/request';
 import URL from 'url';
@@ -24,6 +25,9 @@ function makeUserObject(userData) {
 }
 
 export function trackPageView(path, title) {
+  // FIXME Legacy analytics -- remove when Myst is stable
+  analytics.pageView(path, title);
+
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
@@ -42,6 +46,9 @@ export function trackPageView(path, title) {
 }
 
 export function trackEvent(category, action = '', data = {}) {
+  // FIXME Legacy analytics -- remove when Myst is stable
+  analytics.event(category, action, data);
+
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
