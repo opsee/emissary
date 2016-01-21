@@ -48,9 +48,9 @@ import OnboardVPCSelect from 'react-proxy?name=onboard!../onboard/VPCSelect';
 import OnboardSubnetSelect from 'react-proxy?name=onboard!../onboard/SubnetSelect';
 import OnboardInstall from 'react-proxy?name=onboard!../onboard/Install';
 
-import AdminSignups from 'react-proxy?adminSignups!../admin/Signups';
+import AdminSignups from 'react-proxy?name=adminSignups!../admin/Signups';
 
-import SearchAll from 'react-proxy?search!../search/All';
+import SearchAll from 'react-proxy?name=search!../search/All';
 
 import Help from 'react-proxy?name=help!../pages/Help';
 import Styleguide from 'react-proxy?name=styleguide!../pages/Styleguide';
