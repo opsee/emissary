@@ -14,13 +14,17 @@ import {
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
-export function getCheckFromNotificaption(jsonURI) {
+/**
+ * Fetches check data as JSON from the given JSON URI (e.g., an S3 URL).
+ * Used by Screenshot.jsx to populate the UI for the screenshot service.
+ */
+export function getCheckFromURI(jsonURI) {
   return dispatch => {
     dispatch({
       type: GET_CHECK,
       payload: request.get(jsonURI)
         .then(res => {
-          return res.body;
+          return { data: res.body };
         })
     });
   };
