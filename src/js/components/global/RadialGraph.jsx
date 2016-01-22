@@ -96,7 +96,9 @@ const RadialGraph = React.createClass({
   },
   getPath(){
     const health = this.getHealth();
-    if (!health){return '';}
+    if (!health){
+      return '';
+    }
     let percentage;
     if (this.state.silenceRemaining){
       percentage = (this.state.silenceRemaining / this.state.silenceDuration) * 100;

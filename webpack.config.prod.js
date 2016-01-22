@@ -37,7 +37,8 @@ module.exports = {
     vendor:vendors
   },
   eslint:{
-    configFile:'./prod.eslintrc'
+    configFile:'./node_modules/opsee-style/.eslintrc',
+    failOnWarning: true
   },
   output: {
     path: path.join(__dirname, "dist"),

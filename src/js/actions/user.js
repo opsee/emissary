@@ -3,7 +3,7 @@ import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
-import analytics from '../modules/analytics';
+import * as analytics from './analytics';
 import {
   USER_LOGIN,
   USER_LOGOUT,
@@ -27,7 +27,11 @@ export function login(data) {
         .post(`${config.authApi}/authenticate/password`)
         .send(data)
         .then((res) => {
+          const user = res.body.user;
+          analytics.trackEvent('User', 'login', null, user)(dispatch, state);
+
           resolve(res.body);
+
           //TODO fix this somehow
           setTimeout(() => {
             const string = state().router.location.query.redirect || '/';
@@ -59,9 +63,9 @@ export function setPassword(data) {
 }
 
 export function logout(query){
-  return (dispatch) => {
+  return (dispatch, state) => {
     storage.remove('user');
-    analytics.event('User', 'logout');
+    analytics.trackEvent('User', 'logout')(dispatch, state);
     dispatch({
       type: USER_LOGOUT
     });
@@ -116,8 +120,8 @@ export function edit(data) {
             dispatch(pushState(null, '/profile'));
           }, 100);
           const user = _.get(res, 'body.user');
-          if (user && window.Intercom){
-            window.Intercom('update', user);
+          if (user){
+            analytics.updateUser(user)(dispatch, state);
           }
         }, reject);
       })

@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import _ from 'lodash';
-import analytics from '../../modules/analytics';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -12,7 +11,7 @@ import listItem from '../global/listItem.css';
 import {Padding} from '../layout';
 import cx from 'classnames';
 import RadialGraph from './RadialGraph';
-import {app as actions} from '../../actions';
+import {app as actions, analytics as analyticsActions} from '../../actions';
 
 const ListItem = React.createClass({
   propTypes: {
@@ -29,6 +28,9 @@ const ListItem = React.createClass({
     noMenu: PropTypes.bool,
     actions: PropTypes.shape({
       openContextMenu: PropTypes.func
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
     })
   },
   getDefaultProps(){
@@ -39,7 +41,7 @@ const ListItem = React.createClass({
   },
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
-    analytics.event(this.props.type, 'menu-open');
+    this.props.analyticsActions.trackEvent(this.props.type, 'menu-open');
   },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
@@ -132,7 +134,8 @@ const ListItem = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 const mapStateToProps = (state) => ({
