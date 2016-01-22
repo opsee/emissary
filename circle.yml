@@ -4,20 +4,23 @@ dependencies:
     - npm install
     - docker info
     - npm run deploy
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
 machine:
   services:
     - docker
   node:
-    version: 4.1.2
+    version: 5.0.0
 test:
   override:
     - docker run -d -p 8080:80 quay.io/opsee/emissary:latest; sleep 10;
     - curl http://localhost:8080/
     - casperjs test test-deploy.js
+    - docker tag quay.io/opsee/emissary quay.io/opsee/emissary:$CIRCLE_SHA1
+    - docker push quay.io/opsee/emissary:$CIRCLE_SHA1
 deployment:
   hub:
     branch: master
     owner: opsee
     commands:
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
       - docker push quay.io/opsee/emissary:latest
+      - curl -X POST "https://api.yellerapp.com/yk_w_f5f4b9abeaad0266f6b0de9ca8cc756b65dc3e86312566d7398caf0fde0f577a/deploys" -d user=CircleCI -d revision=$CIRCLE_SHA1

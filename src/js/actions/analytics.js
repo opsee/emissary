@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import analytics from '../modules/analytics';
 import config from '../modules/config';
 import request from '../modules/request';
@@ -19,14 +21,7 @@ function makeUserObject(userData) {
   // Users taken from redux state are Immutable Records, but user updates
   // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
-
-  return {
-    email: user.email,
-    name: user.name,
-    customer_id: user.customer_id,
-    id: user.id,
-    intercom_hmac: user.intercom_hmac
-  };
+  return _.pick(user, ['email', 'name', 'customer_id', 'id']);
 }
 
 /**
@@ -104,23 +99,8 @@ export function updateUser(updatedUser) {
 
     // The user in state has attributes that updatedUser does not have, since
     // the latter is only profile information. However, the profile information
-    // in state().user could be stale, so we only use that for token & id.
-    const user = state().user;
-
-    // Construct the update by hand, vs. using makeUserObject in order to
-    // correctly handle updated fields
-    const update = {
-      id: user.id,
-      email: updatedUser.email,
-      name: updatedUser.name,
-      token: user.token,
-      custom_attributes: {
-        customer_id: user.customer_id,
-        admin: user.admin,
-        admin_id: user.admin_id,
-        verified: user.verified
-      }
-    };
+    // in state().user could be stale, so we only use that for id.
+    const update = _.assign({}, {user_id: state().user.get('id')}, updatedUser);
 
     dispatch({
       type: ANALYTICS_USER_UPDATE,

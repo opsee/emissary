@@ -43,7 +43,7 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
-    chunkFilename: "[name]-[id].[hash].js"
+    chunkFilename: "[name].js"
   },
   module: {
     preLoaders:[
@@ -57,7 +57,7 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           plugins: ['transform-runtime'],
-          presets: ['es2015', 'react'],
+          presets: ['es2015', 'react']
         },
         include: [context_dir]
       },

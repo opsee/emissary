@@ -78,7 +78,7 @@
  * Best practices
  */
     "consistent-return": 1,          // http://eslint.org/docs/rules/consistent-return
-    "curly": [1, "multi-line"],      // http://eslint.org/docs/rules/curly
+    "curly": [1],      // http://eslint.org/docs/rules/curly
     "default-case": 1,               // http://eslint.org/docs/rules/default-case
     "dot-notation": [1, {            // http://eslint.org/docs/rules/dot-notation
       "allowKeywords": true
@@ -123,7 +123,7 @@
     "indent": [1, 2],                // http://eslint.org/docs/rules/
     "brace-style": [1,               // http://eslint.org/docs/rules/brace-style
       "1tbs", {
-      "allowSingleLine": true
+      "allowSingleLine": false
     }],
     "quotes": [
       1, "single", "avoid-escape"    // http://eslint.org/docs/rules/quotes
