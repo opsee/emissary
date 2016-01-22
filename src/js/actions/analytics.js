@@ -21,7 +21,7 @@ function makeUserObject(userData) {
   // Users taken from redux state are Immutable Records, but user updates
   // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
-  return _.pick(user, ['email', 'name', 'customer_id', 'id', 'token', 'intercom_hmac']);
+  return _.pick(user, ['email', 'name', 'customer_id', 'id']);
 }
 
 /**
@@ -57,8 +57,12 @@ export function trackPageView(path, title) {
  *    e.g., 'menu clicked', 'created check'
  *
  * @param {object} data - any additional metadata to be included with the action
+ *
+ * @param {object} userData - the user doing the event. In most cases, you'll
+ *    want to rely on state().user and leave userData null; however, sometimes
+ *    state().user is empty (e.g., with logins)
  */
-export function trackEvent(category, action = '', data = {}) {
+export function trackEvent(category, action = '', data = {}, userData = null) {
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
@@ -74,7 +78,7 @@ export function trackEvent(category, action = '', data = {}) {
     // FIXME Legacy analytics -- remove when Myst is stable
     analytics.event(category, action, data);
 
-    const user = makeUserObject(state().user);
+    const user = makeUserObject(userData || state().user);
     dispatch({
       type: ANALYTICS_EVENT,
       payload: request
