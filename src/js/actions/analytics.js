@@ -25,13 +25,13 @@ function makeUserObject(userData) {
 }
 
 export function trackPageView(path, title) {
-  // FIXME Legacy analytics -- remove when Myst is stable
-  analytics.pageView(path, title);
-
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
     }
+
+    // FIXME Legacy analytics -- remove when Myst is stable
+    analytics.pageView(path, title);
 
     const name = title || document.title;
     const user = makeUserObject(state().user);
@@ -46,9 +46,6 @@ export function trackPageView(path, title) {
 }
 
 export function trackEvent(category, action = '', data = {}) {
-  // FIXME Legacy analytics -- remove when Myst is stable
-  analytics.event(category, action, data);
-
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
@@ -60,6 +57,9 @@ export function trackEvent(category, action = '', data = {}) {
       }
       return Promise.resolve();
     }
+
+    // FIXME Legacy analytics -- remove when Myst is stable
+    analytics.event(category, action, data);
 
     const user = makeUserObject(state().user);
     dispatch({
