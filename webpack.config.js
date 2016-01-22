@@ -29,7 +29,7 @@ module.exports = {
   cache:true,
   context:context_dir,
   eslint:{
-    configFile:'./.eslintrc'
+    configFile:'./node_modules/opsee-style/.eslintrc'
   },
   entry: {
     'index': [
