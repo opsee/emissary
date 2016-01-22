@@ -10,7 +10,7 @@ let config = {
   debug: false,
   demo: false,
   error: false,
-  env: process.env.NODE_ENV,
+  env: process.env.NODE_ENV || 'development',
   ghosting: false,
   revision: __REVISION__,
   services: {

@@ -10,6 +10,7 @@ import DocumentTitle from 'react-document-title';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
+import {yeller} from '../../modules';
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';

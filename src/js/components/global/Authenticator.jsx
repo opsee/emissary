@@ -19,7 +19,7 @@ export function auth(Component, adminRequired){
     isAuthenticated(){
       let arr = [];
       if (adminRequired){
-        arr.push(this.props.redux.user.get('admin_id') > 0);
+        arr.push(this.props.redux.user.get('admin'));
       }
       arr.push(!!(this.props.redux.user.get('token')));
       return _.every(arr);

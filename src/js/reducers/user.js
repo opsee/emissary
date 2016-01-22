@@ -23,7 +23,7 @@ function getAuth(data){
   // 720 minutes == 12 hours
   let minutes = 720;
   // 15 minutes for ghosting
-  if (data.admin_id > 0){
+  if (data.admin){
     minutes = 15;
   }
   const valid = !!(typeof diff === 'number' && diff < minutes && diff > -1);

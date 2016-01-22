@@ -56,9 +56,8 @@ module.exports = {
         test: /\.js$|\.jsx$/, 
         loader: 'babel-loader',
         query: {
-          // plugins: ['transform-es2015-modules-commonjs', 'transform-runtime'],
           plugins: ['transform-runtime'],
-          presets: ['es2015', 'react'],
+          presets: ['es2015', 'react']
         },
         include: [context_dir]
       },
