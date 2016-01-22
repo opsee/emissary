@@ -23,3 +23,4 @@ deployment:
     owner: opsee
     commands:
       - docker push quay.io/opsee/emissary:latest
+      - curl -X POST "https://api.yellerapp.com/yk_w_f5f4b9abeaad0266f6b0de9ca8cc756b65dc3e86312566d7398caf0fde0f577a/deploys" -d user=CircleCI -d revision=$CIRCLE_SHA1
