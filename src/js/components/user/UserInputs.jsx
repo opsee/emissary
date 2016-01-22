@@ -49,6 +49,13 @@ export default React.createClass({
   componentWillMount(){
     include = this.props.include;
   },
+  getDefaultProps(){
+    return {
+      email: '',
+      name: '',
+      password: ''
+    };
+  },
   getInitialState() {
     const self = this;
     return {
@@ -66,7 +73,7 @@ export default React.createClass({
     };
   },
   getCompleteData(){
-    const test = _.chain(this.props.include).map(s => this.props[s]).every().value();
+    const test = _.chain(this.props.include).map(s => this.props[s]).some().value();
     if (test){
       return {
         data: _.cloneDeep(this.props)
