@@ -10,6 +10,7 @@ import DocumentTitle from 'react-document-title';
 import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
+import {yeller} from '../../modules';
 import styleGlobal from './style.global.css';
 import grid from './grid.global.css';
 import style from './opsee.css';
@@ -39,12 +40,6 @@ const Opsee = React.createClass({
   componentWillMount(){
     this.props.appActions.initialize();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
-    if (window.Yeller){
-      window.Yeller.configure({
-        token: 'yk_w_f5f4b9abeaad0266f6b0de9ca8cc756b65dc3e86312566d7398caf0fde0f577a',
-        environment: config.env
-      });
-    }
   },
   componentWillReceiveProps(nextProps) {
     //user log out
