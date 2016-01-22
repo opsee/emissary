@@ -16,7 +16,7 @@ let config = {
   services: {
     analytics: {
       protocol: 'https',
-      host: 'myst.opsee.com',
+      hostname: 'myst.opsee.com',
       port: null
     }
   },
