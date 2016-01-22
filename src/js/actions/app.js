@@ -85,7 +85,9 @@ export function shutdown(){
   return (dispatch) => {
     // FIXME Legacy analytics -- remove when Myst is stable
     window.Intercom('shutdown');
-    if (window.socket){window.socket.close();}
+    if (window.socket){
+      window.socket.close();
+    }
     dispatch({
       type: APP_SHUTDOWN
     });

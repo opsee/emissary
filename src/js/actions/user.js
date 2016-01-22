@@ -118,7 +118,9 @@ export function edit(data) {
             dispatch(pushState(null, '/profile'));
           }, 100);
           const user = _.get(res, 'body.user');
-          if (user) analytics.updateUser(user)(dispatch, state);
+          if (user){
+            analytics.updateUser(user)(dispatch, state);
+          }
         }, reject);
       })
     });
