@@ -11,7 +11,13 @@ import {
 const ANALYTICS_CONFIG = config.services.analytics;
 const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
 
+/**
+ * @returns {object} - an object containing minimum viable user data
+ *    required by Myst
+ */
 function makeUserObject(userData) {
+  // Users taken from redux state are Immutable Records, but user updates
+  // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
 
   return {
@@ -24,6 +30,10 @@ function makeUserObject(userData) {
   };
 }
 
+/**
+ * @param {string} path - e.g., '/', '/login', '/search?foo=bar'
+ * @param {string} title - e.g., document.title
+ */
 export function trackPageView(path, title) {
   return (dispatch, state) => {
     if (config.ghosting){
@@ -45,6 +55,15 @@ export function trackPageView(path, title) {
   };
 }
 
+/**
+ * @param {string} category - required; a broad category for the action
+ *    e.g,. 'Login', 'Onboard'
+ *
+ * @param {string} action - optional; a finer-grained label for the event
+ *    e.g., 'menu clicked', 'created check'
+ *
+ * @param {object} data - any additional metadata to be included with the action
+ */
 export function trackEvent(category, action = '', data = {}) {
   return (dispatch, state) => {
     if (config.ghosting){
@@ -85,6 +104,8 @@ export function updateUser(updatedUser) {
     // in state().user could be stale, so we only use that for token & id.
     const user = state().user;
 
+    // Construct the update by hand, vs. using makeUserObject in order to
+    // correctly handle updated fields
     const update = {
       id: user.id,
       email: updatedUser.email,
