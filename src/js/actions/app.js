@@ -83,6 +83,7 @@ function socketStart(dispatch, state){
 
 export function shutdown(){
   return (dispatch) => {
+    // FIXME Legacy analytics -- remove when Myst is stable
     window.Intercom('shutdown');
     if (window.socket){window.socket.close();}
     dispatch({
@@ -95,6 +96,8 @@ export function initialize(){
   return (dispatch, state) => {
     if (state().user.get('token') && state().user.get('id')){
       const user = state().user.toJS();
+
+      // FIXME Legacy analytics -- remove when Myst is stable
       if (window.Intercom){
         window.Intercom('boot', {
           app_id: 'mrw1z4dm',
@@ -103,6 +106,8 @@ export function initialize(){
           name: user.name
         });
       }
+
+      // FIXME Legacy analytics -- remove when Launch Darkly added to Myst
       if (window.ldclient){
         window.ldclient.identify({
           firstName: user.name,
