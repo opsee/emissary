@@ -329,7 +329,7 @@ const CheckCreateRequest = React.createClass({
         <Heading level={3}>Define Your HTTP Request</Heading>
         {['protocol', 'verb', 'path', 'port'].map(string => {
           return (
-            <Padding b={1}>
+            <Padding b={1} key={`form-input-${string}`}>
               <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
             </Padding>
           );
