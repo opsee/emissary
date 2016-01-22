@@ -67,7 +67,7 @@ export function trackPageView(path, title) {
  *    want to rely on state().user and leave userData null; however, sometimes
  *    state().user is empty (e.g., with logins)
  */
-export function trackEvent(category, action = '', data = {}, userData=null) {
+export function trackEvent(category, action = '', data = {}, userData = null) {
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
