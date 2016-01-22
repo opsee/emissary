@@ -25,7 +25,6 @@ function makeUserObject(userData) {
     name: user.name,
     customer_id: user.customer_id,
     id: user.id,
-    auth_token: user.token,
     intercom_hmac: user.intercom_hmac
   };
 }
@@ -63,8 +62,12 @@ export function trackPageView(path, title) {
  *    e.g., 'menu clicked', 'created check'
  *
  * @param {object} data - any additional metadata to be included with the action
+ *
+ * @param {object} userData - the user doing the event. In most cases, you'll
+ *    want to rely on state().user and leave userData null; however, sometimes
+ *    state().user is empty (e.g., with logins)
  */
-export function trackEvent(category, action = '', data = {}) {
+export function trackEvent(category, action = '', data = {}, userData=null) {
   return (dispatch, state) => {
     if (config.ghosting){
       return Promise.resolve();
@@ -80,7 +83,7 @@ export function trackEvent(category, action = '', data = {}) {
     // FIXME Legacy analytics -- remove when Myst is stable
     analytics.event(category, action, data);
 
-    const user = makeUserObject(state().user);
+    const user = makeUserObject(userData || state().user);
     dispatch({
       type: ANALYTICS_EVENT,
       payload: request

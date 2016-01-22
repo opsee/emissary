@@ -27,9 +27,11 @@ export function login(data) {
         .post(`${config.authApi}/authenticate/password`)
         .send(data)
         .then((res) => {
-          analytics.trackEvent('User', 'login', {}, data)(dispatch, state);
+          const user = res.body.user;
+          analytics.trackEvent('User', 'login', null, user)(dispatch, state);
 
           resolve(res.body);
+
           //TODO fix this somehow
           setTimeout(() => {
             const string = state().router.location.query.redirect || '/';
