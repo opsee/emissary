@@ -26,8 +26,11 @@ export function signupCreate(data) {
         .post(`${config.authApi}/signups`)
         .send(data)
         .then((res) => {
-          resolve(res.body);
-          analytics.trackEvent('Onboard', 'signup')(dispatch, state);
+          const user = res.body;
+          analytics.trackEvent('Onboard', 'signup', {}, user)(dispatch, state);
+
+          resolve(user);
+
           //TODO remove timeout somehow
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
