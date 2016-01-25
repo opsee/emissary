@@ -5,11 +5,10 @@ import forms from 'newforms';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import analytics from '../../modules/analytics';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {onboard as actions} from '../../actions';
+import {onboard as actions, analytics as analyticsActions} from '../../actions';
 
 const InfoForm = forms.Form.extend({
   vpcs: forms.ChoiceField({
@@ -29,6 +28,9 @@ const VPCSelect = React.createClass({
     history: PropTypes.object,
     actions: PropTypes.shape({
       vpcSelect: PropTypes.func
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
     }),
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
@@ -77,7 +79,7 @@ const VPCSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    analytics.event('Onboard', 'vpc-select');
+    this.props.analyticsActions.trackEvent('Onboard', 'vpc-select');
     this.props.actions.vpcSelect(this.state.info.cleanedData.vpcs);
   },
   renderInner(){
@@ -117,7 +119,8 @@ const VPCSelect = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(VPCSelect);

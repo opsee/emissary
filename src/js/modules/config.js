@@ -13,6 +13,13 @@ let config = {
   env: process.env.NODE_ENV || 'development',
   ghosting: false,
   revision: __REVISION__,
+  services: {
+    analytics: {
+      protocol: 'https',
+      host: 'myst.opsee.com',
+      port: null
+    }
+  },
   slackClientSecret: window.slackClientSecret,
   socket: 'wss://api.opsee.com/stream/'
 };
