@@ -15,6 +15,14 @@ const ANALYTICS_CONFIG = config.services.analytics;
 const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
 
 /**
+ * @returns {string} - an anonymous UUID for tracking unauthenticated users
+ *    (similar in spirit to Google Analytics' _ga cookie)
+ */
+function getAnonymousUUID() {
+  return localStorage.getItem('_opsee_uuid');
+}
+
+/**
  * @returns {object} - an object containing minimum viable user data
  *    required by Myst
  */
@@ -22,6 +30,8 @@ function makeUserObject(userData) {
   // Users taken from redux state are Immutable Records, but user updates
   // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
+
+  // FIXME do we want to use anonymous UUID for authenticated users?
   return _.pick(user, ['email', 'name', 'customer_id', 'id']);
 }
 
@@ -39,7 +49,7 @@ export function trackPageView(path, title) {
     analytics.pageView(path, title);
 
     // Grab the visitor's UUID from local storage, if anonymous
-    const uuid = localStorage.getItem('_opsee_uuid');
+    const uuid = getAnonymousUUID();
     const user = _.assign({}, makeUserObject(state().user), { uuid });
     const name = title || document.title;
 
@@ -120,9 +130,9 @@ export function initialize() {
     const isAuthenticated = user.get('token') && user.get('id');
 
     // If the user is authenticated, we can initialize them with their identity
+    // TODO: update last_seen_at
     if (isAuthenticated) {
-      const update = makeUserObject(user); // FIXME should send more information?
-
+      const update = makeUserObject(user);
       dispatch({
         type: ANALYTICS_USER_UPDATE,
         payload: request
@@ -132,7 +142,7 @@ export function initialize() {
     } else {
       // Unauthenticated users are tracked with an anonymous, client-side UUID
       // in order to accurately capture repeat visits.
-      if (!localStorage.getItem('_opsee_uuid')) {
+      if (!getAnonymousUUID()) {
         localStorage.setItem('_opsee_uuid', UUID());
       }
     }
