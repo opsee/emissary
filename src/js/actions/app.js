@@ -1,6 +1,6 @@
 import config from '../modules/config';
 import {createAction} from 'redux-actions';
-
+import * as analytics from './analytics';
 import {
   APP_INITIALIZE,
   APP_SHUTDOWN,
@@ -96,6 +96,8 @@ export function shutdown(){
 
 export function initialize(){
   return (dispatch, state) => {
+    analytics.initialize()(dispatch, state);
+
     if (state().user.get('token') && state().user.get('id')){
       const user = state().user.toJS();
 
