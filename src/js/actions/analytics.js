@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import uuid from 'uuid-v4';
 
 import analytics from '../modules/analytics';
 import config from '../modules/config';
@@ -39,6 +40,7 @@ export function trackPageView(path, title) {
 
     const name = title || document.title;
     const user = makeUserObject(state().user);
+    user.uuid = localStorage.getItem('_opsee_uuid');
 
     dispatch({
       type: ANALYTICS_PAGEVIEW,
@@ -108,5 +110,32 @@ export function updateUser(updatedUser) {
         .post(`${ANALYTICS_API}/user`)
         .send({ user: update })
     });
+  };
+}
+
+export function initialize() {
+  return (dispatch, state) => {
+    const user = state().user;
+    const isAuthenticated = user.get('token') && user.get('id');
+
+    // If the user is authenticated, we can initialize them with their identity
+    if (isAuthenticated) {
+      const update = makeUserObject(user); // FIXME should send more information?
+
+      dispatch({
+        type: ANALYTICS_USER_UPDATE,
+        payload: request
+          .post(`${ANALYTICS_API}/user`)
+          .send({ user: update })
+      });
+    } else {
+      // If the user is unauthenticated, we need to identify them with their
+      // anonymous UUID (stored in localStorage if they've previously
+      // visited Opsee). If they don't have a UUID stored, generate one & save
+      // it so we can track repeat visits.
+      if (!localStorage.getItem('_opsee_uuid')) {
+        localStorage.setItem('_opsee_uuid', uuid());
+      }
+    }
   };
 }
