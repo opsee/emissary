@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import uuid from 'uuid-v4';
+import UUID from 'uuid-v4';
 
 import analytics from '../modules/analytics';
 import config from '../modules/config';
@@ -27,7 +27,7 @@ function makeUserObject(userData) {
 
 /**
  * @param {string} path - e.g., '/', '/login', '/search?foo=bar'
- * @param {string} title - e.g., document.title
+ * @param {string} title - e.g., 'Opsee', 'Login'. [Default: document.title]
  */
 export function trackPageView(path, title) {
   return (dispatch, state) => {
@@ -38,9 +38,10 @@ export function trackPageView(path, title) {
     // FIXME Legacy analytics -- remove when Myst is stable
     analytics.pageView(path, title);
 
+    // Grab the visitor's UUID from local storage, if anonymous
+    const uuid = localStorage.getItem('_opsee_uuid');
+    const user = _.assign({}, makeUserObject(state().user), { uuid });
     const name = title || document.title;
-    const user = makeUserObject(state().user);
-    user.uuid = localStorage.getItem('_opsee_uuid');
 
     dispatch({
       type: ANALYTICS_PAGEVIEW,
@@ -129,12 +130,10 @@ export function initialize() {
           .send({ user: update })
       });
     } else {
-      // If the user is unauthenticated, we need to identify them with their
-      // anonymous UUID (stored in localStorage if they've previously
-      // visited Opsee). If they don't have a UUID stored, generate one & save
-      // it so we can track repeat visits.
+      // Unauthenticated users are tracked with an anonymous, client-side UUID
+      // in order to accurately capture repeat visits.
       if (!localStorage.getItem('_opsee_uuid')) {
-        localStorage.setItem('_opsee_uuid', uuid());
+        localStorage.setItem('_opsee_uuid', UUID());
       }
     }
   };
