@@ -15,7 +15,8 @@ import {Heading} from '../type';
 import {
   checks as actions,
   user as userActions,
-  analytics as analyticsActions
+  analytics as analyticsActions,
+  integrations as integrationsActions
 } from '../../actions';
 
 const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
@@ -73,6 +74,9 @@ const CheckCreateInfo = React.createClass({
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    integrationsActions: PropTypes.shape({
+      slackChannels: PropTypes.func
+    }),
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
@@ -125,6 +129,7 @@ const CheckCreateInfo = React.createClass({
     if (!this.props.check.assertions.length || !this.props.check.target.id){
       this.props.history.pushState(null, '/check-create/target');
     }
+    this.props.integrationsActions.slackChannels();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
@@ -288,7 +293,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  analyticsActions: bindActionCreators(analyticsActions, dispatch)
+  analyticsActions: bindActionCreators(analyticsActions, dispatch),
+  integrationsActions: bindActionCreators(integrationsActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateInfo);
