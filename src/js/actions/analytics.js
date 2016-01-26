@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import UUID from 'uuid-v4';
+import storage from '../modules/storage';
 
 import analytics from '../modules/analytics';
 import config from '../modules/config';
@@ -19,7 +20,7 @@ const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
  *    (similar in spirit to Google Analytics' _ga cookie)
  */
 function getAnonymousUUID() {
-  return localStorage.getItem('_opsee_uuid');
+  return storage.get('_opsee_uuid');
 }
 
 /**
@@ -143,7 +144,7 @@ export function initialize() {
       // Unauthenticated users are tracked with an anonymous, client-side UUID
       // in order to accurately capture repeat visits.
       if (!getAnonymousUUID()) {
-        localStorage.setItem('_opsee_uuid', UUID());
+        storage.set('_opsee_uuid', UUID());
       }
     }
   };
