@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import UUID from 'uuid-v4';
+import storage from '../modules/storage';
 
 import analytics from '../modules/analytics';
 import config from '../modules/config';
@@ -14,6 +16,14 @@ const ANALYTICS_CONFIG = config.services.analytics;
 const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
 
 /**
+ * @returns {string} - an anonymous UUID for tracking unauthenticated users
+ *    (similar in spirit to Google Analytics' _ga cookie)
+ */
+function getAnonymousUUID() {
+  return storage.get('_opsee_uuid');
+}
+
+/**
  * @returns {object} - an object containing minimum viable user data
  *    required by Myst
  */
@@ -21,12 +31,14 @@ function makeUserObject(userData) {
   // Users taken from redux state are Immutable Records, but user updates
   // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
+
+  // FIXME do we want to use anonymous UUID for authenticated users?
   return _.pick(user, ['email', 'name', 'customer_id', 'id']);
 }
 
 /**
  * @param {string} path - e.g., '/', '/login', '/search?foo=bar'
- * @param {string} title - e.g., document.title
+ * @param {string} title - e.g., 'Opsee', 'Login'. [Default: document.title]
  */
 export function trackPageView(path, title) {
   return (dispatch, state) => {
@@ -37,8 +49,10 @@ export function trackPageView(path, title) {
     // FIXME Legacy analytics -- remove when Myst is stable
     analytics.pageView(path, title);
 
+    // Grab the visitor's UUID from local storage, if anonymous
+    const uuid = getAnonymousUUID();
+    const user = _.assign({}, makeUserObject(state().user), { uuid });
     const name = title || document.title;
-    const user = makeUserObject(state().user);
 
     dispatch({
       type: ANALYTICS_PAGEVIEW,
@@ -108,5 +122,30 @@ export function updateUser(updatedUser) {
         .post(`${ANALYTICS_API}/user`)
         .send({ user: update })
     });
+  };
+}
+
+export function initialize() {
+  return (dispatch, state) => {
+    const user = state().user;
+    const isAuthenticated = user.get('token') && user.get('id');
+
+    // If the user is authenticated, we can initialize them with their identity
+    // TODO: update last_seen_at
+    if (isAuthenticated) {
+      const update = makeUserObject(user);
+      dispatch({
+        type: ANALYTICS_USER_UPDATE,
+        payload: request
+          .post(`${ANALYTICS_API}/user`)
+          .send({ user: update })
+      });
+    } else {
+      // Unauthenticated users are tracked with an anonymous, client-side UUID
+      // in order to accurately capture repeat visits.
+      if (!getAnonymousUUID()) {
+        storage.set('_opsee_uuid', UUID());
+      }
+    }
   };
 }
