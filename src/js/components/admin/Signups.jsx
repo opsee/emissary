@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
 
 import {Toolbar} from '../global';
-import {Checkmark, Person, Mail, Ghost} from '../icons';
+import {Checkmark, Delete, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
@@ -18,7 +18,9 @@ const Signups = React.createClass({
     actions: PropTypes.shape({
       getSignups: PropTypes.func,
       activateSignup: PropTypes.func,
-      getUsers: PropTypes.func
+      getUsers: PropTypes.func,
+      deleteSignup: PropTypes.func,
+      deleteUser: PropTypes.func
     }),
     appActions: PropTypes.shape({
       modalMessageOpen: PropTypes.func
@@ -69,12 +71,21 @@ const Signups = React.createClass({
   },
   runActivateSignup(signup){
     this.props.actions.activateSignup(signup);
-    // this.props.appActions.modalMessageOpen({
-    //   html: `${signup.email} approved.`
-    // });
   },
   runGhostAccount(signup){
     this.props.userActions.logout({as: signup.userId});
+  },
+  runDeleteSignup(signup){
+    /*eslint-disable no-alert*/
+    if (window.confirm(`Delete ${signup.email} (#${signup.id})?`)){
+      this.props.actions.deleteSignup(signup);
+    }
+  },
+  runDeleteUser(user){
+    if (window.confirm(`Delete ${user.email} (#${user.userId})?`)){
+      this.props.actions.deleteUser(user);
+    }
+    /*eslint-enable no-alert*/
   },
   renderIcon(signup){
     if (this.isUser(signup)){
@@ -87,15 +98,36 @@ const Signups = React.createClass({
   renderButton(signup){
     if (this.isUnapprovedSignup(signup)){
       return (
-        <Button flat color="success" onClick={this.runActivateSignup.bind(null, signup)}><Checkmark fill="success" inline/> Activate</Button>
+        <div className="display-flex">
+          <div className="flex-1">
+            <Button flat color="danger" sm onClick={this.runDeleteSignup.bind(null, signup)} title="Delete this signup"><Delete fill="danger"/></Button>
+          </div>
+          <div>
+            <Button flat color="success" onClick={this.runActivateSignup.bind(null, signup)}><Checkmark fill="success" inline/> Activate</Button>
+          </div>
+        </div>
       );
     } else if (this.isApprovedSignup(signup)) {
       return (
-        <Button flat color="primary" onClick={this.runActivateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Activation Email</Button>
+        <div className="display-flex">
+          <div className="flex-1">
+            <Button flat color="danger" sm onClick={this.runDeleteSignup.bind(null, signup)} title="Delete this signup"><Delete fill="danger"/></Button>
+          </div>
+          <div>
+            <Button flat color="primary" onClick={this.runActivateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Email</Button>
+          </div>
+        </div>
       );
     }
     return (
-      <Button flat color="danger" onClick={this.runGhostAccount.bind(null, signup)}><Ghost fill="danger" inline/> Ghost</Button>
+      <div className="display-flex">
+          <div className="flex-1">
+            <Button flat color="danger" sm onClick={this.runDeleteUser.bind(null, signup)} title="Delete this user"><Delete fill="danger"/></Button>
+          </div>
+          <div>
+            <Button flat color="warning" onClick={this.runGhostAccount.bind(null, signup)}><Ghost fill="warning" inline/> Ghost</Button>
+          </div>
+        </div>
     );
   },
   renderItem(signup){
@@ -108,7 +140,10 @@ const Signups = React.createClass({
                 {this.renderIcon(signup)} {signup.name}
               </Heading>
               <Padding b={1}>
-                <div><a href={'mailto:' + signup.email}>{signup.email}</a></div>
+                <div>
+                  <a href={'mailto:' + signup.email}>{signup.email}</a>
+                  {signup.admin ? '  [admin]' : ''}
+                </div>
                 <span>#{`${signup.userId || signup.id}`} - <TimeAgo date={signup.created_at}/></span>
               </Padding>
               <div>
