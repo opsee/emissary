@@ -34,7 +34,7 @@ const ContextMenu = React.createClass({
   renderTitle(){
     if (!this.props.noTitle){
       return (
-        <Padding lr={1}>
+        <Padding lr={1} t={2}>
           <Heading level={3}>{this.props.title}</Heading>
         </Padding>
       );

@@ -27,8 +27,7 @@ export function signupCreate(data) {
         .send(data)
         .then((res) => {
           const user = res.body;
-          analytics.trackEvent('Onboard', 'signup', {}, user)(dispatch, state);
-
+          analytics.trackEvent('Onboard', 'signup', data, user)(dispatch, state);
           resolve(user);
 
           //TODO remove timeout somehow
