@@ -14,7 +14,8 @@ import {
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_SEND_RESET_EMAIL,
-  USER_APPLY
+  USER_APPLY,
+  USER_SET_LOGIN_DATA
 } from './constants';
 import storage from '../modules/storage';
 
@@ -218,6 +219,15 @@ export function sendResetEmail(data) {
         .send(data)
         .then(res => resolve(res.body), reject);
       })
+    });
+  };
+}
+
+export function setLoginData(data){
+  return (dispatch) => {
+    dispatch({
+      type: USER_SET_LOGIN_DATA,
+      payload: data
     });
   };
 }

@@ -13,7 +13,8 @@ import {
   USER_GET_CUSTOMER,
   USER_GET_DATA,
   USER_PUT_DATA,
-  USER_APPLY
+  USER_APPLY,
+  USER_SET_LOGIN_DATA
 } from '../actions/constants';
 
 function getAuth(data){
@@ -110,6 +111,11 @@ export default handleActions({
   [USER_APPLY]: {
     next(state, action){
       return setUser(state, action);
+    }
+  },
+  [USER_SET_LOGIN_DATA]: {
+    next(state, action){
+      return new User(_.assign({}, state.toJS(), {loginData: action.payload}));
     }
   }
 }, initial);

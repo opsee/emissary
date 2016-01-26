@@ -16,7 +16,8 @@ const Login = React.createClass({
     location: PropTypes.object,
     redux: PropTypes.object.isRequired,
     actions: PropTypes.shape({
-      login: PropTypes.func
+      login: PropTypes.func,
+      setLoginData: PropTypes.func
     }).isRequired
   },
   getInitialState(){
@@ -32,9 +33,8 @@ const Login = React.createClass({
     return incomplete || this.props.redux.asyncActions.userLogin.status === 'pending';
   },
   setUserData(data){
-    this.setState({
-      data: data
-    });
+    this.setState({data});
+    this.props.actions.setLoginData(data);
   },
   handleSubmit(e){
     e.preventDefault();
