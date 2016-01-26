@@ -24,7 +24,7 @@ const OnboardCreate = React.createClass({
   },
   getInitialState(){
     return {
-      data: this.props.redux.user.toJS()
+      data: this.props.redux.user.get('loginData')
     };
   },
   getButtonText(){
@@ -58,7 +58,7 @@ const OnboardCreate = React.createClass({
             <Col xs={12}>
               <Padding b={2}><LogoColor/></Padding>
               <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
-              <form name="loginForm" onSubmit={this.handleSubmit}>
+              <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
                   <UserInputs include={['name', 'email']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
                 </Padding>

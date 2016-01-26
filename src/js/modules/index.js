@@ -7,6 +7,7 @@ import request from './request';
 import stringFromTokens from './stringFromTokens';
 import storage from './storage';
 import variables from './variables';
+import yeller from './yeller';
 
 export {
   bootstrap,
@@ -17,5 +18,6 @@ export {
   request,
   stringFromTokens,
   storage,
-  variables
+  variables,
+  yeller
 };

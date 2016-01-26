@@ -37,27 +37,37 @@ module.exports = {
     vendor:vendors
   },
   eslint:{
-    configFile:'./prod.eslintrc'
+    configFile:'./node_modules/opsee-style/.eslintrc',
+    failOnWarning: true
   },
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
-    chunkFilename: "[name]-[id].[hash].js"
+    chunkFilename: "[name].js"
+  },
+  postcss: function(webpack){
+    return [
+      require('postcss-import')({
+        addDependencyTo: webpack
+      }),
+      require('postcss-cssnext')(),
+      require('postcss-url')()
+    ];
   },
   module: {
     preLoaders:[
       { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
     ],
     loaders: [
-      { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!cssnext-loader'), include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[hash:base64:12]!cssnext-loader')},
+      { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?&importLoaders=1!postcss-loader'), include: [context_dir]},
+      { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?&modules&importLoaders=1!postcss-loader')},
       {
         test: /\.js$|\.jsx$/, 
         loader: 'babel-loader',
         query: {
           plugins: ['transform-runtime'],
-          presets: ['es2015', 'react'],
+          presets: ['es2015', 'react']
         },
         include: [context_dir]
       },

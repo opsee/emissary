@@ -5,11 +5,10 @@ import forms from 'newforms';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import analytics from '../../modules/analytics';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {onboard as actions} from '../../actions';
+import {onboard as actions, analytics as analyticsActions} from '../../actions';
 
 const InfoForm = forms.Form.extend({
   subnets: forms.ChoiceField({
@@ -29,6 +28,9 @@ const SubnetSelect = React.createClass({
     history: PropTypes.object,
     actions: PropTypes.shape({
       subnetSelect: PropTypes.func
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
     }),
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
@@ -76,7 +78,7 @@ const SubnetSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    analytics.event('Onboard', 'subnet-select');
+    this.props.analyticsActions.trackEvent('Onboard', 'subnet-select');
     this.props.actions.subnetSelect(this.state.info.cleanedData.subnets);
   },
   renderInner(){
@@ -116,7 +118,8 @@ const SubnetSelect = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(SubnetSelect);

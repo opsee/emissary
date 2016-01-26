@@ -1,4 +1,4 @@
-export {
+export const results = {
   'results': [
     {
       'check_id': '39TbkyFhQwVFANFtudhW2P',

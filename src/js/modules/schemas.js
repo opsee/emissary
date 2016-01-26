@@ -14,7 +14,8 @@ export const User = Record({
   auth: null,
   ghosting: false,
   customer_id: undefined,
-  data: undefined
+  data: undefined,
+  loginData: {}
 });
 
 const baseEnvItem = {

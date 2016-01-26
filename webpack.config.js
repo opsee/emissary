@@ -29,7 +29,7 @@ module.exports = {
   cache:true,
   context:context_dir,
   eslint:{
-    configFile:'./.eslintrc'
+    configFile:'./node_modules/opsee-style/.eslintrc'
   },
   entry: {
     'index': [
@@ -44,21 +44,29 @@ module.exports = {
     filename: "bundle.js",
     chunkFilename: "[name]-[id].[hash].js"
   },
+  postcss: function(webpack){
+    return [
+      require('postcss-import')({
+        addDependencyTo: webpack
+      }),
+      require('postcss-cssnext')(),
+      require('postcss-url')()
+    ];
+  },
   module: {
     preLoaders:[
       { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
     ],
     loaders: [
-      { test: /\.global\.css$/, loader: 'style-loader!css-loader!cssnext-loader', include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]!cssnext-loader'},
+      { test: /\.global\.css$/, loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader', include: [context_dir]},
+      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1!postcss-loader'},
       {test: /\.js$|\.jsx$/, loaders: ['react-hot'], include: [context_dir] },
       {
         test: /\.js$|\.jsx$/, 
         loader: 'babel-loader',
         query: {
-          // plugins: ['transform-es2015-modules-commonjs', 'transform-runtime'],
           plugins: ['transform-runtime'],
-          presets: ['es2015', 'react'],
+          presets: ['es2015', 'react']
         },
         include: [context_dir]
       },
