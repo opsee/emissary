@@ -78,7 +78,7 @@ export function vpcScan(data) {
         .then((res) => {
           const regions = res.body.regions;
           if (Array.isArray(regions)){
-            const bool = _.chain(regions).pluck('supported_platforms').map(platforms => {
+            const bool = _.chain(regions).map('supported_platforms').map(platforms => {
               return !(platforms.indexOf('VPC') > -1);
             }).compact().some().value();
             if (bool){

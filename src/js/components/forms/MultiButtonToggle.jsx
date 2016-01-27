@@ -13,12 +13,12 @@ const MultiButtonToggle = React.createClass({
     };
   },
   isWidgetActive(w){
-    return !!(_.findWhere(this.props.bf.value(), w.choiceValue));
+    return !!(_.find(this.props.bf.value(), w.choiceValue));
   },
   handleChange(id){
     let data = this.props.bf.value() || [];
     let obj = {};
-    if (_.findWhere(data, id)){
+    if (_.find(data, id)){
       data = _.pull(data, id);
     }else {
       data.push(id);

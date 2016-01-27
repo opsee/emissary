@@ -37,7 +37,7 @@ const CheckCreate = React.createClass({
   getInitialState(){
     return this.getState();
   },
-  getState(noCheck){
+  getState(){
     const obj = {
       check: new Check({
         target: this.props.location.query,
@@ -51,7 +51,7 @@ const CheckCreate = React.createClass({
       }).toJS(),
       filter: null
     };
-    return _.omit(obj, noCheck ? 'check' : null);
+    return obj;
   },
   setStatus(obj){
     this.setState(_.extend(this.state.statuses, obj));

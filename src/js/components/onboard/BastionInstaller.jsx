@@ -25,11 +25,11 @@ const BastionInstaller = React.createClass({
     }
     const items = this.getItems();
 
-    const rollback = _.findWhere(items, {status: 'ROLLBACK_COMPLETE'});
+    const rollback = _.find(items, {status: 'ROLLBACK_COMPLETE'});
     if (rollback){
       return 'Rollback';
     }
-    const deleting = _.findWhere(items, {status: 'DELETE_COMPLETE'});
+    const deleting = _.find(items, {status: 'DELETE_COMPLETE'});
     if (deleting){
       return 'Deleting';
     }

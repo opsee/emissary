@@ -48,12 +48,12 @@ const InstanceRds = React.createClass({
   },
   getGroupIds(){
     if (this.getInstance().get('name')){
-      return _.pluck(this.getInstance().groups.toJS(), 'id');
+      return _.map(this.getInstance().groups.toJS(), 'id');
     }
   },
   getGroupsSecurity(){
     if (this.getInstance().get('name')){
-      return _.pluck(this.getInstance().toJS().VpcSecurityGroups, 'VpcSecurityGroupId');
+      return _.map(this.getInstance().toJS().VpcSecurityGroups, 'VpcSecurityGroupId');
     }
     return [];
   },

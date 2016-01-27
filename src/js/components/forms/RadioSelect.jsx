@@ -13,7 +13,7 @@ const RadioSelect = React.createClass({
     };
   },
   isWidgetActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
+    return _.find(this.props.bf.value(), w.choiceValue);
   },
   handleChange(id, bool){
     const data = bool ? [id] : [];
