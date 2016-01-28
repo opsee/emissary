@@ -1,0 +1,4 @@
+/* Override for components/global/style.global.css */
+:global #main {
+  padding-bottom: 0;
+}

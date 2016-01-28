@@ -106,7 +106,7 @@ const InstanceMenu = React.createClass({
     const {item} = this.props;
     return (
       <div key="page0">
-        <Padding lr={1}>
+        <Padding lr={1} t={2}>
           <Heading level={3}>{this.props.item.get('name')} Actions</Heading>
         </Padding>
         <Button color="primary" text="left" to={`/check-create/request?id=${item.get('id')}&type=${item.get('type')}&name=${item.get('name')}`} block flat>

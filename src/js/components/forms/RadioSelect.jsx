@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import RadioWithLabel from './RadioWithLabel.jsx';
-import _ from 'lodash';
 import {Padding} from '../layout';
 
 const RadioSelect = React.createClass({
@@ -13,7 +12,11 @@ const RadioSelect = React.createClass({
     };
   },
   isWidgetActive(w){
-    return _.findWhere(this.props.bf.value(), w.choiceValue);
+    let val = this.props.bf.value();
+    if (Array.isArray(val)){
+      val = val[0];
+    }
+    return val === w.choiceValue;
   },
   handleChange(id, bool){
     const data = bool ? [id] : [];

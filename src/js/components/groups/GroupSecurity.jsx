@@ -50,7 +50,7 @@ const GroupSecurity = React.createClass({
   },
   getInstanceIds(){
     if (this.getGroup().get('name')){
-      return _.pluck(this.getGroup().get('instances').toJS(), 'id');
+      return _.map(this.getGroup().get('instances').toJS(), 'id');
     }
   },
   renderDescription(){
