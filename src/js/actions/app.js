@@ -83,6 +83,9 @@ function socketStart(dispatch, state){
 
 export function shutdown(){
   return (dispatch) => {
+    if (window.socket){
+      window.socket.close();
+    }
     dispatch({
       type: APP_SHUTDOWN
     });
