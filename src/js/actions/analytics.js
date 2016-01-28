@@ -108,9 +108,6 @@ export function updateUser(updatedUser) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    window.Intercom('update', updatedUser);
-
     // The user in state has attributes that updatedUser does not have, since
     // the latter is only profile information. However, the profile information
     // in state().user could be stale, so we only use that for id.

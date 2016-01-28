@@ -16,7 +16,6 @@ const analytics = {
     const stringData = typeof data === 'string' ? data : JSON.stringify(data);
     const objectData = typeof data === 'string' ? {data} : data;
     window.ga('send', 'event', category, action, stringData);
-    window.Intercom('trackEvent', `${category} - ${action}`, objectData);
     if (window.ldclient){
       window.ldclient.track(`${category} - ${action}`, objectData);
     }
