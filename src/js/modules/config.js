@@ -12,6 +12,7 @@ let config = {
   error: false,
   env: process.env.NODE_ENV || 'development',
   ghosting: false,
+  googleAnalyticsID: 'UA-59205908-3',
   revision: __REVISION__,
   services: {
     analytics: {
