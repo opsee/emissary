@@ -29,9 +29,9 @@ import GroupELB from '../groups/GroupElb';
 import InstanceEcc from '../instances/InstanceEcc';
 import InstanceRDS from '../instances/InstanceRDS';
 
-import Login from '../user/Login';
-import PasswordForgot from 'react-proxy?name=password!exports?exports.default!../user/PasswordForgot';
-import PasswordChange from 'react-proxy?name=password!exports?exports.default!../user/PasswordChange';
+import Login from 'react-proxy?name=onboard!exports?exports.default!../user/Login';
+import PasswordForgot from 'react-proxy?name=onboard!exports?exports.default!../user/PasswordForgot';
+import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../user/PasswordChange';
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
 
