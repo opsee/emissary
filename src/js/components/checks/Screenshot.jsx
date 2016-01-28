@@ -13,6 +13,10 @@ import NotificationItemList from './NotificationItemList';
 import HttpRequestItem from './HttpRequestItem';
 import CheckResponsePaginate from './CheckResponsePaginate';
 
+/*eslint-disable no-unused-vars*/
+import style from './screenshot.css';
+/*eslint-enable no-unused-vars*/
+
 const CheckScreenshot = React.createClass({
 
   propTypes: {
