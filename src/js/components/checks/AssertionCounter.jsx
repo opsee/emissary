@@ -36,7 +36,7 @@ const AssertionCounter = React.createClass({
     return test && test.success;
   },
   runTest(){
-    return slate(_.assign({}, this.props, {key: this.props.keyData}), this.getResponse());
+    return slate.checkAssertion(_.assign({}, this.props, {key: this.props.keyData}), this.getResponse());
   },
   renderIcon(){
     return this.isPassing() ? (
