@@ -92,7 +92,7 @@
     "fuzzy": "^0.1.1",
     "git-rev": "^0.2.1",
     "highlight.js": "^8.6.0",
-    "history": "^1.17.0",
+    "history": "git+ssh://git@github.com/opsee/history.git",
     "immutable": "^3.7.4",
     "lodash": "^4.0.0",
     "moment": "^2.10.3",
