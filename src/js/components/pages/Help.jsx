@@ -16,7 +16,7 @@ export default React.createClass({
   renderAdminLinks(){
     if (this.props.redux.user.get('admin')){
       return (
-        <Padding b={1}>
+        <Padding b={1} t={1}>
           <Heading level={3}>Onboarding Pages</Heading>
           <div><Link to="/start/tutorial">Tutorial</Link></div>
           <div><Link to="/start/password">Set Password</Link></div>
@@ -24,11 +24,12 @@ export default React.createClass({
           <div><Link to="/start/credentials">Credentials</Link></div>
           <div><Link to="/start/vpc-select">VPC Scan + Select</Link></div>
           <div><Link to="/start/install">Bastion Installation</Link></div>
-
-          <Heading level={3}>Admin Pages</Heading>
-          <div><Link to="/admin/signups">Admin: Signups</Link></div>
-          <div><Link to="/system">System</Link></div>
-          <div><Link to="/styleguide">Style Guide</Link></div>
+          <Padding t={2}>
+            <Heading level={3}>Admin Pages</Heading>
+            <div><Link to="/admin/signups">Admin: Signups</Link></div>
+            <div><Link to="/system">System</Link></div>
+            <div><Link to="/styleguide">Style Guide</Link></div>
+          </Padding>
         </Padding>
       );
     }

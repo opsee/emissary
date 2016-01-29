@@ -70,9 +70,9 @@ export default {
     };
     if (obj.results && obj.results.size && obj.results.get(0)){
       //this works for groups
-      let boolArray = _.chain(obj.results.toJS()).pluck('passing').value();
+      let boolArray = _.chain(obj.results.toJS()).map('passing').value();
       if (useTestsInsteadOfChecks){
-        boolArray = _.chain(obj.results.toJS()).pluck('responses').flatten().pluck('passing').value();
+        boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
       }
       const passing = _.compact(boolArray);
       obj.passing = passing.length;

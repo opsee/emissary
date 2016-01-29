@@ -45,7 +45,7 @@ export function login(data) {
 }
 
 export function setPassword(data) {
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: USER_SET_PASSWORD,
       payload: new Promise((resolve, reject) => {
@@ -54,6 +54,7 @@ export function setPassword(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
+          analytics.updateUser(res.body.user)(dispatch, state);
           setTimeout(() => {
             dispatch(pushState(null, '/start/tutorial'));
           }, 100);

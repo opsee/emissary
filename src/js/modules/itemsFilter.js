@@ -7,12 +7,12 @@ export default function(items = new List(), search = {string: '', tokens: []}){
   const {tokens} = search;
   if (tokens.length){
     //do fuzzy searching first
-    const stringQuery = _.chain(tokens).reject('tag').pluck('term').join(' ').value();
+    const stringQuery = _.chain(tokens).reject('tag').map('term').join(' ').value();
     const results = newItems.toJS().map(item => {
       const fields = [item.name, item.id];
       const hits = fuzzy.filter(stringQuery, fields);
       return {
-        score: _.chain(hits).pluck('score').reduce((total, n) => total + n).value() || 0,
+        score: _.chain(hits).map('score').reduce((total, n) => total + n).value() || 0,
         id: item.id
       };
     });

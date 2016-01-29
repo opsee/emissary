@@ -39,7 +39,7 @@ const Opsee = React.createClass({
   },
   componentWillMount(){
     this.props.appActions.initialize();
-    this.setInterval(this.props.userActions.refresh, (1000 * 60 * 15));
+    this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
   },
   componentWillReceiveProps(nextProps) {
     //user log out

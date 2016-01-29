@@ -1,9 +1,9 @@
 import _ from 'lodash';
-
-import analytics from '../modules/analytics';
-import config from '../modules/config';
-import request from '../modules/request';
 import URL from 'url';
+
+import config from '../modules/config';
+import ga from '../modules/ga';
+import request from '../modules/request';
 import {
   ANALYTICS_EVENT,
   ANALYTICS_PAGEVIEW,
@@ -26,7 +26,7 @@ function makeUserObject(userData) {
 
 /**
  * @param {string} path - e.g., '/', '/login', '/search?foo=bar'
- * @param {string} title - e.g., document.title
+ * @param {string} title - e.g., 'Opsee', 'Login'. [Default: document.title]
  */
 export function trackPageView(path, title) {
   return (dispatch, state) => {
@@ -34,11 +34,22 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    analytics.pageView(path, title);
-
     const name = title || document.title;
     const user = makeUserObject(state().user);
+
+    // Track both authenticated and unauthenticated users in Google Analytics.
+    // The GA snippet will be identified by the user's user ID or generated
+    // UUID, respectively.
+    ga('send', 'pageview', {
+      page: path,
+      title: name
+    });
+
+    // Only authenticated page views are tracked in Myst (for Intercom)
+    // to update the 'last seen' time.
+    if (!user || !user.id) {
+      return Promise.resolve();
+    }
 
     dispatch({
       type: ANALYTICS_PAGEVIEW,
@@ -75,9 +86,12 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    analytics.event(category, action, data);
+    // FIXME remove when LaunchDarkly tracked in Myst
+    if (window.ldclient){
+      window.ldclient.track(`${category} - ${action}`, data);
+    }
 
+    // Track all events in Myst (and none through the window.ga object.)
     const user = makeUserObject(userData || state().user);
     dispatch({
       type: ANALYTICS_EVENT,
@@ -94,9 +108,6 @@ export function updateUser(updatedUser) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    window.Intercom('update', updatedUser);
-
     // The user in state has attributes that updatedUser does not have, since
     // the latter is only profile information. However, the profile information
     // in state().user could be stale, so we only use that for id.
@@ -108,5 +119,56 @@ export function updateUser(updatedUser) {
         .post(`${ANALYTICS_API}/user`)
         .send({ user: update })
     });
+  };
+}
+
+export function initialize() {
+  return (dispatch, state) => {
+    const user = state().user;
+    const isAuthenticated = user.get('token') && user.get('id');
+
+    // If the user is authenticated, we can initialize them with their identity
+    // in both Myst (e.g., to update their 'last seen' date in Intercom)
+    // and Google Analytics (which we are still tracking using the
+    // Google Analytics snippet for richer visitor data; e.g., referrer).
+    if (isAuthenticated) {
+      // Created a GA visitor for the authenticated user, using their Opsee ID
+      // as their visitor ID. (This allows us to track logged-in users across
+      // multiple devices.)
+      ga('create', config.googleAnalyticsID, user.id);
+
+      // FIXME Legacy analytics -- remove when Launch Darkly added to Myst
+      if (window.ldclient){
+        window.ldclient.identify({
+          firstName: user.name,
+          key: user.id.toString(),
+          email: user.email,
+          custom: {
+            customer_id: user.customer_id,
+            id: user.id
+          }
+        });
+      }
+
+      // Sync the user with Myst/Intercom
+      const update = makeUserObject(user);
+      dispatch({
+        type: ANALYTICS_USER_UPDATE,
+        payload: request
+          .post(`${ANALYTICS_API}/user`)
+          .send({ user: update })
+      });
+    } else {
+      // Unauthenticated users are tracked with the default Google Analytics
+      // behavior (e.g., anonymous, GA-generated UUID instead of Opsee user ID).
+      ga('create', config.googleAnalyticsID, 'auto');
+    }
+  };
+}
+
+export function shutdown() {
+  return () => {
+    // Revert to an unauthenticated visitor on logout.
+    ga('create', config.googleAnalyticsID, 'auto');
   };
 }

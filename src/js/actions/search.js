@@ -47,7 +47,7 @@ export function setTokens(payloadTokens = []){
       type: SEARCH_SET_TOKENS,
       payload: new Promise((resolve) => {
         const oldTokens = state().search.tokens;
-        const tokens = _.chain([].concat(payloadTokens, oldTokens)).uniq(token => {
+        const tokens = _.chain([].concat(payloadTokens, oldTokens)).uniqBy(token => {
           if (token.tag){
             return token.tag + token.term;
           }

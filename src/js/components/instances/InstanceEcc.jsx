@@ -55,7 +55,7 @@ const InstanceEcc = React.createClass({
   },
   getGroupsSecurity(){
     if (this.getInstance().get('name')){
-      return _.pluck(this.getInstance().toJS().SecurityGroups, 'GroupId');
+      return _.map(this.getInstance().toJS().SecurityGroups, 'GroupId');
     }
     return [];
   },
@@ -63,7 +63,7 @@ const InstanceEcc = React.createClass({
     if (this.getInstance().get('name')){
       return _.chain(this.props.redux.env.groups.elb.toJS()).filter(elb => {
         return _.chain(elb.instances).indexOf(this.getInstance().get('id')).value() > -1;
-      }).pluck('id').value();
+      }).map('id').value();
     }
     return [];
   },

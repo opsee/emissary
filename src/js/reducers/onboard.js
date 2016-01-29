@@ -104,7 +104,7 @@ function generateSubnetsForSelection(regions){
     return _.chain(region.subnets).map(subnet => {
       let subnetName = subnet.subnet_id;
       if (subnet.tags.length){
-        subnetName = _.chain(subnet.tags).findWhere({key: 'Name'}).get('value').value() || subnetName;
+        subnetName = _.chain(subnet.tags).find({key: 'Name'}).get('value').value() || subnetName;
       }
       const nameString = subnetName !== subnet.subnet_id ? `${subnetName}&nbsp;(${subnet.subnet_id})` : subnet.subnet_id;
       return [subnet.subnet_id, `
@@ -134,7 +134,7 @@ export default handleActions({
         return _.chain(region.vpcs).map(vpc => {
           let vpcName = vpc.vpc_id;
           if (vpc.tags.length){
-            vpcName = _.chain(vpc.tags).findWhere({key: 'Name'}).get('value').value() || vpcName;
+            vpcName = _.chain(vpc.tags).find({key: 'Name'}).get('value').value() || vpcName;
           }
           const identifier = vpcName === vpc.vpc_id ? `<strong>${vpcName}</strong>` : `<strong>${vpcName}</strong> - ${vpc.vpc_id}`;
           return [vpc.vpc_id, `

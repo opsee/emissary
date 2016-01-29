@@ -7,7 +7,6 @@ import _ from 'lodash';
 import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
@@ -59,17 +58,17 @@ const Install = React.createClass({
     .groupBy('instance_id').map((value, key) => {
       return {
         id: key,
-        messages: _.chain(value).pluck('attributes').sort((a, b) => {
+        messages: _.chain(value).map('attributes').sort((a, b) => {
           return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
         }).value()
       };
     }).value();
   },
   getBastionStatuses(){
-    return _.chain(this.getBastionMessages()).pluck('messages').map(bastionMsgs => {
+    return _.chain(this.getBastionMessages()).map('messages').map(bastionMsgs => {
       return _.chain(bastionMsgs).filter({ResourceType: 'AWS::CloudFormation::Stack'}).filter(msg => {
         return msg.ResourceStatus === 'CREATE_COMPLETE' || msg.ResourceStatus === 'ROLLBACK_COMPLETE';
-      }).pluck('ResourceStatus').first().value();
+      }).map('ResourceStatus').head().value();
     }).value();
   },
   getBastionErrors(){
@@ -173,7 +172,6 @@ const Install = React.createClass({
           })}
           {this.renderBtn()}
           {this.renderSlack()}
-          <Survey/>
         </div>
       );
     }

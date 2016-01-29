@@ -69,7 +69,7 @@ const statics = {
     let newData = data.group || data;
     newData.instance_count = data.instance_count;
     if (Array.isArray(newData.Instances)){
-      newData.instances = new List(_.pluck(newData.Instances, 'InstanceId'));
+      newData.instances = new List(_.map(newData.Instances, 'InstanceId'));
     }else {
       newData.instances = new List();
     }
@@ -170,7 +170,7 @@ const statics = {
     newData.id = newData.InstanceId;
     let name = newData.id;
     if (newData.Tags && newData.Tags.length){
-      name = _.chain(newData.Tags).findWhere({Key: 'Name'}).get('Value').value() || name;
+      name = _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || name;
     }
     if (Array.isArray(newData.SecurityGroups)){
       newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));

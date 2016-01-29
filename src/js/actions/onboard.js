@@ -26,8 +26,10 @@ export function signupCreate(data) {
         .post(`${config.authApi}/signups`)
         .send(data)
         .then((res) => {
-          resolve(res.body);
-          analytics.trackEvent('Onboard', 'signup')(dispatch, state);
+          const user = res.body;
+          analytics.trackEvent('Onboard', 'signup', data)(dispatch, state);
+          resolve(user);
+
           //TODO remove timeout somehow
           setTimeout(() => {
             dispatch(pushState(null, '/start/thanks'));
@@ -76,7 +78,7 @@ export function vpcScan(data) {
         .then((res) => {
           const regions = res.body.regions;
           if (Array.isArray(regions)){
-            const bool = _.chain(regions).pluck('supported_platforms').map(platforms => {
+            const bool = _.chain(regions).map('supported_platforms').map(platforms => {
               return !(platforms.indexOf('VPC') > -1);
             }).compact().some().value();
             if (bool){
