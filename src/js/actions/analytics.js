@@ -35,19 +35,22 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    analytics.pageView(path, title);
+    const name = title || document.title;
+    const user = makeUserObject(state().user);
+
+    // Track both authenticated and unauthenticated users in Google Analytics.
+    // The GA snippet will be identified by the user's user ID or generated
+    // UUID, respectively.
+    ga('send', 'pageview', {
+      page: path,
+      title: name
+    });
 
     // Only authenticated page views are tracked in Myst (for Intercom)
-    // to update the 'last seen' time. The Google Analytics snippet takes care
-    // of both unauthenticated and authenticated page views.
-    const user = makeUserObject(state().user);
+    // to update the 'last seen' time.
     if (!user || !user.id) {
-      console.log('ignoring unauthenticated pageview');
       return Promise.resolve();
     }
-
-    const name = title || document.title;
 
     dispatch({
       type: ANALYTICS_PAGEVIEW,
@@ -84,8 +87,10 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    analytics.event(category, action, data);
+    // FIXME remove when LaunchDarkly tracked in Myst
+    if (window.ldclient){
+      window.ldclient.track(`${category} - ${action}`, data);
+    }
 
     const user = makeUserObject(userData || state().user);
     dispatch({
