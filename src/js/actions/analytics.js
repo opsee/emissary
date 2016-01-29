@@ -132,7 +132,6 @@ export function initialize() {
     // and Google Analytics (which we are still tracking using the
     // Google Analytics snippet for richer visitor data; e.g., referrer).
     if (isAuthenticated) {
-
       // Created a GA visitor for the authenticated user, using their Opsee ID
       // as their visitor ID. (This allows us to track logged-in users across
       // multiple devices.)
