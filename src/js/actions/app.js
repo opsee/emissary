@@ -82,7 +82,9 @@ function socketStart(dispatch, state){
 }
 
 export function shutdown(){
-  return (dispatch) => {
+  return (dispatch, state) => {
+    analytics.shutdown()(dispatch, state);
+
     if (window.socket){
       window.socket.close();
     }
@@ -97,20 +99,6 @@ export function initialize(){
     analytics.initialize()(dispatch, state);
 
     if (state().user.get('token') && state().user.get('id')){
-      const user = state().user.toJS();
-
-      // FIXME Legacy analytics -- remove when Launch Darkly added to Myst
-      if (window.ldclient){
-        window.ldclient.identify({
-          firstName: user.name,
-          key: user.id.toString(),
-          email: user.email,
-          custom: {
-            customer_id: user.customer_id,
-            id: user.id
-          }
-        });
-      }
       setTimeout(() => {
         socketStart(dispatch, state);
       }, config.socketStartDelay || 0);

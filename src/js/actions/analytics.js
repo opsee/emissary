@@ -137,6 +137,19 @@ export function initialize() {
       // multiple devices.)
       ga('create', config.googleAnalyticsID, user.id);
 
+      // FIXME Legacy analytics -- remove when Launch Darkly added to Myst
+      if (window.ldclient){
+        window.ldclient.identify({
+          firstName: user.name,
+          key: user.id.toString(),
+          email: user.email,
+          custom: {
+            customer_id: user.customer_id,
+            id: user.id
+          }
+        });
+      }
+
       // Sync the user with Myst/Intercom
       const update = makeUserObject(user);
       dispatch({
