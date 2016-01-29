@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import UUID from 'uuid-v4';
-import storage from '../modules/storage';
+import URL from 'url';
 
 import analytics from '../modules/analytics';
 import config from '../modules/config';
+import ga from '../modules/ga';
 import request from '../modules/request';
-import URL from 'url';
 import {
   ANALYTICS_EVENT,
   ANALYTICS_PAGEVIEW,
@@ -16,14 +15,6 @@ const ANALYTICS_CONFIG = config.services.analytics;
 const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
 
 /**
- * @returns {string} - an anonymous UUID for tracking unauthenticated users
- *    (similar in spirit to Google Analytics' _ga cookie)
- */
-function getAnonymousUUID() {
-  return storage.get('_opsee_uuid');
-}
-
-/**
  * @returns {object} - an object containing minimum viable user data
  *    required by Myst
  */
@@ -31,8 +22,6 @@ function makeUserObject(userData) {
   // Users taken from redux state are Immutable Records, but user updates
   // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
-
-  // FIXME do we want to use anonymous UUID for authenticated users?
   return _.pick(user, ['email', 'name', 'customer_id', 'id']);
 }
 
@@ -46,13 +35,22 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    analytics.pageView(path, title);
-
-    // Grab the visitor's UUID from local storage, if anonymous
-    const uuid = getAnonymousUUID();
-    const user = _.assign({}, makeUserObject(state().user), { uuid });
     const name = title || document.title;
+    const user = makeUserObject(state().user);
+
+    // Track both authenticated and unauthenticated users in Google Analytics.
+    // The GA snippet will be identified by the user's user ID or generated
+    // UUID, respectively.
+    ga('send', 'pageview', {
+      page: path,
+      title: name
+    });
+
+    // Only authenticated page views are tracked in Myst (for Intercom)
+    // to update the 'last seen' time.
+    if (!user || !user.id) {
+      return Promise.resolve();
+    }
 
     dispatch({
       type: ANALYTICS_PAGEVIEW,
@@ -89,8 +87,10 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
       return Promise.resolve();
     }
 
-    // FIXME Legacy analytics -- remove when Myst is stable
-    analytics.event(category, action, data);
+    // FIXME remove when LaunchDarkly tracked in Myst
+    if (window.ldclient){
+      window.ldclient.track(`${category} - ${action}`, data);
+    }
 
     const user = makeUserObject(userData || state().user);
     dispatch({
@@ -128,8 +128,17 @@ export function initialize() {
     const isAuthenticated = user.get('token') && user.get('id');
 
     // If the user is authenticated, we can initialize them with their identity
-    // TODO: update last_seen_at
+    // in both Myst (e.g., to update their 'last seen' date in Intercom)
+    // and Google Analytics (which we are still tracking using the
+    // Google Analytics snippet for richer visitor data; e.g., referrer).
     if (isAuthenticated) {
+
+      // Created a GA visitor for the authenticated user, using their Opsee ID
+      // as their visitor ID. (This allows us to track logged-in users across
+      // multiple devices.)
+      ga('create', config.googleAnalyticsID, user.id);
+
+      // Sync the user with Myst/Intercom
       const update = makeUserObject(user);
       dispatch({
         type: ANALYTICS_USER_UPDATE,
@@ -138,11 +147,9 @@ export function initialize() {
           .send({ user: update })
       });
     } else {
-      // Unauthenticated users are tracked with an anonymous, client-side UUID
-      // in order to accurately capture repeat visits.
-      if (!getAnonymousUUID()) {
-        storage.set('_opsee_uuid', UUID());
-      }
+      // Unauthenticated users are tracked with the default Google Analytics
+      // behavior (e.g., anonymous, GA-generated UUID instead of Opsee user ID).
+      ga('create', config.googleAnalyticsID, 'auto');
     }
   };
 }
