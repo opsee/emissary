@@ -92,6 +92,7 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
       window.ldclient.track(`${category} - ${action}`, data);
     }
 
+    // Track all events in Myst (and none through the window.ga object.)
     const user = makeUserObject(userData || state().user);
     dispatch({
       type: ANALYTICS_EVENT,
