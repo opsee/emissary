@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import URL from 'url';
 
-import analytics from '../modules/analytics';
 import config from '../modules/config';
 import ga from '../modules/ga';
 import request from '../modules/request';
