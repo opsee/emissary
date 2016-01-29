@@ -152,3 +152,10 @@ export function initialize() {
     }
   };
 }
+
+export function shutdown() {
+  return (dispatch, state) => {
+    // Revert to an unauthenticated visitor on logout.
+    ga('create', config.googleAnalyticsID, 'auto');
+  };
+}
