@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import storage from '../modules/storage';
+import URL from 'url';
 
 import analytics from '../modules/analytics';
 import config from '../modules/config';
 import ga from '../modules/ga';
 import request from '../modules/request';
-import URL from 'url';
 import {
   ANALYTICS_EVENT,
   ANALYTICS_PAGEVIEW,
@@ -39,7 +38,15 @@ export function trackPageView(path, title) {
     // FIXME Legacy analytics -- remove when Myst is stable
     analytics.pageView(path, title);
 
+    // Only authenticated page views are tracked in Myst (for Intercom)
+    // to update the 'last seen' time. The Google Analytics snippet takes care
+    // of both unauthenticated and authenticated page views.
     const user = makeUserObject(state().user);
+    if (!user || !user.id) {
+      console.log('ignoring unauthenticated pageview');
+      return Promise.resolve();
+    }
+
     const name = title || document.title;
 
     dispatch({
