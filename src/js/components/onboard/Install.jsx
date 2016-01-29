@@ -7,7 +7,6 @@ import _ from 'lodash';
 import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import Survey from './Survey.jsx';
 import config from '../../modules/config';
 import {Button} from '../forms';
 import {Padding} from '../layout';
@@ -161,7 +160,6 @@ const Install = React.createClass({
             );
           })}
           {this.renderBtn()}
-          <Survey/>
         </div>
       );
     }
