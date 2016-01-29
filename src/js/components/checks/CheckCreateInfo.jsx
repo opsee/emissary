@@ -19,28 +19,6 @@ import {
   integrations as integrationsActions
 } from '../../actions';
 
-const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
-
-const NotificationForm = forms.Form.extend({
-  type: forms.ChoiceField({
-    choices: notificationOptions,
-    widgetAttrs: {
-      widgetType: 'Dropdown'
-    }
-  }),
-  value: forms.CharField({
-    label: 'Recipient',
-    validators: [forms.validators.validateEmail],
-    widgetAttrs: {
-      placeholder: 'test@testing.com'
-    }
-  })
-});
-
-const NotificationFormSet = forms.FormSet.extend({
-  form: NotificationForm,
-  canDelete: true
-});
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
@@ -95,8 +73,56 @@ const CheckCreateInfo = React.createClass({
       });
     }
 
+    let channels = self.props.redux.integrations.slackChannels.toJS();
+    if(channels.length){
+      channels = channels.map(c => [c.id, c.name]);
+    }
+
+    const notificationOptions = ['email', 'slack'].map(s => [s, _.capitalize(s)]);
+
+    const NotificationForm = forms.Form.extend({
+      type: forms.ChoiceField({
+        choices: notificationOptions,
+        widgetAttrs: {
+          widgetType: 'Dropdown'
+        }
+      }),
+      value: forms.CharField({
+        label: 'Recipient',
+        validators: [forms.validators.validateEmail],
+        widgetAttrs: {
+          placeholder: 'test@testing.com'
+        }
+      }),
+      channels: forms.ChoiceField({
+        choices: channels,
+        widgetAttrs: {
+          widgetType: 'Dropdown'
+        }
+      }),
+      // constructor(kwargs){
+      //   debugger;
+      //   forms.Form.call(this, kwargs);
+      //   if (initialData.channels.length){
+      //     this.fields.channels.setChoices(initialData.channels);
+      //   }
+      // }
+    });
+
+    const NotificationFormSet = forms.FormSet.extend({
+      form: NotificationForm,
+      canDelete: true,
+      // constructor(kwargs){
+      //   this.form({channels}, kwargs);
+      //   // forms.Form.call(this, kwargs);
+      //   // if (channels.length){
+      //   //   this.fields.channels.setChoices(initialData.channels);
+      //   // }
+      // }
+    });
+
     const obj = {
-      info: new InfoForm({
+      info: new InfoForm({channels}, {
         onChange: self.runChange,
         labelSuffix: '',
         data: {
@@ -108,7 +134,8 @@ const CheckCreateInfo = React.createClass({
         labelSuffix: '',
         initial: initialNotifs,
         minNum: !initialNotifs.length ? 1 : 0,
-        extra: 0
+        data: initialNotifs,
+        extra: 0,
       }),
       hasSetNotifications: !self.isDataComplete()
     };
@@ -127,9 +154,8 @@ const CheckCreateInfo = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      this.props.history.pushState(null, '/check-create/target');
+      // this.props.history.pushState(null, '/check-create/target');
     }
-    this.props.integrationsActions.slackChannels();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
@@ -191,6 +217,12 @@ const CheckCreateInfo = React.createClass({
      </Padding>
     );
   },
+  renderValueOrChannels(form){
+    if (form.cleanedData.type === 'email'){
+      return <BoundField bf={form.boundField('value')}/>;
+    } 
+    return <BoundField bf={form.boundField('channels')}/>;
+  },
   renderNotificationForm(){
     return (
       <Padding b={2}>
@@ -205,7 +237,7 @@ const CheckCreateInfo = React.createClass({
                       <BoundField bf={form.boundField('type')}/>
                     </Col>
                     <Col xs={12} sm={6}>
-                      <BoundField bf={form.boundField('value')}/>
+                      {this.renderValueOrChannels(form)}
                     </Col>
                   </Row>
                 </Col>

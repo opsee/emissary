@@ -29,5 +29,7 @@
   //socket start delay (for simulating slow connection startup)
   "socketStartDelay": 0,
   //allow usage of the app even when socket is erroring
-  "bypassSocketError": false
+  "bypassSocketError": false,
+  //weinre port for remote debugging (chrome ios etc)
+  "remoteDebugPort": 9000
 }

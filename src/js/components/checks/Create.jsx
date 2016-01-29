@@ -6,7 +6,12 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {Check} from '../../modules/schemas';
-import {checks as actions, user as userActions, env as envActions} from '../../actions';
+import {
+  checks as actions, 
+  user as userActions, 
+  env as envActions,
+  integrations as integrationsActions
+} from '../../actions';
 
 const CheckCreate = React.createClass({
   propTypes: {
@@ -33,6 +38,7 @@ const CheckCreate = React.createClass({
       this.props.envActions.getGroupsElb();
       this.props.envActions.getInstancesEcc();
     }
+    this.props.integrationsActions.getSlackChannels();
   },
   getInitialState(){
     return this.getState();
@@ -94,7 +100,8 @@ const CheckCreate = React.createClass({
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  envActions: bindActionCreators(envActions, dispatch)
+  envActions: bindActionCreators(envActions, dispatch),
+  integrationsActions: bindActionCreators(integrationsActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckCreate);

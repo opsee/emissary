@@ -1,5 +1,6 @@
 import config from '../modules/config';
 import request from '../modules/request';
+import _ from 'lodash';
 import {
   INTEGRATIONS_SLACK_ACCESS,
   INTEGRATIONS_SLACK_CHANNELS
@@ -39,7 +40,7 @@ export function slackAccess(query) {
   };
 }
 
-export function slackChannels() {
+export function getSlackChannels() {
   return (dispatch, state) => {
     dispatch({
       type: INTEGRATIONS_SLACK_CHANNELS,
@@ -48,7 +49,7 @@ export function slackChannels() {
         .get(`${config.api}/services/slack/channels`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
-          resolve(res.body);
+          resolve(_.get(res.body, 'channels') || []);
         }, reject);
       })
     });
