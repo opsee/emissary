@@ -40,12 +40,12 @@ const CheckScreenshot = React.createClass({
     this.props.actions.getCheckFromURI(jsonURI);
   },
   getCheck() {
-    const check = this.props.redux.checks.checks.head();
-    return check || new Map({id: this.props.params.id});
+    const checks = this.props.redux.checks.checks;
+    return checks.size ? checks.first() : new Map({id: this.props.params.id});
   },
   getFailingResponses() {
     const check = this.getCheck();
-    const responses = check.get('results').head().get('responses');
+    const responses = check.get('results').first().get('responses');
 
     return responses.filter(response => !response.passing);
   },
