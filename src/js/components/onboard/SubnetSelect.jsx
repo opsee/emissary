@@ -4,10 +4,12 @@ import forms from 'newforms';
 
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
+import img from '../../../img/tut-subnets.svg';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
 
 const InfoForm = forms.Form.extend({
@@ -46,6 +48,13 @@ const SubnetSelect = React.createClass({
     if (!this.props.redux.onboard.subnetsForSelection.length){
       this.props.history.replaceState(null, '/start/region-select');
     }
+    const newImg = new Image();
+    newImg.src = img;
+    newImg.onload = () => {
+      this.setState({
+        loaded: true
+      });
+    };
   },
   getInitialState() {
     const self = this;
@@ -85,11 +94,21 @@ const SubnetSelect = React.createClass({
     if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
-          <p>Choose which Subnet you&rsquo;d like to install a Bastion in.</p>
-          <BoundField bf={this.state.info.boundField('subnets')}/>
-          <Padding t={1}>
-            <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
-          </Padding>
+          <Grid>
+            <Row>
+              <Col xs={12} sm={5}>
+                <img src={img}/>
+                <p>Choose a Subnet to install your Bastion in. The Bastion needs to be in a subnet that can communicate with both the public internet, and any private subnets hosting the services you want to monitor.  If you're not sure which subnet to choose, we've already selected what we think is the best fit.</p>
+              </Col>
+              <Col xs={12} sm={7}>
+                <Heading level={3}>Your Subnets</Heading>
+                <BoundField bf={this.state.info.boundField('subnets')}/>
+                <Padding t={1}>
+                  <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
+                </Padding>
+              </Col>
+            </Row>
+          </Grid>
         </div>
       );
     }
