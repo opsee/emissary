@@ -94,21 +94,24 @@ const SubnetSelect = React.createClass({
     if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
+          <Padding b={1}>
+            <p>Choose a Subnet to install your Bastion in. The Bastion needs to communicate with both Opsee and any private subnets you want to check.  If you're not sure which subnet to choose, we've selected the one we think is the best fit.</p>
+          </Padding>
           <Grid>
             <Row>
-              <Col xs={12} sm={5}>
+              <Col xs={12} sm={4}>
                 <img src={img}/>
-                <p>Choose a Subnet to install your Bastion in. The Bastion needs to be in a subnet that can communicate with both the public internet, and any private subnets hosting the services you want to monitor.  If you're not sure which subnet to choose, we've already selected what we think is the best fit.</p>
+
               </Col>
-              <Col xs={12} sm={7}>
+              <Col xs={12} sm={8}>
                 <Heading level={3}>Your Subnets</Heading>
                 <BoundField bf={this.state.info.boundField('subnets')}/>
-                <Padding t={1}>
-                  <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
-                </Padding>
               </Col>
             </Row>
           </Grid>
+          <Padding t={1}>
+            <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
+          </Padding>
         </div>
       );
     }
