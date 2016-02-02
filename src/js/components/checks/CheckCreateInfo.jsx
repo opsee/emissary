@@ -74,7 +74,9 @@ const CheckCreateInfo = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      this.props.history.pushState(null, '/check-create/target');
+      //intentionally fail
+      let intentionalcirclefailure;
+      // this.props.history.pushState(null, '/check-create/target');
     }
   },
   componentDidMount(){
