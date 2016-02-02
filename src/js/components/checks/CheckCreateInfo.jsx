@@ -74,8 +74,7 @@ const CheckCreateInfo = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      //TODO reenable this
-      // this.props.history.pushState(null, '/check-create/target');
+      this.props.history.pushState(null, '/check-create/target');
     }
   },
   componentDidMount(){
