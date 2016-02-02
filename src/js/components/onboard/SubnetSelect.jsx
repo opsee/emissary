@@ -95,7 +95,7 @@ const SubnetSelect = React.createClass({
   },
   renderInner(){
     if (!this.state.loaded){
-      return <StatusHandler status="pending"/>
+      return <StatusHandler status="pending"/>;
     } else if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
