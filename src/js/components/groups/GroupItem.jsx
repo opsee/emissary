@@ -26,7 +26,8 @@ const GroupItem = React.createClass({
   },
   getDefaultProps(){
     return {
-      item: new Map()
+      item: new Map(),
+      target: {}
     };
   },
   componentWillMount(){
@@ -44,10 +45,14 @@ const GroupItem = React.createClass({
   shouldComponentUpdate(nextProps) {
     const {props} = this;
     const {target} = props;
+    let {type} = target;
+    if (type === 'sg'){
+      type = 'security';
+    }
     let arr = [];
     arr.push(!_.isEqual(target, nextProps.target));
-    if (target && target.type){
-      arr.push(!Immutable.is(props.groups[target.type], nextProps.groups[target.type]));
+    if (target && type){
+      arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
     }
     arr.push(!Immutable.is(props.item, nextProps.item));
     return _.some(arr);

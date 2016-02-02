@@ -1,15 +1,23 @@
 import _ from 'lodash';
-import {fromJS, List} from 'immutable';
+import {List} from 'immutable';
 import {handleActions} from 'redux-actions';
 import {
-  INTEGRATIONS_SLACK_CHANNELS
+  INTEGRATIONS_SLACK_CHANNELS,
+  INTEGRATIONS_SLACK_INFO
 } from '../actions/constants';
 
 const initial = {
-  slackChannels: new List()
+  slackChannels: new List(),
+  slackInfo: {}
 };
 
 export default handleActions({
+  [INTEGRATIONS_SLACK_INFO]: {
+    next(state, action){
+      const slackInfo = action.payload;
+      return _.assign({}, state, {slackInfo});
+    }
+  },
   [INTEGRATIONS_SLACK_CHANNELS]: {
     next(state, action){
       const slackChannels = new List(action.payload);

@@ -7,18 +7,16 @@ import {bindActionCreators} from 'redux';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
-import {Close, Add} from '../icons';
+import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
-import {Heading} from '../type';
+import NotificationSelection from './NotificationSelection';
 import {
   checks as actions,
   user as userActions,
-  analytics as analyticsActions,
-  integrations as integrationsActions
+  analytics as analyticsActions
 } from '../../actions';
-
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
@@ -52,9 +50,6 @@ const CheckCreateInfo = React.createClass({
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
-    integrationsActions: PropTypes.shape({
-      slackChannels: PropTypes.func
-    }),
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
@@ -65,95 +60,21 @@ const CheckCreateInfo = React.createClass({
   getInitialState() {
     const self = this;
 
-    let initialNotifs = self.props.check.notifications;
-    if (!initialNotifs.length){
-      initialNotifs.push({
-        type: 'email',
-        value: this.props.redux.user.get('email')
-      });
-    }
-
-    let channels = self.props.redux.integrations.slackChannels.toJS();
-    if(channels.length){
-      channels = channels.map(c => [c.id, c.name]);
-    }
-
-    const notificationOptions = ['email', 'slack'].map(s => [s, _.capitalize(s)]);
-
-    const NotificationForm = forms.Form.extend({
-      type: forms.ChoiceField({
-        choices: notificationOptions,
-        widgetAttrs: {
-          widgetType: 'Dropdown'
-        }
-      }),
-      value: forms.CharField({
-        label: 'Recipient',
-        validators: [forms.validators.validateEmail],
-        widgetAttrs: {
-          placeholder: 'test@testing.com'
-        }
-      }),
-      channels: forms.ChoiceField({
-        choices: channels,
-        widgetAttrs: {
-          widgetType: 'Dropdown'
-        }
-      }),
-      // constructor(kwargs){
-      //   debugger;
-      //   forms.Form.call(this, kwargs);
-      //   if (initialData.channels.length){
-      //     this.fields.channels.setChoices(initialData.channels);
-      //   }
-      // }
-    });
-
-    const NotificationFormSet = forms.FormSet.extend({
-      form: NotificationForm,
-      canDelete: true,
-      // constructor(kwargs){
-      //   this.form({channels}, kwargs);
-      //   // forms.Form.call(this, kwargs);
-      //   // if (channels.length){
-      //   //   this.fields.channels.setChoices(initialData.channels);
-      //   // }
-      // }
-    });
-
     const obj = {
-      info: new InfoForm({channels}, {
+      info: new InfoForm({
         onChange: self.runChange,
         labelSuffix: '',
         data: {
           name: self.props.check.name || `Http ${self.props.check.target.name || self.props.check.target.id}`
         }
       }),
-      notifications: new NotificationFormSet({
-        onChange: self.runChange,
-        labelSuffix: '',
-        initial: initialNotifs,
-        minNum: !initialNotifs.length ? 1 : 0,
-        data: initialNotifs,
-        extra: 0,
-      }),
-      hasSetNotifications: !self.isDataComplete()
+      notifications: []
     };
-
-    //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(() => {
-      self.state.notifications.forms().forEach((form, i) => {
-        let notif = initialNotifs[i];
-        if (notif){
-          form.setData(notif);
-        }
-      });
-      this.setState({hasSetNotifications: true});
-    }, 50);
     return obj;
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
+      //TODO reenable this
       // this.props.history.pushState(null, '/check-create/target');
     }
   },
@@ -162,34 +83,29 @@ const CheckCreateInfo = React.createClass({
       this.runChange();
     }
   },
-  getNotificationsForms(){
-    return _.reject(this.state.notifications.forms(), f => {
-      return f.cleanedData.DELETE;
-    });
-  },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = this.state.info.cleanedData.name;
-    check.check_spec.value.name = check.name;
-    if (this.state.hasSetNotifications){
-      check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
-        return _.omit(n, 'DELETE');
-      });
-    }
+    check.name = check.check_spec.value.name = this.state.info.cleanedData.name;
+    check.notifications = this.getNotifications();
     return check;
   },
   getCleanedData(){
-    let notificationData = this.state.notifications.cleanedData();
-    const data = {
-      notifications: notificationData
-    };
-    return _.assign(data, this.state.info.cleanedData);
+    return _.assign({}, {
+      notifications: this.state.notifications
+    }, this.state.info.cleanedData);
+  },
+  getNotifications(){
+    return _.reject(this.state.notifications, (n = {}) => {
+      return !n.type || !n.value;
+    });
   },
   isDataComplete(){
     return this.props.check.check_spec.value.name;
   },
   isDisabled(){
-    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
+    const notifsComplete = _.chain(this.state.notifications).map((n = {}) => {
+      return n.type && n.value;
+    }).every().value();
     return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
@@ -197,6 +113,13 @@ const CheckCreateInfo = React.createClass({
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckInfoHelp');
+  },
+  handleNotificationChange(notifications){
+    this.setState({
+      notifications
+    });
+    const data = _.assign({}, this.getFinalData(), {notifications});
+    this.props.onChange(data, this.isDisabled(), 3);
   },
   handleSubmit(e) {
     this.props.analyticsActions.trackEvent('Onboard', 'check-created');
@@ -217,51 +140,13 @@ const CheckCreateInfo = React.createClass({
      </Padding>
     );
   },
-  renderValueOrChannels(form){
-    if (form.cleanedData.type === 'email'){
-      return <BoundField bf={form.boundField('value')}/>;
-    } 
-    return <BoundField bf={form.boundField('channels')}/>;
-  },
-  renderNotificationForm(){
-    return (
-      <Padding b={2}>
-        <Heading level={3}>Notifications</Heading>
-        {this.getNotificationsForms().map((form, index) => {
-          return (
-            <Padding b={2} key={`notif-form-${index}`}>
-              <Row>
-                <Col xs={10} sm={11}>
-                  <Row>
-                    <Col xs={12} sm={6}>
-                      <BoundField bf={form.boundField('type')}/>
-                    </Col>
-                    <Col xs={12} sm={6}>
-                      {this.renderValueOrChannels(form)}
-                    </Col>
-                  </Row>
-                </Col>
-                <Col xs={2} sm={1}>
-                  <Padding t={1}>
-                    {this.renderRemoveNotificationButton(form, index)}
-                  </Padding>
-                </Col>
-              </Row>
-            </Padding>
-          );
-        })
-        }
-        <Button color="primary" flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill="primary" inline/> Add Another Notification</Button>
-      </Padding>
-    );
-  },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){
       return (
         <div>
           <Padding t={2}>
             <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
-            <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Finish</Button>
+            <Button color="success" block type="submit" disabled={this.isDisabled()} chevron>Finish</Button>
           </Padding>
         </div>
       );
@@ -285,7 +170,7 @@ const CheckCreateInfo = React.createClass({
           {this.state.info.render()}
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>
-        {this.renderNotificationForm()}
+        <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
         {this.renderSubmitButton()}
       </form>
     );
@@ -325,8 +210,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  analyticsActions: bindActionCreators(analyticsActions, dispatch),
-  integrationsActions: bindActionCreators(integrationsActions, dispatch)
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateInfo);

@@ -8,7 +8,11 @@ import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
-import {user as actions, app as appActions} from '../../actions';
+import {
+  user as actions,
+  app as appActions,
+  integrations as integrationsActions
+} from '../../actions';
 import {SlackInfo} from '../integrations';
 
 const Profile = React.createClass({
@@ -21,7 +25,19 @@ const Profile = React.createClass({
     }),
     redux: PropTypes.shape({
       user: PropTypes.object
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.object
+    }),
+    integrationsActions: PropTypes.shape({
+      getSlackInfo: PropTypes.func,
+      getSlackChannels: PropTypes.func
     })
+  },
+  componentWillMount() {
+    if (!this.props.location.query.slack){
+      this.props.integrationsActions.getSlackInfo();
+    }
   },
   handleLogout(){
     this.props.actions.logout();
@@ -70,7 +86,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch),
+  integrationsActions: bindActionCreators(integrationsActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

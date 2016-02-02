@@ -14,7 +14,10 @@ import {Padding} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
 import {Heading} from '../type';
-import {checks as actions, env as envActions} from '../../actions';
+import {
+  checks as actions,
+  env as envActions
+} from '../../actions';
 import {Check} from '../../modules/schemas';
 
 function getState(){

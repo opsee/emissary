@@ -147,7 +147,7 @@ const Install = React.createClass({
     if (!this.props.redux.user.get('slack')){
       return (
         <Padding>
-          While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications there - if you&rsquo;re into that.
+          While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications in your favorite channel.
         </Padding>
       );
     }
