@@ -3,11 +3,13 @@ import {connect} from 'react-redux';
 import forms from 'newforms';
 
 import {bindActionCreators} from 'redux';
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
+import img from '../../../img/tut-subnets.svg';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
+import {Heading} from '../type';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
 
 const InfoForm = forms.Form.extend({
@@ -46,6 +48,15 @@ const SubnetSelect = React.createClass({
     if (!this.props.redux.onboard.subnetsForSelection.length){
       this.props.history.replaceState(null, '/start/region-select');
     }
+    const newImg = new Image();
+    newImg.src = img;
+    newImg.onload = () => {
+      if (this.isMounted()){
+        this.setState({
+          loaded: true
+        });
+      }
+    };
   },
   getInitialState() {
     const self = this;
@@ -53,6 +64,7 @@ const SubnetSelect = React.createClass({
     let obj = {};
     if (data.length){
       obj = {
+        loaded: false,
         info: new InfoForm(data, {
           onChange(){
             self.forceUpdate();
@@ -82,11 +94,26 @@ const SubnetSelect = React.createClass({
     this.props.actions.subnetSelect(this.state.info.cleanedData.subnets);
   },
   renderInner(){
-    if (this.props.redux.onboard.subnetsForSelection.length){
+    if (!this.state.loaded){
+      return <StatusHandler status="pending"/>;
+    } else if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
-          <p>Choose which Subnet you&rsquo;d like to install a Bastion in.</p>
-          <BoundField bf={this.state.info.boundField('subnets')}/>
+          <Padding b={1}>
+            <p>Choose a Subnet to install your Bastion in. The Bastion needs to communicate with both Opsee and any private subnets you want to check.  If you're not sure which subnet to choose, we've selected the one we think is the best fit.</p>
+          </Padding>
+          <Grid>
+            <Row>
+              <Col xs={12} sm={4}>
+                <img src={img}/>
+
+              </Col>
+              <Col xs={12} sm={8}>
+                <Heading level={3}>Your Subnets</Heading>
+                <BoundField bf={this.state.info.boundField('subnets')}/>
+              </Col>
+            </Row>
+          </Grid>
           <Padding t={1}>
             <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
           </Padding>
