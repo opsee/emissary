@@ -62,6 +62,7 @@ const SubnetSelect = React.createClass({
     let obj = {};
     if (data.length){
       obj = {
+        loaded: false,
         info: new InfoForm(data, {
           onChange(){
             self.forceUpdate();
@@ -91,7 +92,7 @@ const SubnetSelect = React.createClass({
     this.props.actions.subnetSelect(this.state.info.cleanedData.subnets);
   },
   renderInner(){
-    if (this.props.redux.onboard.subnetsForSelection.length){
+    if (this.props.redux.onboard.subnetsForSelection.length && this.state.loaded){
       return (
         <div>
           <Padding b={1}>
