@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import forms from 'newforms';
 
 import {bindActionCreators} from 'redux';
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import img from '../../../img/tut-subnets.svg';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
@@ -51,9 +51,11 @@ const SubnetSelect = React.createClass({
     const newImg = new Image();
     newImg.src = img;
     newImg.onload = () => {
-      this.setState({
-        loaded: true
-      });
+      if (this.isMounted()){
+        this.setState({
+          loaded: true
+        });
+      }
     };
   },
   getInitialState() {
@@ -92,7 +94,9 @@ const SubnetSelect = React.createClass({
     this.props.actions.subnetSelect(this.state.info.cleanedData.subnets);
   },
   renderInner(){
-    if (this.props.redux.onboard.subnetsForSelection.length && this.state.loaded){
+    if (!this.state.loaded){
+      return <StatusHandler status="pending"/>
+    } else if (this.props.redux.onboard.subnetsForSelection.length){
       return (
         <div>
           <Padding b={1}>
