@@ -116,7 +116,12 @@ function formatCheckData(data){
   if (obj.target.type === 'EC2'){
     obj.target.type = 'instance';
   }
-  return _.pick(obj, ['target', 'interval', 'check_spec', 'name']);
+  const assertions = obj.assertions.map(a => {
+    return _.assign({}, a, {
+      operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
+    });
+  });
+  return _.assign({}, _.pick(obj, ['target', 'interval', 'check_spec', 'name']), {assertions});
 }
 
 export function test(data){
