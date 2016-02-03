@@ -12,6 +12,7 @@ import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import NotificationSelection from './NotificationSelection';
+import NotificationSelectionType1 from './NotificationSelectionType1';
 import {
   checks as actions,
   user as userActions,
@@ -147,7 +148,7 @@ const CheckCreateInfo = React.createClass({
         <div>
           <Padding t={2}>
             <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
-            <Button color="success" block type="submit" disabled={this.isDisabled()} chevron>Finish</Button>
+            <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
           </Padding>
         </div>
       );
@@ -166,14 +167,14 @@ const CheckCreateInfo = React.createClass({
   },
   renderInner() {
     return (
-      <form ref="form" onSubmit={this.handleSubmit}>
+      <div>
         <Padding b={2}>
           {this.state.info.render()}
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>
-        <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
+        <NotificationSelectionType1 onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
         {this.renderSubmitButton()}
-      </form>
+      </div>
     );
   },
   renderAsPage(){
