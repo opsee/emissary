@@ -86,7 +86,7 @@ const NotificationSelection = React.createClass({
   },
   runSetNotificationsState(iteratee, addAnother){
     let notifications = this.state.notifications.map(iteratee);
-    if (addAnother){
+    if (addAnother && _.chain(notifications).map(this.isNotifComplete).every().value()){
       notifications = notifications.concat([new schema()]);
     }
     this.setState({
