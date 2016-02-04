@@ -38,7 +38,7 @@ function socketStart(dispatch, state){
           type: APP_SOCKET_OPEN
         });
       }
-      throw new Error('Socket Started');
+      console.info('Socket Started.');
     };
     window.socket.onmessage = (event) => {
       let data;
