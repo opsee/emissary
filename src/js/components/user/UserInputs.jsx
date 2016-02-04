@@ -67,7 +67,7 @@ export default React.createClass({
         labelSuffix: '',
         validation: {
           on: 'blur change',
-          onChangeDelay: 100
+          onChangeDelay: 300
         }
       }, self.getCompleteData()))
     };

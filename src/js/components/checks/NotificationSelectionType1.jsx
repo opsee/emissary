@@ -15,13 +15,44 @@ import {
   integrations as integrationsActions
 } from '../../actions';
 
-const schema = function(type){
-  return {
-    type,
-    value: undefined,
-    valueState: undefined
+
+const EmailForm = forms.Form.extend({
+  text: forms.CharField({
+    validators: [forms.validators.validateEmail],
+    label: 'Email',
+    widgetAttrs: {
+      placeholder: 'address@domain.com',
+      autoCapitalize: 'off',
+      autoCorrect: 'off'
+    }
+  }),
+  render() {
+    return (
+      <BoundField bf={this.boundField('text')}>
+        <Mail className="icon"/>
+      </BoundField>
+    );
   }
-}
+});
+
+const WebhookForm = forms.Form.extend({
+  text: forms.CharField({
+    validators: [forms.validators.URLValidator],
+    label: 'Webhook URL',
+    widgetAttrs: {
+      placeholder: 'https://alert.me/incoming',
+      autoCapitalize: 'off',
+      autoCorrect: 'off'
+    }
+  }),
+  render() {
+    return (
+      <BoundField bf={this.boundField('text')}>
+        <Cloud className="icon"/>
+      </BoundField>
+    );
+  }
+});
 
 const NotificationSelection = React.createClass({
   propTypes: {
@@ -57,6 +88,26 @@ const NotificationSelection = React.createClass({
     //   this.setState(this.getState(nextProps));
     // }
   },
+  getNewSchema(type, notifIndex){
+    const self = this;
+    const opts = {
+      onChange(){
+        self.handleInputChange(this.cleanedData, notifIndex);
+        self.forceUpdate();
+      },
+      labelSuffix: '',
+      prefix: `notif-${notifIndex}`,
+      validation: {
+        on: 'blur change',
+        onChangeDelay: 300
+      }
+    };
+    return {
+      type,
+      value: undefined,
+      form: type === 'email' ? new EmailForm(opts) : new WebhookForm(opts)
+    }
+  },
   getFinalData(){
     return _.chain(this.getNotificationsForms())
     .map(form => {
@@ -80,6 +131,7 @@ const NotificationSelection = React.createClass({
     return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   isNewDisabled(){
+    return false;
     return !_.chain(this.state.notifications).last().thru(notif => this.isNotifComplete(notif)).value();
   },
   isNotifComplete(notif){
@@ -129,22 +181,20 @@ const NotificationSelection = React.createClass({
     });
   },
   runNewNotif(type){
-    if (!this.isNewDisabled()){
-      this.setState({
-        notifications: this.state.notifications.concat([new schema(type)])
-      })
-    }
-  },
-  runAddOne(){
-    if (!this.isNewDisabled()){
-      this.setState({
-        notifications: this.state.notifications.concat([new schema()])
-      })
-    }
+    this.setState({
+      notifications: this.state.notifications.concat([this.getNewSchema(type, this.state.notifications.length)])
+    })
   },
   runDelete(index){
     this.setState({
       notifications: _.reject(this.state.notifications, (n, i) => i === index)
+    });
+  },
+  handleInputChange(data, index){
+    this.runSetNotificationsState((n, i) => {
+      return _.assign({}, n, {
+        value: index === i ? data.text : n.value
+      });
     });
   },
   renderValueOrChannels(form){
@@ -167,34 +217,46 @@ const NotificationSelection = React.createClass({
   },
   renderNotif(notif, index){
     const {type} = notif;
-    if (!notif.value){
+    if (!notif.value || type === 'email' || type === 'webhook'){
       if (type === 'email' || type === 'webhook'){
         let placeholder;
         let inputType = 'text';
         switch (type){
           case 'email':
-            placeholder = 'pepe@therarest.com';
+            placeholder = 'email';
             inputType = 'email';
             break;
           case 'webhook':
-            placeholder = 'https://pepelove.com/incoming';
+            placeholder = 'webhook';
             break;
           default:
             break;
         }
         return (
-          <div>
-            <Heading level={4}>{_.capitalize(type)}</Heading>
-            <div className="display-flex">
-              <Button flat color="danger" title="Remove this Notification" onClick={this.runDelete.bind(null, index)}>
-                <Delete inline fill="danger"/>
-              </Button>
-              <form name={`notif-email-form-${index}`} onSubmit={this.runSetValue.bind(this, index, notif.valueState)} className="display-flex flex-1">
-                <Padding l={2} r={2} className="flex-1">
-                  <input value={notif.valueState} onChange={this.runSetValueState.bind(this, index)} type={inputType} placeholder={placeholder}/>
-                </Padding>
-                <Button flat color="success" title="Ok" type="submit">Ok</Button>
-              </form>
+          <div className="display-flex">
+            <Button flat color="danger" title="Remove this Notification" onClick={this.runDelete.bind(null, index)} className="align-self-end" style={{minHeight: '46px'}}>
+              <Delete inline fill="danger"/>
+            </Button>
+            <div className="flex-1">
+              <div className="display-flex">
+                {
+                  // onSubmit={this.runSetValue.bind(this, index, notif.valueState)
+                }
+                <form name={`notif-email-form-${index}`} className="display-flex flex-1">
+                  <Padding l={2} r={2} className="flex-1">
+                    {notif.form.render()}
+                    {
+                    // <input value={notif.valueState} onChange={this.runSetValueState.bind(this, index)} type={inputType} placeholder={placeholder}/>
+                    }
+                  </Padding>
+                  {
+                  // <Button flat color="success" title="Ok" type="submit">Ok</Button>
+                  }
+                </form>
+                <Button color="warning" flat className="align-self-end" style={{minHeight: '46px'}} disabled={!this.isNotifComplete(notif)}>
+                  Test&nbsp;<ChevronRight inline fill={this.isNotifComplete(notif) ? 'warning' : 'text'}/>
+                </Button>
+              </div>
             </div>
           </div>
         );
@@ -212,7 +274,7 @@ const NotificationSelection = React.createClass({
                 <Padding l={2} className="flex-1">
                 {channels.map(c => {
                   return (
-                    <Button onClick={this.runSetValue.bind(this, index, c.id)} color="info" style={{margin: '.5rem'}}>#{c.name}</Button>
+                    <Button flat onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem', textTransform: 'lowercase'}}>#{c.name}</Button>
                   );
                 })}
                 </Padding>
@@ -241,13 +303,13 @@ const NotificationSelection = React.createClass({
   renderNotifPickType(){
     return (
       <div>
-        <Button color="primary" flat onClick={this.runNewNotif.bind(null, 'email')} className="flex-1" style={{margin: '0 1rem 0 0'}} disabled={this.isNewDisabled()}>
+        <Button flat color="primary" onClick={this.runNewNotif.bind(null, 'email')} className="flex-1" style={{margin: '0 1rem 0 0'}} disabled={this.isNewDisabled()}>
           <Add inline fill={this.isNewDisabled() ? 'text' : 'primary'}/>&nbsp;Email
         </Button>
-        <Button color="primary" flat onClick={this.runNewNotif.bind(null, 'slack')} className="flex-1" style={{margin: '0 1rem 0 0'}} disabled={this.isNewDisabled()}>
+        <Button flat color="primary" onClick={this.runNewNotif.bind(null, 'slack')} className="flex-1" style={{margin: '0 1rem 0 0'}} disabled={this.isNewDisabled()}>
           <Add inline fill={this.isNewDisabled() ? 'text' : 'primary'}/>&nbsp;Slack
         </Button>
-        <Button color="primary" flat onClick={this.runNewNotif.bind(null, 'webhook')} className="flex-1" style={{margin: '0 1rem 0 0'}} disabled={this.isNewDisabled()}>
+        <Button flat color="primary" onClick={this.runNewNotif.bind(null, 'webhook')} className="flex-1" style={{margin: '0 1rem 0 0'}} disabled={this.isNewDisabled()}>
           <Add inline fill={this.isNewDisabled() ? 'text' : 'primary'}/>&nbsp;Webhook
         </Button>
       </div>
@@ -267,9 +329,6 @@ const NotificationSelection = React.createClass({
         })
         }
         {this.renderNotifPickType()}
-        {
-          //<Button color="primary" flat onClick={this.runAddOne}><Add fill="primary" inline/> Add Another Notification</Button>
-        }
       </Padding>
     );
   }

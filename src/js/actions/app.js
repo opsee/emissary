@@ -38,7 +38,7 @@ function socketStart(dispatch, state){
           type: APP_SOCKET_OPEN
         });
       }
-      console.info('Socket Started.');
+      throw new Error('Socket Started');
     };
     window.socket.onmessage = (event) => {
       let data;
@@ -63,7 +63,7 @@ function socketStart(dispatch, state){
         type: APP_SOCKET_ERROR,
         payload: event
       });
-      console.info('Socket Error.');
+      throw new Error('Socket Error');
     };
     window.socket.onclose = (event) => {
       dispatch({
