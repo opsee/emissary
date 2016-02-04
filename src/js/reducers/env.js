@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
 import result from '../modules/result';
-import {itemsFilter} from '../modules';
+import {itemsFilter, yeller} from '../modules';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {InstanceEcc, InstanceRds, GroupSecurity, GroupElb} from '../modules/schemas';
@@ -228,7 +228,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
       const groups = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_GROUPS_SECURITY]: {
     next(state, action){
@@ -236,7 +237,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
       const groups = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_GROUP_ELB]: {
     next(state, action){
@@ -244,7 +246,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(elb, state, action, 'groups.elb');
       const groups = _.assign({}, state.groups, {elb});
       return _.assign({}, state, {groups, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_GROUPS_ELB]: {
     next(state, action){
@@ -252,7 +255,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(elb, state, action, 'groups.elb');
       const groups = _.assign({}, state.groups, {elb});
       return _.assign({}, state, {groups, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_INSTANCE_ECC]: {
     next(state, action){
@@ -260,7 +264,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(ecc, state, action, 'instances.ecc');
       const instances = _.assign({}, state.instances, {ecc});
       return _.assign({}, state, {instances, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_INSTANCES_ECC]: {
     next(state, action){
@@ -268,7 +273,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(ecc, state, action, 'instances.ecc');
       const instances = _.assign({}, state.instances, {ecc});
       return _.assign({}, state, {instances, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_INSTANCE_RDS]: {
     next(state, action){
@@ -276,7 +282,8 @@ export default handleActions({
       const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
       const instances = _.assign({}, state.instances, {rds});
       return _.assign({}, state, {instances, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [GET_INSTANCES_RDS]: {
     next(state, action){
@@ -284,12 +291,14 @@ export default handleActions({
       const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
       const instances = _.assign({}, state.instances, {rds});
       return _.assign({}, state, {instances, filtered});
-    }
+    },
+    throw: yeller.reportAction
   },
   [ENV_GET_BASTIONS]: {
     next(state, action){
       return _.assign({}, state, {bastions: action.payload});
-    }
+    },
+    throw: yeller.reportAction
   },
   [ENV_SET_FILTERED]: {
     next(state, action = {payload: {string: '', tokens: []}}){
