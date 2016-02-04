@@ -63,7 +63,7 @@ function socketStart(dispatch, state){
         type: APP_SOCKET_ERROR,
         payload: event
       });
-      console.info('Socket Error.');
+      throw new Error('Socket Error');
     };
     window.socket.onclose = (event) => {
       dispatch({
