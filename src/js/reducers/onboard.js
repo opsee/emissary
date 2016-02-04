@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
+import {yeller} from '../modules';
 import colors from 'seedling/colors';
 import {
   ONBOARD_SET_REGION,
@@ -21,53 +22,6 @@ const initial = {
   bastionLaunching: undefined,
   installData: undefined
 };
-
-/*eslint-disable no-unused-vars*/
-if (config.env !== 'production'){
-  const regionsWithVpcsTest = [
-    {
-      'region': 'us-west-1',
-      'supported_platforms': [
-        'VPC'
-      ],
-      'vpcs': [
-        {
-          'cidr_block': '172.31.0.0/16',
-          'dhcp_options_id': 'dopt-9dc9d5ff',
-          'instance_tenancy': 'default',
-          'is_default': true,
-          'state': 'available',
-          'vpc_id': 'vpc-79b1491c'
-        }
-      ],
-      'subnets': [
-        {
-          'availability_zone': 'us-west-1c',
-          'available_ip_address_count': 4064,
-          'cidr_block': '172.31.0.0/20',
-          'default_for_az': true,
-          'map_public_ip_on_launch': true,
-          'state': 'available',
-          'subnet_id': 'subnet-eccedfaa',
-          'vpc_id': 'vpc-79b1491c',
-          'selected': false
-        },
-        {
-          'availability_zone': 'us-west-1a',
-          'available_ip_address_count': 4071,
-          'cidr_block': '172.31.16.0/20',
-          'default_for_az': true,
-          'map_public_ip_on_launch': true,
-          'state': 'available',
-          'subnet_id': 'subnet-0378a966',
-          'vpc_id': 'vpc-79b1491c',
-          'selected': true
-        }
-      ]
-    }
-  ];
-}
-/*eslint-enable no-unused-vars*/
 
 function getFinalInstallData(state){
   const starter = {
@@ -142,12 +96,9 @@ export default handleActions({
           `];
         }).value();
       }).flatten().value();
-
       return _.assign({}, state, {regionsWithVpcs, vpcsForSelection});
     },
-    throw(state){
-      return state;
-    }
+    throw: yeller.reportAction
   },
   [ONBOARD_VPC_SELECT]: {
     next(state, action){

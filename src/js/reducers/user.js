@@ -4,6 +4,7 @@ import {handleActions} from 'redux-actions';
 import moment from 'moment';
 import config from '../modules/config';
 import {User} from '../modules/schemas';
+import {yeller} from '../modules';
 import {
   USER_LOGIN,
   USER_LOGOUT,
@@ -65,7 +66,8 @@ export default handleActions({
     next: setUser
   },
   [USER_EDIT]: {
-    next: setUser
+    next: setUser,
+    throw: yeller.reportAction
   },
   [USER_SET_PASSWORD]: {
     next: setUser
@@ -80,7 +82,8 @@ export default handleActions({
       const data = _.assign({}, action.payload, {loginDate: new Date()});
       return setUser(state, {payload: data});
     },
-    throw(){
+    throw(state, action){
+      yeller.reportAction(state, action);
       return new User();
     }
   },
@@ -88,25 +91,19 @@ export default handleActions({
     next(state, action){
       return new User(_.assign({}, state.toJS(), action.payload));
     },
-    throw(state){
-      return state;
-    }
+    throw: yeller.reportAction
   },
   [USER_GET_DATA]: {
     next(state, action){
       return new User(_.assign({}, state.toJS(), {data: action.payload}));
     },
-    throw(state, action){
-      if (config.env === 'production'){
-        console.error(action);
-      }
-      return state;
-    }
+    throw: yeller.reportAction
   },
   [USER_PUT_DATA]: {
     next(state, action){
       return new User(_.assign({}, state.toJS(), {data: action.payload}));
-    }
+    },
+    throw: yeller.reportAction
   },
   [USER_APPLY]: {
     next(state, action){
