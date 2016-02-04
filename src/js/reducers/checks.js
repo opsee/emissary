@@ -4,7 +4,7 @@ import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {Check} from '../modules/schemas';
-import {itemsFilter} from '../modules';
+import {itemsFilter, yeller} from '../modules';
 import {
   GET_CHECK,
   GET_CHECKS,
@@ -111,9 +111,7 @@ export default handleActions({
         filtered
       });
     },
-    throw(state){
-      return state;
-    }
+    throw: yeller.reportAction
   },
   [GET_CHECKS]: {
     next(state, action){
@@ -123,9 +121,7 @@ export default handleActions({
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});
     },
-    throw(state){
-      return state;
-    }
+    throw: yeller.reportAction
   },
   [CHECK_TEST]: {
     next(state, action){

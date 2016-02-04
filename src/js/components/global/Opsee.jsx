@@ -40,6 +40,7 @@ const Opsee = React.createClass({
   componentWillMount(){
     this.props.appActions.initialize();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
+    yeller.configure(this.props.redux);
   },
   componentWillReceiveProps(nextProps) {
     //user log out
