@@ -59,7 +59,7 @@ module.exports = {
     ],
     loaders: [
       { test: /\.global\.css$/, loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader', include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1!postcss-loader'},
+      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]&importLoaders=1!postcss-loader'},
       {test: /\.js$|\.jsx$/, loaders: ['react-hot'], include: [context_dir] },
       {
         test: /\.js$|\.jsx$/, 
