@@ -40,9 +40,9 @@ const AssertionCounter = React.createClass({
   },
   renderIcon(){
     return this.isPassing() ? (
-      <Checkmark btn fill="#303030"/>
+      <Checkmark btn fill="#303030" style={{top: '.5rem'}}/>
     ) : (
-      <Close btn fill="#303030"/>
+      <Close btn fill="#303030" style={{top: '.5rem'}}/>
     );
   },
   render(){

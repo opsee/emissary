@@ -23,7 +23,7 @@ const AssertionItemList = React.createClass({
       <div>
         {this.props.assertions.map((assertion, i) => {
           return (
-            <Padding tb={0.5} key={`assertion-item-${i}`}>
+            <Padding b={1} key={`assertion-item-${i}`}>
               <AssertionItem item={assertion} key={i} response={this.props.redux.checks.responses.get(this.props.redux.checks.selectedResponse)}/>
             </Padding>
             );
