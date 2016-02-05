@@ -11,13 +11,13 @@ var str = JSON.stringify;
 var env = process.env;
 
 var definePlugin = new webpack.DefinePlugin({
-  __DEV__: stringify(JSON.parse(env.BUILD_DEV || 'true')),
-  __API__: stringify(env.CONFIG_API),
-  __AUTH__: stringify(env.CONFIG_AUTH),
+  __DEV__: str(JSON.parse(env.BUILD_DEV || 'true')),
+  __API__: str(env.CONFIG_API),
+  __AUTH__: str(env.CONFIG_AUTH),
   'process.env': {
-    NODE_ENV: stringify(env.NODE_ENV)
+    NODE_ENV: str(env.NODE_ENV)
   },
-  __REVISION__: stringify(fs.readFileSync('/dev/stdin').toString())
+  __REVISION__: str(fs.readFileSync('/dev/stdin').toString())
 });
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
