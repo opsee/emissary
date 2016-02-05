@@ -1,6 +1,7 @@
-import config from '../modules/config';
-import request from '../modules/request';
 import _ from 'lodash';
+
+import config from '../modules/config';
+import {storage, request} from '../modules';
 import {
   INTEGRATIONS_SLACK_INFO,
   INTEGRATIONS_SLACK_ACCESS,
@@ -17,6 +18,7 @@ export function getSlackChannels() {
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(_.get(res.body, 'channels') || []);
+          getSlackInfo()(dispatch, state);
         }, reject);
       })
     });
@@ -52,6 +54,7 @@ export function slackAccess(query) {
         .then((res) => {
           resolve(res.body);
           getSlackInfo()(dispatch, state);
+          storage.set('shouldGetSlackChannels', true);
         }, reject);
       })
     });

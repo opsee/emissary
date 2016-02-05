@@ -105,9 +105,10 @@ const CheckCreateInfo = React.createClass({
     return this.props.check.check_spec.value.name;
   },
   isDisabled(){
-    const notifsComplete = _.chain(this.state.notifications).map((n = {}) => {
+    const notifs = _.chain(this.state.notifications).map((n = {}) => {
       return n.type && n.value;
-    }).every().value();
+    }).value();
+    const notifsComplete = _.every(notifs) && notifs.length;
     return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
@@ -124,8 +125,10 @@ const CheckCreateInfo = React.createClass({
     this.props.onChange(data, this.isDisabled(), 3);
   },
   handleSubmit(e) {
+    if (e){
+      e.preventDefault();
+    }
     this.props.analyticsActions.trackEvent('Onboard', 'check-created');
-    e.preventDefault();
     this.props.onSubmit();
   },
   renderRemoveNotificationButton(form, index){
@@ -167,14 +170,14 @@ const CheckCreateInfo = React.createClass({
   },
   renderInner() {
     return (
-      <div>
+      <form name="checkCreateInfoForm">
         <Padding b={2}>
           {this.state.info.render()}
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>
         <NotificationSelectionType1 onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
         {this.renderSubmitButton()}
-      </div>
+      </form>
     );
   },
   renderAsPage(){

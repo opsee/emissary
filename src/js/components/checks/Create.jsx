@@ -6,6 +6,7 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {StatusHandler} from '../global';
 import {Check} from '../../modules/schemas';
+import config from '../../modules/config';
 import {
   checks as actions,
   user as userActions,
@@ -51,6 +52,12 @@ const CheckCreate = React.createClass({
             operand: 200,
             relationship: 'equal'
           }
+        ],
+        notifications: [
+          {
+            type: 'email',
+            value: this.props.redux.user.get('email')
+          }
         ]
       }).toJS(),
       filter: null
@@ -90,6 +97,7 @@ const CheckCreate = React.createClass({
             </Col>
           </Row>
         </Grid>
+        {config.env === 'debug' ? JSON.stringify(this.state.check.notifications) : null}
       </div>
     );
   }

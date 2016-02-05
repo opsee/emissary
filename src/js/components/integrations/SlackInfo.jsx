@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import SlackConnect from './SlackConnect';
 import {Color} from '../type';
+import {Alert} from '../../modules/bootstrap';
 
 /*eslint-disable camelcase*/
 const redirect_uri = `${window.location.origin}/profile?slack=true`;
@@ -51,7 +52,7 @@ const SlackInfo = React.createClass({
     } else if (_.some(nullArr)){
       return null;
     } else if (status && status !== 'success'){
-      return <span>Something went wrong.</span>;
+      return <Alert bsStyle="danger">Something went wrong trying to connect.</Alert>;
     } else if (team_name){
       return (
         <span>Team <Color c="success">{team_name}</Color> is connected to <a href={`https://${team_name}.slack.com/apps/manage/A04MVPTFN-opsee`} target="_blank">Opsee</a></span>

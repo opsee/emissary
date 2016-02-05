@@ -384,3 +384,7 @@
   composes: progressWarning;
   composes: progressPressing;
 }
+
+.btnNocap{
+  text-transform: none;
+}
