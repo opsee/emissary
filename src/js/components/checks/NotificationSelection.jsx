@@ -4,15 +4,56 @@ import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
-import {Add} from '../icons';
-import {StatusHandler} from '../global';
+import {Add, ChevronRight, Cloud, Delete, Mail, Slack} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
+import {SlackConnect} from '../integrations';
+import {storage} from '../../modules';
+import style from './notificationSelection.css';
 import {
   integrations as integrationsActions
 } from '../../actions';
+
+const EmailForm = forms.Form.extend({
+  text: forms.CharField({
+    validators: [forms.validators.validateEmail],
+    label: 'Email',
+    widgetAttrs: {
+      placeholder: 'address@domain.com',
+      autoCapitalize: 'off',
+      autoCorrect: 'off'
+    }
+  }),
+  render() {
+    return (
+      <BoundField bf={this.boundField('text')}>
+        <Mail className="icon"/>
+      </BoundField>
+    );
+  }
+});
+
+const WebhookForm = forms.Form.extend({
+  text: forms.CharField({
+    validators: [forms.validators.URLValidator({
+      schemes: ['http', 'https']
+    })],
+    label: 'Webhook URL',
+    widgetAttrs: {
+      placeholder: 'https://alert.me/incoming',
+      autoCapitalize: 'off',
+      autoCorrect: 'off'
+    }
+  }),
+  render() {
+    return (
+      <BoundField bf={this.boundField('text')}>
+        <Cloud className="icon"/>
+      </BoundField>
+    );
+  }
+});
 
 const NotificationSelection = React.createClass({
   propTypes: {
@@ -20,159 +61,154 @@ const NotificationSelection = React.createClass({
     integrationsActions: PropTypes.shape({
       getSlackChannels: PropTypes.func
     }),
+    notifications: PropTypes.array,
     onChange: PropTypes.func.isRequired,
     redux: PropTypes.shape({
       user: PropTypes.object,
+      integrations: PropTypes.shape({
+        slackChannels: PropTypes.object
+      }),
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object
       })
     })
   },
+  getDefaultProps() {
+    return {
+      notifications: []
+    };
+  },
   getInitialState() {
     return {
-      ready: false
+      notifications: []
     };
   },
-  componentWillMount(){
+  componentDidMount(){
     this.props.integrationsActions.getSlackChannels();
-  },
-  componentWillReceiveProps(nextProps) {
-    const {status} = nextProps.redux.asyncActions.integrationsSlackChannels;
-    const channels = nextProps.redux.integrations.slackChannels;
-    let arr = [];
-    arr.push(status === 'success' && !channels.size);
-    arr.push(status === 'pending');
-    arr.push(!status);
-    const bool = _.every(arr, a => a === false) || channels.size;
-    if (bool && !this.state.ready){
-      this.setState(this.getState(nextProps));
+    if (this.props.notifications.length){
+      this.props.notifications.forEach(n => {
+        this.runNewNotif(n.type, n.value);
+      });
     }
+    window.addEventListener('storage', event => {
+      if (event.key === 'shouldGetSlackChannels' && event.newValue === 'true'){
+        this.props.integrationsActions.getSlackChannels();
+        storage.remove('shouldGetSlackChannels');
+      }
+    });
   },
-  getState(props) {
+  getNewSchema(type, notifIndex, value){
     const self = this;
-
-    let initialNotifs = props.notifications || [];
-    if (!initialNotifs.length){
-      initialNotifs.push({
-        type: 'email',
-        value: props.redux.user.get('email')
-      });
-    }
-
-    let channels = props.redux.integrations.slackChannels.toJS();
-    let notificationOptions = ['email'];
-
-    if (channels.length){
-      channels = channels.map(c => [c.id, c.name]);
-      notificationOptions.push('slack');
-    }
-
-    notificationOptions = notificationOptions.map(s => [s, _.capitalize(s)]);
-
-    const NotificationForm = forms.Form.extend({
-      type: forms.ChoiceField({
-        choices: notificationOptions,
-        widgetAttrs: {
-          widgetType: 'Dropdown'
-        }
-      }),
-      value: forms.CharField({
-        label: 'Recipient',
-        validators: [forms.validators.validateEmail],
-        widgetAttrs: {
-          placeholder: 'test@testing.com'
-        },
-        required: false
-      }),
-      channel: forms.ChoiceField({
-        choices: channels,
-        widgetAttrs: {
-          widgetType: 'Dropdown'
-        },
-        required: false
-      }),
-      cleanValue(){
-        if (this.cleanedData.type === 'email' && !this.cleanedData.value){
-          throw forms.ValidationError('Recipient email required');
-        }
+    const opts = {
+      onChange(){
+        self.handleInputChange(this.cleanedData, notifIndex);
+        self.forceUpdate();
       },
-      cleanChannel(){
-        if (this.cleanedData.type === 'slack' && !this.cleanedData.channel){
-          throw forms.ValidationError('Channel selection required');
-        }
-      }
-    });
-
-    const NotificationFormSet = forms.FormSet.extend({
-      form: NotificationForm,
-      canDelete: true
-    });
-
-    const obj = {
-      ready: true,
-      notifications: new NotificationFormSet({
-        onChange: self.runChange,
-        labelSuffix: '',
-        initial: initialNotifs,
-        minNum: !initialNotifs.length ? 1 : 0,
-        data: initialNotifs,
-        extra: 0
-      })
+      labelSuffix: '',
+      prefix: `notif-${notifIndex}`,
+      validation: {
+        on: 'blur change',
+        onChangeDelay: 300
+      },
+      initial: value ? {
+        text: value
+      } : {}
     };
-
-    //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(() => {
-      self.state.notifications.forms().forEach((form, i) => {
-        let notif = initialNotifs[i];
-        if (notif){
-          form.setData(notif);
-        }
-      });
-      this.setState({hasSetNotifications: true});
-    }, 30);
-
-    //do this because we want parent component to know about initial data
-    setTimeout(this.runChange, 60);
-
-    return obj;
+    return {
+      type,
+      value,
+      form: type === 'email' ? new EmailForm(opts) : new WebhookForm(opts)
+    };
   },
-  getNotificationsForms(){
-    return _.reject(this.state.notifications.forms(), f => {
-      return f.cleanedData.DELETE;
-    });
+  getNotifValueForDisplay(notif = {}){
+    if (notif.type === 'slack'){
+      const channels = this.props.redux.integrations.slackChannels.toJS();
+      return '#' + _.chain(channels).find(c => c.id === notif.value).get('name').value();
+    }
+    return notif.value;
   },
-  getFinalData(){
-    return _.chain(this.getNotificationsForms())
-    .map(form => {
-      const n = form.cleanedData;
-      let obj = _.pick(n, ['type', 'value']);
-      if (obj.type === 'slack'){
-        obj.value = n.channel;
-      }
-      return obj;
-    }).value();
+  getFinalNotifications(notifs = this.state.notifications){
+    return notifs.map(n => _.pick(n, ['type', 'value']));
   },
   isDisabled(){
     let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
     return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
+  isNotifComplete(notif){
+    return _.chain(notif).pick(['type', 'value']).values().every().value();
+  },
+  runSetNotificationsState(iteratee){
+    const notifications = this.state.notifications.map(iteratee);
+    this.setState({
+      notifications
+    });
+    return notifications;
+  },
   runChange(){
     this.forceUpdate();
-    this.props.onChange(this.getFinalData());
+    const notifications = this.state.notifications.map(n => _.pick(n, ['type', 'value']));
+    this.props.onChange(notifications);
   },
-  renderRemoveNotificationButton(form, index){
-    if (index > 0){
-      return (
-        <Padding t={2}>
-          <BoundField bf={form.boundField('DELETE')}/>
-        </Padding>
-      );
+  runSetType(index, type){
+    this.runSetNotificationsState((n, i) => {
+      return _.assign({}, n, {
+        type: index === i ? type : n.type
+      });
+    });
+  },
+  runSetValueState(index, e){
+    const {value} = e.target;
+    this.runSetNotificationsState((n, i) => {
+      return _.assign({}, n, {
+        valueState: index === i ? value : n.valueState
+      });
+    });
+  },
+  runSetValue(index, data, e){
+    if (e){
+      e.preventDefault();
     }
-    return (
-      <Padding lr={1}>
-       <div style={{width: '48px'}}/>
-     </Padding>
-    );
+    this.runSetNotificationsState((n, i) => {
+      const value = data || n.valueState;
+      return _.assign({}, n, {
+        value: index === i ? value : n.value
+      });
+    }, true);
+  },
+  runRemoveType(index){
+    this.runSetNotificationsState((n, i) => {
+      return _.assign({}, n, {
+        type: index === i ? undefined : n.type
+      });
+    });
+  },
+  runNewNotif(type, value){
+    const notifications = this.state.notifications.concat([
+      this.getNewSchema(type, this.state.notifications.length, value)
+    ]);
+    this.setState({
+      notifications
+    });
+    this.props.onChange(this.getFinalNotifications(notifications));
+  },
+  runDelete(index){
+    const notifications = _.reject(this.state.notifications, (n, i) => i === index);
+    this.setState({
+      notifications
+    });
+    this.props.onChange(this.getFinalNotifications(notifications));
+  },
+  handleInputChange(data, index){
+    const notifs = this.runSetNotificationsState((n, i) => {
+      return _.assign({}, n, {
+        value: index === i ? data.text : n.value
+      });
+    });
+    this.props.onChange(this.getFinalNotifications(notifs));
+  },
+  handleSubmit(e){
+    e.preventDefault();
+    return false;
   },
   renderValueOrChannels(form){
     if (form.cleanedData.type === 'email'){
@@ -180,38 +216,125 @@ const NotificationSelection = React.createClass({
     }
     return <BoundField bf={form.boundField('channel')}/>;
   },
-  render(){
-    if (!this.state.ready){
-      return <StatusHandler status="pending"/>;
+  renderNotifIcon(notif){
+    const {type} = notif;
+    let el = <Mail/>;
+    if (type === 'slack'){
+      el = <Slack/>;
+    } else if (type === 'webhook'){
+      el = <Cloud/>;
     }
+    return (
+      <span title={notif.type}>{el}</span>
+    );
+  },
+  renderNotif(notif, index){
+    const {type} = notif;
+    const isText = !!type.match('email|webhook');
+    if (!notif.value || isText){
+      if (isText){
+        return (
+          <div className={style.line}>
+            <Padding b={1} className={`display-flex ${style.inputArea}`}>
+              <form name={`notif-email-form-${index}`} onSubmit={this.handleSubmit} className="flex-1">
+                {notif.form.render()}
+              </form>
+              <Padding l={1} className="align-self-end">
+                <Button flat color="danger" title="Remove this Notification" onClick={this.runDelete.bind(null, index)} style={{minHeight: '46px'}}>
+                  <Delete inline fill="danger"/>
+                </Button>
+              </Padding>
+            </Padding>
+            <Button color="warning" flat className={`align-self-end ${style.testButton}`} style={{minHeight: '46px'}} disabled={!this.isNotifComplete(notif)}>
+              Test&nbsp;<ChevronRight inline fill={this.isNotifComplete(notif) ? 'warning' : 'text'}/>
+            </Button>
+          </div>
+        );
+      }
+      if (type === 'slack'){
+        const channels = this.props.redux.integrations.slackChannels.toJS();
+        if (channels.length){
+          return (
+            <div>
+              <Heading level={4}>Slack Channel</Heading>
+              <div className="display-flex">
+                <Padding l={2} className="flex-1">
+                  {channels.map(c => {
+                    return (
+                      <Button flat nocap onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem'}}>#{c.name}</Button>
+                    );
+                  })}
+                  </Padding>
+                  <Button flat color="danger" title="Back" onClick={this.runDelete.bind(this, index)} className="align-self-start">
+                    <Delete inline fill="danger"/>
+                  </Button>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <div className="display-flex">
+            <Padding r={2} className="flex-1">
+              <SlackConnect target="_blank"/> to choose your channel.
+            </Padding>
+            <Button flat color="danger" title="Back" onClick={this.runDelete.bind(this, index)} className="align-self-start">
+              <Delete inline fill="danger"/>
+            </Button>
+          </div>
+        );
+      }
+    }
+    return (
+      <div className="display-flex flex-vertical-align">
+        <Button flat color="danger" title="Remove this Notification" onClick={this.runDelete.bind(null, index)}>
+          <Delete inline fill="danger"/>
+        </Button>
+        <Padding l={2} className="flex-1">
+          <div className="display-flex">
+            {this.renderNotifIcon(notif)}&nbsp;{this.getNotifValueForDisplay(notif)}
+          </div>
+        </Padding>
+        <Button color="warning" flat>Test <ChevronRight inline fill="warning"/></Button>
+      </div>
+    );
+  },
+  renderNotifPickType(){
+    return (
+      <div>
+        {['email', 'slack', 'webhook'].map(type => {
+          return (
+            <Button flat color="primary" onClick={this.runNewNotif.bind(null, type)} className="flex-1" style={{margin: '0 1rem 1rem 0'}}>
+              <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}
+            </Button>
+          );
+        })}
+      </div>
+    );
+  },
+  renderNotifList(){
+    if (this.state.notifications.length){
+      return this.state.notifications.map((notif, index) => {
+        return (
+          <div key={`notif-${index}`}>
+            {this.renderNotif(notif, index)}
+            <hr/>
+          </div>
+        );
+      });
+    }
+    return (
+      <div>
+        <p>Choose from the options below to set up a new notification for this check. You must have at least 1 notification.</p>
+        <hr/>
+      </div>
+    );
+  },
+  render(){
     return (
       <Padding b={2}>
         <Heading level={3}>Notifications</Heading>
-        {this.getNotificationsForms().map((form, index) => {
-          return (
-            <Padding b={2} key={`notif-form-${index}`}>
-              <Row>
-                <Col xs={10} sm={11}>
-                  <Row>
-                    <Col xs={12} sm={6}>
-                      <BoundField bf={form.boundField('type')}/>
-                    </Col>
-                    <Col xs={12} sm={6}>
-                      {this.renderValueOrChannels(form)}
-                    </Col>
-                  </Row>
-                </Col>
-                <Col xs={2} sm={1}>
-                  <Padding t={1}>
-                    {this.renderRemoveNotificationButton(form, index)}
-                  </Padding>
-                </Col>
-              </Row>
-            </Padding>
-          );
-        })
-        }
-        <Button color="primary" flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill="primary" inline/> Add Another Notification</Button>
+        {this.renderNotifList()}
+        {this.renderNotifPickType()}
       </Padding>
     );
   }

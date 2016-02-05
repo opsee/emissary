@@ -18,7 +18,9 @@ export function getSlackChannels() {
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(_.get(res.body, 'channels') || []);
+          /*eslint-disable no-use-before-define*/
           getSlackInfo()(dispatch, state);
+          /*eslint-enable no-use-before-define*/
         }, reject);
       })
     });

@@ -64,7 +64,7 @@ import {auth} from '../global/Authenticator';
 
 const routes = (
   <Route component={Opsee}>
-    <Route path="styleguide" component={Styleguide}/>
+    <Route path="styleguide" component={auth(Styleguide, true)}/>
 
     <Route path="/env" component={auth(Env)}/>
     <Route path="/env-groups-security" component={auth(EnvGroupsSecurity)}/>

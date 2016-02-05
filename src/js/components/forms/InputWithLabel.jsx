@@ -24,7 +24,7 @@ const InputWithLabel = React.createClass({
     }
     const style = {
       paddingRight: this.props.children ? '5rem' : 0
-    }
+    };
     return (
       <div className={cx(arr)}>
         <div className={`input-container flex-order-2 `}>{this.props.bf.render({attrs: {style}})}</div>

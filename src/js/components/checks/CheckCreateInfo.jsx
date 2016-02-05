@@ -12,7 +12,6 @@ import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import NotificationSelection from './NotificationSelection';
-import NotificationSelectionType1 from './NotificationSelectionType1';
 import {
   checks as actions,
   user as userActions,
@@ -170,14 +169,16 @@ const CheckCreateInfo = React.createClass({
   },
   renderInner() {
     return (
-      <form name="checkCreateInfoForm">
+      <div>
         <Padding b={2}>
-          {this.state.info.render()}
+          <form name="checkCreateInfoForm">
+            {this.state.info.render()}
+            </form>
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>
-        <NotificationSelectionType1 onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
+        <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
         {this.renderSubmitButton()}
-      </form>
+      </div>
     );
   },
   renderAsPage(){
