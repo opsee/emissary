@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var AssetsPlugin = require('assets-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var fs = require('fs');
 
@@ -8,12 +7,17 @@ var path = require('path');
 var node_modules_dir = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
+var str = JSON.stringify;
+var env = process.env;
+
 var definePlugin = new webpack.DefinePlugin({
-  __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-  __API__: JSON.stringify(process.env.CONFIG_API),
-  __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
-  'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)},
-  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString())
+  __DEV__: stringify(JSON.parse(env.BUILD_DEV || 'true')),
+  __API__: stringify(env.CONFIG_API),
+  __AUTH__: stringify(env.CONFIG_AUTH),
+  'process.env': {
+    NODE_ENV: stringify(env.NODE_ENV)
+  },
+  __REVISION__: stringify(fs.readFileSync('/dev/stdin').toString())
 });
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
@@ -57,11 +61,22 @@ module.exports = {
   },
   module: {
     preLoaders:[
-      { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
+      {
+        test: /\.js$|\.jsx$/,
+        loaders: ['eslint-loader'],
+        include: [context_dir]
+      }
     ],
     loaders: [
-      { test: /\.global\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?&importLoaders=1!postcss-loader'), include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?&modules&importLoaders=1!postcss-loader')},
+      {
+        test: /\.global\.css$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?&importLoaders=1!postcss-loader'),
+        include: [context_dir]
+      },
+      {
+        test: /^(?!.*global\.css$).*\.css$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?&modules&importLoaders=1!postcss-loader')
+      },
       {
         test: /\.js$|\.jsx$/, 
         loader: 'babel-loader',
@@ -71,8 +86,16 @@ module.exports = {
         },
         include: [context_dir]
       },
-      { test: /\.json$/, loaders: ['json'], include: [context_dir]},
-      {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
+      {
+        test: /\.json$/,
+        loaders: ['json'],
+        include: [context_dir]
+      },
+      {
+        test: /\.(png|jpg|svg)$/,
+        loader: 'url-loader?limit=8192',
+        include: [context_dir]
+      }
     ]
   },
   noParse:vendors.map(v => path.join(__dirname, 'node_modules/'+v)),
@@ -87,7 +110,6 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     definePlugin,
     uglify,
-    // new AssetsPlugin(),
     new HtmlWebpackPlugin({
       hash:true,
       template:'src/index.html'

@@ -13,14 +13,20 @@ try{
   config = JSON.stringify(fs.readFileSync(path.join(__dirname, '/config.json')).toString());
 }catch(err){}
 
+var str = JSON.stringify;
+var env = process.env;
+
 var definePlugin = new webpack.DefinePlugin({
-  __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-  __API__: JSON.stringify(process.env.CONFIG_API),
-  __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
-  'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)},
-  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString()),
+  __DEV__: str(JSON.parse(env.BUILD_DEV || 'true')),
+  __API__: str(env.CONFIG_API),
+  __AUTH__: str(env.CONFIG_AUTH),
+  'process.env': {
+    NODE_ENV: str(env.NODE_ENV)
+  },
+  __REVISION__: str(fs.readFileSync('/dev/stdin').toString()),
   __CONFIG__: config
 });
+
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
 var vendors = ['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'react-document-title', 'react-timeago'];
@@ -55,14 +61,29 @@ module.exports = {
   },
   module: {
     preLoaders:[
-      { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
-    ],
-    loaders: [
-      { test: /\.global\.css$/, loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader', include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1!postcss-loader'},
-      {test: /\.js$|\.jsx$/, loaders: ['react-hot'], include: [context_dir] },
       {
         test: /\.js$|\.jsx$/, 
+        loaders: ['eslint-loader'], 
+        include: [context_dir]
+      },
+    ],
+    loaders: [
+      {
+        test: /\.global\.css$/,
+        loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader',
+        include: [context_dir]
+      },
+      {
+        test: /^(?!.*global\.css$).*\.css$/,
+        loader: 'style-loader!css-loader?modules&importLoaders=1!postcss-loader'
+      },
+      {
+        test: /\.js$|\.jsx$/,
+        loaders: ['react-hot'],
+        include: [context_dir]
+      },
+      {
+        test: /\.js$|\.jsx$/,
         loader: 'babel-loader',
         query: {
           plugins: ['transform-runtime'],
@@ -70,8 +91,16 @@ module.exports = {
         },
         include: [context_dir]
       },
-      { test: /\.json$/, loaders: ['json'], include: [context_dir]},
-      {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
+      {
+        test: /\.json$/,
+        loaders: ['json'],
+        include: [context_dir]
+      },
+      {
+        test: /\.(png|jpg|svg)$/,
+        loader: 'url-loader?limit=8192',
+        include: [context_dir]
+      }
     ]
   },
   noParse:vendors.map(v => path.join(__dirname, 'node_modules/'+v)),
