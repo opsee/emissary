@@ -51,17 +51,15 @@ const CheckScreenshot = React.createClass({
     if (!this.isJSONLoaded()) {
       return null;
     }
-
     return (
       <div className="js-screenshot-results">
         <CheckResponsePaginate responses={this.getFailingResponses().take(1)}
-          allowCollapse={false} />
+          allowCollapse={false} showRerunButton={false} />
       </div>
     );
   },
   render() {
     const check = this.getNotification();
-
     return (
       <div>
         <Toolbar title={check.get('check_name') || check.get('check_id')} />
