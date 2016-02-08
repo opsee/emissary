@@ -33,7 +33,7 @@ const CheckResponsePaginate = React.createClass({
       })
     }),
     showBoolArea: PropTypes.bool,
-
+    showRerunButton: PropTypes.bool,
     /**
      * If true, the response body will be collapsed by default and can be
      * expanded with a button click. If false, the entire response body will
@@ -44,6 +44,7 @@ const CheckResponsePaginate = React.createClass({
   getDefaultProps() {
     return {
       showBoolArea: true,
+      showRerunButton: true,
       allowCollapse: true
     };
   },
@@ -285,11 +286,17 @@ const CheckResponsePaginate = React.createClass({
     }
     return null;
   },
+  renderRerunButton() {
+    if (!this.props.showRerunButton) {
+      return null;
+    }
+    return <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={this.getStatus() === 'pending'}><Refresh fill="primary"/></Button>;
+  },
   renderTitle(){
     return (
       <Padding t={1} className="display-flex">
         <Heading level={3} className="flex-1">Response{this.getResponses().size > 1 ? 's' : ''}</Heading>
-        <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={this.getStatus() === 'pending'}><Refresh fill="primary"/></Button>
+        {this.renderRerunButton()}
       </Padding>
     );
   },

@@ -1,4 +1,20 @@
-/* Override for components/global/style.global.css */
+@import '../global/vars.css';
+
+/*
+ * Override for components/global/style.global.css so that the screenshots
+ * aren't overly tall
+ */
 :global #main {
   padding-bottom: 0;
+}
+
+/*
+ * Overrides for the header -- since Screenshot doesn't have a Toolbar,
+ * they are shown underneath the screenshot content unless hidden.
+ */
+:global #header { display: none; }
+:global #header-search { display: none; }
+
+.screenshot {
+  margin: 1rem 0;
 }

@@ -7,6 +7,7 @@ import {Check} from '../modules/schemas';
 import {itemsFilter, yeller} from '../modules';
 import {
   GET_CHECK,
+  GET_CHECK_NOTIFICATION,
   GET_CHECKS,
   CHECK_TEST,
   CHECK_TEST_RESET,
@@ -111,6 +112,19 @@ export default handleActions({
         filtered
       });
     },
+    throw: yeller.reportAction
+  },
+  [GET_CHECK_NOTIFICATION]: {
+    next(state, action) {
+      const notification = fromJS(action.payload.data);
+
+      let responses = notification.get('responses');
+      responses = responses && responses.toJS ? responses : new List();
+      const responsesFormatted = statics.getFormattedResponses(responses);
+
+      return _.assign({}, state, { notification, responses, responsesFormatted });
+    },
+
     throw: yeller.reportAction
   },
   [GET_CHECKS]: {
