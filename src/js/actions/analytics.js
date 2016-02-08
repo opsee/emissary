@@ -145,7 +145,8 @@ export function initialize() {
           email: user.email,
           custom: {
             customer_id: user.customer_id,
-            id: user.id
+            id: user.id,
+            admin: !!user.admin
           }
         });
       }

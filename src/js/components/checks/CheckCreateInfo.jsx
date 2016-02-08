@@ -12,6 +12,7 @@ import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import NotificationSelection from './NotificationSelection';
+import {config} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -65,7 +66,7 @@ const CheckCreateInfo = React.createClass({
         onChange: self.runChange,
         labelSuffix: '',
         data: {
-          name: self.props.check.name || `Http ${self.props.check.target.name || self.props.check.target.id}`
+          name: self.props.check.name || `Http ${self.props.check.target.name || self.props.check.target.id || ''}`
         }
       }),
       notifications: []
@@ -74,14 +75,9 @@ const CheckCreateInfo = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      //intentionally fail
-      let intentionalcirclefailure;
-      // this.props.history.pushState(null, '/check-create/target');
-    }
-  },
-  componentDidMount(){
-    if (this.props.renderAsInclude){
-      this.runChange();
+      if (config.env !== 'debug'){
+        this.props.history.pushState(null, '/check-create/target');
+      }
     }
   },
   getFinalData(){
@@ -103,11 +99,11 @@ const CheckCreateInfo = React.createClass({
   isDataComplete(){
     return this.props.check.check_spec.value.name;
   },
-  isDisabled(){
-    const notifs = _.chain(this.state.notifications).map((n = {}) => {
+  isDisabled(notifications = this.state.notifications){
+    const notifs = _.chain(notifications).map((n = {}) => {
       return n.type && n.value;
     }).value();
-    const notifsComplete = _.every(notifs) && notifs.length;
+    const notifsComplete = !!(_.every(notifs) && notifs.length);
     return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
@@ -121,7 +117,7 @@ const CheckCreateInfo = React.createClass({
       notifications
     });
     const data = _.assign({}, this.getFinalData(), {notifications});
-    this.props.onChange(data, this.isDisabled(), 3);
+    this.props.onChange(data, this.isDisabled(notifications), 3);
   },
   handleSubmit(e) {
     if (e){

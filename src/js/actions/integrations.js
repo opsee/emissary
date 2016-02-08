@@ -5,7 +5,9 @@ import {storage, request} from '../modules';
 import {
   INTEGRATIONS_SLACK_INFO,
   INTEGRATIONS_SLACK_ACCESS,
-  INTEGRATIONS_SLACK_CHANNELS
+  INTEGRATIONS_SLACK_CHANNELS,
+  INTEGRATIONS_SLACK_TEST,
+  INTEGRATIONS_EMAIL_TEST
 } from './constants';
 
 export function getSlackChannels() {
@@ -19,7 +21,7 @@ export function getSlackChannels() {
         .then((res) => {
           resolve(_.get(res.body, 'channels') || []);
           /*eslint-disable no-use-before-define*/
-          getSlackInfo()(dispatch, state);
+          // getSlackInfo()(dispatch, state);
           /*eslint-enable no-use-before-define*/
         }, reject);
       })
@@ -37,7 +39,7 @@ export function getSlackInfo() {
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(res.body);
-          getSlackChannels()(dispatch, state);
+          // getSlackChannels()(dispatch, state);
         }, reject);
       })
     });
@@ -57,6 +59,50 @@ export function slackAccess(query) {
           resolve(res.body);
           getSlackInfo()(dispatch, state);
           storage.set('shouldGetSlackChannels', true);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function testNotification(notif = {}) {
+  let type = INTEGRATIONS_EMAIL_TEST;
+  switch (notif.type){
+  case 'slack':
+    type = INTEGRATIONS_SLACK_TEST;
+    break;
+  default:
+    break;
+  }
+  return (dispatch, state) => {
+    dispatch({
+      type,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.api}/services/${notif.type}/test`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          notifications: [notif]
+        })
+        .then(() => {
+          resolve(notif);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function emailTest(notif = {type: undefined, value: undefined}) {
+  return (dispatch, state) => {
+    dispatch({
+      type: INTEGRATIONS_EMAIL_TEST,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.api}/services/email/test`)
+        .set('Authorization', state().user.get('auth'))
+        .send(notif)
+        .then((res) => {
+          resolve(res.body);
         }, reject);
       })
     });

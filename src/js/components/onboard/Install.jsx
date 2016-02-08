@@ -8,6 +8,7 @@ import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
+import {flag} from '../../modules';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
@@ -144,7 +145,7 @@ const Install = React.createClass({
     return <p>Checking installation status...</p>;
   },
   renderSlack(){
-    if (!this.props.redux.user.get('slack')){
+    if (flag('integrations-slack')){
       return (
         <Padding>
           While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications in your favorite channel.
