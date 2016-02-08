@@ -5,7 +5,6 @@ import {Map} from 'immutable';
 
 import {checks as actions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
 import Padding from '../layout/Padding';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import style from './screenshot.css';
@@ -59,7 +58,6 @@ const CheckScreenshot = React.createClass({
     );
   },
   render() {
-    const check = this.getNotification();
     return (
       <div className={style.screenshot}>
         <Grid>
