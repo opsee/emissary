@@ -93,7 +93,9 @@ const Opsee = React.createClass({
       <div>
         <DocumentTitle title="Opsee"/>
         <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
-        <SearchBar/>
+        <div id="header-search">
+          <SearchBar />
+        </div>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

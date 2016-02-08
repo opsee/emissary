@@ -62,7 +62,6 @@ const CheckScreenshot = React.createClass({
     const check = this.getNotification();
     return (
       <div>
-        <Toolbar title={check.get('check_name') || check.get('check_id')} />
         <Grid>
           <Row>
             <Col xs={12}>
