@@ -12,5 +12,9 @@
  * Overrides for the header -- since Screenshot doesn't have a Toolbar,
  * they are shown underneath the screenshot content unless hidden.
  */
-:global #header { visibility: hidden; }
-:global #header-search { visibility: hidden; }
+:global #header { display: none; }
+:global #header-search { display: none; }
+
+.screenshot {
+  margin: 1rem 0;
+}

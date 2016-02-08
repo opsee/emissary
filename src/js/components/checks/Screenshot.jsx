@@ -6,11 +6,9 @@ import {Map} from 'immutable';
 import {checks as actions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Toolbar} from '../global';
+import Padding from '../layout/Padding';
 import CheckResponsePaginate from './CheckResponsePaginate';
-
-/*eslint-disable no-unused-vars*/
 import style from './screenshot.css';
-/*eslint-enable no-unused-vars*/
 
 const CheckScreenshot = React.createClass({
 
@@ -53,15 +51,17 @@ const CheckScreenshot = React.createClass({
     }
     return (
       <div className="js-screenshot-results">
-        <CheckResponsePaginate responses={this.getFailingResponses().take(1)}
-          allowCollapse={false} showRerunButton={false} />
+        <Padding tb={1}>
+          <CheckResponsePaginate responses={this.getFailingResponses().take(1)}
+            allowCollapse={false} showRerunButton={false} />
+        </Padding>
       </div>
     );
   },
   render() {
     const check = this.getNotification();
     return (
-      <div>
+      <div className={style.screenshot}>
         <Grid>
           <Row>
             <Col xs={12}>
