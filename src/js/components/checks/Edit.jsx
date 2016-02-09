@@ -78,7 +78,7 @@ const CheckEdit = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Check();
     const check = data.toJS();
-    if (!this.state.check && check.assertions.length){
+    if (!this.state.check && check.assertions.length && check.notifications.length){
       this.setState({
         check
       });
@@ -136,7 +136,7 @@ const CheckEdit = React.createClass({
      : <div/>;
   },
   renderInner(){
-    if (this.getCheck().id){
+    if (this.getCheck().id && this.getCheck().assertions.length){
       return (
         <div>
           {this.renderEnv()}

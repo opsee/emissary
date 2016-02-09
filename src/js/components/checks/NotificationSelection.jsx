@@ -124,7 +124,7 @@ const NotificationSelection = React.createClass({
     };
   },
   getNotifValueForDisplay(notif = {}){
-    if (notif.type === 'slack'){
+    if (notif.type === 'slack_bot'){
       const channels = this.props.redux.integrations.slackChannels.toJS();
       return _.chain(channels).find(c => c.id === notif.value).get('name').value();
     }
@@ -213,7 +213,7 @@ const NotificationSelection = React.createClass({
   renderNotifIcon(notif, props = {}){
     const {type} = notif;
     let el = <Mail {...props}/>;
-    if (type === 'slack'){
+    if (type === 'slack_bot' || type === 'slack'){
       el = <Slack {...props}/>;
     } else if (type === 'webhook'){
       el = <Cloud {...props}/>;
@@ -319,7 +319,7 @@ const NotificationSelection = React.createClass({
       if (isText){
         return this.renderTextNotif(notif, index);
       }
-      if (type === 'slack'){
+      if (type === 'slack_bot'){
         if (this.props.redux.integrations.slackChannels.toJS().length){
           return this.renderChannelSelect(notif, index);
         }
@@ -332,9 +332,10 @@ const NotificationSelection = React.createClass({
     return (
       <div>
         {['email', 'slack', 'webhook'].map(type => {
+          const typeCorrected = type === 'slack' ? 'slack_bot' : type;
           if (flag(`notification-type-${type}`)){
             return (
-              <Button flat color="primary" onClick={this.runNewNotif.bind(null, type)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
+              <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
                 <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}
               </Button>
             );

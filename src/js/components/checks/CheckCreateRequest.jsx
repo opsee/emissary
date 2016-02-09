@@ -221,10 +221,14 @@ const CheckCreateRequest = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.history.pushState(null, '/check-create/assertions');
+    if (!this.props.renderAsInclude){
+      this.props.history.pushState(null, '/check-create/assertions');
+    }
   },
   handleTargetClick(){
-    this.props.history.pushState(null, '/check-create/target');
+    if (!this.props.renderAsInclude){
+      this.props.history.pushState(null, '/check-create/target');
+    }
   },
   renderHeaderForm(){
     return (

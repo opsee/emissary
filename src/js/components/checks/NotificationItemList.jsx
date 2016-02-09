@@ -30,7 +30,7 @@ const NotificationItemList = React.createClass({
           <Mail inline/> {n.value}
         </Padding>
       );
-    } else if (n.type === 'slack'){
+    } else if (n.type === 'slack_bot'){
       const channel = this.getSlackChannelFromId(n.value);
       return (
         <Padding key={`notif-${i}`} b={1}>

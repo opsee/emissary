@@ -68,7 +68,7 @@ export function slackAccess(query) {
 export function testNotification(notif = {}) {
   let type = INTEGRATIONS_EMAIL_TEST;
   switch (notif.type){
-  case 'slack':
+  case 'slack_bot':
     type = INTEGRATIONS_SLACK_TEST;
     break;
   default:
