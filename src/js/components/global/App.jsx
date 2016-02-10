@@ -6,7 +6,7 @@ import {pushState, ReduxRouter} from 'redux-router';
 import config from '../../modules/config';
 import routes from './Routes.jsx';
 
-if (config.env !== 'production'){
+if (process.env.NODE_ENV !== 'production'){
   window._ = _;
   if (config.remoteDebugPort){
     /*eslint-disable*/
