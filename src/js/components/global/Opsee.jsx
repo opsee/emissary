@@ -18,7 +18,7 @@ import {app as appActions, user as userActions, env as envActions} from '../../a
 import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
-const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot', '^\/check\/\\w+\/screenshot'];
+const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],
@@ -93,7 +93,9 @@ const Opsee = React.createClass({
       <div>
         <DocumentTitle title="Opsee"/>
         <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
-        <SearchBar/>
+        <div id="header-search">
+          <SearchBar />
+        </div>
         <Analytics/>
         <div className={this.getMeatClass()}>
         {

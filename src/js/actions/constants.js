@@ -52,6 +52,7 @@ export const ENV_SET_FILTERED = 'ENV_SET_FILTERED';
 export const FILTER_ENV = 'FILTER_ENV';
 
 export const GET_CHECK = 'GET_CHECK';
+export const GET_CHECK_NOTIFICATION = 'GET_CHECK_NOTIFICATION';
 export const GET_CHECKS = 'GET_CHECKS';
 export const CHECK_CREATE = 'CHECK_CREATE';
 export const CHECK_EDIT = 'CHECK_EDIT';

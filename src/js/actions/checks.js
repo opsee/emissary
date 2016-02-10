@@ -5,6 +5,7 @@ import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import {
   GET_CHECK,
+  GET_CHECK_NOTIFICATION,
   GET_CHECKS,
   CHECK_DELETE,
   CHECK_CREATE,
@@ -21,7 +22,7 @@ import {
 export function getCheckFromURI(jsonURI) {
   return dispatch => {
     dispatch({
-      type: GET_CHECK,
+      type: GET_CHECK_NOTIFICATION,
       payload: request.get(jsonURI)
         .then(res => {
           return { data: res.body };
