@@ -183,7 +183,7 @@ export function install(retry){
 
 let exampleMessages;
 let exampleInstallFn;
-if (config.env !== 'production'){
+if (process.env.NODE_ENV !== 'production'){
   const msgs = require('../../files/bastion-install-messages-example.json');
   exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
   exampleInstallFn = () => {
