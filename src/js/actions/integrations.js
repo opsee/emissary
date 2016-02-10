@@ -74,12 +74,13 @@ export function testNotification(notif = {}) {
   default:
     break;
   }
+  const path = notif.type === 'slack_bot' ? 'slack' : notif.type;
   return (dispatch, state) => {
     dispatch({
       type,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/services/${notif.type}/test`)
+        .post(`${config.api}/services/${path}/test`)
         .set('Authorization', state().user.get('auth'))
         .send({
           notifications: [notif]

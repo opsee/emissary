@@ -120,7 +120,8 @@ const NotificationSelection = React.createClass({
     return {
       type,
       value,
-      form: type === 'email' ? new EmailForm(opts) : new WebhookForm(opts)
+      form: type === 'email' ? new EmailForm(opts) : new WebhookForm(opts),
+      sending: false
     };
   },
   getNotifValueForDisplay(notif = {}){
@@ -191,6 +192,12 @@ const NotificationSelection = React.createClass({
   },
   runTestNotif(notif){
     this.props.actions.testNotification(_.pick(notif, ['type', 'value']));
+    const notifications = this.state.notifications.map(n => {
+      return _.assign({}, n, {
+        sending: n.type === notif.type && n.value === notif.value
+      });
+    });
+    this.runChange(notifications);
   },
   handleInputChange(data, index){
     const notifs = this.runSetNotificationsState((n, i) => {
@@ -243,7 +250,7 @@ const NotificationSelection = React.createClass({
     }
     return (
       <div className={`align-self-end`}>
-        <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={style.testButton} {...props} disabled={!this.isNotifComplete(notif) || !!(string.match('sent|error'))} style={{minHeight: '46px'}}>
+        <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={style.testButton} {...props} disabled={!this.isNotifComplete(notif) || !!(string.match('sent|error')) || notif.sending} style={{minHeight: '46px'}}>
           {string}&nbsp;<ChevronRight inline fill={this.isNotifComplete(notif) ? 'warning' : 'text'}/>
         </Button>
       </div>
