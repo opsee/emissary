@@ -248,10 +248,11 @@ const NotificationSelection = React.createClass({
     } else if (string === 'error'){
       color = 'danger';
     }
+    const disabled = !this.isNotifComplete(notif) || !!(string.match('sent|error')) || notif.sending;
     return (
       <div className={`align-self-end`}>
-        <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={style.testButton} {...props} disabled={!this.isNotifComplete(notif) || !!(string.match('sent|error')) || notif.sending} style={{minHeight: '46px'}}>
-          {string}&nbsp;<ChevronRight inline fill={this.isNotifComplete(notif) ? 'warning' : 'text'}/>
+        <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={style.testButton} {...props} disabled={disabled} style={{minHeight: '46px'}}>
+          {string}&nbsp;<ChevronRight inline fill={disabled ? 'text' : 'warning'}/>
         </Button>
       </div>
     );

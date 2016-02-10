@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
-import {parse} from 'query-string';
+import {parse} from 'querystring';
 import tokenizer from 'search-text-tokenizer';
 
 import {

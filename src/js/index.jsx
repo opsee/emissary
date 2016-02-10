@@ -3,9 +3,8 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import App from './components/global/App';
 import store from './modules/store';
-import config from './modules/config';
 
-if (config.env === 'debug'){
+if (process.env.NODE_ENV === 'debug'){
   const tools = require('redux-devtools/lib/react');
   const {DevTools, DebugPanel, LogMonitor} = tools;
   render(
