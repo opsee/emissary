@@ -13,11 +13,22 @@ const NotificationItemList = React.createClass({
     notifications: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.string.isRequired
     })).isRequired,
+    integrationsActions: PropTypes.shape({
+      getSlackChannels: PropTypes.func
+    }),
     redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        integrationsSlackChannels: PropTypes.object
+      }),
       integrations: PropTypes.shape({
         slackChannels: PropTypes.object
       })
     })
+  },
+  componentWillMount(){
+    if (!this.props.redux.asyncActions.integrationsSlackChannels.history.length){
+      this.props.integrationsActions.getSlackChannels();
+    }
   },
   getSlackChannelFromId(id){
     const channels = this.props.redux.integrations.slackChannels.toJS();
@@ -34,7 +45,7 @@ const NotificationItemList = React.createClass({
       const channel = this.getSlackChannelFromId(n.value);
       return (
         <Padding key={`notif-${i}`} b={1}>
-          <Slack inline/> #{channel.name}
+          <Slack inline/> {channel.name}
         </Padding>
       );
     }

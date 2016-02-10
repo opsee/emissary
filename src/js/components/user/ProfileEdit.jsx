@@ -43,7 +43,6 @@ const ProfileEdit = React.createClass({
     })
   },
   getInitialState() {
-    // return this.getForm();
     return {
       user: this.props.redux.user.toJS(),
       passwordForm: this.getForm()
@@ -99,8 +98,8 @@ const ProfileEdit = React.createClass({
               {this.state.passwordForm.render()}
               <StatusHandler status={this.getStatus()}/>
               <Padding t={2}>
-                <Button color="success" type="submit" disabled={this.isDisabled()}>
-                  {this.getStatus() === 'pending' ? 'Updating...' : 'Update Profile'}
+                <Button color="success" type="submit" block disabled={this.isDisabled()}>
+                  {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
                 </Button>
               </Padding>
             </form>

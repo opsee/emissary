@@ -153,7 +153,7 @@ function saveNotifications(state, data, checkId, isEditing){
   [isEditing ? 'put' : 'post'](`${config.api}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', state().user.get('auth'))
   .send({
-    'check_id': checkId,
+    'check-id': checkId,
     notifications: data.notifications
   });
 }
