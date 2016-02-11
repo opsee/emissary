@@ -12,7 +12,8 @@ import {
   APP_OPEN_CONTEXT_MENU,
   APP_CLOSE_CONTEXT_MENU,
   APP_MODAL_MESSAGE_OPEN,
-  APP_MODAL_MESSAGE_CLOSE
+  APP_MODAL_MESSAGE_CLOSE,
+  APP_SET_DROPDOWN_ID
 } from './constants';
 
 function socketStart(dispatch, state){
@@ -113,3 +114,4 @@ export const openContextMenu = createAction(APP_OPEN_CONTEXT_MENU);
 export const closeContextMenu = createAction(APP_CLOSE_CONTEXT_MENU);
 export const modalMessageOpen = createAction(APP_MODAL_MESSAGE_OPEN);
 export const modalMessageClose = createAction(APP_MODAL_MESSAGE_CLOSE);
+export const setDropdownId = createAction(APP_SET_DROPDOWN_ID);
