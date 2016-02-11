@@ -69,7 +69,7 @@ const NotificationSelection = React.createClass({
       integrations: PropTypes.shape({
         slackChannels: PropTypes.object,
         tests: PropTypes.array
-      }),
+      }).isRequired,
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object
       })
