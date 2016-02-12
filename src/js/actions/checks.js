@@ -122,7 +122,9 @@ function formatCheckData(data){
       operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
     });
   });
-  return _.assign({}, _.pick(obj, ['target', 'interval', 'check_spec', 'name']), {assertions});
+  return _.assign({}, _.pick(obj, ['target', 'interval', 'check_spec', 'name']), {
+    assertions
+  });
 }
 
 export function test(data){
@@ -130,12 +132,15 @@ export function test(data){
     dispatch({
       type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
-        let newData = formatCheckData(data);
-        newData = _.assign(newData, {name: state().user.get('email')});
+        const check = _.chain(data)
+        .thru(formatCheckData)
+        .assign({name: state().user.get('email')})
+        .pick(check, ['check_spec', 'interval', 'name', 'target'])
+        .value();
         return request
         .post(`${config.api}/bastions/test-check`)
         .set('Authorization', state().user.get('auth'))
-        .send({check: newData, max_hosts: 3, deadline: '30s'})
+        .send({check, max_hosts: 3, deadline: '30s'})
         .then(res => {
           const responses = _.get(res, 'body.responses');
           responses ? resolve(responses) : reject(res.body);
@@ -150,12 +155,14 @@ export const testCheckReset = createAction(CHECK_TEST_RESET);
 export const selectResponse = createAction(CHECK_TEST_SELECT_RESPONSE);
 
 function saveNotifications(state, data, checkId, isEditing){
+  //ensure no duplicate notifications
+  const notifications = _.uniqBy(data.notifications, n => n.type + n.value);
   return request
   [isEditing ? 'put' : 'post'](`${config.api}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', state().user.get('auth'))
   .send({
     'check-id': checkId,
-    notifications: data.notifications
+    notifications
   });
 }
 

@@ -114,9 +114,9 @@ export const Check = Record({
     value: Map({
       name: undefined,
       path: config.checkDefaultPath,
-      protocol: config.checkDefaultProtocol,
+      protocol: config.checkDefaultProtocol || 'http',
       port: config.checkDefaultPort,
-      verb: config.checkDefaultVerb,
+      verb: config.checkDefaultVerb || 'GET',
       body: undefined,
       headers: new List()
     })
