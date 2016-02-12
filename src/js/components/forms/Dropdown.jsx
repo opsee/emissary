@@ -1,13 +1,29 @@
 import React, {PropTypes} from 'react';
-import Label from './Label.jsx';
 import _ from 'lodash';
+import uuid from 'uuid-v4';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import Label from './Label.jsx';
 import Button from './Button';
 import {ChevronDown, ChevronUp} from '../icons';
 import style from './dropdown.css';
+import {
+  app as actions
+} from '../../actions';
 
 const Dropdown = React.createClass({
   propTypes: {
-    bf: PropTypes.object.isRequired
+    actions: PropTypes.shape({
+      setDropdownId: PropTypes.func
+    }),
+    bf: PropTypes.object.isRequired,
+    id: PropTypes.string,
+    redux: PropTypes.shape({
+      app: PropTypes.shape({
+        dropdownId: PropTypes.any
+      })
+    })
   },
   getInitialState(){
     return this.getState();
@@ -19,6 +35,12 @@ const Dropdown = React.createClass({
       obj[this.state.bf.name] = val;
       this.state.bf.form.updateData(obj);
     }
+    /*eslint-disable react/no-did-mount-set-state*/
+    /*not sure how else to set this id so that it will be unique across multiple dropdown components*/
+    this.setState({
+      id: uuid()
+    });
+    /*eslint-enable react/no-did-mount-set-state*/
   },
   componentWillReceiveProps(){
     this.setState(this.getState());
@@ -43,6 +65,9 @@ const Dropdown = React.createClass({
     }
     return choice;
   },
+  isOpen(){
+    return this.props.redux.app.dropdownId === this.state.id;
+  },
   onSelect(choice){
     const obj = {};
     obj[this.state.bf.name] = choice[0];
@@ -50,12 +75,13 @@ const Dropdown = React.createClass({
     this.setState({
       label: choice[1]
     });
+    this.props.actions.setDropdownId(undefined);
   },
   handleClick(){
-    this.setState({open: !this.state.open});
+    this.props.actions.setDropdownId(this.isOpen() ? undefined : this.state.id);
   },
   renderChevron(){
-    if (this.state.open){
+    if (this.isOpen()){
       return (
         <ChevronUp style={{position: 'absolute', right: '10px', top: '10px'}}/>
       );
@@ -65,7 +91,7 @@ const Dropdown = React.createClass({
     );
   },
   renderMenu(){
-    if (this.state.open){
+    if (this.isOpen()){
       return (
         <div className={style.menu}>
           {
@@ -98,4 +124,12 @@ const Dropdown = React.createClass({
   }
 });
 
-export default Dropdown;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dropdown);

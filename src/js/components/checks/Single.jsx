@@ -14,9 +14,11 @@ import {Padding} from '../layout';
 import {Heading} from '../type';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
-import {checks as actions} from '../../actions';
 import NotificationItemList from './NotificationItemList';
 import HttpRequestItem from './HttpRequestItem';
+import {
+  checks as actions
+} from '../../actions';
 
 const CheckSingle = React.createClass({
   propTypes: {

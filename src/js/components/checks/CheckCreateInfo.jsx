@@ -7,39 +7,18 @@ import {bindActionCreators} from 'redux';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
-import {Close, Add} from '../icons';
+import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
-import {Heading} from '../type';
+import NotificationSelection from './NotificationSelection';
+import CheckDisabledReason from './CheckDisabledReason';
+import {config, validateCheck} from '../../modules';
 import {
   checks as actions,
   user as userActions,
   analytics as analyticsActions
 } from '../../actions';
-
-const notificationOptions = ['email'].map(s => [s, _.capitalize(s)]);
-
-const NotificationForm = forms.Form.extend({
-  type: forms.ChoiceField({
-    choices: notificationOptions,
-    widgetAttrs: {
-      widgetType: 'Dropdown'
-    }
-  }),
-  value: forms.CharField({
-    label: 'Recipient',
-    validators: [forms.validators.validateEmail],
-    widgetAttrs: {
-      placeholder: 'test@testing.com'
-    }
-  })
-});
-
-const NotificationFormSet = forms.FormSet.extend({
-  form: NotificationForm,
-  canDelete: true
-});
 
 const InfoForm = forms.Form.extend({
   name: forms.CharField({
@@ -83,83 +62,53 @@ const CheckCreateInfo = React.createClass({
   getInitialState() {
     const self = this;
 
-    let initialNotifs = self.props.check.notifications;
-    if (!initialNotifs.length){
-      initialNotifs.push({
-        type: 'email',
-        value: this.props.redux.user.get('email')
-      });
-    }
-
     const obj = {
       info: new InfoForm({
         onChange: self.runChange,
         labelSuffix: '',
         data: {
-          name: self.props.check.name || `Http ${self.props.check.target.name || self.props.check.target.id}`
+          name: self.getGeneratedName()
         }
       }),
-      notifications: new NotificationFormSet({
-        onChange: self.runChange,
-        labelSuffix: '',
-        initial: initialNotifs,
-        minNum: !initialNotifs.length ? 1 : 0,
-        extra: 0
-      }),
-      hasSetNotifications: !self.isDataComplete()
+      notifications: []
     };
-
-    //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(() => {
-      self.state.notifications.forms().forEach((form, i) => {
-        let notif = initialNotifs[i];
-        if (notif){
-          form.setData(notif);
-        }
-      });
-      this.setState({hasSetNotifications: true});
-    }, 50);
     return obj;
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      this.props.history.pushState(null, '/check-create/target');
+      if (config.env !== 'debug'){
+        this.props.history.pushState(null, '/check-create/target');
+      }
     }
   },
-  componentDidMount(){
-    if (this.props.renderAsInclude){
-      this.runChange();
+  getGeneratedName(){
+    const {target} = this.props.check;
+    if (this.props.check.name){
+      return this.props.check.name;
+    } else if (target.name || target.id){
+      const string = target.name || target.id;
+      return `Http ${string}`;
     }
-  },
-  getNotificationsForms(){
-    return _.reject(this.state.notifications.forms(), f => {
-      return f.cleanedData.DELETE;
-    });
+    return 'Http check';
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = this.state.info.cleanedData.name;
-    check.check_spec.value.name = check.name;
-    if (this.state.hasSetNotifications){
-      check.notifications = _.reject(this.state.notifications.cleanedData(), 'DELETE').map(n => {
-        return _.omit(n, 'DELETE');
-      });
-    }
+    check.name = check.check_spec.value.name = this.state.info.cleanedData.name;
+    check.notifications = this.getNotifications();
     return check;
   },
   getCleanedData(){
-    let notificationData = this.state.notifications.cleanedData();
-    const data = {
-      notifications: notificationData
-    };
-    return _.assign(data, this.state.info.cleanedData);
+    return _.assign({}, {
+      notifications: this.state.notifications
+    }, this.state.info.cleanedData);
   },
-  isDataComplete(){
-    return this.props.check.check_spec.value.name;
+  getNotifications(){
+    return _.reject(this.state.notifications, (n = {}) => {
+      return !n.type || !n.value;
+    });
   },
   isDisabled(){
-    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
-    return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
+    return !!(validateCheck(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending');
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
@@ -167,9 +116,18 @@ const CheckCreateInfo = React.createClass({
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckInfoHelp');
   },
+  handleNotificationChange(notifications){
+    this.setState({
+      notifications
+    });
+    const data = _.assign({}, this.getFinalData(), {notifications});
+    this.props.onChange(data, this.isDisabled(notifications), 3);
+  },
   handleSubmit(e) {
+    if (e){
+      e.preventDefault();
+    }
     this.props.analyticsActions.trackEvent('Onboard', 'check-created');
-    e.preventDefault();
     this.props.onSubmit();
   },
   renderRemoveNotificationButton(form, index){
@@ -186,51 +144,6 @@ const CheckCreateInfo = React.createClass({
      </Padding>
     );
   },
-  renderNotificationForm(){
-    return (
-      <Padding b={2}>
-        <Heading level={3}>Notifications</Heading>
-        {this.getNotificationsForms().map((form, index) => {
-          return (
-            <Padding b={2} key={`notif-form-${index}`}>
-              <Row>
-                <Col xs={10} sm={11}>
-                  <Row>
-                    <Col xs={12} sm={6}>
-                      <BoundField bf={form.boundField('type')}/>
-                    </Col>
-                    <Col xs={12} sm={6}>
-                      <BoundField bf={form.boundField('value')}/>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col xs={2} sm={1}>
-                  <Padding t={1}>
-                    {this.renderRemoveNotificationButton(form, index)}
-                  </Padding>
-                </Col>
-              </Row>
-            </Padding>
-          );
-        })
-        }
-        <Button color="primary" flat onClick={this.state.notifications.addAnother.bind(this.state.notifications)}><Add fill="primary" inline/> Add Another Notification</Button>
-      </Padding>
-    );
-  },
-  renderSubmitButton(){
-    if (!this.props.renderAsInclude){
-      return (
-        <div>
-          <Padding t={2}>
-            <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
-            <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Finish</Button>
-          </Padding>
-        </div>
-      );
-    }
-    return null;
-  },
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
@@ -241,16 +154,30 @@ const CheckCreateInfo = React.createClass({
         </UserDataRequirement>
       );
   },
+  renderSubmitButton(){
+    if (!this.props.renderAsInclude){
+      return (
+        <Padding t={2}>
+          <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
+          <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
+          <CheckDisabledReason check={this.props.check} areas={['info', 'notifications']}/>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderInner() {
     return (
-      <form ref="form" onSubmit={this.handleSubmit}>
+      <div>
         <Padding b={2}>
-          {this.state.info.render()}
+          <form name="checkCreateInfoForm">
+            {this.state.info.render()}
+            </form>
           <em className="small text-muted">For display in the Opsee app</em>
         </Padding>
-        {this.renderNotificationForm()}
+        <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
         {this.renderSubmitButton()}
-      </form>
+      </div>
     );
   },
   renderAsPage(){

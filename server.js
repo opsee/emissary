@@ -16,7 +16,7 @@ var server = new WebpackDevServer(webpack(config), {
     hash: false,
     version: false
   }
-});
+})
 
 server.listen(8080, '0.0.0.0', function (err) {
   if (err) {

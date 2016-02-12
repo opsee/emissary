@@ -6,6 +6,7 @@ import Env from '../env/Env';
 import EnvGroupsSecurity from '../env/EnvGroupsSecurity';
 import EnvGroupsELB from '../env/EnvGroupsELB';
 import EnvInstancesEC2 from '../env/EnvInstancesEC2';
+
 import CheckList from 'react-proxy?name=checks!exports?exports.default!../checks/List';
 import CheckSingle from 'react-proxy?name=checks!exports?exports.default!../checks/Single';
 import CheckEdit from 'react-proxy?name=checks!exports?exports.default!../checks/Edit';
@@ -22,6 +23,8 @@ import CheckCreateRequest from 'react-proxy?name=checkCreate!exports?exports.def
 import CheckCreateAssertions from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateAssertions';
 import CheckCreateInfo from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateInfo';
 import CheckScreenshot from 'react-proxy?name=checkCreate!exports?exports.default!../checks/Screenshot';
+
+import Slack from '../integrations/Slack';
 
 import GroupSecurity from '../groups/GroupSecurity';
 import GroupELB from '../groups/GroupElb';
@@ -61,7 +64,7 @@ import {auth} from '../global/Authenticator';
 
 const routes = (
   <Route component={Opsee}>
-    <Route path="styleguide" component={Styleguide}/>
+    <Route path="styleguide" component={auth(Styleguide, true)}/>
 
     <Route path="/env" component={auth(Env)}/>
     <Route path="/env-groups-security" component={auth(EnvGroupsSecurity)}/>
@@ -126,6 +129,8 @@ const routes = (
     <Route path="/docs/cloudformation" component={DocsCloudformation}/>
     <Route path="/docs/IAM" component={DocsIAM}/>
     <Route path="/docs/checks" component={DocsChecks}/>
+
+    <Route path="/integrations/slack" component={Slack}/>
 
     <Route path="*" component={NotFound}/>
   </Route>

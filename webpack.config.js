@@ -75,7 +75,7 @@ module.exports = {
       },
       {
         test: /^(?!.*global\.css$).*\.css$/,
-        loader: 'style-loader!css-loader?modules&importLoaders=1!postcss-loader'
+        loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]&importLoaders=1!postcss-loader'
       },
       {
         test: /\.js$|\.jsx$/,

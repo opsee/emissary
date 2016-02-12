@@ -26,7 +26,8 @@ const GroupItem = React.createClass({
   },
   getDefaultProps(){
     return {
-      item: new Map()
+      item: new Map(),
+      target: {}
     };
   },
   componentWillMount(){
@@ -44,10 +45,14 @@ const GroupItem = React.createClass({
   shouldComponentUpdate(nextProps) {
     const {props} = this;
     const {target} = props;
+    let {type} = target;
+    if (type === 'sg'){
+      type = 'security';
+    }
     let arr = [];
     arr.push(!_.isEqual(target, nextProps.target));
-    if (target && target.type){
-      arr.push(!Immutable.is(props.groups[target.type], nextProps.groups[target.type]));
+    if (target && type){
+      arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
     }
     arr.push(!Immutable.is(props.item, nextProps.item));
     return _.some(arr);
@@ -118,7 +123,7 @@ const GroupItem = React.createClass({
     if (this.getItem().get('name')){
       return (
         <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
-          <ContextMenu title={`${this.props.item.get('name')} Actions`} id={this.getItem().get('id')} key="menu">
+          <ContextMenu title={`${this.getItem().get('name')} Actions`} id={this.getItem().get('id')} key="menu">
             <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
               <Add inline fill="primary"/> Create Check
             </Button>

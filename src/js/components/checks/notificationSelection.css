@@ -1,0 +1,18 @@
+@import '../global/vars.css';
+
+@media (min-width: 550px) {
+  .line{
+    display: flex;
+  }
+  .inputArea{
+    flex: 1;
+    padding: 0;
+  }
+  .testButton{
+    margin-left: 1rem;
+  }
+}
+
+.testButtonSlack{
+  margin-left: 1rem;
+}

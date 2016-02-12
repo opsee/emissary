@@ -12,8 +12,10 @@ import relationships from 'slate/src/relationships';
 import {BoundField} from '../forms';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import AssertionCounter from './AssertionCounter.jsx';
-import CheckResponsePaginate from './CheckResponsePaginate.jsx';
+import AssertionCounter from './AssertionCounter';
+import CheckResponsePaginate from './CheckResponsePaginate';
+import CheckDisabledReason from './CheckDisabledReason';
+import {config, validateCheck} from '../../modules';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
@@ -103,7 +105,7 @@ const CheckCreateAssertions = React.createClass({
     })
   },
   componentWillMount(){
-    if (!this.props.check.target.type){
+    if (!this.props.check.target.type && config.env !== 'debug'){
       this.history.pushState(null, '/check-create/target');
     }
   },
@@ -143,8 +145,8 @@ const CheckCreateAssertions = React.createClass({
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
     if (this.state.hasSetAssertions){
-      check.assertions = _.reject(this.state.assertions.cleanedData(), 'DELETE').map(a => {
-        return _.omit(a, 'DELETE');
+      check.assertions = this.getAssertionsForms().map(form => {
+        return _.omit(form.cleanedData, 'DELETE');
       });
     }
     return check;
@@ -164,7 +166,7 @@ const CheckCreateAssertions = React.createClass({
     return this.props.check.assertions.length;
   },
   isDisabled(){
-    return !_.chain(this.getAssertionsForms()).map(a => a.isComplete()).every().value();
+    return validateCheck(this.props.check, ['assertions']).length;
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 2);
@@ -180,7 +182,9 @@ const CheckCreateAssertions = React.createClass({
     const data = form.cleanedData;
     if (data && data.relationship && !data.relationship.match('empty|notEmpty')){
       return (
-        <BoundField bf={form.boundField('operand')}/>
+        <Padding t={1}>
+          <BoundField bf={form.boundField('operand')}/>
+        </Padding>
       );
     }
     return null;
@@ -210,38 +214,37 @@ const CheckCreateAssertions = React.createClass({
         {this.getAssertionsForms().map((form, index) => {
           return (
             <Grid fluid key={`assertion-${index}`}>
-              <Padding tb={2}>
-                <Row>
-                  <Col xs={2} sm={1}>
-                    <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
-                  </Col>
-                  <Col xs={8} sm={10}>
-                    <Row>
-                      <Col xs={12}>
-                        <Row>
-                          <Col xs={12} sm={6} key={`assertion-key-${index}`}>
-                            <Padding b={1}>
-                              <BoundField bf={form.boundField('key')}/>
-                            </Padding>
-                          </Col>
-                          <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
-                            <Padding b={1}>
-                              <BoundField bf={form.boundField('relationship')}/>
-                            </Padding>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xs={12}>
-                        {this.renderValue(form, `assertion-${index}-value-field`)}
-                        {this.renderOperand(form, `assertion-${index}-operand-field`)}
-                      </Col>
-                    </Row>
-                  </Col>
-                  {this.renderDeleteAssertionButton(form, index)}
-                </Row>
-              </Padding>
+              <Row>
+                <Col xs={2} sm={1}>
+                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
+                </Col>
+                <Col xs={8} sm={10}>
+                  <Row>
+                    <Col xs={12}>
+                      <Row>
+                        <Col xs={12} sm={6} key={`assertion-key-${index}`}>
+                          <Padding b={1}>
+                            <BoundField bf={form.boundField('key')}/>
+                          </Padding>
+                        </Col>
+                        <Col xs={12} sm={6} smOffset={0} key={`assertion-relationship-${index}`}>
+                          <Padding b={1}>
+                            <BoundField bf={form.boundField('relationship')}/>
+                          </Padding>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={12}>
+                      {this.renderValue(form, `assertion-${index}-value-field`)}
+                      {this.renderOperand(form, `assertion-${index}-operand-field`)}
+                    </Col>
+                  </Row>
+                </Col>
+                {this.renderDeleteAssertionButton(form, index)}
+              </Row>
+              <hr/>
             </Grid>
           );
         })
@@ -254,19 +257,6 @@ const CheckCreateAssertions = React.createClass({
       </div>
     );
   },
-  renderSubmitButton(){
-    if (!this.props.renderAsInclude){
-      return (
-        <div>
-          <div><br/><br/></div>
-          <div>
-            <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Next</Button>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  },
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
@@ -275,6 +265,17 @@ const CheckCreateAssertions = React.createClass({
           </Alert>
         </UserDataRequirement>
       );
+  },
+  renderSubmitButton(){
+    if (!this.props.renderAsInclude){
+      return (
+        <Padding t={2}>
+          <Button color="success" block type="submit" onClick={this.submit} disabled={this.isDisabled()} chevron>Next</Button>
+          <CheckDisabledReason check={this.props.check} areas={['assertions']}/>
+        </Padding>
+      );
+    }
+    return null;
   },
   renderInner() {
     return (

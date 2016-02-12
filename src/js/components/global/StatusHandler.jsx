@@ -17,7 +17,8 @@ const StatusHandler = React.createClass({
     children: PropTypes.node,
     noFallback: PropTypes.bool,
     onDismiss: PropTypes.func,
-    history: PropTypes.array
+    history: PropTypes.array,
+    waitingText: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -66,8 +67,16 @@ const StatusHandler = React.createClass({
       return null;
     }
     if (this.props.status === 'pending' && this.state.attempts < 1){
+      if (this.props.waitingText){
+        return (
+          <div>
+            <Padding b={1}>{this.props.waitingText}</Padding>
+             <Loader timeout={this.props.timeout}/>
+          </div>
+        );
+      }
       return <Loader timeout={this.props.timeout}/>;
-    }else if (this.isError()){
+    } else if (this.isError()){
       return (
         <Padding b={1}>
           <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
@@ -75,7 +84,7 @@ const StatusHandler = React.createClass({
           </Alert>
         </Padding>
       );
-    }else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
+    } else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
       return (
         <div>{this.props.children}</div>
       );

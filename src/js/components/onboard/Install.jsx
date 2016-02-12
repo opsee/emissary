@@ -8,9 +8,11 @@ import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
+import {flag} from '../../modules';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
+import {SlackConnect} from '../integrations';
 
 const Install = React.createClass({
   propTypes: {
@@ -31,6 +33,7 @@ const Install = React.createClass({
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),
+      user: PropTypes.object,
       asyncActions: PropTypes.object
     }).isRequired
   },
@@ -141,6 +144,15 @@ const Install = React.createClass({
     }
     return <p>Checking installation status...</p>;
   },
+  renderSlack(){
+    if (flag('integrations-slack')){
+      return (
+        <Padding>
+          While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications in your favorite channel.
+        </Padding>
+      );
+    }
+  },
   renderInner(){
     if (this.getBastionConnectionStatus() === 'failed'){
       return (
@@ -160,6 +172,7 @@ const Install = React.createClass({
             );
           })}
           {this.renderBtn()}
+          {this.renderSlack()}
         </div>
       );
     }

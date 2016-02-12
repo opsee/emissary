@@ -2168,6 +2168,14 @@ em {
   align-items: center;
 }
 
+.align-self-start {
+  align-self: flex-start;
+}
+
+.align-self-end {
+  align-self: flex-end;
+}
+
 .justify-content-between {
   -webkit-justify-content: space-between;
   justify-content: space-between;

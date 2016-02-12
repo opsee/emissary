@@ -3,20 +3,29 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {StatusHandler} from '../global';
 import {Check} from '../../modules/schemas';
-import {checks as actions, user as userActions, env as envActions} from '../../actions';
+import CheckDebug from './CheckDebug';
+import {
+  checks as actions,
+  user as userActions,
+  env as envActions
+} from '../../actions';
 
 const CheckCreate = React.createClass({
   propTypes: {
-    location: PropTypes.object,
-    children: PropTypes.node,
-    redux: PropTypes.object.isRequired,
     actions: PropTypes.shape({
       create: PropTypes.func,
       testCheckReset: PropTypes.func
     }),
+    location: PropTypes.object,
+    children: PropTypes.node,
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        checkCreate: PropTypes.object,
+        getGroupsSecurity: PropTypes.object
+      }),
+      user: PropTypes.object
+    }).isRequired,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
@@ -46,6 +55,12 @@ const CheckCreate = React.createClass({
             key: 'code',
             operand: 200,
             relationship: 'equal'
+          }
+        ],
+        notifications: [
+          {
+            type: 'email',
+            value: this.props.redux.user.get('email')
           }
         ]
       }).toJS(),
@@ -79,13 +94,7 @@ const CheckCreate = React.createClass({
           onFilterChange: this.handleFilterChange
         }, this.state)
         )}
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
-            </Col>
-          </Row>
-        </Grid>
+        <CheckDebug check={this.state.check}/>
       </div>
     );
   }

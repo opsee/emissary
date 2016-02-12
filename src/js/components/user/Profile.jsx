@@ -8,7 +8,13 @@ import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
-import {user as actions, app as appActions} from '../../actions';
+import {flag} from '../../modules';
+import {
+  user as actions,
+  app as appActions,
+  integrations as integrationsActions
+} from '../../actions';
+import {SlackInfo} from '../integrations';
 
 const Profile = React.createClass({
   propTypes: {
@@ -20,10 +26,33 @@ const Profile = React.createClass({
     }),
     redux: PropTypes.shape({
       user: PropTypes.object
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.object
+    }),
+    integrationsActions: PropTypes.shape({
+      getSlackInfo: PropTypes.func,
+      getSlackChannels: PropTypes.func
     })
+  },
+  componentWillMount() {
+    if (!this.props.location.query.slack){
+      this.props.integrationsActions.getSlackInfo();
+    }
   },
   handleLogout(){
     this.props.actions.logout();
+  },
+  renderSlackArea(){
+    if (flag('integrations-slack')){
+      return (
+        <tr>
+          <td><strong>Slack</strong></td>
+          <td><SlackInfo/></td>
+        </tr>
+      );
+    }
+    return null;
   },
   render() {
     const user = this.props.redux.user.toJS();
@@ -48,6 +77,7 @@ const Profile = React.createClass({
                     <td><strong>Password</strong></td>
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
+                  {this.renderSlackArea()}
                 </Table>
               </Padding>
               <Padding t={3}>
@@ -65,7 +95,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch),
+  integrationsActions: bindActionCreators(integrationsActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

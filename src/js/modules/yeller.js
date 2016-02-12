@@ -24,7 +24,7 @@ const yeller = {
     if (typeof Yeller === 'function'){
       Yeller.configure({
         token: 'yk_w_f5f4b9abeaad0266f6b0de9ca8cc756b65dc3e86312566d7398caf0fde0f577a',
-        environment: config.env,
+        environment: config.env === 'production' ? 'production' : 'development',
         transform(err){
           const data = err['custom-data'] || {};
           return _.assign({}, err, {

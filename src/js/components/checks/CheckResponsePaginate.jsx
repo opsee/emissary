@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {Alert} from '../../modules/bootstrap';
-import Highlight from '../global/Highlight.jsx';
+import {Highlight} from '../global';
 import {Padding} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
