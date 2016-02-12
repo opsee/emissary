@@ -5,15 +5,18 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Toolbar, StatusHandler} from '../global';
-import CheckCreateRequest from './CheckCreateRequest.jsx';
-import CheckCreateAssertions from './CheckCreateAssertions.jsx';
-import CheckCreateInfo from './CheckCreateInfo.jsx';
+import CheckCreateRequest from './CheckCreateRequest';
+import CheckCreateAssertions from './CheckCreateAssertions';
+import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
 import {Heading} from '../type';
+import CheckDisabledReason from './CheckDisabledReason';
+import CheckDebug from './CheckDebug';
+import {validateCheck} from '../../modules';
 import {
   checks as actions,
   env as envActions
@@ -91,7 +94,7 @@ const CheckEdit = React.createClass({
     return _.get(this, 'state.check.check_spec.value.name') || 'Check';
   },
   isDisabled(){
-    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
+    return !!validateCheck(this.getCheck()).length;
   },
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
@@ -154,6 +157,7 @@ const CheckEdit = React.createClass({
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
             Finish <Checkmark inline fill={colors.success}/>
           </Button>
+          <CheckDisabledReason check={this.getCheck()}/>
           </Padding>
           <Padding t={4}>
             <Padding t={4}>
@@ -183,6 +187,7 @@ const CheckEdit = React.createClass({
           <Row>
             <Col xs={12}>
               {this.renderInner()}
+              <CheckDebug check={_.omit(this.getCheck(), 'results')}/>
             </Col>
           </Row>
         </Grid>

@@ -12,7 +12,8 @@ import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import NotificationSelection from './NotificationSelection';
-import {config} from '../../modules';
+import CheckDisabledReason from './CheckDisabledReason';
+import {config, validateCheck} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -66,7 +67,7 @@ const CheckCreateInfo = React.createClass({
         onChange: self.runChange,
         labelSuffix: '',
         data: {
-          name: self.props.check.name || `Http ${self.props.check.target.name || self.props.check.target.id || ''}`
+          name: self.getGeneratedName()
         }
       }),
       notifications: []
@@ -79,6 +80,16 @@ const CheckCreateInfo = React.createClass({
         this.props.history.pushState(null, '/check-create/target');
       }
     }
+  },
+  getGeneratedName(){
+    const {target} = this.props.check;
+    if (this.props.check.name){
+      return this.props.check.name;
+    } else if (target.name || target.id){
+      const string = target.name || target.id;
+      return `Http ${string}`;
+    }
+    return 'Http check';
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
@@ -96,15 +107,8 @@ const CheckCreateInfo = React.createClass({
       return !n.type || !n.value;
     });
   },
-  isDataComplete(){
-    return this.props.check.check_spec.value.name;
-  },
-  isDisabled(notifications = this.state.notifications){
-    const notifs = _.chain(notifications).map((n = {}) => {
-      return n.type && n.value;
-    }).value();
-    const notifsComplete = !!(_.every(notifs) && notifs.length);
-    return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
+  isDisabled(){
+    return !!(validateCheck(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending');
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
@@ -140,19 +144,6 @@ const CheckCreateInfo = React.createClass({
      </Padding>
     );
   },
-  renderSubmitButton(){
-    if (!this.props.renderAsInclude){
-      return (
-        <div>
-          <Padding t={2}>
-            <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
-            <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
-          </Padding>
-        </div>
-      );
-    }
-    return null;
-  },
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
@@ -162,6 +153,18 @@ const CheckCreateInfo = React.createClass({
           </Alert>
         </UserDataRequirement>
       );
+  },
+  renderSubmitButton(){
+    if (!this.props.renderAsInclude){
+      return (
+        <Padding t={2}>
+          <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
+          <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
+          <CheckDisabledReason check={this.props.check} areas={['info', 'notifications']}/>
+        </Padding>
+      );
+    }
+    return null;
   },
   renderInner() {
     return (

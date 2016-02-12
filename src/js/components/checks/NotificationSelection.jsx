@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {BoundField, Button} from '../forms';
-import {Add, ChevronRight, Cloud, Delete, Mail, Slack} from '../icons';
+import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {SlackConnect} from '../integrations';
@@ -134,10 +134,6 @@ const NotificationSelection = React.createClass({
   getFinalNotifications(notifs = this.state.notifications){
     return notifs.map(n => _.pick(n, ['type', 'value']));
   },
-  isDisabled(){
-    let notifsComplete = _.chain(this.getNotificationsForms()).map(n => n.isComplete()).every().value();
-    return !(this.state.info.isComplete() && notifsComplete) || this.props.redux.asyncActions.checkCreate.status === 'pending';
-  },
   isNotifComplete(notif){
     return _.chain(notif).pick(['type', 'value']).values().every().value();
   },
@@ -249,10 +245,15 @@ const NotificationSelection = React.createClass({
       color = 'danger';
     }
     const disabled = !this.isNotifComplete(notif) || !!(string.match('sent|error')) || notif.sending;
+    const className = notif.type === 'slack_bot' ? style.testButtonSlack : style.testButton;
+    let icon = <ChevronRight inline fill={disabled ? 'text' : 'warning'}/>;
+    if (string === 'sent'){
+      icon = <Checkmark inline fill="text"/>;
+    }
     return (
       <div className={`align-self-end`}>
-        <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={style.testButton} {...props} disabled={disabled} style={{minHeight: '46px'}}>
-          {string}&nbsp;<ChevronRight inline fill={disabled ? 'text' : 'warning'}/>
+        <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={className} {...props} disabled={disabled} style={{minHeight: '46px'}}>
+          {string}&nbsp;{icon}
         </Button>
       </div>
     );
@@ -366,7 +367,7 @@ const NotificationSelection = React.createClass({
     }
     return (
       <div>
-        <p>Choose from the options below to set up a new notification for this check. You must have at least 1 notification.</p>
+        <p>Choose from the options below to set up notifications for this check.</p>
         <hr/>
       </div>
     );

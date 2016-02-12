@@ -185,6 +185,9 @@
 .btnFlat:active{
   background: color(var(--colorTextSecondary) shade(40%));
 }
+.btnFlat[disabled]{
+  border-color: var(--colorText) !important;
+}
 
 .btnFlat.btnBlock, .btnFlat.btnPrimary.btnBlock, .btnFlat.btnSuccess.btnBlock, .btnFlat.btnWarning.btnBlock, .btnFlat.btnInfo.btnBlock, .btnFlat.btnDanger.btnBlock {
   border-color: transparent;

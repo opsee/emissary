@@ -55,7 +55,7 @@ const SlackInfo = React.createClass({
       return <Alert bsStyle="danger">Something went wrong trying to connect.</Alert>;
     } else if (team_name){
       return (
-        <span>Team <Color c="success">{team_name}</Color> is connected to <a href={`https://${team_name}.slack.com/apps/manage/A04MVPTFN-opsee`} target="_blank">Opsee</a></span>
+        <span>Team <Color c="success">{team_name}</Color>&nbsp;connected. <a href={`https://${team_name}.slack.com/apps/manage/A04MVPTFN-opsee`} target="_blank">Edit or remove integration</a></span>
       );
     }
     return (

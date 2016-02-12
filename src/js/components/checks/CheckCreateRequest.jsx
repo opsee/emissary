@@ -11,10 +11,12 @@ import {BastionRequirement, Toolbar} from '../global';
 import {Close, Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate.jsx';
+import CheckDisabledReason from './CheckDisabledReason.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
 import {Heading} from '../type';
+import {validateCheck} from '../../modules';
 import {
   env as envActions,
   checks as checkActions,
@@ -129,7 +131,7 @@ const CheckCreateRequest = React.createClass({
           onChangeDelay: 700
         },
         initial: self.isDataComplete() ? initialData : null
-      }, self.isDataComplete() ? {data: initialData} : null)),
+      })),
       headers: new HeaderFormSet({
         onChange: self.runChange,
         labelSuffix: '',
@@ -185,22 +187,30 @@ const CheckCreateRequest = React.createClass({
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
     let val = check.check_spec.value;
+    let headers = [];
     if (this.state.hasSetHeaders){
-      val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
+      headers = _.chain(this.getHeaderForms()).map(header => {
+        const h = header.cleanedData;
         return {
           name: h.key,
-          values: h.value ? h.value.split(', ') : undefined
+          values: h.value ? h.value.split(', ') : []
         };
       }).value();
     }
-    let cleaned = this.state.info.cleanedData;
-    if (cleaned.path && !cleaned.path.match('^\/')){
-      cleaned.path = `/${cleaned.path}`;
+    let data = _.assign({}, this.state.info.data, {headers});
+    if (data.path && !data.path.match('^\/')){
+      data.path = `/${data.path}`;
     }
-    if (cleaned.port){
-      cleaned.port = parseInt(cleaned.port, 10);
+    if (data.port){
+      data.port = parseInt(data.port, 10);
     }
-    val = _.assign(val, cleaned);
+    if (Array.isArray(data.protocol)){
+      data.protocol = data.protocol[0];
+    }
+    if (Array.isArray(data.verb)){
+      data.verb = data.verb[0];
+    }
+    val = _.assign(val, data);
     return check;
   },
   isDataComplete(){
@@ -209,8 +219,7 @@ const CheckCreateRequest = React.createClass({
     return condition1 && condition2;
   },
   isDisabled(){
-    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
-    return !(this.state.info.isComplete() && headersComplete);
+    return validateCheck(this.props.check, ['request']).length;
   },
   runChange(){
     let data = this.getFinalData();
@@ -261,17 +270,6 @@ const CheckCreateRequest = React.createClass({
         </Button>
       </div>
     );
-  },
-  renderSubmitButton(){
-    if (!this.props.renderAsInclude){
-      return (
-        <div>
-          <Padding tb={1}/>
-          <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
-        </div>
-      );
-    }
-    return null;
   },
   renderLink(){
     return this.state.check.id ? (
@@ -341,6 +339,18 @@ const CheckCreateRequest = React.createClass({
         {this.renderBodyInput()}
       </Padding>
     );
+  },
+  renderSubmitButton(){
+    if (!this.props.renderAsInclude){
+      return (
+        <div>
+          <Padding tb={1}/>
+          <Button color="success" block type="submit" disabled={this.isDisabled()} title="Define Assertions" chevron>Next: Define Assertions</Button>
+          <CheckDisabledReason check={this.getCheck()} areas={['request']}/>
+        </div>
+      );
+    }
+    return null;
   },
   renderInner(){
     return (

@@ -116,7 +116,7 @@ export const Check = Record({
       path: config.checkDefaultPath,
       protocol: config.checkDefaultProtocol,
       port: config.checkDefaultPort,
-      verb: undefined,
+      verb: config.checkDefaultVerb,
       body: undefined,
       headers: new List()
     })
