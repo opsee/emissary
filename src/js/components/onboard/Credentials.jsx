@@ -77,7 +77,7 @@ const Credentials = React.createClass({
     return this.props.redux.onboard.access_key && this.props.redux.onboard.secret_key;
   },
   isDisabled(){
-    return !!(!this.state.info.isValid() || this.getStatus() === 'pending');
+    return !!(!this.state.info.isComplete() || this.getStatus() === 'pending');
   },
   handleSubmit(e){
     e.preventDefault();
