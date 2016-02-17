@@ -4,5 +4,5 @@
   "checkDefaultVerb": "GET",
   "defaultBastionRegion": "us-west-1",
   "showVpcScreen": true,
-  "skipBastionRequirement": false,
+  "skipBastionRequirement": false
 }

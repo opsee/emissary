@@ -80,7 +80,7 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
     }
 
     if (!category){
-      if (config.env !== 'production'){
+      if (process.env.NODE_ENV !== 'production'){
         console.warn('No category supplied to analytics event');
       }
       return Promise.resolve();

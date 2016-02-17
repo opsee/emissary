@@ -201,7 +201,7 @@ export function getBastions(){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           const arr = _.get(res, 'body.bastions');
-          if (!arr && config.env !== 'production'){
+          if (!arr && process.env.NODE_ENV !== 'production'){
             console.error('No array from GET /bastions');
           }
           resolve(arr || []);

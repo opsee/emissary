@@ -15,7 +15,7 @@ import {UserDataRequirement} from '../user';
 import AssertionCounter from './AssertionCounter';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import CheckDisabledReason from './CheckDisabledReason';
-import {config, validateCheck} from '../../modules';
+import {validateCheck} from '../../modules';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
@@ -105,7 +105,7 @@ const CheckCreateAssertions = React.createClass({
     })
   },
   componentWillMount(){
-    if (!this.props.check.target.type && config.env !== 'debug'){
+    if (!this.props.check.target.type && process.env.NODE_ENV !== 'debug'){
       this.history.pushState(null, '/check-create/target');
     }
   },

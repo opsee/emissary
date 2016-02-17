@@ -1,11 +1,14 @@
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config');
-config.entry.index.unshift("webpack-dev-server/client?http://0.0.0.0:8080", 'webpack/hot/only-dev-server');
+
+if (process.env.NODE_ENV !== 'production'){
+  config.entry.index.unshift("webpack-dev-server/client?http://0.0.0.0:8080", 'webpack/hot/only-dev-server');
+}
 
 var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
-  hot: true,
+  hot: process.env.NODE_ENV !== 'production',
   historyApiFallback: true,
   contentBase:'/',
   stats: {
@@ -16,7 +19,7 @@ var server = new WebpackDevServer(webpack(config), {
     hash: false,
     version: false
   }
-})
+});
 
 server.listen(8080, '0.0.0.0', function (err) {
   if (err) {

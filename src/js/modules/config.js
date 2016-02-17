@@ -1,38 +1,11 @@
 import _ from 'lodash';
 
-let config = {
-  /*global __API__*/
-  /*global __AUTH__*/
-  /*global __REVISION__*/
-  api: __API__ || 'https://api.opsee.com',
-  apiDelay: 0,
-  authApi: __AUTH__ || 'https://auth.opsee.com',
-  debug: false,
-  demo: false,
-  error: false,
-  env: process.env.NODE_ENV || 'development',
-  ghosting: false,
-  googleAnalyticsID: 'UA-59205908-3',
-  revision: __REVISION__,
-  services: {
-    analytics: {
-      protocol: 'https',
-      hostname: 'myst.opsee.com',
-      port: null
-    }
-  },
-  slackClientSecret: window.slackClientSecret,
-  socket: 'wss://api.opsee.com/stream/'
-};
+const initial = require(`../../../config/default.json`);
 
-/*global __CONFIG__*/
-if (config.env !== 'production' && __CONFIG__ && typeof __CONFIG__ === 'string'){
-  try {
-    config = _.assign(config, JSON.parse(__CONFIG__));
-  }catch (err){
-    console.error('Improperly formatted config file.');
-  }
+if (process.env){
+  const env = process.env.NODE_ENV || 'default';
+  const optional = require(`../../../config/${env}.json`);
+  window.config = _.assign(initial, optional || {});
 }
 
-window.config = config;
-export default config;
+export default window.config || initial || {};

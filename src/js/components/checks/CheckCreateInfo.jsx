@@ -13,7 +13,7 @@ import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
-import {config, validateCheck} from '../../modules';
+import {validateCheck} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -76,7 +76,7 @@ const CheckCreateInfo = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      if (config.env !== 'debug'){
+      if (process.env.NODE_ENV !== 'debug'){
         this.props.history.pushState(null, '/check-create/target');
       }
     }
