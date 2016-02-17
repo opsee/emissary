@@ -8,23 +8,14 @@ var path = require('path');
 var node_modules_dir = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
-var config;
-try{
-  config = JSON.stringify(fs.readFileSync(path.join(__dirname, '/config.json')).toString());
-}catch(err){}
-
 var str = JSON.stringify;
 var env = process.env;
 
 var definePlugin = new webpack.DefinePlugin({
-  __DEV__: str(JSON.parse(env.BUILD_DEV || 'true')),
-  __API__: str(env.CONFIG_API),
-  __AUTH__: str(env.CONFIG_AUTH),
   'process.env': {
     NODE_ENV: str(env.NODE_ENV)
   },
-  __REVISION__: str(fs.readFileSync('/dev/stdin').toString()),
-  __CONFIG__: config
+  __REVISION__: str(fs.readFileSync('/dev/stdin').toString())
 });
 
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
