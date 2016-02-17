@@ -30,7 +30,8 @@ function makeUserObject(userData) {
  */
 export function trackPageView(path, title) {
   return (dispatch, state) => {
-    if (config.ghosting){
+    //user is ghosting
+    if (state().user && state().user.toJS && state().user.get('ghosting')){
       return Promise.resolve();
     }
 
@@ -75,7 +76,8 @@ export function trackPageView(path, title) {
  */
 export function trackEvent(category, action = '', data = {}, userData = null) {
   return (dispatch, state) => {
-    if (config.ghosting){
+    //user is ghosting
+    if (state().user && state().user.toJS && state().user.get('ghosting')){
       return Promise.resolve();
     }
 
