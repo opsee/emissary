@@ -1,4 +1,5 @@
 export default {
+  access_key: null,
   checkDefaultPath: null,
   checkDefaultPort: null,
   checkDefaultProtocol: 'http',
@@ -6,6 +7,8 @@ export default {
   defaultBastionRegion: null,
   ghosting: false,
   googleAnalyticsID: 'UA-59205908-3',
+  remoteDebugPort: null,
+  secret_key: null,
   services: {
     analytics: 'https://myst.opsee.com',
     api: 'https://api.opsee.com',
