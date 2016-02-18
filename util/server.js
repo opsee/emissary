@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+var config = require('../webpack.config');
 
 if (process.env.NODE_ENV !== 'production'){
   config.entry.index.unshift("webpack-dev-server/client?http://0.0.0.0:8080", 'webpack/hot/only-dev-server');
