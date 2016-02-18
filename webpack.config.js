@@ -61,14 +61,14 @@ var config = {
       {
         test: /\.js$|\.jsx$/, 
         loaders: ['eslint-loader'], 
-        include: [context_dir]
+        exclude: [node_modules]
       },
     ],
     loaders: [
       {
         test: /\.global\.css$/,
         loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader',
-        include: [context_dir]
+        exclude: [node_modules]
       },
       {
         test: /^(?!.*global\.css$).*\.css$/,
@@ -81,7 +81,7 @@ var config = {
           plugins: ['transform-runtime'],
           presets: ['es2015', 'react']
         },
-        include: [context_dir]
+        exclude: [node_modules]
       },
       {
         test: /\.json$/,
@@ -90,7 +90,7 @@ var config = {
       {
         test: /\.(png|jpg|svg)$/,
         loader: 'url-loader?limit=8192',
-        include: [context_dir]
+        exclude: [node_modules]
       }
     ]
   },

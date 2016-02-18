@@ -21,7 +21,7 @@ function socketStart(dispatch, state){
     dispatch({
       type: APP_SOCKET_START
     });
-    window.socket = new WebSocket(config.socket);
+    window.socket = new WebSocket(config.services.stream);
     window.socket.onopen = () => {
       const token = state().user.get('token');
       if (token && window.socket){

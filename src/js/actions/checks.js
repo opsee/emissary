@@ -37,12 +37,12 @@ export function getCheck(id){
       type: GET_CHECK,
       payload: new Promise((resolve, reject) => {
         const r1 = request
-        .get(`${config.api}/checks/${id}`)
+        .get(`${config.services.api}/checks/${id}`)
         .set('Authorization', state().user.get('auth'));
 
         const r2 = new Promise((r2resolve) => {
           request
-          .get(`${config.api}/notifications/${id}`)
+          .get(`${config.services.api}/notifications/${id}`)
           .set('Authorization', state().user.get('auth'))
           .then(r2resolve, () => {
             r2resolve({body: {notifications: []}});
@@ -50,7 +50,7 @@ export function getCheck(id){
         });
 
         const r3 = request
-        .get(`${config.api}/assertions/${id}`)
+        .get(`${config.services.api}/assertions/${id}`)
         .set('Authorization', state().user.get('auth'));
 
         Promise.all([r1, r2, r3]).then((values) => {
@@ -74,7 +74,7 @@ export function getChecks(redirect){
       type: GET_CHECKS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/checks`)
+        .get(`${config.services.api}/checks`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -98,7 +98,7 @@ export function del(id){
       type: CHECK_DELETE,
       payload: new Promise((resolve, reject) => {
         return request
-        .del(`${config.api}/checks/${id}`)
+        .del(`${config.services.api}/checks/${id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body);
@@ -138,7 +138,7 @@ export function test(data){
         .pick(check, ['check_spec', 'interval', 'name', 'target'])
         .value();
         return request
-        .post(`${config.api}/bastions/test-check`)
+        .post(`${config.services.api}/bastions/test-check`)
         .set('Authorization', state().user.get('auth'))
         .send({check, max_hosts: 3, deadline: '30s'})
         .then(res => {
@@ -158,7 +158,7 @@ function saveNotifications(state, data, checkId, isEditing){
   //ensure no duplicate notifications
   const notifications = _.uniqBy(data.notifications, n => n.type + n.value);
   return request
-  [isEditing ? 'put' : 'post'](`${config.api}/notifications${isEditing ? '/' + checkId : ''}`)
+  [isEditing ? 'put' : 'post'](`${config.services.api}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', state().user.get('auth'))
   .send({
     'check-id': checkId,
@@ -168,7 +168,7 @@ function saveNotifications(state, data, checkId, isEditing){
 
 function saveAssertions(state, data, checkId, isEditing){
   return request
-  [isEditing ? 'put' : 'post'](`${config.api}/assertions${isEditing ? '/' + checkId : ''}`)
+  [isEditing ? 'put' : 'post'](`${config.services.api}/assertions${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', state().user.get('auth'))
   .send({
     'check-id': checkId,
@@ -180,7 +180,7 @@ function checkCreateOrEdit(state, data, isEditing){
   return new Promise((resolve, reject) => {
     const d = formatCheckData(data);
     request
-    [isEditing ? 'put' : 'post'](`${config.api}/checks${isEditing ? '/' + data.id : ''}`)
+    [isEditing ? 'put' : 'post'](`${config.services.api}/checks${isEditing ? '/' + data.id : ''}`)
     .set('Authorization', state().user.get('auth'))
     .send(d).then(checkRes =>{
       saveNotifications(state, data, _.get(checkRes, 'body.id') || data.id, isEditing)

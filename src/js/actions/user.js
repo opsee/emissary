@@ -25,7 +25,7 @@ export function login(data) {
       type: USER_LOGIN,
       payload: new Promise((resolve, reject) => {
         request
-        .post(`${config.authApi}/authenticate/password`)
+        .post(`${config.services.auth}/authenticate/password`)
         .send(data)
         .then((res) => {
           const user = res.body.user;
@@ -50,7 +50,7 @@ export function setPassword(data) {
       type: USER_SET_PASSWORD,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.authApi}/signups/${data.id}/claim`)
+        .post(`${config.services.auth}/signups/${data.id}/claim`)
         .send(data)
         .then((res) => {
           resolve(res.body);
@@ -87,7 +87,7 @@ export function refresh() {
       type: USER_REFRESH,
       payload: new Promise((resolve, reject) => {
         request
-        .put(`${config.authApi}/authenticate/refresh`)
+        .put(`${config.services.auth}/authenticate/refresh`)
         .set('Authorization', state().user.get('auth'))
         .timeout(7000)
         .then((res) => {
@@ -112,7 +112,7 @@ export function edit(data) {
       type: USER_EDIT,
       payload: new Promise((resolve, reject) => {
         request
-        .put(`${config.authApi}/users/${data.id}`)
+        .put(`${config.services.auth}/users/${data.id}`)
         .set('Authorization', state().user.get('auth'))
         .send(data)
         .then((res) => {
@@ -137,7 +137,7 @@ export function getCustomer(){
       type: USER_GET_CUSTOMER,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/customer`)
+        .get(`${config.services.api}/customer`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           let body = _.get(res, 'body.body');
@@ -162,7 +162,7 @@ export function getData(){
       type: USER_GET_DATA,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.authApi}/users/${state().user.get('id')}/data`)
+        .get(`${config.services.auth}/users/${state().user.get('id')}/data`)
         .set('Authorization', state().user.get('auth'))
         .then(res => resolve(res.body), reject);
       })
@@ -176,7 +176,7 @@ export function putData(key, data, reset){
       type: USER_PUT_DATA,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.authApi}/users/${state().user.get('id')}/data`)
+        .get(`${config.services.auth}/users/${state().user.get('id')}/data`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           let user = res.body;
@@ -200,7 +200,7 @@ export function putData(key, data, reset){
             user[key] = false;
           }
           return request
-          .put(`${config.authApi}/users/${state().user.get('id')}/data`)
+          .put(`${config.services.auth}/users/${state().user.get('id')}/data`)
           .set('Authorization', state().user.get('auth'))
           .send(user)
           .then(res2 => resolve(res2.body), reject);
@@ -216,7 +216,7 @@ export function sendResetEmail(data) {
       type: USER_SEND_RESET_EMAIL,
       payload: new Promise((resolve, reject) => {
         request
-        .post(`${config.authApi}/authenticate/token`)
+        .post(`${config.services.auth}/authenticate/token`)
         .send(data)
         .then(res => resolve(res.body), reject);
       })

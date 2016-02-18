@@ -16,7 +16,7 @@ export function getSlackChannels() {
       type: INTEGRATIONS_SLACK_CHANNELS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/services/slack/channels`)
+        .get(`${config.services.api}/services/slack/channels`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(_.get(res.body, 'channels') || []);
@@ -35,7 +35,7 @@ export function getSlackInfo() {
       type: INTEGRATIONS_SLACK_INFO,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/services/slack`)
+        .get(`${config.services.api}/services/slack`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(res.body);
@@ -52,7 +52,7 @@ export function slackAccess(query) {
       type: INTEGRATIONS_SLACK_ACCESS,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/services/slack`)
+        .post(`${config.services.api}/services/slack`)
         .set('Authorization', state().user.get('auth'))
         .send(query)
         .then((res) => {
@@ -80,7 +80,7 @@ export function testNotification(notif = {}) {
       type,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/services/${path}/test`)
+        .post(`${config.services.api}/services/${path}/test`)
         .set('Authorization', state().user.get('auth'))
         .send({
           notifications: [notif]
@@ -99,7 +99,7 @@ export function emailTest(notif = {type: undefined, value: undefined}) {
       type: INTEGRATIONS_EMAIL_TEST,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/services/email/test`)
+        .post(`${config.services.api}/services/email/test`)
         .set('Authorization', state().user.get('auth'))
         .send(notif)
         .then((res) => {

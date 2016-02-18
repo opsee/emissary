@@ -1,11 +1,15 @@
 import _ from 'lodash';
 
-const initial = require(`../../../config/default.json`);
+const initial = require(`../../../config/default`).default;
 
 if (process.env){
-  const env = process.env.NODE_ENV || 'default';
-  const optional = require(`../../../config/${env}.json`);
-  window.config = _.assign(initial, optional || {});
+  let env = process.env.NODE_ENV || 'default';
+  if (!env.match('default|development|production|local')){
+    console.error(`Attempted configuration file "${env}.js" is not allowed. Falling back to default.`);
+    env = 'default';
+  }
+  const optional = require(`../../../config/${env}`).default || {};
+  window.config = _.assign(initial, optional);
 }
 
 export default window.config || initial || {};
