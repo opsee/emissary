@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 
-import config from '../../modules/config';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {Highlight} from '../global';
@@ -11,7 +10,7 @@ const CheckDebug = React.createClass({
     check: PropTypes.object.isRequired
   },
   render(){
-    if (config.env === 'debug'){
+    if (process.env.NODE_ENV === 'debug'){
       return (
         <Grid>
           <Row>

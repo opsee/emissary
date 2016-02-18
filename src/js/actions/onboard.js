@@ -23,7 +23,7 @@ export function signupCreate(data) {
       type: ONBOARD_SIGNUP_CREATE,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.authApi}/signups`)
+        .post(`${config.services.auth}/signups`)
         .send(data)
         .then((res) => {
           const user = res.body;
@@ -72,7 +72,7 @@ export function vpcScan(data) {
           return reject(new Error('config.onboardVpcScanError'));
         }
         return request
-        .post(`${config.api}/vpcs/scan`)
+        .post(`${config.services.api}/vpcs/scan`)
         .set('Authorization', state().user.get('auth'))
         .send(sendData)
         .then((res) => {
@@ -146,7 +146,7 @@ function launch(dispatch, state, resolve, reject){
     return reject(new Error('config.onboardInstallError'));
   }
   request
-  .post(`${config.api}/vpcs/launch`)
+  .post(`${config.services.api}/vpcs/launch`)
   .set('Authorization', state().user.get('auth'))
   .send(state().onboard.installData)
   .then(resolve, (err) => {

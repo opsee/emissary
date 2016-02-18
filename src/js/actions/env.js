@@ -24,14 +24,14 @@ export function getGroupSecurity(id){
       type: GET_GROUP_SECURITY,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.api}/groups/security`)
+        .get(`${config.services.api}/groups/security`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
             return g.group.GroupId === id;
           });
           request
-          .get(`${config.api}/groups/security/${id}`)
+          .get(`${config.services.api}/groups/security/${id}`)
           .set('Authorization', state().user.get('auth'))
           .then((res2) => {
             group.instances = res2.body && res2.body.instances;
@@ -52,7 +52,7 @@ export function getGroupsSecurity(){
       type: GET_GROUPS_SECURITY,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/groups/security`)
+        .get(`${config.services.api}/groups/security`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -71,14 +71,14 @@ export function getGroupElb(id){
       type: GET_GROUP_ELB,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.api}/groups/elb`)
+        .get(`${config.services.api}/groups/elb`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
             return g.group.LoadBalancerName === id;
           });
           request
-          .get(`${config.api}/groups/elb/${id}`)
+          .get(`${config.services.api}/groups/elb/${id}`)
           .set('Authorization', state().user.get('auth'))
           .then((res2) => {
             group.instances = res2.body && res2.body.instances;
@@ -99,7 +99,7 @@ export function getGroupsElb(){
       type: GET_GROUPS_ELB,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/groups/elb`)
+        .get(`${config.services.api}/groups/elb`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -118,7 +118,7 @@ export function getInstanceEcc(id){
       type: GET_INSTANCE_ECC,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/instances/ec2/${id}`)
+        .get(`${config.services.api}/instances/ec2/${id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -137,7 +137,7 @@ export function getInstancesEcc(){
       type: GET_INSTANCES_ECC,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/instances/ec2`)
+        .get(`${config.services.api}/instances/ec2`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -156,7 +156,7 @@ export function getInstancesRds(){
       type: GET_INSTANCES_RDS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/instances/rds`)
+        .get(`${config.services.api}/instances/rds`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -175,7 +175,7 @@ export function getInstanceRds(id){
       type: GET_INSTANCE_RDS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/instances/rds/${id}`)
+        .get(`${config.services.api}/instances/rds/${id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve({
@@ -197,11 +197,11 @@ export function getBastions(){
       type: ENV_GET_BASTIONS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/vpcs/bastions`)
+        .get(`${config.services.api}/vpcs/bastions`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           const arr = _.get(res, 'body.bastions');
-          if (!arr && config.env !== 'production'){
+          if (!arr && process.env.NODE_ENV !== 'production'){
             console.error('No array from GET /bastions');
           }
           resolve(arr || []);
@@ -217,7 +217,7 @@ export function rebootInstances(InstanceIds){
       type: AWS_REBOOT_INSTANCES,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/aws/reboot-instances`)
+        .post(`${config.services.api}/aws/reboot-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
         .then(res => {
@@ -234,7 +234,7 @@ export function stopInstances(InstanceIds){
       type: AWS_STOP_INSTANCES,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/aws/stop-instances`)
+        .post(`${config.services.api}/aws/stop-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
         .then(res => {
@@ -251,7 +251,7 @@ export function startInstances(InstanceIds){
       type: AWS_START_INSTANCES,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.api}/aws/start-instances`)
+        .post(`${config.services.api}/aws/start-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
         .then(res => {

@@ -7,7 +7,6 @@ import _ from 'lodash';
 import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import config from '../../modules/config';
 import {flag} from '../../modules';
 import {Button} from '../forms';
 import {Padding} from '../layout';
@@ -49,7 +48,7 @@ const Install = React.createClass({
     }).value();
 
     let reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
-    if (config.env !== 'production'){
+    if (process.env.NODE_ENV !== 'production'){
       if (this.props.location.query.fail){
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }

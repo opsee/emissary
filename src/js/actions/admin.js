@@ -14,7 +14,7 @@ export function getSignups() {
       type: ADMIN_GET_SIGNUPS,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.authApi}/signups`)
+        .get(`${config.services.auth}/signups`)
         .set('Authorization', state().user.get('auth'))
         .query({
           per_page: 1000
@@ -31,7 +31,7 @@ export function activateSignup(signup) {
       type: ADMIN_ACTIVATE_SIGNUP,
       payload: new Promise((resolve, reject) => {
         request
-        .put(`${config.authApi}/signups/${signup.id}/activate`)
+        .put(`${config.services.auth}/signups/${signup.id}/activate`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body);
@@ -48,7 +48,7 @@ export function deleteSignup(signup) {
       type: ADMIN_DELETE_SIGNUP,
       payload: new Promise((resolve, reject) => {
         request
-        .del(`${config.authApi}/signups/${signup.id}`)
+        .del(`${config.services.auth}/signups/${signup.id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body);
@@ -65,7 +65,7 @@ export function getUsers() {
       type: ADMIN_GET_USERS,
       payload: new Promise((resolve) => {
         request
-        .get(`${config.authApi}/users`)
+        .get(`${config.services.auth}/users`)
         .set('Authorization', state().user.get('auth'))
         .query({
           per_page: 1000
@@ -82,7 +82,7 @@ export function deleteUser(user) {
       type: ADMIN_DELETE_USER,
       payload: new Promise((resolve, reject) => {
         request
-        .del(`${config.authApi}/users/${user.id}`)
+        .del(`${config.services.auth}/users/${user.id}`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body);

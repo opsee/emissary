@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import URL from 'url';
 
 import config from '../modules/config';
 import ga from '../modules/ga';
@@ -10,8 +9,7 @@ import {
   ANALYTICS_USER_UPDATE
 } from './constants';
 
-const ANALYTICS_CONFIG = config.services.analytics;
-const ANALYTICS_API = URL.format(ANALYTICS_CONFIG);
+const ANALYTICS_API = config.services.analytics;
 
 /**
  * @returns {object} - an object containing minimum viable user data
@@ -82,7 +80,7 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
     }
 
     if (!category){
-      if (config.env !== 'production'){
+      if (process.env.NODE_ENV !== 'production'){
         console.warn('No category supplied to analytics event');
       }
       return Promise.resolve();

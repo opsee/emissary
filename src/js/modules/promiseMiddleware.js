@@ -1,6 +1,5 @@
 import {isFSA} from 'flux-standard-action';
 import _ from 'lodash';
-import config from './config';
 
 function isPromise(val) {
   return val && typeof val.then === 'function';
@@ -37,7 +36,7 @@ export function promiseMiddleware({ dispatch }) {
           return dispatch(_.assign({}, action, {payload: result}));
         },
         error => {
-          if (config.env !== 'production'){
+          if (process.env.NODE_ENV !== 'production'){
             if (!error instanceof Error){
               throw Error(`Error object from ${action.type} is not a true error.`);
             }
