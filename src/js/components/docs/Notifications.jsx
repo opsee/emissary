@@ -1,12 +1,12 @@
 import React from 'react';
-// import {Link} from 'react-router';
+import {Link} from 'react-router';
+
 import {Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
 import {Padding} from '../layout';
-import slackProfileImage from '../../../img/docs/notifications/slack-profile.png';
-import slackCheckImage from '../../../img/docs/notifications/slack-notification.png';
-import whNotificationImage from '../../../img/docs/notifications/webhook-notification.png';
+import {SlackConnect} from '../integrations';
+import {auth} from '../global/Authenticator';
 
 const Notifications = React.createClass({
   render() {
@@ -16,29 +16,22 @@ const Notifications = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Heading level={2}>General Information About Notifications in Opsee</Heading>
-              <p>If a health check fails, Opsee can send notifications to:</p>
+              <p>If a health check fails, Opsee can send one or more notifications via:</p>
               <ul>
                 <li>Email</li>
-                <li>Slack channels</li>
-                <li>Webhooks</li>
+                <li>A Slack channel</li>
+                <li>A Webhook</li>
               </ul>
 
-              <Heading level={2}>Email Notifications</Heading>
-              <p>Speak to your IT professional if you've never used email before.</p>
+              <Heading level={2}>Email</Heading>
+              <p>Speak to your IT professional if you&rsquo;ve never used email before.</p>
 
-              <Heading level={2}>Slack Notifications</Heading>
-              <p>First, you need to connect your Opsee account to Slack. You can do this one of two ways. First, you can go to your <a href="/profile">Profile page</a> to connect:</p>
-              <Padding b={2}>
-                <img src={slackProfileImage} alt="connect Slack on the profile page"/>
-              </Padding>
+              <Heading level={2}>Slack Channels</Heading>
+              <p>First, connect your Opsee account to Slack. You have the opportunity to connect on your <Link to="/profile">Profile page</Link> or while <Link to="/check-create">Creating a Check</Link>.</p>
+                {auth(<SlackConnect target="_blank"/>)}
+              <p>When successfully connected, you&rsquo;ll see a list of Slack channels available to you as notification options during check creation.</p>
 
-              <p>Or you can simply <a href="/check-create/target">create a check</a>. In the last step, when trying to add a Slack notification, we'll prompt you to connect Slack if you haven't already.</p>
-              <Padding b={2}>
-                <img src={slackCheckImage} alt="connect Slack during check creation"/>
-              </Padding>
-
-              <Heading level={2}>Webhook Notifications</Heading>
+              <Heading level={2}>Webhooks</Heading>
               <p>Here is what an Opsee webhook looks like:</p>
 
               <Padding tb={1}>
@@ -76,10 +69,6 @@ const Notifications = React.createClass({
                 <li>If any response is failing, the whole event will be failing</li>
               </ul>
 
-              <p>To add a webhook notification to your check, just enter the URL in the last step of check creation:</p>
-              <Padding b={2}>
-                <img src={whNotificationImage} alt="add a webhook notification"/>
-              </Padding>
             </Col>
           </Row>
         </Grid>
