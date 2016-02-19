@@ -11,8 +11,8 @@ import {Alert, Grid, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 /* eslint-disable no-unused-vars */
 import {yeller} from '../../modules';
-import styleGlobal from './style.global.css';
-import grid from './grid.global.css';
+import styleGlobal from './global.css';
+import grid from './grid.css';
 import style from './opsee.css';
 import {app as appActions, user as userActions, env as envActions} from '../../actions';
 import {Bar as SearchBar} from '../search';

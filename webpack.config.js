@@ -66,21 +66,17 @@ var config = {
     ],
     loaders: [
       {
-        test: /\.global\.css$/,
-        loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader',
-        exclude: [node_modules]
-      },
-      {
-        test: /^(?!.*global\.css$).*\.css$/,
-        loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]&importLoaders=1!postcss-loader'
-      },
-      {
         test: /\.js$|\.jsx$/,
         loader: 'babel-loader',
         query: {
           plugins: ['transform-runtime'],
           presets: ['es2015', 'react']
         },
+        exclude: [node_modules]
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader?module!postcss',
         exclude: [node_modules]
       },
       {
@@ -116,16 +112,13 @@ if (process.env.NODE_ENV === 'production'){
   config.plugins.push(uglify);
   config.plugins.push(new ExtractTextPlugin('style.css'));
   config.module.loaders = config.module.loaders.map(item => {
-    if (_.isEqual(item.test, /\.global\.css$/)){
-      item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?&importLoaders=1!postcss-loader')
-    }
-    if (_.isEqual(item.test, /^(?!.*global\.css$).*\.css$/)){
-      item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[path][name]-[local]&importLoaders=1!postcss-loader')
+    if (_.isEqual(item.test, /\.css$/)){
+      item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[path][name]-[local]!postcss-loader')
     }
     return item;
   });
 } else {
-  config.module.loaders.splice(2, 0, {
+  config.module.loaders.splice(0, 0, {
     test: /\.js$|\.jsx$/,
     loaders: ['react-hot'],
     include: [context_dir]
