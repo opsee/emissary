@@ -6,8 +6,7 @@ import _ from 'lodash';
 const Authenticator = React.createClass({
   propTypes: {
     redux: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    pushState: PropTypes.func.isRequired
+    admin: PropTypes.bool
   },
   componentWillMount() {
     this.runCheckAuth();
@@ -17,7 +16,7 @@ const Authenticator = React.createClass({
   },
   isAuthenticated(){
     let arr = [];
-    if (this.props.adminRequired){
+    if (this.props.admin){
       arr.push(this.props.redux.user.get('admin'));
     }
     arr.push(!!(this.props.redux.user.get('token')));

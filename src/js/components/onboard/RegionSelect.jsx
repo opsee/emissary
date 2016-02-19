@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import forms from 'newforms';
 
-import {Toolbar} from '../global';
+import {Authenticator, Toolbar} from '../global';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -104,7 +104,7 @@ const RegionSelect = React.createClass({
   },
   render() {
     return (
-       <div>
+       <Authenticator>
         <Toolbar title="Choose a Region"/>
         <Grid>
           <Row>
@@ -113,7 +113,7 @@ const RegionSelect = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

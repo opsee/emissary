@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
 
-import {Toolbar} from '../global';
+import {Authenticator, Toolbar} from '../global';
 import {Checkmark, Delete, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -160,7 +160,7 @@ const Signups = React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator admin>
         <Toolbar title="Signups"/>
         <Grid>
           <Row>
@@ -196,7 +196,7 @@ const Signups = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

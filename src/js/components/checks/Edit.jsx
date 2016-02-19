@@ -4,7 +4,7 @@ import colors from 'seedling/colors';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Toolbar, StatusHandler} from '../global';
+import {Authenticator, Toolbar, StatusHandler} from '../global';
 import CheckCreateRequest from './CheckCreateRequest';
 import CheckCreateAssertions from './CheckCreateAssertions';
 import CheckCreateInfo from './CheckCreateInfo';
@@ -179,7 +179,7 @@ const CheckEdit = React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator>
         <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`} bg="info">
           {this.renderLink()}
         </Toolbar>
@@ -191,7 +191,7 @@ const CheckEdit = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

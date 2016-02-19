@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {StatusHandler, Toolbar} from '../global';
+import {Authenticator, StatusHandler, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
@@ -85,7 +85,7 @@ const Credentials = React.createClass({
   },
   render() {
     return (
-       <div>
+       <Authenticator>
         <Toolbar title="AWS Credentials"/>
           <Grid>
             <Row>
@@ -108,7 +108,7 @@ const Credentials = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import forms from 'newforms';
 
-import {StatusHandler, Toolbar} from '../global';
+import {Authenticator, StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
@@ -84,7 +84,7 @@ const ProfileEdit = React.createClass({
   },
   render() {
     return (
-       <div>
+       <Authenticator>
         <Toolbar title="Edit Your Profile" bg="info" btnPosition="midRight">
           <Button to="/profile" icon flat>
             <Close btn/>
@@ -106,7 +106,7 @@ const ProfileEdit = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

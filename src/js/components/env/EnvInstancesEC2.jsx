@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
+import {Authenticator, Toolbar} from '../global';
 import EnvList from './EnvList.jsx';
 
 const EnvInstancesEC2 = React.createClass({
@@ -9,7 +9,7 @@ const EnvInstancesEC2 = React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator>
         <Toolbar title="Environment - EC2 Instances"/>
           <Grid>
             <Row>
@@ -18,7 +18,7 @@ const EnvInstancesEC2 = React.createClass({
               </Col>
             </Row>
           </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import forms from 'newforms';
 
 import {bindActionCreators} from 'redux';
-import {StatusHandler, Toolbar} from '../global';
+import {Authenticator, StatusHandler, Toolbar} from '../global';
 import img from '../../../img/tut-subnets.svg';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
@@ -128,7 +128,7 @@ const SubnetSelect = React.createClass({
   },
   render() {
     return (
-       <div>
+       <Authenticator>
         <Toolbar title="Select a Subnet"/>
         <Grid>
           <Row>
@@ -139,7 +139,7 @@ const SubnetSelect = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

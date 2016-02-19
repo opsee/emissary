@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {StatusHandler, Table, Toolbar} from '../global';
+import {Authenticator, StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
@@ -37,9 +37,6 @@ const GroupSecurity = React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  // shouldComponentUpdate(nextProps) {
-  //   return !Immutable.is(this.props.group, nextProps.group);
-  // },
   getData(){
     this.props.actions.getGroupSecurity(this.props.params.id);
   },
@@ -94,7 +91,7 @@ const GroupSecurity = React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator>
         <Toolbar title={`Group: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
         <Grid>
           <Row>
@@ -103,7 +100,7 @@ const GroupSecurity = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
-import {Toolbar} from '../global';
+import {Authenticator, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Heading} from '../type';
@@ -37,7 +37,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator>
         <Toolbar title="Documentation and Support"/>
         <Grid>
           <Row>
@@ -70,7 +70,7 @@ export default React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

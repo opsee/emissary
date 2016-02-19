@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
 
-import {BastionRequirement, Toolbar} from '../global';
+import {Authenticator, BastionRequirement, Toolbar} from '../global';
 import {search as actions} from '../../actions';
 import {EnvList} from '../env';
 import FilterButtons from './FilterButtons';
@@ -53,7 +53,7 @@ const SearchAll = React.createClass({
   },
   render(){
     return (
-      <div>
+      <Authenticator>
         <Toolbar title="Search"/>
           <Grid>
             <Row>
@@ -65,7 +65,7 @@ const SearchAll = React.createClass({
               </Col>
             </Row>
           </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

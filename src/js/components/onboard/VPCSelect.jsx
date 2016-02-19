@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import forms from 'newforms';
 
 import {bindActionCreators} from 'redux';
-import {Toolbar} from '../global';
+import {Authenticator, Toolbar} from '../global';
 import {BoundField} from '../forms';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
@@ -102,7 +102,7 @@ const VPCSelect = React.createClass({
   },
   render() {
     return (
-       <div>
+       <Authenticator>
         <Toolbar title="Select a VPC"/>
         <Grid>
           <Row>
@@ -113,7 +113,7 @@ const VPCSelect = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Toolbar} from '../global';
+import {Authenticator, Toolbar} from '../global';
 import EnvList from './EnvList.jsx';
 
 const EnvGroupsSecurity = React.createClass({
@@ -10,7 +10,7 @@ const EnvGroupsSecurity = React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator>
         <Toolbar title="Environment - Security Groups"/>
           <Grid>
             <Row>
@@ -19,7 +19,7 @@ const EnvGroupsSecurity = React.createClass({
               </Col>
             </Row>
           </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });

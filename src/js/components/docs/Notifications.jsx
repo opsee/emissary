@@ -1,12 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router';
 
 import {Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
 import {Padding} from '../layout';
 import {SlackConnect} from '../integrations';
-import {auth} from '../global/Authenticator';
 
 const Notifications = React.createClass({
   render() {
@@ -22,18 +20,14 @@ const Notifications = React.createClass({
                 <li>A Slack channel</li>
                 <li>A Webhook</li>
               </ul>
-
               <Heading level={2}>Email</Heading>
               <p>Speak to your IT professional if you&rsquo;ve never used email before.</p>
-
               <Heading level={2}>Slack Channels</Heading>
-              <p>First, connect your Opsee account to Slack. You have the opportunity to connect on your <Link to="/profile">Profile page</Link> or while <Link to="/check-create">Creating a Check</Link>.</p>
-                {auth(<SlackConnect target="_blank"/>)}
+              <p>First, <SlackConnect target="_blank"/>.</p>
               <p>When successfully connected, you&rsquo;ll see a list of Slack channels available to you as notification options during check creation.</p>
-
+              <p><a href="https://opsee.slack.com/apps/manage/A04MVPTFN-opsee" target="_blank">Edit your Slack integration here.</a></p>
               <Heading level={2}>Webhooks</Heading>
               <p>Here is what an Opsee webhook looks like:</p>
-
               <Padding tb={1}>
                 <Highlight>
                 {JSON.stringify({
@@ -60,15 +54,15 @@ const Notifications = React.createClass({
                 }, null, ' ')}
                 </Highlight>
               </Padding>
-
-              <p>Some other important things to know about our webhooks:</p>
-              <ul>
-                <li>When a Check is failing, you will see <code>'passing': false</code> at the top level. <code>'passing': true</code> is sent when an alert is resolved</li>
-                <li>You will only receive one webhook per event, and we currently do not support re-sending webhooks when the recipient returns an error</li>
-                <li>Each response in the responses array will have an indicator saying whether or not that individual response is passing or failing like the top-level passing value</li>
-                <li>If any response is failing, the whole event will be failing</li>
-              </ul>
-
+              <Padding t={1}>
+                <p>Important details about our webhooks:</p>
+                <ul>
+                  <li>When a Check is failing, you will see <code>'passing': false</code> at the top level.<br/><code>'passing': true</code> is sent when an alert is resolved.</li>
+                  <li>You will only receive one webhook per event. We currently do not support re-sending the request when the webhook returns an error.</li>
+                  <li>Each response in the <code>responses</code> array will include a <code>passing</code> key that relates to that particular response.</li>
+                  <li>If any response is failing, the check is deemed failing.</li>
+                </ul>
+              </Padding>
             </Col>
           </Row>
         </Grid>

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
-import {BastionRequirement, Toolbar, StatusHandler} from '../global';
+import {Authenticator, BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
@@ -65,7 +65,7 @@ const CheckList = React.createClass({
   },
   render() {
     return (
-      <div>
+      <Authenticator>
         <Toolbar title="Checks">
           <Button color="primary" fab to="/check-create" title="Create New Check">
             <Add btn/>
@@ -80,7 +80,7 @@ const CheckList = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Authenticator>
     );
   }
 });
