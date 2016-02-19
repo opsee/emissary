@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
-import {Authenticator, Table, Toolbar} from '../global';
+import {Table, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
@@ -58,7 +58,7 @@ const Profile = React.createClass({
   render() {
     const user = this.props.redux.user.toJS();
     return (
-       <Authenticator>
+       <div>
         <Toolbar title={user.name} pageTitle="Profile">
           <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
             <Edit btn/>
@@ -89,7 +89,7 @@ const Profile = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

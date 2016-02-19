@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Authenticator, BastionRequirement, Toolbar} from '../global';
+import {BastionRequirement, Toolbar} from '../global';
 import EnvList from './EnvList.jsx';
 import {State} from 'react-router';
 import {env as actions} from '../../actions';
@@ -49,7 +49,7 @@ const Env = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         <Toolbar title={this.getTitle()}/>
           <Grid>
             <Row>
@@ -60,7 +60,7 @@ const Env = React.createClass({
               </Col>
             </Row>
           </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

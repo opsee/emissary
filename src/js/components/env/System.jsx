@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import TimeAgo from 'react-timeago';
 
-import {Authenticator, StatusHandler, Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Color, Heading} from '../type';
@@ -96,7 +96,7 @@ const System = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         <Toolbar title="System Status"/>
         <Grid>
           <Row>
@@ -107,7 +107,7 @@ const System = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

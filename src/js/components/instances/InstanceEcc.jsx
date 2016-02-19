@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
 
-import {Authenticator, StatusHandler, Table, Toolbar} from '../global';
+import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
@@ -128,7 +128,7 @@ const InstanceEcc = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         <Toolbar title={`Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}>
           <Button onClick={this.handleActionsClick} color="info" fab title={`${this.getInstance().get('name')} Actions`}>
             <Settings btn/>
@@ -142,7 +142,7 @@ const InstanceEcc = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

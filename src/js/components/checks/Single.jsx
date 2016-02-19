@@ -4,7 +4,7 @@ import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Authenticator, BastionRequirement, Toolbar, StatusHandler} from '../global';
+import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Edit, Delete} from '../icons';
@@ -119,7 +119,7 @@ const CheckSingle = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         <Toolbar title={this.getCheck().get('name') || this.getCheck().get('id') || ''}>
           {this.renderLink()}
         </Toolbar>
@@ -137,7 +137,7 @@ const CheckSingle = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

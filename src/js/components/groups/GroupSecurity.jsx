@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Authenticator, StatusHandler, Table, Toolbar} from '../global';
+import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
@@ -91,7 +91,7 @@ const GroupSecurity = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         <Toolbar title={`Group: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
         <Grid>
           <Row>
@@ -100,7 +100,7 @@ const GroupSecurity = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

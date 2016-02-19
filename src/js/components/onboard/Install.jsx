@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Authenticator, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import config from '../../modules/config';
@@ -184,7 +184,7 @@ const Install = React.createClass({
   },
   render() {
     return (
-       <Authenticator>
+       <div>
         <Toolbar title="Bastion Installation"/>
         <Grid>
           <Row>
@@ -193,7 +193,7 @@ const Install = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

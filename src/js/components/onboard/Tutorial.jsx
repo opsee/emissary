@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Authenticator, Toolbar} from '../global';
+import {Toolbar} from '../global';
 
 export default React.createClass({
   propTypes: {
@@ -7,10 +7,10 @@ export default React.createClass({
   },
   render() {
     return (
-       <Authenticator>
+       <div>
          <Toolbar title="How Opsee Works"/>
          {this.props.children}
-      </Authenticator>
+      </div>
     );
   }
 });

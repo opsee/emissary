@@ -5,7 +5,6 @@ import {bindActionCreators} from 'redux';
 
 import {Check} from '../../modules/schemas';
 import CheckDebug from './CheckDebug';
-import {Authenticator} from '../global';
 import {
   checks as actions,
   user as userActions,
@@ -88,7 +87,7 @@ const CheckCreate = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         {React.cloneElement(this.props.children, _.assign({
           onChange: this.setData,
           onSubmit: this.handleSubmit,
@@ -96,7 +95,7 @@ const CheckCreate = React.createClass({
         }, this.state)
         )}
         <CheckDebug check={this.state.check}/>
-      </Authenticator>
+      </div>
     );
   }
 });

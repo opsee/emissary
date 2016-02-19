@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 
 import {Padding} from '../layout';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {Authenticator, Table, Toolbar, Loader} from '../global';
+import {Table, Toolbar, Loader} from '../global';
 
 import {Add, Key} from '../icons';
 
@@ -163,7 +163,7 @@ const Styleguide = React.createClass({
   },
   render() {
     return (
-      <Authenticator admin>
+      <div>
         <Toolbar title="Opsee Styleguide">
           <Button fab color="primary" title="Primary Action" tooltip="A Test Button" tooltip-placement="left">
             <Add btn/>
@@ -448,7 +448,7 @@ const Styleguide = React.createClass({
           </Col>
         </Row>
       </Grid>
-    </Authenticator>
+    </div>
     );
   }
 });

@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 import TimeAgo from 'react-timeago';
 
-import {Authenticator, StatusHandler, Table, Toolbar} from '../global';
+import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
@@ -140,7 +140,7 @@ const InstanceRds = React.createClass({
   },
   render() {
     return (
-      <Authenticator>
+      <div>
         <Toolbar title={`RDS DB Instance: ${this.getInstance().get('name') || this.getInstance().get('id') || this.props.params.id}`}/>
         <Grid>
           <Row>
@@ -149,7 +149,7 @@ const InstanceRds = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Authenticator>
+      </div>
     );
   }
 });

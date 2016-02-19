@@ -61,62 +61,64 @@ import Styleguide from 'react-proxy?name=styleguide!exports?exports.default!../p
 import System from 'react-proxy?name=system!exports?exports.default!../env/System';
 import NotFound from 'react-proxy?name=notfound!exports?exports.default!../pages/NotFound';
 
+import {auth} from '../global/Authenticator';
+
 const routes = (
   <Route component={Opsee}>
-    <Route path="styleguide" component={Styleguide}/>
+    <Route path="styleguide" component={auth(Styleguide, true)}/>
 
-    <Route path="/env" component={Env}/>
-    <Route path="/env-groups-security" component={EnvGroupsSecurity}/>
-    <Route path="/env-groups-elb" component={EnvGroupsELB}/>
-    <Route path="/env-instances-ec2" component={EnvInstancesEC2}/>
-    <Route path="/instance/ec2/:id" component={InstanceEcc}/>
-    <Route path="/instance/rds/:id" component={InstanceRDS}/>
+    <Route path="/env" component={auth(Env)}/>
+    <Route path="/env-groups-security" component={auth(EnvGroupsSecurity)}/>
+    <Route path="/env-groups-elb" component={auth(EnvGroupsELB)}/>
+    <Route path="/env-instances-ec2" component={auth(EnvInstancesEC2)}/>
+    <Route path="/instance/ec2/:id" component={auth(InstanceEcc)}/>
+    <Route path="/instance/rds/:id" component={auth(InstanceRDS)}/>
 
-    <Route path="/" component={CheckList}>
+    <Route path="/" component={auth(CheckList)}>
       <IndexRoute component={CheckList}/>
     </Route>
     <Redirect from="/checks" to="/"/>
 
     <Redirect from="/check-create" to="/check-create/target"/>
-    <Route path="/check-create" component={CheckCreate}>
+    <Route path="/check-create" component={auth(CheckCreate)}>
       <Route path="/check-create/target" component={CheckCreateTarget}/>
       <Route path="/check-create/request" component={CheckCreateRequest}/>
       <Route path="/check-create/assertions" component={CheckCreateAssertions}/>
       <Route path="/check-create/info" component={CheckCreateInfo}/>
     </Route>
-    <Route path="/check/edit/:id" component={CheckEdit}/>
-    <Route path="/check/:id" component={CheckSingle}/>
+    <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
+    <Route path="/check/:id" component={auth(CheckSingle)}/>
     <Route path="/check/:id/screenshot" component={CheckScreenshot}/>
 
-    <Route path="/group/security/:id" component={GroupSecurity}/>
-    <Route path="/group/elb/:id" component={GroupELB}/>
+    <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
+    <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
     <Route path="/start/password" component={OnboardPassword}/>
 
     <Redirect from="/start/tutorial" to="/start/tutorial/1"/>
-    <Route path="/start/tutorial" component={OnboardTutorial}>
+    <Route path="/start/tutorial" component={auth(OnboardTutorial)}>
       <Route path="/start/tutorial/1" component={OnboardTutorial1}/>
       <Route path="/start/tutorial/2" component={OnboardTutorial2}/>
       <Route path="/start/tutorial/3" component={OnboardTutorial3}/>
     </Route>
 
-    <Route path="/start/profile" component={Help}/>
-    <Route path="/start/region-select" component={OnboardRegionSelect}/>
-    <Route path="/start/credentials" component={OnboardCredentials}/>
-    <Route path="/start/vpc-select" component={OnboardVPCSelect}/>
-    <Route path="/start/subnet-select" component={OnboardSubnetSelect}/>
-    <Route path="/start/install" component={OnboardInstall}/>
-    <Route path="/start/install-example" component={OnboardInstall} example/>
+    <Route path="/start/profile" component={auth(Help)}/>
+    <Route path="/start/region-select" component={auth(OnboardRegionSelect)}/>
+    <Route path="/start/credentials" component={auth(OnboardCredentials)}/>
+    <Route path="/start/vpc-select" component={auth(OnboardVPCSelect)}/>
+    <Route path="/start/subnet-select" component={auth(OnboardSubnetSelect)}/>
+    <Route path="/start/install" component={auth(OnboardInstall)}/>
+    <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 
-    <Route path="/admin/signups" component={AdminSignups}/>
-    <Route path="/system" component={System}/>
+    <Route path="/admin/signups" component={auth(AdminSignups, true)}/>
+    <Route path="/system" component={auth(System)}/>
 
-    <Route path="/search" component={SearchAll}/>
+    <Route path="/search" component={auth(SearchAll)}/>
 
-    <Route path="/profile" component={Profile}/>
-    <Route path="/profile/edit" component={ProfileEdit}/>
+    <Route path="/profile" component={auth(Profile)}/>
+    <Route path="/profile/edit" component={auth(ProfileEdit)}/>
     <Route path="/login" component={Login}/>
     <Route path="/password-forgot" component={PasswordForgot}/>
     <Route path="/password-change" component={PasswordChange}/>
