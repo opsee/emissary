@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Table, Toolbar} from '../global';
 import {Link} from 'react-router';
+
+import {Table, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
@@ -26,7 +27,7 @@ const Profile = React.createClass({
     }),
     redux: PropTypes.shape({
       user: PropTypes.object
-    }),
+    }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
     }),

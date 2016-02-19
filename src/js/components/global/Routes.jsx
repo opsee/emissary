@@ -16,6 +16,7 @@ import DocsBastion from 'react-proxy?name=docsBastion!exports?exports.default!..
 import DocsCloudformation from 'react-proxy?name=docsCloudformation!exports?exports.default!../docs/Cloudformation';
 import DocsIAM from 'react-proxy?name=docsIAM!exports?exports.default!../docs/IAM';
 import DocsChecks from 'react-proxy?name=docsChecks!exports?exports.default!../docs/Checks.jsx';
+import DocsNotifications from 'react-proxy?name=docsNotifications!exports?exports.default!../docs/Notifications.jsx';
 
 import CheckCreate from 'react-proxy?name=checkCreate!exports?exports.default!../checks/Create';
 import CheckCreateTarget from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateTarget';
@@ -129,6 +130,7 @@ const routes = (
     <Route path="/docs/cloudformation" component={DocsCloudformation}/>
     <Route path="/docs/IAM" component={DocsIAM}/>
     <Route path="/docs/checks" component={DocsChecks}/>
+    <Route path="/docs/notifications" component={DocsNotifications}/>
 
     <Route path="/integrations/slack" component={Slack}/>
 

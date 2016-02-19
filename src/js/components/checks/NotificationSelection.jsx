@@ -378,6 +378,7 @@ const NotificationSelection = React.createClass({
         <Heading level={3}>Notifications</Heading>
         {this.renderNotifList()}
         {this.renderNotifPickType()}
+        <p><em className="small text-muted">Learn more about notification types and our webhook format in our <a target="_blank" href="/docs/notifications">notification docs</a>.</em></p>
       </Padding>
     );
   }

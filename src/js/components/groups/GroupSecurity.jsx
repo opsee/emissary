@@ -37,9 +37,6 @@ const GroupSecurity = React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  // shouldComponentUpdate(nextProps) {
-  //   return !Immutable.is(this.props.group, nextProps.group);
-  // },
   getData(){
     this.props.actions.getGroupSecurity(this.props.params.id);
   },
