@@ -27,6 +27,7 @@ nav,
 section,
 summary {
   display: block;
+  margin: 0;
 }
 
 audio,
@@ -117,6 +118,9 @@ hr {
 
 pre {
   overflow: auto;
+  white-space: pre;
+  width: 100%;
+  margin: 0;
 }
 
 code,
@@ -167,8 +171,9 @@ legend {
 label {
   display: inline-block;
   max-width: 100%;
-  margin-bottom: 5px;
-  font-weight: bold;
+  cursor: pointer;
+  font-weight: inherit;
+  margin: 0;
 }
 
 input[type="radio"],
@@ -203,6 +208,7 @@ select,
 textarea {
   color: inherit;
   font: inherit;
+  line-height: inherit;
   margin: 0;
 }
 
@@ -285,4 +291,39 @@ table {
 td,
 th {
   padding: 0;
+}
+
+dl {
+  margin-top: 0;
+  margin-bottom: 22px;
+}
+
+dt,
+dd {
+  line-height: 1.42857;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 0;
+}
+
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: 11px;
+}
+
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+  margin-bottom: 0;
+}
+
+em {
+  font-style: italic;
 }
