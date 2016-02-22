@@ -132,3 +132,77 @@
     width: 900px;
   }
 }
+
+:global .modal-content {
+  box-shadow: none;
+  border: 0;
+}
+
+:global .modal-body {
+  border: none;
+  color: var(--colorGray9);
+}
+:global .modal-body a {
+  color: var(--colorInfo);
+}
+
+:global .modal.notify .modal-dialog {
+  transform: translate(0, 100px);
+  transition: transform var(--transitionEaseOut);
+}
+:global .modal.notify.in .modal-dialog {
+  transform: translate(0, 0);
+}
+:global .modal.notify .modal-dialog {
+  display: block;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  position: absolute;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  :global .modal.notify .modal-dialog {
+    bottom: 32px;
+    max-width: 500px;
+    right: 32px;
+  }
+}
+
+:global .modal.context.in .modal-dialog {
+  transform: translate(0, 0);
+}
+@media (min-width: 768px) {
+  :global .modal.context.fade .modal-dialog {
+    transform: translate(100%, 0px);
+  }
+  :global .modal.context.in .modal-dialog {
+    transform: translate(0, 0);
+  }
+}
+:global .modal.context .modal-dialog {
+  bottom: 0px;
+  margin: 0 0 0 0;
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  :global .modal.context .modal-dialog {
+    width: 300px;
+    left: auto;
+    right: 0;
+    height: 100%;
+  }
+  :global .modal.context .modal-dialog .modal-content {
+    height: 100%;
+  }
+}
+:global .modal.context .modal-body {
+  color:var(--colorText);
+  padding: 0;
+}
+
+:global .modal-backdrop {
+  background: none;
+}
