@@ -27,6 +27,7 @@
 :root{
   --fontGotham:"Gotham SSm A", "Gotham SSm B", sans-serif;
   --fontTungsten:"Tungsten A", "Tungsten B", sans-serif;
+  --fontMono: 'Droid Sans Mono', "InconsolataMedium", monospace;
 }
 
 /* shadows */
@@ -51,4 +52,13 @@
   colorDanger: var(--colorDanger);
   colorError: var(--colorError);
   gray50: var(--gray50);
+  gray100: var(--gray100);
+  gray200: var(--gray200);
+  gray300: var(--gray300);
+  gray400: var(--gray400);
+  gray500: var(--gray500);
+  gray600: var(--gray600);
+  gray700: var(--gray700);
+  gray800: var(--gray800);
+  gray900: var(--gray900);
 }

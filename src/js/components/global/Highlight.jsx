@@ -2,6 +2,9 @@ import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+/* eslint-disable no-unused-vars */
+import style from './hljs.css';
+/* eslint-enable no-unused-vars */
 
 hljs.registerLanguage('json', json);
 

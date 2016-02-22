@@ -3,6 +3,7 @@ import _ from 'lodash';
 import slate from 'slate';
 import {Close, Checkmark} from '../icons';
 import style from './assertionCounter.css';
+import {ScreenReaderOnly} from '../type';
 
 const AssertionCounter = React.createClass({
   propTypes: {
@@ -49,7 +50,7 @@ const AssertionCounter = React.createClass({
     return (
       <div title={this.getTitle()} className={this.getClass()}>
         {this.renderIcon()}
-      <span className="sr-only">{this.runTest().error}</span>
+        <ScreenReaderOnly>{this.runTest().error}</ScreenReaderOnly>
     </div>
     );
   }

@@ -51,7 +51,15 @@ var config = {
         addDependencyTo: webpack
       }),
       require('postcss-cssnext')({
-        browsers: 'last 1 version, > 10%'
+        browsers: 'last 1 version, > 10%',
+        // css variables like this
+        // features: {
+        //   customProperties: {
+        //     variables: {
+        //       colorSuccess: 'purple'
+        //     }
+        //   }
+        // }
       }),
       require('postcss-url')()
     ];
@@ -76,7 +84,7 @@ var config = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader?module!postcss',
+        loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]!postcss',
         exclude: [node_modules]
       },
       {
