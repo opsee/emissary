@@ -3,6 +3,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var fs = require('fs');
 var _ = require('lodash');
+var seedling = require('seedling');
 
 var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
@@ -52,14 +53,11 @@ var config = {
       }),
       require('postcss-cssnext')({
         browsers: 'last 1 version, > 10%',
-        // css variables like this
-        // features: {
-        //   customProperties: {
-        //     variables: {
-        //       colorSuccess: 'purple'
-        //     }
-        //   }
-        // }
+        features: {
+          customProperties: {
+            variables: seedling.flat
+          }
+        }
       }),
       require('postcss-url')()
     ];

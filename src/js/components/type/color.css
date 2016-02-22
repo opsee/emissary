@@ -1,5 +1,3 @@
-@import '../global/vars';
-
 .primary, .primary:hover, .primary:focus, .primary:active{
   color:var(--colorPrimary);
 }
@@ -29,41 +27,41 @@
 }
 
 .gray50, .gray50:hover, .gray50:focus, .gray50:active{
-  color:var(--gray50);
+  color:var(--colorGray);
 }
 
 .gray100, .gray100:hover, .gray100:focus, .gray100:active{
-  color:var(--gray100);
+  color:var(--colorGray1);
 }
 
 .gray200, .gray200:hover, .gray200:focus, .gray200:active{
-  color:var(--gray200);
+  color:var(--colorGray2);
 }
 
 .gray300, .gray300:hover, .gray300:focus, .gray300:active{
-  color:var(--gray300);
+  color:var(--colorGray3);
 }
 
 .gray400, .gray400:hover, .gray400:focus, .gray400:active{
-  color:var(--gray400);
+  color:var(--colorGray4);
 }
 
 .gray500, .gray500:hover, .gray500:focus, .gray500:active{
-  color:var(--gray500);
+  color:var(--colorGray5);
 }
 
 .gray600, .gray600:hover, .gray600:focus, .gray600:active{
-  color:var(--gray600);
+  color:var(--colorGray6);
 }
 
 .gray700, .gray700:hover, .gray700:focus, .gray700:active{
-  color:var(--gray700);
+  color:var(--colorGray7);
 }
 
 .gray800, .gray800:hover, .gray800:focus, .gray800:active{
-  color:var(--gray800);
+  color:var(--colorGray8);
 }
 
 .gray900, .gray900:hover, .gray900:focus, .gray900:active{
-  color:var(--gray900);
+  color:var(--colorGray9);
 }

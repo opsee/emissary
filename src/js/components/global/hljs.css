@@ -1,10 +1,8 @@
-@import './vars';
-
 :global .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: var(--gray900);
+  background: var(--colorGray9);
   -webkit-text-size-adjust: none;
   font-size: 14px;
   /* Track */

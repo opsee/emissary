@@ -1,5 +1,3 @@
-@import './vars';
-
 :global .alert {
   padding: 1em;
   border: 1px solid transparent;
@@ -82,7 +80,7 @@
 }
 
 :global .alert.alert-default {
-  background-color: var(--gray800);
+  background-color: var(--colorGray8);
 }
 
 :global .alert-dismissable .close {

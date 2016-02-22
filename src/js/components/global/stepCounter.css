@@ -1,7 +1,5 @@
-@import './vars.css';
-
 .title {
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
   margin-top: 32px;
   padding: 16px 0;
 }

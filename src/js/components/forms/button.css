@@ -1,5 +1,3 @@
-@import '../global/vars.css';
-
 .btn {
   background-image: none;
   border: 1px solid transparent;
@@ -46,25 +44,25 @@
   cursor: not-allowed;
   opacity: 0.65;
   box-shadow: none;
-  color: var(--colorTextSecondary) !important;
+  color: var(--colorText2) !important;
   pointer-events: none;
-  background: var(--gray800);
+  background: var(--colorGray8);
 }
 
 .btnDefault {
   composes: btn;
   color: white;
-  background: var(--colorTextSecondary);
+  background: var(--colorText2);
 }
 .btnDefault:hover {
   color: white;
-  background: color(var(--colorTextSecondary) shade(20%));
+  background: color(var(--colorText2) shade(20%));
 }
 .btnDefault:active {
-  background: color(var(--colorTextSecondary) shade(40%));
+  background: color(var(--colorText2) shade(40%));
 }
 .btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
-  background: var(--colorTextSecondary);
+  background: var(--colorText2);
 }
 
 .btnPrimary {
@@ -150,7 +148,7 @@
 .btnDark {
   composes: btn;
   color: #fff;
-  background: var(--gray900);
+  background: var(--colorGray9);
 }
 .btnDark:hover {
   color: #fff;
@@ -158,7 +156,7 @@
 }
 .btnDark:active {
   color: #fff;
-  background: var(--gray800);
+  background: var(--colorGray8);
 }
 
 .btnNoPad {
@@ -178,12 +176,12 @@
   background-color: transparent;
 }
 .btnFlat:hover{
-  background: var(--colorTextSecondary);
+  background: var(--colorText2);
   border-color: transparent;
   color: white !important;
 }
 .btnFlat:active{
-  background: color(var(--colorTextSecondary) shade(40%));
+  background: color(var(--colorText2) shade(40%));
 }
 .btnFlat[disabled]{
   border-color: var(--colorText) !important;
@@ -194,7 +192,7 @@
 }
 .btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
   background: none;
-  border-color: var(--colorTextSecondary);
+  border-color: var(--colorText2);
 }
 .btnFlat.btnPrimary {
   border-color: var(--colorPrimary);
@@ -291,7 +289,7 @@
   position: relative;
 }
 .btnIcon:hover, .btnIcon:active, .btnIcon:focus {
-  background: var(--gray800);
+  background: var(--colorGray8);
 }
 
 .btnSecondary {

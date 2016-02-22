@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import style from './progressBar.css';
 
 export default React.createClass({
@@ -14,14 +14,15 @@ export default React.createClass({
     };
   },
   getBg(){
+    const {color} = seed;
     if (this.props.percentage >= 100){
-      return colors.success;
+      return color.success;
     } else if (this.props.percentage === 0){
-      return colors.warning;
+      return color.warning;
     } else if (this.props.percentage === -1){
-      return colors.danger;
+      return color.danger;
     }
-    return colors.primary;
+    return color.primary;
   },
   getWidth(){
     if (this.props.percentage === 0 || this.props.percentage === -1){

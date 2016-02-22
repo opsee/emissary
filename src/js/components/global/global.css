@@ -1,7 +1,5 @@
-@import './vars.css';
-
 body {
-  background-color: var(--bodyBg);
+  background-color: var(--colorBackground);
 }
 
 body ::selection {
@@ -47,7 +45,7 @@ hr {
   margin-top: 22px;
   margin-bottom: 22px;
   border: 0;
-  border-top: 1px solid var(--gray200);
+  border-top: 1px solid var(--colorGray2);
 }
 
 code,
@@ -116,7 +114,7 @@ mark {
 }
 
 :global .text-muted {
-  color: var(--colorTextSecondary);
+  color: var(--colorText2);
 }
 
 :global .text-info {
@@ -228,7 +226,7 @@ svg {
 }
 :global .form-group .label {
   transition: color var(--transitionEaseOut);
-  color: var(--colorTextSecondary);
+  color: var(--colorText2);
   display: block;
   font-size: 0.875em;
   font-weight: 300;
@@ -245,7 +243,7 @@ svg {
 :global .form-group .dropdown-toggle .form-group [dropdown-toggle] {
   -moz-box-shadow: none;
   box-shadow: none;
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
   border-radius: 0;
   font-weight: 300;
   text-align: left;
@@ -263,7 +261,7 @@ svg {
   outline: none;
 }
 :global .form-group .dropdown-toggle .icon .form-group [dropdown-toggle] .icon {
-  fill: var(--colorTextSecondary);
+  fill: var(--colorText2);
   position: absolute;
   right: 0.3em;
   top: 0;
@@ -287,22 +285,22 @@ svg {
 }
 :global .form-group .form-subdomain {
   transition: height var(--transitionEaseOut);
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
   display: block;
   padding: 0.25em 0.5em;
 }
 
 :global .input-container:hover ~ label .input-container:active ~ label {
-  color: var(--gray200);
+  color: var(--colorGray2);
 }
 :global .input-container:hover ~ .icon .input-container:active ~ .icon {
-  fill: var(--gray200);
+  fill: var(--colorGray2);
 }
 
 input, textarea {
   box-shadow: none;
   transition: background-color var(--transitionEaseOut);
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
   border: none;
   color: var(--colorText);
   width: 100%;
@@ -311,7 +309,7 @@ input, textarea {
 }
 
 :global input[type='text']::placeholder, :global input[type='number']::placeholder, :global input[type='email']::placeholder input[type='password']::placeholder {
-  color: var(--colorTextSecondary);
+  color: var(--colorText2);
 }
 
 input:focus, textarea:focus{
@@ -336,7 +334,7 @@ input:focus, textarea:focus{
 
 :global .icon {
   transition: fill var(--transitionEaseOut);
-  fill: var(--colorTextSecondary);
+  fill: var(--colorText2);
   height: 1.25em;
   width: 1.25em;
 }
@@ -344,7 +342,7 @@ input:focus, textarea:focus{
 :global .input-group-addon {
   background-color: black;
   border: none;
-  color: var(--colorTextSecondary);
+  color: var(--colorText2);
 }
 
 label {
@@ -396,13 +394,13 @@ pre {
 }
 
 :global .pre {
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
   margin-bottom: 0.5em;
   padding: 0.5em;
 }
 
 :global .text-secondary {
-  color: var(--colorTextSecondary);
+  color: var(--colorText2);
 }
 
 :global .text-sm {
@@ -517,7 +515,7 @@ em {
 }
 
 hr {
-  border-color: var(--gray800);
+  border-color: var(--colorGray8);
 }
 
 body {
@@ -617,7 +615,7 @@ to prevent collapsing during animation*/
 }
 
 :global .bg-gray-900 {
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
 }
 
 :global .user-select-none {
@@ -631,7 +629,7 @@ to prevent collapsing during animation*/
 
 :global .modal-body {
   border: none;
-  color: var(--gray900);
+  color: var(--colorGray9);
 }
 :global .modal-body a {
   color: var(--colorInfo);

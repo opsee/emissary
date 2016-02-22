@@ -1,5 +1,3 @@
-@import './vars.css';
-
 :global .tooltip {
   position: absolute;
   z-index: 1070;

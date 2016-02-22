@@ -1,5 +1,3 @@
-@import './vars.css';
-
 :global .modal-open {
   overflow: hidden;
 }
@@ -37,7 +35,7 @@
 
 :global .modal-content {
   position: relative;
-  background-color: var(--gray900);
+  background-color: var(--colorGray9);
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 3px;

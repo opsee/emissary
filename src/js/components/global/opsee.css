@@ -1,11 +1,9 @@
-@import './vars.css';
-
 body {
   font-family: var(--fontGotham);
   font-size: 16px;
   line-height: 1.42857;
   color: var(--colorText);
-  background: var(--bodyBg);
+  background: var(--colorBackground);
 }
 
 .meat{

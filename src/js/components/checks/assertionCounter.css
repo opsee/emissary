@@ -1,11 +1,9 @@
-@import '../global/vars.css';
-
 .counter {
   position: relative;
   border-radius: 100%;
   transition: background-color var(--transitionEaseOut);
-  background-color: var(--gray600);
-  color: var(--bodyBg);
+  background-color: var(--colorGray6);
+  color: var(--colorBackground);
   display: block;
   font-family: var(--fontTungsten);
   font-size: 24px;

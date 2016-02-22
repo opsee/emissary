@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import Radio from './Radio.jsx';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 
 const RadioWithLabel = React.createClass({
   propTypes: {
@@ -19,7 +19,7 @@ const RadioWithLabel = React.createClass({
       paddingLeft: '1rem'
     };
     if (this.props.on){
-      style.color = colors.primary;
+      style.color = seed.color.primary;
     }
     return style;
   },

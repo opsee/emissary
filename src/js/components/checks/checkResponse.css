@@ -1,9 +1,7 @@
-@import '../global/vars.css';
-
 .checkResponse {
   align-items: flex-start;
-  background: var(--gray900);
-  border: 2px solid var(--gray900);
+  background: var(--colorGray9);
+  border: 2px solid var(--colorGray9);
   display: flex;
   height: 13rem;
   max-height: 13rem;
@@ -14,7 +12,7 @@
 }
 .checkResponse:after {
   background-size: 100%;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--gray900));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
   bottom: 0;
   content: '';
   display: block;

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import colors from 'seedling/colors';
+import {flat as seed} from 'seedling';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -177,7 +177,7 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <Heading level={3}><Checkmark fill={colors.textColorSecondary} inline/> Approved</Heading>
+                <Heading level={3}><Checkmark fill={seed.textColor2} inline/> Approved</Heading>
                 <div className="display-flex-sm flex-wrap">
                   {this.getApproved().map(this.renderItem)}
                 </div>
@@ -188,7 +188,7 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <Heading level={3}><Person fill={colors.textColorSecondary} inline/> Users</Heading>
+                <Heading level={3}><Person fill={seed.textColor2} inline/> Users</Heading>
                 <div className="display-flex-sm flex-wrap">
                   {this.getUsers().map(this.renderItem)}
                 </div>

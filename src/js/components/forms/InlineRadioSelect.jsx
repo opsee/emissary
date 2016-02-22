@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import RadioWithLabel from './RadioWithLabel.jsx';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {Padding} from '../layout';
 
 const InlineRadioSelect = React.createClass({
@@ -47,7 +47,7 @@ const InlineRadioSelect = React.createClass({
             {this.props.bf.subWidgets().map((w, i) => {
               return (
                 <li key={i} style={{marginRight: '1.8em'}}>
-                  <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '-.2rem', color: colors.textColor}}/>
+                  <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`} labelStyle={{marginTop: '-.2rem', color: seed.color.text}}/>
                 </li>
               );
             })}
