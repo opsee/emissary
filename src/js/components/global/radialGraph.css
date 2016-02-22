@@ -1,12 +1,10 @@
-@import './vars.css';
-
 :root{
   --radialWidth:40px;
 }
 
 .base{
   background:var(--colorDanger);
-  color:var(--bodyBg);
+  color:var(--colorBackground);
   border-radius:100%;
   font-weight:500;
   position: relative;
@@ -36,7 +34,7 @@
 }
 .baseRunning{
   composes: base;
-  background:var(--gray600);
+  background:var(--colorGray6);
 }
 .baseSilenced{
   composes: base;
@@ -70,7 +68,7 @@
 }
 .svgRunning{
   composes: svg;
-  fill: var(--gray600);
+  fill: var(--colorGray6);
 }
 .svgSilenced{
   composes: svg;
@@ -84,7 +82,7 @@
 .inner{
   background:transparent;
   border-radius:100%;
-  border:3px solid var(--bodyBg);
+  border:3px solid var(--colorBackground);
   height:calc(var(--radialWidth) - 4);
   width:calc(var(--radialWidth) - 4);
   left:50%;
@@ -102,7 +100,7 @@
 .innerRunning{
   composes: inner;
   border-color: transparent;
-  background:var(--gray600);
+  background:var(--colorGray6);
 }
 .innerPassing{
   composes: inner;

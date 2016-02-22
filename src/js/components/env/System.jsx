@@ -8,7 +8,6 @@ import {StatusHandler, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {Color, Heading} from '../type';
-import config from '../../modules/config';
 import {user as actions, env as envActions} from '../../actions';
 
 const System = React.createClass({
@@ -103,7 +102,7 @@ const System = React.createClass({
             <Col xs={12}>
               {this.renderBastionsInfo()}
               {this.renderCustomerInfo()}
-              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{config.revision}</span>
+              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
             </Col>
           </Row>
         </Grid>

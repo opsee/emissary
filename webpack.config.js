@@ -3,6 +3,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var fs = require('fs');
 var _ = require('lodash');
+var seedling = require('seedling');
 
 var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
@@ -10,9 +11,9 @@ var context_dir = path.join(__dirname, '/src');
 
 var definePlugin = new webpack.DefinePlugin({
   'process.env': {
-    NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-  },
-  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString())
+    NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    REVISION: JSON.stringify(fs.readFileSync('/dev/stdin').toString())
+  }
 });
 
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
@@ -51,7 +52,12 @@ var config = {
         addDependencyTo: webpack
       }),
       require('postcss-cssnext')({
-        browsers: 'last 1 version, > 10%'
+        browsers: 'last 1 version, > 10%',
+        features: {
+          customProperties: {
+            variables: seedling.flat
+          }
+        }
       }),
       require('postcss-url')()
     ];
@@ -76,7 +82,7 @@ var config = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader?module!postcss',
+        loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]!postcss',
         exclude: [node_modules]
       },
       {

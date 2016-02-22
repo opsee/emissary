@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 
 import {Padding} from '../layout';
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {Table, Toolbar, Loader} from '../global';
+import {Loader, ProgressBar, Table, Toolbar} from '../global';
 
 import {Add, Key} from '../icons';
 
@@ -15,6 +15,7 @@ import {Circle} from '../icons';
 import {Button, BoundField, ToggleWithLabel} from '../forms';
 import {GroupItemList} from '../groups';
 import {Heading} from '../type';
+import relationships from 'slate/src/relationships';
 import {env as envActions, checks as checkActions, app as appActions} from '../../actions';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
@@ -66,6 +67,13 @@ const InfoForm = forms.Form.extend({
     widgetAttrs: {
       widgetType: 'RadioSelect'
     }
+  }),
+  relationship: forms.ChoiceField({
+    widgetAttrs: {
+      noLabel: true,
+      widgetType: 'Dropdown'
+    },
+    choices: relationships.map(r => [r.id, r.name])
   }),
   validation: 'auto'
 });
@@ -280,17 +288,8 @@ const Styleguide = React.createClass({
 
             <hr/>
 
-            {
-            // <Heading level={3}>List Items</Heading>
-            // <ListItemTest state="passing" passing={2} total={2}/>
-            // <ListItemTest state="failing" passing={1} total={2}/>
-            // <ListItemTest state="running"/>
-            }
-
-            <hr/>
-
             <Heading level={3}>Example Group Items</Heading>
-            <GroupItemList groups={this.props.redux.env.groups.security}/>
+            <GroupItemList groups={this.props.redux.env.groups.security} limit={4}/>
             <hr/>
             <Heading level={3}>Cards</Heading>
             <Row>
@@ -333,6 +332,9 @@ const Styleguide = React.createClass({
               </Padding>
               <Padding b={1}>
                 <BoundField bf={this.state.info.boundField('body')}/>
+              </Padding>
+              <Padding b={1}>
+                <BoundField bf={this.state.info.boundField('relationship')}/>
               </Padding>
 
               <Heading level={3}>Buttons</Heading>
@@ -416,6 +418,12 @@ const Styleguide = React.createClass({
                   <Alert bsStyle={i} onDismiss={_.noop} key={`alert-${i}`}>A great alert goes here.</Alert>
                   );
               })}
+            </Padding>
+
+            <Heading level={3}>Progress Bars</Heading>
+            <Padding b={2}>
+              <ProgressBar percentage={70} steps={8}/>
+              <ProgressBar percentage={100} steps={4}/>
             </Padding>
 
             <Heading level={3}>Loading State</Heading>

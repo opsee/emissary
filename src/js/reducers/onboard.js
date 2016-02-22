@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
 import {yeller} from '../modules';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
@@ -63,7 +63,7 @@ function generateSubnetsForSelection(regions){
       const nameString = subnetName !== subnet.subnet_id ? `${subnetName}&nbsp;(${subnet.subnet_id})` : subnet.subnet_id;
       return [subnet.subnet_id, `
       <strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${nameString}<br/>
-      <span style="color:${colors.textColorSecondary}">${subnet.instance_count} Instances (${subnet.routing})</span>
+      <span style="color:${seed.color.text2}">${subnet.instance_count} Instances (${subnet.routing})</span>
       `];
     }).value();
   }).flatten().value();

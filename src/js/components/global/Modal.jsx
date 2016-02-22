@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Modal} from '../../modules/bootstrap';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 
 export default React.createClass({
   propTypes: {
@@ -9,7 +9,7 @@ export default React.createClass({
   },
   getStyle(){
     return {
-      background: this.props.style ? colors[this.props.style] : colors.warning
+      background: this.props.style ? seed.color[this.props.style] : seed.color.warning
     };
   },
   getClassName(){
@@ -19,9 +19,6 @@ export default React.createClass({
     return (
       <div>
         <Modal {...this.props}>
-        {
-        // show={this.state.showModal} onHide={this.close} className={this.getClassName()}
-        }
           <Modal.Body style={this.getStyle()}>
             {this.props.children}
           </Modal.Body>

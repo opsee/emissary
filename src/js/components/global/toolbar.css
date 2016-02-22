@@ -1,7 +1,5 @@
-@import './vars.css';
-
 .outer{
-  background-color: var(--gray800);
+  background-color: var(--colorGray8);
   font-size: 2rem;
   width: 100%;
   margin-bottom: 2em;

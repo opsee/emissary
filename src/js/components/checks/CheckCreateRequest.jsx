@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -266,7 +266,7 @@ const CheckCreateRequest = React.createClass({
         })
         }
         <Button flat color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
-          <Add fill={colors.primary} inline/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+          <Add fill={seed.color.primary} inline/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     );

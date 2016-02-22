@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -155,7 +155,7 @@ const CheckEdit = React.createClass({
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-            Finish <Checkmark inline fill={colors.success}/>
+            Finish <Checkmark inline fill={seed.color.success}/>
           </Button>
           <CheckDisabledReason check={this.getCheck()}/>
           </Padding>

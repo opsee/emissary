@@ -7,7 +7,7 @@ const LogoColor = React.createClass({
   render() {
     return (
       <Padding tb={1}>
-         <div className="text-center">
+         <div style={{textAlign: 'center'}}>
            <img src={img} alt="Opsee logo" className={style.logo}/>
          </div>
        </Padding>

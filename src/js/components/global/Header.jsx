@@ -3,7 +3,7 @@ import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 
 import style from './header.css';
 
@@ -20,7 +20,7 @@ const Header = React.createClass({
   getHeaderStyle(){
     let obj = {};
     if (this.props.user.get('ghosting')){
-      obj.background = colors.danger;
+      obj.background = seed.color.danger;
     }
     return obj;
   },

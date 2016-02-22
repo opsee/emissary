@@ -270,7 +270,6 @@ const CheckResponsePaginate = React.createClass({
             {this.renderPassing()}
             {this.renderFailing()}
           </Padding>
-          <div className="clearfix"/>
         </div>
       );
     }
