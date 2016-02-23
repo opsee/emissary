@@ -23,7 +23,7 @@ import CheckCreateTarget from 'react-proxy?name=checkCreate!exports?exports.defa
 import CheckCreateRequest from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateRequest';
 import CheckCreateAssertions from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateAssertions';
 import CheckCreateInfo from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateInfo';
-import CheckScreenshot from 'react-proxy?name=checkCreate!exports?exports.default!../checks/Screenshot';
+import CheckEvent from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckEvent';
 
 import Slack from '../integrations/Slack';
 
@@ -87,8 +87,8 @@ const routes = (
       <Route path="/check-create/info" component={CheckCreateInfo}/>
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
+    <Route path="/check/event/:id" component={auth(CheckEvent)}/>
     <Route path="/check/:id" component={auth(CheckSingle)}/>
-    <Route path="/check/:id/screenshot" component={CheckScreenshot}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>

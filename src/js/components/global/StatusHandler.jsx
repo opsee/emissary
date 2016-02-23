@@ -46,10 +46,13 @@ const StatusHandler = React.createClass({
     return !_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState);
   },
   getErrorText(){
-    return _.get(this.props, 'status.message') ||
+    let string = _.get(this.props, 'status.message') ||
     _.get(this.props, 'status.response.body.message') ||
-    this.props.errorText ||
-    'Something went wrong.';
+    this.props.errorText;
+    if (string.match('^Parser is unable')){
+      string = _.get(this.props, 'status.rawResponse');
+    }
+    return string || 'Something went wrong.';
   },
   isError(){
     return !!(this.props.status && typeof this.props.status !== 'string');

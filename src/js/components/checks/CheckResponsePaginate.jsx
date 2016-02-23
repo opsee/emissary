@@ -321,9 +321,9 @@ const CheckResponsePaginate = React.createClass({
   render() {
     if (this.props.responses && !this.props.responses.size){
       return null;
-    }else if (this.isWaiting()){
+    } else if (this.isWaiting()){
       return this.renderWaiting();
-    }else if (this.getResponses().size){
+    } else if (this.getResponses().size){
       return (
         <div>
         {this.renderTitle()}

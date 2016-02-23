@@ -3,7 +3,7 @@ import {fromJS, List} from 'immutable';
 import result from '../modules/result';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
-import {Check} from '../modules/schemas';
+import {Check, CheckEvent} from '../modules/schemas';
 import {itemsFilter, yeller} from '../modules';
 import {
   GET_CHECK,
@@ -26,49 +26,50 @@ export const statics = {
     _.assign(newData, result.getFormattedData(data, true));
     return new Check(newData);
   },
-  formatResponse(singleResponse){
-    // let response = _.cloneDeep(singleResponse);
-    // if(response.toJS){
-    //   response = response.toJS();
-    // }
-    // return {error: 'Something went wrong'};
-    let response = singleResponse.toJS();
-    if (_.get(response, 'response.value')){
-      const headers = _.get(response, 'response.value.headers');
+  formatResponse(item){
+    let data = item.toJS();
+    if (data && data.response && data.response.code){
+      data.response = {
+        value: data.response,
+        type_url: 'HttpResponse'
+      };
+    }
+    if (_.get(data, 'response.value')){
+      const headers = _.get(data, 'response.value.headers');
       if (headers){
-        response.response.value.headers = headers.map(h => {
+        data.response.value.headers = headers.map(h => {
           h.values = h.values.join(', ');
           return h;
         });
         let headerObj = {};
-        response.response.value.headers.forEach(h => {
+        data.response.value.headers.forEach(h => {
           headerObj[h.name] = h.values;
         });
-        response.response.value.headers = headerObj;
+        data.response.value.headers = headerObj;
       }
-      if (response.error){
+      if (data.error){
         try {
-          let err = JSON.parse(response.error);
+          let err = JSON.parse(data.error);
           if (err && err.error){
-            response.error = err.error;
+            data.error = err.error;
           }else {
-            response.error = err;
+            data.error = err;
           }
         }catch (err){
           _.noop();
         }
       }
-      if (!response.error && !_.get(response, 'response.type_url')){
+      if (!data.error && !_.get(data, 'response.type_url')){
         return {error: 'Error in sending the request'};
       }
-      if (_.get(response, 'response.value.metrics')){
-        delete response.response.value.metrics;
+      if (_.get(data, 'response.value.metrics')){
+        delete data.response.value.metrics;
       }
-      return response;
-      // return _.omit(response, 'response.value.metrics');
+      return data;
+      // return _.omit(data, 'data.value.metrics');
     }
-    if (response.error){
-      return {error: response.error};
+    if (data.error){
+      return {error: data.error};
     }
     return {error: 'Something went wrong'};
   },
@@ -82,7 +83,9 @@ const initial = {
   responses: new List(),
   responsesFormatted: [],
   selectedResponse: 0,
-  filtered: new List()
+  filtered: new List(),
+  event: new CheckEvent(),
+  notification: new CheckEvent()
 };
 
 export default handleActions({
@@ -117,14 +120,12 @@ export default handleActions({
   [GET_CHECK_NOTIFICATION]: {
     next(state, action) {
       const notification = fromJS(action.payload.data);
-
       let responses = notification.get('responses');
       responses = responses && responses.toJS ? responses : new List();
       const responsesFormatted = statics.getFormattedResponses(responses);
 
       return _.assign({}, state, { notification, responses, responsesFormatted });
     },
-
     throw: yeller.reportAction
   },
   [GET_CHECKS]: {
