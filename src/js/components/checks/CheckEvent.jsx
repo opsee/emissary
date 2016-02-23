@@ -78,7 +78,7 @@ const CheckEvent = React.createClass({
           <CheckResponsePaginate responses={this.getNotification().get('responses')}
             allowCollapse={false} showRerunButton={false} date={d}/>
             <Padding t={2}>
-              <Button href={this.props.location.query.json} target="_blank" flat color="warning">View Raw Event JSON</Button>
+              <Button href={this.props.location.query.json} target="_blank" flat color="default">View Raw Event JSON</Button>
             </Padding>
         </Padding>
       </div>

@@ -77,7 +77,7 @@ const CheckCreateType = React.createClass({
       <div>
         {this.renderHelperText()}
         <Padding b={1}>
-          <Heading level={3}>Choose a Check Type</Heading>
+          <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
         {types.map(type => {
           return (
