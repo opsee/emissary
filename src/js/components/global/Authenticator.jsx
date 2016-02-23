@@ -25,7 +25,8 @@ export function auth(Component, adminRequired){
       return _.every(arr);
     },
     runCheckAuth() {
-      const redirect = this.props.location.pathname;
+      const {location} = this.props;
+      const redirect = `${location.pathname}${location.search}`;
       if (!this.isAuthenticated()) {
         this.props.pushState(null, `/login?redirect=${redirect}`);
       }
