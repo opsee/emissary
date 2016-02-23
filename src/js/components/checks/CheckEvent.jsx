@@ -3,13 +3,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 import TimeAgo from 'react-timeago';
+import {Link} from 'react-router';
 
 import {checks as actions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import Padding from '../layout/Padding';
 import {Toolbar} from '../global';
-import {Button} from '../forms';
-import {Close} from '../icons';
 import CheckResponsePaginate from './CheckResponsePaginate';
 
 const CheckEvent = React.createClass({
@@ -51,16 +50,6 @@ const CheckEvent = React.createClass({
     // True if the JSON has been loaded from the S3 URL
     return this.getNotification().get('check_name');
   },
-  renderLink(){
-    if (this.getNotification() && this.getNotification().get('check_id')){
-      return (
-        <Button to={`/check/${this.props.params.id}`} color="info" fab title={`Go to ${this.getNotification().get('check_name')}`}>
-          <Close btn/>
-        </Button>
-      );
-    }
-    return null;
-  },
   renderText(){
     const stamp = this.getNotification().get('timestamp');
     if (typeof stamp !== 'object'){
@@ -69,19 +58,24 @@ const CheckEvent = React.createClass({
     const d = new Date(stamp.get('seconds') * 1000);
     const bool = this.getNotification().get('passing');
     return (
-      <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={d}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. To view the most current status of your check, click above.</p>
+      <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={d}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
+        To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
     );
   },
   renderInner() {
     if (!this.isJSONLoaded()) {
       return null;
     }
+    let d = this.getNotification().get('timestamp') || new Date();
+    if (d.toJS){
+      d = new Date(d.get('seconds') * 1000);
+    }
     return (
       <div className="js-screenshot-results">
         <Padding tb={1}>
           {this.renderText()}
           <CheckResponsePaginate responses={this.getNotification().get('responses')}
-            allowCollapse={false} showRerunButton={false} />
+            allowCollapse={false} showRerunButton={false} date={d}/>
         </Padding>
       </div>
     );
@@ -93,9 +87,7 @@ const CheckEvent = React.createClass({
     }
     return (
       <div>
-        <Toolbar title={this.getTitle()} bg={bg}>
-          {this.renderLink()}
-        </Toolbar>
+        <Toolbar title={this.getTitle()} bg={bg}/>
         <Grid>
           <Row>
             <Col xs={12}>

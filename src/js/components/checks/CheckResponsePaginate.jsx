@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {plain as seed} from 'seedling';
 
 import {Alert} from '../../modules/bootstrap';
 import {Highlight} from '../global';
@@ -11,8 +12,7 @@ import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
-import color from '../type/color.css';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -39,7 +39,8 @@ const CheckResponsePaginate = React.createClass({
      * expanded with a button click. If false, the entire response body will
      * be shown, and the expansion button will be hidden.
      */
-    allowCollapse: PropTypes.bool
+    allowCollapse: PropTypes.bool,
+    date: PropTypes.instanceOf(Date)
   },
   getDefaultProps() {
     return {
@@ -240,11 +241,9 @@ const CheckResponsePaginate = React.createClass({
     const passing = this.getNumberPassing();
     if (passing){
       return (
-        <span>
-          <Padding r={1} inline>
-            <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
-          </Padding>
-        </span>
+        <Padding r={1} inline>
+          <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
+        </Padding>
       );
     }
     return null;
@@ -253,11 +252,9 @@ const CheckResponsePaginate = React.createClass({
     const failing = this.getNumberFailing();
     if (failing){
       return (
-        <span>
-          <Padding r={1} inline>
-            <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
-          </Padding>
-        </span>
+        <Padding r={1} inline>
+          <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
+        </Padding>
       );
     }
     return null;
@@ -269,6 +266,7 @@ const CheckResponsePaginate = React.createClass({
           <Padding b={1}>
             {this.renderPassing()}
             {this.renderFailing()}
+            {this.renderDate()}
           </Padding>
         </div>
       );
@@ -299,20 +297,32 @@ const CheckResponsePaginate = React.createClass({
       </Padding>
     );
   },
+  renderDate(){
+    if (this.props.date instanceof Date){
+      const s = this.props.date.toGMTString();
+      return (
+        <Color c="gray500">
+          <small title="The date this event was processed.">{`- ${s}`}</small>
+        </Color>
+      );
+    }
+    return null;
+  },
   renderTopArea(){
     const arr = this.getFormattedResponses();
+    const selected = arr[this.props.redux.checks.selectedResponse];
     if (arr.length){
-      const passing = _.get(arr[this.props.redux.checks.selectedResponse], 'passing');
+      const passing = _.get(selected, 'passing');
       if (!this.props.showBoolArea){
         return (
           <Padding a={0.5}>
-          <strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          <strong>{_.get(selected, 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
           </Padding>
         );
       }
       return (
         <Padding a={0.5}>
-          <strong className={passing ? color.success : color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          <strong className={passing ? seed.color.success : seed.color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
         </Padding>
       );
     }

@@ -87,7 +87,7 @@ const routes = (
       <Route path="/check-create/info" component={CheckCreateInfo}/>
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
-    <Route path="/check/event/:id" component={auth(CheckEvent)}/>
+    <Route path="/check/:id/event" component={auth(CheckEvent)}/>
     <Route path="/check/:id" component={auth(CheckSingle)}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>

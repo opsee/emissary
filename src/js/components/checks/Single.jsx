@@ -83,7 +83,10 @@ const CheckSingle = React.createClass({
     if (this.getCheck().get('name')){
       const spec = this.getCheck().get('check_spec').value;
       const target = this.getCheck().get('target');
-
+      let d = _.chain(this.getCheck().toJS()).get('results').head().get('time').value() || new Date();
+      if (typeof d === 'number'){
+        d = new Date(d * 1000);
+      }
       return (
         <div>
           {this.renderTarget()}
@@ -96,7 +99,7 @@ const CheckSingle = React.createClass({
             <AssertionItemList assertions={this.getCheck().get('assertions')}/>
           </Padding>
           <Padding b={2}>
-            <CheckResponsePaginate responses={this.getResponses()}/>
+            <CheckResponsePaginate responses={this.getResponses()} date={d}/>
           </Padding>
 
           {this.renderNotifications()}
