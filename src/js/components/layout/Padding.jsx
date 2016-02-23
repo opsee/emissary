@@ -6,7 +6,8 @@ const availProps = ['t', 'b', 'tb', 'l', 'r', 'lr', 'a'];
 let types = {
   inline: PropTypes.bool,
   className: PropTypes.string,
-  children: PropTypes.node
+  children: PropTypes.node,
+  style: PropTypes.object
 };
 availProps.forEach(string => {
   types[string] = PropTypes.number;
@@ -37,13 +38,13 @@ const Padding = React.createClass({
   render(){
     if (this.props.inline){
       return (
-        <span className={this.getClass()}>
+        <span className={this.getClass()} style={this.props.style}>
           {this.props.children}
         </span>
       );
     }
     return (
-      <div className={this.getClass()}>
+      <div className={this.getClass()} style={this.props.style}>
         {this.props.children}
       </div>
     );

@@ -34,7 +34,7 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/> Passing</Button>
+          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/>&nbsp;Passing</Button>
         </Padding>
       </Col>
     );
@@ -43,7 +43,7 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>Failing</Button>
+          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>&nbsp;Failing</Button>
         </Padding>
       </Col>
     );
@@ -52,7 +52,7 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>Unmonitored</Button>
+          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>&nbsp;Unmonitored</Button>
         </Padding>
       </Col>
     );

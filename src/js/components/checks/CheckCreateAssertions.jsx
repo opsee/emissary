@@ -261,7 +261,7 @@ const CheckCreateAssertions = React.createClass({
     return (
         <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
           <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Assertions are used to describe what a passing check looks like. A typical assertion for a HTTP check might be: <strong>'Status Code equal to 200'</strong>.</p>
+            <p>Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.</p>
           </Alert>
         </UserDataRequirement>
       );
@@ -294,7 +294,7 @@ const CheckCreateAssertions = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title={`Create Check (3 of 4)`} bg="info">
+        <Toolbar btnPosition="midRight" title={`Create Check (4 of 5)`} bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>

@@ -20,6 +20,7 @@ import DocsNotifications from 'react-proxy?name=docsNotifications!exports?export
 
 import CheckCreate from 'react-proxy?name=checkCreate!exports?exports.default!../checks/Create';
 import CheckCreateTarget from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateTarget';
+import CheckCreateType from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateType';
 import CheckCreateRequest from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateRequest';
 import CheckCreateAssertions from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateAssertions';
 import CheckCreateInfo from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateInfo';
@@ -79,8 +80,9 @@ const routes = (
     </Route>
     <Redirect from="/checks" to="/"/>
 
-    <Redirect from="/check-create" to="/check-create/target"/>
+    <Redirect from="/check-create" to="/check-create/type"/>
     <Route path="/check-create" component={auth(CheckCreate)}>
+      <Route path="/check-create/type" component={CheckCreateType}/>
       <Route path="/check-create/target" component={CheckCreateTarget}/>
       <Route path="/check-create/request" component={CheckCreateRequest}/>
       <Route path="/check-create/assertions" component={CheckCreateAssertions}/>

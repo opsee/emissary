@@ -64,10 +64,6 @@ samp {
   font: var(--fontMono);
 }
 
-:global .form-group {
-  margin-bottom: 15px;
-}
-
 :global .open > a {
   outline: 0;
 }
@@ -232,7 +228,7 @@ hr {
   border-color: var(--colorGray8);
 }
 
-#main {
+:global #main {
   padding-bottom: 5em;
 }
 

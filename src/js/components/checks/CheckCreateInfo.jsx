@@ -24,7 +24,7 @@ const InfoForm = forms.Form.extend({
   name: forms.CharField({
     label: 'Check name',
     widgetAttrs: {
-      placeholder: 'My Service 404 Check'
+      placeholder: 'My Critical Service Status 200 Check'
     }
   }),
   validation: 'auto',
@@ -172,8 +172,7 @@ const CheckCreateInfo = React.createClass({
         <Padding b={2}>
           <form name="checkCreateInfoForm">
             {this.state.info.render()}
-            </form>
-          <em className="small text-muted">For display in the Opsee app</em>
+          </form>
         </Padding>
         <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
         {this.renderSubmitButton()}
@@ -183,7 +182,7 @@ const CheckCreateInfo = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (4 of 4)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create Check (5 of 5)" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>

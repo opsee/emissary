@@ -28,26 +28,15 @@ const CheckCreateTarget = React.createClass({
     onFilterChange: PropTypes.func,
     userActions: PropTypes.shape({
       putData: PropTypes.func
-    })
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.object
+    }).isRequired
   },
   getInitialState() {
-    const obj = {
-      selected: this.props.check.target.id
-    };
-    return _.extend(obj, {
+    return {
       cleanedData: null
-    });
-  },
-  componentDidMount(){
-    if (this.props.renderAsInclude){
-      this.runChange();
-    }
-  },
-  getFinalData(){
-    let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
-    check.target.id = this.state.selected;
-    check.target.type = this.state.selectedType;
-    return check;
+    };
   },
   getGroupsSecurity(){
     const string = this.state.filter.cleanedData.filter;
@@ -68,15 +57,32 @@ const CheckCreateTarget = React.createClass({
     }
     return this.state.groupsELB;
   },
+  getInclude(){
+    let include = ['groups.elb', 'groups.security', 'instances.ecc'];
+    const type = this.props.location.query.type;
+    if (type){
+      switch (type){
+      case 'security':
+        include = ['groups.security'];
+        break;
+      case 'elb':
+        include = ['groups.elb'];
+        break;
+      case 'EC2':
+      case 'ecc':
+        include = ['instances.ecc'];
+        break;
+      default:
+        break;
+      }
+    }
+    return include;
+  },
   isDisabled(){
     return false;
   },
-  runChange(){
-    let data = this.getFinalData();
-    this.props.onChange(data, this.isDisabled(), 1);
-  },
   runDismissHelperText(){
-    this.props.userActions.putData('hasDismissedCheckCreationHelp');
+    this.props.userActions.putData('hasDismissedCheckTargetHelp');
   },
   handleSubmit(e){
     e.preventDefault();
@@ -84,34 +90,16 @@ const CheckCreateTarget = React.createClass({
   },
   handleTargetSelect(item){
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
-    check.target.id = item.get('id');
-    check.target.type = item.get('type') || 'sg';
-    check.target.name = item.get('name');
-    this.setState({
-      selected: check.target.id,
-      selectedType: item.get('type') || 'sg'
-    });
-    this.props.onChange(check, this.isDisabled(), 1);
+    check.target = item.toJS ? item.toJS() : item;
+    this.props.onChange(check, null, 1);
     this.history.pushState(null, '/check-create/request', {id: check.target.id, type: check.target.type, name: check.target.name});
-  },
-  renderSubmitButton(){
-    if (!this.props.renderAsInclude){
-      return (
-        <div>
-          <Padding t={2}>
-            <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
-          </Padding>
-        </div>
-      );
-    }
-    return null;
   },
   renderHelperText(){
     return (
-      <UserDataRequirement hideIf="hasDismissedCheckCreationHelp">
+      <UserDataRequirement hideIf="hasDismissedCheckTargetHelp">
         <Padding b={2}>
           <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Let’s create a check! The first step is to choose a target to check. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.</p>
+            <p>Now, choose your target.</p>
           </Alert>
         </Padding>
       </UserDataRequirement>
@@ -125,14 +113,14 @@ const CheckCreateTarget = React.createClass({
           <Heading level={3}>Choose a Target for your Check</Heading>
           <SearchBar noRedirect id="check-create-search"/>
         </Padding>
-        <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={['groups.elb', 'groups.security', 'instances.ecc']} noFetch filter/>
+        <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={this.getInclude()} noFetch filter/>
       </div>
     );
   },
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (1 of 4)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create Check (2 of 5)" bg="info">
           <Button icon flat to="/">
             <Close btn/>
           </Button>
