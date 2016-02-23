@@ -3,6 +3,7 @@ import _ from 'lodash';
 import DocumentTitle from 'react-document-title';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './toolbar.css';
+import {plain as seed} from 'seedling';
 import {Heading, Hyphenate} from '../type';
 
 const Toolbar = React.createClass({
@@ -18,14 +19,12 @@ const Toolbar = React.createClass({
     key = _.startCase(key).split(' ').join('');
     return style[`btn${key}`];
   },
-  getOuterClass(){
-    let c = {};
-    if (this.props.bg === 'info'){
-      c = style.outerInfo;
-    } else {
-      c = style.outer;
+  getStyle(){
+    let obj = {};
+    if (this.props.bg){
+      obj.background = seed.color[this.props.bg];
     }
-    return c;
+    return obj;
   },
   renderTitle(){
     return (
@@ -34,7 +33,7 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={this.getOuterClass()}>
+      <div className={style.outer} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>

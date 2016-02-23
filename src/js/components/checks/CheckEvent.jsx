@@ -2,15 +2,16 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
+import TimeAgo from 'react-timeago';
+import {Link} from 'react-router';
 
 import {checks as actions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import Padding from '../layout/Padding';
+import {Toolbar} from '../global';
 import CheckResponsePaginate from './CheckResponsePaginate';
-import style from './screenshot.css';
 
-const CheckScreenshot = React.createClass({
-
+const CheckEvent = React.createClass({
   propTypes: {
     params: PropTypes.object,
     location: PropTypes.shape({
@@ -40,26 +41,53 @@ const CheckScreenshot = React.createClass({
     const notification = this.getNotification();
     return notification.get('responses').filter(response => !response.passing);
   },
+  getTitle(){
+    const name = this.getNotification().get('check_name') || this.getNotification().get('check_id') || '';
+    const bool = this.getNotification().get('passing') ? 'Passing' : 'Failure';
+    return `${bool} Event: ${name}`;
+  },
   isJSONLoaded() {
     // True if the JSON has been loaded from the S3 URL
-    return this.getNotification().has('check_name');
+    return this.getNotification().get('check_name');
+  },
+  renderText(){
+    const stamp = this.getNotification().get('timestamp');
+    if (typeof stamp !== 'object'){
+      return null;
+    }
+    const d = new Date(stamp.get('seconds') * 1000);
+    const bool = this.getNotification().get('passing');
+    return (
+      <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={d}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
+        To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
+    );
   },
   renderInner() {
     if (!this.isJSONLoaded()) {
       return null;
     }
+    let d = this.getNotification().get('timestamp') || new Date();
+    if (d.toJS){
+      d = new Date(d.get('seconds') * 1000);
+    }
     return (
       <div className="js-screenshot-results">
         <Padding tb={1}>
+          {this.renderText()}
           <CheckResponsePaginate responses={this.getNotification().get('responses')}
-            allowCollapse={false} showRerunButton={false} />
+            allowCollapse={false} showRerunButton={false} date={d}/>
         </Padding>
       </div>
     );
   },
   render() {
+    let bg;
+    if (this.isJSONLoaded()){
+      bg = this.getNotification().get('passing') ? 'success' : 'danger';
+    }
     return (
-      <div className={style.screenshot}>
+      <div>
+        <Toolbar title={this.getTitle()} bg={bg}/>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -76,4 +104,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(CheckScreenshot);
+export default connect(null, mapDispatchToProps)(CheckEvent);

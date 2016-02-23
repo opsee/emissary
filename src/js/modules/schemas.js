@@ -91,13 +91,6 @@ export const Check = Record({
   id: undefined,
   name: undefined,
   target: Target(),
-  // assertions: List([
-  //   {
-  //     key: 'code',
-  //     operand: 200,
-  //     relationship: 'equal'
-  //   }
-  // ]),
   assertions: [],
   notifications: List(),
   instances: List(),
@@ -121,4 +114,14 @@ export const Check = Record({
       headers: new List()
     })
   })
+});
+
+export const CheckEvent = Record({
+  check_name: undefined,
+  check_id: undefined,
+  timestamp: undefined,
+  passing: undefined,
+  responses: new List(),
+  target: undefined,
+  version: undefined
 });
