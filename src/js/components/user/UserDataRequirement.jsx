@@ -30,7 +30,7 @@ const UserDataRequirement = React.createClass({
     }
     if (this.props.hideIf){
       return !(selection);
-    }else if (this.props.showIf){
+    } else if (this.props.showIf){
       return !!(selection);
     }
   },

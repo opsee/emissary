@@ -20,7 +20,7 @@ const MultiButtonToggle = React.createClass({
     let obj = {};
     if (_.find(data, id)){
       data = _.pull(data, id);
-    }else {
+    } else {
       data.push(id);
     }
     obj[this.props.bf.name] = data;

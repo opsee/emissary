@@ -184,7 +184,7 @@ export function putData(key, data, reset){
           let index;
           if (history && Array.isArray(history) && history.length){
             index = history.length - 1;
-          }else {
+          } else {
             index = 0;
             user[key] = [];
           }

@@ -24,7 +24,7 @@ export default function asyncActions(state, action = {type: null}) {
           history: history.concat([action.payload])
         });
       }
-    }else {
+    } else {
       obj[stripped] = _.assign({}, action.payload, {
         history
       });

@@ -135,7 +135,7 @@ const RadialGraph = React.createClass({
     if (remaining){
       this.setInterval(this.runSilence, 1000);
       this.runSilence();
-    }else {
+    } else {
       this.intervals.map(clearInterval);
     }
   },

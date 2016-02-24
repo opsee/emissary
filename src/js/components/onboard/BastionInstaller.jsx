@@ -41,7 +41,7 @@ const BastionInstaller = React.createClass({
       }
       if (items[0].status !== 'CREATE_COMPLETE'){
         return 'Cloud Finishing';
-      }else if (items[0].status === 'CREATE_COMPLETE'){
+      } else if (items[0].status === 'CREATE_COMPLETE'){
         return 'Complete';
       }
       return 'AWS::CloudFormation::Stack';

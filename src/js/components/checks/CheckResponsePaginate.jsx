@@ -104,7 +104,7 @@ const CheckResponsePaginate = React.createClass({
   getResponses(){
     if (this.props.responses){
       return this.props.responses;
-    }else if (this.state.complete){
+    } else if (this.state.complete){
       return this.props.redux.checks.responses;
     }
     return [];
@@ -170,11 +170,11 @@ const CheckResponsePaginate = React.createClass({
       return (
         <div className={style.checkResponseWaiting}>Sending request...</div>
       );
-    }else if (this.getStatus() && typeof this.getStatus() !== 'string'){
+    } else if (this.getStatus() && typeof this.getStatus() !== 'string'){
       return (
         <Alert bsStyle="danger">There was an error sending your request.</Alert>
       );
-    }else if (this.props.responses){
+    } else if (this.props.responses){
       return null;
     }
     return (

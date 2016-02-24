@@ -108,7 +108,7 @@ const GroupItem = React.createClass({
           </span>
         </span>
       );
-    }else if (this.getItem().get('checks').size){
+    } else if (this.getItem().get('checks').size){
       return 'Initializing checks';
     }
     return  (

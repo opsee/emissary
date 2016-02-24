@@ -49,7 +49,7 @@ const Dropdown = React.createClass({
     let label = this.props.bf.value();
     if (label){
       label = this.getLabelFromChoice(label);
-    }else {
+    } else {
       label = _.clone(this.props.bf.label);
     }
     return _.extend({}, this.props, {

@@ -52,7 +52,7 @@ export const statics = {
           let err = JSON.parse(data.error);
           if (err && err.error){
             data.error = err.error;
-          }else {
+          } else {
             data.error = err;
           }
         }catch (err){
@@ -98,7 +98,7 @@ export default handleActions({
       });
       if (index > -1){
         checks = state.checks.update(index, () => single);
-      }else {
+      } else {
         checks = state.checks.concat(new List([single]));
       }
       let responses = _.get(single.get('results').get(0), 'responses');

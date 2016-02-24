@@ -18,7 +18,7 @@ const MultiToggle = React.createClass({
     let data = this.props.bf.value() || [];
     if (_.find(data, id)){
       data = _.pull(data, id);
-    }else {
+    } else {
       data.push(id);
     }
     let obj = {};

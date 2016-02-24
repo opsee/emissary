@@ -86,9 +86,9 @@ const System = React.createClass({
   renderCustomerInfo(){
     if (this.props.redux.user.get('customer_id')){
       return (
-        <Padding t={3}>
-          <div><strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customer_id')}</span></div>
-        </Padding>
+          <div>
+            <strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customer_id')}</span>
+          </div>
       );
     }
     return null;
@@ -100,9 +100,11 @@ const System = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderBastionsInfo()}
               {this.renderCustomerInfo()}
               <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
+              <Padding t={2}>
+                {this.renderBastionsInfo()}
+              </Padding>
             </Col>
           </Row>
         </Grid>

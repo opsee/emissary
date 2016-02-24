@@ -20,7 +20,7 @@ export function setString(string, noRedirect){
             if (!noRedirect){
               if (state().router.location.pathname !== '/search'){
                 dispatch(pushState(null, `/search?s=${string}`));
-              }else {
+              } else {
                 dispatch(replaceState(null, `/search?s=${string}`));
               }
             }
@@ -69,7 +69,7 @@ export function setTokens(payloadTokens = []){
           });
           if (state().router.location.pathname !== '/search'){
             dispatch(pushState(null, `/search?s=${string}`));
-          }else {
+          } else {
             dispatch(replaceState(null, `/search?s=${string}`));
           }
         }
