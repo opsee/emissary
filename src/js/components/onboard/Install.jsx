@@ -94,6 +94,10 @@ const Install = React.createClass({
   isBastionLaunching(){
     return !!(_.filter(this.props.redux.app.socketMessages, {command: 'launch-bastion'}).length);
   },
+  isBastionConnecting(){
+    const {socketMessages} = this.props.redux.app;
+    return !!(_.chain(socketMessages).filter({command: 'connect-bastion'}).last().get('state').value() === 'in-progress');
+  },
   isDiscoveryComplete(){
     if (this.props.location.pathname.match('install-example')){
       return true;
@@ -115,7 +119,9 @@ const Install = React.createClass({
   },
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
-    return (_.every(stats) && stats.length) ||  _.filter(this.props.redux.app.socketMessages, {command: 'connect-bastion'}).length;
+    const {socketMessages} = this.props.redux.app;
+    return (_.every(stats) && stats.length) ||
+    _.filter(socketMessages, {command: 'connect-bastion', state: 'complete'}).length;
   },
   renderBtn(){
     if (this.isComplete()){
@@ -148,6 +154,10 @@ const Install = React.createClass({
     } else if (this.isComplete()){
       return (
         <p>You are all set. Create a check to get started.</p>
+      );
+    } else if (this.isBastionConnecting()){
+      return (
+        <p>Your Bastion is currently attempting to connect. Hang on...</p>
       );
     }
     return <p>Checking installation status...</p>;

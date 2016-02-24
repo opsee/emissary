@@ -39,9 +39,9 @@ const Env = React.createClass({
     if (pathname){
       if (pathname.match('groups-security')){
         include = ['groups.security'];
-      }else if (pathname.match('groups-elb')){
+      } else if (pathname.match('groups-elb')){
         include = ['groups.elb'];
-      }else if (pathname.match('instances-ec2')){
+      } else if (pathname.match('instances-ec2')){
         include = ['instances.ecc'];
       }
     }

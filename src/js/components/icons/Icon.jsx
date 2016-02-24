@@ -22,7 +22,7 @@ const Icon = React.createClass({
     for (const prop in this.props){
       if (prop === 'fill'){
         arr.push(this.getColorClassFromProp(prop));
-      }else {
+      } else {
         arr.push(style[prop]);
       }
     }

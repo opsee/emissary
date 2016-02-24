@@ -74,7 +74,7 @@ const RegionSelect = React.createClass({
           return r.id;
         })
       });
-    }else {
+    } else {
       this.state.info.updateData({regions: []});
     }
   },

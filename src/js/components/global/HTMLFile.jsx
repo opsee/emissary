@@ -27,7 +27,7 @@ export default React.createClass({
           HTML error: {this.state.error}
         </Alert>
       );
-    }else if (this.state.html){
+    } else if (this.state.html){
       return <div dangerouslySetInnerHTML={{__html: this.state.html}}/>;
     }
     return null;

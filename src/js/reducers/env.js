@@ -70,7 +70,7 @@ const statics = {
     newData.instance_count = data.instance_count;
     if (Array.isArray(newData.Instances)){
       newData.instances = new List(_.map(newData.Instances, 'InstanceId'));
-    }else {
+    } else {
       newData.instances = new List();
     }
     newData.name = newData.LoadBalancerName;
@@ -174,7 +174,7 @@ const statics = {
     }
     if (Array.isArray(newData.SecurityGroups)){
       newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
-    }else {
+    } else {
       newData.SecurityGroups = new List();
     }
     newData.Placement = fromJS(newData.Placement);

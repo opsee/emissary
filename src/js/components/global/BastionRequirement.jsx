@@ -49,7 +49,6 @@ const BastionRequirement = React.createClass({
       if (bastion && bastion.state){
         return bastion.state;
       }
-      return false;
     }
     return false;
   },
@@ -75,7 +74,7 @@ const BastionRequirement = React.createClass({
           Your Opsee Bastion is currently installing. You can visit the <Link to="/start/install" style={{color: 'white', textDecoration: 'underline'}}>Install Page</Link> to view progress.
         </div>
       );
-    }else if (state === 'active'){
+    } else if (state === 'active'){
       return (
         <div>
           Your Opsee Bastion is disconnected or has been removed. If you need to install another, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>

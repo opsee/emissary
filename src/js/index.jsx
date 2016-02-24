@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'debug'){
       </DebugPanel>
     </div>
   ), document.getElementById('main'));
-}else {
+} else {
   render(
   (
     <div>

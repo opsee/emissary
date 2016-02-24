@@ -292,7 +292,7 @@ const CheckCreateRequest = React.createClass({
       selection = this.props.redux.env.groups[type].find(g => {
         return g.get('id') === target.id;
       }) || new Map();
-    }else {
+    } else {
       selection = this.props.redux.env.instances.ecc.find(g => {
         return g.get('id') === target.id;
       }) || new Map();
