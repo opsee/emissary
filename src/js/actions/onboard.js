@@ -133,7 +133,17 @@ export function subnetSelect(payload){
 
 function isBastionLaunching(state){
   return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length ||
-  !!_.filter(state().app.socketMessages, {command: 'connect-bastion'}).length;
+  !!_.filter(state().app.socketMessages, {command: 'connect-bastion'}).length ||
+  state().onboard.installing;
+}
+
+function isBastionConnected(state){
+  return _.chain(state().app.socketMessages)
+  .filter({command: 'bastions'})
+  .find(msg => {
+    return _.chain(msg).get('attributes.bastions').find('connected').value();
+  })
+  .value();
 }
 
 // let launchAttempts = 0;
@@ -149,33 +159,30 @@ function launch(dispatch, state, resolve, reject){
   .post(`${config.services.api}/vpcs/launch`)
   .set('Authorization', state().user.get('auth'))
   .send(state().onboard.installData)
-  .then(resolve, (err) => {
-    //save this for retrying later
-    // if (launchAttempts < 0){
-    //   return setTimeout(() => {
-    //     launch(state, resolve, reject);
-    //   }, 5000);
-    // }
-    return reject(err);
-  });
+  .then(resolve, reject);
 }
 
-export function install(retry){
+export function install(){
   return (dispatch, state) => {
     return dispatch({
       type: ONBOARD_INSTALL,
       payload: new Promise((resolve, reject) => {
-        if (isBastionLaunching(state)){
+        //user has launched
+        if (isBastionLaunching(state) || state().onboard.installing || isBastionConnected(state)){
           return resolve();
         }
+        //user has install data but has not launched
+        if (state().onboard.installData && !state().onboard.installing && !isBastionConnected(state)){
+          return launch(dispatch, state, resolve, reject);
+        }
+        //we aren't sure at this point, so let's wait
         setTimeout(() => {
-          if (isBastionLaunching(state)){
+          if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
-          }else if (state().onboard.installData){
-            return launch(dispatch, state, resolve, reject);
           }
-          return dispatch(pushState(null, '/start/region-select'));
-        }, retry ? 6000 : 17000);
+          dispatch(pushState(null, '/start/region-select'));
+          return reject();
+        }, 30000);
       })
     });
   };

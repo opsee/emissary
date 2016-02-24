@@ -9,7 +9,8 @@ import {
   ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT
+  ONBOARD_SUBNET_SELECT,
+  ONBOARD_INSTALL
 } from '../actions/constants';
 
 const initial = {
@@ -20,7 +21,8 @@ const initial = {
   vpcsForSelection: [],
   subnetsForSelection: [],
   bastionLaunching: undefined,
-  installData: undefined
+  installData: undefined,
+  installing: false
 };
 
 function getFinalInstallData(state){
@@ -129,6 +131,11 @@ export default handleActions({
     next(state){
       const installData = getFinalInstallData(state);
       return _.assign({}, state, {installData});
+    }
+  },
+  [ONBOARD_INSTALL]: {
+    next(state){
+      return _.assign({}, state, {installing: true});
     }
   }
 }, initial);
