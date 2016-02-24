@@ -120,7 +120,7 @@ const Install = React.createClass({
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
     const {socketMessages} = this.props.redux.app;
-    return (_.every(stats) && stats.length) ||  
+    return (_.every(stats) && stats.length) ||
     _.filter(socketMessages, {command: 'connect-bastion', state: 'complete'}).length;
   },
   renderBtn(){
