@@ -112,10 +112,9 @@ const CheckEdit = React.createClass({
   handleSubmit(){
     return this.props.actions.edit(this.getCheck());
   },
-  handleTargetSelect(id, type){
+  handleTargetSelect(target){
     let check = _.cloneDeep(this.getCheck());
-    check.target.id = id;
-    check.target.type = type || 'sg';
+    check.target = _.pick(target, ['id', 'name', 'type']);
     this.setData(check);
     this.setShowEnv();
   },
@@ -144,7 +143,7 @@ const CheckEdit = React.createClass({
         <div>
           {this.renderEnv()}
           <Padding tb={1}>
-            <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude/>
+            <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
           </Padding>
           <Padding tb={1}>
             <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>

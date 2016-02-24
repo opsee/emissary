@@ -8,6 +8,7 @@ import {Link} from 'react-router';
 import {checks as actions} from '../../actions';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import Padding from '../layout/Padding';
+import {Button} from '../forms';
 import {Toolbar} from '../global';
 import CheckResponsePaginate from './CheckResponsePaginate';
 
@@ -76,6 +77,9 @@ const CheckEvent = React.createClass({
           {this.renderText()}
           <CheckResponsePaginate responses={this.getNotification().get('responses')}
             allowCollapse={false} showRerunButton={false} date={d}/>
+            <Padding t={2}>
+              <Button href={this.props.location.query.json} target="_blank" flat color="default">View Raw Event JSON</Button>
+            </Padding>
         </Padding>
       </div>
     );

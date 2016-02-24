@@ -11,7 +11,7 @@
   margin:0;
   padding: 0.5em;
   text-align: center;
-  text-transform: uppercase;
+  text-transform: capitalize;
   touch-action: manipulation;
   transition: background var(--transitionEaseOut), color var(--transitionEaseOut), border-color var(--transitionEaseOut), width var(--transitionEaseOut);
   user-select: none;

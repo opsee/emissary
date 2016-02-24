@@ -101,6 +101,8 @@ const CheckCreateRequest = React.createClass({
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    //allows user to edit target in /check/edit mode
+    handleTargetClick: PropTypes.func,
     history: PropTypes.object,
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -219,7 +221,7 @@ const CheckCreateRequest = React.createClass({
     return condition1 && condition2;
   },
   isDisabled(){
-    return validateCheck(this.props.check, ['request']).length;
+    return !!validateCheck(this.props.check, ['request']).length;
   },
   runChange(){
     let data = this.getFinalData();
@@ -237,6 +239,8 @@ const CheckCreateRequest = React.createClass({
   handleTargetClick(){
     if (!this.props.renderAsInclude){
       this.props.history.pushState(null, '/check-create/target');
+    } else if (typeof this.props.handleTargetClick === 'function'){
+      this.props.handleTargetClick();
     }
   },
   renderHeaderForm(){
@@ -309,7 +313,7 @@ const CheckCreateRequest = React.createClass({
     return (
         <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
           <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Your Request defines the check you want to run on your chosen target. You can try a typical HTTP request by choosing to GET the '/' route on port 80.</p>
+            <p>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</p>
           </Alert>
         </UserDataRequirement>
       );
@@ -380,7 +384,7 @@ const CheckCreateRequest = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create Check (3 of 5)" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>
