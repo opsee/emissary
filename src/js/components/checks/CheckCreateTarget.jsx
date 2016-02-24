@@ -91,6 +91,7 @@ const CheckCreateTarget = React.createClass({
   handleTargetSelect(item){
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
+    check.target = _.pick(check.target, ['id', 'name', 'type']);
     this.props.onChange(check, null, 1);
     this.history.pushState(null, '/check-create/request', {id: check.target.id, type: check.target.type, name: check.target.name});
   },

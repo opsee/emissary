@@ -149,6 +149,7 @@ export default handleActions({
       return _.assign({}, state, {responses, responsesFormatted});
     },
     throw(state){
+      yeller.reportAction(state, action);
       return _.assign({}, state, {responses: new List(), responsesFormatted: []});
     }
   },
