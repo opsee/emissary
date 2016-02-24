@@ -148,7 +148,7 @@ export default handleActions({
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {responses, responsesFormatted});
     },
-    throw(state){
+    throw(state, action){
       yeller.reportAction(state, action);
       return _.assign({}, state, {responses: new List(), responsesFormatted: []});
     }
