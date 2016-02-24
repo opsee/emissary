@@ -104,23 +104,28 @@ const Install = React.createClass({
     return this.getBastionConnectionStatus() === 'complete';
   },
   isComplete(){
-    return this.isBastionConnected() && this.isDiscoveryComplete();
+    //the bastion connection can be determined an alternate way that indicates discovery is fully complete:
+    const bool = _.chain(this.props.redux.app.socketMessages)
+    .filter({command: 'bastions'})
+    .find(msg => {
+      return _.chain(msg).get('attributes.bastions').find('connected').value();
+    })
+    .value();
+    return (this.isBastionConnected() && this.isDiscoveryComplete()) || bool;
   },
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
     return (_.every(stats) && stats.length) ||  _.filter(this.props.redux.app.socketMessages, {command: 'connect-bastion'}).length;
   },
   renderBtn(){
-    if (this.areBastionsComplete()){
-      if (this.isComplete()){
-        return (
-          <Padding tb={3}>
-            <Button to="/check-create" color="primary" block chevron>
-              Create a Check
-            </Button>
-          </Padding>
-        );
-      }
+    if (this.isComplete()){
+      return (
+        <Padding tb={3}>
+          <Button to="/check-create" color="primary" block chevron>
+            Create a Check
+          </Button>
+        </Padding>
+      );
     }
     if (this.getBastionErrors().length){
       return (
@@ -138,13 +143,17 @@ const Install = React.createClass({
           <p>We are now installing the bastion in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
         </Padding>
       );
-    }else if (this.areBastionsComplete()){
+    } else if (this.areBastionsComplete()){
       return null;
+    } else if (this.isComplete()){
+      return (
+        <p>You are all set. Create a check to get started.</p>
+      );
     }
     return <p>Checking installation status...</p>;
   },
   renderSlack(){
-    if (flag('integrations-slack')){
+    if (flag('integrations-slack') && !this.isComplete()){
       return (
         <Padding>
           While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications in your favorite channel.
@@ -159,7 +168,7 @@ const Install = React.createClass({
           The bastion failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
         </Alert>
       );
-    }else if (!this.isInstallError()){
+    } else if (!this.isInstallError()){
       return (
         <div>
           {this.renderText()}
