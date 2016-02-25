@@ -113,7 +113,14 @@ const CheckCreateRequest = React.createClass({
   },
   getInitialState() {
     const self = this;
-    const initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
+    let initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
+    initialHeaders = initialHeaders.map(h => {
+      return {
+        key: h.name,
+        value: h.values.join(', ')
+      };
+    });
+
     let initialData = _.cloneDeep(_.get(self.props, 'check.check_spec.value') || {});
     if (typeof initialData.verb === 'string'){
       initialData.verb = [initialData.verb];
@@ -139,7 +146,6 @@ const CheckCreateRequest = React.createClass({
         labelSuffix: '',
         emptyPermitted: false,
         initial: initialHeaders.length ? initialHeaders : null,
-        // minNum:!initialHeaders.length ? 1 : 0,
         extra: 0,
         validation: {
           on: 'blur change',
@@ -152,12 +158,7 @@ const CheckCreateRequest = React.createClass({
     //this is a workaround because the library is not working correctly with initial + data formset
     setTimeout(() => {
       self.state.headers.forms().forEach((form, i) => {
-        const h = self.props.check.check_spec.value.headers[i];
-        const data = {
-          key: h.name,
-          value: h.values.join(', ')
-        };
-        form.setData(data);
+        form.setData(initialHeaders[i]);
       });
       if (this.isMounted()){
         this.setState({hasSetHeaders: true});
@@ -189,9 +190,9 @@ const CheckCreateRequest = React.createClass({
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
     let val = check.check_spec.value;
-    let headers = [];
+    let override = {};
     if (this.state.hasSetHeaders){
-      headers = _.chain(this.getHeaderForms()).map(header => {
+      override.headers = _.chain(this.getHeaderForms()).map(header => {
         const h = header.cleanedData;
         return {
           name: h.key,
@@ -199,7 +200,7 @@ const CheckCreateRequest = React.createClass({
         };
       }).value();
     }
-    let data = _.assign({}, this.state.info.data, {headers});
+    let data = _.assign({}, this.state.info.data, override);
     if (data.path && !data.path.match('^\/')){
       data.path = `/${data.path}`;
     }
