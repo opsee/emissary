@@ -37,7 +37,10 @@ const AssertionCounter = React.createClass({
     return test && test.success;
   },
   runTest(){
-    return slate.checkAssertion(_.assign({}, this.props, {key: this.props.keyData}), this.getResponse());
+    let response = _.assign({}, this.getResponse()) || {};
+    //cast to string because that's what slate wants
+    response.body = typeof response.body === 'object' ? JSON.stringify(response.body) : response.body;
+    return slate.checkAssertion(_.assign({}, this.props, {key: this.props.keyData}), response);
   },
   renderIcon(){
     return this.isPassing() ? (

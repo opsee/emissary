@@ -80,8 +80,9 @@ const CheckCreateType = React.createClass({
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
         {types.map(type => {
+          const data = JSON.stringify({target: {type: type.id}});
           return (
-            <Button to={`/check-create/target?type=${type.id}`} style={this.getItemStyle()} color="primary" flat key={`type-select-${type.id}`}>
+            <Button to={`/check-create/target?data=${data}`} style={this.getItemStyle()} color="primary" flat key={`type-select-${type.id}`}>
               <span>
                 <strong>{type.title}&nbsp;</strong>
               </span>

@@ -11,3 +11,4 @@ stats.json
 /visreg/img/compare/
 /visreg/img/diff/
 /config/local.js
+/config/debug.js

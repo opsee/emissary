@@ -78,6 +78,11 @@ const GroupItem = React.createClass({
     const type = this.getItem().get('type').toLowerCase();
     return `/group/${type}/${this.getItem().get('id')}`;
   },
+  getCreateCheckLink(){
+    const target = _.pick(this.getItem().toJS(), ['id', 'type', 'name']);
+    const data = JSON.stringify({target});
+    return `/check-create/request?data=${data}`;
+  },
   renderInstanceCount(){
     const count = this.getItem().get('instance_count');
     return (
@@ -124,7 +129,7 @@ const GroupItem = React.createClass({
       return (
         <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
           <ContextMenu title={`${this.getItem().get('name')} Actions`} id={this.getItem().get('id')} key="menu">
-            <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
+            <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
               <Add inline fill="primary"/> Create Check
             </Button>
           </ContextMenu>
