@@ -2,6 +2,7 @@ import {pushState} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
+import * as analytics from './analytics';
 import _ from 'lodash';
 import {
   GET_CHECK,
@@ -103,6 +104,7 @@ export function del(id){
         .then(res => {
           resolve(res.body);
           getChecks(true)(dispatch, state);
+          analytics.trackEvent('Check', 'delete', id)(dispatch, state);
         }, reject);
       })
     });
@@ -201,6 +203,7 @@ export function create(data){
         checkCreateOrEdit(state, data)
         .then(res => {
           resolve(res.body);
+          analytics.trackEvent('Check', 'create', res.body)(dispatch, state);
           setTimeout(() => {
             dispatch(pushState(null, '/'));
           }, 100);
@@ -218,6 +221,7 @@ export function edit(data){
         checkCreateOrEdit(state, data, true)
         .then(res => {
           resolve(res.body);
+          analytics.trackEvent('Check', 'edit', res.body)(dispatch, state);
           setTimeout(() => {
             dispatch(pushState(null, '/'));
           }, 100);
