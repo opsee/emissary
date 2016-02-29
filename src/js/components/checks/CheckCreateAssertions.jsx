@@ -6,7 +6,6 @@ import {BastionRequirement, Toolbar} from '../global';
 import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import jspath from 'jspath';
 
 import assertionTypes from 'slate/src/types';
 import relationships from 'slate/src/relationships';
@@ -197,11 +196,8 @@ const CheckCreateAssertions = React.createClass({
       }
       body = typeof body === 'object' ? body : {};
       try {
-        const val = data.value.match('^\\.') ? data.value : `.${data.value}`;
-        path = jspath.apply(val || '', body);
-        if (path && Array.isArray(path) && path.length === 1){
-          path = path[0];
-        }
+        const val = data.value;
+        path = _.get(body, val);
         if (typeof path !== 'string'){
           path = JSON.stringify(path);
         }
@@ -260,8 +256,8 @@ const CheckCreateAssertions = React.createClass({
       return (
         <div>
           <BoundField bf={form.boundField('json')}/>
-          <Padding t={1}>
-            <Heading level={4}>Result:</Heading>
+          <Padding t={2}>
+            <Heading level={4}>JSON Selection Result</Heading>
           </Padding>
           <Alert bsStyle="default">{path}</Alert>
         </div>
