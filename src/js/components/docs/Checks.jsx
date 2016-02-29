@@ -12,12 +12,19 @@ const Checks = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Heading level={2}>General Information</Heading>
+              <p>Checks determine the Health of your services. Checks have four main components - a target, a request, assertions, and notifications.</p>
+              <p>Checks run every 30 seconds. Opsee looks for 4 consecutive events of the same state - we call this "stable state". You will receive a notification the state of your check changes.</p>
 
-              <p>Checks run every 30 seconds. Opsee looks for 4 consecutive events of the same state - we call this "stable state". If a stable failing state occurs, you will receive a notifiction.</p>
+              <Heading level={2}>Targets</Heading>
+              <p>The following entities are available health check targets:</p>
+              <Heading level={3}>EC2 Instance</Heading>
+              <p>A single EC2 Instance of any size.</p>
 
-              <p>Opsee currently supports the following check types and check targets:</p>
-              <Heading level={2}>Check Types</Heading>
+              <Heading level={3}>EC2 Security Group</Heading>
+              <p>When a security group is selected, the check will run on all instances in the group. If instances are added and removed from the group, Opsee will automatically update the group definition, always running the check on the most up-to-date list of member instances</p>
+
+              <Heading level={3}>Elastic Load Balancer (ELB)</Heading>
+              <p>When an ELB is set as a target, the check will run on all instances behind the load balancer. If instances are added and removed from the ELB definition, Opsee will automatically update the ELB definition, always running the check on the most up-to-date list of member instances</p>
 
               <Heading level={3}>HTTP</Heading>
               <p>A HTTP request is made to your chosen target. The request must contain the following information:</p>
@@ -28,17 +35,6 @@ const Checks = React.createClass({
                 <li>(optional) Header Key & Value (e.g. 'content-type' : 'application/json'</li>
               </ul>
               <p>Along with a request, at least one assertion must be defined against the Status Code, Headers, or Body of the response for a passing check.</p>
-
-              <Heading level={2}>Check Targets</Heading>
-              <p>The following entities can be used as targets for checks, with functionality as noted:</p>
-              <Heading level={3}>EC2 Instance</Heading>
-              <p>An EC2 Instance is a static target for a check, never altering its configuration.</p>
-
-              <Heading level={3}>EC2 Security Group</Heading>
-              <p>When a security group is set as a target, the check will run on all instances in the group. If instances are added and removed from the group, Opsee will automatically update the group definition, always running the check on the most up-to-date list of member instances</p>
-
-              <Heading level={3}>ELB (Elastic Load Balancer</Heading>
-              <p>When an ELB is set as a target, the check will run on all instances behind the load balancer. If instances are added and removed from the ELB definition, Opsee will automatically update the ELB definition, always running the check on the most up-to-date list of member instances</p>
             </Col>
           </Row>
         </Grid>
