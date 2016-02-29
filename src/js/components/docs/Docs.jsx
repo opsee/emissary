@@ -13,7 +13,6 @@ const Docs = React.createClass({
             <Col xs={12}>
               <ul>
                 <li><Link to="/docs/bastion">The Bastion Instance</Link></li>
-                <li><Link to="/docs/cloudformation">Our Cloudformation Template and Permissions</Link></li>
                 <li><Link to="/docs/IAM">IAM Profile for Bastion Installation</Link></li>
               </ul>
               </Col>

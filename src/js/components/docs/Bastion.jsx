@@ -39,8 +39,7 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>What kind of access and permissions does the Bastion Instance have to my environment?</Heading>
-                <p>You can see a complete overview of the Bastion Instance permissions in our <a href="/docs/cloudformation">Cloudformation template document</a>.</p>
-                <p>In addition to permissions for the Bastion Instance itself, Opsee needs to ensure that the Bastion Instance can communicate with the rest of your infrastructure. In order to ensure that the Opsee Bastion can communicate with your services to perform health checks, a process running on the Bastion will regularly examine the security groups in your AWS environment and add a rule that allows communication from the Bastion&rsquo;s security group to your security groups.</p>
+                <p>In addition to permissions for the Bastion Instance itself, Opsee needs to ensure that the Bastion Instance can communicate with the rest of your infrastructure. In order to ensure that the Opsee Bastion can communicate with your services to perform health checks, a process running on the Bastion will periodically examine the security groups in your AWS environment.  If groups are found with which the bastion cannot communicate, ingress rules will be created via the AWS API so that services within those groups can be monitored. All ingress rules are created, updated, and deleted via the modification of a special cloudformation stack that resides in the region which the bastion was installed. You can see all of the security groups to which the bastion has access by examining the ingress stack&rsquo;s template body.</p>
                 <hr/>
 
                 <Heading level={3}>Does Opsee install any software on my systems?</Heading>
@@ -48,7 +47,7 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>Tell me about the security measures Opsee has taken with the Bastion</Heading>
-                <p>We&rsquo;re glad you asked! The Bastion Instance is an Amazon AMI defined by a CloudFormation template. Its credentials are updated every hour. Any credentials it needs to run health checks are stored on an encrypted EBS volume inside your network. The Bastion Instance can even keep running if it can&rsquo;t connect to Opsee.</p>
+                <p>We&rsquo;re glad you asked! The Bastion Instance is a t2.micro EC2 instance running an Opsee Bastion AMI within an Autoscaling Group.  The Autoscaling Group is defined by a CloudFormation template and managed via a CloudFormation stack that resides in the region within which the bastion was installed. The Bastion&rsquo;s credentials are updated every hour. Any credentials it needs to run health checks are stored on an encrypted EBS volume inside your network. The Bastion Instance can even keep running if it can&rsquo;t connect to Opsee.</p>
                 <hr/>
 
                 <Heading level={3}>How does the Bastion Instance handle VPCs?</Heading>
