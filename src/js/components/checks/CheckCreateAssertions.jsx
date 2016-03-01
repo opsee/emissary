@@ -260,13 +260,16 @@ const CheckCreateAssertions = React.createClass({
       if (!path){
         path = <em>No data selected</em>;
       }
+      const result = data.json ? (
+        <Padding t={2}>
+          <Heading level={4}>JSON Selection Result</Heading>
+          <Alert bsStyle="default">{path}</Alert>
+        </Padding>
+      ) : null;
       return (
         <div>
           <BoundField bf={form.boundField('json')}/>
-          <Padding t={2}>
-            <Heading level={4}>JSON Selection Result</Heading>
-          </Padding>
-          <Alert bsStyle="default">{path}</Alert>
+          {result}
         </div>
       );
     }
