@@ -20,6 +20,7 @@ import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
 import {Heading} from '../type';
+import AssertionSelection from './AssertionSelection';
 
 const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
@@ -178,6 +179,10 @@ const CheckCreateAssertions = React.createClass({
     e.preventDefault();
     this.history.pushState(null, '/check-create/info');
   },
+  handleAssertionsChange(assertions = []){
+    const data = _.assign({}, this.props.check, {assertions});
+    this.props.onChange(data, this.isDisabled(), 2);
+  },
   renderOperand(form){
     const data = form.cleanedData;
     if (data && data.relationship && !data.relationship.match('empty|notEmpty')){
@@ -285,7 +290,10 @@ const CheckCreateAssertions = React.createClass({
         </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
         <br />
-        {this.renderAssertionsForm()}
+        <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>
+        {
+          // this.renderAssertionsForm()
+        }
         <div><br/></div>
         {this.renderSubmitButton()}
       </form>
