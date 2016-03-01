@@ -255,7 +255,7 @@ const CheckCreateAssertions = React.createClass({
   renderJsonPath(form){
     const data = form.cleanedData || {};
     const key = data.key || '';
-    if (data.relationship && key === 'body'){
+    if (data.relationship && key === 'body' && flag('assertion-type-json')){
       let path = this.getPath(data);
       if (!path){
         path = <em>No data selected</em>;
