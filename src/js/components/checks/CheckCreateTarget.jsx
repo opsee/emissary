@@ -59,7 +59,13 @@ const CheckCreateTarget = React.createClass({
   },
   getInclude(){
     let include = ['groups.elb', 'groups.security', 'instances.ecc'];
-    const type = this.props.location.query.type;
+    let data = this.props.location.query.data;
+    if (data && typeof data === 'string'){
+      data = JSON.parse(data);
+    }
+    data = data || {};
+    data = _.defaults(data, {target: {}});
+    const type = data.target.type;
     if (type){
       switch (type){
       case 'security':
@@ -93,7 +99,8 @@ const CheckCreateTarget = React.createClass({
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
     this.props.onChange(check, null, 1);
-    this.history.pushState(null, '/check-create/request', {id: check.target.id, type: check.target.type, name: check.target.name});
+    const data = JSON.stringify(check);
+    this.history.pushState(null, `/check-create/request?data=${data}`);
   },
   renderHelperText(){
     return (

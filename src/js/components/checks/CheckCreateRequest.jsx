@@ -235,7 +235,8 @@ const CheckCreateRequest = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     if (!this.props.renderAsInclude){
-      this.props.history.pushState(null, '/check-create/assertions');
+      const data = JSON.stringify(this.props.check);
+      this.props.history.pushState(null, `/check-create/assertions?data=${data}`);
     }
   },
   handleTargetClick(){

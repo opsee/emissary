@@ -83,14 +83,18 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
 
 const Target = Record({
   name: undefined,
-  type: 'sg',
+  type: undefined,
   id: undefined
 });
 
 export const Check = Record({
   id: undefined,
   name: undefined,
-  target: Target(),
+  target: Target({
+    name: config.checkDefaultTargetName,
+    type: config.checkDefaultTargetType,
+    id: config.checkDefaultTargetId
+  }),
   assertions: [],
   notifications: List(),
   instances: List(),
