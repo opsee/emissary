@@ -62,7 +62,7 @@ export const statics = {
           } else {
             data.error = err;
           }
-        }catch (err){
+        } catch (err){
           _.noop();
         }
       }

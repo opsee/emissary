@@ -137,7 +137,7 @@ export function test(data){
         const check = _.chain(data)
         .thru(formatCheckData)
         .assign({name: state().user.get('email')})
-        .pick(check, ['check_spec', 'interval', 'name', 'target'])
+        .pick(['check_spec', 'interval', 'name', 'target'])
         .value();
         return request
         .post(`${config.services.api}/bastions/test-check`)

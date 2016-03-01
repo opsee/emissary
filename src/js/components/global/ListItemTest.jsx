@@ -36,6 +36,7 @@ const ListItemTest = React.createClass({
     if (this.props.total){
       return Math.floor((this.props.passing / this.props.total) * 100);
     }
+    return 0;
   },
   getInfoSecondary(){
     if (this.getHealth()){

@@ -33,7 +33,7 @@ const PasswordChange = React.createClass({
     if (!this.props.location.query.id || !token){
       return this.props.history.replaceState(null, '/password-forgot');
     }
-    this.props.actions.userApply({
+    return this.props.actions.userApply({
       loginDate: new Date(),
       token
     });

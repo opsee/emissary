@@ -155,7 +155,7 @@ function launch(dispatch, state, resolve, reject){
   if (config.onboardInstallError){
     return reject(new Error('config.onboardInstallError'));
   }
-  request
+  return request
   .post(`${config.services.api}/vpcs/launch`)
   .set('Authorization', state().user.get('auth'))
   .send(state().onboard.installData)
@@ -176,7 +176,7 @@ export function install(){
           return launch(dispatch, state, resolve, reject);
         }
         //we aren't sure at this point, so let's wait
-        setTimeout(() => {
+        return setTimeout(() => {
           if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
           }

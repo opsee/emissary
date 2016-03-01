@@ -3,6 +3,7 @@ import _ from 'lodash';
 import config from '../modules/config';
 import ga from '../modules/ga';
 import request from '../modules/request';
+import {User} from '../modules/schemas';
 import {
   ANALYTICS_EVENT,
   ANALYTICS_PAGEVIEW,
@@ -50,7 +51,7 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
-    dispatch({
+    return dispatch({
       type: ANALYTICS_PAGEVIEW,
       payload: request
         .post(`${ANALYTICS_API}/pageview`)
@@ -93,7 +94,7 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
 
     // Track all events in Myst (and none through the window.ga object.)
     const user = makeUserObject(userData || state().user);
-    dispatch({
+    return dispatch({
       type: ANALYTICS_EVENT,
       payload: request
         .post(`${ANALYTICS_API}/event`)
@@ -113,7 +114,7 @@ export function updateUser(updatedUser) {
     // in state().user could be stale, so we only use that for id.
     const update = _.assign({}, {user_id: state().user.get('id')}, updatedUser);
 
-    dispatch({
+    return dispatch({
       type: ANALYTICS_USER_UPDATE,
       payload: request
         .post(`${ANALYTICS_API}/user`)
@@ -124,12 +125,28 @@ export function updateUser(updatedUser) {
 
 export function initialize() {
   return (dispatch, state) => {
+    const user = state().user || new User();
+    // ld needs to be loaded even if user is ghosting for features to work
+    // there are no analytics in LD so it's nbd
+    // FIXME Remove when Launch Darkly added to Myst
+    if (window.ldclient){
+      window.ldclient.identify({
+        firstName: user.get('name'),
+        key: (user.get('id') || '').toString(),
+        email: user.get('email'),
+        custom: {
+          customer_id: user.get('customer_id'),
+          id: user.get('id'),
+          admin: !!user.get('admin')
+        }
+      });
+    }
+
     //user is ghosting
-    if (state().user && state().user.toJS && state().user.get('ghosting')){
+    if (user && user.toJS && user.get('ghosting')){
       return Promise.resolve();
     }
 
-    const user = state().user;
     const isAuthenticated = user.get('token') && user.get('id');
 
     // If the user is authenticated, we can initialize them with their identity
@@ -141,20 +158,6 @@ export function initialize() {
       // as their visitor ID. (This allows us to track logged-in users across
       // multiple devices.)
       ga('create', config.googleAnalyticsID, user.id);
-
-      // FIXME Legacy analytics -- remove when Launch Darkly added to Myst
-      if (window.ldclient){
-        window.ldclient.identify({
-          firstName: user.name,
-          key: user.id.toString(),
-          email: user.email,
-          custom: {
-            customer_id: user.customer_id,
-            id: user.id,
-            admin: !!user.admin
-          }
-        });
-      }
 
       // Sync the user with Myst/Intercom
       const update = makeUserObject(user);
@@ -169,6 +172,7 @@ export function initialize() {
       // behavior (e.g., anonymous, GA-generated UUID instead of Opsee user ID).
       ga('create', config.googleAnalyticsID, 'auto');
     }
+    return true;
   };
 }
 

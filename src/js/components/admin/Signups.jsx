@@ -44,7 +44,13 @@ const Signups = React.createClass({
     const users = this.props.redux.admin.users.toJS();
     const combined = [].concat(signups).concat(users);
     return _.chain(combined).map(s => {
-      s.created_at = new Date(Date.parse(s.created_at));
+      let d = s.created_at;
+      if (typeof d === 'string'){
+        d = new Date(Date.parse(d));
+      } else {
+        d = new Date(d);
+      }
+      s.created_at = d;
       s.userId = _.chain(users).find({email: s.email}).get('id').value();
       return s;
     }).sortBy(s => {
@@ -135,7 +141,7 @@ const Signups = React.createClass({
   },
   renderItem(signup){
     return (
-      <Col xs={12} sm={6}>
+      <Col xs={12} sm={6} key={`signup-${_.uniqueId()}`}>
         <Padding tb={1}>
           <div style={{background: seed.color.gray9}}>
             <Padding a={1}>

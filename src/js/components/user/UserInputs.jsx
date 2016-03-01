@@ -79,6 +79,7 @@ export default React.createClass({
         data: _.cloneDeep(this.props)
       };
     }
+    return null;
   },
   renderEmail(){
     return (
