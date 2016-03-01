@@ -174,6 +174,7 @@ const CheckCreateAssertions = React.createClass({
             key: 'json',
             value: obj.json
           });
+          obj = _.pick(obj, ['key', 'operand', 'relationship', 'value']);
         }
         return _.pick(obj, ['key', 'value', 'relationship', 'operand']);
       });
