@@ -31,6 +31,7 @@ const Label = React.createClass({
         </div>
       );
     }
+    return null;
   },
   render(){
     if (_.get(this.props.bf, 'field.widgetAttrs.noLabel')){

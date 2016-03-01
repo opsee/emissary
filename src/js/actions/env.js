@@ -193,7 +193,7 @@ export function getBastions(){
     if (!state().user.get('auth')){
       return Promise.resolve();
     }
-    dispatch({
+    return dispatch({
       type: ENV_GET_BASTIONS,
       payload: new Promise((resolve, reject) => {
         return request

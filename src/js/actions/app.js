@@ -45,7 +45,7 @@ function socketStart(dispatch, state){
       let data;
       try {
         data = JSON.parse(event.data);
-      }catch (err){
+      } catch (err){
         console.log(err);
         return false;
       }
@@ -58,6 +58,7 @@ function socketStart(dispatch, state){
           payload: data
         });
       }
+      return true;
     };
     window.socket.onerror = (event) => {
       dispatch({

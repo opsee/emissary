@@ -42,7 +42,7 @@ const Header = React.createClass({
   },
   renderNavItems(){
     return (
-      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
+      <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checks nav/>&nbsp;

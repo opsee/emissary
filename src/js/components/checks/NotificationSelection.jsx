@@ -251,7 +251,7 @@ const NotificationSelection = React.createClass({
       icon = <Checkmark inline fill="text"/>;
     }
     return (
-      <div className={`align-self-end`}>
+      <div className="align-self-end">
         <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={className} {...props} disabled={disabled} style={{minHeight: '46px'}}>
           {string}&nbsp;{icon}
         </Button>

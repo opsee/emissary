@@ -3,7 +3,7 @@ export default {
     let local = window.localStorage.getItem(string);
     try {
       local = JSON.parse(local);
-    }catch (err){
+    } catch (err){
       local = null;
     }
     //TODO remove after all the storage.get('user').auth calls are gone

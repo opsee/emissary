@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {Map} from 'immutable';
-import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -44,11 +43,6 @@ const GroupSecurity = React.createClass({
     return this.props.redux.env.groups.security.find(g => {
       return g.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
-  },
-  getInstanceIds(){
-    if (this.getGroup().get('name')){
-      return _.map(this.getGroup().get('instances').toJS(), 'id');
-    }
   },
   renderDescription(){
     const desc = this.getGroup().get('Description');

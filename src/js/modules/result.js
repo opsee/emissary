@@ -51,6 +51,7 @@ function fromJS(data){
         }));
         return new Result(resultData);
       }
+      return new Result();
     });
     newResults = _.compact(newResults);
     if (newResults && newResults.length){

@@ -7,6 +7,7 @@ const yeller = {
     if (typeof Yeller === 'function'){
       return Yeller.report(...args);
     }
+    return null;
   },
   reportAction(state, action = {payload: {}}){
     const payload = action.payload || {};

@@ -28,7 +28,7 @@ const RadioWithLabel = React.createClass({
       <div className="display-flex align-items-center">
         <Radio on={this.props.on} onChange={this.props.onChange} id={this.props.id} />
         <div className="flex-1">
-          <label className={`label user-select-none`} style={_.assign(this.getStyle(), this.props.labelStyle)} htmlFor={this.props.id}>
+          <label className="label user-select-none" style={_.assign(this.getStyle(), this.props.labelStyle)} htmlFor={this.props.id}>
             <span dangerouslySetInnerHTML={{__html: this.props.label}}/>
           </label>
         </div>
