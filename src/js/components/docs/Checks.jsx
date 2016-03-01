@@ -48,7 +48,7 @@ const Checks = React.createClass({
               <p>If your service responds in valid JSON format including a correct <code>Content-Type</code> header, you can take advantage of our powerful JSON path parameter. Here&rsquo;s how it works:</p>
               <ul>
                 <li>The response body will be converted to a JavaScript object using <code>JSON.stringify</code>.</li>
-                <li>You will supply a JSON "path" that is written with standard <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_Accessors" target="_blank">property accessors</a>.</li>
+                <li>You supply a JSON "path" that is written with standard <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_Accessors" target="_blank">property accessors</a>.</li>
                 <li>We use the <a href="https://lodash.com/docs#get" target="_blank"><code>.get()</code> function in Lodash</a> to safely select an object.</li>
                 <li>If your response is valid json and an object is found, you can make any assertion against it.</li>
               </ul>
