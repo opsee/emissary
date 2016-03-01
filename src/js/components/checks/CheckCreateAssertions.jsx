@@ -15,14 +15,19 @@ import {UserDataRequirement} from '../user';
 import AssertionCounter from './AssertionCounter';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import CheckDisabledReason from './CheckDisabledReason';
-import {validateCheck} from '../../modules';
+import {flag, validateCheck} from '../../modules';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
 import {Heading} from '../type';
 import AssertionSelection from './AssertionSelection';
 
-const assertionTypeOptions = assertionTypes.map(assertion => [assertion.id, assertion.name]);
+const assertionTypeOptions = _.chain(assertionTypes).filter(type => {
+  if (type.id === 'json'){
+    return false;
+  }
+  return flag(`assertion-type-${type.id}`);
+}).map(type => [type.id, type.name]).value();
 const relationshipOptions = relationships.map(relationship => [relationship.id, relationship.name]);
 
 function relationshipConcernsEmpty(relationship){
@@ -58,6 +63,13 @@ const AssertionsForm = forms.Form.extend({
     label: 'Header Key',
     widgetAttrs: {
       placeholder: 'i.e. Content-Type'
+    },
+    required: false
+  }),
+  json: forms.CharField({
+    label: 'JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a>',
+    widgetAttrs: {
+      placeholder: 'dogs[1].breed'
     },
     required: false
   }),
@@ -116,7 +128,13 @@ const CheckCreateAssertions = React.createClass({
       assertions: new AssertionsFormSet({
         onChange: self.runChange,
         labelSuffix: '',
-        initial: _.cloneDeep(this.props.check.assertions),
+        initial: _.chain(this.props.check.assertions).cloneDeep().map((assertion = {}) => {
+          if (assertion.key === 'json'){
+            assertion.json = assertion.value;
+            assertion.key = 'body';
+          }
+          return assertion;
+        }).value(),
         minNum: !this.props.check.assertions.length ? 1 : 0,
         extra: 0
       }),
@@ -129,6 +147,10 @@ const CheckCreateAssertions = React.createClass({
         //checking here accounts for empty assertion forms
         let data = self.props.check.assertions[i];
         if (data){
+          if (data.key === 'json'){
+            data.json = data.value;
+            data.key = 'body';
+          }
           form.setData(data);
         }
       });
@@ -147,7 +169,15 @@ const CheckCreateAssertions = React.createClass({
     let check = _.cloneDeep(this.props.check);
     if (this.state.hasSetAssertions){
       check.assertions = this.getAssertionsForms().map(form => {
-        return _.omit(form.cleanedData, 'DELETE');
+        let obj = _.assign({}, form.cleanedData);
+        if (obj.key === 'body' && obj.json){
+          obj = _.assign({}, obj, {
+            key: 'json',
+            value: obj.json
+          });
+          obj = _.pick(obj, ['key', 'operand', 'relationship', 'value']);
+        }
+        return _.pick(obj, ['key', 'value', 'relationship', 'operand']);
       });
     }
     return check;
@@ -163,11 +193,46 @@ const CheckCreateAssertions = React.createClass({
     }
     return val;
   },
+  getPath(data = {}){
+    let path;
+    if (data.json){
+      let body = _.get(this.getResponse(), 'body') || {};
+      if (typeof body === 'string'){
+        try {
+          body = JSON.parse(body);
+        } catch (err){
+          return path;
+        }
+      }
+      body = typeof body === 'object' ? body : {};
+      try {
+        path = _.get(body, data.json);
+        if (typeof path !== 'string'){
+          path = JSON.stringify(path);
+        }
+      } catch (err){
+        return path;
+      }
+    }
+    return path;
+  },
   isDataComplete(){
     return this.props.check.assertions.length;
   },
   isDisabled(){
     return validateCheck(this.props.check, ['assertions']).length;
+  },
+  isBodyJson(){
+    try {
+      const res = this.getResponse();
+      const body = _.get(res, 'body');
+      const json = JSON.parse(body);
+      const type = _.chain(res).get('headers').find({name: 'Content-Type'}).get('values').value() || [];
+      const smashed = type.join(';');
+      return !!json && smashed.match('json');
+    } catch (err){
+      return false;
+    }
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 2);
@@ -177,7 +242,8 @@ const CheckCreateAssertions = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.history.pushState(null, '/check-create/info');
+    const data = JSON.stringify(this.props.check);
+    this.history.pushState(null, `/check-create/info?data=${data}`);
   },
   handleAssertionsChange(assertions = []){
     const data = _.assign({}, this.props.check, {assertions});
@@ -195,10 +261,34 @@ const CheckCreateAssertions = React.createClass({
     return null;
   },
   renderValue(form){
-    const data = form.cleanedData;
-    if (data && data.relationship && data.key === 'header'){
+    const data = form.cleanedData || {};
+    const key = data.key || '';
+    if (data.relationship && key.match('header')){
       return (
         <BoundField bf={form.boundField('value')}/>
+      );
+    }
+    return null;
+  },
+  renderJsonPath(form){
+    const data = form.cleanedData || {};
+    const key = data.key || '';
+    if (data.relationship && key === 'body' && flag('assertion-type-json') && this.isBodyJson()){
+      let path = this.getPath(data);
+      if (!path){
+        path = <em>No data selected</em>;
+      }
+      const result = data.json ? (
+        <Padding t={2}>
+          <Heading level={4}>JSON Selection Result</Heading>
+          <Alert bsStyle="default">{path}</Alert>
+        </Padding>
+      ) : null;
+      return (
+        <div>
+          <BoundField bf={form.boundField('json')}/>
+          {result}
+        </div>
       );
     }
     return null;
@@ -217,11 +307,18 @@ const CheckCreateAssertions = React.createClass({
     return (
       <div>
         {this.getAssertionsForms().map((form, index) => {
+          let data = form.cleanedData;
+          if (data.key === 'body' && data.json){
+            data = _.assign({}, data, {
+              key: 'json',
+              value: data.json
+            });
+          }
           return (
             <Grid fluid key={`assertion-${index}`}>
               <Row>
                 <Col xs={2} sm={1}>
-                  <AssertionCounter label={index + 1} {...form.cleanedData} keyData={form.cleanedData.key} response={this.getResponse()}/>
+                  <AssertionCounter label={index + 1} {...data} keyData={data.key} response={this.getResponse()}/>
                 </Col>
                 <Col xs={8} sm={10}>
                   <Row>
@@ -243,6 +340,7 @@ const CheckCreateAssertions = React.createClass({
                   <Row>
                     <Col xs={12}>
                       {this.renderValue(form, `assertion-${index}-value-field`)}
+                      {this.renderJsonPath(form, `assertion-${index}-json-field`)}
                       {this.renderOperand(form, `assertion-${index}-operand-field`)}
                     </Col>
                   </Row>

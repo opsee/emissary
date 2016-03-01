@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import {Check} from '../../modules/schemas';
 import CheckDebug from './CheckDebug';
+import config from '../../modules/config';
 import {
   checks as actions,
   user as userActions,
@@ -47,23 +48,32 @@ const CheckCreate = React.createClass({
     return this.getState();
   },
   getState(){
+    let data = this.props.location.query.data;
+    if (data && typeof data === 'string'){
+      data = JSON.parse(data);
+    }
+    const initial = _.chain(data).defaults({
+      target: {
+        name: config.checkDefaultTargetName,
+        type: config.checkDefaultTargetType,
+        id: config.checkDefaultTargetId
+      },
+      assertions: [
+        {
+          key: 'code',
+          operand: 200,
+          relationship: 'equal'
+        }
+      ],
+      notifications: [
+        {
+          type: 'email',
+          value: this.props.redux.user.get('email')
+        }
+      ]
+    }).value();
     const obj = {
-      check: new Check({
-        target: this.props.location.query,
-        assertions: [
-          {
-            key: 'code',
-            operand: 200,
-            relationship: 'equal'
-          }
-        ],
-        notifications: [
-          {
-            type: 'email',
-            value: this.props.redux.user.get('email')
-          }
-        ]
-      }).toJS(),
+      check: new Check(initial).toJS(),
       filter: null
     };
     return obj;

@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
 import result from '../modules/result';
-// import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {Check, CheckEvent} from '../modules/schemas';
 import {itemsFilter, yeller} from '../modules';
@@ -46,6 +45,14 @@ export const statics = {
           headerObj[h.name] = h.values;
         });
         data.response.value.headers = headerObj;
+        const contentType = _.chain(headers).find({name: 'Content-Type'}).get('values').value() || '';
+        if (contentType.match('json')){
+          try {
+            data.response.value.body = JSON.parse(data.response.value.body);
+          } catch (err){
+            yeller.report(err);
+          }
+        }
       }
       if (data.error){
         try {

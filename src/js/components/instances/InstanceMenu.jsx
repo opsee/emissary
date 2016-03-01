@@ -48,6 +48,11 @@ const InstanceMenu = React.createClass({
     const cond5 = !_.isEqual(this.state, nextState);
     return (cond1 || cond2 || cond3 || cond4 || cond5);
   },
+  getCreateCheckLink(){
+    const target = _.pick(this.props.item.toJS(), ['id', 'type', 'name']);
+    const data = JSON.stringify({target});
+    return `/check-create/request?data=${data}`;
+  },
   runStartConfirm(){
     this.props.actions.startInstances([this.props.item.get('id')]);
     // this.props.appActions.closeContextMenu();
@@ -107,9 +112,9 @@ const InstanceMenu = React.createClass({
     return (
       <div key="page0">
         <Padding lr={1} t={2}>
-          <Heading level={3}>{this.props.item.get('name')} Actions</Heading>
+          <Heading level={3}>{item.get('name')} Actions</Heading>
         </Padding>
-        <Button color="primary" text="left" to={`/check-create/request?id=${item.get('id')}&type=${item.get('type')}&name=${item.get('name')}`} block flat>
+        <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
           <Add inline fill="primary"/> Create Check
         </Button>
         {this.renderActions()}

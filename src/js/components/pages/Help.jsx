@@ -45,7 +45,7 @@ export default React.createClass({
               <Padding b={1}>
               <Heading level={3}>Documentation</Heading>
               <ul>
-                <li><Link to="/docs/checks">Check Types and Targets</Link></li>
+                <li><Link to="/docs/checks">Checks</Link></li>
                 <li><Link to="/docs/notifications">Notifications</Link></li>
                 <li><Link to="/docs/bastion">The Bastion Instance</Link></li>
                 <li><Link to="/docs/IAM">IAM Profile for Bastion Installation</Link></li>
