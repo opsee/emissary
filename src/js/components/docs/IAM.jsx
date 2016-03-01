@@ -53,6 +53,7 @@ const IAM = React.createClass({
                           'ec2:*',
                           'iam:*',
                           'sns:*',
+                          's3:*',
                           'elasticloadbalancing:*',
                           'sqs:*',
                           'rds:*'
