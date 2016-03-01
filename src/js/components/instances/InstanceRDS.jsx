@@ -50,6 +50,7 @@ const InstanceRds = React.createClass({
     if (this.getInstance().get('name')){
       return _.map(this.getInstance().groups.toJS(), 'id');
     }
+    return [];
   },
   getGroupsSecurity(){
     if (this.getInstance().get('name')){

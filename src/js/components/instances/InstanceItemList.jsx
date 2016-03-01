@@ -55,7 +55,7 @@ const InstanceItemList = React.createClass({
     if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
       return true;
     }
-    this.getData();
+    return this.getData();
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
@@ -89,6 +89,7 @@ const InstanceItemList = React.createClass({
       }
       return this.props.actions.getInstancesEcc();
     }
+    return null;
   },
   getInstances(noFilter){
     const {type} = this.props;

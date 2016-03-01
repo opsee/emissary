@@ -51,7 +51,7 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
-    dispatch({
+    return dispatch({
       type: ANALYTICS_PAGEVIEW,
       payload: request
         .post(`${ANALYTICS_API}/pageview`)
@@ -94,7 +94,7 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
 
     // Track all events in Myst (and none through the window.ga object.)
     const user = makeUserObject(userData || state().user);
-    dispatch({
+    return dispatch({
       type: ANALYTICS_EVENT,
       payload: request
         .post(`${ANALYTICS_API}/event`)
@@ -114,7 +114,7 @@ export function updateUser(updatedUser) {
     // in state().user could be stale, so we only use that for id.
     const update = _.assign({}, {user_id: state().user.get('id')}, updatedUser);
 
-    dispatch({
+    return dispatch({
       type: ANALYTICS_USER_UPDATE,
       payload: request
         .post(`${ANALYTICS_API}/user`)
@@ -172,6 +172,7 @@ export function initialize() {
       // behavior (e.g., anonymous, GA-generated UUID instead of Opsee user ID).
       ga('create', config.googleAnalyticsID, 'auto');
     }
+    return true;
   };
 }
 

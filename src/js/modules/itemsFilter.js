@@ -57,6 +57,7 @@ export default function(items = new List(), search = {string: '', tokens: []}){
           });
           return _.some(boolArray);
         }
+        return false;
       });
     }
   }
