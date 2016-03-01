@@ -220,6 +220,18 @@ const CheckCreateAssertions = React.createClass({
   isDisabled(){
     return validateCheck(this.props.check, ['assertions']).length;
   },
+  isBodyJson(){
+    try {
+      const res = this.getResponse();
+      const body = _.get(res, 'body');
+      const json = JSON.parse(body);
+      const type = _.chain(res).get('headers').find({name: 'Content-Type'}).get('values').value() || [];
+      const smashed = type.join(';');
+      return !!json && smashed.match('json');
+    } catch (err){
+      return false;
+    }
+  },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 2);
   },
@@ -255,7 +267,7 @@ const CheckCreateAssertions = React.createClass({
   renderJsonPath(form){
     const data = form.cleanedData || {};
     const key = data.key || '';
-    if (data.relationship && key === 'body' && flag('assertion-type-json')){
+    if (data.relationship && key === 'body' && flag('assertion-type-json') && this.isBodyJson()){
       let path = this.getPath(data);
       if (!path){
         path = <em>No data selected</em>;
