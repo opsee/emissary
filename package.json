@@ -83,6 +83,7 @@
   },
   "dependencies": {
     "babel-eslint": "^5.0.0",
+    "babel-loader": "^6.2.4",
     "classnames": "^2.1.5",
     "es6-promise": "^3.0.2",
     "eslint": "^2.2.0",
