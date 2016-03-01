@@ -64,7 +64,7 @@ const GroupItemList = React.createClass({
     if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
       return true;
     }
-    this.getData();
+    return this.getData();
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];

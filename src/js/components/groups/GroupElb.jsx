@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import TimeAgo from 'react-timeago';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';

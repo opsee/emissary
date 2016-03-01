@@ -170,6 +170,7 @@ const Install = React.createClass({
         </Padding>
       );
     }
+    return null;
   },
   renderInner(){
     if (this.getBastionConnectionStatus() === 'failed'){

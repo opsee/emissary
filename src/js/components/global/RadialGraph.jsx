@@ -64,7 +64,7 @@ const RadialGraph = React.createClass({
     case 'stopped':
       return `This ${this.props.type} is stopped in AWS.`;
     default:
-      break;
+      return '';
     }
   },
   getSilenceRemaining(){

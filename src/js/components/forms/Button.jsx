@@ -93,6 +93,7 @@ const Button = React.createClass({
         pressing: 1
       });
     }
+    return null;
   },
   handlePressUp(){
     if (this.state.pressStart && this.state.pressing){
@@ -125,8 +126,9 @@ const Button = React.createClass({
   },
   handleKeyUp(e){
     if (e.keyCode.toString().match('13|32')){
-      this.handlePressUp();
+      return this.handlePressUp();
     }
+    return null;
   },
   renderChevron(){
     if (this.props.chevron){
@@ -136,6 +138,7 @@ const Button = React.createClass({
       }
       return <ChevronRight inline fill={fill}/>;
     }
+    return null;
   },
   renderInner(){
     return (

@@ -126,11 +126,9 @@ const CheckResponsePaginate = React.createClass({
     }
     const complete = this.isCheckComplete(data.check);
     if (complete){
-      // if (this.getStatus() !== 'pending'){
       this.props.actions.test(data.check);
-      // }
     }
-    this.setState({complete: true});
+    return this.setState({complete: true});
   },
   runNext(){
     const activeItem = this.props.redux.checks.selectedResponse + 1;

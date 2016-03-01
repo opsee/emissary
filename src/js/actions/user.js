@@ -83,7 +83,7 @@ export function refresh() {
     if (!state().user.get('auth')){
       return false;
     }
-    dispatch({
+    return dispatch({
       type: USER_REFRESH,
       payload: new Promise((resolve, reject) => {
         request
@@ -145,7 +145,7 @@ export function getCustomer(){
             try {
               body = JSON.parse(body);
               return resolve({customerId: body.customer.id});
-            }catch (err){
+            } catch (err){
               _.noop();
             }
           }

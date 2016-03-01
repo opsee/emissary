@@ -27,7 +27,7 @@ const InputWithLabel = React.createClass({
     };
     return (
       <div className={cx(arr)}>
-        <div className={`input-container flex-order-2 `}>{this.props.bf.render({attrs: {style}})}</div>
+        <div className="input-container flex-order-2">{this.props.bf.render({attrs: {style}})}</div>
         <Label className="flex-order-1" bf={this.props.bf} />
         {this.props.children}
       </div>

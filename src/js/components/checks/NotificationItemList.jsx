@@ -49,6 +49,7 @@ const NotificationItemList = React.createClass({
         </Padding>
       );
     }
+    return null;
   },
   render() {
     return (

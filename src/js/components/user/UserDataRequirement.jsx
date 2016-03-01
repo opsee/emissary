@@ -33,6 +33,7 @@ const UserDataRequirement = React.createClass({
     } else if (this.props.showIf){
       return !!(selection);
     }
+    return false;
   },
   render() {
     if (this.getBool()){

@@ -4,6 +4,7 @@ import forms from 'newforms';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
 
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
@@ -172,7 +173,7 @@ const CheckCreateRequest = React.createClass({
     if (!this.props.check.target.id){
       return this.props.history.pushState(null, '/check-create/target');
     }
-    this.props.checkActions.testCheckReset();
+    return this.props.checkActions.testCheckReset();
   },
   componentDidMount(){
     if (this.props.renderAsInclude){
@@ -323,7 +324,7 @@ const CheckCreateRequest = React.createClass({
     if (this.state.info.cleanedData.verb !== 'GET'){
       return (
         <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
+          <BoundField bf={this.state.info.boundField('body')} key="bound-field-body"/>
         </Padding>
       );
     }
