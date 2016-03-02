@@ -9,7 +9,20 @@ function getVerbAndSuffix(numberIncomplete){
   };
 }
 
-export default function validateCheck(check = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
+function assertion(assertion = {}){
+  let arr = [];
+  arr.push(!!assertion.key);
+  arr.push(!!assertion.relationship);
+  if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
+    arr.push(!!assertion.operand);
+  }
+  if (assertion.key === 'header'){
+    arr.push(!!assertion.value);
+  }
+  return _.every(arr);
+}
+
+function check(check = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
   const spec = _.get(check, 'check_spec.value') || {};
   let errors = [];
 
@@ -35,16 +48,7 @@ export default function validateCheck(check = {}, areas = ['request', 'assertion
 
   //assertions area
   const assertions = check.assertions.map((a = {}) => {
-    let arr = [];
-    arr.push(!!a.key);
-    arr.push(!!a.relationship);
-    if (a.relationship && !a.relationship.match('empty|notEmpty')){
-      arr.push(!!a.operand);
-    }
-    if (a.key === 'header'){
-      arr.push(!!a.value);
-    }
-    return _.every(arr);
+    return assertion(a);
   });
   const numberOfIncompleteAssertions = assertions.length - _.compact(assertions).length;
   parts = getVerbAndSuffix(numberOfIncompleteAssertions);
@@ -81,4 +85,9 @@ export default function validateCheck(check = {}, areas = ['request', 'assertion
   return _.reject(errors, e => {
     return areas.indexOf(e.area) === -1;
   });
+}
+
+export default {
+  assertion,
+  check
 }

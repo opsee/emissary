@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import {Padding} from '../layout';
 import {Alert} from '../../modules/bootstrap';
-import {validateCheck} from '../../modules';
+import {validate} from '../../modules';
 
 const CheckDisabledReason = React.createClass({
   propTypes: {
@@ -16,7 +16,7 @@ const CheckDisabledReason = React.createClass({
     };
   },
   render() {
-    const errors = validateCheck(this.props.check, this.props.areas);
+    const errors = validate.check(this.props.check, this.props.areas);
     if (errors.length){
       return (
         <Padding t={1}>

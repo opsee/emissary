@@ -13,7 +13,7 @@ import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
-import {validateCheck} from '../../modules';
+import {validate} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -108,7 +108,7 @@ const CheckCreateInfo = React.createClass({
     });
   },
   isDisabled(){
-    return !!(validateCheck(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending');
+    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
     this.props.onChange(this.getFinalData(), this.isDisabled(), 3);

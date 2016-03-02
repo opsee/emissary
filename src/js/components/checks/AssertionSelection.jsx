@@ -5,60 +5,52 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {BoundField, Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack} from '../icons';
+import {Add, Checkmark, ChevronRight, Delete} from '../icons';
 import {Padding} from '../layout';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
+import {Alert} from '../../modules/bootstrap';
 import {SlackConnect} from '../integrations';
-import {flag, storage} from '../../modules';
+import {flag, validate} from '../../modules';
 import style from './assertionSelection.css';
+import relationships from 'slate/src/relationships';
+import types from 'slate/src/types';
+import slate from 'slate';
 import {
   integrations as actions
 } from '../../actions';
 
-const EmailForm = forms.Form.extend({
-  text: forms.CharField({
-    validators: [forms.validators.validateEmail],
-    label: 'Email',
+const CodeForm = forms.Form.extend({
+  operand: forms.CharField({
+    label: 'Value',
     widgetAttrs: {
-      placeholder: 'address@domain.com',
-      autoCapitalize: 'off',
-      autoCorrect: 'off'
+      noLabel: true
     }
-  }),
-  render() {
-    return (
-      <BoundField bf={this.boundField('text')}>
-        <Mail className="icon"/>
-      </BoundField>
-    );
-  }
+  })
 });
 
-const WebhookForm = forms.Form.extend({
-  text: forms.CharField({
-    validators: [forms.validators.URLValidator({
-      schemes: ['http', 'https']
-    })],
-    label: 'Webhook URL',
-    widgetAttrs: {
-      placeholder: 'https://alert.me/incoming',
-      autoCapitalize: 'off',
-      autoCorrect: 'off'
-    }
+const HeaderForm = forms.Form.extend({
+  operand: forms.CharField({
+    label: 'Value'
   }),
-  render() {
-    return (
-      <BoundField bf={this.boundField('text')}>
-        <Cloud className="icon"/>
-      </BoundField>
-    );
-  }
+  value: forms.CharField({
+    label: 'Value'
+  })
+});
+
+const BodyForm = forms.Form.extend({
+  operand: forms.CharField({
+    label: 'Value'
+  }),
+  value: forms.CharField({
+    label: 'Value'
+  })
 });
 
 const AssertionsSelection = React.createClass({
   propTypes: {
     check: PropTypes.object,
     assertions: PropTypes.array,
+    response: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     redux: PropTypes.shape({
       user: PropTypes.object,
@@ -73,7 +65,12 @@ const AssertionsSelection = React.createClass({
   },
   getDefaultProps() {
     return {
-      assertions: []
+      assertions: [],
+      response: {
+        code: undefined,
+        headers: [],
+        body: undefined
+      }
     };
   },
   getInitialState() {
@@ -84,12 +81,12 @@ const AssertionsSelection = React.createClass({
   componentDidMount(){
     if (this.props.assertions.length){
       const assertions = this.props.assertions.map((n, i) => {
-        return this.getNewSchema(n.type, i, n.value);
+        return this.getNewSchema(n.key, i);
       });
       this.runChange(assertions);
     }
   },
-  getNewSchema(type, assertionIndex, value){
+  getNewSchema(key, assertionIndex, value){
     const self = this;
     const opts = {
       onChange(){
@@ -106,11 +103,23 @@ const AssertionsSelection = React.createClass({
         text: value
       } : {}
     };
+    let form = new CodeForm(opts);
+    switch (key){
+      case 'header':
+        form = new HeaderForm(opts);
+        break;
+      case 'body':
+        form = new BodyForm(opts);
+      break;
+      default:
+        break;
+    }
     return {
-      type,
+      key,
+      relationship: null,
       value,
-      form: type === 'email' ? new EmailForm(opts) : new WebhookForm(opts),
-      sending: false
+      operand: null,
+      form
     };
   },
   getAssertionValueForDisplay(assertion = {}){
@@ -121,10 +130,31 @@ const AssertionsSelection = React.createClass({
     return assertion.value;
   },
   getFinalAssertions(assertions = this.state.assertions){
-    return assertions.map(n => _.pick(n, ['type', 'value']));
+    return assertions.map(n => _.pick(n, ['key', 'value', 'relationship', 'operand']));
   },
-  isAssertionComplete(assertion){
-    return _.chain(assertion).pick(['type', 'value']).values().every().value();
+  getResponse(){
+    const {checks} = this.props.redux;
+    const data = checks.responses.toJS()[checks.selectedResponse];
+    if (data && data.response){
+      return _.get(data, 'response.value');
+    }
+    return {};
+  },
+  getResponseFormatted(){
+    const {checks} = this.props.redux;
+    const data = checks.responsesFormatted[checks.selectedResponse];
+    if (data && data.response){
+      return _.get(data, 'response.value');
+    }
+    return {};
+  },
+  getSlateTest(assertion){
+    let response = this.getResponse();
+    response.body = typeof response.body === 'object' ? JSON.stringify(response.body) : response.body;
+    if (response && response.body && validate.assertion(assertion)){
+      return slate.checkAssertion(assertion, response);
+    }
+    return null;
   },
   runSetAssertionsState(iteratee){
     const assertions = this.state.assertions.map(iteratee);
@@ -165,9 +195,9 @@ const AssertionsSelection = React.createClass({
       });
     });
   },
-  runNewAssertion(type, value){
+  runNewAssertion(key, value){
     const assertions = this.state.assertions.concat([
-      this.getNewSchema(type, this.state.assertions.length, value)
+      this.getNewSchema(key, this.state.assertions.length, value)
     ]);
     this.runChange(assertions);
   },
@@ -184,11 +214,17 @@ const AssertionsSelection = React.createClass({
     });
     this.runChange(assertions);
   },
+  runSetAssertionData(index, data){
+    const assertions = this.state.assertions.map((assertion, i) => {
+      const d = index === i ? data : {};
+      return _.assign(assertion, d);
+    });
+    return this.runChange(assertions);
+  },
   handleInputChange(data, index){
-    const assertions = this.runSetAssertionsState((n, i) => {
-      return _.assign({}, n, {
-        value: index === i ? data.text : n.value
-      });
+    const assertions = this.runSetAssertionsState((assertion, i) => {
+      const d = index === i ? data : {};
+      return _.assign(assertion, d);
     });
     this.props.onChange(this.getFinalAssertions(assertions));
   },
@@ -221,32 +257,6 @@ const AssertionsSelection = React.createClass({
       </Button>
     );
   },
-  renderTestButton(assertion, props){
-    let string = 'test';
-    const found = _.find(this.props.redux.integrations.tests, _.pick(assertion, ['type', 'value']));
-    if (found){
-      string = found.success ? 'sent' : 'error';
-    }
-    let color = 'warning';
-    if (string === 'sent'){
-      color = 'success';
-    } else if (string === 'error'){
-      color = 'danger';
-    }
-    const disabled = !this.isAssertionComplete(assertion) || !!(string.match('sent|error')) || assertion.sending;
-    const className = assertion.type === 'slack_bot' ? style.testButtonSlack : style.testButton;
-    let icon = <ChevronRight inline fill={disabled ? 'text' : 'warning'}/>;
-    if (string === 'sent'){
-      icon = <Checkmark inline fill="text"/>;
-    }
-    return (
-      <div className="align-self-end">
-        <Button color={color} flat onClick={this.runTestAssertion.bind(this, assertion)} className={className} {...props} disabled={disabled} style={{minHeight: '46px'}}>
-          {string}&nbsp;{icon}
-        </Button>
-      </div>
-    );
-  },
   renderTextAssertion(assertion, index){
     return (
       <div className={style.line}>
@@ -258,39 +268,6 @@ const AssertionsSelection = React.createClass({
             {this.renderDeleteButton(index)}
           </Padding>
         </Padding>
-        {this.renderTestButton(assertion)}
-      </div>
-    );
-  },
-  renderSlackConnect(assertion, index){
-    return (
-      <div className="display-flex">
-        <Padding r={2} className="flex-1">
-          <SlackConnect target="_blank"/> to choose your channel.
-        </Padding>
-        <div className="align-self-start">
-          {this.renderDeleteButton(index, {minHeight: '46px'})}
-        </div>
-      </div>
-    );
-  },
-  renderChannelSelect(assertion, index){
-    const channels = this.props.redux.integrations.slackChannels.toJS();
-    return (
-      <div>
-        <Heading level={4}>Slack Channel</Heading>
-        <div className="display-flex">
-          <div className="flex-1">
-            {channels.map(c => {
-              return (
-                <Button flat nocap onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem'}} key={`slack-channel-${c.id}`}>#{c.name}</Button>
-              );
-            })}
-            </div>
-            <div className="align-self-start">
-              {this.renderDeleteButton(index, {minHeight: '46px'})}
-            </div>
-        </div>
       </div>
     );
   },
@@ -310,31 +287,88 @@ const AssertionsSelection = React.createClass({
       </div>
     );
   },
-  renderAssertion(assertion, index){
-    const {type} = assertion;
-    const isText = !!type.match('email|webhook');
-    if (!assertion.value || isText){
-      if (isText){
-        return this.renderTextAssertion(assertion, index);
-      }
-      if (type === 'slack_bot'){
-        if (this.props.redux.integrations.slackChannels.toJS().length){
-          return this.renderChannelSelect(assertion, index);
-        }
-        return this.renderSlackConnect(assertion, index);
-      }
+  renderRelationshipButtons(assertionIndex){
+    return (
+      <div style={{width: '100%'}}>
+        {relationships.map(rel => {
+          const data = {
+            relationship: rel.id
+          };
+          return (
+            <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
+          );
+        })}
+      </div>
+    );
+  },
+  renderCode(index){
+    const assertion = this.state.assertions[index];
+    const title = <Heading level={4}>Response Code</Heading>;
+    let inner = null;
+    let buttons = null;
+    if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
+      inner = (
+        <Padding l={1} className="flex-1">
+          <BoundField bf={this.state.assertions[index].form.boundField('operand')}/>
+        </Padding>
+      );
+    } else if (!assertion.relationship){
+      buttons = (
+        <Padding t={1}>
+          {this.renderRelationshipButtons(index)}
+        </Padding>
+      )
     }
-    return this.renderChosenChannel(assertion, index);
+    let rel = '';
+    if (assertion.relationship){
+      const obj = _.find(relationships, {id: assertion.relationship}) || {};
+      rel = (
+        <span>&nbsp;<em>{obj.name.toLowerCase()}</em></span>
+      );
+    }
+    let op = '';
+    if (assertion.operand){
+      op = ` ${assertion.operand}`;
+    }
+    let alertStyle = 'default';
+    let test = this.getSlateTest(assertion);
+    if (test && test.success){
+      alertStyle = 'success';
+    } else if (test){
+      alertStyle = 'danger';
+    }
+    return (
+      <div>
+        {title}
+          <Alert bsStyle={alertStyle} className="display-flex flex-wrap flex-vertical-align" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+            <strong>{this.getResponse().code}</strong>{rel}{inner}
+          </Alert>
+          {buttons}
+      </div>
+    );
+  },
+  renderHeader(index){
+    return (
+      <BoundField bf={this.state.assertions[index].form.boundField('value')}/>
+    );
+  },
+  renderBody(index){
+    return (
+      <BoundField bf={this.state.assertions[index].form.boundField('value')}/>
+    );
+  },
+  renderAssertion(assertion, index){
+    const key = assertion.key || 'code';
+    return this[`render${_.capitalize(key)}`](index);
   },
   renderAssertionPickType(){
     return (
       <div>
-        {['email', 'slack', 'webhook'].map(type => {
-          const typeCorrected = type === 'slack' ? 'slack_bot' : type;
+        {['code', 'header', 'body'].map(type => {
           if (flag(`assertion-type-${type}`)){
             return (
-              <Button flat color="primary" onClick={this.runNewAssertion.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`assertion-button-${type}`}>
-                <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}&nbsp;{this.renderAssertionIcon({type}, {inline: true, fill: 'primary'})}
+              <Button flat color="primary" onClick={this.runNewAssertion.bind(null, type)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`assertion-button-${type}`}>
+                <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}
               </Button>
             );
           }
@@ -344,6 +378,9 @@ const AssertionsSelection = React.createClass({
     );
   },
   renderAssertionList(){
+    if (!this.getResponse().code){
+      return null;
+    }
     if (this.state.assertions.length){
       return this.state.assertions.map((assertion, index) => {
         return (
@@ -364,10 +401,9 @@ const AssertionsSelection = React.createClass({
   render(){
     return (
       <Padding b={2}>
-        <Heading level={3}>Assertions</Heading>
         {this.renderAssertionList()}
         {this.renderAssertionPickType()}
-        <p><em className="small text-muted">Learn more about assertion types and our webhook format in our <a target="_blank" href="/docs/assertions">assertion docs</a>.</em></p>
+        <p><em className="small text-muted">Learn more about assertions <a target="_blank" href="/docs/checks">in our docs</a>.</em></p>
       </Padding>
     );
   }

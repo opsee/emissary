@@ -16,7 +16,7 @@ import {Button} from '../forms';
 import {Heading} from '../type';
 import CheckDisabledReason from './CheckDisabledReason';
 import CheckDebug from './CheckDebug';
-import {validateCheck} from '../../modules';
+import {validate} from '../../modules';
 import {
   checks as actions,
   env as envActions
@@ -94,7 +94,7 @@ const CheckEdit = React.createClass({
     return _.get(this, 'state.check.check_spec.value.name') || 'Check';
   },
   isDisabled(){
-    return !!validateCheck(this.getCheck()).length;
+    return !!validate.check(this.getCheck()).length;
   },
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);

@@ -17,7 +17,7 @@ import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
 import {Heading} from '../type';
-import {validateCheck} from '../../modules';
+import {validate} from '../../modules';
 import {
   env as envActions,
   checks as checkActions,
@@ -223,7 +223,7 @@ const CheckCreateRequest = React.createClass({
     return condition1 && condition2;
   },
   isDisabled(){
-    return !!validateCheck(this.props.check, ['request']).length;
+    return !!validate.check(this.props.check, ['request']).length;
   },
   runChange(){
     let data = this.getFinalData();

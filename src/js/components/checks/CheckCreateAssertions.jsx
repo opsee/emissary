@@ -15,7 +15,7 @@ import {UserDataRequirement} from '../user';
 import AssertionCounter from './AssertionCounter';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import CheckDisabledReason from './CheckDisabledReason';
-import {flag, validateCheck} from '../../modules';
+import {flag, validate} from '../../modules';
 import {Padding} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
@@ -220,7 +220,7 @@ const CheckCreateAssertions = React.createClass({
     return this.props.check.assertions.length;
   },
   isDisabled(){
-    return validateCheck(this.props.check, ['assertions']).length;
+    return !!validate.check(this.props.check, ['assertions']).length;
   },
   isBodyJson(){
     try {
