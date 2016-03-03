@@ -6,11 +6,11 @@ import {bindActionCreators} from 'redux';
 import TimeAgo from 'react-timeago';
 
 import {Toolbar} from '../global';
-import {Checkmark, Delete, Person, Mail, Ghost} from '../icons';
+import {Checkmark, Delete, Lock, Person, Mail, Ghost} from '../icons';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Padding} from '../layout';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
 import {admin as actions, user as userActions, app as appActions} from '../../actions';
 
 const Signups = React.createClass({
@@ -18,7 +18,7 @@ const Signups = React.createClass({
     actions: PropTypes.shape({
       getSignups: PropTypes.func,
       activateSignup: PropTypes.func,
-      getUsers: PropTypes.func,
+      getCustomers: PropTypes.func,
       deleteSignup: PropTypes.func,
       deleteUser: PropTypes.func
     }),
@@ -31,19 +31,17 @@ const Signups = React.createClass({
     redux: PropTypes.shape({
       admin: PropTypes.shape({
         signups: PropTypes.object,
-        users: PropTypes.object
+        customers: PropTypes.object
       })
     })
   },
   componentWillMount(){
     this.props.actions.getSignups();
-    this.props.actions.getUsers();
+    this.props.actions.getCustomers();
   },
   getData(){
     const signups = this.props.redux.admin.signups.toJS();
-    const users = this.props.redux.admin.users.toJS();
-    const combined = [].concat(signups).concat(users);
-    return _.chain(combined).map(s => {
+    return _.chain(signups).map(s => {
       let d = s.created_at;
       if (typeof d === 'string'){
         d = new Date(Date.parse(d));
@@ -51,7 +49,6 @@ const Signups = React.createClass({
         d = new Date(d);
       }
       s.created_at = d;
-      s.userId = _.chain(users).find({email: s.email}).get('id').value();
       return s;
     }).sortBy(s => {
       return -1 * s.created_at;
@@ -63,8 +60,8 @@ const Signups = React.createClass({
   getApproved(){
     return _.filter(this.getData(), this.isApprovedSignup);
   },
-  getUsers(){
-    return _.filter(this.getData(), this.isUser);
+  getCustomers(){
+    return this.props.redux.admin.customers.toJS();
   },
   isUnapprovedSignup(s){
     return !s.customer_id && !s.activated;
@@ -79,7 +76,7 @@ const Signups = React.createClass({
     this.props.actions.activateSignup(signup);
   },
   runGhostAccount(signup){
-    this.props.userActions.logout({as: signup.userId});
+    this.props.userActions.logout({as: signup.id});
   },
   runDeleteSignup(signup){
     /*eslint-disable no-alert*/
@@ -91,7 +88,7 @@ const Signups = React.createClass({
   runDeleteUser(user){
   /*eslint-enable no-unused-vars*/
     return window.alert('this does nothing right now');
-    // if (window.confirm(`Delete ${user.email} (#${user.userId})?`)){
+    // if (window.confirm(`Delete ${user.email} (#${user.userId || user.id})?`)){
     //   this.props.actions.deleteUser(user);
     // }
     /*eslint-enable no-alert*/
@@ -116,27 +113,16 @@ const Signups = React.createClass({
           </div>
         </div>
       );
-    } else if (this.isApprovedSignup(signup)) {
-      return (
-        <div className="display-flex">
-          <div className="flex-1">
-            <Button flat color="danger" sm onClick={this.runDeleteSignup.bind(null, signup)} title="Delete this signup"><Delete fill="danger"/></Button>
-          </div>
-          <div>
-            <Button flat color="primary" onClick={this.runActivateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Email</Button>
-          </div>
-        </div>
-      );
     }
     return (
       <div className="display-flex">
-          <div className="flex-1">
-            <Button flat color="danger" sm onClick={this.runDeleteUser.bind(null, signup)} title="Delete this user"><Delete fill="danger"/></Button>
-          </div>
-          <div>
-            <Button flat color="warning" onClick={this.runGhostAccount.bind(null, signup)}><Ghost fill="warning" inline/> Ghost</Button>
-          </div>
+        <div className="flex-1">
+          <Button flat color="danger" sm onClick={this.runDeleteSignup.bind(null, signup)} title="Delete this signup"><Delete fill="danger"/></Button>
         </div>
+        <div>
+          <Button flat color="primary" onClick={this.runActivateSignup.bind(null, signup)}><Mail fill="primary" inline/> Resend Email</Button>
+        </div>
+      </div>
     );
   },
   renderItem(signup){
@@ -158,6 +144,55 @@ const Signups = React.createClass({
               <div>
                 {this.renderButton(signup)}
               </div>
+            </Padding>
+          </div>
+        </Padding>
+      </Col>
+    );
+  },
+  renderBastionInfo(customer){
+    const bastion = _.chain(customer).get('bastion_states').sortBy(b => {
+      return -1 * b.last_seen;
+    }).head().value() || {};
+    if (bastion.last_seen){
+      const color = bastion.status === 'active' ? 'success' : 'danger';
+      return (
+        <div>
+          <strong>Customer ID:</strong>&nbsp;{customer.id}<br/>
+          <strong>Bastion ID:</strong>&nbsp;{bastion.id}<br/>
+          <strong>Bastion Status:&nbsp;</strong><Color c={color}>{bastion.status}</Color><br/>
+          <strong>Bastion Last Seen:</strong>&nbsp;<TimeAgo date={new Date(bastion.last_seen)}/>
+        </div>
+      );
+    }
+    return null;
+  },
+  renderCustomer(customer){
+    const user = _.get(customer, 'users[0]') || {};
+    const icon = user.admin ?
+    (
+      <span title="User is Admin"><Lock fill="gray500" inline/></span>
+    ) : null;
+    return (
+      <Col xs={12} key={`customer-${_.uniqueId()}`}>
+        <Padding tb={1}>
+          <div style={{background: seed.color.gray9}}>
+            <Padding a={1}>
+              <Heading level={3}>
+                {icon}&nbsp;{user.name}&nbsp;-&nbsp;<a href={'mailto:' + user.email}>{user.email}</a>
+              </Heading>
+              <Padding b={1}>
+                {this.renderBastionInfo(customer)}
+                <strong>Customer Created:</strong>&nbsp;<TimeAgo date={user.created_at}/>
+                <Padding t={1} className="display-flex">
+                  <div className="flex-1">
+                    <Button flat color="danger" sm onClick={this.runDeleteUser.bind(null, user)} title="Delete this user"><Delete fill="danger"/></Button>
+                  </div>
+                  <div>
+                    <Button flat color="warning" onClick={this.runGhostAccount.bind(null, user)}><Ghost fill="warning" inline/> Ghost</Button>
+                  </div>
+                </Padding>
+              </Padding>
             </Padding>
           </div>
         </Padding>
@@ -194,9 +229,9 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <Heading level={3}><Person fill={seed.color.text2} inline/> Users</Heading>
+                <Heading level={3}><Person fill={seed.color.text2} inline/> Customers</Heading>
                 <div className="display-flex-sm flex-wrap">
-                  {this.getUsers().map(this.renderItem)}
+                  {this.getCustomers().map(this.renderCustomer)}
                 </div>
               </Padding>
             </Col>

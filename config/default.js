@@ -13,7 +13,8 @@ export default {
     analytics: 'https://myst.opsee.com',
     api: 'https://api.opsee.com',
     auth: 'https://auth.opsee.com',
-    stream: 'wss://api.opsee.com/stream/'
+    stream: 'wss://api.opsee.com/stream/',
+    compost: 'https://compost.in.opsee.com'
   },
   //display vpc screen despite only having 1 vpc in environment
   showVpcScreen: false,

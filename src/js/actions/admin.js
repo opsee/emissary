@@ -1,8 +1,10 @@
+import _ from 'lodash';
+
 import config from '../modules/config';
 import request from '../modules/request';
 import {
   ADMIN_GET_SIGNUPS,
-  ADMIN_GET_USERS,
+  ADMIN_GET_CUSTOMERS,
   ADMIN_ACTIVATE_SIGNUP,
   ADMIN_DELETE_SIGNUP,
   ADMIN_DELETE_USER
@@ -59,18 +61,41 @@ export function deleteSignup(signup) {
   };
 }
 
-export function getUsers() {
+export function getCustomers() {
   return (dispatch, state) => {
     dispatch({
-      type: ADMIN_GET_USERS,
-      payload: new Promise((resolve) => {
+      type: ADMIN_GET_CUSTOMERS,
+      payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.services.auth}/users`)
+        .post(`${config.services.compost}/admin/graphql`)
         .set('Authorization', state().user.get('auth'))
-        .query({
-          per_page: 1000
+        .send({
+          query: `{
+            listCustomers(page: 1, per_page: 1000) {
+              customers {
+                id
+                bastion_states {
+                  id
+                  status
+                  last_seen
+                }
+                users {
+                  id
+                  name
+                  email
+                  verified
+                  active
+                  admin
+                  created_at
+                  updated_at
+                }
+              }
+            }
+          }`
         })
-        .then(res => resolve(res.body));
+        .then(res => {
+          resolve(_.get(res, 'body.data.listCustomers.customers') || []);
+        }, reject);
       })
     });
   };
@@ -86,7 +111,7 @@ export function deleteUser(user) {
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body);
-          getUsers()(dispatch, state);
+          getCustomers()(dispatch, state);
         }, reject);
       })
     });
