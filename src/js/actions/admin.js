@@ -1,8 +1,10 @@
+import _ from 'lodash';
+
 import config from '../modules/config';
 import request from '../modules/request';
 import {
   ADMIN_GET_SIGNUPS,
-  ADMIN_GET_USERS,
+  ADMIN_GET_CUSTOMERS,
   ADMIN_ACTIVATE_SIGNUP,
   ADMIN_DELETE_SIGNUP,
   ADMIN_DELETE_USER
@@ -59,35 +61,17 @@ export function deleteSignup(signup) {
   };
 }
 
-// export function getUsers() {
-//   return (dispatch, state) => {
-//     dispatch({
-//       type: ADMIN_GET_USERS,
-//       payload: new Promise((resolve) => {
-//         request
-//         .get(`${config.services.auth}/users`)
-//         .set('Authorization', state().user.get('auth'))
-//         .query({
-//           per_page: 1000
-//         })
-//         .then(res => resolve(res.body));
-//       })
-//     });
-//   };
-// }
-
 export function getCustomers() {
   return (dispatch, state) => {
     dispatch({
-      type: ADMIN_GET_USERS,
-      payload: new Promise((resolve) => {
+      type: ADMIN_GET_CUSTOMERS,
+      payload: new Promise((resolve, reject) => {
         request
         .post(`${config.services.compost}/admin/graphql`)
-        // .set('authorization', 'Basic ' + state().user.get('token'))
-        .set('authorization', 'Basic ' + 'eyJpZCI6MTEsImN1c3RvbWVyX2lkIjoiMTQwYzUzNDYtNWQ1Ny0xMWU1LTk5NDctOWY5ZmNmNjI3MjVlIiwiZW1haWwiOiJjb3JleUBvcHNlZS5jbyIsIm5hbWUiOiJDb3JleSAtIEFkbWluIiwidmVyaWZpZWQiOnRydWUsImFkbWluIjp0cnVlLCJhY3RpdmUiOnRydWUsImNyZWF0ZWRfYXQiOjE0NDI1MDY0Mjg0MjIsInVwZGF0ZWRfYXQiOjE0NTU3NTQxMjYyMjN9')
+        .set('Authorization', state().user.get('auth'))
         .send({
           query: `{
-            listCustomers(page: 1, per_page: 20) {
+            listCustomers(page: 1, per_page: 1000) {
               customers {
                 id
                 bastion_states {
@@ -110,8 +94,8 @@ export function getCustomers() {
           }`
         })
         .then(res => {
-          resolve(_.get(res, 'body.data.listCustomers.customers'));
-        });
+          resolve(_.get(res, 'body.data.listCustomers.customers') || []);
+        }, reject);
       })
     });
   };

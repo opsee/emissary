@@ -294,7 +294,7 @@ const NotificationSelection = React.createClass({
           <div className="flex-1">
             {channels.map(c => {
               return (
-                <Button flat nocap onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem'}} key={`slack-channel-${c.id}`}>#{c.name}</Button>
+                <Button flat onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem'}} key={`slack-channel-${c.id}`}>#{c.name}</Button>
               );
             })}
             </div>
