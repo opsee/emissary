@@ -18,7 +18,7 @@ const Signups = React.createClass({
     actions: PropTypes.shape({
       getSignups: PropTypes.func,
       activateSignup: PropTypes.func,
-      getUsers: PropTypes.func,
+      getCustomers: PropTypes.func,
       deleteSignup: PropTypes.func,
       deleteUser: PropTypes.func
     }),
@@ -37,12 +37,11 @@ const Signups = React.createClass({
   },
   componentWillMount(){
     this.props.actions.getSignups();
-    this.props.actions.getUsers();
+    this.props.actions.getCustomers();
   },
   getData(){
     const signups = this.props.redux.admin.signups.toJS();
-    const users = this.props.redux.admin.users.toJS();
-    const combined = [].concat(signups).concat(users);
+    const combined = [].concat(signups).concat(customers);
     return _.chain(combined).map(s => {
       let d = s.created_at;
       if (typeof d === 'string'){
@@ -51,7 +50,6 @@ const Signups = React.createClass({
         d = new Date(d);
       }
       s.created_at = d;
-      s.userId = _.chain(users).find({email: s.email}).get('id').value();
       return s;
     }).sortBy(s => {
       return -1 * s.created_at;
@@ -63,8 +61,8 @@ const Signups = React.createClass({
   getApproved(){
     return _.filter(this.getData(), this.isApprovedSignup);
   },
-  getUsers(){
-    return _.filter(this.getData(), this.isUser);
+  getCustomers(){
+    return this.props.redux.admin.customers.toJS();
   },
   isUnapprovedSignup(s){
     return !s.customer_id && !s.activated;
@@ -79,7 +77,7 @@ const Signups = React.createClass({
     this.props.actions.activateSignup(signup);
   },
   runGhostAccount(signup){
-    this.props.userActions.logout({as: signup.userId});
+    this.props.userActions.logout({as: signup.id});
   },
   runDeleteSignup(signup){
     /*eslint-disable no-alert*/
@@ -164,6 +162,31 @@ const Signups = React.createClass({
       </Col>
     );
   },
+  renderCustomer(customer){
+    return (
+      <Col xs={12} sm={6} key={`customer-${_.uniqueId()}`}>
+        <Padding tb={1}>
+          <div style={{background: seed.color.gray9}}>
+            <Padding a={1}>
+              <Heading level={3}>
+                {this.renderIcon(customer)} {customer.name}
+              </Heading>
+              <Padding b={1}>
+                <div>
+                  <a href={'mailto:' + customer.email}>{customer.email}</a>
+                  {customer.admin ? '  [admin]' : ''}
+                </div>
+                <span>#{`${customer.userId || customer.id}`} - <TimeAgo date={customer.created_at}/></span>
+              </Padding>
+              <div>
+                {this.renderButton(customer)}
+              </div>
+            </Padding>
+          </div>
+        </Padding>
+      </Col>
+    );
+  },
   render() {
     return (
       <div>
@@ -194,9 +217,9 @@ const Signups = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <Heading level={3}><Person fill={seed.color.text2} inline/> Users</Heading>
+                <Heading level={3}><Person fill={seed.color.text2} inline/> Customers</Heading>
                 <div className="display-flex-sm flex-wrap">
-                  {this.getUsers().map(this.renderItem)}
+                  {this.getCustomers().map(this.renderItem)}
                 </div>
               </Padding>
             </Col>
