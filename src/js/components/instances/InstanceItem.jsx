@@ -49,6 +49,18 @@ const InstanceItem = React.createClass({
     const type = this.getItem().get('type').toLowerCase();
     return `/instance/${type}/${this.getItem().get('id')}`;
   },
+  getType(){
+    let type = 'EC2';
+    switch (this.getItem().get('type')){
+    case 'RDS':
+    case 'rds':
+      type = 'RDS';
+      break;
+    default:
+      break;
+    }
+    return type;
+  },
   renderInfoText(){
     if (this.getItem().get('total')){
       const passing = this.getItem().get('passing');
@@ -84,7 +96,7 @@ const InstanceItem = React.createClass({
       return (
         <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState}>
           {this.renderMenu()}
-          <div key="line1">{this.getItem().get('name')}</div>
+          <div key="line1">{this.getItem().get('name')}&nbsp;({this.getType()})</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
