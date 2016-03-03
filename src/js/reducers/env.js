@@ -15,7 +15,10 @@ import {
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
-  ENV_SET_FILTERED
+  ENV_SET_FILTERED,
+  AWS_REBOOT_INSTANCES,
+  AWS_START_INSTANCES,
+  AWS_STOP_INSTANCES
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -218,7 +221,8 @@ const initial = {
       rds: new List()
     }
   },
-  bastions: []
+  bastions: [],
+  awsActionHistory: []
 };
 
 export default handleActions({
@@ -315,5 +319,44 @@ export default handleActions({
       };
       return _.assign({}, state, {filtered});
     }
+  },
+  [AWS_START_INSTANCES]: {
+    next(state, action){
+      const awsActionHistory = state.awsActionHistory.concat([
+        {
+          action: 'start',
+          ids: action.payload || [],
+          date: new Date()
+        }
+      ]);
+      return _.assign({}, state, {awsActionHistory});
+    },
+    throw: yeller.reportAction
+  },
+  [AWS_STOP_INSTANCES]: {
+    next(state, action){
+      const awsActionHistory = state.awsActionHistory.concat([
+        {
+          action: 'stop',
+          ids: action.payload || [],
+          date: new Date()
+        }
+      ]);
+      return _.assign({}, state, {awsActionHistory});
+    },
+    throw: yeller.reportAction
+  },
+  [AWS_REBOOT_INSTANCES]: {
+    next(state, action){
+      const awsActionHistory = state.awsActionHistory.concat([
+        {
+          action: 'reboot',
+          ids: action.payload || [],
+          date: new Date()
+        }
+      ]);
+      return _.assign({}, state, {awsActionHistory});
+    },
+    throw: yeller.reportAction
   }
 }, initial);

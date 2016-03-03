@@ -43,7 +43,10 @@ const StatusHandler = React.createClass({
     this.setState(state);
   },
   shouldComponentUpdate(nextProps, nextState) {
-    return !_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState);
+    let arr = [];
+    arr.push(!_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState));
+    arr.push(!_.isEqual(this.props.children, nextProps.children));
+    return _.some(arr);
   },
   getErrorText(){
     let string = _.get(this.props, 'status.message') ||
