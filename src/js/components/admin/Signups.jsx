@@ -87,10 +87,10 @@ const Signups = React.createClass({
   /*eslint-disable no-unused-vars*/
   runDeleteUser(user){
   /*eslint-enable no-unused-vars*/
-    // return window.alert('this does nothing right now');
-    if (window.confirm(`Delete ${user.email} (#${user.userId || user.id})?`)){
-      this.props.actions.deleteUser(user);
-    }
+    return window.alert('this does nothing right now');
+    // if (window.confirm(`Delete ${user.email} (#${user.userId || user.id})?`)){
+    //   this.props.actions.deleteUser(user);
+    // }
     /*eslint-enable no-alert*/
   },
   renderIcon(signup){
