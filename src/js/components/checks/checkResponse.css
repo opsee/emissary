@@ -1,5 +1,6 @@
 .checkResponse {
   align-items: flex-start;
+  flex-wrap: wrap;
   background: var(--colorGray9);
   border: 2px solid var(--colorGray9);
   display: flex;

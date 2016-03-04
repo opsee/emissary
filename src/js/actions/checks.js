@@ -16,6 +16,11 @@ import {
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
+let exampleResponse
+if (process.env.NODE_ENV === 'debug'){
+  exampleResponse = require('../../files/exampleResponse');
+}
+
 /**
  * Fetches check data as JSON from the given JSON URI (e.g., an S3 URL).
  * Used by Screenshot.jsx to populate the UI for the screenshot service.
@@ -134,6 +139,16 @@ export function test(data){
     dispatch({
       type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
+        if (process.env.NODE_ENV === 'debug'){
+          return resolve([
+          {
+            response: {
+              type_url: 'HttpResponse',
+              value: exampleResponse
+            }
+          }
+          ]);
+        }
         const check = _.chain(data)
         .thru(formatCheckData)
         .assign({name: state().user.get('email')})

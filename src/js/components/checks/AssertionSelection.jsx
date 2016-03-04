@@ -30,10 +30,10 @@ const CodeForm = forms.Form.extend({
 
 const HeaderForm = forms.Form.extend({
   operand: forms.CharField({
-    label: 'Value'
-  }),
-  value: forms.CharField({
-    label: 'Value'
+    label: 'Value',
+    widgetAttrs: {
+      noLabel: true
+    }
   })
 });
 
@@ -156,6 +156,39 @@ const AssertionsSelection = React.createClass({
     }
     return null;
   },
+  getJsonPath(assertion){
+    let path;
+    if (assertion.json){
+      let body = _.get(this.getResponse(), 'body') || {};
+      if (typeof body === 'string'){
+        try {
+          body = JSON.parse(body);
+        } catch (err){
+          return path;
+        }
+      }
+      body = typeof body === 'object' ? body : {};
+      try {
+        path = _.get(body, assertion.json);
+        if (typeof path !== 'string'){
+          path = JSON.stringify(path);
+        }
+      } catch (err){
+        return path;
+      }
+    }
+    return path;
+  },
+  getAlertStyle(assertion){
+    let alertStyle = 'default';
+    let test = this.getSlateTest(assertion);
+    if (test && test.success){
+      alertStyle = 'success';
+    } else if (test){
+      alertStyle = 'danger';
+    }
+    return alertStyle;
+  },
   runSetAssertionsState(iteratee){
     const assertions = this.state.assertions.map(iteratee);
     this.setState({
@@ -252,7 +285,7 @@ const AssertionsSelection = React.createClass({
   },
   renderDeleteButton(index){
     return (
-      <Button flat color="danger" title="Remove this Assertionication" onClick={this.runDelete.bind(null, index)} style={{minHeight: '46px'}}>
+      <Button flat color="danger" title="Remove this Assertion" onClick={this.runDelete.bind(null, index)} style={{minHeight: '46px', marginLeft: '1rem', marginTop: '3.2rem'}}>
         <Delete inline fill="danger"/>
       </Button>
     );
@@ -289,77 +322,137 @@ const AssertionsSelection = React.createClass({
   },
   renderRelationshipButtons(assertionIndex){
     return (
-      <div style={{width: '100%'}}>
+      <Padding t={1} style={{width: '100%'}}>
         {relationships.map(rel => {
           const data = {
             relationship: rel.id
           };
           return (
-            <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
+            <Button flat onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
           );
         })}
-      </div>
+      </Padding>
     );
   },
-  renderCode(index){
-    const assertion = this.state.assertions[index];
-    const title = <Heading level={4}>Response Code</Heading>;
-    let inner = null;
-    let buttons = null;
-    if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
-      inner = (
-        <Padding l={1} className="flex-1">
-          <BoundField bf={this.state.assertions[index].form.boundField('operand')}/>
-        </Padding>
-      );
-    } else if (!assertion.relationship){
-      buttons = (
-        <Padding t={1}>
-          {this.renderRelationshipButtons(index)}
-        </Padding>
-      )
-    }
-    let rel = '';
+  renderChosenRelationship(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
     if (assertion.relationship){
       const obj = _.find(relationships, {id: assertion.relationship}) || {};
-      rel = (
-        <span>&nbsp;<em>{obj.name.toLowerCase()}</em></span>
+      return (
+        <Padding inline l={1}>
+          <Button flat color="text" onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
+        </Padding>
+      );  
+    }
+    return null;
+  },
+  renderOperand(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
+    if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
+      return (
+        <Padding l={1} className="flex-1">
+          <BoundField bf={this.state.assertions[assertionIndex].form.boundField('operand')}/>
+        </Padding>
       );
     }
-    let op = '';
-    if (assertion.operand){
-      op = ` ${assertion.operand}`;
-    }
-    let alertStyle = 'default';
-    let test = this.getSlateTest(assertion);
-    if (test && test.success){
-      alertStyle = 'success';
-    } else if (test){
-      alertStyle = 'danger';
+    return null;
+  },
+  renderCode(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
+    const title = <Heading level={4}>Response Code</Heading>;
+    let buttons = null;
+    if (!assertion.relationship){
+      buttons = this.renderRelationshipButtons(assertionIndex);
     }
     return (
       <div>
         {title}
-          <Alert bsStyle={alertStyle} className="display-flex flex-wrap flex-vertical-align" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-            <strong>{this.getResponse().code}</strong>{rel}{inner}
-          </Alert>
-          {buttons}
+        <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+          <code style={{fontSize: '1.4rem'}}>{this.getResponse().code}</code>{this.renderChosenRelationship(assertionIndex)}{this.renderOperand(assertionIndex)}
+        </Alert>
+        {buttons}
       </div>
     );
   },
-  renderHeader(index){
+  renderHeader(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
+    const selectedHeader = assertion.value;
+    const selectedHeaderResult = _.get(this.getResponseFormatted(), `headers.${assertion.value}`);
+    const headers = _.get(this.getResponseFormatted(), 'headers') || {};
+    const headerKeys = _.keys(headers);
+    let buttons = null;
+    if (!assertion.relationship && assertion.value){
+      buttons = this.renderRelationshipButtons(assertionIndex);
+    } else if (!assertion.value){
+      buttons = (
+        <Padding t={1}>
+          {headerKeys.map(key => {
+            return (
+              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: key})} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-header-key-${key}`}>{key}</Button>
+            );
+          })}
+        </Padding>
+      )
+    }
+    const title = <Heading level={4}>Header{selectedHeader ? ` - ${selectedHeader}` : null}</Heading>;
+    const helper = assertion.value ? (
+      <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+        <code style={{fontSize: '1.4rem'}}>{selectedHeaderResult || 'Select a header below'}</code>{this.renderChosenRelationship(assertionIndex)}{this.renderOperand(assertionIndex)}
+      </Alert>
+    ) : null;
     return (
-      <BoundField bf={this.state.assertions[index].form.boundField('value')}/>
+      <div>
+        {title}
+        {helper}
+        {buttons}
+      </div>
     );
   },
-  renderBody(index){
+  renderHeader(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
+    const selectedHeaderResult = _.get(this.getResponseFormatted(), `headers.${assertion.value}`);
+    const headers = _.get(this.getResponseFormatted(), 'headers') || {};
+    const headerKeys = _.keys(headers);
+    let buttons = null;
+    if (!assertion.relationship && assertion.value){
+      buttons = this.renderRelationshipButtons(assertionIndex);
+    } else if (!assertion.value){
+      buttons = (
+        <Padding t={1}>
+          {headerKeys.map(key => {
+            return (
+              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: key})} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-header-key-${key}`}>{key}</Button>
+            );
+          })}
+        </Padding>
+      )
+    }
+    const title = <Heading level={4}>Header{selectedHeader ? ` - ${selectedHeader}` : null}</Heading>;
+    const helper = assertion.value ? (
+      <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+        <code style={{fontSize: '1.4rem'}}>{selectedHeaderResult || 'Select a header below'}</code>{this.renderChosenRelationship(assertionIndex)}{this.renderOperand(assertionIndex)}
+      </Alert>
+    ) : null;
     return (
-      <BoundField bf={this.state.assertions[index].form.boundField('value')}/>
+      <div>
+        {title}
+        {helper}
+        {buttons}
+      </div>
     );
   },
   renderAssertion(assertion, index){
     const key = assertion.key || 'code';
-    return this[`render${_.capitalize(key)}`](index);
+    return (
+      <div className="display-flex">
+        <div className="flex-1">
+          {this[`render${_.capitalize(key)}`](index)}
+        </div>
+        <div className="align-flex-start">
+          {this.renderDeleteButton(index)}
+        </div>
+      </div>
+    );
   },
   renderAssertionPickType(){
     return (

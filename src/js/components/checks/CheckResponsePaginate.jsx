@@ -6,7 +6,7 @@ import {plain as seed} from 'seedling';
 
 import {Alert} from '../../modules/bootstrap';
 import {Highlight} from '../global';
-import {Padding} from '../layout';
+import {Padding, Rule} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
@@ -179,13 +179,17 @@ const CheckResponsePaginate = React.createClass({
       <div className={style.checkResponseWaiting}>Your response will appear here</div>
     );
   },
-  renderCode(){
+  renderHeaders(res){
+    const headers = _.get(res, 'response.value.headers') || {};
     return (
-      <div className={this.getResponseClass()}>
-        <Highlight>
-          {JSON.stringify(_.get(this.getFormattedResponses(), 'response.value'), null, ' ')}
-        </Highlight>
-        {this.renderButton()}
+      <div>
+        {_.chain(headers).keys().map(key => {
+          return (
+            <div>
+              <strong>{key}:</strong>&nbsp;<Color c="primary">{headers[key]}</Color>
+            </div>
+          );
+        }).value()}
       </div>
     );
   },
@@ -202,12 +206,21 @@ const CheckResponsePaginate = React.createClass({
       );
     }
     return (
-      <div className={this.getResponseClass()}>
+      <Padding a={1} className={this.getResponseClass()}>
+        <div style={{width: '100%'}}>
+          <strong>Status Code:</strong>&nbsp;<Color c="primary">{_.get(res, 'response.value.code')}</Color><br/>
+          <Rule/>
+          {this.renderHeaders(res)}
+          <Rule/>
+          <Padding b={0.5}>
+            <strong>Body</strong>
+          </Padding>
+        </div>
         <Highlight>
-          {JSON.stringify(_.get(res, 'response.value'), null, ' ')}
+          {JSON.stringify(_.get(res, 'response.value.body'), null, ' ')}
         </Highlight>
         {this.renderButton()}
-      </div>
+      </Padding>
     );
   },
   renderWaiting(){
@@ -336,11 +349,9 @@ const CheckResponsePaginate = React.createClass({
         <div>
         {this.renderTitle()}
         {this.renderBoolArea()}
-          <div style={{background: '#212121'}}>
-            <Padding a={0.5}>
-              {this.renderTopArea()}
-              {this.renderItem()}
-            </Padding>
+          <div>
+            {this.renderTopArea()}
+            {this.renderItem()}
           </div>
           {this.renderFlippers()}
         </div>
