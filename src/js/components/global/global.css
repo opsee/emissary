@@ -238,7 +238,7 @@ to prevent collapsing during animation*/
   position: relative;
 }
 
-:global .page-enter .page-leave {
+:global .page-enter, :global .page-leave {
   transition: all var(--transitionEaseOut);
   position: absolute;
   left: 0;
@@ -249,11 +249,11 @@ to prevent collapsing during animation*/
   transform: translateY(15px);
 }
 
-:global .page-enter .page-leave-active {
+:global .page-enter, :global .page-leave-active {
   opacity: 0;
 }
 
-:global .page-enter-active .page-leave {
+:global .page-enter-active, :global .page-leave {
   opacity: 1;
   transform: none;
 }

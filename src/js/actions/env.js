@@ -220,8 +220,8 @@ export function rebootInstances(InstanceIds){
         .post(`${config.services.api}/aws/reboot-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
-        .then(res => {
-          resolve(res.body);
+        .then(() => {
+          resolve(InstanceIds);
         }, reject);
       })
     });
@@ -237,8 +237,8 @@ export function stopInstances(InstanceIds){
         .post(`${config.services.api}/aws/stop-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
-        .then(res => {
-          resolve(res.body);
+        .then(() => {
+          resolve(InstanceIds);
         }, reject);
       })
     });
@@ -254,8 +254,8 @@ export function startInstances(InstanceIds){
         .post(`${config.services.api}/aws/start-instances`)
         .set('Authorization', state().user.get('auth'))
         .send({InstanceIds})
-        .then(res => {
-          resolve(res.body);
+        .then(() => {
+          resolve(InstanceIds);
         }, reject);
       })
     });

@@ -298,7 +298,12 @@ const CheckResponsePaginate = React.createClass({
     if (!this.props.showRerunButton) {
       return null;
     }
-    return <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={this.getStatus() === 'pending'}><Refresh fill="primary"/></Button>;
+    const disabled = this.getStatus() === 'pending';
+    return (
+      <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={disabled}>
+        <Refresh fill={disabled ? 'textSecondary' : 'primary'}/>
+      </Button>
+    );
   },
   renderTitle(){
     return (

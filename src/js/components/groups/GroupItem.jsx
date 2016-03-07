@@ -83,6 +83,17 @@ const GroupItem = React.createClass({
     const data = JSON.stringify({target});
     return `/check-create/request?data=${data}`;
   },
+  getType(){
+    let type = 'SG';
+    switch (this.getItem().get('type')){
+    case 'elb':
+      type = 'ELB';
+      break;
+    default:
+      break;
+    }
+    return type;
+  },
   renderInstanceCount(){
     const count = this.getItem().get('instance_count');
     return (
@@ -133,7 +144,7 @@ const GroupItem = React.createClass({
               <Add inline fill="primary"/> Create Check
             </Button>
           </ContextMenu>
-          <div key="line1">{this.getItem().get('name')}</div>
+          <div key="line1">{this.getItem().get('name')}&nbsp;({this.getType()})</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
