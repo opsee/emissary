@@ -71,6 +71,16 @@ const InstanceEcc = React.createClass({
     const initial = [this.props.params.id];
     return initial.concat(this.getGroupsSecurity()).concat(this.getGroupsELB());
   },
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getInstance().get('id'),
+        type: 'EC2',
+        name: this.getInstance().get('name')
+      }
+    });
+    return `/check-create/request?data=${data}`;
+  },
   handleActionsClick(){
     this.props.appActions.openContextMenu(this.getInstance().get('id'));
   },
@@ -91,7 +101,7 @@ const InstanceEcc = React.createClass({
       return (
         <div>
           <Padding b={3}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=EC2&name=${this.getInstance().get('name')}`} title="Create New Check">
+            <Button color="primary" flat to={this.getCreateLink()} title="Create New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>

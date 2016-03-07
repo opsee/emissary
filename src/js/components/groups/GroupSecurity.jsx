@@ -44,6 +44,16 @@ const GroupSecurity = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getGroup().get('id'),
+        type: 'security',
+        name: this.getGroup().get('name')
+      }
+    });
+    return `/check-create/request?data=${data}`;
+  },
   renderDescription(){
     const desc = this.getGroup().get('Description');
     if (desc && desc !== ''){
@@ -56,7 +66,7 @@ const GroupSecurity = React.createClass({
       return (
         <div>
           <Padding b={3}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=security&name=${this.getGroup().get('name')}`} title="Create New Check">
+            <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>

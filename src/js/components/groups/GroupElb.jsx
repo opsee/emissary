@@ -45,6 +45,16 @@ const GroupElb = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Map();
   },
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getGroup().get('id'),
+        type: 'elb',
+        name: this.getGroup().get('name')
+      }
+    });
+    return `/check-create/request?data=${data}`;
+  },
   renderDescription(){
     const desc = this.getGroup().get('Description');
     if (desc && desc !== ''){
@@ -62,7 +72,7 @@ const GroupElb = React.createClass({
       return (
         <div>
           <Padding b={3}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=elb&name=${this.getGroup().get('name')}`}>
+            <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
