@@ -2,6 +2,7 @@ import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import cx from 'classnames';
 /* eslint-disable no-unused-vars */
 import style from './hljs.css';
 /* eslint-enable no-unused-vars */
@@ -12,11 +13,15 @@ const Highlight = React.createClass({
   propTypes: {
     innerHTML: PropTypes.string,
     className: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    noBg: PropTypes.bool,
+    wrap: PropTypes.bool
   },
   getDefaultProps() {
     return {
-      className: ''
+      className: '',
+      noBg: false,
+      wrap: false
     };
   },
   componentDidMount() {
@@ -24,6 +29,12 @@ const Highlight = React.createClass({
   },
   componentDidUpdate() {
     this.runHighlightCode();
+  },
+  getClassName(){
+    return cx(this.props.className, {
+      'noBg': this.props.noBg,
+      'wrap': this.props.wrap
+    });
   },
   runHighlightCode() {
     if (this.isMounted()){
@@ -38,16 +49,16 @@ const Highlight = React.createClass({
   },
   render() {
     if (this.props.innerHTML) {
-      return React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.children }, className: this.props.className || null });
+      return (
+        <div dangerouslySetInnerHTML={{__html: this.props.children}} className={this.getClassName()}/>
+      );
     }
-    return React.createElement(
-      'pre',
-      null,
-      React.createElement(
-        'code',
-        { className: this.props.className },
-        this.props.children
-      )
+    return (
+      <pre>
+        <code className={this.getClassName()}>
+          {this.props.children}
+        </code>
+      </pre>
     );
   }
 });
