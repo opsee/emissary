@@ -215,6 +215,8 @@ const CheckResponsePaginate = React.createClass({
     return (
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
+          {this.renderTopArea()}
+          <Rule/>
           <strong>Status Code:</strong>&nbsp;<Color c="primary">{_.get(res, 'response.value.code')}</Color><br/>
           <Rule/>
           {this.renderHeaders(res)}
@@ -362,7 +364,6 @@ const CheckResponsePaginate = React.createClass({
         {this.renderTitle()}
         {this.renderBoolArea()}
           <div>
-            {this.renderTopArea()}
             {this.renderItem()}
           </div>
           {this.renderFlippers()}

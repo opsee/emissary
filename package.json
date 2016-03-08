@@ -107,7 +107,7 @@
     "react-addons-css-transition-group": "^0.14.3",
     "react-addons-perf": "^0.14.2",
     "react-addons-pure-render-mixin": "^0.14.2",
-    "react-autosuggest": "^2.1.1",
+    "react-autosuggest": "^3.5.1",
     "react-bootstrap": "^0.27.3",
     "react-components": "^0.2.0",
     "react-document-title": "^2.0.0",

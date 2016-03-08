@@ -4,62 +4,23 @@ import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
+import Autosuggest from 'react-autosuggest';
 
 import {BoundField, Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Delete} from '../icons';
+import {Add, Delete} from '../icons';
 import {Padding, Rule} from '../layout';
 import {Color, Heading} from '../type';
 import {Expandable, Highlight} from '../global';
 import {Alert} from '../../modules/bootstrap';
-import {SlackConnect} from '../integrations';
 import {flag, validate} from '../../modules';
 import style from './assertionSelection.css';
 import relationships from 'slate/src/relationships';
 import types from 'slate/src/types';
 import slate from 'slate';
+import getKeys from '../../modules/getKeys';
 import {
   integrations as actions
 } from '../../actions';
-
-const CodeForm = forms.Form.extend({
-  operand: forms.CharField({
-    widgetAttrs: {
-      noLabel: true
-    }
-  })
-});
-
-const HeaderForm = forms.Form.extend({
-  operand: forms.CharField({
-    widgetAttrs: {
-      noLabel: true
-    }
-  })
-});
-
-const JsonForm = forms.Form.extend({
-  operand: forms.CharField({
-    widgetAttrs: {
-      noLabel: true
-    }
-  }),
-  value: forms.CharField({
-    label: 'JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a>',
-    required: false,
-    widgetAttrs: {
-      placeholder: 'animals.dogs[0]'
-    }
-  })
-});
-
-const BodyForm = forms.Form.extend({
-  operand: forms.CharField({
-    label: 'Value',
-    widgetAttrs: {
-      noLabel: true
-    }
-  })
-});
 
 const AssertionsSelection = React.createClass({
   propTypes: {
@@ -101,6 +62,57 @@ const AssertionsSelection = React.createClass({
       this.runChange(assertions);
     }
   },
+  getForm(type = 'code', kwargs){
+    const self = this;
+    let obj = null;
+    switch (type){
+    case 'code':
+      obj = forms.Form.extend({
+        operand: forms.CharField({
+          widgetAttrs: {
+            noLabel: true
+          }
+        })
+      });
+    break;
+    case 'header':
+      obj = forms.Form.extend({
+        operand: forms.CharField({
+          widgetAttrs: {
+            noLabel: true
+          }
+        })
+      });
+    break;
+    case 'json':
+      obj = forms.Form.extend({
+        operand: forms.CharField({
+          widgetAttrs: {
+            noLabel: true
+          }
+        }),
+        value: forms.CharField({
+          label: 'JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a>',
+          required: false,
+          widgetAttrs: {
+            placeholder: self.getJsonPlaceholder()
+          }
+        })
+      });
+    break;
+    default:
+      obj = forms.Form.extend({
+        operand: forms.CharField({
+          label: 'Value',
+          widgetAttrs: {
+            noLabel: true
+          }
+        })
+      });
+    break;
+    }
+    return new obj(kwargs);
+  },
   getNewSchema(key, assertionIndex, value){
     const self = this;
     const opts = {
@@ -118,28 +130,35 @@ const AssertionsSelection = React.createClass({
         text: value
       } : {}
     };
-    let form = new CodeForm(opts);
-    switch (key){
-      case 'header':
-        form = new HeaderForm(opts);
-        break;
-      case 'body':
-        form = new BodyForm(opts);
-      break;
-      case 'json':
-        form = new JsonForm(opts);
-      break;
-      default:
-        break;
-    }
     return {
       key,
       relationship: null,
       value,
       operand: null,
-      form,
+      form: this.getForm(key, opts),
       useJson: undefined
     };
+  },
+  getJsonBodyKeys(){
+    const json = this.getJsonBody();
+    if (json){
+      const keys = getKeys(json);
+      if (Array.isArray(keys) && keys.length){
+        return keys;
+      }
+    }
+    return [];
+  },
+  getFilteredJsonBodyKeys(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
+    return this.getJsonBodyKeys().filter(path => {
+      return path.match(`^${assertion.value}`);
+    });
+  },
+  getJsonPlaceholder(){
+    const keys = this.getJsonBodyKeys()
+    const last = _.chain(keys).sortBy(keys, k => k.length).last().value();
+    return last || 'animals.dogs[0].breed';
   },
   getAssertionValueForDisplay(assertion = {}){
     if (assertion.type === 'slack_bot'){
@@ -216,13 +235,7 @@ const AssertionsSelection = React.createClass({
     const meta = this.getJsonPathMeta(assertion);
     if (meta && meta.data && assertion.value){
       if (meta.scalar){
-        return (
-          <Padding b={1} style={{width: '100%'}}>
-            <Padding style={{background: seed.color.gray9}}>
-              <code style={{fontSize: '1.4rem'}}><Color c="primary">{meta.data}</Color></code>
-            </Padding>
-          </Padding>
-        );
+        return this.renderReturnedValue(meta.data);
       }
       return (
         <Padding b={1} style={{width: '100%'}}>
@@ -232,7 +245,7 @@ const AssertionsSelection = React.createClass({
         </Padding>
       );
     } else if (!meta.data && assertion.value){
-      return 'No JSON data selected';
+      return this.renderReturnedValue('>> No JSON data selected', 'danger');
     }
     return (
       <Padding b={1} style={{width: '100%'}}>
@@ -303,15 +316,6 @@ const AssertionsSelection = React.createClass({
     const assertions = _.reject(this.state.assertions, (n, i) => i === index);
     this.runChange(assertions);
   },
-  runTestAssertion(assertion){
-    this.props.actions.testAssertionication(_.pick(assertion, ['type', 'value']));
-    const assertions = this.state.assertions.map(n => {
-      return _.assign({}, n, {
-        sending: n.type === assertion.type && n.value === assertion.value
-      });
-    });
-    this.runChange(assertions);
-  },
   runSetAssertionData(index, data){
     const assertions = this.state.assertions.map((assertion, i) => {
       let d = {};
@@ -330,64 +334,14 @@ const AssertionsSelection = React.createClass({
     });
     this.props.onChange(this.getFinalAssertions(assertions));
   },
+  handleJsonSuggestionSelect(assertionIndex, event, data){
+    this.runSetAssertionData(assertionIndex, {
+      value: data.newValue
+    });
+  },
   handleSubmit(e){
     e.preventDefault();
     return false;
-  },
-  renderValueOrChannels(form){
-    if (form.cleanedData.type === 'email'){
-      return <BoundField bf={form.boundField('value')}/>;
-    }
-    return <BoundField bf={form.boundField('channel')}/>;
-  },
-  renderAssertionIcon(assertion, props = {}){
-    const {type} = assertion;
-    let el = <Mail {...props}/>;
-    if (type === 'slack_bot' || type === 'slack'){
-      el = <Slack {...props}/>;
-    } else if (type === 'webhook'){
-      el = <Cloud {...props}/>;
-    }
-    return (
-      <span title={assertion.type}>{el}</span>
-    );
-  },
-  renderDeleteButton(index){
-    return (
-      <Button flat color="danger" title="Remove this Assertion" onClick={this.runDelete.bind(null, index)} style={{minHeight: '46px', marginLeft: '1rem', marginTop: '3.2rem'}}>
-        <Delete inline fill="danger"/>
-      </Button>
-    );
-  },
-  renderTextAssertion(assertion, index){
-    return (
-      <div className={style.line}>
-        <Padding b={1} className={`display-flex ${style.inputArea}`}>
-          <form name={`assertion-email-form-${index}`} onSubmit={this.handleSubmit} className="flex-1">
-            {assertion.form.render()}
-          </form>
-          <Padding l={1} className="align-self-end">
-            {this.renderDeleteButton(index)}
-          </Padding>
-        </Padding>
-      </div>
-    );
-  },
-  renderChosenChannel(assertion, index){
-    return (
-      <div>
-        <Heading level={4}>Slack Channel</Heading>
-        <div className="display-flex flex-vertical-align">
-          <div className="flex-1">
-            <div className="display-flex">
-              {this.renderAssertionIcon(assertion)}&nbsp;{this.getAssertionValueForDisplay(assertion)}
-            </div>
-          </div>
-          {this.renderDeleteButton(index)}
-          {this.renderTestButton(assertion)}
-        </div>
-      </div>
-    );
   },
   renderRelationshipButtons(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
@@ -402,6 +356,8 @@ const AssertionsSelection = React.createClass({
               data.operand = this.getResponseFormatted().code;  
             } else if (assertion.key === 'header'){
               data.operand = _.get(this.getResponseFormatted(), `headers.${assertion.value}`);
+            } else if (assertion.key === 'json'){
+              data.operand = this.getJsonPathMeta(assertion).data;
             }
           }
           return (
@@ -432,6 +388,15 @@ const AssertionsSelection = React.createClass({
     }
     return null;
   },
+  renderReturnedValue(value, color = 'primary'){
+    return (
+      <Padding b={1} style={{width: '100%'}}>
+        <Padding style={{background: seed.color.gray9}}>
+          <code style={{fontSize: '1.4rem'}}><Color c={color}>{value}</Color></code>
+        </Padding>
+      </Padding>
+    );
+  },
   renderTitle(assertionIndex, title){
     return (
       <Heading level={4} className="display-flex flex-1 flex-vertical-align">
@@ -452,11 +417,7 @@ const AssertionsSelection = React.createClass({
       <div>
         {this.renderTitle(assertionIndex, 'Response Code')}
         <Alert bsStyle={this.getAlertStyle(assertion)} style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-          <Padding b={1} style={{width: '100%'}}>
-            <Padding style={{background: seed.color.gray9}}>
-              <code style={{fontSize: '1.4rem'}}><Color c="primary">{this.getResponse().code}</Color></code>
-            </Padding>
-          </Padding>
+          {this.renderReturnedValue(this.getResponse().code)}
           <div className="display-flex">
             {this.renderChosenRelationship(assertionIndex)}
             {this.renderOperand(assertionIndex)}
@@ -489,9 +450,7 @@ const AssertionsSelection = React.createClass({
     const helper = assertion.value ? (
       <Alert bsStyle={this.getAlertStyle(assertion)} className="flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
         <Padding b={1} style={{width: '100%'}}>
-          <Padding style={{background: seed.color.gray9}}>
-            <code style={{fontSize: '1.4rem'}}><Color c="primary">{selectedHeaderResult}</Color></code>
-          </Padding>
+          {this.renderReturnedValue(selectedHeaderResult)}
         </Padding>
         <div className="display-flex">
           {this.renderChosenRelationship(assertionIndex)}
@@ -537,6 +496,9 @@ const AssertionsSelection = React.createClass({
       </div>
     );
   },
+  renderSuggestion(suggestion){
+    return <span>{suggestion}</span>;
+  },
   renderJson(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
     let buttons = null;
@@ -546,11 +508,21 @@ const AssertionsSelection = React.createClass({
     return (
       <div>
         {this.renderTitle(assertionIndex, 'JSON Response Body')}
-        <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-          {this.renderJsonInput(assertion)}
+        <Alert bsStyle={this.getAlertStyle(assertion)} className="" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
           {this.getBodySnippet(assertion) || 'Select a header below'}
-          {this.renderChosenRelationship(assertionIndex)}
-          {this.renderOperand(assertionIndex)}
+          {
+            // this.renderJsonInput(assertion)
+          }
+          <Padding b={1}>
+            <div className="form-group">
+              <label className="label" htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
+              <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(), id: `json-path-${assertionIndex}`}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
+            </div>
+          </Padding>
+          <div className="display-flex">
+            {this.renderChosenRelationship(assertionIndex)}
+            {this.renderOperand(assertionIndex)}
+          </div>
         </Alert>
         {buttons}
       </div>

@@ -244,6 +244,10 @@ input {
   line-height: normal;
 }
 
+input[type="search"], input[type="text"]{
+  width: 100%;
+}
+
 input[type="checkbox"],
 input[type="radio"] {
   padding: 0;
