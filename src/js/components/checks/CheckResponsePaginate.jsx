@@ -109,6 +109,13 @@ const CheckResponsePaginate = React.createClass({
     }
     return [];
   },
+  getBody(){
+    const res = _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.value');
+    if (typeof res === 'object'){
+      return JSON.stringify(res, null, ' ');
+    }
+    return _.get(res, 'body');
+  },
   isCheckComplete(check){
     if (!check){
       return false;
@@ -217,7 +224,7 @@ const CheckResponsePaginate = React.createClass({
           </Padding>
         </div>
         <Highlight>
-          {JSON.stringify(_.get(res, 'response.value.body'), null, ' ')}
+          {this.getBody()}
         </Highlight>
         {this.renderButton()}
       </Padding>

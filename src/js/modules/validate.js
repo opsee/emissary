@@ -9,6 +9,10 @@ function getVerbAndSuffix(numberIncomplete){
   };
 }
 
+function responseIsJson(response){
+
+}
+
 function assertion(assertion = {}){
   let arr = [];
   arr.push(!!assertion.key);

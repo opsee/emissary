@@ -1,4 +1,4 @@
-.checkResponse {
+.expandable {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -11,40 +11,30 @@
   position: relative;
   transition: max-height var(--transitionEaseOut);
 }
-.checkResponse:after {
+.expandable:after {
   background-size: 100%;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
   bottom: 0;
   content: '';
   display: block;
-  height: 2.5rem;
+  height: 4rem;
   overflow: visible;
   left: 0;
   position: absolute;
   width: 100%;
 }
 
-.checkResponse pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-.checkResponseWaiting {
-  composes: checkResponse;
-  align-items: center;
-}
-
-.checkResponseExpanded {
-  composes: checkResponse;
+.expandableOpen {
+  composes: expandable;
   align-items: flex-start;
   height: auto;
   max-height: none;
 }
-.checkResponseExpanded:after {
+.expandableOpen:after {
   display: none;
 }
 
-.checkResponseButton {
+.button {
   bottom: 1rem;
   position: absolute;
   right: 1rem;

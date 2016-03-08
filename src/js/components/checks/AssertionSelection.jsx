@@ -3,12 +3,13 @@ import _ from 'lodash';
 import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {plain as seed} from 'seedling';
 
 import {BoundField, Button} from '../forms';
 import {Add, Checkmark, ChevronRight, Delete} from '../icons';
-import {Padding} from '../layout';
+import {Padding, Rule} from '../layout';
 import {Color, Heading} from '../type';
-import {Highlight} from '../global';
+import {Expandable, Highlight} from '../global';
 import {Alert} from '../../modules/bootstrap';
 import {SlackConnect} from '../integrations';
 import {flag, validate} from '../../modules';
@@ -215,10 +216,16 @@ const AssertionsSelection = React.createClass({
     const meta = this.getJsonPathMeta(assertion);
     if (meta && meta.data && assertion.value){
       if (meta.scalar){
-        return <code style={{fontSize: '1.4rem'}}>{meta.data}</code>;
+        return (
+          <Padding b={1} style={{width: '100%'}}>
+            <Padding style={{background: seed.color.gray9}}>
+              <code style={{fontSize: '1.4rem'}}><Color c="primary">{meta.data}</Color></code>
+            </Padding>
+          </Padding>
+        );
       }
       return (
-        <Padding b={1}>
+        <Padding b={1} style={{width: '100%'}}>
           <Highlight wrap>
             {meta.data}
           </Highlight>
@@ -228,10 +235,12 @@ const AssertionsSelection = React.createClass({
       return 'No JSON data selected';
     }
     return (
-      <Padding b={1}>
-        <Highlight wrap>
-          {this.getResponse().body}
-        </Highlight>
+      <Padding b={1} style={{width: '100%'}}>
+        <Expandable>
+          <Highlight wrap>
+            {this.getResponse().body}
+          </Highlight>
+        </Expandable>
       </Padding>
     );
   },
@@ -427,7 +436,7 @@ const AssertionsSelection = React.createClass({
   },
   renderCode(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
-    const title = <Heading level={4}>Response Code</Heading>;
+    const title = <Heading level={4}>#{assertionIndex + 1} Response Code</Heading>;
     let buttons = null;
     if (!assertion.relationship){
       buttons = this.renderRelationshipButtons(assertionIndex);
@@ -462,7 +471,7 @@ const AssertionsSelection = React.createClass({
         </Padding>
       )
     }
-    const title = <Heading level={4}>Response Header{selectedHeader ? ` - ${selectedHeader}` : null}</Heading>;
+    const title = <Heading level={4}>#{assertionIndex + 1} Response Header{selectedHeader ? ` - ${selectedHeader}` : null}</Heading>;
     const helper = assertion.value ? (
       <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
         <code style={{fontSize: '1.4rem'}}>{selectedHeaderResult || 'Select a header below'}</code>{this.renderChosenRelationship(assertionIndex)}{this.renderOperand(assertionIndex)}
@@ -480,7 +489,7 @@ const AssertionsSelection = React.createClass({
     const jsonBody = this.getJsonBody();
     if (jsonBody){
       return (
-        <Padding b={1}>
+        <Padding b={1} style={{width: '100%'}}>
           <BoundField bf={assertion.form.boundField('value')}/>
         </Padding>
       );
@@ -495,7 +504,7 @@ const AssertionsSelection = React.createClass({
     }
     return (
       <div>
-        <Heading level={4}>Plaintext Response Body</Heading>
+        <Heading level={4}>#{assertionIndex + 1} Plaintext Response Body</Heading>
         <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
           {this.getBodySnippet(assertion) || 'Select a header below'}
           {this.renderChosenRelationship(assertionIndex)}
@@ -513,9 +522,9 @@ const AssertionsSelection = React.createClass({
     }
     return (
       <div>
-        <Heading level={4}>JSON Response Body</Heading>
-        {this.renderJsonInput(assertion)}
+        <Heading level={4}>#{assertionIndex + 1} JSON Response Body</Heading>
         <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+          {this.renderJsonInput(assertion)}
           {this.getBodySnippet(assertion) || 'Select a header below'}
           {this.renderChosenRelationship(assertionIndex)}
           {this.renderOperand(assertionIndex)}
@@ -527,28 +536,36 @@ const AssertionsSelection = React.createClass({
   renderAssertion(assertion, index){
     const key = assertion.key || 'code';
     return (
-      <div className="display-flex">
+      <Padding className="display-flex" key={`assertion-${index}`} b={2}>
         <div className="flex-1">
           {this[`render${_.capitalize(key)}`](index)}
         </div>
         <div className="align-flex-start">
           {this.renderDeleteButton(index)}
         </div>
-      </div>
+      </Padding>
     );
   },
   renderAssertionPickType(){
     return (
       <div>
+        <Rule/>
+        <Padding t={1}>
+          <Heading level={4}>Pick an Assertion Type</Heading>
+        </Padding>
         {['code', 'header', 'body'].map(type => {
           let schemaType = type;
-          if (this.getJsonBody()){
+          if (this.getJsonBody() && type === 'body'){
             schemaType = 'json';
+          }
+          let name = _.capitalize(type);
+          if (name === 'Code'){
+            name = 'Status Code'
           }
           if (flag(`assertion-type-${type}`)){
             return (
               <Button flat color="primary" onClick={this.runNewAssertion.bind(null, schemaType)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`assertion-button-${type}`}>
-                <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}
+                <Add inline fill="primary"/>&nbsp;{name}
               </Button>
             );
           }
@@ -562,14 +579,7 @@ const AssertionsSelection = React.createClass({
       return null;
     }
     if (this.state.assertions.length){
-      return this.state.assertions.map((assertion, index) => {
-        return (
-          <div key={`assertion-${index}`}>
-            {this.renderAssertion(assertion, index)}
-            <hr/>
-          </div>
-        );
-      });
+      return this.state.assertions.map(this.renderAssertion);
     }
     return (
       <div>

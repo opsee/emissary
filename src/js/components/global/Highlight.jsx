@@ -1,5 +1,6 @@
 import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
+import xml from 'highlight.js/lib/languages/xml';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
@@ -8,6 +9,7 @@ import style from './hljs.css';
 /* eslint-enable no-unused-vars */
 
 hljs.registerLanguage('json', json);
+hljs.registerLanguage('xml', xml);
 
 const Highlight = React.createClass({
   propTypes: {

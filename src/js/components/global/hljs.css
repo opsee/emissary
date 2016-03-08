@@ -45,12 +45,11 @@
   color: #FFA726;
 }
 
-:global .hljs-string {
+:global .hljs-string, 
+:global .hljs-tag .hljs-value,
+:global .hljs-number
+{
   color: var(--colorPrimary);
-}
-
-:global .hljs-number {
-  color: var(--colorWarning);
 }
 
 :global .hljs,
@@ -61,7 +60,6 @@
 :global .hljs-title,
 :global .hljs-type,
 :global .ini .hljs-title,
-:global .hljs-tag .hljs-value,
 :global .css .hljs-rule .hljs-value,
 :global .hljs-preprocessor,
 :global .hljs-pragma,
@@ -85,9 +83,12 @@
 :global .apache .hljs-cbracket,
 :global .tex .hljs-command,
 :global .hljs-prompt,
-:global .coffeescript .hljs-attribute,
 :global .hljs-name {
-  color: #d88;
+  color: var(--colorWarning);
+}
+
+:global .xml .hljs-attribute{
+  color: var(--colorGray5);
 }
 
 :global .hljs-comment,
