@@ -23,5 +23,7 @@ function traverse(obj, stack, parent = ''){
 export default function produceKeyArray(obj = {}) {
   let stack = [];
   traverse(obj, stack);
-  return stack.map(item => item.slice(1));
+  return stack.map(item => {
+    return item.charAt(0) === '.' ? item.slice(1) : item;
+  });
 }

@@ -152,7 +152,7 @@ const AssertionsSelection = React.createClass({
   getFilteredJsonBodyKeys(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
     return this.getJsonBodyKeys().filter(path => {
-      return path.match(`^${assertion.value}`);
+      return path.match(`^${_.escapeRegExp(assertion.value)}`);
     });
   },
   getJsonPlaceholder(){
@@ -206,7 +206,7 @@ const AssertionsSelection = React.createClass({
       const json = JSON.parse(body);
       const type = _.chain(res).get('headers').find({name: 'Content-Type'}).get('values').value() || [];
       const smashed = type.join(';');
-      return smashed.match('json') && typeof json === 'object' && json;
+      return smashed.match('json') && json;
     } catch (err){
       return false;
     }

@@ -193,7 +193,7 @@ const CheckResponsePaginate = React.createClass({
         {_.chain(headers).keys().map(key => {
           return (
             <div>
-              <strong>{key}:</strong>&nbsp;<Color c="primary">{headers[key]}</Color>
+              {key}:&nbsp;<Color c="primary">{headers[key]}</Color>
             </div>
           );
         }).value()}
@@ -216,11 +216,13 @@ const CheckResponsePaginate = React.createClass({
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
           {this.renderTopArea()}
-          <Rule/>
           <strong>Status Code:</strong>&nbsp;<Color c="primary">{_.get(res, 'response.value.code')}</Color><br/>
-          <Rule/>
-          {this.renderHeaders(res)}
-          <Rule/>
+          <Padding t={1} b={1}>
+            <Padding b={0.5}>
+              <strong>Headers</strong>
+            </Padding>
+            {this.renderHeaders(res)}
+          </Padding>
           <Padding b={0.5}>
             <strong>Body</strong>
           </Padding>
