@@ -29,6 +29,7 @@
   align-items: flex-start;
   height: auto;
   max-height: none;
+  padding-bottom: 5rem;
 }
 .expandableOpen:after {
   display: none;

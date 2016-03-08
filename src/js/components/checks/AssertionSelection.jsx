@@ -416,9 +416,7 @@ const AssertionsSelection = React.createClass({
     if (assertion.relationship){
       const obj = _.find(relationships, {id: assertion.relationship}) || {};
       return (
-        <Padding inline l={1}>
-          <Button flat color="text" onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
-        </Padding>
+        <Button flat color="text" onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
       );  
     }
     return null;
@@ -434,18 +432,35 @@ const AssertionsSelection = React.createClass({
     }
     return null;
   },
+  renderTitle(assertionIndex, title){
+    return (
+      <Heading level={4} className="display-flex flex-1 flex-vertical-align">
+        <span className="flex-1">#{assertionIndex + 1} {title}</span>
+        <Button flat color="danger" title="Remove this Assertion" onClick={this.runDelete.bind(null, assertionIndex)} style={{padding: '0.2rem'}}>
+          <Delete inline fill="danger"/>
+        </Button>
+      </Heading>
+    );
+  },
   renderCode(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
-    const title = <Heading level={4}>#{assertionIndex + 1} Response Code</Heading>;
     let buttons = null;
     if (!assertion.relationship){
       buttons = this.renderRelationshipButtons(assertionIndex);
     }
     return (
       <div>
-        {title}
-        <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-          <code style={{fontSize: '1.4rem'}}>{this.getResponse().code}</code>{this.renderChosenRelationship(assertionIndex)}{this.renderOperand(assertionIndex)}
+        {this.renderTitle(assertionIndex, 'Response Code')}
+        <Alert bsStyle={this.getAlertStyle(assertion)} style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+          <Padding b={1} style={{width: '100%'}}>
+            <Padding style={{background: seed.color.gray9}}>
+              <code style={{fontSize: '1.4rem'}}><Color c="primary">{this.getResponse().code}</Color></code>
+            </Padding>
+          </Padding>
+          <div className="display-flex">
+            {this.renderChosenRelationship(assertionIndex)}
+            {this.renderOperand(assertionIndex)}
+          </div>
         </Alert>
         {buttons}
       </div>
@@ -471,15 +486,23 @@ const AssertionsSelection = React.createClass({
         </Padding>
       )
     }
-    const title = <Heading level={4}>#{assertionIndex + 1} Response Header{selectedHeader ? ` - ${selectedHeader}` : null}</Heading>;
     const helper = assertion.value ? (
-      <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-        <code style={{fontSize: '1.4rem'}}>{selectedHeaderResult || 'Select a header below'}</code>{this.renderChosenRelationship(assertionIndex)}{this.renderOperand(assertionIndex)}
+      <Alert bsStyle={this.getAlertStyle(assertion)} className="flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+        <Padding b={1} style={{width: '100%'}}>
+          <Padding style={{background: seed.color.gray9}}>
+            <code style={{fontSize: '1.4rem'}}><Color c="primary">{selectedHeaderResult}</Color></code>
+          </Padding>
+        </Padding>
+        <div className="display-flex">
+          {this.renderChosenRelationship(assertionIndex)}
+          {this.renderOperand(assertionIndex)}
+        </div>
       </Alert>
     ) : null;
+    const title = selectedHeader ? ` - ${selectedHeader}` : '';
     return (
       <div>
-        {title}
+        {this.renderTitle(assertionIndex, `Response Header${title}`)}
         {helper}
         {buttons}
       </div>
@@ -504,7 +527,7 @@ const AssertionsSelection = React.createClass({
     }
     return (
       <div>
-        <Heading level={4}>#{assertionIndex + 1} Plaintext Response Body</Heading>
+        {this.renderTitle(assertionIndex, 'Plaintext Response Body')}
         <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
           {this.getBodySnippet(assertion) || 'Select a header below'}
           {this.renderChosenRelationship(assertionIndex)}
@@ -522,7 +545,7 @@ const AssertionsSelection = React.createClass({
     }
     return (
       <div>
-        <Heading level={4}>#{assertionIndex + 1} JSON Response Body</Heading>
+        {this.renderTitle(assertionIndex, 'JSON Response Body')}
         <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
           {this.renderJsonInput(assertion)}
           {this.getBodySnippet(assertion) || 'Select a header below'}
@@ -536,13 +559,8 @@ const AssertionsSelection = React.createClass({
   renderAssertion(assertion, index){
     const key = assertion.key || 'code';
     return (
-      <Padding className="display-flex" key={`assertion-${index}`} b={2}>
-        <div className="flex-1">
-          {this[`render${_.capitalize(key)}`](index)}
-        </div>
-        <div className="align-flex-start">
-          {this.renderDeleteButton(index)}
-        </div>
+      <Padding key={`assertion-${index}`} b={2}>
+        {this[`render${_.capitalize(key)}`](index)}
       </Padding>
     );
   },
