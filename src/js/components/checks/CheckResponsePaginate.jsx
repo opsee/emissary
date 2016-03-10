@@ -5,7 +5,6 @@ import _ from 'lodash';
 import {plain as seed} from 'seedling';
 
 import {Alert} from '../../modules/bootstrap';
-import {Highlight} from '../global';
 import {Padding} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
@@ -13,6 +12,7 @@ import style from './checkResponse.css';
 import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
 import {Color, Heading} from '../type';
+import CheckResponseSingle from './CheckResponseSingle';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -110,11 +110,7 @@ const CheckResponsePaginate = React.createClass({
     return [];
   },
   getBody(){
-    const res = _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response') || {};
-    if (res.json){
-      return JSON.stringify(_.get(res, 'value.body'), null, ' ');
-    }
-    return _.get(res, 'value.body');
+    return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.value.body');
   },
   isCheckComplete(check){
     if (!check){
@@ -216,24 +212,8 @@ const CheckResponsePaginate = React.createClass({
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
           {this.renderTopArea()}
-          <Padding t={1}>
-            <strong>Status Code:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{_.get(res, 'response.value.code')}</code></Color><br/>
-          </Padding>
-          <Padding t={1} b={1}>
-            <Padding b={0.5}>
-              <strong>Headers</strong>
-            </Padding>
-            {this.renderHeaders(res)}
-          </Padding>
-          <Padding b={0.5}>
-            <strong>Body</strong>
-          </Padding>
+          <CheckResponseSingle code={_.get(res, 'response.value.code')} headers={_.get(res, 'response.value.headers') || {}} body={this.getBody()}/>
         </div>
-        <Padding>
-          <Highlight>
-            {this.getBody()}
-          </Highlight>
-        </Padding>
         {this.renderButton()}
       </Padding>
     );
