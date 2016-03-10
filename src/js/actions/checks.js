@@ -17,7 +17,7 @@ import {
 } from './constants';
 
 let exampleResponse;
-if (process.env.NODE_ENV === 'debug'){
+if (process.env.NODE_ENV !== 'production'){
   exampleResponse = require('../../files/exampleResponse');
 }
 
@@ -139,15 +139,17 @@ export function test(data){
     dispatch({
       type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
-        if (process.env.NODE_ENV === 'debug'){
-          return resolve([
-            {
-              response: {
-                type_url: 'HttpResponse',
-                value: exampleResponse
+        if (process.env.NODE_ENV !== 'production'){
+          if (data.check_spec.value.path.match('jsonassertion')){
+            return resolve([
+              {
+                response: {
+                  type_url: 'HttpResponse',
+                  value: exampleResponse
+                }
               }
-            }
-          ]);
+            ]);
+          }
         }
         const check = _.chain(data)
         .thru(formatCheckData)
