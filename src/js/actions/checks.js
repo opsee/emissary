@@ -16,7 +16,7 @@ import {
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
-let exampleResponse
+let exampleResponse;
 if (process.env.NODE_ENV === 'debug'){
   exampleResponse = require('../../files/exampleResponse');
 }
@@ -141,12 +141,12 @@ export function test(data){
       payload: new Promise((resolve, reject) => {
         if (process.env.NODE_ENV === 'debug'){
           return resolve([
-          {
-            response: {
-              type_url: 'HttpResponse',
-              value: exampleResponse
+            {
+              response: {
+                type_url: 'HttpResponse',
+                value: exampleResponse
+              }
             }
-          }
           ]);
         }
         const check = _.chain(data)

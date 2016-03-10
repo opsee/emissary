@@ -6,7 +6,7 @@ import {plain as seed} from 'seedling';
 
 import {Alert} from '../../modules/bootstrap';
 import {Highlight} from '../global';
-import {Padding, Rule} from '../layout';
+import {Padding} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
@@ -110,11 +110,11 @@ const CheckResponsePaginate = React.createClass({
     return [];
   },
   getBody(){
-    const res = _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.value');
-    if (typeof res === 'object'){
-      return JSON.stringify(res, null, ' ');
+    const res = _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response') || {};
+    if (res.json){
+      return JSON.stringify(_.get(res, 'value.body'), null, ' ');
     }
-    return _.get(res, 'body');
+    return _.get(res, 'value.body');
   },
   isCheckComplete(check){
     if (!check){
@@ -193,7 +193,7 @@ const CheckResponsePaginate = React.createClass({
         {_.chain(headers).keys().map(key => {
           return (
             <div>
-              {key}:&nbsp;<Color c="primary">{headers[key]}</Color>
+              <code style={{fontSize: '1.4rem'}}>{key}:&nbsp;<Color c="primary">{headers[key]}</Color></code>
             </div>
           );
         }).value()}
@@ -216,7 +216,9 @@ const CheckResponsePaginate = React.createClass({
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
           {this.renderTopArea()}
-          <strong>Status Code:</strong>&nbsp;<Color c="primary">{_.get(res, 'response.value.code')}</Color><br/>
+          <Padding t={1}>
+            <strong>Status Code:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{_.get(res, 'response.value.code')}</code></Color><br/>
+          </Padding>
           <Padding t={1} b={1}>
             <Padding b={0.5}>
               <strong>Headers</strong>
@@ -227,9 +229,11 @@ const CheckResponsePaginate = React.createClass({
             <strong>Body</strong>
           </Padding>
         </div>
-        <Highlight>
-          {this.getBody()}
-        </Highlight>
+        <Padding>
+          <Highlight>
+            {this.getBody()}
+          </Highlight>
+        </Padding>
         {this.renderButton()}
       </Padding>
     );
@@ -342,15 +346,15 @@ const CheckResponsePaginate = React.createClass({
       const passing = _.get(selected, 'passing');
       if (!this.props.showBoolArea){
         return (
-          <Padding a={0.5}>
-          <strong>{_.get(selected, 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
-          </Padding>
+          <div>
+            <strong>{_.get(selected, 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          </div>
         );
       }
       return (
-        <Padding a={0.5}>
+        <div>
           <strong className={passing ? seed.color.success : seed.color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
-        </Padding>
+        </div>
       );
     }
     return null;

@@ -1,6 +1,7 @@
 import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
 import xml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
@@ -10,6 +11,7 @@ import style from './hljs.css';
 
 hljs.registerLanguage('json', json);
 hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('css', css);
 
 const Highlight = React.createClass({
   propTypes: {
@@ -17,13 +19,15 @@ const Highlight = React.createClass({
     className: PropTypes.string,
     children: PropTypes.node,
     noBg: PropTypes.bool,
-    wrap: PropTypes.bool
+    wrap: PropTypes.bool,
+    style: PropTypes.object
   },
   getDefaultProps() {
     return {
       className: '',
       noBg: false,
-      wrap: false
+      wrap: false,
+      style: {}
     };
   },
   componentDidMount() {
@@ -52,12 +56,12 @@ const Highlight = React.createClass({
   render() {
     if (this.props.innerHTML) {
       return (
-        <div dangerouslySetInnerHTML={{__html: this.props.children}} className={this.getClassName()}/>
+        <div dangerouslySetInnerHTML={{__html: this.props.children}} className={this.getClassName()} style={this.props.style}/>
       );
     }
     return (
       <pre>
-        <code className={this.getClassName()}>
+        <code className={this.getClassName()} style={this.props.style}>
           {this.props.children}
         </code>
       </pre>

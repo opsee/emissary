@@ -49,6 +49,7 @@ export const statics = {
         if (contentType.match('json')){
           try {
             data.response.value.body = JSON.parse(data.response.value.body);
+            data.response.json = true;
           } catch (err){
             yeller.report(err);
           }

@@ -9,25 +9,23 @@ function getVerbAndSuffix(numberIncomplete){
   };
 }
 
-function responseIsJson(response){
-
-}
-
-function assertion(assertion = {}){
+/*returns true if assertion passes validation*/
+function assertion(obj = {}){
   let arr = [];
-  arr.push(!!assertion.key);
-  arr.push(!!assertion.relationship);
-  if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
-    arr.push(!!assertion.operand);
+  arr.push(!!obj.key);
+  arr.push(!!obj.relationship);
+  if (obj.relationship && !obj.relationship.match('empty|notEmpty')){
+    arr.push(!!obj.operand);
   }
-  if (assertion.key === 'header'){
-    arr.push(!!assertion.value);
+  if (obj.key === 'header'){
+    arr.push(!!obj.value);
   }
   return _.every(arr);
 }
 
-function check(check = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
-  const spec = _.get(check, 'check_spec.value') || {};
+/*Returns an array of error objects with associated "areas" if any area fails*/
+function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
+  const spec = _.get(obj, 'check_spec.value') || {};
   let errors = [];
 
   //request area
@@ -51,7 +49,7 @@ function check(check = {}, areas = ['request', 'assertions', 'notifications', 'i
   }
 
   //assertions area
-  const assertions = check.assertions.map((a = {}) => {
+  const assertions = obj.assertions.map((a = {}) => {
     return assertion(a);
   });
   const numberOfIncompleteAssertions = assertions.length - _.compact(assertions).length;
@@ -63,7 +61,7 @@ function check(check = {}, areas = ['request', 'assertions', 'notifications', 'i
   }
 
   //notifications area
-  const notifs = check.notifications.map((n = {}) => {
+  const notifs = obj.notifications.map((n = {}) => {
     return n.type && n.value;
   });
   const numberOfIncompleteNotifs = notifs.length - _.compact(notifs).length;
@@ -94,4 +92,4 @@ function check(check = {}, areas = ['request', 'assertions', 'notifications', 'i
 export default {
   assertion,
   check
-}
+};

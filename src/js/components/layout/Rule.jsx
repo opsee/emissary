@@ -6,7 +6,7 @@ const Rule = React.createClass({
     sm: PropTypes.bool
   },
   render(){
-    return <div className={style.rule}/>
+    return <div className={style.rule}/>;
   }
 });
 

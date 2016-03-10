@@ -1,7 +1,7 @@
 :global .hljs {
   display: block;
   overflow-x: auto;
-  padding: 0.5em;
+  /*padding: 1rem;*/
   background: var(--colorGray9);
   -webkit-text-size-adjust: none;
   font-size: 14px;
@@ -87,7 +87,7 @@
   color: var(--colorWarning);
 }
 
-:global .xml .hljs-attribute{
+:global .xml .hljs-attribute, :global .css .hljs-class{
   color: var(--colorGray5);
 }
 

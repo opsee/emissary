@@ -2,8 +2,6 @@
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
-  background: var(--colorGray9);
-  border: 2px solid var(--colorGray9);
   height: 13rem;
   max-height: 13rem;
   overflow: hidden;
@@ -11,7 +9,8 @@
   position: relative;
   transition: max-height var(--transitionEaseOut);
 }
-.expandable:after {
+
+.fade{
   background-size: 100%;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
   bottom: 0;
@@ -24,14 +23,14 @@
   width: 100%;
 }
 
-.expandableOpen {
+.open {
   composes: expandable;
   align-items: flex-start;
   height: auto;
   max-height: none;
   padding-bottom: 5rem;
 }
-.expandableOpen:after {
+.open:after {
   display: none;
 }
 

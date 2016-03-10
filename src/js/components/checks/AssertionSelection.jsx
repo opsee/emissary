@@ -11,11 +11,8 @@ import {Add, Delete} from '../icons';
 import {Padding, Rule} from '../layout';
 import {Color, Heading} from '../type';
 import {Expandable, Highlight} from '../global';
-import {Alert} from '../../modules/bootstrap';
 import {flag, validate} from '../../modules';
-import style from './assertionSelection.css';
 import relationships from 'slate/src/relationships';
-import types from 'slate/src/types';
 import slate from 'slate';
 import getKeys from '../../modules/getKeys';
 import {
@@ -30,6 +27,9 @@ const AssertionsSelection = React.createClass({
     onChange: PropTypes.func.isRequired,
     redux: PropTypes.shape({
       user: PropTypes.object,
+      checks: PropTypes.shape({
+        responses: PropTypes.object
+      }),
       integrations: PropTypes.shape({
         slackChannels: PropTypes.object,
         tests: PropTypes.array
@@ -56,9 +56,7 @@ const AssertionsSelection = React.createClass({
   },
   componentDidMount(){
     if (this.props.assertions.length){
-      const assertions = this.props.assertions.map((n, i) => {
-        return this.getNewSchema(n.key, i);
-      });
+      const assertions = this.props.assertions.map(this.getNewSchema);
       this.runChange(assertions);
     }
   },
@@ -74,7 +72,7 @@ const AssertionsSelection = React.createClass({
           }
         })
       });
-    break;
+      break;
     case 'header':
       obj = forms.Form.extend({
         operand: forms.CharField({
@@ -83,7 +81,7 @@ const AssertionsSelection = React.createClass({
           }
         })
       });
-    break;
+      break;
     case 'json':
       obj = forms.Form.extend({
         operand: forms.CharField({
@@ -99,7 +97,7 @@ const AssertionsSelection = React.createClass({
           }
         })
       });
-    break;
+      break;
     default:
       obj = forms.Form.extend({
         operand: forms.CharField({
@@ -109,11 +107,11 @@ const AssertionsSelection = React.createClass({
           }
         })
       });
-    break;
+      break;
     }
     return new obj(kwargs);
   },
-  getNewSchema(key, assertionIndex, value){
+  getNewSchema(assertion = {}, assertionIndex){
     const self = this;
     const opts = {
       onChange(){
@@ -126,18 +124,11 @@ const AssertionsSelection = React.createClass({
         on: 'blur change',
         onChangeDelay: 300
       },
-      initial: value ? {
-        text: value
-      } : {}
+      initial: _.omitBy(assertion, a => !a)
     };
-    return {
-      key,
-      relationship: null,
-      value,
-      operand: null,
-      form: this.getForm(key, opts),
-      useJson: undefined
-    };
+    return _.assign({}, assertion, {
+      form: this.getForm(assertion.key, opts)
+    });
   },
   getJsonBodyKeys(){
     const json = this.getJsonBody();
@@ -156,16 +147,9 @@ const AssertionsSelection = React.createClass({
     });
   },
   getJsonPlaceholder(){
-    const keys = this.getJsonBodyKeys()
+    const keys = this.getJsonBodyKeys();
     const last = _.chain(keys).sortBy(keys, k => k.length).last().value();
     return last || 'animals.dogs[0].breed';
-  },
-  getAssertionValueForDisplay(assertion = {}){
-    if (assertion.type === 'slack_bot'){
-      const channels = this.props.redux.integrations.slackChannels.toJS();
-      return _.chain(channels).find(c => c.id === assertion.value).get('name').value();
-    }
-    return assertion.value;
   },
   getFinalAssertions(assertions = this.state.assertions){
     return assertions.map(n => _.pick(n, ['key', 'value', 'relationship', 'operand']));
@@ -190,6 +174,10 @@ const AssertionsSelection = React.createClass({
       return _.chain(data).get('response.value').defaults(initial).value();
     }
     return initial;
+  },
+  getResponseBody(){
+    const json = this.getJsonBody();
+    return json ? JSON.stringify(json) : this.getResponse().body;
   },
   getSlateTest(assertion){
     let response = this.getResponse();
@@ -229,43 +217,41 @@ const AssertionsSelection = React.createClass({
     return {
       data,
       scalar
-    }
+    };
   },
   getBodySnippet(assertion){
     const meta = this.getJsonPathMeta(assertion);
     if (meta && meta.data && assertion.value){
       if (meta.scalar){
-        return this.renderReturnedValue(meta.data);
+        return this.renderReturnedValue(assertion, meta.data);
       }
       return (
-        <Padding b={1} style={{width: '100%'}}>
-          <Highlight wrap>
-            {meta.data}
-          </Highlight>
-        </Padding>
+        <Highlight wrap style={{width: '100%'}} noBg>
+          {meta.data}
+        </Highlight>
       );
     } else if (!meta.data && assertion.value){
-      return this.renderReturnedValue('>> No JSON data selected', 'danger');
+      return this.renderReturnedValue(assertion, '>> No JSON data selected', 'danger');
     }
     return (
-      <Padding b={1} style={{width: '100%'}}>
-        <Expandable>
-          <Highlight wrap>
-            {this.getResponse().body}
-          </Highlight>
-        </Expandable>
-      </Padding>
+      <Expandable style={{width: '100%'}} noFade>
+        <Highlight wrap noBg>
+          {this.getResponseBody()}
+        </Highlight>
+      </Expandable>
     );
   },
-  getAlertStyle(assertion){
-    let alertStyle = 'default';
+  getAssertionStyle(assertion){
+    let border = 'gray7';
     let test = this.getSlateTest(assertion);
     if (test && test.success){
-      alertStyle = 'success';
+      border = 'success';
     } else if (test){
-      alertStyle = 'danger';
+      border = 'danger';
     }
-    return alertStyle;
+    return {
+      borderLeft: `.8rem solid ${seed.color[border]}`
+    };
   },
   runSetAssertionsState(iteratee){
     const assertions = this.state.assertions.map(iteratee);
@@ -306,9 +292,9 @@ const AssertionsSelection = React.createClass({
       });
     });
   },
-  runNewAssertion(key, value){
+  runNewAssertion(key){
     const assertions = this.state.assertions.concat([
-      this.getNewSchema(key, this.state.assertions.length, value)
+      this.getNewSchema({key}, this.state.assertions.length)
     ]);
     this.runChange(assertions);
   },
@@ -351,13 +337,13 @@ const AssertionsSelection = React.createClass({
           let data = {
             relationship: rel.id
           };
-          if (rel.id === 'equal'){
+          if (rel.id === 'equal' && !assertion.operand){
             if (assertion.key === 'code'){
-              data.operand = this.getResponseFormatted().code;  
+              data.operand = this.getResponseFormatted().code || '';
             } else if (assertion.key === 'header'){
-              data.operand = _.get(this.getResponseFormatted(), `headers.${assertion.value}`);
+              data.operand = _.get(this.getResponseFormatted(), `headers.${assertion.value}`) || '';
             } else if (assertion.key === 'json'){
-              data.operand = this.getJsonPathMeta(assertion).data;
+              data.operand = this.getJsonPathMeta(assertion).data || '';
             }
           }
           return (
@@ -372,8 +358,10 @@ const AssertionsSelection = React.createClass({
     if (assertion.relationship){
       const obj = _.find(relationships, {id: assertion.relationship}) || {};
       return (
-        <Button flat color="text" onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
-      );  
+        <Padding t={1}>
+          <Button flat color="text" onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
+        </Padding>
+      );
     }
     return null;
   },
@@ -381,25 +369,23 @@ const AssertionsSelection = React.createClass({
     const assertion = this.state.assertions[assertionIndex];
     if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
       return (
-        <Padding l={1} className="flex-1">
+        <Padding l={1} className="flex-1 align-self-end">
           <BoundField bf={this.state.assertions[assertionIndex].form.boundField('operand')}/>
         </Padding>
       );
     }
     return null;
   },
-  renderReturnedValue(value, color = 'primary'){
+  renderReturnedValue(assertion, value){
     return (
-      <Padding b={1} style={{width: '100%'}}>
-        <Padding style={{background: seed.color.gray9}}>
-          <code style={{fontSize: '1.4rem'}}><Color c={color}>{value}</Color></code>
-        </Padding>
+      <Padding b={1}>
+        <code style={{fontSize: '1.4rem'}}><Color c="gray500">{value}</Color></code>
       </Padding>
     );
   },
   renderTitle(assertionIndex, title){
     return (
-      <Heading level={4} className="display-flex flex-1 flex-vertical-align">
+      <Heading level={3} className="display-flex flex-1 flex-vertical-align" style={{marginBottom: '-1rem'}}>
         <span className="flex-1">#{assertionIndex + 1} {title}</span>
         <Button flat color="danger" title="Remove this Assertion" onClick={this.runDelete.bind(null, assertionIndex)} style={{padding: '0.2rem'}}>
           <Delete inline fill="danger"/>
@@ -416,14 +402,14 @@ const AssertionsSelection = React.createClass({
     return (
       <div>
         {this.renderTitle(assertionIndex, 'Response Code')}
-        <Alert bsStyle={this.getAlertStyle(assertion)} style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-          {this.renderReturnedValue(this.getResponse().code)}
+        <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
+          {this.renderReturnedValue(assertion, this.getResponse().code)}
           <div className="display-flex">
             {this.renderChosenRelationship(assertionIndex)}
             {this.renderOperand(assertionIndex)}
           </div>
-        </Alert>
-        {buttons}
+          {buttons}
+        </Padding>
       </div>
     );
   },
@@ -445,25 +431,27 @@ const AssertionsSelection = React.createClass({
             );
           })}
         </Padding>
-      )
+      );
     }
     const helper = assertion.value ? (
-      <Alert bsStyle={this.getAlertStyle(assertion)} className="flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
-        <Padding b={1} style={{width: '100%'}}>
-          {this.renderReturnedValue(selectedHeaderResult)}
-        </Padding>
+      <div>
+        <div style={{width: '100%'}}>
+          {this.renderReturnedValue(assertion, selectedHeaderResult)}
+        </div>
         <div className="display-flex">
           {this.renderChosenRelationship(assertionIndex)}
           {this.renderOperand(assertionIndex)}
         </div>
-      </Alert>
+      </div>
     ) : null;
     const title = selectedHeader ? ` - ${selectedHeader}` : '';
     return (
       <div>
         {this.renderTitle(assertionIndex, `Response Header${title}`)}
-        {helper}
-        {buttons}
+        <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
+          {helper}
+          {buttons}
+        </Padding>
       </div>
     );
   },
@@ -487,12 +475,12 @@ const AssertionsSelection = React.createClass({
     return (
       <div>
         {this.renderTitle(assertionIndex, 'Plaintext Response Body')}
-        <Alert bsStyle={this.getAlertStyle(assertion)} className="display-flex flex-wrap flex-vertical-align flex-1" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+        <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
           {this.getBodySnippet(assertion) || 'Select a header below'}
           {this.renderChosenRelationship(assertionIndex)}
           {this.renderOperand(assertionIndex)}
-        </Alert>
-        {buttons}
+          {buttons}
+        </Padding>
       </div>
     );
   },
@@ -508,12 +496,9 @@ const AssertionsSelection = React.createClass({
     return (
       <div>
         {this.renderTitle(assertionIndex, 'JSON Response Body')}
-        <Alert bsStyle={this.getAlertStyle(assertion)} className="" style={{padding:'.7rem 1rem', minHeight: '5.9rem'}}>
+        <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
           {this.getBodySnippet(assertion) || 'Select a header below'}
-          {
-            // this.renderJsonInput(assertion)
-          }
-          <Padding b={1}>
+          <Padding t={0.5} b={1}>
             <div className="form-group">
               <label className="label" htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
               <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(), id: `json-path-${assertionIndex}`}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
@@ -523,8 +508,8 @@ const AssertionsSelection = React.createClass({
             {this.renderChosenRelationship(assertionIndex)}
             {this.renderOperand(assertionIndex)}
           </div>
-        </Alert>
-        {buttons}
+          {buttons}
+        </Padding>
       </div>
     );
   },
@@ -541,7 +526,7 @@ const AssertionsSelection = React.createClass({
       <div>
         <Rule/>
         <Padding t={1}>
-          <Heading level={4}>Pick an Assertion Type</Heading>
+          <Heading level={3}>Add an Assertion</Heading>
         </Padding>
         {['code', 'header', 'body'].map(type => {
           let schemaType = type;
@@ -550,7 +535,7 @@ const AssertionsSelection = React.createClass({
           }
           let name = _.capitalize(type);
           if (name === 'Code'){
-            name = 'Status Code'
+            name = 'Status Code';
           }
           if (flag(`assertion-type-${type}`)){
             return (
@@ -571,12 +556,7 @@ const AssertionsSelection = React.createClass({
     if (this.state.assertions.length){
       return this.state.assertions.map(this.renderAssertion);
     }
-    return (
-      <div>
-        <p>Choose from the options below to set up assertions for this check.</p>
-        <hr/>
-      </div>
-    );
+    return null;
   },
   render(){
     return (

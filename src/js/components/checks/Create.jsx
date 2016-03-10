@@ -50,7 +50,11 @@ const CheckCreate = React.createClass({
   getState(){
     let data = this.props.location.query.data;
     if (data && typeof data === 'string'){
-      data = JSON.parse(data);
+      try {
+        data = JSON.parse(data);
+      } catch (err){
+        data = {};
+      }
     }
     const initial = _.chain(data).defaults({
       target: {
