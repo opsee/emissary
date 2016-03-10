@@ -92,7 +92,11 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
       window.ldclient.track(`${category} - ${action}`, data);
     }
 
-    // Track all events in Myst (and none through the window.ga object.)
+    // Track the event in GA so we can get browser context (referrer, etc.)
+    const stringData = typeof data === 'string' ? data : JSON.stringify(data);
+    window.ga('send', 'event', category, action, stringData);
+
+    // Track the event in Myst (for Intercom, etc.)
     const user = makeUserObject(userData || state().user);
     return dispatch({
       type: ANALYTICS_EVENT,
