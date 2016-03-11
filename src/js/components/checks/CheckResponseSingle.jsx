@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Highlight} from '../global';
-import {Padding} from '../layout';
-import {Color} from '../type';
+import Highlight from '../global/Highlight';
+import Padding from '../layout/Padding';
+import Color from '../type/Color';
 
 const CheckResponseSingle = React.createClass({
   propTypes: {

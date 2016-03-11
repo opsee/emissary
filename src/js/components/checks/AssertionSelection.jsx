@@ -2,28 +2,30 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import forms from 'newforms';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import Autosuggest from 'react-autosuggest';
 
-import {BoundField, Button} from '../forms';
+import BoundField from '../forms/BoundField';
+import Button from '../forms/Button';
 import {Add, Delete} from '../icons';
-import {Padding, Rule} from '../layout';
-import {Color, Heading} from '../type';
-import {Expandable, Highlight} from '../global';
-import {flag, validate} from '../../modules';
+import Padding from '../layout/Padding';
+import Rule from '../layout/Rule';
+import Color from '../type/Color';
+import Heading from '../type/Heading';
+import Expandable from '../global/Expandable';
+import Highlight from '../global/Highlight';
+import flag from '../../modules/flag';
+import validate from '../../modules/validate';
+import getKeys from '../../modules/getKeys';
 import relationships from 'slate/src/relationships';
 import slate from 'slate';
-import getKeys from '../../modules/getKeys';
-import {
-  integrations as actions
-} from '../../actions';
 
 const AssertionsSelection = React.createClass({
   propTypes: {
     check: PropTypes.object,
     assertions: PropTypes.array,
     response: PropTypes.object,
+    responseFormatted: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     redux: PropTypes.shape({
       user: PropTypes.object,
@@ -155,25 +157,31 @@ const AssertionsSelection = React.createClass({
     return assertions.map(n => _.pick(n, ['key', 'value', 'relationship', 'operand']));
   },
   getResponse(){
-    const {checks} = this.props.redux;
-    const data = checks.responses.toJS()[checks.selectedResponse];
-    if (data && data.response){
-      return _.get(data, 'response.value');
+    if (this.props.redux.checks){
+      const {checks} = this.props.redux;
+      const data = checks.responses.toJS()[checks.selectedResponse];
+      if (data && data.response){
+        return _.get(data, 'response.value');
+      }
+      return {};
     }
-    return {};
+    return this.props.response;
   },
   getResponseFormatted(){
-    const {checks} = this.props.redux;
-    const data = checks.responsesFormatted[checks.selectedResponse];
-    const initial = {
-      code: undefined,
-      headers: [],
-      body: undefined
-    };
-    if (data && data.response){
-      return _.chain(data).get('response.value').defaults(initial).value();
+    if (this.props.redux.checks){
+      const {checks} = this.props.redux;
+      const data = checks.responsesFormatted[checks.selectedResponse];
+      const initial = {
+        code: undefined,
+        headers: [],
+        body: undefined
+      };
+      if (data && data.response){
+        return _.chain(data).get('response.value').defaults(initial).value();
+      }
+      return initial;
     }
-    return initial;
+    return this.props.responseFormatted;
   },
   getResponseBody(){
     const json = this.getJsonBody();
@@ -573,8 +581,4 @@ const mapStateToProps = (state) => ({
   redux: state
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AssertionsSelection);
+export default connect(mapStateToProps)(AssertionsSelection);
