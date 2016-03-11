@@ -185,12 +185,11 @@ const AssertionsSelection = React.createClass({
   },
   getJsonBody(){
     try {
-      const res = this.getResponse();
+      const res = this.getResponseFormatted();
       const body = _.get(res, 'body');
-      const json = JSON.parse(body);
-      const type = _.chain(res).get('headers').find({name: 'Content-Type'}).get('values').value() || [];
-      const smashed = type.join(';');
-      return smashed.match('json') && json;
+      const json = typeof body === 'string' ? JSON.parse(body) : body;
+      const type = _.chain(res).get('headers').get('Content-Type').value();
+      return type.match('json') && json;
     } catch (err){
       return false;
     }
