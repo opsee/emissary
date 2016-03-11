@@ -5,18 +5,12 @@ import {connect} from 'react-redux';
 import {plain as seed} from 'seedling';
 import Autosuggest from 'react-autosuggest';
 
-import BoundField from '../forms/BoundField';
-import Button from '../forms/Button';
+import {BoundField, Button} from '../forms';
 import {Add, Delete} from '../icons';
-import Padding from '../layout/Padding';
-import Rule from '../layout/Rule';
-import Color from '../type/Color';
-import Heading from '../type/Heading';
-import Expandable from '../global/Expandable';
-import Highlight from '../global/Highlight';
-import flag from '../../modules/flag';
-import validate from '../../modules/validate';
-import getKeys from '../../modules/getKeys';
+import {Padding, Rule} from '../layout';
+import {Color, Heading} from '../type';
+import {Expandable, Highlight} from '../global';
+import {flag, validate, getKeys} from '../../modules';
 import relationships from 'slate/src/relationships';
 import slate from 'slate';
 
@@ -157,31 +151,25 @@ const AssertionsSelection = React.createClass({
     return assertions.map(n => _.pick(n, ['key', 'value', 'relationship', 'operand']));
   },
   getResponse(){
-    if (this.props.redux.checks){
-      const {checks} = this.props.redux;
-      const data = checks.responses.toJS()[checks.selectedResponse];
-      if (data && data.response){
-        return _.get(data, 'response.value');
-      }
-      return {};
+    const {checks} = this.props.redux;
+    const data = checks.responses.toJS()[checks.selectedResponse];
+    if (data && data.response){
+      return _.get(data, 'response.value');
     }
-    return this.props.response;
+    return {};
   },
   getResponseFormatted(){
-    if (this.props.redux.checks){
-      const {checks} = this.props.redux;
-      const data = checks.responsesFormatted[checks.selectedResponse];
-      const initial = {
-        code: undefined,
-        headers: [],
-        body: undefined
-      };
-      if (data && data.response){
-        return _.chain(data).get('response.value').defaults(initial).value();
-      }
-      return initial;
+    const {checks} = this.props.redux;
+    const data = checks.responsesFormatted[checks.selectedResponse];
+    const initial = {
+      code: undefined,
+      headers: [],
+      body: undefined
+    };
+    if (data && data.response){
+      return _.chain(data).get('response.value').defaults(initial).value();
     }
-    return this.props.responseFormatted;
+    return initial;
   },
   getResponseBody(){
     const json = this.getJsonBody();
@@ -234,19 +222,25 @@ const AssertionsSelection = React.createClass({
         return this.renderReturnedValue(assertion, meta.data);
       }
       return (
-        <Highlight wrap style={{width: '100%'}} noBg>
-          {meta.data}
-        </Highlight>
+        <div>
+          <Highlight wrap style={{width: '100%'}} noBg>
+            {meta.data}
+          </Highlight>
+          <Rule/>
+        </div>
       );
     } else if (!meta.data && assertion.value){
       return this.renderReturnedValue(assertion, '>> No JSON data selected', 'danger');
     }
     return (
-      <Expandable style={{width: '100%'}} noFade>
-        <Highlight wrap noBg>
-          {this.getResponseBody()}
-        </Highlight>
-      </Expandable>
+      <div>
+        <Expandable style={{width: '100%'}} noFade>
+          <Highlight wrap noBg>
+            {this.getResponseBody()}
+          </Highlight>
+        </Expandable>
+        <Rule/>
+      </div>
     );
   },
   getAssertionStyle(assertion){
@@ -355,7 +349,7 @@ const AssertionsSelection = React.createClass({
             }
           }
           return (
-            <Button flat onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
+            <Button flat onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} color="text" style={{margin: '0 1rem 1rem 0'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
           );
         })}
       </Padding>
@@ -386,9 +380,10 @@ const AssertionsSelection = React.createClass({
   },
   renderReturnedValue(assertion, value){
     return (
-      <Padding b={1}>
-        <code style={{fontSize: '1.4rem'}}><Color c="gray500">{value}</Color></code>
-      </Padding>
+      <div>
+        <code style={{fontSize: '1.4rem'}}><Color c="primary">{value}</Color></code>
+        <Rule/>
+      </div>
     );
   },
   renderTitle(assertionIndex, title){
@@ -485,8 +480,10 @@ const AssertionsSelection = React.createClass({
         {this.renderTitle(assertionIndex, 'Plaintext Response Body')}
         <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
           {this.getBodySnippet(assertion) || 'Select a header below'}
-          {this.renderChosenRelationship(assertionIndex)}
-          {this.renderOperand(assertionIndex)}
+          <div className="display-flex">
+            {this.renderChosenRelationship(assertionIndex)}
+            {this.renderOperand(assertionIndex)}
+          </div>
           {buttons}
         </Padding>
       </div>

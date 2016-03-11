@@ -16,11 +16,6 @@ import {
   CHECK_TEST_SELECT_RESPONSE
 } from './constants';
 
-let exampleResponse;
-if (process.env.NODE_ENV !== 'production'){
-  exampleResponse = require('../../files/exampleResponse');
-}
-
 /**
  * Fetches check data as JSON from the given JSON URI (e.g., an S3 URL).
  * Used by Screenshot.jsx to populate the UI for the screenshot service.
@@ -145,7 +140,17 @@ export function test(data){
               {
                 response: {
                   type_url: 'HttpResponse',
-                  value: exampleResponse
+                  value: require('../../files/exampleResponseJson')
+                }
+              }
+            ]);
+          }
+          if (data.check_spec.value.path.match('services\/200')){
+            return resolve([
+              {
+                response: {
+                  type_url: 'HttpResponse',
+                  value: require('../../files/exampleResponseHtml')
                 }
               }
             ]);
