@@ -134,6 +134,28 @@ export function test(data){
     dispatch({
       type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
+        if (process.env.NODE_ENV !== 'production'){
+          if (data.check_spec.value.path.match('jsonassertion')){
+            return resolve([
+              {
+                response: {
+                  type_url: 'HttpResponse',
+                  value: require('../../files/exampleResponseJson')
+                }
+              }
+            ]);
+          }
+          if (data.check_spec.value.path.match('services\/200')){
+            return resolve([
+              {
+                response: {
+                  type_url: 'HttpResponse',
+                  value: require('../../files/exampleResponseHtml')
+                }
+              }
+            ]);
+          }
+        }
         const check = _.chain(data)
         .thru(formatCheckData)
         .assign({name: state().user.get('email')})

@@ -35,6 +35,11 @@
   color: #628e34;
 }
 
+:global .alert-primary {
+  background-color: var(--colorPrimary);
+  border:0;
+}
+
 :global .alert-info {
   background-color: var(--colorInfo);
   border-color: transparent;
@@ -70,7 +75,7 @@
 :global .alert-danger .alert-link {
   color: #d23b0e;
 }
-:global .alert-danger a {
+:global .alert a{
   color: white;
   text-decoration: underline;
 }

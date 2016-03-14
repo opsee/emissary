@@ -1,12 +1,19 @@
 :global .hljs {
   display: block;
   overflow-x: auto;
-  padding: 0.5em;
+  /*padding: 1rem;*/
   background: var(--colorGray9);
   -webkit-text-size-adjust: none;
   font-size: 14px;
   /* Track */
   /* Handle */
+}
+:global .hljs.noBg{
+  background:none;
+}
+:global .hljs.wrap{
+  white-space: pre-line;
+  word-break: break-word;
 }
 :global .hljs::-webkit-scrollbar {
   height: 6px;
@@ -38,12 +45,11 @@
   color: #FFA726;
 }
 
-:global .hljs-string {
+:global .hljs-string, 
+:global .hljs-tag .hljs-value,
+:global .hljs-number
+{
   color: var(--colorPrimary);
-}
-
-:global .hljs-number {
-  color: var(--colorWarning);
 }
 
 :global .hljs,
@@ -54,7 +60,6 @@
 :global .hljs-title,
 :global .hljs-type,
 :global .ini .hljs-title,
-:global .hljs-tag .hljs-value,
 :global .css .hljs-rule .hljs-value,
 :global .hljs-preprocessor,
 :global .hljs-pragma,
@@ -78,9 +83,12 @@
 :global .apache .hljs-cbracket,
 :global .tex .hljs-command,
 :global .hljs-prompt,
-:global .coffeescript .hljs-attribute,
 :global .hljs-name {
-  color: #d88;
+  color: var(--colorWarning);
+}
+
+:global .xml .hljs-attribute, :global .css .hljs-class{
+  color: var(--colorGray5);
 }
 
 :global .hljs-comment,

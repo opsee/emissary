@@ -9,8 +9,23 @@ function getVerbAndSuffix(numberIncomplete){
   };
 }
 
-export default function validateCheck(check = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
-  const spec = _.get(check, 'check_spec.value') || {};
+/*returns true if assertion passes validation*/
+function assertion(obj = {}){
+  let arr = [];
+  arr.push(!!obj.key);
+  arr.push(!!obj.relationship);
+  if (obj.relationship && !obj.relationship.match('empty|notEmpty')){
+    arr.push(!!obj.operand);
+  }
+  if (obj.key === 'header'){
+    arr.push(!!obj.value);
+  }
+  return _.every(arr);
+}
+
+/*Returns an array of error objects with associated "areas" if any area fails*/
+function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
+  const spec = _.get(obj, 'check_spec.value') || {};
   let errors = [];
 
   //request area
@@ -34,17 +49,8 @@ export default function validateCheck(check = {}, areas = ['request', 'assertion
   }
 
   //assertions area
-  const assertions = check.assertions.map((a = {}) => {
-    let arr = [];
-    arr.push(!!a.key);
-    arr.push(!!a.relationship);
-    if (a.relationship && !a.relationship.match('empty|notEmpty')){
-      arr.push(!!a.operand);
-    }
-    if (a.key === 'header'){
-      arr.push(!!a.value);
-    }
-    return _.every(arr);
+  const assertions = obj.assertions.map((a = {}) => {
+    return assertion(a);
   });
   const numberOfIncompleteAssertions = assertions.length - _.compact(assertions).length;
   parts = getVerbAndSuffix(numberOfIncompleteAssertions);
@@ -55,7 +61,7 @@ export default function validateCheck(check = {}, areas = ['request', 'assertion
   }
 
   //notifications area
-  const notifs = check.notifications.map((n = {}) => {
+  const notifs = obj.notifications.map((n = {}) => {
     return n.type && n.value;
   });
   const numberOfIncompleteNotifs = notifs.length - _.compact(notifs).length;
@@ -82,3 +88,8 @@ export default function validateCheck(check = {}, areas = ['request', 'assertion
     return areas.indexOf(e.area) === -1;
   });
 }
+
+export default {
+  assertion,
+  check
+};

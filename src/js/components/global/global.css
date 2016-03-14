@@ -61,7 +61,7 @@ code,
 kbd,
 pre,
 samp {
-  font: var(--fontMono);
+  font-family: var(--fontMono);
 }
 
 :global .open > a {
