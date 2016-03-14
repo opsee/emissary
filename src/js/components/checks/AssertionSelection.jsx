@@ -64,7 +64,8 @@ const AssertionsSelection = React.createClass({
       obj = forms.Form.extend({
         operand: forms.CharField({
           widgetAttrs: {
-            noLabel: true
+            noLabel: true,
+            placeholder: 'Status Code Value'
           }
         })
       });
@@ -73,7 +74,8 @@ const AssertionsSelection = React.createClass({
       obj = forms.Form.extend({
         operand: forms.CharField({
           widgetAttrs: {
-            noLabel: true
+            noLabel: true,
+            placeholder: 'Header Value'
           }
         })
       });
@@ -82,7 +84,8 @@ const AssertionsSelection = React.createClass({
       obj = forms.Form.extend({
         operand: forms.CharField({
           widgetAttrs: {
-            noLabel: true
+            noLabel: true,
+            placeholder: 'JSON data'
           }
         }),
         value: forms.CharField({
@@ -99,7 +102,8 @@ const AssertionsSelection = React.createClass({
         operand: forms.CharField({
           label: 'Value',
           widgetAttrs: {
-            noLabel: true
+            noLabel: true,
+            placeholder: 'Body data'
           }
         })
       });
