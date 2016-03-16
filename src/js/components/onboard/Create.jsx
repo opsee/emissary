@@ -34,7 +34,7 @@ const OnboardCreate = React.createClass({
     return this.props.redux.asyncActions.onboardSignupCreate.status;
   },
   isDisabled(){
-    const incomplete = !(this.state.data.name && this.state.data.email);
+    const incomplete = !this.state.data.email;
     return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
@@ -44,9 +44,6 @@ const OnboardCreate = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
     this.props.actions.signupCreate(this.state.data);
   },
   render() {
@@ -60,7 +57,7 @@ const OnboardCreate = React.createClass({
               <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['name', 'email']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
+                  <UserInputs include={['email']}  onChange={this.handleUserData} email={this.state.data.email}/>
                 </Padding>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
