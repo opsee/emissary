@@ -38,7 +38,7 @@ export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
     created: new Date(),
     instanceSize: 't2-micro'
   }),
-  type: 'EC2',
+  type: 'ecc',
   // groups: List(),
   LaunchTime: null,
   InstanceType: null,

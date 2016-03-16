@@ -183,7 +183,7 @@ const statics = {
     newData.Placement = fromJS(newData.Placement);
     newData.name = name;
     newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
-    newData.type = 'EC2';
+    newData.type = 'ecc';
     _.assign(newData, result.getFormattedData(newData));
     if (newData.checks && newData.checks.size && !newData.results.size){
       newData.state = 'initializing';

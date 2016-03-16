@@ -116,7 +116,7 @@ function formatCheckData(data){
   if (obj.target.type === 'security'){
     obj.target.type = 'sg';
   }
-  if (obj.target.type === 'EC2'){
+  if (obj.target.type.match('^EC2$|^ecc$')){
     obj.target.type = 'instance';
   }
   const assertions = obj.assertions.map(a => {

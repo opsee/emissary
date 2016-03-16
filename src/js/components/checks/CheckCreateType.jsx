@@ -12,6 +12,7 @@ import {UserDataRequirement} from '../user';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {checks as actions, user as userActions} from '../../actions';
+import {flag} from '../../modules';
 
 const CheckCreateType = React.createClass({
   mixins: [History],
@@ -41,6 +42,42 @@ const CheckCreateType = React.createClass({
       margin: '0 1rem 1rem 0'
     };
   },
+  getTypes(){
+    const self = this;
+    const initial = [
+      {
+        id: 'elb',
+        title: 'ELB',
+        size(){
+          return self.props.redux.env.groups.elb.size;
+        }
+      },
+      {
+        id: 'security',
+        title: 'Security Group',
+        size(){
+          return self.props.redux.env.groups.security.size;
+        }
+      },
+      {
+        id: 'ecc',
+        title: 'EC2 Instance',
+        size(){
+          return self.props.redux.env.instances.ecc.size;
+        }
+      },
+      {
+        id: 'url',
+        title: 'URL',
+        size(){
+          return '';
+        }
+      }
+    ];
+    return _.reject(initial, type => {
+      return !flag(`check-type-${type.id}`);
+    });
+  },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
   },
@@ -56,30 +93,13 @@ const CheckCreateType = React.createClass({
     );
   },
   renderInner(){
-    const types = [
-      {
-        id: 'elb',
-        title: 'ELB',
-        selector: 'groups.elb'
-      },
-      {
-        id: 'security',
-        title: 'Security Group',
-        selector: 'groups.security'
-      },
-      {
-        id: 'EC2',
-        title: 'EC2 Instance',
-        selector: 'instances.ecc'
-      }
-    ];
     return (
       <div>
         {this.renderHelperText()}
         <Padding b={1}>
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
-        {types.map(type => {
+        {this.getTypes().map(type => {
           const data = JSON.stringify({target: {type: type.id}});
           return (
             <Button to={`/check-create/target?data=${data}`} style={this.getItemStyle()} color="primary" flat key={`type-select-${type.id}`}>
@@ -87,7 +107,7 @@ const CheckCreateType = React.createClass({
                 <strong>{type.title}&nbsp;</strong>
               </span>
               <span style={{display: 'inline-block', textAlign: 'left'}}>
-                ({_.get(this.props.redux.env, type.selector).size})
+                {type.size()}
               </span>
             </Button>
           );

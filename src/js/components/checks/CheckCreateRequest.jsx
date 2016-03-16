@@ -301,7 +301,7 @@ const CheckCreateRequest = React.createClass({
       }) || new Map();
     }
     if (selection && selection.get('id')){
-      if (type.match('EC2|instance')){
+      if (type.match('^EC2$|^ecc$|^instance$')){
         return (
           <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
         );

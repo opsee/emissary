@@ -183,7 +183,7 @@ const InstanceItemList = React.createClass({
         <div>
           {this.renderTitle()}
           {this.getInstances().map(instance => {
-            return <InstanceItem item={instance} key={instance.get('id')} {...this.props} noMenu={instance.type !== 'EC2'}/>;
+            return <InstanceItem item={instance} key={instance.get('id')} {...this.props} noMenu={instance.type !== 'ecc'}/>;
           })}
           {this.renderNoMatch()}
           {this.renderLink()}
