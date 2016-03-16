@@ -28,13 +28,11 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>Are there any constraints on the configuration of my AWS environment for the Bastion Instance to work properly?</Heading>
-                <p>Currently (this document was last updated in November 2015 so check with us if you are reading this from the future) there are a few important restrictions on supported AWS environemnts:</p>
+                <p>Currently (this document was last updated in March 2016 so check with us if you are reading this from the future) there are a few important restrictions on supported AWS environemnts:</p>
                 <ul>
-                  <li>Opsee currently supports 1 Bastion Instance per customer. Your Bastion instance can only communicate within the region you choose for installation, so multiple regions are not supported</li>
-                  <li>The Bastion Instance must communicate with Opsee to report on your health checks. If your Bastion Instance is in a VPC or subnet that cannot talk to Opsee servers, it will not work</li>
-                  <li>The Bastion cannot be installed in an EC2 Classic location. It must be installed in a VPC and subnet</li>
-                  <li>If you have more than 1 VPC in your chosen region, you must choose a VPC to install your Bastion Instance. It is possible that the Bastion will not be able to communicate with other VPCs in your region, depending on your VPC configuration</li>
-                  <li>The Bastion Instance automatically installs into the default subnet in your chosen VPC. If you are running multiple subnets, communication outside of the default subnet may not work, depending on your subnet configuration</li>
+                  <li>Opsee currently supports 1 Bastion Instance per customer. Your Bastion instance can only communicate within the VPC you choose for installation. If you have multiple VPCs and multiple regions, support is coming soon. Reach out to us for more info: <a href="mailto:support@opsee.co">support@opsee.co</a>.</li>
+                  <li>The Bastion Instance must be able to communicate with Opsee to report on your health checks. We recommend adding our instance to a Public or NATed subnet, which we will ask you about during installation. There, it will be able to talk to both Opsee and your other VPCs, unless you have ingress/egress rules prohibiting that. If so, you will need to allow traffic from our bastion instance.</li>
+                  <li>The Bastion cannot be installed in EC2 Classic. It must be installed in a VPC and subnet.</li>
                 </ul>
                 <hr/>
 
@@ -51,15 +49,15 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>How does the Bastion Instance handle VPCs?</Heading>
-                <p>Opsee allows you to choose a VPC to install your Bastion Instance. Since Opsee can only support 1 Bastion Instance per customer right now, installation in multiple VPCs is not yet supported. If VPC support is important to you, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
+                <p>Opsee allows you to choose a VPC to install your Bastion Instance. Since Opsee can only support 1 Bastion Instance per customer right now, installation in multiple VPCs is not yet supported. If you have multiple VPCs and multiple regions, support is coming soon. Reach out to us for more info: <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
                 <hr/>
 
                 <Heading level={3}>How does the Bastion Instance handle subnets?</Heading>
-                <p>Opsee will choose the default subnet in your VPC to install the Bastion Instance. If you have multiple subnets and are interested in support, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
+                <p>You can choose a subnet to add our instance to during on-boarding. We recommend adding our instance to a Public or NATed subnet, which we will ask you about during installation. There, it will be able to talk to both Opsee and your other VPCs, unless you have ingress/egress rules prohibiting that. If so, you will need to allow traffic from our bastion instance.</p>
                 <hr/>
 
                 <Heading level={3}>Can I add more than one Bastion Instance?</Heading>
-                <p>You&rsquo;re only able to have 1 Bastion Instance in your environment right now. We&rsquo;re working on ways to add more Bastion Instances across multiple regions, VPCs, and subnets, and we&rsquo;ll keep you posted. If you&rsquo;re interested in this capability now, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
+                <p>You&rsquo;re only able to have 1 Bastion Instance in your environment right now. If you have multiple VPCs and multiple regions, support is coming soon. Reach out to us for more info: <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
                 <hr/>
 
                 <Heading level={3}>What language is the Bastion Instance written in? Can I check out the source code?</Heading>
