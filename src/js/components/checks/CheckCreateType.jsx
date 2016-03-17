@@ -42,6 +42,13 @@ const CheckCreateType = React.createClass({
       margin: '0 1rem 1rem 0'
     };
   },
+  getLink(type = {}){
+    const data = JSON.stringify({target: {type: type.id}});
+    if (type.id === 'host'){
+      return `/check-create/request?data=${data}`;
+    }
+    return `/check-create/target?data=${data}`;
+  },
   getTypes(){
     const self = this;
     const initial = [
@@ -67,7 +74,7 @@ const CheckCreateType = React.createClass({
         }
       },
       {
-        id: 'url',
+        id: 'host',
         title: 'URL',
         size(){
           return '';
@@ -80,6 +87,18 @@ const CheckCreateType = React.createClass({
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
+  },
+  handleTypeSelect(type){
+    let check = _.cloneDeep(this.props.check);
+    check.target.type = type.id;
+    this.props.onChange(check);
+
+    const data = JSON.stringify({target: {type: type.id}});
+    let path = `/check-create/target?data=${data}`;
+    if (type.id === 'host'){
+      path = `/check-create/request?data=${data}`;
+    }
+    this.history.pushState(null, path);
   },
   renderHelperText(){
     return (
@@ -100,9 +119,8 @@ const CheckCreateType = React.createClass({
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
         {this.getTypes().map(type => {
-          const data = JSON.stringify({target: {type: type.id}});
           return (
-            <Button to={`/check-create/target?data=${data}`} style={this.getItemStyle()} color="primary" flat key={`type-select-${type.id}`}>
+            <Button onClick={this.handleTypeSelect.bind(null, type)} style={this.getItemStyle()} color="primary" flat key={`type-select-${type.id}`}>
               <span>
                 <strong>{type.title}&nbsp;</strong>
               </span>

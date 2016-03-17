@@ -44,47 +44,6 @@ const HeaderFormSet = forms.FormSet.extend({
   canDelete: true
 });
 
-const InfoForm = forms.Form.extend({
-  protocol: forms.ChoiceField({
-    choices: ['http', 'https'].map(name => [name, name]),
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['http']
-  }),
-  verb: forms.ChoiceField({
-    choices: verbOptions,
-    widget: forms.RadioSelect,
-    label: 'Method',
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['GET']
-  }),
-  port: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. 8080'
-    },
-    widget: forms.NumberInput
-  }),
-  body: forms.CharField({
-    widget: forms.Textarea,
-    required: false,
-    widgetAttrs: {
-      widgetType: 'Textarea'
-    }
-  }),
-  path: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. /healthcheck'
-    }
-  }),
-  constructor(data, kwargs){
-    forms.Form.call(this, kwargs);
-  }
-});
-
 const CheckCreateRequest = React.createClass({
   propTypes: {
     check: PropTypes.object,
@@ -132,8 +91,9 @@ const CheckCreateRequest = React.createClass({
     initialData = _.mapValues(initialData, val => {
       return val || null;
     });
+    const infoForm = this.getInfoFormConstructor();
     const obj = {
-      info: new InfoForm(initialData, _.assign({
+      info: new infoForm(initialData, _.assign({
         onChange: self.runChange,
         labelSuffix: '',
         validation: {
@@ -170,7 +130,7 @@ const CheckCreateRequest = React.createClass({
     });
   },
   componentWillMount(){
-    if (!this.props.check.target.id){
+    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
       return this.props.history.pushState(null, '/check-create/target');
     }
     return this.props.checkActions.testCheckReset();
@@ -179,6 +139,52 @@ const CheckCreateRequest = React.createClass({
     if (this.props.renderAsInclude){
       this.runChange();
     }
+  },
+  getInfoFormConstructor(){
+    const self = this;
+    const isHost = this.props.check.target.type === 'host';
+    return forms.Form.extend({
+      protocol: forms.ChoiceField({
+        choices: ['http', 'https'].map(name => [name, name]),
+        widget: forms.RadioSelect,
+        required: !isHost,
+        widgetAttrs: {
+          widgetType: 'InlineRadioSelect'
+        },
+        initial: ['http']
+      }),
+      verb: forms.ChoiceField({
+        choices: verbOptions,
+        widget: forms.RadioSelect,
+        label: 'Method',
+        widgetAttrs: {
+          widgetType: 'InlineRadioSelect'
+        },
+        initial: ['GET']
+      }),
+      port: forms.CharField({
+        required: !isHost,
+        widgetAttrs: {
+          placeholder: 'e.g. 8080'
+        },
+        widget: forms.NumberInput
+      }),
+      body: forms.CharField({
+        widget: forms.Textarea,
+        required: false,
+        widgetAttrs: {
+          widgetType: 'Textarea'
+        }
+      }),
+      path: forms.CharField({
+        widgetAttrs: {
+          placeholder: isHost ? 'https://superwebsite.com' : 'e.g. /healthcheck'
+        }
+      }),
+      constructor(data, kwargs){
+        forms.Form.call(this, kwargs);
+      }
+    });
   },
   getHeaderForms(){
     return _.reject(this.state.headers.forms(), f => {
@@ -301,13 +307,17 @@ const CheckCreateRequest = React.createClass({
       }) || new Map();
     }
     if (selection && selection.get('id')){
+      let inner = null;
       if (type.match('^EC2$|^ecc$|^instance$')){
-        return (
-          <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
-        );
+        inner = <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
       }
+      inner = <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
       return (
-        <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
+        <Padding b={1}>
+          <Heading level={3}>Your Target</Heading>
+          {inner}
+          <hr/>
+        </Padding>
       );
     }
     return null;
@@ -333,6 +343,11 @@ const CheckCreateRequest = React.createClass({
   },
   renderInfoForm(){
     const self = this;
+    if (this.props.check.target.type === 'host'){
+      return (
+        <div>wee</div>
+      );
+    }
     return (
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
@@ -365,11 +380,7 @@ const CheckCreateRequest = React.createClass({
         <Padding b={2}>
           {this.renderHelperText()}
         </Padding>
-        <Padding b={1}>
-          <Heading level={3}>Your Target</Heading>
-          {this.renderTargetSelection()}
-          <hr/>
-        </Padding>
+        {this.renderTargetSelection()}
         <Padding b={1}>
           {this.renderInfoForm()}
           {this.renderHeaderForm()}
