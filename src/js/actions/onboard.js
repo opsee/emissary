@@ -45,7 +45,7 @@ export function signupCreate(data) {
 }
 
 export function setRegion(data) {
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SET_REGION,
       payload: {region: data}
@@ -107,7 +107,7 @@ export function vpcScan(data) {
 }
 
 export function vpcSelect(payload){
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_VPC_SELECT,
       payload
@@ -120,7 +120,7 @@ export function vpcSelect(payload){
 }
 
 export function subnetSelect(payload){
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SUBNET_SELECT,
       payload
