@@ -73,6 +73,7 @@ const CheckCreateRequest = React.createClass({
   },
   getInitialState() {
     const self = this;
+    const {check} = this.props;
     let initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
     initialHeaders = initialHeaders.map(h => {
       return {
@@ -88,9 +89,20 @@ const CheckCreateRequest = React.createClass({
     if (typeof initialData.protocol === 'string'){
       initialData.protocol = [initialData.protocol];
     }
+    if (check.target.type === 'host' && check.target.id){
+      const s = check.check_spec.value;
+      let port = '';
+      if (s.protocol === 'http' && s.port !== 80){
+        port = `:${s.port}`;
+      } else if (s.protocol === 'https' && s.port !== 443){
+        port = `:${s.port}`;
+      }
+      initialData.url = `${s.protocol}://${check.target.id}${port}${s.path}`;
+    }
     initialData = _.mapValues(initialData, val => {
       return val || null;
     });
+
     const infoForm = this.getInfoFormConstructor();
     const obj = {
       info: new infoForm(initialData, _.assign({
@@ -113,7 +125,7 @@ const CheckCreateRequest = React.createClass({
           onChangeDelay: 700
         }
       }),
-      check: this.props.check,
+      check,
       hasSetHeaders: !self.isDataComplete()
     };
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -141,7 +153,6 @@ const CheckCreateRequest = React.createClass({
     }
   },
   getInfoFormConstructor(){
-    const self = this;
     const isHost = this.props.check.target.type === 'host';
     return forms.Form.extend({
       protocol: forms.ChoiceField({
@@ -177,8 +188,20 @@ const CheckCreateRequest = React.createClass({
         }
       }),
       path: forms.CharField({
+        label: 'Path',
+        required: !isHost,
         widgetAttrs: {
-          placeholder: isHost ? 'https://superwebsite.com' : 'e.g. /healthcheck'
+          placeholder: '/healthcheck'
+        }
+      }),
+      url: forms.CharField({
+        label: 'URL',
+        required: isHost,
+        validators: [forms.validators.URLValidator({
+          schemes: ['http', 'https']
+        })],
+        widgetAttrs: {
+          placeholder: 'https://superwebsite.com'
         }
       }),
       constructor(data, kwargs){
@@ -196,7 +219,6 @@ const CheckCreateRequest = React.createClass({
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    let val = check.check_spec.value;
     let override = {};
     if (this.state.hasSetHeaders){
       override.headers = _.chain(this.getHeaderForms()).map(header => {
@@ -206,6 +228,20 @@ const CheckCreateRequest = React.createClass({
           values: h.value ? h.value.split(', ') : []
         };
       }).value();
+    }
+    if (this.props.check.target.type === 'host'){
+      let url = {};
+      try {
+        url = new window.URL(this.state.info.data.url);
+      } catch (err) {
+        _.noop();
+      }
+      override = _.assign(override, {
+        port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
+        path: url.path || '/',
+        protocol: (url.protocol || '').replace(':', '')
+      });
+      check.target.id = url.hostname;
     }
     let data = _.assign({}, this.state.info.data, override);
     if (data.path && !data.path.match('^\/')){
@@ -220,7 +256,7 @@ const CheckCreateRequest = React.createClass({
     if (Array.isArray(data.verb)){
       data.verb = data.verb[0];
     }
-    val = _.assign(val, data);
+    check.check_spec.value = _.chain(check.check_spec.value).assign(data).pick(['name', 'path', 'port', 'verb', 'protocol', 'headers']).value();
     return check;
   },
   isDataComplete(){
@@ -343,15 +379,17 @@ const CheckCreateRequest = React.createClass({
   },
   renderInfoForm(){
     const self = this;
-    if (this.props.check.target.type === 'host'){
-      return (
-        <div>wee</div>
-      );
-    }
     return (
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
-        {['protocol', 'verb', 'path', 'port'].map(string => {
+        {_.chain(['protocol', 'verb', 'path', 'url', 'port'])
+        .reject(field => {
+          if (this.props.check.target.type === 'host'){
+            return field.match('protocol|port|path');
+          }
+          return field === 'url';
+        })
+        .value().map(string => {
           return (
             <Padding b={1} key={`form-input-${string}`}>
               <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
