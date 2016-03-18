@@ -43,7 +43,7 @@ const SlackInfo = React.createClass({
     const {asyncActions} = this.props.redux;
     const {status} = asyncActions.integrationsSlackAccess;
     /*eslint-disable camelcase*/
-    const {team_name} = this.props.data.slackInfo;
+    const {name, domain} = this.props.data.slackInfo;
     let nullArr = [];
     nullArr.push(this.props.query.code && !asyncActions.integrationsSlackAccess.history.length);
     nullArr.push(!this.props.query.code && !asyncActions.integrationsSlackInfo.history.length);
@@ -53,9 +53,9 @@ const SlackInfo = React.createClass({
       return null;
     } else if (status && status !== 'success'){
       return <Alert bsStyle="danger">Something went wrong trying to connect.</Alert>;
-    } else if (team_name){
+    } else if (domain){
       return (
-        <span>Team <Color c="success">{team_name}</Color>&nbsp;connected. <a href={`https://${team_name}.slack.com/apps/manage/A04MVPTFN-opsee`} target="_blank">Edit or remove integration</a></span>
+        <span>Team <Color c="success">{name}</Color>&nbsp;connected. <a href={`https://${domain}.slack.com/apps/manage/A04MVPTFN-opsee`} target="_blank">Edit or remove integration</a></span>
       );
     }
     return (
