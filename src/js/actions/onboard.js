@@ -45,11 +45,12 @@ export function signupCreate(data) {
 }
 
 export function setRegion(data) {
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SET_REGION,
       payload: {region: data}
     });
+    analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
     setTimeout(() => {
       dispatch(pushState(null, '/start/credentials'));
     }, 100);
@@ -68,6 +69,7 @@ export function vpcScan(data) {
     dispatch({
       type: ONBOARD_VPC_SCAN,
       payload: new Promise((resolve, reject) => {
+        analytics.trackEvent('Onboard', 'vpc-scan')(dispatch, state);
         if (config.onboardVpcScanError){
           return reject(new Error('config.onboardVpcScanError'));
         }
@@ -105,11 +107,12 @@ export function vpcScan(data) {
 }
 
 export function vpcSelect(payload){
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_VPC_SELECT,
       payload
     });
+    analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
     setTimeout(() => {
       dispatch(pushState(null, '/start/subnet-select'));
     }, 100);
@@ -117,11 +120,12 @@ export function vpcSelect(payload){
 }
 
 export function subnetSelect(payload){
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SUBNET_SELECT,
       payload
     });
+    analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
     dispatch({
       type: ONBOARD_SET_INSTALL_DATA
     });
