@@ -58,6 +58,7 @@ import SearchAll from 'react-proxy?name=search!exports?exports.default!../search
 import Help from 'react-proxy?name=help!exports?exports.default!../pages/Help';
 import Styleguide from 'react-proxy?name=styleguide!exports?exports.default!../pages/Styleguide';
 import System from 'react-proxy?name=system!exports?exports.default!../env/System';
+import TOS from 'react-proxy?name=tos!exports?exports.default!../pages/TOS';
 import NotFound from 'react-proxy?name=notfound!exports?exports.default!../pages/NotFound';
 
 import {auth} from '../global/Authenticator';
@@ -133,6 +134,7 @@ const routes = (
 
     <Route path="/integrations/slack" component={Slack}/>
 
+    <Route path="/tos" component={TOS}/>
     <Route path="*" component={NotFound}/>
   </Route>
 );
