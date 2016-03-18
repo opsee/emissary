@@ -5,6 +5,8 @@ import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
+import {Address6, Address4} from 'ip-address';
+import URI from 'uri-js';
 
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
@@ -197,9 +199,6 @@ const CheckCreateRequest = React.createClass({
       url: forms.CharField({
         label: 'URL',
         required: isHost,
-        validators: [forms.validators.URLValidator({
-          schemes: ['http', 'https']
-        })],
         widgetAttrs: {
           placeholder: 'https://superwebsite.com'
         }
@@ -217,31 +216,48 @@ const CheckCreateRequest = React.createClass({
   getCheck(){
     return _.cloneDeep(this.props.check);
   },
+  getFinalHeaders(){
+    return _.chain(this.getHeaderForms()).map(header => {
+      const h = header.cleanedData || {};
+      return {
+        name: h.key,
+        values: h.value ? h.value.split(', ') : []
+      };
+    }).value();
+  },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
     let override = {};
     if (this.state.hasSetHeaders){
-      override.headers = _.chain(this.getHeaderForms()).map(header => {
-        const h = header.cleanedData;
-        return {
-          name: h.key,
-          values: h.value ? h.value.split(', ') : []
-        };
-      }).value();
+      override.headers = this.getFinalHeaders();
     }
     if (this.props.check.target.type === 'host'){
-      let url = {};
+      const string = this.state.info.data.url || '';
       try {
-        url = new window.URL(this.state.info.data.url);
+        const url = new window.URL(string);
+        override = _.assign(override, {
+          port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
+          path: url.path || '/',
+          protocol: (url.protocol || '').replace(':', '')
+        });
+        check.target.id = url.hostname;
       } catch (err) {
-        _.noop();
+        let address = URI.parse(string);
+        debugger;
+        // string is not a domain-like url, try ipv4
+        address = new Address4(string);
+        if (address.isValid()){
+          override = _.assign(override, {
+            port: 80,
+            path: null
+          });
+          debugger;
+        } else {
+          //string is not ipv4, try ipv6
+          address = new Address6(string);
+          debugger;
+        }
       }
-      override = _.assign(override, {
-        port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
-        path: url.path || '/',
-        protocol: (url.protocol || '').replace(':', '')
-      });
-      check.target.id = url.hostname;
     }
     let data = _.assign({}, this.state.info.data, override);
     if (data.path && !data.path.match('^\/')){
@@ -256,7 +272,10 @@ const CheckCreateRequest = React.createClass({
     if (Array.isArray(data.verb)){
       data.verb = data.verb[0];
     }
-    check.check_spec.value = _.chain(check.check_spec.value).assign(data).pick(['name', 'path', 'port', 'verb', 'protocol', 'headers']).value();
+    check.check_spec.value = _.chain(check.check_spec.value)
+    .assign(data)
+    .pick(['name', 'path', 'port', 'verb', 'protocol', 'headers'])
+    .value();
     return check;
   },
   isDataComplete(){
