@@ -5,8 +5,6 @@ import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
-import {Address6, Address4} from 'ip-address';
-import URI from 'uri-js';
 
 import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
@@ -232,31 +230,20 @@ const CheckCreateRequest = React.createClass({
       override.headers = this.getFinalHeaders();
     }
     if (this.props.check.target.type === 'host'){
-      const string = this.state.info.data.url || '';
+      let string = this.state.info.data.url || '';
+      if (!string.match('^http')){
+        string = `http://${string}`;
+      }
       try {
         const url = new window.URL(string);
         override = _.assign(override, {
           port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
-          path: url.path || '/',
+          path: url.pathname || '/',
           protocol: (url.protocol || '').replace(':', '')
         });
         check.target.id = url.hostname;
       } catch (err) {
-        let address = URI.parse(string);
-        debugger;
-        // string is not a domain-like url, try ipv4
-        address = new Address4(string);
-        if (address.isValid()){
-          override = _.assign(override, {
-            port: 80,
-            path: null
-          });
-          debugger;
-        } else {
-          //string is not ipv4, try ipv6
-          address = new Address6(string);
-          debugger;
-        }
+        _.noop();
       }
     }
     let data = _.assign({}, this.state.info.data, override);
