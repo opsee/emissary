@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import _ from 'lodash';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
@@ -20,7 +21,10 @@ const OnboardCreate = React.createClass({
       asyncActions: PropTypes.shape({
         onboardSignupCreate: PropTypes.object
       })
-    })
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.object
+    }).isRequired
   },
   getInitialState(){
     return {
@@ -44,7 +48,10 @@ const OnboardCreate = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.signupCreate(this.state.data);
+    this.props.actions.signupCreate(_.defaults(this.state.data, {
+      name: 'default',
+      referrer: this.props.location.query.referrer || ''
+    }));
   },
   render() {
     return (
