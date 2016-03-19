@@ -44,7 +44,7 @@ var config = {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
-    chunkFilename: "[name]-[id].[hash].js"
+    chunkFilename: "[name]-[id].js"
   },
   postcss: function(webpack){
     return [
