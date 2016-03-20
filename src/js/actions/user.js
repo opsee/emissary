@@ -52,12 +52,19 @@ export function setPassword(data) {
         return request
         .post(`${config.services.auth}/signups/${data.id}/claim`)
         .send(data)
-        .then((res) => {
-          resolve(res.body);
-          analytics.updateUser(res.body.user)(dispatch, state);
-          setTimeout(() => {
-            dispatch(pushState(null, '/start/tutorial'));
-          }, 100);
+        .then((res1) => {
+          const auth = `Bearer ${res1.body.token}`;
+          request
+          .put(`${config.services.auth}/users/${res1.body.user.id}`)
+          .set('Authorization', auth)
+          .send(_.assign(res1.body.user, data))
+          .then(res2 => {
+            resolve(res2.body);
+            analytics.updateUser(res2.body)(dispatch, state);
+            setTimeout(() => {
+              dispatch(pushState(null, '/start/tutorial'));
+            }, 100);
+          }, reject);
         }, reject);
       })
     });

@@ -25,7 +25,8 @@ const OnboardPassword = React.createClass({
   },
   getInitialState(){
     return {
-      password: null
+      password: undefined,
+      name: undefined
     };
   },
   getButtonText(){
@@ -35,25 +36,28 @@ const OnboardPassword = React.createClass({
     return this.props.redux.asyncActions.userSetPassword.status;
   },
   isDisabled(){
-    return !this.state.password || this.getStatus() === 'pending';
+    return (!this.state.password || !this.state.name) || this.getStatus() === 'pending';
   },
   handleUserData(data){
-    this.setState({password: data.password});
+    this.setState(_.defaults(data, {
+      password: undefined,
+      name: undefined
+    }));
   },
   handleSubmit(e){
     e.preventDefault();
-    const data = _.assign({}, this.state, this.props.location.query);
+    const data = _.chain({}).assign(this.state, this.props.location.query).pick(['id', 'token', 'password', 'name']).value();
     this.props.actions.setPassword(data);
   },
   render() {
     return (
        <div>
-        <Toolbar title="Set Your Password"/>
+        <Toolbar title="Get Started"/>
         <Grid>
           <Row>
             <Col xs={12}>
               <form name="loginForm" onSubmit={this.handleSubmit}>
-                <UserInputs include={['password']}  onChange={this.handleUserData}/>
+                <UserInputs include={['name', 'password']}  onChange={this.handleUserData}/>
                 <StatusHandler status={this.getStatus()}/>
                 <Padding t={1}>
                   <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>
