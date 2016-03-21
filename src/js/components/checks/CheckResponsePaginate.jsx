@@ -322,12 +322,13 @@ const CheckResponsePaginate = React.createClass({
   renderTopArea(){
     const arr = this.getFormattedResponses();
     const selected = arr[this.props.redux.checks.selectedResponse];
+    const title = _.get(selected, 'target.address') || _.get(selected, 'target.id');
     if (arr.length){
       const passing = _.get(selected, 'passing');
       if (!this.props.showBoolArea){
         return (
           <div>
-            <strong>{_.get(selected, 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+            <strong>{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
           </div>
         );
       }

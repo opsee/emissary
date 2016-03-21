@@ -63,6 +63,9 @@ const CheckSingle = React.createClass({
   },
   renderTarget(){
     const target = this.getCheck().get('target');
+    if (target && target.type === 'host'){
+      return null;
+    }
     let el;
     switch (target.type){
     case 'instance':

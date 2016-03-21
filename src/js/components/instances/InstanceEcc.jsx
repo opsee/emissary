@@ -75,7 +75,7 @@ const InstanceEcc = React.createClass({
     const data = JSON.stringify({
       target: {
         id: this.getInstance().get('id'),
-        type: 'EC2',
+        type: 'ecc',
         name: this.getInstance().get('name')
       }
     });

@@ -44,47 +44,6 @@ const HeaderFormSet = forms.FormSet.extend({
   canDelete: true
 });
 
-const InfoForm = forms.Form.extend({
-  protocol: forms.ChoiceField({
-    choices: ['http', 'https'].map(name => [name, name]),
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['http']
-  }),
-  verb: forms.ChoiceField({
-    choices: verbOptions,
-    widget: forms.RadioSelect,
-    label: 'Method',
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['GET']
-  }),
-  port: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. 8080'
-    },
-    widget: forms.NumberInput
-  }),
-  body: forms.CharField({
-    widget: forms.Textarea,
-    required: false,
-    widgetAttrs: {
-      widgetType: 'Textarea'
-    }
-  }),
-  path: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. /healthcheck'
-    }
-  }),
-  constructor(data, kwargs){
-    forms.Form.call(this, kwargs);
-  }
-});
-
 const CheckCreateRequest = React.createClass({
   propTypes: {
     check: PropTypes.object,
@@ -114,6 +73,7 @@ const CheckCreateRequest = React.createClass({
   },
   getInitialState() {
     const self = this;
+    const {check} = this.props;
     let initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
     initialHeaders = initialHeaders.map(h => {
       return {
@@ -129,11 +89,23 @@ const CheckCreateRequest = React.createClass({
     if (typeof initialData.protocol === 'string'){
       initialData.protocol = [initialData.protocol];
     }
+    if (check.target.type === 'host' && check.target.id){
+      const s = check.check_spec.value;
+      let port = '';
+      if (s.protocol === 'http' && s.port !== 80){
+        port = `:${s.port}`;
+      } else if (s.protocol === 'https' && s.port !== 443){
+        port = `:${s.port}`;
+      }
+      initialData.url = `${s.protocol}://${check.target.id}${port}${s.path}`;
+    }
     initialData = _.mapValues(initialData, val => {
       return val || null;
     });
+
+    const infoForm = this.getInfoFormConstructor();
     const obj = {
-      info: new InfoForm(initialData, _.assign({
+      info: new infoForm(initialData, _.assign({
         onChange: self.runChange,
         labelSuffix: '',
         validation: {
@@ -153,7 +125,7 @@ const CheckCreateRequest = React.createClass({
           onChangeDelay: 700
         }
       }),
-      check: this.props.check,
+      check,
       hasSetHeaders: !self.isDataComplete()
     };
     //this is a workaround because the library is not working correctly with initial + data formset
@@ -170,7 +142,7 @@ const CheckCreateRequest = React.createClass({
     });
   },
   componentWillMount(){
-    if (!this.props.check.target.id){
+    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
       return this.props.history.pushState(null, '/check-create/target');
     }
     return this.props.checkActions.testCheckReset();
@@ -180,6 +152,60 @@ const CheckCreateRequest = React.createClass({
       this.runChange();
     }
   },
+  getInfoFormConstructor(){
+    const isHost = this.props.check.target.type === 'host';
+    return forms.Form.extend({
+      protocol: forms.ChoiceField({
+        choices: ['http', 'https'].map(name => [name, name]),
+        widget: forms.RadioSelect,
+        required: !isHost,
+        widgetAttrs: {
+          widgetType: 'InlineRadioSelect'
+        },
+        initial: ['http']
+      }),
+      verb: forms.ChoiceField({
+        choices: verbOptions,
+        widget: forms.RadioSelect,
+        label: 'Method',
+        widgetAttrs: {
+          widgetType: 'InlineRadioSelect'
+        },
+        initial: ['GET']
+      }),
+      port: forms.CharField({
+        required: !isHost,
+        widgetAttrs: {
+          placeholder: 'e.g. 8080'
+        },
+        widget: forms.NumberInput
+      }),
+      body: forms.CharField({
+        widget: forms.Textarea,
+        required: false,
+        widgetAttrs: {
+          widgetType: 'Textarea'
+        }
+      }),
+      path: forms.CharField({
+        label: 'Path',
+        required: !isHost,
+        widgetAttrs: {
+          placeholder: '/healthcheck'
+        }
+      }),
+      url: forms.CharField({
+        label: 'URL',
+        required: isHost,
+        widgetAttrs: {
+          placeholder: 'https://superwebsite.com'
+        }
+      }),
+      constructor(data, kwargs){
+        forms.Form.call(this, kwargs);
+      }
+    });
+  },
   getHeaderForms(){
     return _.reject(this.state.headers.forms(), f => {
       return f.cleanedData.DELETE;
@@ -188,18 +214,37 @@ const CheckCreateRequest = React.createClass({
   getCheck(){
     return _.cloneDeep(this.props.check);
   },
+  getFinalHeaders(){
+    return _.chain(this.getHeaderForms()).map(header => {
+      const h = header.cleanedData || {};
+      return {
+        name: h.key,
+        values: h.value ? h.value.split(', ') : []
+      };
+    }).value();
+  },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    let val = check.check_spec.value;
     let override = {};
     if (this.state.hasSetHeaders){
-      override.headers = _.chain(this.getHeaderForms()).map(header => {
-        const h = header.cleanedData;
-        return {
-          name: h.key,
-          values: h.value ? h.value.split(', ') : []
-        };
-      }).value();
+      override.headers = this.getFinalHeaders();
+    }
+    if (this.props.check.target.type === 'host'){
+      let string = this.state.info.data.url || '';
+      if (!string.match('^http')){
+        string = `http://${string}`;
+      }
+      try {
+        const url = new window.URL(string);
+        override = _.assign(override, {
+          port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
+          path: url.pathname || '/',
+          protocol: (url.protocol || '').replace(':', '')
+        });
+        check.target.id = url.hostname;
+      } catch (err) {
+        _.noop();
+      }
     }
     let data = _.assign({}, this.state.info.data, override);
     if (data.path && !data.path.match('^\/')){
@@ -214,7 +259,10 @@ const CheckCreateRequest = React.createClass({
     if (Array.isArray(data.verb)){
       data.verb = data.verb[0];
     }
-    val = _.assign(val, data);
+    check.check_spec.value = _.chain(check.check_spec.value)
+    .assign(data)
+    .pick(['name', 'path', 'port', 'verb', 'protocol', 'headers'])
+    .value();
     return check;
   },
   isDataComplete(){
@@ -301,13 +349,17 @@ const CheckCreateRequest = React.createClass({
       }) || new Map();
     }
     if (selection && selection.get('id')){
-      if (type.match('EC2|instance')){
-        return (
-          <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
-        );
+      let inner = null;
+      if (type.match('^EC2$|^ecc$|^instance$')){
+        inner = <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
       }
+      inner = <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
       return (
-        <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
+        <Padding b={1}>
+          <Heading level={3}>Your Target</Heading>
+          {inner}
+          <hr/>
+        </Padding>
       );
     }
     return null;
@@ -336,7 +388,14 @@ const CheckCreateRequest = React.createClass({
     return (
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
-        {['protocol', 'verb', 'path', 'port'].map(string => {
+        {_.chain(['protocol', 'verb', 'path', 'url', 'port'])
+        .reject(field => {
+          if (this.props.check.target.type === 'host'){
+            return field.match('protocol|port|path');
+          }
+          return field === 'url';
+        })
+        .value().map(string => {
           return (
             <Padding b={1} key={`form-input-${string}`}>
               <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
@@ -365,11 +424,7 @@ const CheckCreateRequest = React.createClass({
         <Padding b={2}>
           {this.renderHelperText()}
         </Padding>
-        <Padding b={1}>
-          <Heading level={3}>Your Target</Heading>
-          {this.renderTargetSelection()}
-          <hr/>
-        </Padding>
+        {this.renderTargetSelection()}
         <Padding b={1}>
           {this.renderInfoForm()}
           {this.renderHeaderForm()}
