@@ -70,7 +70,9 @@ const routes = (
     <Route path="/env" component={auth(Env)}/>
     <Route path="/env-groups-security" component={auth(EnvGroupsSecurity)}/>
     <Route path="/env-groups-elb" component={auth(EnvGroupsELB)}/>
+    <Route path="/env-instances-ecc" component={auth(EnvInstancesEC2)}/>
     <Route path="/env-instances-ec2" component={auth(EnvInstancesEC2)}/>
+    <Route path="/instance/ecc/:id" component={auth(InstanceEcc)}/>
     <Route path="/instance/ec2/:id" component={auth(InstanceEcc)}/>
     <Route path="/instance/rds/:id" component={auth(InstanceRDS)}/>
 

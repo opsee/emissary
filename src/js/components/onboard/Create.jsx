@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import _ from 'lodash';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
@@ -20,7 +21,10 @@ const OnboardCreate = React.createClass({
       asyncActions: PropTypes.shape({
         onboardSignupCreate: PropTypes.object
       })
-    })
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.object
+    }).isRequired
   },
   getInitialState(){
     return {
@@ -34,7 +38,7 @@ const OnboardCreate = React.createClass({
     return this.props.redux.asyncActions.onboardSignupCreate.status;
   },
   isDisabled(){
-    const incomplete = !(this.state.data.name && this.state.data.email);
+    const incomplete = !this.state.data.email;
     return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
@@ -44,10 +48,10 @@ const OnboardCreate = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
-    this.props.actions.signupCreate(this.state.data);
+    this.props.actions.signupCreate(_.defaults(this.state.data, {
+      name: 'default',
+      referrer: this.props.location.query.referrer || ''
+    }));
   },
   render() {
     return (
@@ -60,7 +64,7 @@ const OnboardCreate = React.createClass({
               <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['name', 'email']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
+                  <UserInputs include={['email']}  onChange={this.handleUserData} email={this.state.data.email}/>
                 </Padding>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">

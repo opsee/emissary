@@ -42,7 +42,7 @@ const InfoForm = forms.Form.extend({
   }
 });
 
-export default React.createClass({
+const UserInputs = React.createClass({
   propTypes: {
     include: PropTypes.array.isRequired
   },
@@ -116,3 +116,5 @@ export default React.createClass({
     );
   }
 });
+
+export default UserInputs;

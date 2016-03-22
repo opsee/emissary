@@ -23,7 +23,7 @@ export function signupCreate(data) {
       type: ONBOARD_SIGNUP_CREATE,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.services.auth}/signups`)
+        .post(`${config.services.auth}/signups/new`)
         .send(data)
         .then((res) => {
           const user = res.body;
@@ -32,7 +32,7 @@ export function signupCreate(data) {
 
           //TODO remove timeout somehow
           setTimeout(() => {
-            dispatch(pushState(null, '/start/thanks'));
+            dispatch(pushState(null, `/start/thanks?referrer=${data.referrer}`));
           }, 100);
         }, err => {
           let msg = _.get(err, 'response.body.message');

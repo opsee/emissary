@@ -46,11 +46,11 @@ const InstanceItem = React.createClass({
     return this.props.item;
   },
   getLink(){
-    const type = this.getItem().get('type').toLowerCase();
+    const type = this.getType().toLowerCase();
     return `/instance/${type}/${this.getItem().get('id')}`;
   },
   getType(){
-    let type = 'EC2';
+    let type = 'ECC';
     switch (this.getItem().get('type')){
     case 'RDS':
     case 'rds':

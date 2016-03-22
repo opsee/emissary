@@ -8,7 +8,10 @@ import Color from '../type/Color';
 const CheckResponseSingle = React.createClass({
   propTypes: {
     code: PropTypes.number,
-    body: PropTypes.object,
+    body: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.string
+    ]),
     headers: PropTypes.object,
     json: PropTypes.bool
   },
