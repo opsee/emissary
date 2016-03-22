@@ -18,7 +18,7 @@ const Analytics = React.createClass({
         return;
       }
 
-      this.runPageview(renderProps.location);
+      this.runPageview(renderProps);
     });
   },
   shouldComponentUpdate() {
@@ -31,8 +31,9 @@ const Analytics = React.createClass({
     this.historyListener();
     this.historyListener = null;
   },
-  runPageview(location = {}) {
-    const path = location.pathname + location.search;
+  runPageview(renderProps) {
+    const {location} = renderProps || {};
+    const path = _.chain(renderProps.routes || []).last().get('path').value() || '/';
     if (this.latestUrl === path) {
       return;
     }
@@ -42,15 +43,19 @@ const Analytics = React.createClass({
     const trackPageView = this.props.actions.trackPageView;
     setTimeout(function wait() {
       trackPageView(path, document.title);
-    }, 0);
+    }, 50);
   },
   render() {
     return null;
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(Analytics);
+export default connect(mapStateToProps, mapDispatchToProps)(Analytics);
