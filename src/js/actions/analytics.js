@@ -51,6 +51,10 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
+    /*eslint-disable no-use-before-define*/
+    trackEvent('pageview', path)(dispatch, state);
+    /*eslint-enable no-use-before-define*/
+
     return dispatch({
       type: ANALYTICS_PAGEVIEW,
       payload: request
