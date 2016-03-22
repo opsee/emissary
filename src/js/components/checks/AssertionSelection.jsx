@@ -182,7 +182,7 @@ const AssertionsSelection = React.createClass({
   getSlateTest(assertion){
     let response = this.getResponse();
     response.body = typeof response.body === 'object' ? JSON.stringify(response.body) : response.body;
-    if (response && response.body && validate.assertion(assertion)){
+    if (response && validate.assertion(assertion)){
       return slate.checkAssertion(assertion, response);
     }
     return null;

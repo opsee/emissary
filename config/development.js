@@ -4,5 +4,12 @@ export default {
   checkDefaultVerb: 'GET',
   defaultBastionRegion: 'us-west-1',
   showVpcScreen: true,
-  skipBastionRequirement: false
+  skipBastionRequirement: false,
+  services: {
+    analytics: 'http://localhost:9098',
+    api: 'https://api.opsee.com',
+    auth: 'https://auth.opsee.com',
+    stream: 'wss://api.opsee.com/stream/',
+    compost: 'https://compost.in.opsee.com'
+  }
 };
