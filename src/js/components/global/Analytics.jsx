@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
+
 import * as actions from '../../actions/analytics';
 
 const Analytics = React.createClass({
@@ -32,7 +34,6 @@ const Analytics = React.createClass({
     this.historyListener = null;
   },
   runPageview(renderProps) {
-    const {location} = renderProps || {};
     const path = _.chain(renderProps.routes || []).last().get('path').value() || '/';
     if (this.latestUrl === path) {
       return;
