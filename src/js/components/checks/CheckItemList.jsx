@@ -63,8 +63,10 @@ const CheckItemList = React.createClass({
   },
   getChecks(noFilter){
     let data = this.props.redux.checks.checks;
-    data = data.sortBy(item => {
-      return item.get('health');
+    data = data
+    .sortBy(item => item.name)
+    .sortBy(item => {
+      return item.health === undefined ? 101 : item.health;
     });
     if (noFilter){
       return data;
