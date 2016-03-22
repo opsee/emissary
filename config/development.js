@@ -11,5 +11,5 @@ export default {
     auth: 'https://auth.opsee.com',
     stream: 'wss://api.opsee.com/stream/',
     compost: 'https://compost.in.opsee.com'
-  },
+  }
 };
