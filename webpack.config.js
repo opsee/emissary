@@ -107,7 +107,8 @@ var config = {
     definePlugin,
     new HtmlWebpackPlugin({
       hash:false,
-      template:'src/index.html'
+      template:'src/index.html',
+      favicon: 'src/img/favicon/favicon.ico'
     }),
     commonsPlugin
   ]
