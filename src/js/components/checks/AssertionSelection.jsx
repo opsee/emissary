@@ -338,7 +338,9 @@ const AssertionsSelection = React.createClass({
     const assertion = this.state.assertions[assertionIndex];
     return (
       <Padding t={1} style={{width: '100%'}}>
-        {relationships.map(rel => {
+        {_.reject(relationships, r => {
+          return r.id.match('lessThan|greaterThan');
+        }).map(rel => {
           let data = {
             relationship: rel.id
           };
