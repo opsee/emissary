@@ -198,7 +198,7 @@ const CheckCreateRequest = React.createClass({
         label: 'URL',
         required: isHost,
         widgetAttrs: {
-          placeholder: 'https://superwebsite.com'
+          placeholder: 'https://try.opsee.com or http://192.168.1.1:80'
         }
       }),
       constructor(data, kwargs){
