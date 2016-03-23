@@ -51,8 +51,6 @@ import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!.
 import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
 import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
 
-import AdminSignups from 'react-proxy?name=adminSignups!exports?exports.default!../admin/Signups';
-
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
 
 import Help from 'react-proxy?name=help!exports?exports.default!../pages/Help';
@@ -115,7 +113,6 @@ const routes = (
     <Route path="/start/install" component={auth(OnboardInstall)}/>
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 
-    <Route path="/admin/signups" component={auth(AdminSignups, true)}/>
     <Route path="/system" component={auth(System)}/>
 
     <Route path="/search" component={auth(SearchAll)}/>

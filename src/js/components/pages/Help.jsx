@@ -26,8 +26,6 @@ export default React.createClass({
           <div><Link to="/start/install">Bastion Installation</Link></div>
           <Padding t={2}>
             <Heading level={3}>Admin Pages</Heading>
-            <div><Link to="/admin/signups">Admin: Signups</Link></div>
-            <div><Link to="/system">System</Link></div>
             <div><Link to="/styleguide">Style Guide</Link></div>
           </Padding>
         </Padding>
