@@ -26,7 +26,7 @@ export const statics = {
     return new Check(newData);
   },
   formatResponse(item){
-    let data = item.toJS();
+    let data = _.cloneDeep(item.toJS());
     if (data && data.response && data.response.code){
       data.response = {
         value: data.response,

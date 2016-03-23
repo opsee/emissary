@@ -28,7 +28,9 @@ const OnboardCreate = React.createClass({
   },
   getInitialState(){
     return {
-      data: this.props.redux.user.get('loginData')
+      data: this.props.redux.user.get('loginData'),
+      tos: false,
+      validationError: undefined
     };
   },
   getButtonText(){
@@ -38,7 +40,7 @@ const OnboardCreate = React.createClass({
     return this.props.redux.asyncActions.onboardSignupCreate.status;
   },
   isDisabled(){
-    const incomplete = !this.state.data.email;
+    const incomplete = !this.state.data.email || !this.state.tos;
     return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
@@ -46,9 +48,26 @@ const OnboardCreate = React.createClass({
       data: data
     });
   },
+  handleInputChange(e){
+    if (e && e.target){
+      const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      let state = {
+        [e.target.name]: value
+      };
+      if (e.target.name === 'tos' && value){
+        state.validationError = undefined;
+      }
+      this.setState(state);
+    }
+  },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.signupCreate(_.defaults(this.state.data, {
+    if (!this.state.tos){
+      return this.setState({
+        validationError: 'You must accept the Terms of Service below.'
+      });
+    }
+    return this.props.actions.signupCreate(_.defaults(this.state.data, {
       name: 'default',
       referrer: this.props.location.query.referrer || ''
     }));
@@ -66,6 +85,12 @@ const OnboardCreate = React.createClass({
                 <Padding b={1}>
                   <UserInputs include={['email']}  onChange={this.handleUserData} email={this.state.data.email}/>
                 </Padding>
+                <div className="display-flex">
+                  <Padding r={1} b={1}>
+                    <input id="js-tos" name="tos" value={this.state.tos} type="checkbox" onChange={this.handleInputChange} required/>
+                  </Padding>
+                  <label className="label" htmlFor="js-tos">I accept the <Link to="/beta-tos" target="_blank">Opsee Terms of Service</Link></label>
+                </div>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
