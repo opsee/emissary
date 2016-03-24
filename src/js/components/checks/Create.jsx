@@ -62,13 +62,6 @@ const CheckCreate = React.createClass({
         type: config.checkDefaultTargetType,
         id: config.checkDefaultTargetId
       },
-      assertions: [
-        {
-          key: 'code',
-          operand: 200,
-          relationship: 'equal'
-        }
-      ],
       notifications: [
         {
           type: 'email',
@@ -76,11 +69,10 @@ const CheckCreate = React.createClass({
         }
       ]
     }).value();
-    const obj = {
+    return {
       check: new Check(initial).toJS(),
       filter: null
     };
-    return obj;
   },
   setStatus(obj){
     this.setState(_.extend(this.state.statuses, obj));
