@@ -46,6 +46,7 @@ import OnboardTutorial from 'react-proxy?name=onboard!exports?exports.default!..
 import OnboardTutorial1 from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial1';
 import OnboardTutorial2 from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial2';
 import OnboardTutorial3 from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial3';
+import OnboardTemplates from 'react-proxy?name=onboard!exports?exports.default!../onboard/Templates';
 import OnboardRegionSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/RegionSelect';
 import OnboardCredentials from 'react-proxy?name=onboard!exports?exports.default!../onboard/Credentials';
 import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
@@ -107,6 +108,7 @@ const routes = (
       <Route path="/start/tutorial/3" component={OnboardTutorial3}/>
     </Route>
 
+    <Route path="/start/templates" component={OnboardTemplates}/>
     <Route path="/start/profile" component={auth(Help)}/>
     <Route path="/start/region-select" component={auth(OnboardRegionSelect)}/>
     <Route path="/start/credentials" component={auth(OnboardCredentials)}/>

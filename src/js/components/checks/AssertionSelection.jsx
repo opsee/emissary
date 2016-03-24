@@ -7,9 +7,9 @@ import Autosuggest from 'react-autosuggest';
 
 import {BoundField, Button} from '../forms';
 import {Add, Delete} from '../icons';
-import {Padding, Rule} from '../layout';
+import {Expandable, Padding, Rule} from '../layout';
 import {Color, Heading} from '../type';
-import {Expandable, Highlight} from '../global';
+import {Highlight} from '../global';
 import {flag, validate, getKeys} from '../../modules';
 import relationships from 'slate/src/relationships';
 import slate from 'slate';
