@@ -6,6 +6,7 @@ import Env from '../env/Env';
 import EnvGroupsSecurity from '../env/EnvGroupsSecurity';
 import EnvGroupsELB from '../env/EnvGroupsELB';
 import EnvInstancesEC2 from '../env/EnvInstancesEC2';
+import EnvInstancesRDS from '../env/EnvInstancesRDS';
 
 import CheckList from 'react-proxy?name=checks!exports?exports.default!../checks/List';
 import CheckSingle from 'react-proxy?name=checks!exports?exports.default!../checks/Single';
@@ -70,6 +71,7 @@ const routes = (
     <Route path="/env-groups-elb" component={auth(EnvGroupsELB)}/>
     <Route path="/env-instances-ecc" component={auth(EnvInstancesEC2)}/>
     <Route path="/env-instances-ec2" component={auth(EnvInstancesEC2)}/>
+    <Route path="/env-instances-rds" component={auth(EnvInstancesRDS)}/>
     <Route path="/instance/ecc/:id" component={auth(InstanceEcc)}/>
     <Route path="/instance/ec2/:id" component={auth(InstanceEcc)}/>
     <Route path="/instance/rds/:id" component={auth(InstanceRDS)}/>
