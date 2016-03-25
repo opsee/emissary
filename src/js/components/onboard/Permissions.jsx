@@ -26,7 +26,7 @@ const Permissions = React.createClass({
     }),
     location: PropTypes.shape({
       pathname: PropTypes.string
-    })
+    }).isRequired
   },
   getInitialState() {
     const docs = !!this.props.location.pathname.match('docs');

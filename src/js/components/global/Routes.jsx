@@ -108,7 +108,7 @@ const routes = (
       <Route path="/start/tutorial/3" component={OnboardTutorial3}/>
     </Route>
 
-    <Route path="/start/permissions" component={Permissions}/>
+    <Route path="/start/permissions" component={auth(Permissions)}/>
     <Route path="/start/profile" component={auth(Help)}/>
     <Route path="/start/region-select" component={auth(OnboardRegionSelect)}/>
     <Route path="/start/credentials" component={auth(OnboardCredentials)}/>
