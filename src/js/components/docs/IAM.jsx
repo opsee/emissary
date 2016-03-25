@@ -48,15 +48,21 @@ const IAM = React.createClass({
                       {
                         'Effect': 'Allow',
                         'Action': [
-                          'autoscaling:*',
-                          'cloudformation:*',
-                          'ec2:*',
-                          'iam:*',
-                          'sns:*',
-                          's3:*',
-                          'elasticloadbalancing:*',
-                          'sqs:*',
-                          'rds:*'
+                          'ec2:DescribeAccountAttributes',
+                          'ec2:DescribeAvailabilityZones',
+                          'ec2:DescribeInstances',
+                          'ec2:DescribeInternetGateways',
+                          'ec2:DescribeNatGateways',
+                          'ec2:DescribeNetworkAcls',
+                          'ec2:DescribeRegions',
+                          'ec2:DescribeRouteTables',
+                          'ec2:DescribeSecurityGroups',
+                          'ec2:DescribeSubnets',
+                          'ec2:DescribeVpcAttribute',
+                          'ec2:DescribeVpcs',
+                          'iam:GetUser',
+                          'iam:CreateRole',
+                          'iam:PutRolePolicy'
                         ],
                         'Resource': '*'
                       }
