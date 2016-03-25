@@ -35,7 +35,7 @@ const Templates = React.createClass({
     const {templates} = this.props.redux.onboard;
     const get = this.props.redux.asyncActions.onboardGetTemplates;
     if (get.status === 'success' && templates.length){
-      return ['Ingress Role', 'CloudFormation Template', 'IAM Role'].map((title, index) => {
+      return ['Ingress IAM Role', 'CloudFormation Template', 'Instance IAM Role'].map((title, index) => {
         const data = templates[index];
         return (
           <Padding b={2} key={`template-${index}`}>
@@ -61,10 +61,19 @@ const Templates = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Required AWS Templates"/>
+        <Toolbar title="Security & Permissions Review"/>
         <Grid>
           <Row>
             <Col xs={12}>
+            <Padding b={2}>
+              <p>Have a look at the IAM roles and permissions Opsee requires for installation. We use 2 IAM roles and 1 CloudFormation template.</p>
+              <ul>
+                <li><strong>Instance IAM Role:</strong> used by our EC2 instance once added to your environment. It needs read permissions for AWS services to run health checks, and we ask for additional permissions to EC2 (so you can perform actions like restarts within Opsee) and auto scale groups (so that we can keep a running instance at all times)</li>
+                <li><strong>Ingress IAM Role:</strong> used to ensure communication betweeen your security groups and the Opsee security group within your chosen VPC.</li>
+                <li><strong>CloudFormation Template:</strong> used to install our EC2 instance. Notably, we create both a security group and auto scale group (to set rules requiring at least one running Opsee instance at all times), and add our instance to both groups. </li>
+              </ul>
+              <p>If you have any questions, you can reach out to us any time on <a target="blank" href="https://app.opsee.com/help">email, Slack, or IRC</a>.</p>
+            </Padding>
             {this.renderTemplates()}
             <Button to="/start/credentials" color="success" block chevron>Next</Button>
             </Col>
