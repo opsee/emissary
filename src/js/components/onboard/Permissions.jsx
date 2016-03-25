@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
+import {Link} from 'react-router';
 
 import {Highlight, Toolbar} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
@@ -22,7 +23,16 @@ const Permissions = React.createClass({
     }),
     actions: PropTypes.shape({
       getTemplates: PropTypes.func
+    }),
+    location: PropTypes.shape({
+      pathname: PropTypes.string
     })
+  },
+  getInitialState() {
+    const docs = !!this.props.location.pathname.match('docs');
+    return {
+      docs
+    };
   },
   componentWillMount(){
     const item = this.props.redux.asyncActions.onboardGetTemplates;
@@ -59,7 +69,7 @@ const Permissions = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Security & Permissions Review"/>
+        <Toolbar title={this.state.docs ? 'Security & Permissions' : 'Security & Permissions Review'}/>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -74,9 +84,9 @@ const Permissions = React.createClass({
               <Heading level={2}>CloudFormation Template</Heading>
               <p>Used to install our EC2 instance. Notably, we create both a security group and auto scale group (to set rules requiring at least one running Opsee instance at all times), and add our instance to both groups.</p>
               {this.renderTemplateItem('cf')}
-              <p>If you have any questions, you can reach out to us any time on <a target="blank" href="https://app.opsee.com/help">email, Slack, or IRC</a>.</p>
+              {!this.state.docs && <p>If you have any questions, you can reach out to us any time on <Link target="_blank" to="https://app.opsee.com/help">email, Slack, or IRC</Link>.</p>}
             </Padding>
-            <Button to="/start/credentials" color="success" block chevron>Next</Button>
+            {!this.state.docs && <Button to="/start/region-select" color="success" block chevron>Next</Button>}
             </Col>
           </Row>
         </Grid>
