@@ -10,7 +10,8 @@ import {
   ONBOARD_VPC_SELECT,
   ONBOARD_SET_INSTALL_DATA,
   ONBOARD_SUBNET_SELECT,
-  ONBOARD_INSTALL
+  ONBOARD_INSTALL,
+  ONBOARD_GET_TEMPLATES
 } from '../actions/constants';
 
 const initial = {
@@ -22,7 +23,8 @@ const initial = {
   subnetsForSelection: [],
   bastionLaunching: undefined,
   installData: undefined,
-  installing: false
+  installing: false,
+  templates: []
 };
 
 function getFinalInstallData(state){
@@ -76,6 +78,13 @@ export default handleActions({
     next(state, action){
       return _.assign({}, state, action.payload);
     }
+  },
+  [ONBOARD_GET_TEMPLATES]: {
+    next(state, action){
+      const templates = action.payload;
+      return _.assign({}, state, {templates});
+    },
+    throw: yeller.reportAction
   },
   [ONBOARD_SET_CREDENTIALS]: {
     next(state, action){

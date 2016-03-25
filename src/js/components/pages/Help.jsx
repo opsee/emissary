@@ -45,6 +45,7 @@ export default React.createClass({
               <ul>
                 <li><Link to="/docs/checks">Checks</Link></li>
                 <li><Link to="/docs/notifications">Notifications</Link></li>
+                <li><Link to="/docs/permissions">AWS Security &amp; Permissions</Link></li>
                 <li><Link to="/docs/bastion">The Bastion Instance</Link></li>
                 <li><Link to="/docs/IAM">IAM Profile for Bastion Installation</Link></li>
               </ul>

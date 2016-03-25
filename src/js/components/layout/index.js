@@ -1,7 +1,9 @@
-import Padding from './Padding.jsx';
-import Rule from './Rule.jsx';
+import Expandable from './Expandable';
+import Padding from './Padding';
+import Rule from './Rule';
 
 export {
+  Expandable,
   Padding,
   Rule
 };

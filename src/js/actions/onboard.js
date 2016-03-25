@@ -13,6 +13,7 @@ import {
   ONBOARD_EXAMPLE_INSTALL,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
+  ONBOARD_GET_TEMPLATES,
   ONBOARD_SET_INSTALL_DATA,
   ONBOARD_SUBNET_SELECT
 } from './constants';
@@ -44,6 +45,23 @@ export function signupCreate(data) {
   };
 }
 
+export function getTemplates(){
+  const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_GET_TEMPLATES,
+      payload: new Promise((resolve, reject) => {
+        const r1 = request.get(`${base}/bastion-ingress-cf.template`);
+        const r2 = request.get(`${base}/bastion-cf.template`);
+        const r3 = request.get(`${base}/opsee-role.json`);
+        Promise.all([r1, r2, r3]).then(values => {
+          resolve(values);
+        }).catch(reject);
+      })
+    });
+  };
+}
+
 export function setRegion(data) {
   return (dispatch, state) => {
     dispatch({
@@ -51,6 +69,7 @@ export function setRegion(data) {
       payload: {region: data}
     });
     analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
+    getTemplates()(dispatch, state);
     setTimeout(() => {
       dispatch(pushState(null, '/start/credentials'));
     }, 100);
