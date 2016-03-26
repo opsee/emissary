@@ -186,7 +186,7 @@ const Install = React.createClass({
           {this.getBastionMessages().map((b, i) => {
             return (
               <Padding b={1} key={`bastion-installer-${i}`}>
-                <BastionInstaller {...b} connected={this.isComplete()}/>
+                <BastionInstaller {...b} connected={this.isBastionConnected()}/>
               </Padding>
             );
           })}
