@@ -99,7 +99,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(action.payload.data);
+      const single = statics.checkFromJS(_.assign(action.payload.data, {COMPLETE: true}));
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');

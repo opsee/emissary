@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Mail, Slack} from '../icons';
+import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
 import {
   integrations as integrationsActions
@@ -52,12 +53,17 @@ const NotificationItemList = React.createClass({
     return null;
   },
   render() {
+    if (this.props.notifications.length){
+      return (
+        <div>
+          {this.props.notifications.map((n, i) => {
+            return this.renderItem(n, i);
+          })}
+        </div>
+      );
+    }
     return (
-      <div>
-        {this.props.notifications.map((n, i) => {
-          return this.renderItem(n, i);
-        })}
-      </div>
+      <Alert bsStyle="warning">This check does not have any notifications. You will not be alerted if this check fails.</Alert>
     );
   }
 });

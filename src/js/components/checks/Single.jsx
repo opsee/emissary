@@ -51,7 +51,7 @@ const CheckSingle = React.createClass({
   renderNotifications(){
     let notifs = this.getCheck().get('notifications');
     notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (notifs.length){
+    if (this.getCheck().get('COMPLETE')){
       return (
         <Padding b={1}>
           <Heading level={3}>Notifications</Heading>
@@ -99,7 +99,7 @@ const CheckSingle = React.createClass({
           </Padding>
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>
-            <AssertionItemList assertions={this.getCheck().get('assertions')}/>
+            {this.getCheck().get('COMPLETE') && <AssertionItemList assertions={this.getCheck().get('assertions')}/>}
           </Padding>
           <Padding b={2}>
             <CheckResponsePaginate responses={this.getResponses()} date={d}/>
