@@ -81,7 +81,7 @@ const CheckEdit = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Check();
     const check = data.toJS();
-    if (!this.state.check && check.assertions.length && check.notifications.length){
+    if (!this.state.check && check.COMPLETE){
       this.setState({
         check
       });
