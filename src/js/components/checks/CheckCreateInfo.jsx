@@ -76,7 +76,7 @@ const CheckCreateInfo = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
-      if (process.env.NODE_ENV !== 'debug'){
+      if (process.env.NODE_ENV !== 'debug' && !this.props.renderAsInclude){
         this.props.history.pushState(null, '/check-create/target');
       }
     }
