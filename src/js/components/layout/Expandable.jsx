@@ -9,7 +9,8 @@ import style from './expandable.css';
 const Expandable = React.createClass({
   propTypes: {
     children: PropTypes.node,
-    noFade: PropTypes.bool
+    noFade: PropTypes.bool,
+    style: PropTypes.object
   },
   getInitialState(){
     return {
@@ -53,7 +54,7 @@ const Expandable = React.createClass({
   },
   render(){
     return (
-      <div className={this.getClass()}>
+      <div className={this.getClass()} style={this.props.style}>
         {this.props.children}
         {this.renderFade()}
         {this.renderButton()}

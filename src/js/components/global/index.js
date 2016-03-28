@@ -2,7 +2,6 @@ import Analytics from './Analytics.jsx';
 import Authenticator from './Authenticator.jsx';
 import BastionRequirement from './BastionRequirement.jsx';
 import ContextMenu from './ContextMenu.jsx';
-import Expandable from './Expandable.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
 import HTMLFile from './HTMLFile.jsx';
@@ -27,7 +26,6 @@ export {
   Authenticator,
   BastionRequirement,
   ContextMenu,
-  Expandable,
   Header,
   Highlight,
   HTMLFile,
