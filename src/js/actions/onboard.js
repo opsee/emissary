@@ -227,7 +227,7 @@ if (process.env.NODE_ENV !== 'production'){
                 type: APP_SOCKET_MSG,
                 payload
               });
-            }, i * 400);
+            }, i * 2000);
           });
           setTimeout(() => {
             dispatch({
