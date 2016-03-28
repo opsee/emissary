@@ -138,7 +138,7 @@ const CheckEdit = React.createClass({
      : <div/>;
   },
   renderInner(){
-    if (this.getCheck().id && this.getCheck().assertions.length){
+    if (this.getCheck().id && this.getCheck().COMPLETE){
       return (
         <div>
           {this.renderEnv()}

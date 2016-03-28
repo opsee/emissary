@@ -57,7 +57,7 @@ export function getCheck(id){
         Promise.all([r1, r2, r3]).then((values) => {
           const check = values[0].body;
           const {notifications} = values[1].body;
-          const {assertions} = values[2].body;
+          const assertions = _.get(values[2], 'body.assertions') || [];
           const obj = _.assign({}, check, {notifications, assertions});
           resolve({
             data: obj,
@@ -119,7 +119,8 @@ function formatCheckData(data){
   if (obj.target.type.match('^EC2$|^ecc$')){
     obj.target.type = 'instance';
   }
-  const assertions = obj.assertions.map(a => {
+  let arr = obj.assertions || [];
+  const assertions = arr.map(a => {
     return _.assign({}, a, {
       operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
     });
