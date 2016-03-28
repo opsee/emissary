@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import {plain as seed} from 'seedling';
 import TimeAgo from 'react-timeago';
-import moment from 'moment';
 
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
