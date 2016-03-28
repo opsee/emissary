@@ -109,13 +109,14 @@ const Install = React.createClass({
   },
   isComplete(){
     //the bastion connection can be determined an alternate way that indicates discovery is fully complete:
-    const bool = _.chain(this.props.redux.app.socketMessages)
+    const bool1 = _.chain(this.props.redux.app.socketMessages)
     .filter({command: 'bastions'})
     .find(msg => {
       return _.chain(msg).get('attributes.bastions').find('connected').value();
     })
     .value();
-    return (this.isBastionConnected() && this.isDiscoveryComplete()) || bool;
+    const bool2 = this.isBastionConnected() && this.isDiscoveryComplete();
+    return !!(bool1 || bool2);
   },
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
@@ -173,6 +174,7 @@ const Install = React.createClass({
     return null;
   },
   renderInner(){
+    const self = this;
     if (this.getBastionConnectionStatus() === 'failed'){
       return (
         <Alert bsStyle="danger">
@@ -186,7 +188,7 @@ const Install = React.createClass({
           {this.getBastionMessages().map((b, i) => {
             return (
               <Padding b={1} key={`bastion-installer-${i}`}>
-                <BastionInstaller {...b} connected={this.isComplete()}/>
+                <BastionInstaller messages={b.messages} connected={self.isComplete()}/>
               </Padding>
             );
           })}
