@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import {plain as seed} from 'seedling';
+import TimeAgo from 'react-timeago';
 
 import {Alert} from '../../modules/bootstrap';
 import {Padding} from '../layout';
@@ -310,10 +311,10 @@ const CheckResponsePaginate = React.createClass({
   },
   renderDate(){
     if (this.props.date instanceof Date){
-      const s = this.props.date.toGMTString();
+      const s = this.props.date.toString();
       return (
         <Color c="gray500">
-          <small title="The date this event was processed.">{`- ${s}`}</small>
+          <small title="The date this event was processed.">{`- ${s}`}&nbsp;-&nbsp;<TimeAgo date={this.props.date}/></small>
         </Color>
       );
     }
