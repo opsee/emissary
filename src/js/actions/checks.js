@@ -50,15 +50,10 @@ export function getCheck(id){
           });
         });
 
-        const r3 = request
-        .get(`${config.services.api}/assertions/${id}`)
-        .set('Authorization', state().user.get('auth'));
-
-        Promise.all([r1, r2, r3]).then((values) => {
+        Promise.all([r1, r2]).then((values) => {
           const check = values[0].body;
           const {notifications} = values[1].body;
-          const assertions = _.get(values[2], 'body.assertions') || [];
-          const obj = _.assign({}, check, {notifications, assertions});
+          const obj = _.assign({}, check, {notifications});
           resolve({
             data: obj,
             search: state().search
