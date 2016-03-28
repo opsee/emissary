@@ -52,7 +52,7 @@ const Permissions = React.createClass({
           <Heading level={4}>Last modified: {data.headers['last-modified']}</Heading>
           <Expandable style={{background: seed.color.gray9}}>
             <Highlight style={{padding: '1rem'}}>
-              {JSON.stringify(data.body, null, ' ')}
+              {data.text}
             </Highlight>
           </Expandable>
         </Padding>

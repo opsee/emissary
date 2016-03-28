@@ -5,16 +5,21 @@ import {Link} from 'react-router';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {UserDataRequirement} from '../user';
+import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Heading} from '../type';
-import {checks as actions} from '../../actions';
+import {Padding} from '../layout';
+import {checks as actions, user as userActions} from '../../actions';
 
 const CheckList = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
       getChecks: PropTypes.func.isRequired
+    }),
+    userActions: PropTypes.shape({
+      putData: PropTypes.func
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
@@ -38,6 +43,20 @@ const CheckList = React.createClass({
     if (oldStatus !== newStatus && newStatus === 'success'){
       this.props.actions.getChecks();
     }
+  },
+  runDismissHelperText(){
+    this.props.userActions.putData('hasDismissedCheckTypeHelp');
+  },
+  renderAutoMessage(){
+    return (
+      <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
+        <Padding b={2}>
+          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
+            <p>Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.</p>
+          </Alert>
+        </Padding>
+      </UserDataRequirement>
+    );
   },
   renderChecks(){
     if (this.props.redux.checks.checks.size){
@@ -86,7 +105,8 @@ const CheckList = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckList);
