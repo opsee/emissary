@@ -50,15 +50,10 @@ export function getCheck(id){
           });
         });
 
-        const r3 = request
-        .get(`${config.services.api}/assertions/${id}`)
-        .set('Authorization', state().user.get('auth'));
-
-        Promise.all([r1, r2, r3]).then((values) => {
+        Promise.all([r1, r2]).then((values) => {
           const check = values[0].body;
           const {notifications} = values[1].body;
-          const assertions = _.get(values[2], 'body.assertions') || [];
-          const obj = _.assign({}, check, {notifications, assertions});
+          const obj = _.assign({}, check, {notifications});
           resolve({
             data: obj,
             search: state().search
@@ -191,16 +186,6 @@ function saveNotifications(state, data, checkId, isEditing){
   });
 }
 
-function saveAssertions(state, data, checkId, isEditing){
-  return request
-  [isEditing ? 'put' : 'post'](`${config.services.api}/assertions${isEditing ? '/' + checkId : ''}`)
-  .set('Authorization', state().user.get('auth'))
-  .send({
-    'check-id': checkId,
-    assertions: data.assertions
-  });
-}
-
 function checkCreateOrEdit(state, data, isEditing){
   return new Promise((resolve, reject) => {
     const d = formatCheckData(data);
@@ -210,9 +195,7 @@ function checkCreateOrEdit(state, data, isEditing){
     .send(d).then(checkRes =>{
       saveNotifications(state, data, _.get(checkRes, 'body.id') || data.id, isEditing)
       .then(() => {
-        saveAssertions(state, data, _.get(checkRes, 'body.id') || data.id, isEditing).then(() => {
-          resolve(checkRes);
-        }).catch(reject);
+        resolve(checkRes);
       }).catch(reject);
     }).catch(reject);
   });
