@@ -156,7 +156,7 @@ const CheckCreateRequest = React.createClass({
     const isHost = this.props.check.target.type === 'host';
     return forms.Form.extend({
       protocol: forms.ChoiceField({
-        choices: ['http', 'https'].map(name => [name, name]),
+        choices: ['http', 'https', 'ws', 'wss'].map(name => [name, name]),
         widget: forms.RadioSelect,
         required: !isHost,
         widgetAttrs: {
@@ -231,7 +231,7 @@ const CheckCreateRequest = React.createClass({
     }
     if (this.props.check.target.type === 'host'){
       let string = this.state.info.data.url || '';
-      if (!string.match('^http')){
+      if (!string.match('^http|^ws')){
         string = `http://${string}`;
       }
       try {
