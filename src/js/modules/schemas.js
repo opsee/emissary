@@ -119,7 +119,8 @@ export const Check = Record({
       port: config.checkDefaultPort,
       verb: config.checkDefaultVerb || 'GET',
       body: undefined,
-      headers: new List()
+      headers: new List(),
+      metrics: new List()
     })
   })
 });
