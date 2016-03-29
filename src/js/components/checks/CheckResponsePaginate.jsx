@@ -213,7 +213,7 @@ const CheckResponsePaginate = React.createClass({
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
           {this.renderTopArea()}
-          <CheckResponseSingle code={_.get(res, 'response.value.code')} headers={_.get(res, 'response.value.headers') || {}} body={this.getBody()}/>
+          <CheckResponseSingle code={_.get(res, 'response.value.code')} headers={_.get(res, 'response.value.headers') || {}} body={this.getBody()} metrics={_.get(res, 'response.value.metrics')}/>
         </div>
         {this.renderButton()}
       </Padding>

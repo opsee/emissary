@@ -70,11 +70,7 @@ export const statics = {
       if (!data.error && !_.get(data, 'response.type_url')){
         return {error: 'Error in sending the request'};
       }
-      if (_.get(data, 'response.value.metrics')){
-        delete data.response.value.metrics;
-      }
       return data;
-      // return _.omit(data, 'data.value.metrics');
     }
     if (data.error){
       return {error: data.error};

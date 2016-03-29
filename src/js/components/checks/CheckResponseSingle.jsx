@@ -13,13 +13,15 @@ const CheckResponseSingle = React.createClass({
       PropTypes.string
     ]),
     headers: PropTypes.object,
-    json: PropTypes.bool
+    json: PropTypes.bool,
+    metrics: PropTypes.array
   },
   getDefaultProps() {
     return {
       code: undefined,
       body: null,
-      headers: {}
+      headers: {},
+      metrics: []
     };
   },
   getBody(){
@@ -28,6 +30,13 @@ const CheckResponseSingle = React.createClass({
       return JSON.stringify(props.body, null, ' ');
     }
     return props.body || '';
+  },
+  getMetric(name){
+    const data = _.chain(this.props.metrics).find({name}).get('value').value();
+    if (name === 'request_latency_ms' && typeof data === 'number'){
+      return Math.round(data);
+    }
+    return data;
   },
   renderHeaders(){
     return (
@@ -47,6 +56,7 @@ const CheckResponseSingle = React.createClass({
       <div>
         <Padding t={1}>
           <strong>Status Code:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{this.props.code}</code></Color><br/>
+          <strong>Request Latency:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{this.getMetric('request_latency_ms')} ms</code></Color><br/>
         </Padding>
         <Padding t={1} b={1}>
           <Padding b={0.5}>
