@@ -1,8 +1,9 @@
 import React from 'react';
 
-import {BastionRequirement, Toolbar} from '../global';
+import {BastionRequirement, Toolbar, Highlight} from '../global';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
+import {Padding} from '../layout';
 
 const Bastion = React.createClass({
   render() {
@@ -38,6 +39,62 @@ const Bastion = React.createClass({
 
                 <Heading level={3}>What kind of access and permissions does the Bastion Instance have to my environment?</Heading>
                 <p>In addition to permissions for the Bastion Instance itself, Opsee needs to ensure that the Bastion Instance can communicate with the rest of your infrastructure. In order to ensure that the Opsee Bastion can communicate with your services to perform health checks, a process running on the Bastion will periodically examine the security groups in your AWS environment.  If groups are found with which the bastion cannot communicate, ingress rules will be created via the AWS API so that services within those groups can be monitored. All ingress rules are created, updated, and deleted via the modification of a special cloudformation stack that resides in the region which the bastion was installed. You can see all of the security groups to which the bastion has access by examining the ingress stack&rsquo;s template body.</p>
+                <p>The Bastion instance has its own IAM role to run health checks and discovery processes in your environment. As of March 2016 the role is:</p>
+                <Padding tb={1}>
+                  <Highlight>
+                  {JSON.stringify({
+                    'Version': '2012-10-17',
+                    'Statement': [
+                      {
+                        'Version': '2012-10-17',
+                        'Statement': [
+                          {
+                            'Effect': 'Allow',
+                            'Action': [
+                              'autoscaling:*',
+                              'cloudformation:*',
+                              'ec2:*',
+                              'cloudwatch:*',
+                              'rds:Describe*',
+                              'sns:CreateTopic',
+                              'sns:DeleteTopic',
+                              'sns:Subscribe',
+                              'sns:Unsubscribe',
+                              'sns:Publish',
+                              'sqs:CreateQueue',
+                              'sqs:DeleteQueue',
+                              'sqs:DeleteMessage',
+                              'sqs:ReceiveMessage',
+                              'sqs:GetQueueAttributes',
+                              'sqs:SetQueueAttributes',
+                              'elasticloadbalancing:DescribeLoadBalancers'
+                            ],
+                            'Resource': '*'
+                          },
+                          {
+                            'Effect': 'Allow',
+                            'Action': [
+                              'iam:*'
+                            ],
+                            'Resource': [
+                              'arn:aws:iam::*:role/opsee-role-*',
+                              'arn:aws:iam::*:instance-profile/opsee-stack-*'
+                            ]
+                          },
+                          {
+                            'Effect': 'Allow',
+                            'Action': [
+                              's3:GetObject'
+                            ],
+                            'Resource': 'arn:aws:s3:::opsee-bastion-cf/*'
+                          }
+                        ]
+                      }
+                    ]
+                  }, null, ' ')}
+                  </Highlight>
+                </Padding>
+
                 <hr/>
 
                 <Heading level={3}>Does Opsee install any software on my systems?</Heading>
@@ -63,6 +120,9 @@ const Bastion = React.createClass({
                 <Heading level={3}>What language is the Bastion Instance written in? Can I check out the source code?</Heading>
                 <p>The Bastion Instance is written in Go. If your company requires a source code review or if you simply want to do diligence on us, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
                 <hr/>
+
+                <Heading level={3}>How do I uninstall the Bastion instance?</Heading>
+                <p>To uninstall the Bastion instance, visit your <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">CloudFormation dashboard</a>. There you should find 2 entries called "opsee-stack-[ID]". Simply click the checkbox for each stack, go to the Actions menu above, and click Delete. This will remove the Bastion instance and all associated roles & permissions from your AWS environment. If you'd like to delete your account, reach out to us at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
             </Col>
           </Row>
         </Grid>
