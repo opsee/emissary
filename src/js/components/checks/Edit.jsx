@@ -167,8 +167,6 @@ const CheckEdit = React.createClass({
           </Padding>
         </div>
       );
-    } else if (!this.getCheck().assertions.length){
-      return <StatusHandler status="pending"/>;
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getCheck.status}>

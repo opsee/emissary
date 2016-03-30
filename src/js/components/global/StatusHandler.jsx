@@ -49,8 +49,8 @@ const StatusHandler = React.createClass({
     return _.some(arr);
   },
   getErrorText(){
-    let string = _.get(this.props, 'status.message') ||
-    _.get(this.props, 'status.response.body.message') ||
+    let string = _.get(this.props, 'status.response.body.message') ||
+    _.get(this.props, 'status.message') ||
     this.props.errorText;
     if (string.match('^Parser is unable')){
       string = _.get(this.props, 'status.rawResponse');
