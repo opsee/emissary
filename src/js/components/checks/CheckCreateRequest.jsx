@@ -261,7 +261,7 @@ const CheckCreateRequest = React.createClass({
     }
     check.check_spec.value = _.chain(check.check_spec.value)
     .assign(data)
-    .pick(['name', 'path', 'port', 'verb', 'protocol', 'headers'])
+    .pick(['name', 'path', 'port', 'verb', 'protocol', 'headers', 'body'])
     .value();
     return check;
   },
