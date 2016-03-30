@@ -335,7 +335,7 @@ const CheckResponsePaginate = React.createClass({
       }
       return (
         <div>
-          <strong className={passing ? seed.color.success : seed.color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          <strong className={passing ? seed.color.success : seed.color.danger}>{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
         </div>
       );
     }
