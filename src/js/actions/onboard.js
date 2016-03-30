@@ -113,13 +113,8 @@ export function vpcScan(data) {
               dispatch(pushState(null, '/start/vpc-select'));
             }, 100);
           }
-          return reject({
-            message: 'Something went wrong trying to get VPCs.'
-          });
-        }, (err) => {
-          let message = err.message || err.response;
-          return reject({message});
-        });
+          return reject(new Error('Something went wrong trying to get VPCs.'));
+        }, reject);
       })
     });
   };
