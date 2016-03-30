@@ -59,7 +59,16 @@ function getFinalInstallData(state){
 
 function generateSubnetsForSelection(regions){
   return _.chain(regions).map(region => {
-    return _.chain(region.subnets).map(subnet => {
+    const selectedVpc = _.chain(region)
+    .get('vpcs')
+    .find('selected')
+    .get('vpc_id')
+    .value();
+    return _.chain(region.subnets)
+    .filter(subnet => {
+      return subnet.vpc_id === selectedVpc;
+    })
+    .map(subnet => {
       let subnetName = subnet.subnet_id;
       if (subnet.tags.length){
         subnetName = _.chain(subnet.tags).find({key: 'Name'}).get('value').value() || subnetName;
