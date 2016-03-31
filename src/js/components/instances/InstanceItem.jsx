@@ -50,7 +50,7 @@ const InstanceItem = React.createClass({
     return `/instance/${type}/${this.getItem().get('id')}`;
   },
   getType(){
-    let type = 'ECC';
+    let type = 'EC2';
     switch (this.getItem().get('type')){
     case 'RDS':
     case 'rds':
