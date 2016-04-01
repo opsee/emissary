@@ -29,8 +29,8 @@ export default React.createClass({
         <Row>
           <Col xs={12}>
             <img className="step-image" src={img}/>
-            <Heading level={2}>First, Add the Bastion Instance</Heading>
-            <p>First, you add the Bastion Instance to your AWS environment. The Bastion is a <a target="_blank" href="https://aws.amazon.com/ec2/instance-types/">t2.micro instance</a> and is free to run. To add it to your AWS environment, you&rsquo;ll choose a VPC and subnet (EC2 Classic is not yet supported). <a target="_blank" href="/docs/Bastion">Learn more about the Bastion Instance</a> in our docs.</p>
+            <Heading level={2}>First, Add our instance</Heading>
+            <p>First, you add our instance to your AWS environment. The instance is a <a target="_blank" href="https://aws.amazon.com/ec2/instance-types/">t2.micro</a> and is free-tier eligible. To add it to your AWS environment, you&rsquo;ll choose a VPC and subnet (EC2 Classic is not yet supported). <a target="_blank" href="/docs/Bastion">Learn more about our instance</a> in our docs.</p>
             <Padding t={2}>
               <Button to="/start/tutorial/2" color="success" block>Next <ArrowRight inline/></Button>
             </Padding>

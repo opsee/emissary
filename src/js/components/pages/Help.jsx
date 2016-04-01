@@ -23,7 +23,7 @@ export default React.createClass({
           <div><Link to="/start/region-select">Region Select</Link></div>
           <div><Link to="/start/credentials">Credentials</Link></div>
           <div><Link to="/start/vpc-select">VPC Scan + Select</Link></div>
-          <div><Link to="/start/install">Bastion Installation</Link></div>
+          <div><Link to="/start/install">Instance Installation</Link></div>
           <Padding t={2}>
             <Heading level={3}>Admin Pages</Heading>
             <div><Link to="/styleguide">Style Guide</Link></div>
@@ -46,8 +46,8 @@ export default React.createClass({
                 <li><Link to="/docs/checks">Checks</Link></li>
                 <li><Link to="/docs/notifications">Notifications</Link></li>
                 <li><Link to="/docs/permissions">AWS Security &amp; Permissions</Link></li>
-                <li><Link to="/docs/bastion">The Bastion Instance</Link></li>
-                <li><Link to="/docs/IAM">IAM Profile for Bastion Installation</Link></li>
+                <li><Link to="/docs/bastion">The Opsee EC2 Instance</Link></li>
+                <li><Link to="/docs/IAM">IAM Profile for Instance Installation</Link></li>
               </ul>
               </Padding>
 
