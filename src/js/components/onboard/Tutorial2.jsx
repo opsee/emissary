@@ -30,7 +30,7 @@ export default React.createClass({
           <Col xs={12}>
               <img className="step-image" src={img}/>
               <Heading level={2}>Opsee Discovers Your Infrastructure</Heading>
-              <p>The Bastion Instance then uses AWS APIs to discover your instances and groups. The bastion is always scanning, and detects changes to infrastructure automatically.</p>
+              <p>Our instance then uses AWS APIs to discover your instances and groups. The instance is always scanning, and detects changes to infrastructure automatically.</p>
               <Padding t={2}>
                 <Button to="/start/tutorial/3" color="success" block>Next <ArrowRight inline/></Button>
               </Padding>

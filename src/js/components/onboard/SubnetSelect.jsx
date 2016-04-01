@@ -100,7 +100,7 @@ const SubnetSelect = React.createClass({
       return (
         <div>
           <Padding b={1}>
-            <p>Choose a Subnet to install your Bastion in. The Bastion needs to communicate with both Opsee and any private subnets you want to check.  If you're not sure which subnet to choose, we've selected the one we think is the best fit.</p>
+            <p>Choose a Subnet to install your instance in. The instance needs to communicate with both Opsee and any private subnets you want to check.  If you're not sure which subnet to choose, we've selected the one we think is the best fit.</p>
           </Padding>
           <Grid>
             <Row>

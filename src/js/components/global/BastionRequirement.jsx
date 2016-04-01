@@ -71,19 +71,19 @@ const BastionRequirement = React.createClass({
     if (state === 'launching'){
       return (
         <div>
-          Your Opsee Bastion is currently installing. You can visit the <Link to="/start/install" style={{color: 'white', textDecoration: 'underline'}}>Install Page</Link> to view progress.
+          Your Opsee instance is currently installing. You can visit the <Link to="/start/install" style={{color: 'white', textDecoration: 'underline'}}>Install Page</Link> to view progress.
         </div>
       );
     } else if (state === 'active'){
       return (
         <div>
-          Your Opsee Bastion is disconnected or has been removed. If you need to install another, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+          Your Opsee instance is disconnected or has been removed. If you need to install another, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
         </div>
       );
     }
     return (
       <div>
-        Opsee requires a <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>Bastion Instance</Link>. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        Opsee requires <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>our instance</Link> to be installed. To install one, just<Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
       </div>
     );
   },
@@ -91,7 +91,7 @@ const BastionRequirement = React.createClass({
     if (this.state.disconnected && !this.getFirstMsg()){
       return (
         <Alert bsStyle="danger">
-          Opsee is having trouble talking to the Bastion.
+          Opsee is having trouble communicating with our instance.
         </Alert>
       );
     }

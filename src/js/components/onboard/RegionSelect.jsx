@@ -86,7 +86,7 @@ const RegionSelect = React.createClass({
     if (!_.find(this.props.redux.env.bastions, 'connected')){
       return (
         <form name="loginForm" onSubmit={this.handleSubmit}>
-         <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
+         <p>Choose the region where you want to launch the Opsee EC2 instance. The instance will only be able to run health checks within this region.</p>
           <BoundField bf={this.state.info.boundField('regions')}/>
           <Padding t={1}>
             <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
@@ -97,7 +97,7 @@ const RegionSelect = React.createClass({
     return (
       <Padding tb={1}>
         <Alert bsStyle="info">
-          It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
+          It looks like you already have an instance in your environment. At this time, Opsee only supports one instance per customer. If you need more, <a href="mailto:support@opsee.co">contact us</a>.
         </Alert>
       </Padding>
     );

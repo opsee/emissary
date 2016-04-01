@@ -86,7 +86,7 @@ const VPCSelect = React.createClass({
     if (this.props.redux.onboard.vpcsForSelection.length){
       return (
         <div>
-          <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install a Bastion in.</p>
+          <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>
           <BoundField bf={this.state.info.boundField('vpcs')}/>
           <Padding t={1}>
             <Button type="submit" color="success" block disabled={this.isDisabled()} chevron>Next</Button>

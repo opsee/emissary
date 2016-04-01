@@ -91,7 +91,7 @@ const Credentials = React.createClass({
             <Row>
               <Col xs={12}>
               <form onSubmit={this.handleSubmit}>
-                <p>We need your AWS credentials to install the Bastion Instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during Bastion Instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
+                <p>We need your AWS credentials to install the our instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
                   <BoundField bf={this.state.info.boundField('access_key')}/>
                 </Padding>
@@ -100,10 +100,10 @@ const Credentials = React.createClass({
                 </Padding>
 
                 <Padding b={2}>
-                <p className="text-secondary text-sm">Note: At this time, manual installation of the Bastion Instance through your AWS console is not possible.</p>
+                <p className="text-secondary text-sm">Note: At this time, manual installation of the instance through your AWS console is not possible.</p>
                 </Padding>
                 <StatusHandler status={this.getStatus()} timeout={1500}/>
-                <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Bastion Instance'} chevron>{this.getStatus() === 'pending' ? 'Submitting...' : 'Next'}</Button>
+                <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Opsee Instance'} chevron>{this.getStatus() === 'pending' ? 'Submitting...' : 'Next'}</Button>
               </form>
             </Col>
           </Row>

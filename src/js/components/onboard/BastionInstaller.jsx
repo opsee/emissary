@@ -77,7 +77,7 @@ const BastionInstaller = React.createClass({
     switch (item){
     case 'Connected':
       num = 8;
-      string = 'Bastion installed and connected.';
+      string = 'The Opsee instance is installed and connected.';
       break;
     case 'Reading':
       num = 1;
@@ -105,15 +105,15 @@ const BastionInstaller = React.createClass({
       break;
     case 'Complete':
       num = 7;
-      string = 'Bastion successfully installed. Waiting for connection to Opsee...';
+      string = 'The Opsee instance is successfully installed. Waiting for connection to Opsee...';
       break;
     case 'Deleting':
       num = 0;
-      string = 'Bastion install failed. Cleaning up.';
+      string = 'Instance install failed. Cleaning up.';
       break;
     case 'Rollback':
       num = -1;
-      string = 'Bastion install failed. Finished with cleanup.';
+      string = 'Instance install failed. Finished with cleanup.';
       break;
     default:
       break;
