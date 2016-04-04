@@ -38,10 +38,10 @@ const Profile = React.createClass({
     })
   },
   componentWillMount() {
-    if (!this.props.location.query.slack){
+    if (!this.props.location.query.slack && flag('integrations-slack')){
       this.props.integrationsActions.getSlackInfo();
     }
-    if (!this.props.location.query.pagerduty){
+    if (!this.props.location.query.pagerduty && flag('integrations-pagerduty')){
       this.props.integrationsActions.getPagerdutyInfo();
     }
   },
