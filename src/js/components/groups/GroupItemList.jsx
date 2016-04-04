@@ -135,7 +135,11 @@ const GroupItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getGroups(true).size})`;
     if (this.getGroups().size < this.getGroups(true).size){
-      numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+      if (!this.props.ids && !this.props.instanceIds){
+        numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+      } else {
+        numbers = `(${this.getGroups().size})`;
+      }
     }
     if (!this.getGroups().size){
       numbers = '';
