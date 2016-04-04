@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checks, Help, Cloud, Login} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {plain as seed} from 'seedling';
 
+import SearchBox from './SearchBox.jsx';
+import {Person, Checks, Help, Cloud, Login} from '../icons';
+import {Grid, Row, Col} from '../../modules/bootstrap';
 import style from './header.css';
 
 const Header = React.createClass({
