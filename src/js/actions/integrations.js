@@ -7,7 +7,9 @@ import {
   INTEGRATIONS_SLACK_ACCESS,
   INTEGRATIONS_SLACK_CHANNELS,
   INTEGRATIONS_SLACK_TEST,
-  INTEGRATIONS_EMAIL_TEST
+  INTEGRATIONS_EMAIL_TEST,
+  INTEGRATIONS_PAGERDUTY_INFO,
+  INTEGRATIONS_PAGERDUTY_ACCESS
 } from './constants';
 
 export function getSlackChannels() {
@@ -60,6 +62,44 @@ export function slackAccess(query) {
           getSlackInfo()(dispatch, state);
           storage.set('shouldGetSlackChannels', true);
         }, reject);
+      })
+    });
+  };
+}
+
+export function getPagerdutyInfo() {
+  return (dispatch, state) => {
+    dispatch({
+      type: INTEGRATIONS_PAGERDUTY_INFO,
+      payload: new Promise((resolve, reject) => {
+        resolve();
+        // return request
+        // .get(`${config.services.api}/services/slack`)
+        // .set('Authorization', state().user.get('auth'))
+        // .then((res) => {
+        //   resolve(res.body);
+        //   // getSlackChannels()(dispatch, state);
+        // }, reject);
+      })
+    });
+  };
+}
+
+export function pagerdutyAccess(query) {
+  return (dispatch, state) => {
+    dispatch({
+      type: INTEGRATIONS_PAGERDUTY_ACCESS,
+      payload: new Promise((resolve, reject) => {
+        return resolve();
+        // return request
+        // .post(`${config.services.api}/services/slack`)
+        // .set('Authorization', state().user.get('auth'))
+        // .send(query)
+        // .then((res) => {
+        //   resolve(res.body);
+        //   getSlackInfo()(dispatch, state);
+        //   storage.set('shouldGetSlackChannels', true);
+        // }, reject);
       })
     });
   };

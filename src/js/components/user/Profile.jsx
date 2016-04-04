@@ -15,7 +15,7 @@ import {
   app as appActions,
   integrations as integrationsActions
 } from '../../actions';
-import {SlackInfo} from '../integrations';
+import {SlackInfo, PagerdutyInfo} from '../integrations';
 
 const Profile = React.createClass({
   propTypes: {
@@ -33,12 +33,16 @@ const Profile = React.createClass({
     }),
     integrationsActions: PropTypes.shape({
       getSlackInfo: PropTypes.func,
-      getSlackChannels: PropTypes.func
+      getSlackChannels: PropTypes.func,
+      getPagerdutyInfo: PropTypes.func
     })
   },
   componentWillMount() {
     if (!this.props.location.query.slack){
       this.props.integrationsActions.getSlackInfo();
+    }
+    if (!this.props.location.query.pagerduty){
+      this.props.integrationsActions.getPagerdutyInfo();
     }
   },
   handleLogout(){
@@ -50,6 +54,17 @@ const Profile = React.createClass({
         <tr>
           <td><strong>Slack</strong></td>
           <td><SlackInfo/></td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderPagerdutyArea(){
+    if (flag('integrations-pagerduty')){
+      return (
+        <tr>
+          <td><strong>Pagerduty</strong></td>
+          <td><PagerdutyInfo/></td>
         </tr>
       );
     }
@@ -79,6 +94,7 @@ const Profile = React.createClass({
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
                   {this.renderSlackArea()}
+                  {this.renderPagerdutyArea()}
                 </Table>
               </Padding>
               <Padding t={3}>
