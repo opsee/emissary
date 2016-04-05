@@ -137,7 +137,7 @@ const Install = React.createClass({
     if (this.getBastionErrors().length){
       return (
         <Alert bsStyle="danger">
-          We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+          We are aware of your failed instance install and we will contact you via email as soon as possible. Thank you!
         </Alert>
       );
     }
@@ -147,7 +147,7 @@ const Install = React.createClass({
     if (this.isBastionLaunching() && !this.isComplete()){
       return (
         <Padding b={1}>
-          <p>We are now installing the bastion in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
+          <p>We are now installing our instance in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
         </Padding>
       );
     } else if (this.isComplete()){
@@ -156,7 +156,7 @@ const Install = React.createClass({
       );
     } else if (this.isBastionConnecting()){
       return (
-        <p>Your Bastion is currently attempting to connect. Hang on...</p>
+        <p>Your instance is currently attempting to connect. Hang on...</p>
       );
     }
     return <p>Checking installation status...</p>;
@@ -176,7 +176,7 @@ const Install = React.createClass({
     if (this.getBastionConnectionStatus() === 'failed'){
       return (
         <Alert bsStyle="danger">
-          The bastion failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
+          Our instance failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
         </Alert>
       );
     } else if (!this.isInstallError()){
@@ -204,7 +204,7 @@ const Install = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Bastion Installation"/>
+        <Toolbar title="Instance Installation"/>
         <Grid>
           <Row>
             <Col xs={12}>

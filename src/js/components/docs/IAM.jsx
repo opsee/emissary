@@ -9,19 +9,19 @@ const IAM = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Docs: IAM Profile for Bastion Installation"/>
+        <Toolbar title="Docs: IAM Profile for Instance Installation"/>
         <Grid>
           <Row>
             <Col xs={12}>
               <div>
                 <Heading level={2}>Overview</Heading>
-                <p>The Opsee onboarding process requires <em>temporary access to your AWS resources</em>. This access will only be used to install and start the Opsee Bastion EC2 Instance.  The Bastion is responsible for discovering and monitoring your AWS services. To learn more about the Bastion Instance <Link to="/docs/bastion" >see the FAQ</Link>.</p>
+                <p>The Opsee onboarding process requires <em>temporary access to your AWS resources</em>. This access will only be used to install and start the Opsee EC2 Instance.  The instance is responsible for discovering and monitoring your AWS services. To learn more about our instance <Link to="/docs/bastion" >see the FAQ</Link>.</p>
 
                 <Heading level={2}>Setup via the creation of an IAM User</Heading>
                 <p>This section describes how to complete the onboarding process by creating an IAM User and attaching an Access Policy to that user.</p>
 
                 <Heading level={3}>Create an IAM User</Heading>
-                <p>IAM Users allow you to delegate access to AWS services to third parties.  Opsee will utilize the IAM User you provide during the installation of the bastion. IAM Users are created via the IAM section of the AWS console.</p>
+                <p>IAM Users allow you to delegate access to AWS services to third parties.  Opsee will utilize the IAM User you provide during the installation of the instance. IAM Users are created via the IAM section of the AWS console.</p>
                 <p>If you have trouble creating an IAM User for the onboarding process, refer to the <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html">AWS Guide on IAM User setup</a>.</p>
 
                 <Heading level={3}>Create and attach and Access Policy to the IAM User</Heading>
