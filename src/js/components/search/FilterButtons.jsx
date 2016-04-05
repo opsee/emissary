@@ -22,6 +22,9 @@ const SearchFilterButtons = React.createClass({
       })
     })
   },
+  shouldComponentUpdate(nextProps) {
+    return !_.isEqual(nextProps.redux.search.tokens, this.props.redux.search.tokens);
+  },
   isStateSelected(state){
     const {tokens} = this.props.redux.search;
     return _.filter(tokens, {tag: 'state', term: state}).length;

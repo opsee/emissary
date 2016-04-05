@@ -161,7 +161,11 @@ const InstanceItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getInstances(true).size})`;
     if (this.getInstances().size < this.getInstances(true).size){
-      numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+      if (!this.props.groupSecurity && !this.props.ids){
+        numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+      } else {
+        numbers = `(${this.getInstances().size})`;
+      }
     }
     if (!this.getInstances().size){
       numbers = '';

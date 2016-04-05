@@ -32,7 +32,7 @@ export default React.createClass({
             <Heading level={2}>Create Health Checks, but Don&rsquo;t Maintain Them</Heading>
             <p>In Opsee you can create health checks for security groups, ELBs, and soon other entities like EC2 Tags, Regions, or Availability Zones. Opsee applies these checks to the right instances for you, and knows when new instances come online. To <a target="_blank" href="/docs/checks">learn more about check types and targets</a>, check out our documentation.</p>
             <Padding t={2}>
-              <Button to="/start/permissions" color="success" block>Start Installation <ArrowRight inline/></Button>
+              <Button to="/start/region-select" color="success" block>Start Installation <ArrowRight inline/></Button>
             </Padding>
             <StepCounter active={3} steps={3}/>
           </Col>

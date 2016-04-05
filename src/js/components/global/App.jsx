@@ -13,8 +13,10 @@ if (process.env.NODE_ENV !== 'production'){
     (function(e){e.setAttribute("src",`http://${window.location.hostname}:${config.remoteDebugPort}/target/target-script-min.js#anonymous`);document.getElementsByTagName("body")[0].appendChild(e);})(document.createElement("script"));void(0);
     /*eslint-enable*/
   }
-  // window.Perf = require('react-addons-perf');
-  // window.Perf.start();
+  if (process.env.NODE_ENV === 'debug'){
+    window.Perf = require('react-addons-perf');
+    window.Perf.start();
+  }
 }
 
 const App = React.createClass({

@@ -174,7 +174,7 @@ const CheckResponsePaginate = React.createClass({
       );
     } else if (this.getStatus() && typeof this.getStatus() !== 'string'){
       return (
-        <Alert bsStyle="danger">There was an error sending your request.</Alert>
+        <Alert bsStyle="danger" className="flex-1">There was an error sending your request.</Alert>
       );
     } else if (this.props.responses){
       return null;
@@ -205,7 +205,7 @@ const CheckResponsePaginate = React.createClass({
     if (res.error){
       return (
         <div className={style.checkResponseWaiting}>
-          <Alert bsStyle="danger">{res.error}</Alert>
+          <Alert bsStyle="danger" className="flex-1">{res.error}</Alert>
         </div>
       );
     }
@@ -232,7 +232,7 @@ const CheckResponsePaginate = React.createClass({
   renderError(){
     return (
       <div className={style.checkResponseWaiting}>
-        <Alert bsStyle="danger">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
+        <Alert bsStyle="danger" className="flex-1">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
       </div>
     );
   },
