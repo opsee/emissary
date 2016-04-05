@@ -33,7 +33,7 @@ const NotificationItemList = React.createClass({
   },
   getSlackChannelFromId(id){
     const channels = this.props.redux.integrations.slackChannels.toJS();
-    return channels.find(c => c.id === id) || {};
+    return channels.find(c => c.id === id);
   },
   renderItem(n, i){
     if (n.type === 'email'){
@@ -44,11 +44,13 @@ const NotificationItemList = React.createClass({
       );
     } else if (n.type === 'slack_bot'){
       const channel = this.getSlackChannelFromId(n.value);
-      return (
-        <Padding key={`notif-${i}`} b={1}>
-          <Slack inline/> {channel.name}
-        </Padding>
-      );
+      if (channel){
+        return (
+          <Padding key={`notif-${i}`} b={1}>
+            <Slack inline/> {channel.name}
+          </Padding>
+        );
+      }
     }
     return null;
   },
