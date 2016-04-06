@@ -97,6 +97,16 @@ const AssertionsSelection = React.createClass({
         })
       });
       break;
+    case 'metric':
+      obj = forms.Form.extend({
+        operand: forms.CharField({
+          widgetAttrs: {
+            noLabel: true,
+            placeholder: 'Metric Value'
+          }
+        })
+      });
+      break;
     default:
       obj = forms.Form.extend({
         operand: forms.CharField({
@@ -257,6 +267,19 @@ const AssertionsSelection = React.createClass({
     return {
       borderLeft: `.8rem solid ${seed.color[border]}`
     };
+  },
+  getMetric(name){
+    const response = this.getResponseFormatted();
+    const metrics = _.get(response, 'metrics');
+    if (!metrics || !Array.isArray(metrics)){
+      return null;
+    }
+    const val = _.chain(metrics).find({name}).get('value').value();
+    //need to use only 2 decimals to conform to slate
+    if (typeof val === 'number'){
+      return parseFloat(val.toFixed(2));
+    }
+    return null;
   },
   runSetAssertionsState(iteratee){
     const assertions = this.state.assertions.map(iteratee);
@@ -461,6 +484,54 @@ const AssertionsSelection = React.createClass({
       </div>
     );
   },
+  renderMetric(assertionIndex){
+    const assertion = this.state.assertions[assertionIndex];
+    const selectedResult = this.getMetric(assertion.value);
+    const headers = _.get(this.getResponseFormatted(), 'headers') || {};
+    const metrics = [
+      {
+        id: 'request_latency_ms',
+        name: 'Round Trip Latency',
+        title: 'Round Trip Latency (ms)'
+      }
+    ]
+    let buttons = null;
+    if (!assertion.relationship && assertion.value){
+      buttons = this.renderRelationshipButtons(assertionIndex);
+    } else if (!assertion.value){
+      buttons = (
+        <Padding t={1}>
+          {metrics.map(metric => {
+            return (
+              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: metric.id})} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-metric-key-${metric.id}`}>{metric.name}</Button>
+            );
+          })}
+        </Padding>
+      );
+    }
+    const helper = assertion.value ? (
+      <div>
+        <div style={{width: '100%'}}>
+          {selectedResult}
+        </div>
+        <div className="display-flex">
+          {this.renderChosenRelationship(assertionIndex)}
+          {this.renderOperand(assertionIndex)}
+        </div>
+      </div>
+    ) : null;
+    let title = _.chain(metrics).find({id: assertion.value}).get('title').value() || '';
+    title = title ? ` - ${title}` : '';
+    return (
+      <div>
+        {this.renderTitle(assertionIndex, `Metric${title}`)}
+        <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
+          {helper}
+          {buttons}
+        </Padding>
+      </div>
+    );
+  },
   renderJsonInput(assertion){
     const jsonBody = this.getJsonBody();
     if (jsonBody){
@@ -536,7 +607,7 @@ const AssertionsSelection = React.createClass({
         <Padding t={1}>
           <Heading level={3}>Add an Assertion</Heading>
         </Padding>
-        {['code', 'header', 'body'].map(type => {
+        {['code', 'header', 'body', 'metric'].map(type => {
           let schemaType = type;
           if (this.getJsonBody() && type === 'body'){
             schemaType = 'json';
