@@ -487,14 +487,13 @@ const AssertionsSelection = React.createClass({
   renderMetric(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
     const selectedResult = this.getMetric(assertion.value);
-    const headers = _.get(this.getResponseFormatted(), 'headers') || {};
     const metrics = [
       {
         id: 'request_latency_ms',
         name: 'Round Trip Latency',
         title: 'Round Trip Latency (ms)'
       }
-    ]
+    ];
     let buttons = null;
     if (!assertion.relationship && assertion.value){
       buttons = this.renderRelationshipButtons(assertionIndex);
