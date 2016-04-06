@@ -20,24 +20,27 @@ const SlackInfo = React.createClass({
     user: PropTypes.object,
     query: PropTypes.object,
     actions: PropTypes.shape({
-      slackAccess: PropTypes.func
-    }),
+      slackAccess: PropTypes.func,
+      getSlackInfo: PropTypes.func
+    }).isRequired,
+    connect: PropTypes.bool,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         integrationsSlackAccess: PropTypes.object
       })
-    })
+    }).isRequired
   },
   componentWillMount(){
     const {code} = this.props.query;
     if (code){
-      this.props.actions.slackAccess({
+      return this.props.actions.slackAccess({
         code,
         /*eslint-disable camelcase*/
         redirect_uri
         /*eslint-enable camelcase*/
       });
     }
+    return this.props.actions.getSlackInfo();
   },
   render() {
     const {asyncActions} = this.props.redux;
@@ -58,9 +61,12 @@ const SlackInfo = React.createClass({
         <span>Team <Color c="success">{team_name}</Color>&nbsp;connected. <a href={`https://${team_name}.slack.com/apps/manage/A04MVPTFN-opsee`} target="_blank">Edit or remove integration</a></span>
       );
     }
-    return (
-      <SlackConnect redirect={redirect_uri}/>
-    );
+    if (this.props.connect){
+      return (
+        <SlackConnect redirect={redirect_uri}/>
+      );
+    }
+    return null;
   }
   /*eslint-enable camelcase*/
 });

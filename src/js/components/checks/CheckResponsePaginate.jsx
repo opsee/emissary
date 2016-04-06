@@ -180,7 +180,9 @@ const CheckResponsePaginate = React.createClass({
       return null;
     }
     return (
-      <div className={style.checkResponseWaiting}>Your response will appear here</div>
+      <div className={style.checkResponseWaiting}>
+        <div>Your response will appear here</div>
+      </div>
     );
   },
   renderHeaders(res){
@@ -223,9 +225,7 @@ const CheckResponsePaginate = React.createClass({
     return (
       <div>
         {this.renderTitle()}
-        <div className={this.getResponseClass()}>
-          {this.renderWaitingResponse()}
-        </div>
+        {this.renderWaitingResponse()}
       </div>
     );
   },

@@ -39,6 +39,7 @@
   align-items: center;
   max-height:none;
   height:auto;
+  min-height:13rem;
 }
 .checkResponseWaiting:after{
   content:none;

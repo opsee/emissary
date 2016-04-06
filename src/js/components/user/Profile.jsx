@@ -12,8 +12,7 @@ import {Heading} from '../type';
 import {flag} from '../../modules';
 import {
   user as actions,
-  app as appActions,
-  integrations as integrationsActions
+  app as appActions
 } from '../../actions';
 import {SlackInfo} from '../integrations';
 
@@ -30,16 +29,7 @@ const Profile = React.createClass({
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
-    }),
-    integrationsActions: PropTypes.shape({
-      getSlackInfo: PropTypes.func,
-      getSlackChannels: PropTypes.func
     })
-  },
-  componentWillMount() {
-    if (!this.props.location.query.slack){
-      this.props.integrationsActions.getSlackInfo();
-    }
   },
   handleLogout(){
     this.props.actions.logout();
@@ -49,7 +39,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td><SlackInfo/></td>
+          <td><SlackInfo connect/></td>
         </tr>
       );
     }
@@ -96,8 +86,7 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch),
-  integrationsActions: bindActionCreators(integrationsActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);
