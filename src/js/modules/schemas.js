@@ -57,7 +57,7 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
   }),
   type: 'RDS',
   groups: List(),
-  LaunchTime: null,
+  InstanceCreateTime: null,
   Engine: null,
   EngineVersion: null,
   PubliclyAccessible: false,

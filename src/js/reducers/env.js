@@ -7,6 +7,7 @@ import {handleActions} from 'redux-actions';
 import {InstanceEcc, InstanceRds, GroupSecurity, GroupElb} from '../modules/schemas';
 import {
   ENV_GET_BASTIONS,
+  ENV_GET_ALL,
   GET_GROUP_SECURITY,
   GET_GROUPS_SECURITY,
   GET_GROUP_ELB,
@@ -117,8 +118,12 @@ const statics = {
     }).value();
     return newData && newData.length ? fromJS(newData) : List();
   },
-  getInstanceRdsSuccess(state, data){
+  getInstanceRdsSuccess(state, instances){
     const arr = state.instances.rds;
+    let data = instances;
+    if (Array.isArray(instances)){
+      data = instances[0];
+    }
     const single = statics.instanceRdsFromJS(data);
     const index = arr.findIndex(item => {
       return item.get('id') === single.get('id');
@@ -137,32 +142,33 @@ const statics = {
     return newData && newData.length ? fromJS(newData) : List();
   },
   getCreatedTime(time){
-    let launchTime;
-    const parsed = Date.parse(time);
-    if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
-      launchTime = parsed;
+    if (time){
+      let launchTime;
+      const parsed = Date.parse(time);
+      if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
+        launchTime = parsed;
+      }
+      return launchTime;
     }
-    return launchTime;
+    return null;
   },
   instanceRdsFromJS(raw){
-    let data = raw.instance;
-    let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
-    if (!newData.results){
-      newData.results = raw.results || data.results;
+    let data = _.cloneDeep(raw);
+    data.id = data.name = data.DBInstanceIdentifier;
+    if (data.DBName !== data.id){
+      data.name = `${data.DBName} - ${data.id}`;
     }
-    newData.id = newData.name = newData.DBInstanceIdentifier;
-    if (newData.DBName !== newData.id){
-      newData.name = `${newData.DBName} - ${newData.id}`;
+    data.InstanceCreateTime = new Date(data.InstanceCreateTime);
+    data.type = 'RDS';
+    if (data.VpcSecurityGroups){
+     data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
-    newData.LaunchTime = statics.getCreatedTime(newData.InstanceCreateTime);
-    newData.type = 'RDS';
-    newData.VpcSecurityGroups = new List(newData.VpcSecurityGroups.map(g => fromJS(g)));
-    _.assign(newData, result.getFormattedData(newData));
-    if (newData.checks && newData.checks.size && !newData.results.size){
-      newData.state = 'initializing';
+    _.assign(data, result.getFormattedData(data));
+    if (data.checks && data.checks.size && !data.results.size){
+      data.state = 'initializing';
     }
-    newData.meta = fromJS(newData.meta);
-    return new InstanceRds(newData);
+    data.meta = fromJS(data.meta);
+    return new InstanceRds(data);
   },
   instanceEccFromJS(raw){
     let data = raw.instance;
@@ -226,6 +232,15 @@ const initial = {
 };
 
 export default handleActions({
+  [ENV_GET_ALL]: {
+    next(state, action){
+      const security = statics.getGroupSecuritySuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
+      const groups = _.assign({}, state.groups, {security});
+      return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
   [GET_GROUP_SECURITY]: {
     next(state, action){
       const security = statics.getGroupSecuritySuccess(state, action.payload.data);

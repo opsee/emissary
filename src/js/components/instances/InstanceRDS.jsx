@@ -95,7 +95,8 @@ const InstanceRds = React.createClass({
     return null;
   },
   renderInner(){
-    if (this.getInstance().get('name')){
+    const instance = this.getInstance().toJS();
+    if (instance.name && instance.DBInstanceClass){
       return (
         <div>
           {this.renderCreateCheckButton()}
@@ -105,24 +106,24 @@ const InstanceRds = React.createClass({
               <tr>
                 <td><strong>Launched</strong></td>
                 <td>
-                  <TimeAgo date={this.getInstance().get('LaunchTime')}/>
+                  <TimeAgo date={instance.InstanceCreateTime}/>
                 </td>
               </tr>
               <tr>
                 <td><strong>Public</strong></td>
-                <td>{this.getInstance().get('PubliclyAccessible') ? 'Yes' : 'No'}</td>
+                <td>{instance.PubliclyAccessible ? 'Yes' : 'No'}</td>
               </tr>
               <tr>
                 <td><strong>Engine</strong></td>
-                <td>{this.getInstance().get('Engine')} {this.getInstance().get('EngineVersion')}</td>
+                <td>{instance.Engine} {instance.EngineVersion}</td>
               </tr>
               <tr>
                 <td><strong>Instance Type</strong></td>
-                <td>{this.getInstance().get('DBInstanceClass')}</td>
+                <td>{instance.DBInstanceClass}</td>
               </tr>
               <tr>
                 <td><strong>Availability Zone</strong></td>
-                <td>{this.getInstance().get('AvailabilityZone')}</td>
+                <td>{instance.AvailabilityZone}</td>
               </tr>
               {this.renderLastChecked()}
             </Table>
@@ -132,7 +133,7 @@ const InstanceRds = React.createClass({
             <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>
           </Padding>
           <Padding b={2}>
-            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
+            <GroupItemList type="elb" instanceIds={[instance.id]} title="ELBs" noFallback/>
           </Padding>
         </div>
       );
