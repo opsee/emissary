@@ -3,11 +3,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Row, Col} from '../../modules/bootstrap';
-
 import {Button} from '../forms';
 import {Circle} from '../icons';
-import {Padding} from '../layout';
+import {Col, Padding, Row} from '../layout';
 import {search as actions} from '../../actions';
 
 const SearchFilterButtons = React.createClass({

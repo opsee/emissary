@@ -4,7 +4,7 @@ import StatusHandler from './StatusHandler';
 import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Alert} from '../../modules/bootstrap';
+import {Alert} from '../layout';
 import config from '../../modules/config';
 
 const BastionRequirement = React.createClass({
@@ -83,20 +83,20 @@ const BastionRequirement = React.createClass({
     }
     return (
       <div>
-        Opsee requires <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>our instance</Link> to be installed. To install one, just<Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        Opsee requires <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>our instance</Link> to be installed. To install one, just <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
       </div>
     );
   },
   renderInner(){
     if (this.state.disconnected && !this.getFirstMsg()){
       return (
-        <Alert bsStyle="danger">
+        <Alert color="danger">
           Opsee is having trouble communicating with our instance.
         </Alert>
       );
     }
     return (
-      <Alert bsStyle="danger">
+      <Alert color="danger">
         {this.renderReason()}
       </Alert>
     );

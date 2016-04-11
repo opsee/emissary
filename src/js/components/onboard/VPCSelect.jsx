@@ -5,9 +5,8 @@ import forms from 'newforms';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
 
 const InfoForm = forms.Form.extend({

@@ -4,11 +4,10 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Settings, NewWindow} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import cx from 'classnames';
 import RadialGraph from './RadialGraph';
 import {app as actions, analytics as analyticsActions} from '../../actions';

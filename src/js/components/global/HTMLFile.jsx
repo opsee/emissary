@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import request from '../../modules/request';
-import {Alert} from '../../modules/bootstrap';
+import {Alert} from '../layout';
 
 export default React.createClass({
   propTypes: {

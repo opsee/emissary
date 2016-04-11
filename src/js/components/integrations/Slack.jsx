@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Col, Grid, Row} from '../layout';
 import {integrations as actions} from '../../actions';
 
 const Slack = React.createClass({
@@ -30,7 +30,7 @@ const Slack = React.createClass({
       );
     }
     return (
-      <Alert bsStyle="danger">
+      <Alert color="danger">
         Whoops, something must have gone wrong.
       </Alert>
     );

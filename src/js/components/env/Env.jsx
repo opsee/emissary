@@ -1,12 +1,13 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {BastionRequirement, Toolbar} from '../global';
-import EnvList from './EnvList.jsx';
 import {State} from 'react-router';
-import {env as actions} from '../../actions';
 import _ from 'lodash';
+
+import {BastionRequirement, Toolbar} from '../global';
+import {Col, Grid, Row} from '../layout';
+import EnvList from './EnvList.jsx';
+import {env as actions} from '../../actions';
 
 const Env = React.createClass({
   mixins: [State],

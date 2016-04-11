@@ -6,9 +6,8 @@ import forms from 'newforms';
 
 import {Toolbar} from '../global';
 import {BoundField} from '../forms';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
 import regions from '../../modules/regions';
 
@@ -96,7 +95,7 @@ const RegionSelect = React.createClass({
     }
     return (
       <Padding tb={1}>
-        <Alert bsStyle="info">
+        <Alert color="info">
           It looks like you already have an instance in your environment. At this time, Opsee only supports one instance per customer. If you need more, <a href="mailto:support@opsee.co">contact us</a>.
         </Alert>
       </Padding>

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {BoundField} from '../forms';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import {Search} from '../icons';
 import {search as actions} from '../../actions';
 import style from './bar.css';
