@@ -63,6 +63,8 @@ import NotFound from 'react-proxy?name=notfound!exports?exports.default!../pages
 
 import {auth} from '../global/Authenticator';
 
+import GraphExample from '../graph/Example';
+
 const routes = (
   <Route component={Opsee}>
     <Route path="styleguide" component={auth(Styleguide, true)}/>
@@ -139,6 +141,9 @@ const routes = (
     <Route path="/integrations/slack" component={Slack}/>
 
     <Route path="/tos" component={TOS}/>
+
+    <Route path="/graph" component={GraphExample} />
+
     <Route path="*" component={NotFound}/>
   </Route>
 );
