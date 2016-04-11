@@ -5,7 +5,7 @@
 }
 
 .success {
-  background-color: #6fa03b;
+  background-color: var(--colorSuccess);
 }
 
 .primary {
@@ -17,11 +17,11 @@
 }
 
 .warning {
-  background-color: #ff9d0c;
+  background-color: var(--colorWarning);
 }
 
 .danger {
-  background-color: #ea4210;
+  background-color: var(--colorDanger);
 }
 
 .default {
