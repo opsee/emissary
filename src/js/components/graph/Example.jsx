@@ -8,6 +8,10 @@ import {env as actions} from '../../actions';
 
 const GraphExample = React.createClass({
 
+  componentDidMount() {
+    this.props.actions.getMetricRDS('mysql', 'CPUUtilization');
+  },
+
   render() {
     return (
       <div>

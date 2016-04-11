@@ -12,6 +12,7 @@ import {
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
+  GET_METRIC_RDS,
   ENV_GET_BASTIONS,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -241,6 +242,56 @@ export function getInstanceRds(id){
             search: state().search
           });
         }, reject);
+      })
+    });
+  };
+}
+
+/**
+ * @param {string} id - the ID of the RDS instance (e.g., 'my-rds-instance')
+ * @param {string} metric - the name of the metric (e.g., 'CPUUtilization')
+ */
+export function getMetricRDS(id, metric) {
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_RDS,
+      payload: new Promise((resolve, reject) => {
+        return request
+          .post(`${config.services.compost}`)
+          .set('Authorization', state().user.get('auth'))
+          .send({query: `
+            {
+              region(id: "us-west-1") {
+                vpc(id: "vpc-79b1491c") {
+                  instances(type: "rds", id: "${id}"){
+                    ... on rdsDBInstance {
+                      DBName
+                      metrics{
+                        ${metric} {
+                          metrics{
+                            name
+                            value
+                            unit
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          `})
+          .then(res => {
+            const errors = _.get(res, 'body.errors');
+            if (Array.isArray(errors) && errors.length){
+              return reject(errors[0]);
+            }
+
+            return resolve({
+              data: _.get(res, 'body.data.region.vpc.instances'),
+              search: state().search
+            });
+          })
       })
     });
   };
