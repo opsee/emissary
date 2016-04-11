@@ -26,7 +26,7 @@ const GraphExample = React.createClass({
 
   getDataPoints() {
     const metrics = this.getMetrics();
-    return _.get(metrics.metrics, this.state.metric).metrics;
+    return metrics ? _.get(metrics.metrics, this.state.metric).metrics : [];
   },
 
   render() {
@@ -39,7 +39,7 @@ const GraphExample = React.createClass({
               <h2>{this.state.rdsID}</h2>
 
               <div>
-                <MetricGraph />
+                <MetricGraph data={this.getDataPoints()} />
               </div>
             </Col>
           </Row>
