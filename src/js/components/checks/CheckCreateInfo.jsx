@@ -4,13 +4,12 @@ import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BastionRequirement, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
 import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
@@ -147,9 +146,9 @@ const CheckCreateInfo = React.createClass({
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckInfoHelp">
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails.</p>
-            <p><strong>Opsee automatically runs your check every 30 seconds</strong>.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            Your check is almost done! All you have to do is give it a name and tell us where to send notifications if the check fails.<br/>
+            <strong>Opsee automatically runs your check every 30 seconds</strong>.
           </Alert>
         </UserDataRequirement>
       );

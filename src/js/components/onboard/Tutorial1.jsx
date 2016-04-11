@@ -1,10 +1,9 @@
 import React from 'react';
 import {ArrowRight} from '../icons';
 import {StepCounter} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import img from '../../../img/tut-bastion';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 
 export default React.createClass({

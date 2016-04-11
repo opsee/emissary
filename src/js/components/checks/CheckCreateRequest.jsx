@@ -6,7 +6,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {BoundField, Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
 import {Close, Add} from '../icons';
@@ -15,7 +14,7 @@ import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import CheckDisabledReason from './CheckDisabledReason.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {validate} from '../../modules';
 import {
@@ -367,8 +366,8 @@ const CheckCreateRequest = React.createClass({
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.
           </Alert>
         </UserDataRequirement>
       );

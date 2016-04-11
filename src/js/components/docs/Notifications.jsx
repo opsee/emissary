@@ -1,9 +1,8 @@
 import React from 'react';
 
 import {Toolbar, Highlight} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {SlackConnect, SlackInfo} from '../integrations';
 
 const Notifications = React.createClass({

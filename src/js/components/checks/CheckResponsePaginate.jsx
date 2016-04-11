@@ -5,8 +5,7 @@ import _ from 'lodash';
 import {plain as seed} from 'seedling';
 import TimeAgo from 'react-timeago';
 
-import {Alert} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
@@ -174,7 +173,7 @@ const CheckResponsePaginate = React.createClass({
       );
     } else if (this.getStatus() && typeof this.getStatus() !== 'string'){
       return (
-        <Alert bsStyle="danger" className="flex-1">There was an error sending your request.</Alert>
+        <Alert color="danger" className="flex-1">There was an error sending your request.</Alert>
       );
     } else if (this.props.responses){
       return null;
@@ -207,7 +206,7 @@ const CheckResponsePaginate = React.createClass({
     if (res.error){
       return (
         <div className={style.checkResponseWaiting}>
-          <Alert bsStyle="danger" className="flex-1">{res.error}</Alert>
+          <Alert color="danger" className="flex-1">{res.error}</Alert>
         </div>
       );
     }
@@ -232,7 +231,7 @@ const CheckResponsePaginate = React.createClass({
   renderError(){
     return (
       <div className={style.checkResponseWaiting}>
-        <Alert bsStyle="danger" className="flex-1">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
+        <Alert color="danger" className="flex-1">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
       </div>
     );
   },

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 
 import {BastionRequirement, Toolbar} from '../global';
 import {search as actions} from '../../actions';

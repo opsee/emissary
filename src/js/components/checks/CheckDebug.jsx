@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {Highlight} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 
 const CheckDebug = React.createClass({
   propTypes: {

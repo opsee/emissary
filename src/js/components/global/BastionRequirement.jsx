@@ -4,7 +4,7 @@ import StatusHandler from './StatusHandler';
 import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Alert} from '../../modules/bootstrap';
+import {Alert} from '../layout';
 import config from '../../modules/config';
 
 const BastionRequirement = React.createClass({
@@ -90,13 +90,13 @@ const BastionRequirement = React.createClass({
   renderInner(){
     if (this.state.disconnected && !this.getFirstMsg()){
       return (
-        <Alert bsStyle="danger">
+        <Alert color="danger">
           Opsee is having trouble communicating with our instance.
         </Alert>
       );
     }
     return (
-      <Alert bsStyle="danger">
+      <Alert color="danger">
         {this.renderReason()}
       </Alert>
     );

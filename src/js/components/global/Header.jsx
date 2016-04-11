@@ -4,7 +4,7 @@ import {plain as seed} from 'seedling';
 
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import style from './header.css';
 
 const Header = React.createClass({

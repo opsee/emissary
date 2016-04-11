@@ -4,8 +4,7 @@ import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 
 import {checks as actions} from '../../actions';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import Padding from '../layout/Padding';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import style from './screenshot.css';
 

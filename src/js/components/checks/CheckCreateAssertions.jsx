@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Col, Grid, Row} from '../layout';
 import _ from 'lodash';
 import {BastionRequirement, Toolbar} from '../global';
 import {History} from 'react-router';
@@ -94,8 +94,8 @@ const CheckCreateAssertions = React.createClass({
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
           </Alert>
         </UserDataRequirement>
       );

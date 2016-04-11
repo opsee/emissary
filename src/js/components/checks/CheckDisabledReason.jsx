@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Padding} from '../layout';
-import {Alert} from '../../modules/bootstrap';
+import {Alert, Padding} from '../layout';
 import {validate} from '../../modules';
 
 const CheckDisabledReason = React.createClass({
@@ -20,7 +19,7 @@ const CheckDisabledReason = React.createClass({
     if (errors.length){
       return (
         <Padding t={1}>
-          <Alert bsStyle="default">{_.head(errors).error}</Alert>
+          <Alert color="default">{_.head(errors).error}</Alert>
         </Padding>
       );
     }

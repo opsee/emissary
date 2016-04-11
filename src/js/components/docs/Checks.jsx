@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Highlight, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import {Heading} from '../type';
 
 const Checks = React.createClass({

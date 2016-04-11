@@ -1,0 +1,47 @@
+.alert {
+  padding: 1em;
+  border: 1px solid transparent;
+  color: white;
+}
+
+.success {
+  background-color: #6fa03b;
+}
+
+.primary {
+  background-color: var(--colorPrimary);
+}
+
+.info {
+  background-color: var(--colorInfo);
+}
+
+.warning {
+  background-color: #ff9d0c;
+}
+
+.danger {
+  background-color: #ea4210;
+}
+
+.default {
+  background-color: var(--colorGray8);
+}
+
+.alert a{
+  color: white;
+  text-decoration: underline;
+}
+
+
+.dismiss {
+  position: relative;
+  font-size: 24px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  top: -0.2rem;
+  right: -0.4rem;
+  line-height: 2rem;
+  align-self: flex-start;
+}

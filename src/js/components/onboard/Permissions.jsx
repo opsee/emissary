@@ -5,9 +5,8 @@ import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
 
 import {Highlight, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Expandable, Padding} from '../layout';
+import {Col, Expandable, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions} from '../../actions';
 

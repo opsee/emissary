@@ -3,9 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {user as actions} from '../../actions';
 
 const PasswordForgot = React.createClass({
