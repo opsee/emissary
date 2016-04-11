@@ -1,6 +1,6 @@
 import React from 'react';
 import {Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 
 export default React.createClass({
   render() {

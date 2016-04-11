@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import {Button} from '../forms';
 import {user as actions} from '../../actions';
 

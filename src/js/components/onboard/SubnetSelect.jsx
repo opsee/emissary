@@ -6,9 +6,8 @@ import {bindActionCreators} from 'redux';
 import {StatusHandler, Toolbar} from '../global';
 import img from '../../../img/tut-subnets.svg';
 import {BoundField} from '../forms';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
 

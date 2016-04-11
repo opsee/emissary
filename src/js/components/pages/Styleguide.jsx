@@ -4,8 +4,7 @@ import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Padding} from '../layout';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Loader, ProgressBar, Table, Toolbar} from '../global';
 
 import {Add, Key} from '../icons';
@@ -415,7 +414,7 @@ const Styleguide = React.createClass({
             <Padding b={2}>
               {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                 return (
-                  <Alert bsStyle={i} onDismiss={_.noop} key={`alert-${i}`}>A great alert goes here.</Alert>
+                  <Alert color={i} onDismiss={_.noop} key={`alert-${i}`}>A great alert goes here.</Alert>
                   );
               })}
             </Padding>

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-import {Alert} from '../../modules/bootstrap';
+import {Alert} from '../layout';
 
 export default React.createClass({
   propTypes: {
@@ -12,7 +12,7 @@ export default React.createClass({
     const targetLabel = target.name || target.id;
 
     return (
-      <Alert bsStyle="default" style={{wordBreak: 'break-all'}}>
+      <Alert color="default" style={{wordBreak: 'break-all'}}>
         <strong>{spec.verb}</strong> {spec.protocol}://{targetLabel}:{spec.port}{spec.path}
       </Alert>
     );

@@ -6,8 +6,7 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {BoundField, Button} from '../forms';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
 
 const InfoForm = forms.Form.extend({

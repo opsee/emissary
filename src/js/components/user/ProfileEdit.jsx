@@ -5,11 +5,10 @@ import _ from 'lodash';
 import forms from 'newforms';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button, BoundField} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Lock, Close} from '../icons';
-import {Padding} from '../layout';
 import {user as actions} from '../../actions';
 
 const PasswordForm = forms.Form.extend({

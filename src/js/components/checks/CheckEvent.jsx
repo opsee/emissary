@@ -6,8 +6,7 @@ import TimeAgo from 'react-timeago';
 import {Link} from 'react-router';
 
 import {checks as actions} from '../../actions';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import Padding from '../layout/Padding';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Toolbar} from '../global';
 import CheckResponsePaginate from './CheckResponsePaginate';

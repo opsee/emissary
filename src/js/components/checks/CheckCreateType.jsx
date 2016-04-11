@@ -4,12 +4,11 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {History} from 'react-router';
 
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {checks as actions, user as userActions} from '../../actions';
 import {flag} from '../../modules';
@@ -104,8 +103,8 @@ const CheckCreateType = React.createClass({
     return (
       <UserDataRequirement hideIf="hasDismissedCheckTypeHelp">
         <Padding b={2}>
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Let’s create a check! The first step is to choose your target type. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+          Let’s create a check! The first step is to choose your target type. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.
           </Alert>
         </Padding>
       </UserDataRequirement>

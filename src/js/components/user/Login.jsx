@@ -6,9 +6,8 @@ import {Link} from 'react-router';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Col, Row} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {user as actions} from '../../actions';
 
 const Login = React.createClass({

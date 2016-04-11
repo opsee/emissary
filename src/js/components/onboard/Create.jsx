@@ -6,9 +6,8 @@ import _ from 'lodash';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
 
 const OnboardCreate = React.createClass({

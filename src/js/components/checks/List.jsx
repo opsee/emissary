@@ -6,11 +6,10 @@ import {Link} from 'react-router';
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add} from '../icons';
 import {UserDataRequirement} from '../user';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Heading} from '../type';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions, user as userActions} from '../../actions';
 
 const CheckList = React.createClass({
@@ -51,8 +50,8 @@ const CheckList = React.createClass({
     return (
       <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
         <Padding b={2}>
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
           </Alert>
         </Padding>
       </UserDataRequirement>

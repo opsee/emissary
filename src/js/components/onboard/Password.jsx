@@ -4,9 +4,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {StatusHandler} from '../global';
 import {user as actions} from '../../actions';
 
