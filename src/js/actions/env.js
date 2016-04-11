@@ -272,6 +272,7 @@ export function getMetricRDS(id, metric) {
                             name
                             value
                             unit
+                            timestamp
                           }
                         }
                       }
