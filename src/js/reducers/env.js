@@ -16,6 +16,7 @@ import {
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
+  GET_METRIC_RDS,
   ENV_SET_FILTERED,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -228,7 +229,8 @@ const initial = {
     }
   },
   bastions: [],
-  awsActionHistory: []
+  awsActionHistory: [],
+  metrics: []
 };
 
 export default handleActions({
@@ -310,6 +312,13 @@ export default handleActions({
       const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
       const instances = _.assign({}, state.instances, {rds});
       return _.assign({}, state, {instances, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_METRIC_RDS]: {
+    next(state, action) {
+      const metrics = action.payload.data;
+      return _.assign({}, state, { metrics });
     },
     throw: yeller.reportAction
   },
