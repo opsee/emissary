@@ -232,7 +232,7 @@ const AssertionsSelection = React.createClass({
     const meta = this.getJsonPathMeta(assertion);
     if (meta && meta.data && assertion.value){
       if (meta.scalar){
-        return this.renderReturnedValue(assertion, meta.data);
+        return this.renderReturnedValue(meta.data);
       }
       return (
         <div>
@@ -243,7 +243,7 @@ const AssertionsSelection = React.createClass({
         </div>
       );
     } else if (!meta.data && assertion.value){
-      return this.renderReturnedValue(assertion, '>> No JSON data selected', 'danger');
+      return this.renderReturnedValue('>> No JSON data selected', 'danger');
     }
     return (
       <div>
@@ -404,7 +404,7 @@ const AssertionsSelection = React.createClass({
     }
     return null;
   },
-  renderReturnedValue(assertion, value){
+  renderReturnedValue(value){
     return (
       <div>
         <code style={{fontSize: '1.4rem'}}><Color c="primary">{value}</Color></code>
@@ -432,7 +432,7 @@ const AssertionsSelection = React.createClass({
       <div>
         {this.renderTitle(assertionIndex, 'Response Code')}
         <Padding l={2} t={1} b={1} r={1} style={this.getAssertionStyle(assertion)}>
-          {this.renderReturnedValue(assertion, this.getResponse().code)}
+          {this.renderReturnedValue(this.getResponse().code)}
           <div className="display-flex">
             {this.renderChosenRelationship(assertionIndex)}
             {this.renderOperand(assertionIndex)}
@@ -465,7 +465,7 @@ const AssertionsSelection = React.createClass({
     const helper = assertion.value ? (
       <div>
         <div style={{width: '100%'}}>
-          {this.renderReturnedValue(assertion, selectedHeaderResult)}
+          {this.renderReturnedValue(selectedHeaderResult)}
         </div>
         <div className="display-flex">
           {this.renderChosenRelationship(assertionIndex)}
@@ -486,12 +486,11 @@ const AssertionsSelection = React.createClass({
   },
   renderMetric(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
-    const selectedResult = this.getMetric(assertion.value);
     const metrics = [
       {
-        id: 'request_latency_ms',
-        name: 'Round Trip Latency',
-        title: 'Round Trip Latency (ms)'
+        id: 'request_latency',
+        name: 'Round-Trip Time',
+        title: 'Round-Trip Time (ms)'
       }
     ];
     let buttons = null;
@@ -511,7 +510,7 @@ const AssertionsSelection = React.createClass({
     const helper = assertion.value ? (
       <div>
         <div style={{width: '100%'}}>
-          {selectedResult}
+          {this.renderReturnedValue(this.getMetric(assertion.value))}
         </div>
         <div className="display-flex">
           {this.renderChosenRelationship(assertionIndex)}
