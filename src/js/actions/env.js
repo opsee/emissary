@@ -292,7 +292,7 @@ export function getMetricRDS(id, metric) {
               data: _.get(res, 'body.data.region.vpc.instances'),
               search: state().search
             });
-          })
+          });
       })
     });
   };

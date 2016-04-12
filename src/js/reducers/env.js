@@ -162,7 +162,7 @@ const statics = {
     data.InstanceCreateTime = new Date(data.InstanceCreateTime);
     data.type = 'RDS';
     if (data.VpcSecurityGroups){
-     data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
+      data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
     _.assign(data, result.getFormattedData(data));
     if (data.checks && data.checks.size && !data.results.size){
