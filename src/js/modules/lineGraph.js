@@ -67,6 +67,7 @@ export function render(data, opts) {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+  // Draw the x-axis
   svg.append('g')
     .attr('class', style.xAxis)
     .attr('transform', 'translate(0,' + height + ')')
@@ -78,6 +79,7 @@ export function render(data, opts) {
       .attr('transform', 'rotate(-65)')
       .attr('class', style.xTick);
 
+  // Draw the y-axis
   svg.append('g')
     .attr('class', style.yAxis)
     .call(yAxis)
@@ -88,10 +90,31 @@ export function render(data, opts) {
     .style('text-anchor', 'end')
     .text('Percent (%)');
 
+  svg.append("rect")
+    .attr('class', style.background)
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", width)
+    .attr("height", height);
+
   svg.append('path')
     .datum(data)
     .attr('class', style.line)
     .attr('d', line);
+
+  // Clipping paths to color the line above/below the threshold
+  svg.append("clipPath")
+      .attr("id", "clip-above")
+    .append("rect")
+      .attr("width", width)
+      .attr("height", y(opts.threshold));
+
+  svg.append("clipPath")
+      .attr("id", "clip-below")
+    .append("rect")
+      .attr("y", y(opts.threshold))
+      .attr("width", width)
+      .attr("height", height - y(opts.threshold));
 
   // Append the threshold line
   svg.append('line')
@@ -100,6 +123,14 @@ export function render(data, opts) {
     .attr('x2', width)
     .attr('y1', y(opts.threshold))
     .attr('y2', y(opts.threshold));
+
+  svg.selectAll(".line")
+      .data(["above", "below"])
+    .enter().append("path")
+      .attr("class", function(d) { return style.line + d; })
+      .attr("clip-path", function(d) { return "url(#clip-" + d + ")"; })
+      .datum(data)
+      .attr("d", line);
 
   return node.toReact();
 }

@@ -1,3 +1,6 @@
+.background {
+  fill: #222;
+}
 
 .axis {
   shape-rendering: crispEdges;
@@ -5,6 +8,7 @@
 
 .axis line {
   stroke: #000;
+  fill: none;
 }
 
 .xAxis {
@@ -21,8 +25,19 @@
 
 .line {
   fill: none;
+  stroke: green;
+  stroke-width: 1.5px;
+}
+
+.linebelow {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.lineabove {
+  fill: none;
   stroke: red;
-  stroke-width: 2px;
+  stroke-width: 1.5px;
 }
 
 .thresholdLine {

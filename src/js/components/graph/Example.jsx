@@ -58,7 +58,7 @@ const GraphExample = React.createClass({
               </div>
 
               <div>
-                <input type="number" step="any" value={this.state.threshold} onChange={this.onThresholdChange} />
+                <input type="number" step="0.1" value={this.state.threshold} onChange={this.onThresholdChange} />
               </div>
             </Col>
           </Row>
