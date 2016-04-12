@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { render } from '../../modules/lineGraph';
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
@@ -25,6 +26,12 @@ export default React.createClass({
     window.addEventListener('resize', this.fitToParentSize);
   },
 
+  getDefaultProps() {
+    return {
+      threshold: 1.0 // FIXME remove
+    };
+  },
+
   getInitialState() {
     return {
       width: 0,
@@ -33,7 +40,8 @@ export default React.createClass({
   },
 
   render() {
-    return render(this.props.data, this.state);
+    const opts = _.assign({}, this.state, this.props);
+    return render(this.props.data, opts);
   },
 
   fitToParentSize() {

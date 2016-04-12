@@ -22,7 +22,8 @@ const GraphExample = React.createClass({
   getInitialState() {
     return {
       rdsID: 'mysql',
-      metric: 'CPUUtilization'
+      metric: 'CPUUtilization',
+      threshold: 1.0
     };
   },
 
@@ -39,6 +40,10 @@ const GraphExample = React.createClass({
     return metrics ? _.get(metrics.metrics, this.state.metric).metrics : [];
   },
 
+  onThresholdChange(e) {
+    this.setState({ threshold: e.target.value });
+  },
+
   render() {
     return (
       <div>
@@ -49,7 +54,11 @@ const GraphExample = React.createClass({
               <h2>{this.state.rdsID}</h2>
 
               <div>
-                <MetricGraph data={this.getDataPoints()} />
+                <MetricGraph data={this.getDataPoints()} threshold={this.state.threshold} />
+              </div>
+
+              <div>
+                <input type="number" step="any" value={this.state.threshold} onChange={this.onThresholdChange} />
               </div>
             </Col>
           </Row>

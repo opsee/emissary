@@ -24,3 +24,8 @@
   stroke: red;
   stroke-width: 2px;
 }
+
+.thresholdLine {
+  stroke: black;
+  stroke-width: 1px;
+}
