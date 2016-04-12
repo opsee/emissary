@@ -11,13 +11,39 @@ export default React.createClass({
     })).isRequired
   },
 
+  componentDidMount() {
+    this.fitToParentSize();
+
+    window.addEventListener('resize', this.fitToParentSize);
+  },
+
+  componentWillReceiveProps () {
+    this.fitToParentSize();
+  },
+
+  componentWillUnmount() {
+    window.addEventListener('resize', this.fitToParentSize);
+  },
+
+  getInitialState() {
+    return {
+      width: 0,
+      height: 500
+    };
+  },
+
+  fitToParentSize() {
+    const elem = this.getDOMNode();
+    const width = elem.parentNode.offsetWidth;
+    this.setState({ width });
+  },
+
   render() {
     const node = ReactFauxDOM.createElement('svg');
 
-    // TODO responsiveness
     const margin = {top: 20, right: 20, bottom: 30, left: 50}
-    const width = 960 - margin.left - margin.right
-    const height = 500 - margin.top - margin.bottom
+    const width = this.state.width - margin.left - margin.right
+    const height = this.state.height - margin.top - margin.bottom
 
     const x = d3.time.scale()
       .range([0, width]);

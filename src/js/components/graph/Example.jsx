@@ -34,7 +34,7 @@ const GraphExample = React.createClass({
       <div>
         <Grid>
           <Row>
-            <Col>
+            <Col xs={12}>
               <h1>{this.state.metric}</h1>
               <h2>{this.state.rdsID}</h2>
 
