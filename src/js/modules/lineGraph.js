@@ -33,7 +33,7 @@ export function render(data, opts) {
 
   const margin = {top: 20, right: 20, bottom: 30, left: 50};
   const width = opts.width - margin.left - margin.right;
-  const height = opts.height - margin.top - margin.bottom;
+  const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
 
   // Set up the x/y scales
   const x = d3.time.scale()

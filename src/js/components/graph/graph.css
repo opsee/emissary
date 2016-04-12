@@ -1,9 +1,18 @@
-.xAxis {
 
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.axis line {
+  stroke: #000;
+}
+
+.xAxis {
+  composes: axis;
 }
 
 .yAxis {
-
+  composes: axis;
 }
 
 .line {

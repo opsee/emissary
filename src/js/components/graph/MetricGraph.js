@@ -27,7 +27,7 @@ export default React.createClass({
   getInitialState() {
     return {
       width: 0,
-      height: 500
+      aspectRatio: 0.5
     };
   },
 
