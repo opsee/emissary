@@ -5,14 +5,14 @@ import App from './components/global/App';
 import store from './modules/store';
 
 if (process.env.NODE_ENV === 'debug'){
-  const DevTools = require('./components/global/DevTools');
+  const DevTools = require('./components/global/DevTools').default;
   render(
   (
     <div>
       <Provider store={store}>
         <App/>
       </Provider>
-      <DevTools/>
+      <DevTools store={store}/>
     </div>
   ), document.getElementById('main'));
 } else {
