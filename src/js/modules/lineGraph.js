@@ -31,7 +31,7 @@ export function render(data, opts) {
     return 0; // a must be equal to b
   });
 
-  const margin = {top: 20, right: 20, bottom: 30, left: 50};
+  const margin = {top: 20, right: 20, bottom: 100, left: 50};
   const width = opts.width - margin.left - margin.right;
   const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
 
@@ -71,7 +71,13 @@ export function render(data, opts) {
   svg.append('g')
     .attr('class', style.xAxis)
     .attr('transform', 'translate(0,' + height + ')')
-    .call(xAxis);
+    .call(xAxis)
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", "rotate(-65)" )
+      .attr('class', style.xTick);
 
   svg.append('g')
     .attr('class', style.yAxis)

@@ -1,5 +1,6 @@
 import { render } from '../../modules/lineGraph';
 import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 
 export default React.createClass({
   propTypes: {
@@ -36,7 +37,7 @@ export default React.createClass({
   },
 
   fitToParentSize() {
-    const elem = this.getDOMNode();
+    const elem = ReactDOM.findDOMNode(this);
     const width = elem.parentNode.offsetWidth;
     this.setState({ width });
   }

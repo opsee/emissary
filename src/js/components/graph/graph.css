@@ -11,6 +11,10 @@
   composes: axis;
 }
 
+.xTick {
+  font-size: 10px;
+}
+
 .yAxis {
   composes: axis;
 }
