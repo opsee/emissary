@@ -8,6 +8,16 @@ import {env as actions} from '../../actions';
 import MetricGraph from './MetricGraph';
 
 const GraphExample = React.createClass({
+  propTypes: {
+    actions: PropTypes.shape({
+      getMetricRDS: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        metrics: PropTypes.array
+      })
+    })
+  },
 
   getInitialState() {
     return {
@@ -54,7 +64,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch),
+  actions: bindActionCreators(actions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphExample);
