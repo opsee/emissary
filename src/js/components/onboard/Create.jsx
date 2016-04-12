@@ -88,7 +88,7 @@ const OnboardCreate = React.createClass({
                   <Padding r={1} b={1}>
                     <input id="js-tos" name="tos" value={this.state.tos} type="checkbox" onChange={this.handleInputChange} required/>
                   </Padding>
-                  <label className="label" htmlFor="js-tos">I accept the <Link to="/beta-tos" target="_blank">Opsee Terms of Service</Link></label>
+                  <label className="label" htmlFor="js-tos">I accept the <Link to="/tos" target="_blank">Opsee Terms of Service</Link></label>
                 </div>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
