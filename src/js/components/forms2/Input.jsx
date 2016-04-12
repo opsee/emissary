@@ -48,19 +48,24 @@ const Input = React.createClass({
     }
     return null;
   },
-  render() {
+  renderChildren(){
     if (this.props.children){
       return (
-        <div className={style.wrapper}>
-          {this.renderLabel()}
-          <input {...this.getProps()}/>
-          <label htmlFor={this.state.id} className={style.iconLabel}>
-            {this.props.children}
-          </label>
-        </div>
+        <label htmlFor={this.state.id} className={style.iconLabel}>
+          {this.props.children}
+        </label>
       );
     }
-    return <input {...this.getProps()}/>;
+    return null;
+  },
+  render() {
+    return (
+      <div className={style.wrapper}>
+        {this.renderLabel()}
+        <input {...this.getProps()}/>
+        {this.renderChildren()}
+      </div>
+    );
   }
 });
 

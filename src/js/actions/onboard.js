@@ -84,7 +84,12 @@ export function vpcScan(data) {
       type: ONBOARD_SET_CREDENTIALS,
       payload: data
     });
-    const sendData = _.assign({}, data, {regions: [state().onboard.region]});
+    const sendData = _.chain(data)
+    .assign({
+      regions: [state().onboard.region]
+    })
+    .pick(['access_key', 'secret_key', 'regions'])
+    .value();
     dispatch({
       type: ONBOARD_VPC_SCAN,
       payload: new Promise((resolve, reject) => {

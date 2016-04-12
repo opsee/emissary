@@ -2,28 +2,13 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import forms from 'newforms';
 
 import {Toolbar} from '../global';
-import {BoundField} from '../forms';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
 import regions from '../../modules/regions';
-
-const regionChoices = regions.map(r => {
-  return [r.id, `${r.id} - ${r.name}`];
-});
-
-const InfoForm = forms.Form.extend({
-  regions: forms.ChoiceField({
-    choices: regionChoices,
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'RadioSelect'
-    }
-  })
-});
+import {RadioSelect} from '../forms2';
 
 const RegionSelect = React.createClass({
   propTypes: {
@@ -40,55 +25,32 @@ const RegionSelect = React.createClass({
     })
   },
   getInitialState() {
-    const self = this;
-    const obj = {
-      info: new InfoForm({
-        onChange(){
-          if (self.isMounted()){
-            self.forceUpdate();
-          }
-        },
-        labelSuffix: '',
-        data: {
-          regions: [this.props.redux.onboard.region]
-        },
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 100
-        }
-      })
+    return {
+      region: undefined
     };
-    setTimeout(() => {
-      obj.info.validate();
-    }, 10);
-    return obj;
   },
-  isDisabled(){
-    return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
-  },
-  runToggleAll(value){
-    if (value){
-      this.state.info.updateData({
-        regions: regions.map(r => {
-          return r.id;
-        })
+  getRegions(){
+    return regions.map(r => {
+      return _.assign(r, {
+        label: `${r.id} - ${r.name}`
       });
-    } else {
-      this.state.info.updateData({regions: []});
-    }
+    });
+  },
+  handleSelect(state){
+    this.setState(state);
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.setRegion(this.state.info.cleanedData.regions);
+    this.props.actions.setRegion(this.state.region);
   },
   renderInner(){
     if (!_.find(this.props.redux.env.bastions, 'connected')){
       return (
-        <form name="loginForm" onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
          <p>Choose the region where you want to launch the Opsee EC2 instance. The instance will only be able to run health checks within this region.</p>
-          <BoundField bf={this.state.info.boundField('regions')}/>
+         <RadioSelect onChange={this.handleSelect} data={this.state} options={this.getRegions()} path="region"/>
           <Padding t={1}>
-            <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
+            <Button color="success" block type="submit" disabled={!this.state.region} title={!this.state.region ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
           </Padding>
         </form>
       );
