@@ -142,7 +142,7 @@ const routes = (
 
     <Route path="/tos" component={TOS}/>
 
-    <Route path="/graph" component={GraphExample} />
+    <Route path="/graph" component={auth(GraphExample)} />
 
     <Route path="*" component={NotFound}/>
   </Route>
