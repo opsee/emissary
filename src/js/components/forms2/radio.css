@@ -1,5 +1,5 @@
 .wrapper {
-  height: 26px;
+  min-height: 26px;
   cursor: pointer;
   display:flex;
   align-items: center;

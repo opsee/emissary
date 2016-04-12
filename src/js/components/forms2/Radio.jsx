@@ -15,7 +15,7 @@ const Radio = React.createClass({
   },
   renderLabel(){
     if (this.props.label){
-      return <div className={cx(style.label, {[style.labelActive]: this.props.on})} onClick={this.handleClick}>{this.props.label}</div>;
+      return <div className={cx(style.label, {[style.labelActive]: this.props.on})} onClick={this.handleClick}  dangerouslySetInnerHTML={{__html: this.props.label}}/>;
     }
     return null;
   },

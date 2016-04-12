@@ -7,6 +7,7 @@ import {Toolbar} from '../global';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
+import config from '../../modules/config';
 import regions from '../../modules/regions';
 import {RadioSelect} from '../forms2';
 
@@ -26,7 +27,7 @@ const RegionSelect = React.createClass({
   },
   getInitialState() {
     return {
-      region: undefined
+      region: config.defaultBastionRegion
     };
   },
   getRegions(){

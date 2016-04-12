@@ -148,9 +148,6 @@ export function subnetSelect(payload){
     dispatch({
       type: ONBOARD_SET_INSTALL_DATA
     });
-    setTimeout(() => {
-      dispatch(pushState(null, '/start/install'));
-    }, 100);
   };
 }
 
