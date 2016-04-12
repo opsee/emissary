@@ -6,6 +6,8 @@ import {bindActionCreators} from 'redux';
 import {Grid, Row, Col} from '../../modules/bootstrap';
 import {env as actions} from '../../actions';
 import MetricGraph from './MetricGraph';
+import {Button} from '../forms';
+import rdsMetrics from '../../modules/rdsMetrics';
 
 const GraphExample = React.createClass({
   propTypes: {
@@ -37,11 +39,30 @@ const GraphExample = React.createClass({
 
   getDataPoints() {
     const metrics = this.getMetrics();
-    return metrics ? _.get(metrics.metrics, this.state.metric).metrics : [];
+    return _.get(metrics, ['metrics', this.state.metric, 'metrics'], []);
+  },
+
+  onMetricChange(metric) {
+    this.setState({ metric });
+    this.props.actions.getMetricRDS(this.state.rdsID, metric);
   },
 
   onThresholdChange(e) {
     this.setState({ threshold: e.target.value });
+  },
+
+  renderButtons() {
+    const self = this;
+    const buttons = [];
+
+    _.mapValues(rdsMetrics, (metric, name) => {
+      buttons.push(
+        <Button key={name} onClick={self.onMetricChange.bind(self, name)} flat>
+          {name}
+        </Button>
+      );
+    });
+    return buttons;
   },
 
   render() {
@@ -58,7 +79,11 @@ const GraphExample = React.createClass({
               </div>
 
               <div>
-                <input type="number" step="0.1" value={this.state.threshold} onChange={this.onThresholdChange} />
+                <input type="number" step="0.1" value={this.state.threshold} onChange={this.onThresholdChange} autoFocus />
+              </div>
+
+              <div>
+                {this.renderButtons()}
               </div>
             </Col>
           </Row>

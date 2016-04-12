@@ -32,7 +32,7 @@ export function render(data, opts) {
     return 0; // a must be equal to b
   });
 
-  const margin = {top: 20, right: 20, bottom: 100, left: 50};
+  const margin = {top: 20, right: 20, bottom: 100, left: 100};
   const width = opts.width - margin.left - margin.right;
   const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
 
@@ -84,18 +84,18 @@ export function render(data, opts) {
     .attr('class', style.yAxis)
     .call(yAxis)
     .append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('y', 6)
-    .attr('dy', '.71em')
-    .style('text-anchor', 'end')
-    .text('Percent (%)');
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 6)
+      .attr('dy', '.71em')
+      .style('text-anchor', 'end')
+      .text('Percent (%)');
 
-  svg.append("rect")
+  svg.append('rect')
     .attr('class', style.background)
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", width)
-    .attr("height", height);
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', '100%')
+    .attr('height', height);
 
   svg.append('path')
     .datum(data)
@@ -103,18 +103,18 @@ export function render(data, opts) {
     .attr('d', line);
 
   // Clipping paths to color the line above/below the threshold
-  svg.append("clipPath")
-      .attr("id", "clip-above")
-    .append("rect")
-      .attr("width", width)
-      .attr("height", y(opts.threshold));
+  svg.append('clipPath')
+      .attr('id', 'clip-above')
+    .append('rect')
+      .attr('width', width)
+      .attr('height', y(opts.threshold));
 
-  svg.append("clipPath")
-      .attr("id", "clip-below")
-    .append("rect")
-      .attr("y", y(opts.threshold))
-      .attr("width", width)
-      .attr("height", height - y(opts.threshold));
+  svg.append('clipPath')
+      .attr('id', 'clip-below')
+    .append('rect')
+      .attr('y', y(opts.threshold))
+      .attr('width', width)
+      .attr('height', height - y(opts.threshold));
 
   // Append the threshold line
   svg.append('line')
@@ -124,13 +124,13 @@ export function render(data, opts) {
     .attr('y1', y(opts.threshold))
     .attr('y2', y(opts.threshold));
 
-  svg.selectAll(".line")
-      .data(["above", "below"])
-    .enter().append("path")
-      .attr("class", function(d) { return style.line + d; })
-      .attr("clip-path", function(d) { return "url(#clip-" + d + ")"; })
+  svg.selectAll('.line')
+      .data(['above', 'below'])
+    .enter().append('path')
+      .attr('class', d => style.line + d)
+      .attr('clip-path', d => 'url(#clip-' + d + ')')
       .datum(data)
-      .attr("d", line);
+      .attr('d', line);
 
   return node.toReact();
 }

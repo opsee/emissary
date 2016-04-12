@@ -318,7 +318,7 @@ export default handleActions({
   [GET_METRIC_RDS]: {
     next(state, action) {
       const metrics = action.payload.data;
-      return _.assign({}, state, { metrics });
+      return _.assign({}, state, { metrics }); // FIXME
     },
     throw: yeller.reportAction
   },
