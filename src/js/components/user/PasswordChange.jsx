@@ -48,10 +48,9 @@ const PasswordChange = React.createClass({
     return !this.state.password || this.getStatus() === 'pending';
   },
   setUserData(data){
-    this.setState(_.assign({}, data));
+    this.setState(data);
   },
-  handleSubmit(e){
-    e.preventDefault();
+  handleSubmit(){
     this.props.actions.edit(_.assign(this.state, this.props.location.query));
   },
   render() {
@@ -61,11 +60,11 @@ const PasswordChange = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <form name="loginForm" onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <p>Enter your new password here.</p>
-                <UserInputs include={['password']}  onChange={this.setUserData}/>
+                <UserInputs include={['password']} onChange={this.setUserData} data={this.state}/>
                 <StatusHandler status={this.getStatus()}/>
-                <Button color="success" block type="submit" disabled={this.isDisabled()}>
+                <Button type="submit" color="success" block disabled={this.isDisabled()}>
                   {this.getButtonText()}
                 </Button>
               </form>

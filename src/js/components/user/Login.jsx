@@ -35,7 +35,8 @@ const Login = React.createClass({
     this.setState({data});
     this.props.actions.setLoginData(data);
   },
-  handleSubmit(){
+  handleSubmit(e){
+    e.preventDefault();
     let data = this.state.data;
     if (this.props.location.query.as){
       data.as = _.parseInt(this.props.location.query.as, 10);
@@ -50,10 +51,11 @@ const Login = React.createClass({
           <Row>
             <Col xs={12}>
               <LogoColor/>
+              <form onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'password']} onChange={this.setUserData} data={this.state.data}/>
                 <StatusHandler status={this.props.redux.asyncActions.userLogin.status}/>
                 <Padding t={1}>
-                  <Button onClick={this.handleSubmit} color="success" block disabled={this.isDisabled()}>
+                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
                   </Button>
                 </Padding>
@@ -61,6 +63,7 @@ const Login = React.createClass({
                   <p><Link to="/password-forgot">Forgot your password?</Link></p>
                   <p>Need an account? <Link to="/start">Sign up!</Link></p>
                 </Padding>
+              </form>
             </Col>
           </Row>
         </Grid>
