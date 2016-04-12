@@ -40,7 +40,7 @@ const statics = {
       d.group.type = 'security';
       return d;
     }).sortBy(d => {
-      return d.group.GroupName.toLowerCase();
+      return (_.get(d, 'group.GroupName') || '').toLowerCase();
     }).value();
     const changed = newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupSecurityFromJS(state, g);

@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import forms from 'newforms';
 import {connect} from 'react-redux';
 import {plain as seed} from 'seedling';
 import Autosuggest from 'react-autosuggest';
 
-import {BoundField, Button} from '../forms';
+import {Button} from '../forms';
 import {Add, Delete} from '../icons';
 import {Expandable, Padding, Rule} from '../layout';
 import {Color, Heading} from '../type';
@@ -13,6 +12,7 @@ import {Highlight} from '../global';
 import {flag, validate, getKeys} from '../../modules';
 import relationships from 'slate/src/relationships';
 import slate from 'slate';
+import {Input} from '../forms2';
 
 const AssertionsSelection = React.createClass({
   propTypes: {
@@ -47,98 +47,8 @@ const AssertionsSelection = React.createClass({
   },
   getInitialState() {
     return {
-      assertions: []
+      assertions: _.cloneDeep(this.props.assertions)
     };
-  },
-  componentDidMount(){
-    if (this.props.assertions.length){
-      const assertions = this.props.assertions.map(this.getNewSchema);
-      this.runChange(assertions);
-    }
-  },
-  getForm(type = 'code', kwargs){
-    const self = this;
-    let obj = null;
-    switch (type){
-    case 'code':
-      obj = forms.Form.extend({
-        operand: forms.CharField({
-          widgetAttrs: {
-            noLabel: true,
-            placeholder: 'Status Code Value'
-          }
-        })
-      });
-      break;
-    case 'header':
-      obj = forms.Form.extend({
-        operand: forms.CharField({
-          widgetAttrs: {
-            noLabel: true,
-            placeholder: 'Header Value'
-          }
-        })
-      });
-      break;
-    case 'json':
-      obj = forms.Form.extend({
-        operand: forms.CharField({
-          widgetAttrs: {
-            noLabel: true,
-            placeholder: 'JSON data'
-          }
-        }),
-        value: forms.CharField({
-          label: 'JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a>',
-          required: false,
-          widgetAttrs: {
-            placeholder: self.getJsonPlaceholder()
-          }
-        })
-      });
-      break;
-    case 'metric':
-      obj = forms.Form.extend({
-        operand: forms.CharField({
-          widgetAttrs: {
-            noLabel: true,
-            placeholder: 'Metric Value'
-          }
-        })
-      });
-      break;
-    default:
-      obj = forms.Form.extend({
-        operand: forms.CharField({
-          label: 'Value',
-          widgetAttrs: {
-            noLabel: true,
-            placeholder: 'Body data'
-          }
-        })
-      });
-      break;
-    }
-    return new obj(kwargs);
-  },
-  getNewSchema(assertion = {}, assertionIndex){
-    const self = this;
-    const opts = {
-      onChange(){
-        self.handleInputChange(this.cleanedData, assertionIndex);
-        self.forceUpdate();
-      },
-      labelSuffix: '',
-      prefix: `assertion-${assertionIndex}`,
-      validation: {
-        on: 'blur change',
-        onChangeDelay: 300
-      },
-      initial: _.omitBy(assertion, a => !a)
-    };
-    return _.assign({}, assertion, {
-      form: this.getForm(assertion.key, opts)
-    });
   },
   getJsonBodyKeys(){
     const json = this.getJsonBody();
@@ -322,7 +232,7 @@ const AssertionsSelection = React.createClass({
   },
   runNewAssertion(key){
     const assertions = this.state.assertions.concat([
-      this.getNewSchema({key}, this.state.assertions.length)
+      {key}
     ]);
     this.runChange(assertions);
   },
@@ -332,21 +242,9 @@ const AssertionsSelection = React.createClass({
   },
   runSetAssertionData(index, data){
     const assertions = this.state.assertions.map((assertion, i) => {
-      let d = {};
-      if (index === i){
-        d = data;
-        assertion.form.setData(_.defaults(data, assertion));
-      }
-      return _.assign(assertion, d);
+      return index === i ? _.assign(assertion, data) : assertion;
     });
     return this.runChange(assertions);
-  },
-  handleInputChange(data, index){
-    const assertions = this.runSetAssertionsState((assertion, i) => {
-      const d = index === i ? data : {};
-      return _.assign(assertion, d);
-    });
-    this.props.onChange(this.getFinalAssertions(assertions));
   },
   handleJsonSuggestionSelect(assertionIndex, event, data){
     this.runSetAssertionData(assertionIndex, {
@@ -367,7 +265,8 @@ const AssertionsSelection = React.createClass({
           };
           if (rel.id === 'equal' && !assertion.operand){
             if (assertion.key === 'code'){
-              data.operand = this.getResponseFormatted().code || '';
+              const code = this.getResponseFormatted().code;
+              data.operand = code ? code.toString() : '';
             } else if (assertion.key === 'header'){
               data.operand = _.get(this.getResponseFormatted(), `headers.${assertion.value}`) || '';
             } else if (assertion.key === 'json'){
@@ -395,10 +294,21 @@ const AssertionsSelection = React.createClass({
   },
   renderOperand(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
+    const attrs = [
+      ['code', 'Status Code Value'],
+      ['header', 'Header Value'],
+      ['json', 'JSON data'],
+      ['metric', 'Metric Value'],
+      ['body', 'Body data']
+    ];
+    const placeholder = _.chain(attrs)
+    .find(arr => arr[0] === assertion.key)
+    .get(1)
+    .value();
     if (assertion.relationship && !assertion.relationship.match('empty|notEmpty')){
       return (
         <Padding l={1} className="flex-1 align-self-end">
-          <BoundField bf={this.state.assertions[assertionIndex].form.boundField('operand')}/>
+          <Input data={assertion} path="operand" onChange={this.runSetAssertionData.bind(null, assertionIndex)} placeholder={placeholder}/>
         </Padding>
       );
     }
@@ -530,17 +440,6 @@ const AssertionsSelection = React.createClass({
       </div>
     );
   },
-  renderJsonInput(assertion){
-    const jsonBody = this.getJsonBody();
-    if (jsonBody){
-      return (
-        <Padding b={1} style={{width: '100%'}}>
-          <BoundField bf={assertion.form.boundField('value')}/>
-        </Padding>
-      );
-    }
-    return null;
-  },
   renderBody(assertionIndex){
     const assertion = this.state.assertions[assertionIndex];
     let buttons = null;
@@ -590,14 +489,6 @@ const AssertionsSelection = React.createClass({
       </div>
     );
   },
-  renderAssertion(assertion, index){
-    const key = assertion.key || 'code';
-    return (
-      <Padding key={`assertion-${index}`} b={2}>
-        {this[`render${_.capitalize(key)}`](index)}
-      </Padding>
-    );
-  },
   renderAssertionPickType(){
     return (
       <div>
@@ -624,6 +515,14 @@ const AssertionsSelection = React.createClass({
           return null;
         })}
       </div>
+    );
+  },
+  renderAssertion(assertion, index){
+    const key = assertion.key || 'code';
+    return (
+      <Padding key={`assertion-${index}`} b={2}>
+        {this[`render${_.capitalize(key)}`](index)}
+      </Padding>
     );
   },
   renderAssertionList(){
