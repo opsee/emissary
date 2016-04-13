@@ -4,10 +4,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Grid, Row, Col} from '../../modules/bootstrap';
+import { Padding } from '../layout';
 import {env as actions} from '../../actions';
 import MetricGraph from './MetricGraph';
 import {Button} from '../forms';
 import rdsMetrics from '../../modules/rdsMetrics';
+import style from './graph.css';
 
 const GraphExample = React.createClass({
   propTypes: {
@@ -49,13 +51,12 @@ const GraphExample = React.createClass({
   },
 
   getStepSize() {
-    const metric = this.getMeta();
     const data = this.getDataPoints();
     const values = _.map(data, d => d.value);
     const min = _.min(values);
     const max = _.max(values);
     const range = max - min;
-    const step = Math.pow(10, (Math.floor(Math.log10(2*range)))) / 10;
+    const step = Math.pow(10, (Math.floor(Math.log10(2 * range)))) / 10;
     return step;
   },
 
@@ -122,9 +123,16 @@ const GraphExample = React.createClass({
                 <MetricGraph metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
               </div>
 
-              <div>
-                <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
-              </div>
+              <Padding tb={2}>
+                <div className='flex-vertical-align'>
+                  <div className='flex-grow-1'>
+                    <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
+                  </div>
+                  <Padding l={1}>
+                    {this.getMeta().units}
+                  </Padding>
+                </div>
+              </Padding>
 
               <div>
                 {this.renderButtons()}
