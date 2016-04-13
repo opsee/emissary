@@ -25,7 +25,7 @@ const GraphExample = React.createClass({
     return {
       rdsID: 'mysql',
       metric: 'CPUUtilization',
-      threshold: 0
+      threshold: null
     };
   },
 
@@ -59,8 +59,29 @@ const GraphExample = React.createClass({
     return step;
   },
 
+  getThreshold() {
+    // Return the actual threshold if there is one
+    if (this.state.threshold !== null) {
+      return this.state.threshold;
+    }
+
+    // If there isn't a threshold yet AND we have data, we can infer a good
+    // suggestion; somewhere between the average and the maximum values.
+    const data = this.getDataPoints();
+    if (!data.length) {
+      return 0;
+    }
+
+    const values = _.map(data, d => d.value);
+    const max = _.max(values);
+    const mean = _.mean(values);
+    const suggestedThreshold = (max + mean) / 2;
+
+    return suggestedThreshold;
+  },
+
   onMetricChange(metric) {
-    this.setState({ metric });
+    this.setState({ metric, threshold: null });
     this.props.actions.getMetricRDS(this.state.rdsID, metric);
   },
 
@@ -86,6 +107,8 @@ const GraphExample = React.createClass({
   },
 
   render() {
+    const threshold = this.getThreshold();
+
     return (
       <div>
         <Grid>
@@ -96,11 +119,11 @@ const GraphExample = React.createClass({
               <p>{this.getMeta().description}</p>
 
               <div>
-                <MetricGraph metric={this.getMeta()} data={this.getDataPoints()} threshold={this.state.threshold} />
+                <MetricGraph metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
               </div>
 
               <div>
-                <input type="number" step={this.getStepSize()} value={this.state.threshold} onChange={this.onThresholdChange} autoFocus />
+                <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
               </div>
 
               <div>
