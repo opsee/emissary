@@ -58,7 +58,10 @@ const Install = React.createClass({
       return {
         id: key,
         messages: _.chain(value).map('attributes').sort((a, b) => {
-          return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
+          if (typeof a.Timestamp === 'string'){
+            return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
+          }
+          return a.Timestamp - b.Timestamp;
         }).value()
       };
     }).value();
