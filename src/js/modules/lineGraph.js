@@ -5,39 +5,43 @@ import ReactFauxDOM from 'react-faux-dom';
 import style from '../components/graph/graph.css';
 
 function formatBytes(bytes) {
-  var thresh = 1024;
-  if(Math.abs(bytes) < thresh) {
-      return bytes + ' B';
+  const thresh = 1024;
+  if (Math.abs(bytes) < thresh) {
+    return `${bytes} B`;
   }
-  var units = ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-  var u = -1;
+
+  const units = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+  let u = -1;
+  let val = bytes;
+
   do {
-      bytes /= thresh;
-      ++u;
-  } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-  return bytes.toFixed(1)+' '+units[u];
+    val /= thresh;
+    ++u;
+  } while (Math.abs(val) >= thresh && u < units.length - 1);
+
+  return `${val.toFixed(1)} ${units[u]}`;
 }
 
 function formatVerticalTick(d, units) {
   switch (units) {
-    case 'bytes':
-      // TODO better byte rounding
-      return formatBytes(d);
+  case 'bytes':
+    // TODO better byte rounding
+    return formatBytes(d);
 
-    case 'bytes/second':
-      return `${d} B/s`
+  case 'bytes/second':
+    return `${d} B/s`;
 
-    case 'count/second':
-      return `${d} /s`;
+  case 'count/second':
+    return `${d} /s`;
 
-    case 'percent':
-      return `${d} %`;
+  case 'percent':
+    return `${d} %`;
 
-    case 'seconds':
-      return `${d} s`;
+  case 'seconds':
+    return `${d} s`;
 
-    default:
-      return d;
+  default:
+    return d;
   }
 }
 
@@ -50,6 +54,8 @@ function formatVerticalTick(d, units) {
  * @param {number} threshold
  */
 export function render(data, opts) {
+  /*eslint-disable indent*/
+
   if (!data.length) {
     return <div>no data</div>;
   }
@@ -179,6 +185,7 @@ export function render(data, opts) {
       .attr('clip-path', d => 'url(#clip-' + d + ')')
       .datum(data)
       .attr('d', line);
+  /*eslint-enable indent*/
 
   const jsx = node.toReact();
   return jsx;
