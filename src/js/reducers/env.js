@@ -137,12 +137,13 @@ const statics = {
     return newData && newData.length ? fromJS(newData) : List();
   },
   getCreatedTime(time){
-    let launchTime;
-    const parsed = Date.parse(time);
-    if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
-      launchTime = parsed;
+    let parsed;
+    if (typeof time === 'number'){
+      parsed = new Date(time);
+    } else {
+      parsed = Date.parse(time);
     }
-    return launchTime;
+    return parsed;
   },
   instanceRdsFromJS(raw){
     let data = raw.instance;
