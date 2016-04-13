@@ -69,7 +69,7 @@ export function render(data, opts) {
     return 0; // a must be equal to b
   });
 
-  const margin = {top: 20, right: 20, bottom: 100, left: 200};
+  const margin = {top: 20, right: 20, bottom: 100, left: 100};
   const width = opts.width - margin.left - margin.right;
   const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
 
@@ -109,16 +109,18 @@ export function render(data, opts) {
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   // Draw the x-axis
-  svg.append('g')
+  const xAxisGroup = svg.append('g')
     .attr('class', style.xAxis)
     .attr('transform', 'translate(0,' + height + ')')
-    .call(xAxis)
-    .selectAll('text')
-      .style('text-anchor', 'end')
-      .attr('dx', '-.8em')
-      .attr('dy', '.15em')
-      .attr('transform', 'rotate(-65)')
-      .attr('class', style.xTick);
+    .call(xAxis);
+
+  // Configure the x-axis ticks
+  xAxisGroup.selectAll('text')
+    .style('text-anchor', 'end')
+    .attr('dx', '-.8em')
+    .attr('dy', '.15em')
+    .attr('transform', 'rotate(-65)')
+    .attr('class', style.xTick);
 
   // Background colour
   svg.append('rect')
@@ -132,6 +134,10 @@ export function render(data, opts) {
   const yAxisGroup = svg.append('g')
     .attr('class', style.yAxis)
     .call(yAxis);
+
+  // Configure the x-axis ticks
+  yAxisGroup.selectAll('text')
+    .attr('class', style.yTick);
 
   // Colour the minor y-axes
   yAxisGroup.selectAll('g')
