@@ -5,8 +5,8 @@ export default {
   },
 
   CPUUtilization: {
-    units: 'bytes',
-    description: 'The amount of disk space occupied by binary logs on the master. Applies to MySQL read replicas.'
+    units: 'percent',
+    description: 'The percentage of CPU utilization.'
   },
 
   DatabaseConnections: {

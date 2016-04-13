@@ -9,7 +9,13 @@ export default React.createClass({
       name: PropTypes.string,
       unit: PropTypes.string,
       value: PropTypes.number.isRequired
-    })).isRequired
+    })).isRequired,
+
+    metric: PropTypes.shape({
+      name: PropTypes.string,
+      units: PropTypes.string,
+      description: PropTypes.string
+    }).isRequired
   },
 
   componentDidMount() {

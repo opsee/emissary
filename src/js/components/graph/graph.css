@@ -41,6 +41,6 @@
 }
 
 .thresholdLine {
-  stroke: black;
+  stroke: var(--colorPrimary);
   stroke-width: 1px;
 }

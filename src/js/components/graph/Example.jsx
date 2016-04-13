@@ -33,6 +33,12 @@ const GraphExample = React.createClass({
     this.props.actions.getMetricRDS(this.state.rdsID, this.state.metric);
   },
 
+  getMeta() {
+    const name = this.state.metric;
+    const meta = _.get(rdsMetrics, name, {});
+    return _.assign({}, meta, { name });
+  },
+
   getMetrics() {
     return this.props.redux.env.metrics[0];
   },
@@ -74,11 +80,12 @@ const GraphExample = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <h1>{this.state.metric}</h1>
-              <h2>{this.state.rdsID}</h2>
+              <h1>{this.state.rdsID}</h1>
+              <h2>{this.state.metric}</h2>
+              <p>{this.getMeta().description}</p>
 
               <div>
-                <MetricGraph data={this.getDataPoints()} threshold={this.state.threshold} />
+                <MetricGraph metric={this.getMeta()} data={this.getDataPoints()} threshold={this.state.threshold} />
               </div>
 
               <div>

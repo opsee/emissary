@@ -4,6 +4,45 @@ import React from 'react'; // Not used directly but required in scope
 import ReactFauxDOM from 'react-faux-dom';
 import style from '../components/graph/graph.css';
 
+function formatBytes(bytes, si = false) {
+  var thresh = si ? 1000 : 1024;
+  if(Math.abs(bytes) < thresh) {
+      return bytes + ' B';
+  }
+  var units = si
+      ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+      : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+  var u = -1;
+  do {
+      bytes /= thresh;
+      ++u;
+  } while(Math.abs(bytes) >= thresh && u < units.length - 1);
+  return bytes.toFixed(1)+' '+units[u];
+}
+
+function formatVerticalTick(d, units) {
+  switch (units) {
+    case 'bytes':
+      // TODO better byte rounding
+      return formatBytes(d);
+
+    case 'bytes/second':
+      return `${d} B/s`
+
+    case 'count/second':
+      return `${d} /s`;
+
+    case 'percent':
+      return `${d} %`;
+
+    case 'seconds':
+      return `${d} s`;
+
+    default:
+      return d;
+  }
+}
+
 /**
  * @param node - ReactFauxDOM node
  * @param {obj[]} data
@@ -13,6 +52,8 @@ import style from '../components/graph/graph.css';
  * @param {number} threshold
  */
 export function render(data, opts) {
+  console.log(opts);
+
   const renderStart = Date.now(); // perf
 
   if (!data.length) {
@@ -34,7 +75,7 @@ export function render(data, opts) {
     return 0; // a must be equal to b
   });
 
-  const margin = {top: 20, right: 20, bottom: 100, left: 100};
+  const margin = {top: 20, right: 20, bottom: 100, left: 200};
   const width = opts.width - margin.left - margin.right;
   const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
 
@@ -57,7 +98,8 @@ export function render(data, opts) {
 
   const yAxis = d3.svg.axis()
     .scale(y)
-    .orient('left');
+    .orient('left')
+    .tickFormat(d => formatVerticalTick(d, opts.metric.units));
 
   // Create the line
   const line = d3.svg.line()
