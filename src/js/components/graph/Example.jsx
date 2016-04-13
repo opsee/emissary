@@ -25,7 +25,7 @@ const GraphExample = React.createClass({
     return {
       rdsID: 'mysql',
       metric: 'CPUUtilization',
-      threshold: 1.0
+      threshold: 0
     };
   },
 
@@ -46,6 +46,17 @@ const GraphExample = React.createClass({
   getDataPoints() {
     const metrics = this.getMetrics();
     return _.get(metrics, ['metrics', this.state.metric, 'metrics'], []);
+  },
+
+  getStepSize() {
+    const metric = this.getMeta();
+    const data = this.getDataPoints();
+    const values = _.map(data, d => d.value);
+    const min = _.min(values);
+    const max = _.max(values);
+    const range = max - min;
+    const step = Math.pow(10, (Math.floor(Math.log10(2*range)))) / 10;
+    return step;
   },
 
   onMetricChange(metric) {
@@ -89,7 +100,7 @@ const GraphExample = React.createClass({
               </div>
 
               <div>
-                <input type="number" step="0.1" value={this.state.threshold} onChange={this.onThresholdChange} autoFocus />
+                <input type="number" step={this.getStepSize()} value={this.state.threshold} onChange={this.onThresholdChange} autoFocus />
               </div>
 
               <div>
