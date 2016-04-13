@@ -4,14 +4,12 @@ import React from 'react'; // Not used directly but required in scope
 import ReactFauxDOM from 'react-faux-dom';
 import style from '../components/graph/graph.css';
 
-function formatBytes(bytes, si = false) {
-  var thresh = si ? 1000 : 1024;
+function formatBytes(bytes) {
+  var thresh = 1024;
   if(Math.abs(bytes) < thresh) {
       return bytes + ' B';
   }
-  var units = si
-      ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-      : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+  var units = ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
   var u = -1;
   do {
       bytes /= thresh;
@@ -52,10 +50,6 @@ function formatVerticalTick(d, units) {
  * @param {number} threshold
  */
 export function render(data, opts) {
-  console.log(opts);
-
-  const renderStart = Date.now(); // perf
-
   if (!data.length) {
     return <div>no data</div>;
   }
@@ -99,6 +93,7 @@ export function render(data, opts) {
   const yAxis = d3.svg.axis()
     .scale(y)
     .orient('left')
+    .tickSize(-width, 0, 0) // for the guidelines to be full-width
     .tickFormat(d => formatVerticalTick(d, opts.metric.units));
 
   // Create the line
@@ -125,17 +120,6 @@ export function render(data, opts) {
       .attr('transform', 'rotate(-65)')
       .attr('class', style.xTick);
 
-  // Draw the y-axis
-  svg.append('g')
-    .attr('class', style.yAxis)
-    .call(yAxis)
-    .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 6)
-      .attr('dy', '.71em')
-      .style('text-anchor', 'end')
-      .text('Percent (%)');
-
   // Background colour
   svg.append('rect')
     .attr('class', style.background)
@@ -143,6 +127,16 @@ export function render(data, opts) {
     .attr('y', 0)
     .attr('width', width)
     .attr('height', height);
+
+  // Draw the y-axis
+  const yAxisGroup = svg.append('g')
+    .attr('class', style.yAxis)
+    .call(yAxis);
+
+  // Colour the minor y-axes
+  yAxisGroup.selectAll('g')
+    .filter(d => d)
+    .attr('class', style.yGuide);
 
   // The data line
   svg.append('path')
@@ -181,9 +175,5 @@ export function render(data, opts) {
       .attr('d', line);
 
   const jsx = node.toReact();
-
-  const renderEnd = Date.now(); // perf
-  console.log(`----- Render time: ${renderEnd - renderStart} ms`); // perf
-
   return jsx;
 }

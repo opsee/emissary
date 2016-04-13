@@ -1,5 +1,5 @@
 .background {
-  fill: #222;
+  fill: var(--colorGray9);
 }
 
 .axis {
@@ -21,6 +21,12 @@
 
 .yAxis {
   composes: axis;
+}
+
+.yGuide line {
+  stroke: var(--colorGray8);
+  stroke-opacity: 0.5;
+  stroke-width: 1px;
 }
 
 .line {
