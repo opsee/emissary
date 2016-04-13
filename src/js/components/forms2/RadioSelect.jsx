@@ -9,7 +9,8 @@ const RadioSelect = React.createClass({
     onChange: PropTypes.func.isRequired,
     options: PropTypes.array.isRequired,
     data: PropTypes.object,
-    path: PropTypes.string.isRequired
+    path: PropTypes.string.isRequired,
+    inline: PropTypes.bool
   },
   handleRadioChange(id){
     if (this.props.data){
@@ -26,11 +27,9 @@ const RadioSelect = React.createClass({
       <div>
         {this.props.options.map((w, i) => {
           return (
-            <div key={i}>
-              <Padding b={1}>
-                <Radio on={_.get(this.props.data, this.props.path) === w.id} onChange={this.handleRadioChange} label={w.label || w.name || w.id} id={w.id}/>
-              </Padding>
-            </div>
+            <Padding b={1} key={i} inline={this.props.inline}>
+              <Radio on={_.get(this.props.data, this.props.path) === w.id} onChange={this.handleRadioChange} label={w.label || w.name || w.id} id={w.id}/>
+            </Padding>
           );
         })}
       </div>

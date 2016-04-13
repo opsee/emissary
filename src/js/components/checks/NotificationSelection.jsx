@@ -42,17 +42,13 @@ const NotificationSelection = React.createClass({
   },
   getInitialState() {
     return {
-      notifications: []
+      notifications: this.props.notifications.map((n, i) => {
+        return this.getNewSchema(n.type, i, n.value);
+      })
     };
   },
   componentDidMount(){
     this.props.actions.getSlackChannels();
-    if (this.props.notifications.length){
-      const notifications = this.props.notifications.map((n, i) => {
-        return this.getNewSchema(n.type, i, n.value);
-      });
-      this.runChange(notifications);
-    }
     window.addEventListener('storage', event => {
       if (typeof event === 'object' && event.key === 'shouldGetSlackChannels' && event.newValue === 'true'){
         this.props.actions.getSlackChannels();
