@@ -42,7 +42,10 @@ const CheckEvent = React.createClass({
     return notification.get('responses').filter(response => !response.passing);
   },
   getTitle(){
-    const name = this.getNotification().get('check_name') || this.getNotification().get('check_id') || '';
+    const name = this.getNotification().get('check_name') || '';
+    if (!name){
+      return '';
+    }
     const bool = this.getNotification().get('passing') ? 'Passing' : 'Failure';
     return `${bool} Event: ${name}`;
   },
@@ -51,14 +54,16 @@ const CheckEvent = React.createClass({
     return this.getNotification().get('check_name');
   },
   renderText(){
-    const stamp = this.getNotification().get('timestamp');
+    let stamp = this.getNotification().get('timestamp');
+    if (typeof stamp === 'number'){
+      stamp = new Date(stamp);
+    }
     if (typeof stamp !== 'object'){
       return null;
     }
-    const d = new Date(stamp.get('seconds') * 1000);
     const bool = this.getNotification().get('passing');
     return (
-      <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={d}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
+      <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={stamp}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
         To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
     );
   },
@@ -66,8 +71,10 @@ const CheckEvent = React.createClass({
     if (!this.isJSONLoaded()) {
       return null;
     }
-    let d = this.getNotification().get('timestamp') || new Date();
-    if (d.toJS){
+    let d = this.getNotification().get('timestamp');
+    if (typeof d === 'number'){
+      d = new Date(d);
+    } else if (typeof d === 'object' && d.toJS){
       d = new Date(d.get('seconds') * 1000);
     }
     return (
