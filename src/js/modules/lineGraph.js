@@ -38,13 +38,15 @@ export function render(data, opts) {
   const width = opts.width - margin.left - margin.right;
   const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
 
+  const yMax = Math.max(opts.threshold, d3.max(data, d => d.value));
+
   // Set up the x/y scales
   const x = d3.time.scale()
     .domain(d3.extent(data, d => d.time ))
     .range([0, width]);
 
   const y = d3.scale.linear()
-    .domain([0, d3.max(data, d => d.value )])
+    .domain([0, yMax])
     .range([height, 0]);
 
   // Set up the axes
