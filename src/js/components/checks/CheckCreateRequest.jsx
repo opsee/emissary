@@ -92,11 +92,6 @@ const CheckCreateRequest = React.createClass({
   getCheck(){
     return _.cloneDeep(this.props.check);
   },
-  isDataComplete(){
-    const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
-    return condition1 && condition2;
-  },
   isDisabled(){
     return !!validate.check(this.props.check, ['request']).length;
   },
@@ -160,20 +155,21 @@ const CheckCreateRequest = React.createClass({
   handleUrlChange(state){
     this.setState(state);
     const check = _.cloneDeep(this.props.check);
+    const spec = check.check_spec.value;
     let string = _.clone(state.url);
     if (!string.match('^http|^ws')){
       string = `http://${string}`;
     }
     try {
       const url = new window.URL(string);
-      check.check_spec.value = _.assign(check.check_spec.value, {
+      check.check_spec.value = _.assign(spec, {
         port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
         path: url.pathname || '/',
         protocol: (url.protocol || '').replace(':', '')
       });
       check.target.id = url.hostname;
     } catch (err) {
-      _.noop();
+      check.check_spec.value = _.pick(spec, ['verb', 'body', 'name']);
     }
     this.runChange(check);
   },
@@ -280,7 +276,7 @@ const CheckCreateRequest = React.createClass({
     });
     return (
       <Padding b={1}>
-        <RadioSelect inline options={methods} path="check_spec.value.verb" data={this.props.check} onChange={this.runChange} label="Method"/>
+        <RadioSelect inline options={methods} path="check_spec.value.verb" data={this.props.check} onChange={this.runChange} label="Method*"/>
       </Padding>
     );
   },
@@ -290,7 +286,7 @@ const CheckCreateRequest = React.createClass({
         <Heading level={3}>Define Your HTTP Request</Heading>
         {this.renderVerbInput()}
         <Padding b={1}>
-          <Input data={this.state} path="url" onChange={this.handleUrlChange} label="URL" placeholder="https://try.opsee.com or http://192.168.1.1:80"/>
+          <Input data={this.state} path="url" onChange={this.handleUrlChange} label="URL*" placeholder="https://try.opsee.com or http://192.168.1.1:80"/>
         </Padding>
         {this.renderBodyInput()}
       </Padding>
@@ -304,14 +300,14 @@ const CheckCreateRequest = React.createClass({
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
         <Padding b={1}>
-          <RadioSelect inline options={protocols} path="check_spec.value.protocol" data={this.props.check} onChange={this.runChange} label="Protocol"/>
+          <RadioSelect inline options={protocols} path="check_spec.value.protocol" data={this.props.check} onChange={this.runChange} label="Protocol*"/>
         </Padding>
         {this.renderVerbInput()}
         <Padding b={1}>
-          <Input data={this.props.check} path="check_spec.value.path" onChange={this.runChange} label="Path" placeholder="/healthcheck"/>
+          <Input data={this.props.check} path="check_spec.value.path" onChange={this.runChange} label="Path*" placeholder="/healthcheck"/>
         </Padding>
         <Padding b={1}>
-          <Input data={this.props.check} path="check_spec.value.port" onChange={this.runChange} label="Port" placeholder="e.g. 8080"/>
+          <Input data={this.props.check} path="check_spec.value.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>
         </Padding>
         {this.renderBodyInput()}
       </Padding>

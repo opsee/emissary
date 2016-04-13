@@ -113,7 +113,7 @@ const CheckCreateInfo = React.createClass({
       <div>
         <Padding b={2}>
           <form name="checkCreateInfoForm">
-            <Input data={this.props.check} path="check_spec.value.name" placeholder="My Critical Service Status 200 Check" label="Check Name" onChange={this.handleInputChange}/>
+            <Input data={this.props.check} path="check_spec.value.name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
           </form>
         </Padding>
         <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>

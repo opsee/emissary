@@ -523,11 +523,11 @@ const AssertionsSelection = React.createClass({
   },
   render(){
     return (
-      <Padding b={2}>
+      <div>
         {this.renderAssertionList()}
         {this.renderAssertionPickType()}
         <p><em className="small text-muted">Learn more about assertions <a target="_blank" href="/docs/checks">in our docs</a>.</em></p>
-      </Padding>
+      </div>
     );
   }
 });

@@ -147,9 +147,7 @@ const CheckEdit = React.createClass({
           <Padding tb={1}>
             <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           </Padding>
-          <Padding tb={1}>
-            <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
-          </Padding>
+          <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
