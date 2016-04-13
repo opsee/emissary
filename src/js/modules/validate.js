@@ -39,10 +39,13 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
     errors.push('request: A check must specify a protocol.');
   }
 
-  const headers = spec.headers.map((h = {}) => {
-    return h.name && h.values && h.values.length;
-  });
-  const numberOfIncompleteHeaders = headers.length - _.compact(headers).length;
+  let numberOfIncompleteHeaders = 0;
+  if (Array.isArray(spec.headers)){
+    const headers = spec.headers.map((h = {}) => {
+      return h.name && h.values && h.values.length;
+    });
+    numberOfIncompleteHeaders = headers.length - _.compact(headers).length;
+  }
   let parts = getVerbAndSuffix(numberOfIncompleteHeaders);
   if (numberOfIncompleteHeaders > 0){
     errors.push(`request: ${numberOfIncompleteHeaders} header${parts.suffix} ${parts.verb} incomplete.`);

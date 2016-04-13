@@ -3,6 +3,8 @@ import _ from 'lodash';
 
 import {Padding} from '../layout';
 import Radio from './Radio';
+import style from './radioSelect.css';
+import inputStyle from './input.css';
 
 const RadioSelect = React.createClass({
   propTypes: {
@@ -10,7 +12,8 @@ const RadioSelect = React.createClass({
     options: PropTypes.array.isRequired,
     data: PropTypes.object,
     path: PropTypes.string.isRequired,
-    inline: PropTypes.bool
+    inline: PropTypes.bool,
+    label: PropTypes.string
   },
   handleRadioChange(id){
     if (this.props.data){
@@ -22,16 +25,25 @@ const RadioSelect = React.createClass({
     }
     return this.props.onChange.call(null, id);
   },
+  renderLabel(){
+    if (this.props.label){
+      return <div className={inputStyle.label} dangerouslySetInnerHTML={{__html: this.props.label}}/>;
+    }
+    return null;
+  },
   render(){
     return (
       <div>
-        {this.props.options.map((w, i) => {
-          return (
-            <Padding b={1} key={i} inline={this.props.inline}>
-              <Radio on={_.get(this.props.data, this.props.path) === w.id} onChange={this.handleRadioChange} label={w.label || w.name || w.id} id={w.id}/>
-            </Padding>
-          );
-        })}
+        {this.renderLabel()}
+        <div className={this.props.inline ? style.wrapperInline : ''}>
+          {this.props.options.map((w, i) => {
+            return (
+              <Padding b={1} key={i} className={this.props.inline ? style.itemInline : ''}>
+                <Radio on={_.get(this.props.data, this.props.path) === w.id} onChange={this.handleRadioChange} label={w.label || w.name || w.id} id={w.id}/>
+              </Padding>
+            );
+          })}
+        </div>
       </div>
     );
   }

@@ -13,7 +13,8 @@ const Input = React.createClass({
     //path is a lodash .get() compatible string to the selected data
     path: PropTypes.string,
     label: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    textarea: PropTypes.bool
   },
   getInitialState() {
     return {
@@ -58,11 +59,17 @@ const Input = React.createClass({
     }
     return null;
   },
+  renderItem(){
+    if (this.props.textarea){
+      return <textarea {...this.getProps()}/>;
+    }
+    return <input {...this.getProps()}/>;
+  },
   render() {
     return (
       <div className={style.wrapper}>
         {this.renderLabel()}
-        <input {...this.getProps()}/>
+        {this.renderItem()}
         {this.renderChildren()}
       </div>
     );

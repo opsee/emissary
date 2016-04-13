@@ -120,6 +120,9 @@ function formatCheckData(data){
       operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
     });
   });
+  obj.check_spec.value.headers = _.filter(obj.check_spec.value.headers, h => {
+    return h.name && h.values && h.values.length;
+  });
   return _.assign({}, _.pick(obj, ['target', 'interval', 'check_spec', 'name']), {
     assertions
   });

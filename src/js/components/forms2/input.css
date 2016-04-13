@@ -26,3 +26,7 @@
   transition: fill var(--transitionEaseOut);
   fill: var(--colorText2);
 }
+
+.input::placeholder {
+  color: color(var(--colorText) lightness(50%));
+}

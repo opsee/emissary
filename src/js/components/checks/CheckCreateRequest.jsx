@@ -1,14 +1,13 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import forms from 'newforms';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 
-import {BoundField, Button} from '../forms';
+import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
-import {Close, Add} from '../icons';
+import {Add, Close, Delete} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import CheckDisabledReason from './CheckDisabledReason.jsx';
@@ -17,31 +16,12 @@ import {InstanceItem} from '../instances';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {validate} from '../../modules';
+import {Input, RadioSelect} from '../forms2';
 import {
   env as envActions,
   checks as checkActions,
   user as userActions
 } from '../../actions';
-
-const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
-
-const HeaderForm = forms.Form.extend({
-  key: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. content-type'
-    }
-  }),
-  value: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. application/json'
-    }
-  })
-});
-
-const HeaderFormSet = forms.FormSet.extend({
-  form: HeaderForm,
-  canDelete: true
-});
 
 const CheckCreateRequest = React.createClass({
   propTypes: {
@@ -70,24 +50,33 @@ const CheckCreateRequest = React.createClass({
       })
     })
   },
+  componentWillMount(){
+    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
+      return this.props.history.pushState(null, '/check-create/target');
+    }
+    return this.props.checkActions.testCheckReset();
+  },
   getInitialState() {
-    const self = this;
-    const {check} = this.props;
-    let initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
-    initialHeaders = initialHeaders.map(h => {
-      return {
-        key: h.name,
-        value: h.values.join(', ')
-      };
+    return {
+      url: this.getUrl()
+    };
+  },
+  getHeaders(fromSource){
+    const arr = _.cloneDeep(_.get(this.props, 'check.check_spec.value.headers')) || [];
+    if (fromSource){
+      return arr;
+    }
+    return arr.map(h => {
+      if (Array.isArray(h.values)){
+        return _.assign(h, {
+          values: h.values.join(', ')
+        });
+      }
+      return h;
     });
-
-    let initialData = _.cloneDeep(_.get(self.props, 'check.check_spec.value') || {});
-    if (typeof initialData.verb === 'string'){
-      initialData.verb = [initialData.verb];
-    }
-    if (typeof initialData.protocol === 'string'){
-      initialData.protocol = [initialData.protocol];
-    }
+  },
+  getUrl(){
+    const {check} = this.props;
     if (check.target.type === 'host' && check.target.id){
       const s = check.check_spec.value;
       let port = '';
@@ -96,173 +85,12 @@ const CheckCreateRequest = React.createClass({
       } else if (s.protocol === 'https' && s.port !== 443){
         port = `:${s.port}`;
       }
-      initialData.url = `${s.protocol}://${check.target.id}${port}${s.path}`;
+      return `${s.protocol}://${check.target.id}${port}${s.path}`;
     }
-    initialData = _.mapValues(initialData, val => {
-      return val || null;
-    });
-
-    const infoForm = this.getInfoFormConstructor();
-    const obj = {
-      info: new infoForm(initialData, _.assign({
-        onChange: self.runChange,
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 700
-        },
-        initial: self.isDataComplete() ? initialData : null
-      })),
-      headers: new HeaderFormSet({
-        onChange: self.runChange,
-        labelSuffix: '',
-        emptyPermitted: false,
-        initial: initialHeaders.length ? initialHeaders : null,
-        extra: 0,
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 700
-        }
-      }),
-      check,
-      hasSetHeaders: !self.isDataComplete()
-    };
-    //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(() => {
-      self.state.headers.forms().forEach((form, i) => {
-        form.setData(initialHeaders[i]);
-      });
-      if (this.isMounted()){
-        this.setState({hasSetHeaders: true});
-      }
-    }, 50);
-    return _.extend(obj, {
-      cleanedData: null
-    });
-  },
-  componentWillMount(){
-    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
-      return this.props.history.pushState(null, '/check-create/target');
-    }
-    return this.props.checkActions.testCheckReset();
-  },
-  componentDidMount(){
-    if (this.props.renderAsInclude){
-      this.runChange();
-    }
-  },
-  getInfoFormConstructor(){
-    const isHost = this.props.check.target.type === 'host';
-    return forms.Form.extend({
-      protocol: forms.ChoiceField({
-        choices: ['http', 'https', 'ws', 'wss'].map(name => [name, name]),
-        widget: forms.RadioSelect,
-        required: !isHost,
-        widgetAttrs: {
-          widgetType: 'InlineRadioSelect'
-        },
-        initial: ['http']
-      }),
-      verb: forms.ChoiceField({
-        choices: verbOptions,
-        widget: forms.RadioSelect,
-        label: 'Method',
-        widgetAttrs: {
-          widgetType: 'InlineRadioSelect'
-        },
-        initial: ['GET']
-      }),
-      port: forms.CharField({
-        required: !isHost,
-        widgetAttrs: {
-          placeholder: 'e.g. 8080'
-        },
-        widget: forms.NumberInput
-      }),
-      body: forms.CharField({
-        widget: forms.Textarea,
-        required: false,
-        widgetAttrs: {
-          widgetType: 'Textarea'
-        }
-      }),
-      path: forms.CharField({
-        label: 'Path',
-        required: !isHost,
-        widgetAttrs: {
-          placeholder: '/healthcheck'
-        }
-      }),
-      url: forms.CharField({
-        label: 'URL',
-        required: isHost,
-        widgetAttrs: {
-          placeholder: 'https://try.opsee.com or http://192.168.1.1:80'
-        }
-      }),
-      constructor(data, kwargs){
-        forms.Form.call(this, kwargs);
-      }
-    });
-  },
-  getHeaderForms(){
-    return _.reject(this.state.headers.forms(), f => {
-      return f.cleanedData.DELETE;
-    });
+    return undefined;
   },
   getCheck(){
     return _.cloneDeep(this.props.check);
-  },
-  getFinalHeaders(){
-    return _.chain(this.getHeaderForms()).map(header => {
-      const h = header.cleanedData || {};
-      return {
-        name: h.key,
-        values: h.value ? h.value.split(', ') : []
-      };
-    }).value();
-  },
-  getFinalData(){
-    let check = _.cloneDeep(this.props.check);
-    let override = {};
-    if (this.state.hasSetHeaders){
-      override.headers = this.getFinalHeaders();
-    }
-    if (this.props.check.target.type === 'host'){
-      let string = this.state.info.data.url || '';
-      if (!string.match('^http|^ws')){
-        string = `http://${string}`;
-      }
-      try {
-        const url = new window.URL(string);
-        override = _.assign(override, {
-          port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
-          path: url.pathname || '/',
-          protocol: (url.protocol || '').replace(':', '')
-        });
-        check.target.id = url.hostname;
-      } catch (err) {
-        _.noop();
-      }
-    }
-    let data = _.assign({}, this.state.info.data, override);
-    if (data.path && !data.path.match('^\/')){
-      data.path = `/${data.path}`;
-    }
-    if (data.port){
-      data.port = parseInt(data.port, 10);
-    }
-    if (Array.isArray(data.protocol)){
-      data.protocol = data.protocol[0];
-    }
-    if (Array.isArray(data.verb)){
-      data.verb = data.verb[0];
-    }
-    check.check_spec.value = _.chain(check.check_spec.value)
-    .assign(data)
-    .pick(['name', 'path', 'port', 'verb', 'protocol', 'headers', 'body'])
-    .value();
-    return check;
   },
   isDataComplete(){
     const condition1 = this.props.check.target.id;
@@ -272,12 +100,35 @@ const CheckCreateRequest = React.createClass({
   isDisabled(){
     return !!validate.check(this.props.check, ['request']).length;
   },
-  runChange(){
-    let data = this.getFinalData();
-    this.props.onChange(data, this.isDisabled(), 1);
+  runChange(data){
+    let check = data;
+    const spec = check.check_spec.value;
+    if (spec.port){
+      check.check_spec.value.port = parseInt(spec.port, 10);
+    }
+    if (spec.path && !spec.path.match('^\/')){
+      check.check_spec.value.path = `/${spec.path}`;
+    }
+    if (spec.verb === 'GET'){
+      check.check_spec.value = _.omit(spec, ['body']);
+    }
+    return this.props.onChange(check);
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckRequestHelp');
+  },
+  runAddHeader(){
+    let check = _.cloneDeep(this.props.check);
+    check.check_spec.value.headers.push({
+      name: undefined,
+      values: []
+    });
+    this.runChange(check);
+  },
+  runRemoveHeader(index){
+    let check = _.cloneDeep(this.props.check);
+    check.check_spec.value.headers.splice(index, 1);
+    this.runChange(check);
   },
   handleSubmit(e){
     e.preventDefault();
@@ -293,24 +144,65 @@ const CheckCreateRequest = React.createClass({
       this.props.handleTargetClick();
     }
   },
+  handleHeaderChange(index, data){
+    const headers = this.getHeaders(true).map((h, i) => {
+      if (index === i){
+        return _.assign(data, {
+          values: data.values.split(', ')
+        });
+      }
+      return h;
+    });
+    let check = _.cloneDeep(this.props.check);
+    check.check_spec.value.headers = headers;
+    this.runChange(check);
+  },
+  handleUrlChange(state){
+    this.setState(state);
+    const check = _.cloneDeep(this.props.check);
+    let string = _.clone(state.url);
+    if (!string.match('^http|^ws')){
+      string = `http://${string}`;
+    }
+    try {
+      const url = new window.URL(string);
+      check.check_spec.value = _.assign(check.check_spec.value, {
+        port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
+        path: url.pathname || '/',
+        protocol: (url.protocol || '').replace(':', '')
+      });
+      check.target.id = url.hostname;
+    } catch (err) {
+      _.noop();
+    }
+    this.runChange(check);
+  },
   renderHeaderForm(){
     return (
       <div>
         <Heading level={3}>Request Headers</Heading>
-        {this.getHeaderForms().map((form, index) => {
+        {this.getHeaders().map((header, index) => {
           return (
-            <Padding b={2} key={`header-form-${index}`}>
+            <Padding b={2} key={`header-${index}`}>
               <Grid fluid>
                 <Row>
                   <Col xs={12} sm={5} key={`header-field-${index}-key`}>
-                    <BoundField bf={form.boundField('key')}/>
+                    <Padding b={1}>
+                      <Input data={header} path="name" onChange={this.handleHeaderChange.bind(null, index)} placeholder="content-type" label="Key"/>
+                    </Padding>
                   </Col>
                   <Col xs={10} sm={5} key={`header-field-${index}-value`}>
-                    <BoundField bf={form.boundField('value')}/>
+                    <Padding b={1}>
+                      <Input data={header} path="values" onChange={this.handleHeaderChange.bind(null, index)} placeholder="application/json" label="Value"/>
+                    </Padding>
                   </Col>
                   <Col xs={2}>
                     <Padding t={3}>
-                      <BoundField bf={form.boundField('DELETE')}/>
+                      <Padding t={0.5}>
+                        <Button flat color="danger" className="pull-right" title="Remove this Header" onClick={this.runRemoveHeader.bind(null, index)}>
+                          <Delete inline fill="danger"/>
+                        </Button>
+                      </Padding>
                     </Padding>
                   </Col>
                 </Row>
@@ -319,8 +211,8 @@ const CheckCreateRequest = React.createClass({
           );
         })
         }
-        <Button flat color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
-          <Add fill={seed.color.primary} inline/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+        <Button flat color="primary" onClick={this.runAddHeader}>
+          <Add fill={seed.color.primary} inline/> Add {!this.getHeaders().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     );
@@ -373,37 +265,63 @@ const CheckCreateRequest = React.createClass({
       );
   },
   renderBodyInput(){
-    if (this.state.info.cleanedData.verb !== 'GET'){
+    if (this.props.check.check_spec.value.verb !== 'GET'){
       return (
         <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('body')} key="bound-field-body"/>
+          <Input data={this.props.check} path="check_spec.value.body" onChange={this.runChange} label="Body" textarea/>
         </Padding>
       );
     }
     return null;
   },
-  renderInfoForm(){
-    const self = this;
+  renderVerbInput(){
+    const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(id => {
+      return {id};
+    });
+    return (
+      <Padding b={1}>
+        <RadioSelect inline options={methods} path="check_spec.value.verb" data={this.props.check} onChange={this.runChange} label="Method"/>
+      </Padding>
+    );
+  },
+  renderUrlInputs(){
     return (
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
-        {_.chain(['protocol', 'verb', 'path', 'url', 'port'])
-        .reject(field => {
-          if (this.props.check.target.type === 'host'){
-            return field.match('protocol|port|path');
-          }
-          return field === 'url';
-        })
-        .value().map(string => {
-          return (
-            <Padding b={1} key={`form-input-${string}`}>
-              <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
-            </Padding>
-          );
-        })}
+        {this.renderVerbInput()}
+        <Padding b={1}>
+          <Input data={this.state} path="url" onChange={this.handleUrlChange} label="URL" placeholder="https://try.opsee.com or http://192.168.1.1:80"/>
+        </Padding>
         {this.renderBodyInput()}
       </Padding>
     );
+  },
+  renderHttpInputs(){
+    const protocols = ['http', 'https', 'ws', 'wss'].map(id => {
+      return {id};
+    });
+    return (
+      <Padding b={1}>
+        <Heading level={3}>Define Your HTTP Request</Heading>
+        <Padding b={1}>
+          <RadioSelect inline options={protocols} path="check_spec.value.protocol" data={this.props.check} onChange={this.runChange} label="Protocol"/>
+        </Padding>
+        {this.renderVerbInput()}
+        <Padding b={1}>
+          <Input data={this.props.check} path="check_spec.value.path" onChange={this.runChange} label="Path" placeholder="/healthcheck"/>
+        </Padding>
+        <Padding b={1}>
+          <Input data={this.props.check} path="check_spec.value.port" onChange={this.runChange} label="Port" placeholder="e.g. 8080"/>
+        </Padding>
+        {this.renderBodyInput()}
+      </Padding>
+    );
+  },
+  renderInputs(){
+    if (this.props.check.target.type === 'host'){
+      return this.renderUrlInputs();
+    }
+    return this.renderHttpInputs();
   },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){
@@ -425,7 +343,7 @@ const CheckCreateRequest = React.createClass({
         </Padding>
         {this.renderTargetSelection()}
         <Padding b={1}>
-          {this.renderInfoForm()}
+          {this.renderInputs()}
           {this.renderHeaderForm()}
         </Padding>
         <hr/>

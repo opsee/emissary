@@ -96,10 +96,6 @@ input[type="checkbox"]{
   padding: 0;
 }
 
-:global input[type='text']::placeholder, :global input[type='number']::placeholder, :global input[type='email']::placeholder, :global input[type='password']::placeholder {
-  color: color(var(--colorText) lightness(50%));
-}
-
 input:focus, textarea:focus{
   background-color: black;
   outline: none;
