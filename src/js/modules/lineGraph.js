@@ -1,3 +1,4 @@
+import cx from 'classnames';
 import d3 from 'd3';
 import moment from 'moment';
 import React from 'react'; // Not used directly but required in scope
@@ -178,11 +179,11 @@ export function render(data, opts) {
     .attr('y1', y(opts.threshold))
     .attr('y2', y(opts.threshold));
 
-  svg.selectAll('.line')
-      .data(['above', 'below'])
+  svg.selectAll(style.line)
+      .data(['Above', 'Below'])
     .enter().append('path')
-      .attr('class', d => style.line + d)
-      .attr('clip-path', d => 'url(#clip-' + d + ')')
+      .attr('class', d => cx(style[opts.relationship], style.line + d))
+      .attr('clip-path', d => 'url(#clip-' + d.toLowerCase() + ')')
       .datum(data)
       .attr('d', line);
   /*eslint-enable indent*/

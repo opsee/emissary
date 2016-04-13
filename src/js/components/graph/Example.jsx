@@ -10,6 +10,7 @@ import MetricGraph from './MetricGraph';
 import {Button} from '../forms';
 import rdsMetrics from '../../modules/rdsMetrics';
 import style from './graph.css';
+import relationships from 'slate/src/relationships';
 
 const GraphExample = React.createClass({
   propTypes: {
@@ -25,6 +26,7 @@ const GraphExample = React.createClass({
 
   getInitialState() {
     return {
+      relationship: 'lessThan',
       rdsID: 'mysql',
       metric: 'CPUUtilization',
       threshold: null
@@ -60,6 +62,13 @@ const GraphExample = React.createClass({
     return step;
   },
 
+  getRelationship(){
+    const rel = this.state.relationship;
+    return _.chain(relationships).find(r => {
+      return r.id === rel;
+    }).get('name').value().toLowerCase();
+  },
+
   getThreshold() {
     // Return the actual threshold if there is one
     if (this.state.threshold !== null) {
@@ -84,6 +93,13 @@ const GraphExample = React.createClass({
   onMetricChange(metric) {
     this.setState({ metric, threshold: null });
     this.props.actions.getMetricRDS(this.state.rdsID, metric);
+  },
+
+  onRelationshipChange(e) {
+    // Just toggle it for now
+    const current = this.state.relationship;
+    const relationship = current === 'lessThan' ? 'greaterThan' : 'lessThan';
+    this.setState({ relationship });
   },
 
   onThresholdChange(e) {
@@ -120,11 +136,17 @@ const GraphExample = React.createClass({
               <p>{this.getMeta().description}</p>
 
               <div>
-                <MetricGraph metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
+                <MetricGraph relationship={this.state.relationship} metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
               </div>
 
               <Padding tb={2}>
                 <div className='flex-vertical-align'>
+                  <div>
+                    <Padding r={1}>
+                      <Button flat onClick={this.onRelationshipChange}>{this.getRelationship()}</Button>
+                    </Padding>
+                  </div>
+
                   <div className='flex-grow-1'>
                     <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
                   </div>

@@ -15,7 +15,9 @@ export default React.createClass({
       name: PropTypes.string,
       units: PropTypes.string,
       description: PropTypes.string
-    }).isRequired
+    }).isRequired,
+
+    relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired
   },
 
   componentDidMount() {

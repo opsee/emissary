@@ -45,14 +45,17 @@
   stroke-width: 1.5px;
 }
 
-.linebelow {
+.greaterThan.lineBelow,
+.lessThan.lineAbove {
   fill: none;
+  stroke: red;
   stroke-width: 1.5px;
 }
 
-.lineabove {
+.greaterThan.lineAbove,
+.lessThan.lineBelow {
   fill: none;
-  stroke: red;
+  stroke: green;
   stroke-width: 1.5px;
 }
 
