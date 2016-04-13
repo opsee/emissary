@@ -13,6 +13,8 @@ import style from '../components/graph/graph.css';
  * @param {number} threshold
  */
 export function render(data, opts) {
+  const renderStart = Date.now(); // perf
+
   if (!data.length) {
     return <div>no data</div>;
   }
@@ -90,13 +92,15 @@ export function render(data, opts) {
       .style('text-anchor', 'end')
       .text('Percent (%)');
 
+  // Background colour
   svg.append('rect')
     .attr('class', style.background)
     .attr('x', 0)
     .attr('y', 0)
-    .attr('width', '100%')
+    .attr('width', width)
     .attr('height', height);
 
+  // The data line
   svg.append('path')
     .datum(data)
     .attr('class', style.line)
@@ -132,5 +136,10 @@ export function render(data, opts) {
       .datum(data)
       .attr('d', line);
 
-  return node.toReact();
+  const jsx = node.toReact();
+
+  const renderEnd = Date.now(); // perf
+  console.log(`----- Render time: ${renderEnd - renderStart} ms`); // perf
+
+  return jsx;
 }

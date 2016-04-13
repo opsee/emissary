@@ -48,7 +48,10 @@ const GraphExample = React.createClass({
   },
 
   onThresholdChange(e) {
-    this.setState({ threshold: e.target.value });
+    const threshold = e.target.value;
+    if (threshold >= 0) {
+      this.setState({ threshold });
+    }
   },
 
   renderButtons() {
