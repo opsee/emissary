@@ -62,7 +62,7 @@ const CheckCreateInfo = React.createClass({
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = check.check_spec.value.name = this.props.check.name = this.getGeneratedName();
+    check.name = check.check_spec.value.name = this.getGeneratedName();
     return check;
   },
   isDisabled(){
