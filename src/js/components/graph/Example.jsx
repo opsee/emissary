@@ -99,8 +99,9 @@ const GraphExample = React.createClass({
     const max = _.max(values);
     const mean = _.mean(values);
     const suggestedThreshold = (max + mean) / 2;
+    const fixedThreshold = parseFloat(Math.round(suggestedThreshold * 100) / 100).toFixed(2)
 
-    return suggestedThreshold;
+    return fixedThreshold;
   },
 
   onMetricChange(metric) {
