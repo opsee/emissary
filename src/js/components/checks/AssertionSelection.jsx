@@ -372,6 +372,8 @@ const AssertionsSelection = React.createClass({
               data.operand = _.get(this.getResponseFormatted(), `headers.${assertion.value}`) || '';
             } else if (assertion.key === 'json'){
               data.operand = this.getJsonPathMeta(assertion).data || '';
+            } else if (assertion.key === 'metric'){
+              data.operand = this.getMetric(assertion.value);
             }
           }
           return (
