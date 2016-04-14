@@ -16,7 +16,7 @@ import {InstanceItem} from '../instances';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {validate} from '../../modules';
-import {Input, RadioSelect} from '../forms2';
+import {Input, RadioSelect} from '../forms';
 import {
   env as envActions,
   checks as checkActions,

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {Mail, Person, Lock} from '../icons';
 import {Padding} from '../layout';
-import {Input} from '../forms2';
+import {Input} from '../forms';
 
 const UserInputs = React.createClass({
   propTypes: {

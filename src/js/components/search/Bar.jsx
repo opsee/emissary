@@ -8,7 +8,7 @@ import {Col, Grid, Row} from '../layout';
 import {Search} from '../icons';
 import {search as actions} from '../../actions';
 import style from './bar.css';
-import {Input} from '../forms2';
+import {Input} from '../forms';
 
 const SearchBar = React.createClass({
   propTypes: {

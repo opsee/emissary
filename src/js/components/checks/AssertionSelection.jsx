@@ -12,7 +12,7 @@ import {Highlight} from '../global';
 import {flag, validate, getKeys} from '../../modules';
 import relationships from 'slate/src/relationships';
 import slate from 'slate';
-import {Input} from '../forms2';
+import {Input} from '../forms';
 
 const AssertionsSelection = React.createClass({
   propTypes: {

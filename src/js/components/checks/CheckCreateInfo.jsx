@@ -12,7 +12,7 @@ import {Alert, Col, Grid, Padding, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
-import {Input} from '../forms2';
+import {Input} from '../forms';
 import {
   checks as actions,
   user as userActions,

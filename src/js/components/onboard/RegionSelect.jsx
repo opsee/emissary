@@ -9,7 +9,7 @@ import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
 import config from '../../modules/config';
 import regions from '../../modules/regions';
-import {RadioSelect} from '../forms2';
+import {RadioSelect} from '../forms';
 
 const RegionSelect = React.createClass({
   propTypes: {

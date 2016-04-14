@@ -6,7 +6,7 @@ import {StatusHandler, Toolbar} from '../global';
 import {Button} from '../forms';
 import {Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
-import {Input} from '../forms2';
+import {Input} from '../forms';
 
 const Credentials = React.createClass({
   propTypes: {

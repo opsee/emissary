@@ -7,7 +7,7 @@ import {Toolbar} from '../global';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
-import {RadioSelect} from '../forms2';
+import {RadioSelect} from '../forms';
 
 const VPCSelect = React.createClass({
   propTypes: {

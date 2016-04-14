@@ -9,7 +9,7 @@ import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
-import {RadioSelect} from '../forms2';
+import {RadioSelect} from '../forms';
 
 const SubnetSelect = React.createClass({
   propTypes: {

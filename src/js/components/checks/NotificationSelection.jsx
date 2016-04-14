@@ -13,7 +13,7 @@ import style from './notificationSelection.css';
 import {
   integrations as actions
 } from '../../actions';
-import {Input} from '../forms2';
+import {Input} from '../forms';
 
 const NotificationSelection = React.createClass({
   propTypes: {
