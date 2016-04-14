@@ -96,7 +96,7 @@ const CheckCreateTarget = React.createClass({
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
-    this.props.onChange(check, null, 1);
+    this.props.onChange(check);
     const data = JSON.stringify(check);
     this.history.pushState(null, `/check-create/request?data=${data}`);
   },

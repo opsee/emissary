@@ -77,7 +77,7 @@ const CheckCreateAssertions = React.createClass({
     return !!validate.check(this.props.check, ['assertions']).length;
   },
   runChange(data = undefined){
-    this.props.onChange(this.getFinalData(data), this.isDisabled(), 2);
+    this.props.onChange(this.getFinalData(data));
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckAssertionsHelp');
@@ -89,7 +89,7 @@ const CheckCreateAssertions = React.createClass({
   },
   handleAssertionsChange(assertions = []){
     const data = _.assign({}, this.props.check, {assertions});
-    this.props.onChange(data, this.isDisabled(), 2);
+    this.props.onChange(data);
   },
   renderHelperText(){
     return (

@@ -47,6 +47,8 @@ const CheckCreateInfo = React.createClass({
         this.props.history.pushState(null, '/check-create/target');
       }
     }
+    //mostly for setting the name of the check at this point
+    this.runChange();
   },
   getGeneratedName(){
     const {target} = this.props.check;
@@ -60,21 +62,21 @@ const CheckCreateInfo = React.createClass({
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = check.check_spec.value.name = this.props.check.name;
+    check.name = check.check_spec.value.name = this.props.check.name = this.getGeneratedName();
     return check;
   },
   isDisabled(){
     return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
-    this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
+    this.props.onChange(this.getFinalData());
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckInfoHelp');
   },
   handleNotificationChange(notifications){
     const data = _.assign({}, this.getFinalData(), {notifications});
-    this.props.onChange(data, this.isDisabled(notifications), 3);
+    this.props.onChange(data);
   },
   handleInputChange(data){
     this.props.onChange(data);
