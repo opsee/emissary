@@ -1,3 +1,4 @@
+/* eslint-disable */
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
@@ -220,3 +221,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphExample);
+/*eslint-enable*/

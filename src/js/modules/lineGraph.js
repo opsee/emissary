@@ -1,3 +1,4 @@
+/* eslint-disable */
 import cx from 'classnames';
 import d3 from 'd3';
 import moment from 'moment';
@@ -202,3 +203,4 @@ export function render(data, opts) {
   const jsx = node.toReact();
   return jsx;
 }
+/* eslint-enable */
