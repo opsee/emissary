@@ -1,36 +1,3 @@
-:global .form-group {
-  border: none;
-  position: relative;
-  padding:0;
-  margin:0;
-}
-:global .form-group.search-group {
-  margin-top: 4em;
-}
-:global .form-group .label {
-  transition: color var(--transitionEaseOut);
-  color: var(--colorText2);
-  display: block;
-  font-size: 0.875em;
-  font-weight: 300;
-  left: 0;
-  margin-bottom: 0;
-  padding: 0.5em 0;
-  width: 100%;
-}
-:global .form-group .icon {
-  bottom: 0.75em;
-  right: 1.25em;
-  position: absolute;
-}
-
-:global .input-container:hover ~ label .input-container:active ~ label {
-  color: var(--colorGray2);
-}
-:global .input-container:hover ~ .icon .input-container:active ~ .icon {
-  fill: var(--colorGray2);
-}
-
 input, textarea {
   box-shadow: none;
   transition: background-color var(--transitionEaseOut);

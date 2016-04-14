@@ -14,11 +14,14 @@ const Input = React.createClass({
     path: PropTypes.string,
     label: PropTypes.string,
     children: PropTypes.node,
-    textarea: PropTypes.bool
+    textarea: PropTypes.bool,
+    id: PropTypes.string,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func
   },
   getInitialState() {
     return {
-      id: `${this.props.path}-${_.uniqueId()}`
+      id: this.props.id || `${this.props.path}-${_.uniqueId()}`
     };
   },
   getValue(){
