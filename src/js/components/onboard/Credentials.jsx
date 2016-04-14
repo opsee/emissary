@@ -1,30 +1,12 @@
 import React, {PropTypes} from 'react';
-import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
-import {BoundField, Button} from '../forms';
+import {Button} from '../forms';
 import {Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions} from '../../actions';
-
-const InfoForm = forms.Form.extend({
-  'access_key': forms.CharField({
-    widget: forms.PasswordInput,
-    label: 'Access Key ID',
-    widgetAttrs: {
-      placeholder: 'Your AWS Access Key ID'
-    }
-  }),
-  'secret_key': forms.CharField({
-    widget: forms.PasswordInput,
-    label: 'Secret Key',
-    widgetAttrs: {
-      placeholder: 'Your AWS Secret Key'
-    }
-  })
-});
+import {Input} from '../forms';
 
 const Credentials = React.createClass({
   propTypes: {
@@ -39,35 +21,13 @@ const Credentials = React.createClass({
         'access_key': PropTypes.string,
         'secret_key': PropTypes.string
       }),
-      app: PropTypes.shape({
-        socketMessages: PropTypes.array
-      }),
-      env: PropTypes.shape({
-        bastions: PropTypes.array
-      }),
       asyncActions: PropTypes.object
     }).isRequired
   },
   componentWillMount(){
-    if (!this.props.redux.onboard.region){
+    if (!this.props.redux.onboard.region && process.env.NODE_ENV !== 'debug'){
       this.props.history.replaceState(null, '/start/region-select');
     }
-  },
-  getInitialState() {
-    const self = this;
-    return {
-      info: new InfoForm(_.extend({
-        onChange(){
-          self.props.actions.setCredentials(self.state.info.cleanedData);
-          self.forceUpdate();
-        },
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 100
-        }
-      }, self.isDataComplete() ? {data: this.props.redux.onboard} :  null))
-    };
   },
   getStatus(){
     return this.props.redux.asyncActions.onboardVpcScan.status;
@@ -76,11 +36,14 @@ const Credentials = React.createClass({
     return this.props.redux.onboard.access_key && this.props.redux.onboard.secret_key;
   },
   isDisabled(){
-    return !!(!this.state.info.isComplete() || this.getStatus() === 'pending');
+    return !!(!this.isDataComplete() || this.getStatus() === 'pending');
+  },
+  handleInputChange(data){
+    this.props.actions.setCredentials(data);
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.vpcScan(this.state.info.cleanedData);
+    this.props.actions.vpcScan(this.props.redux.onboard);
   },
   render() {
     return (
@@ -92,14 +55,14 @@ const Credentials = React.createClass({
               <form onSubmit={this.handleSubmit}>
                 <p>We need your AWS credentials to install the our instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
-                  <BoundField bf={this.state.info.boundField('access_key')}/>
+                  <Input data={this.props.redux.onboard} path="access_key" label="Access Key ID*" type="password" onChange={this.handleInputChange} placeholder="Your AWS Access Key ID"/>
                 </Padding>
                 <Padding b={1}>
-                  <BoundField bf={this.state.info.boundField('secret_key')}/>
+                  <Input data={this.props.redux.onboard} path="secret_key" label="Secret Key*" type="password" onChange={this.handleInputChange} placeholder="Your AWS Secret Key"/>
                 </Padding>
 
-                <Padding b={2}>
-                <p className="text-secondary text-sm">Note: At this time, manual installation of the instance through your AWS console is not possible.</p>
+                <Padding b={2} className="text-secondary text-sm">
+                  Note: At this time, manual installation of the instance through your AWS console is not possible.
                 </Padding>
                 <StatusHandler status={this.getStatus()} timeout={1500}/>
                 <Button color="success" type="submit" block disabled={this.isDisabled()} title={this.isDisabled() ? 'Fill in Credentials to move on.' : 'Install the Opsee Instance'} chevron>{this.getStatus() === 'pending' ? 'Submitting...' : 'Next'}</Button>

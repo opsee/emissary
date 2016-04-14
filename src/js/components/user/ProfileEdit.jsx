@@ -2,32 +2,13 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import forms from 'newforms';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
-import {Button, BoundField} from '../forms';
+import {Button} from '../forms';
 import UserInputs from './UserInputs.jsx';
-import {Lock, Close} from '../icons';
+import {Close} from '../icons';
 import {user as actions} from '../../actions';
-
-const PasswordForm = forms.Form.extend({
-  password: forms.CharField({
-    widget: forms.PasswordInput,
-    label: 'New Password',
-    widgetAttrs: {
-      placeholder: 'Enter a new password'
-    },
-    required: false
-  }),
-  render(){
-    return (
-      <BoundField bf={this.boundField('password')}>
-        <Lock className="icon"/>
-      </BoundField>
-    );
-  }
-});
 
 const ProfileEdit = React.createClass({
   propTypes: {
@@ -43,22 +24,8 @@ const ProfileEdit = React.createClass({
   },
   getInitialState() {
     return {
-      user: this.props.redux.user.toJS(),
-      passwordForm: this.getForm()
+      user: this.props.redux.user.toJS()
     };
-  },
-  getForm(){
-    const self = this;
-    return new PasswordForm({
-      onChange(){
-        self.setState({password: self.state.passwordForm.cleanedData.password});
-      },
-      labelSuffix: '',
-      validation: {
-        on: 'blur change',
-        onChangeDelay: 100
-      }
-    });
   },
   getStatus(){
     return this.props.redux.asyncActions.userEdit.status;
@@ -68,18 +35,12 @@ const ProfileEdit = React.createClass({
     this.getStatus() === 'pending';
   },
   handleUserData(data){
-    let user = _.clone(this.state.user);
-    user.name = data.name;
-    user.email = data.email;
+    const user = _.assign({}, this.state.user, data);
     this.setState({user});
   },
   handleSubmit(e){
     e.preventDefault();
-    let data = this.state.user;
-    if (this.state.password){
-      data.password = this.state.password;
-    }
-    this.props.actions.edit(data);
+    this.props.actions.edit(this.state.user);
   },
   render() {
     return (
@@ -92,16 +53,15 @@ const ProfileEdit = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-            <form onSubmit={this.handleSubmit}>
-              <UserInputs include={['email', 'name']}  onChange={this.handleUserData} email={this.state.user.email} name={this.state.user.name}/>
-              {this.state.passwordForm.render()}
-              <StatusHandler status={this.getStatus()}/>
-              <Padding t={2}>
-                <Button color="success" type="submit" block disabled={this.isDisabled()}>
-                  {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
-                </Button>
-              </Padding>
-            </form>
+              <form onSubmit={this.handleSubmit}>
+                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']}/>
+                <StatusHandler status={this.getStatus()}/>
+                <Padding t={2}>
+                  <Button color="success" type="submit" block disabled={this.isDisabled()}>
+                    {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
+                  </Button>
+                </Padding>
+              </form>
             </Col>
           </Row>
         </Grid>

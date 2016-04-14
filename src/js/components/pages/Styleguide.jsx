@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -11,71 +10,13 @@ import {Add, Key} from '../icons';
 
 import * as icons from '../icons';
 import {Circle} from '../icons';
-import {Button, BoundField, ToggleWithLabel} from '../forms';
+import {Button} from '../forms';
 import {GroupItemList} from '../groups';
 import {Heading} from '../type';
-import relationships from 'slate/src/relationships';
 import {env as envActions, checks as checkActions, app as appActions} from '../../actions';
+import {RadioSelect, Input} from '../forms';
 
 const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
-
-function getState(){
-  return {
-    toggles: [{on: true}, {on: false}, {on: true}],
-    radios: _.range(3).map(i => {
-      return {id: `radio-${i}`, on: false};
-    }),
-    buttonToggles: ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached'].map((title, i) => {
-      return {title: title, on: false, id: `button-toggle-${i}`};
-    })
-  };
-}
-
-const serviceChoices = ['Cassandra', 'Consul', 'Docker Registry', 'Elasticsearch', 'Etcd', 'Influxdb', 'Memcached', 'MongoDB', 'MySQL', 'Node', 'Postgres', 'RDS', 'Redis', 'Riak', 'Zookeeper'];
-
-const InfoForm = forms.Form.extend({
-  name: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'Name',
-      autoComplete: 'off',
-      title: 'foo'
-    }
-  }),
-  password: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'Password'
-    }
-  }),
-  body: forms.CharField({
-    widget: forms.Textarea,
-    widgetAttrs: {
-      placeholder: 'Body'
-    }
-  }),
-  services: forms.MultipleChoiceField({
-    choices: serviceChoices.slice(0, 6).map(s => [s, s]),
-    widget: forms.CheckboxSelectMultiple(),
-    widgetAttrs: {
-      widgetType: 'MultiButtonToggle'
-    },
-    label: 'buttonToggle'
-  }),
-  radio: forms.ChoiceField({
-    choices: serviceChoices.slice(0, 5).map(s => [s, s]),
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'RadioSelect'
-    }
-  }),
-  relationship: forms.ChoiceField({
-    widgetAttrs: {
-      noLabel: true,
-      widgetType: 'Dropdown'
-    },
-    choices: relationships.map(r => [r.id, r.name])
-  }),
-  validation: 'auto'
-});
 
 const Styleguide = React.createClass({
   propTypes: {
@@ -97,24 +38,16 @@ const Styleguide = React.createClass({
     })
   },
   getInitialState(){
-    const self = this;
-    return _.extend(getState(), {
-      info: new InfoForm({
-        onChange(){
-          if (self.isMounted()){
-            self.forceUpdate();
-          }
-        }
-      }),
-      showMenu: false
-    });
+    return {
+      radio: 1,
+      input1: undefined,
+      input2: undefined,
+      input3: undefined
+    };
   },
   componentWillMount(){
     this.props.checkActions.getChecks();
     this.props.envActions.getGroupsSecurity();
-  },
-  getDefaultProps() {
-    return getState();
   },
   getColor(index){
     return opseeColors[index % opseeColors.length];
@@ -162,6 +95,9 @@ const Styleguide = React.createClass({
   },
   runToggleContextMenu(){
     this.setState({showMenu: !this.state.showMenu});
+  },
+  handleInputChange(state){
+    this.setState(state);
   },
   handlePressUp(){
     /*eslint-disable no-alert*/
@@ -242,27 +178,12 @@ const Styleguide = React.createClass({
                   </ol>
                 </Padding>
 
-                <Heading level={3}>Toggle List</Heading>
-                <ul className="list-unstyled">
-                {this.state.toggles.map((t, i) => {
-                  return (
-                    <li key={`toggle-${i}`}>
-                      <ToggleWithLabel on={t.on} onChange={this.runTriggerToggle} id={i} label="Item"/>
-                    </li>
-                  );
-                })}
-                </ul>
+              <hr/>
               </Padding>
 
-              <hr/>
-
               <Heading level={3}>Radio Select</Heading>
-              <BoundField bf={this.state.info.boundField('radio')}/>
+              <RadioSelect options={[{id: 1}, {id: 2}, {id: 3}]} data={this.state} path="radio" onChange={this.handleInputChange}/>
               <hr/>
-
-          <Heading level={3}>Button Toggles</Heading>
-          <BoundField bf={this.state.info.boundField('services')}/>
-            <hr/>
 
             <Heading level={3}>Data Tables</Heading>
 
@@ -322,18 +243,15 @@ const Styleguide = React.createClass({
             <form name="testform" id="testform">
 
               <Padding b={1}>
-                <BoundField bf={this.state.info.boundField('name')}/>
+                <Input placeholder="Name" onChange={this.handleInputChange} data={this.state} path="input1"/>
               </Padding>
               <Padding b={1}>
-                <BoundField bf={this.state.info.boundField('password')}>
+                <Input placeholder="Password" label="Input with Label" onChange={this.handleInputChange} data={this.state} path="input2">
                   <Key className="icon"/>
-                </BoundField>
+                </Input>
               </Padding>
               <Padding b={1}>
-                <BoundField bf={this.state.info.boundField('body')}/>
-              </Padding>
-              <Padding b={1}>
-                <BoundField bf={this.state.info.boundField('relationship')}/>
+                <Input textarea placeholder="Write some long text in here" onChange={this.handleInputChange} data={this.state} path="input3"/>
               </Padding>
 
               <Heading level={3}>Buttons</Heading>

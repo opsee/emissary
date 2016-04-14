@@ -77,7 +77,7 @@ const CheckCreateAssertions = React.createClass({
     return !!validate.check(this.props.check, ['assertions']).length;
   },
   runChange(data = undefined){
-    this.props.onChange(this.getFinalData(data), this.isDisabled(), 2);
+    this.props.onChange(this.getFinalData(data));
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckAssertionsHelp');
@@ -89,7 +89,7 @@ const CheckCreateAssertions = React.createClass({
   },
   handleAssertionsChange(assertions = []){
     const data = _.assign({}, this.props.check, {assertions});
-    this.props.onChange(data, this.isDisabled(), 2);
+    this.props.onChange(data);
   },
   renderHelperText(){
     return (
@@ -111,6 +111,17 @@ const CheckCreateAssertions = React.createClass({
     }
     return null;
   },
+  renderAssertionSelection(){
+    const {props} = this;
+    if ((props.renderAsInclude && props.check.COMPLETE) || !props.renderAsInclude){
+      return (
+        <Padding b={1}>
+          <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
@@ -118,8 +129,7 @@ const CheckCreateAssertions = React.createClass({
           <Heading level={3}>Assertions</Heading>
         </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
-        <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>
-        <div><br/></div>
+        {this.renderAssertionSelection()}
         {this.renderSubmitButton()}
       </form>
     );

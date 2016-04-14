@@ -12,7 +12,8 @@ import FilterButtons from './FilterButtons';
 const SearchAll = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      setTokens: PropTypes.func
+      setTokens: PropTypes.func,
+      setString: PropTypes.func
     }),
     redux: PropTypes.shape({
       search: PropTypes.shape({
@@ -50,6 +51,9 @@ const SearchAll = React.createClass({
     if (props.redux.search.string !== props.location.query.s && props.location.query.s){
       props.actions.setString(props.location.query.s);
     }
+  },
+  componentWillUnmount() {
+    this.props.actions.setString('');
   },
   render(){
     return (

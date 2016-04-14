@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import forms from 'newforms';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {BastionRequirement, Toolbar} from '../global';
-import {BoundField, Button} from '../forms';
+import {Button} from '../forms';
 import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
@@ -13,28 +12,12 @@ import {Alert, Col, Grid, Padding, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
+import {Input} from '../forms';
 import {
   checks as actions,
   user as userActions,
   analytics as analyticsActions
 } from '../../actions';
-
-const InfoForm = forms.Form.extend({
-  name: forms.CharField({
-    label: 'Check name',
-    widgetAttrs: {
-      placeholder: 'My Critical Service Status 200 Check'
-    }
-  }),
-  validation: 'auto',
-  render() {
-    return (
-      <Padding b={1}>
-        <BoundField bf={this.boundField('name')}/>
-      </Padding>
-    );
-  }
-});
 
 const CheckCreateInfo = React.createClass({
   propTypes: {
@@ -58,27 +41,14 @@ const CheckCreateInfo = React.createClass({
       })
     })
   },
-  getInitialState() {
-    const self = this;
-
-    const obj = {
-      info: new InfoForm({
-        onChange: self.runChange,
-        labelSuffix: '',
-        data: {
-          name: self.getGeneratedName()
-        }
-      }),
-      notifications: []
-    };
-    return obj;
-  },
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
       if (process.env.NODE_ENV !== 'debug' && !this.props.renderAsInclude){
         this.props.history.pushState(null, '/check-create/target');
       }
     }
+    //mostly for setting the name of the check at this point
+    this.runChange();
   },
   getGeneratedName(){
     const {target} = this.props.check;
@@ -92,35 +62,24 @@ const CheckCreateInfo = React.createClass({
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = check.check_spec.value.name = this.state.info.cleanedData.name;
-    check.notifications = this.getNotifications();
+    check.name = check.check_spec.value.name = this.getGeneratedName();
     return check;
-  },
-  getCleanedData(){
-    return _.assign({}, {
-      notifications: this.state.notifications
-    }, this.state.info.cleanedData);
-  },
-  getNotifications(){
-    return _.reject(this.state.notifications, (n = {}) => {
-      return !n.type || !n.value;
-    });
   },
   isDisabled(){
     return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
-    this.props.onChange(this.getFinalData(), this.isDisabled(), 3);
+    this.props.onChange(this.getFinalData());
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckInfoHelp');
   },
   handleNotificationChange(notifications){
-    this.setState({
-      notifications
-    });
     const data = _.assign({}, this.getFinalData(), {notifications});
-    this.props.onChange(data, this.isDisabled(notifications), 3);
+    this.props.onChange(data);
+  },
+  handleInputChange(data){
+    this.props.onChange(data);
   },
   handleSubmit(e) {
     if (e){
@@ -128,20 +87,6 @@ const CheckCreateInfo = React.createClass({
     }
     this.props.analyticsActions.trackEvent('Onboard', 'check-created');
     this.props.onSubmit();
-  },
-  renderRemoveNotificationButton(form, index){
-    if (index > 0){
-      return (
-        <Padding t={2}>
-          <BoundField bf={form.boundField('DELETE')}/>
-        </Padding>
-      );
-    }
-    return (
-      <Padding lr={1}>
-       <div style={{width: '48px'}}/>
-     </Padding>
-    );
   },
   renderHelperText(){
     return (
@@ -170,7 +115,7 @@ const CheckCreateInfo = React.createClass({
       <div>
         <Padding b={2}>
           <form name="checkCreateInfoForm">
-            {this.state.info.render()}
+            <Input data={this.props.check} path="check_spec.value.name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
           </form>
         </Padding>
         <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>

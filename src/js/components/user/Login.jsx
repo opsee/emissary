@@ -51,8 +51,8 @@ const Login = React.createClass({
           <Row>
             <Col xs={12}>
               <LogoColor/>
-              <form name="loginForm" onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'password']}  onChange={this.setUserData}/>
+              <form onSubmit={this.handleSubmit}>
+                <UserInputs include={['email', 'password']} onChange={this.setUserData} data={this.state.data}/>
                 <StatusHandler status={this.props.redux.asyncActions.userLogin.status}/>
                 <Padding t={1}>
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>

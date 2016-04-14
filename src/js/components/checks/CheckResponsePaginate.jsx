@@ -53,7 +53,8 @@ const CheckResponsePaginate = React.createClass({
     return {
       complete: false,
       expanded: false,
-      activeItem: 0
+      activeItem: 0,
+      debouncedTestAction: _.debounce(this.props.actions.test, 500)
     };
   },
   componentDidMount(){
@@ -129,7 +130,7 @@ const CheckResponsePaginate = React.createClass({
     }
     const complete = this.isCheckComplete(data.check);
     if (complete){
-      this.props.actions.test(data.check);
+      this.state.debouncedTestAction(data.check);
     }
     return this.setState({complete: true});
   },

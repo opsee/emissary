@@ -34,9 +34,7 @@ const PasswordForgot = React.createClass({
     return !this.state.data.email || this.getStatus() === 'pending';
   },
   setUserData(data){
-    this.setState({
-      data
-    });
+    this.setState({data});
   },
   handleSubmit(e){
     e.preventDefault();
@@ -52,9 +50,9 @@ const PasswordForgot = React.createClass({
       <form name="loginForm" onSubmit={this.handleSubmit}>
         <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
         <Padding b={1}>
-          <UserInputs include={['email']}  onChange={this.setUserData} email={this.state.data.email}/>
+          <UserInputs include={['email']} onChange={this.setUserData} data={this.state.data}/>
         </Padding>
-        <Button type="submit" color="success" block disabled={this.isDisabled()}>
+        <Button color="success" type="submit" block disabled={this.isDisabled()}>
           {this.getButtonText()}
         </Button>
       </form>

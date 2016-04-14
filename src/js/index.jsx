@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import App from './components/global/App';
 import store from './modules/store';
 
-if (process.env.NODE_ENV === 'debug'){
+if (process.env.NODE_ENV === 'redux'){
   const DevTools = require('./components/global/DevTools').default;
   render(
   (
