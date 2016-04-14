@@ -12,6 +12,7 @@ import {Button} from '../forms';
 import rdsMetrics from '../../modules/rdsMetrics';
 import style from './graph.css';
 import relationships from 'slate/src/relationships';
+import {Color} from '../type';
 
 const GraphExample = React.createClass({
   propTypes: {
@@ -181,11 +182,13 @@ const GraphExample = React.createClass({
               </div>
 
               <Padding tb={2}>
-                <div className='flex-vertical-align'>
-                  <Padding r={1}>
-                    <input type="text" disabled value={`${this.getCurrentDataPoint().value} ${this.getMeta().units}`} />
+                <div>
+                  <Padding tb={1}>
+                    <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${this.getMeta().units}`}</Color></code>
                   </Padding>
+                </div>
 
+                <div className='flex-vertical-align'>
                   <div>
                     <Padding r={1}>
                       <Button flat onClick={this.onRelationshipChange}>{this.getRelationship()}</Button>

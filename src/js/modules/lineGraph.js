@@ -86,8 +86,10 @@ export function render(data, opts) {
   const xAxis = d3.svg.axis()
     .scale(x)
     .orient('bottom')
-    .tickFormat(d => {
-      return moment(d).fromNow()
+    .tickFormat(timestamp => {
+      const now = moment();
+      const minAgo = now.diff(moment(timestamp), 'minutes');
+      return `-${minAgo} min`;
     });
 
   const yAxis = d3.svg.axis()
