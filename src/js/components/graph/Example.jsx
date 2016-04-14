@@ -50,7 +50,8 @@ const GraphExample = React.createClass({
   getDataPoints() {
     const metrics = this.getMetrics();
     return _.get(metrics, ['metrics', this.state.metric, 'metrics'], [])
-      .sort((a, b) => { // FIXME put this in the reducer
+      // FIXME put this in the reducer, ultimately should be done in compost tho
+      .sort((a, b) => {
         if (a.timestamp < b.timestamp) return -1;
         if (a.timestamp > b.timestamp) return 1;
         return 0;

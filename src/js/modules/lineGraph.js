@@ -86,7 +86,7 @@ export function render(data, opts) {
     .scale(x)
     .orient('bottom')
     .tickFormat(d => {
-      moment(d).fromNow()
+      return moment(d).fromNow()
     });
 
   const yAxis = d3.svg.axis()
@@ -134,7 +134,7 @@ export function render(data, opts) {
     .attr('class', style.yAxis)
     .call(yAxis);
 
-  // Configure the x-axis ticks
+  // Configure the y-axis ticks
   yAxisGroup.selectAll('text')
     .attr('class', style.yTick);
 
