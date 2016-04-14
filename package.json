@@ -60,15 +60,16 @@
     "webpack-dev-server": "^1.12.0"
   },
   "scripts": {
-    "start": "node util/rev | node util/server",
     "build": "node util/rev | NODE_ENV=production webpack --bail && cp -r src/fonts/ dist/fonts/",
-    "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
-    "lint": "eslint src/. --ext .js,.jsx --max-warnings 0 --config ./node_modules/opsee-style/.eslintrc",
-    "compare": "node visreg/compare",
-    "fix": "npm install",
-    "serve": "node util/connect",
     "casper": "npm run serve | casperjs test util/test-deploy.js",
-    "casper-debug": "npm run serve | casperjs test util/test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080"
+    "casper-debug": "npm run serve | casperjs test util/test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080",
+    "compare": "node visreg/compare",
+    "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
+    "fix": "npm install",
+    "lint": "eslint src/. --ext .js,.jsx --max-warnings 0 --config ./node_modules/opsee-style/.eslintrc",
+    "serve": "node util/connect",
+    "start": "node util/rev | node util/server",
+    "stats": "webpack --profile --json > stats.json"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
