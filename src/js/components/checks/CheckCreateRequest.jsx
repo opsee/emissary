@@ -58,7 +58,8 @@ const CheckCreateRequest = React.createClass({
   },
   getInitialState() {
     return {
-      url: this.getUrl()
+      url: this.getUrl(),
+      debouncedRunUrlChange: _.debounce(this.runUrlChange, 800)
     };
   },
   getHeaders(fromSource){
@@ -125,6 +126,26 @@ const CheckCreateRequest = React.createClass({
     check.check_spec.value.headers.splice(index, 1);
     this.runChange(check);
   },
+  runUrlChange(state){
+    const check = _.cloneDeep(this.props.check);
+    const spec = check.check_spec.value;
+    let string = _.clone(state.url);
+    if (!string.match('^http|^ws')){
+      string = `http://${string}`;
+    }
+    try {
+      const url = new window.URL(string);
+      check.check_spec.value = _.assign(spec, {
+        port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
+        path: url.pathname || '/',
+        protocol: (url.protocol || '').replace(':', '')
+      });
+      check.target.id = url.hostname;
+    } catch (err) {
+      check.check_spec.value = _.pick(spec, ['verb', 'body', 'name']);
+    }
+    this.runChange(check);
+  },
   handleSubmit(e){
     e.preventDefault();
     if (!this.props.renderAsInclude){
@@ -154,24 +175,7 @@ const CheckCreateRequest = React.createClass({
   },
   handleUrlChange(state){
     this.setState(state);
-    const check = _.cloneDeep(this.props.check);
-    const spec = check.check_spec.value;
-    let string = _.clone(state.url);
-    if (!string.match('^http|^ws')){
-      string = `http://${string}`;
-    }
-    try {
-      const url = new window.URL(string);
-      check.check_spec.value = _.assign(spec, {
-        port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
-        path: url.pathname || '/',
-        protocol: (url.protocol || '').replace(':', '')
-      });
-      check.target.id = url.hostname;
-    } catch (err) {
-      check.check_spec.value = _.pick(spec, ['verb', 'body', 'name']);
-    }
-    this.runChange(check);
+    this.state.debouncedRunUrlChange(state);
   },
   renderHeaderForm(){
     return (

@@ -19,29 +19,12 @@ const Input = React.createClass({
     onFocus: PropTypes.func,
     onBlur: PropTypes.func
   },
-  getDefaultProps() {
-    return {
-      debounce: 0
-    };
-  },
   getInitialState() {
     return {
-      id: this.props.id || `${this.props.path}-${_.uniqueId()}`,
-      value: _.get(this.props.data, this.props.path),
-      debouncedChange: _.debounce(this.props.onChange, this.props.debounce)
+      id: this.props.id || `${this.props.path}-${_.uniqueId()}`
     };
   },
-  componentWillReceiveProps(nextProps) {
-    const get = _.get(nextProps.data, this.props.path);
-    if (get !== this.state.value){
-      console.log(get, this.state.value);
-      this.setState({
-        value: get
-      });
-    }
-  },
   getValue(){
-    return this.state.value || '';
     return _.get(this.props.data, this.props.path) || '';
   },
   getProps(){
@@ -54,18 +37,14 @@ const Input = React.createClass({
     return _.omit(props, ['data', 'children', 'label', 'path']);
   },
   handleChange(event){
-    const val = event.target.value;
-    this.setState({
-      value: val
-    });
     if (this.props.data){
       const data = _.chain(this.props.data)
       .cloneDeep()
-      .set(this.props.path, val)
+      .set(this.props.path, event.target.value)
       .value();
-      return this.state.debouncedChange(data);
+      return this.props.onChange.call(null, data);
     }
-    return this.state.debouncedChange(val);
+    return event.target.value;
   },
   renderLabel(){
     if (this.props.label){
