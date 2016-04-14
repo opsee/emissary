@@ -108,6 +108,7 @@ export function del(id){
 
 function formatCheckData(data){
   let obj = _.cloneDeep(data);
+  const spec = obj.check_spec.value;
   if (obj.target.type === 'security'){
     obj.target.type = 'sg';
   }
@@ -120,9 +121,10 @@ function formatCheckData(data){
       operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
     });
   });
-  obj.check_spec.value.headers = _.filter(obj.check_spec.value.headers, h => {
+  obj.check_spec.value.headers = _.filter(spec.headers, h => {
     return h.name && h.values && h.values.length;
   });
+  obj.check_spec.value = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
   return _.assign({}, _.pick(obj, ['target', 'interval', 'check_spec', 'name']), {
     assertions
   });

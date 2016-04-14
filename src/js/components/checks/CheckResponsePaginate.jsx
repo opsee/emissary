@@ -54,7 +54,7 @@ const CheckResponsePaginate = React.createClass({
       complete: false,
       expanded: false,
       activeItem: 0,
-      debouncedTestAction: _.debounce(this.props.actions.test, 200)
+      debouncedTestAction: _.debounce(this.props.actions.test, 500)
     };
   },
   componentDidMount(){
