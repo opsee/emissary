@@ -55,10 +55,10 @@ const Credentials = React.createClass({
               <form onSubmit={this.handleSubmit}>
                 <p>We need your AWS credentials to install the our instance. They will only be used once and <strong>we do not store them.</strong> If you  prefer, you can <a target="_blank" href="/docs/IAM">follow our IAM guide</a> and create a temporary role for Opsee to use during instance installation. You can <a target="_blank" href="https://console.aws.amazon.com/iam/home#users">manage users and permissions</a> from your AWS console.</p>
                 <Padding b={1}>
-                  <Input data={this.props.redux.onboard} path="access_key" label="Access Key ID" type="password" onChange={this.handleInputChange} placeholder="Your AWS Access Key ID"/>
+                  <Input data={this.props.redux.onboard} path="access_key" label="Access Key ID*" type="password" onChange={this.handleInputChange} placeholder="Your AWS Access Key ID"/>
                 </Padding>
                 <Padding b={1}>
-                  <Input data={this.props.redux.onboard} path="secret_key" label="Secret Key" type="password" onChange={this.handleInputChange} placeholder="Your AWS Secret Key"/>
+                  <Input data={this.props.redux.onboard} path="secret_key" label="Secret Key*" type="password" onChange={this.handleInputChange} placeholder="Your AWS Secret Key"/>
                 </Padding>
 
                 <Padding b={2} className="text-secondary text-sm">

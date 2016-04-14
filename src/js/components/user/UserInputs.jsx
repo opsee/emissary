@@ -8,25 +8,36 @@ const UserInputs = React.createClass({
   propTypes: {
     include: PropTypes.array.isRequired,
     data: PropTypes.object,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    required: PropTypes.array
+  },
+  getDefaultProps() {
+    return {
+      required: ['email', 'password', 'name']
+    };
+  },
+  getLabel(type){
+    const found = this.props.required.indexOf(type) > -1;
+    const suffix = found ? '*' : '';
+    return _.capitalize(type) + suffix;
   },
   renderEmail(){
     return (
-      <Input data={this.props.data} path="email" placeholder="address@domain.com" autoCapitalize="off" autoCorrect="off" onChange={this.props.onChange} label="Email">
+      <Input data={this.props.data} path="email" placeholder="address@domain.com" autoCapitalize="off" autoCorrect="off" onChange={this.props.onChange} label={this.getLabel('email')}>
         <Mail/>
       </Input>
     );
   },
   renderPassword(){
     return (
-      <Input data={this.props.data} type="password" path="password" placeholder="Password" onChange={this.props.onChange} label="Password">
+      <Input data={this.props.data} type="password" path="password" placeholder="Password" onChange={this.props.onChange} label={this.getLabel('password')}>
         <Lock/>
       </Input>
     );
   },
   renderName(){
     return (
-      <Input data={this.props.data} path="name" placeholder="Your Name" onChange={this.props.onChange} label="Name">
+      <Input data={this.props.data} path="name" placeholder="Your Name" onChange={this.props.onChange} label={this.getLabel('name')}>
         <Person/>
       </Input>
     );

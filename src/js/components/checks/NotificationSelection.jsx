@@ -180,13 +180,13 @@ const NotificationSelection = React.createClass({
   renderForm(notif, index){
     if (notif.type === 'email'){
       return (
-        <Input placeholder="address@domain.com" onChange={this.handleInputChange.bind(null, index)} data={notif} path="value" label="Email">
+        <Input placeholder="address@domain.com" onChange={this.handleInputChange.bind(null, index)} data={notif} path="value" label="Email*">
           <Mail/>
         </Input>
       );
     }
     return (
-      <Input placeholder="https://alert.me/incoming" onChange={this.handleInputChange.bind(null, index)} data={notif} path="value" label="Webhook URL">
+      <Input placeholder="https://alert.me/incoming" onChange={this.handleInputChange.bind(null, index)} data={notif} path="value" label="Webhook URL*">
         <Cloud/>
       </Input>
     );

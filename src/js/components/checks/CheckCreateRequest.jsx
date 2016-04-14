@@ -188,12 +188,12 @@ const CheckCreateRequest = React.createClass({
                 <Row>
                   <Col xs={12} sm={5} key={`header-field-${index}-key`}>
                     <Padding b={1}>
-                      <Input data={header} path="name" onChange={this.handleHeaderChange.bind(null, index)} placeholder="content-type" label="Key"/>
+                      <Input data={header} path="name" onChange={this.handleHeaderChange.bind(null, index)} placeholder="content-type" label="Key*"/>
                     </Padding>
                   </Col>
                   <Col xs={10} sm={5} key={`header-field-${index}-value`}>
                     <Padding b={1}>
-                      <Input data={header} path="values" onChange={this.handleHeaderChange.bind(null, index)} placeholder="application/json" label="Value"/>
+                      <Input data={header} path="values" onChange={this.handleHeaderChange.bind(null, index)} placeholder="application/json" label="Value*"/>
                     </Padding>
                   </Col>
                   <Col xs={2}>
