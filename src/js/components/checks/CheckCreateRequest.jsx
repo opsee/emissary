@@ -59,6 +59,7 @@ const CheckCreateRequest = React.createClass({
   getInitialState() {
     return {
       url: this.getUrl(),
+      hasSetPort: false,
       debouncedRunUrlChange: _.debounce(this.runUrlChange, 800)
     };
   },
@@ -99,6 +100,22 @@ const CheckCreateRequest = React.createClass({
   runChange(data){
     let check = data;
     const spec = check.check_spec.value;
+    //lets see if a user has "touched" the port
+    //if not, lets give them some nice defaults
+    let hasSetPort = this.state.hasSetPort;
+    if (this.props.check.check_spec.value.port !== spec.port){
+      hasSetPort = true;
+      this.setState({
+        hasSetPort
+      });
+    }
+    if (!hasSetPort){
+      if (spec.protocol === 'http'){
+        spec.port = 80;
+      } else if (spec.protocol === 'https'){
+        spec.port = 443;
+      }
+    }
     if (spec.port){
       check.check_spec.value.port = parseInt(spec.port, 10);
     }
