@@ -58,6 +58,11 @@ const GraphExample = React.createClass({
       });
   },
 
+  getCurrentDataPoint() {
+    const data = this.getDataPoints();
+    return data.length ? data[data.length-1] : {};
+  },
+
   getStepSize() {
     const data = this.getDataPoints();
     const values = _.map(data, d => d.value);
@@ -176,6 +181,10 @@ const GraphExample = React.createClass({
 
               <Padding tb={2}>
                 <div className='flex-vertical-align'>
+                  <Padding r={1}>
+                    <input type="text" disabled value={`${this.getCurrentDataPoint().value} ${this.getMeta().units}`} />
+                  </Padding>
+
                   <div>
                     <Padding r={1}>
                       <Button flat onClick={this.onRelationshipChange}>{this.getRelationship()}</Button>

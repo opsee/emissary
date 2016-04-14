@@ -34,34 +34,44 @@
 }
 
 .yGuide line {
-  stroke: var(--colorGray8);
-  stroke-opacity: 0.5;
+  stroke: #111;
+  stroke-opacity: 0.3;
   stroke-width: 1px;
 }
 
 .line {
   fill: none;
-  stroke: green;
-  stroke-width: 1.5px;
+  stroke: var(--colorSuccess);
+  stroke-width: 1px;
 }
 
 .greaterThan.lineBelow,
 .lessThan.lineAbove {
   fill: none;
-  stroke: red;
-  stroke-width: 1.5px;
+  stroke: var(--colorDanger);
+  stroke-width: 1px;
 }
 
 .greaterThan.lineAbove,
 .lessThan.lineBelow {
   fill: none;
-  stroke: green;
-  stroke-width: 1.5px;
+  stroke: var(--colorSuccess);
+  stroke-width: 1px;
 }
 
 .thresholdLine {
   stroke: var(--colorPrimary);
-  stroke-width: 1px;
+  stroke-width: 1.5px;
+}
+
+.pointPassing {
+  stroke: var(--colorSuccess);
+  fill: var(--colorSuccess);
+}
+
+.pointFailing {
+  stroke: var(--colorDanger);
+  fill: var(--colorDanger);
 }
 
 .statusPassing {

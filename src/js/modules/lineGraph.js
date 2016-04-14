@@ -97,6 +97,7 @@ export function render(data, opts) {
 
   // Create the line
   const line = d3.svg.line()
+    .interpolate('monotone')
     .x(d => x(d.time))
     .y(d => y(d.value));
 
@@ -162,6 +163,24 @@ export function render(data, opts) {
       .attr('y', y(opts.threshold))
       .attr('width', width)
       .attr('height', height - y(opts.threshold));
+
+  // Append the data points
+  svg.append('g')
+    .selectAll('circle')
+    .data(data)
+    .enter().append('circle')
+    .attr('cx', d => x(d.time))
+    .attr('cy', d => y(d.value))
+    .attr('r', 2)
+    .attr('class', d => {
+      let status;
+      if (opts.relationship === 'lessThan') {
+        status = d.value < opts.threshold ? 'Passing' : 'Failing';
+      } else if (opts.relationship === 'greaterThan') {
+        status = d.value > opts.threshold ? 'Passing' : 'Failing';
+      }
+      return style[`point${status}`];
+    });
 
   // Append the threshold line
   svg.append('line')
