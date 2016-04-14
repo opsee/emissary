@@ -49,7 +49,12 @@ const GraphExample = React.createClass({
 
   getDataPoints() {
     const metrics = this.getMetrics();
-    return _.get(metrics, ['metrics', this.state.metric, 'metrics'], []);
+    return _.get(metrics, ['metrics', this.state.metric, 'metrics'], [])
+      .sort((a, b) => { // FIXME put this in the reducer
+        if (a.timestamp < b.timestamp) return -1;
+        if (a.timestamp > b.timestamp) return 1;
+        return 0;
+      });
   },
 
   getStepSize() {
@@ -123,6 +128,24 @@ const GraphExample = React.createClass({
     return buttons;
   },
 
+  renderStatus() {
+    const data = this.getDataPoints();
+    const threshold = this.getThreshold();
+    const relationship = this.state.relationship;
+    const currentDataPoint = data[data.length-1].value;
+
+    let status;
+    if (relationship === 'lessThan') {
+      status = currentDataPoint < threshold ? 'Passing' : 'Failing';
+    } else if (relationship === 'greaterThan') {
+      status = currentDataPoint > threshold ? 'Passing' : 'Failing';
+    }
+
+    return (
+      <span className={style[`status${status}`]}>Status: {status}</span>
+    );
+  },
+
   render() {
     const threshold = this.getThreshold();
 
@@ -131,12 +154,15 @@ const GraphExample = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <h1>{this.state.rdsID}</h1>
               <h2>{this.state.metric}</h2>
               <p>{this.getMeta().description}</p>
 
               <div>
                 <MetricGraph relationship={this.state.relationship} metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
+              </div>
+
+              <div className="text-center">
+                {this.renderStatus()}
               </div>
 
               <Padding tb={2}>

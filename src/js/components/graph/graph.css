@@ -63,3 +63,11 @@
   stroke: var(--colorPrimary);
   stroke-width: 1px;
 }
+
+.statusPassing {
+  color: var(--colorSuccess);
+}
+
+.statusFailing {
+  color: var(--colorDanger);
+}

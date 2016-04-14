@@ -48,7 +48,7 @@ function formatVerticalTick(d, units) {
 
 /**
  * @param node - ReactFauxDOM node
- * @param {obj[]} data
+ * @param {obj[]} data - a sorted array of data points
  * @param {obj} opts
  * @param {int} opts.width
  * @param {int} opts.aspectRatio - calculate height with respect to width
@@ -64,16 +64,6 @@ export function render(data, opts) {
   data.forEach(d => {
     d.time = new Date(d.timestamp);
     d.value = +d.value;
-  });
-
-  data.sort((a, b) => {
-    if (a.timestamp < b.timestamp) {
-      return -1;
-    }
-    if (a.timestamp > b.timestamp) {
-      return 1;
-    }
-    return 0; // a must be equal to b
   });
 
   const margin = {top: 20, right: 20, bottom: 100, left: 100};
@@ -95,7 +85,9 @@ export function render(data, opts) {
   const xAxis = d3.svg.axis()
     .scale(x)
     .orient('bottom')
-    .tickFormat(d => moment(d).fromNow());
+    .tickFormat(d => {
+      moment(d).fromNow()
+    });
 
   const yAxis = d3.svg.axis()
     .scale(y)
