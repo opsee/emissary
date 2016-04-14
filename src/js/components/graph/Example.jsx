@@ -130,15 +130,23 @@ const GraphExample = React.createClass({
 
   renderStatus() {
     const data = this.getDataPoints();
+    const currentDataPoint = data[data.length-1];
+
+    if (!currentDataPoint) {
+      return (
+        <span>Status: loading...</span>
+      );
+    }
+
     const threshold = this.getThreshold();
     const relationship = this.state.relationship;
-    const currentDataPoint = data[data.length-1].value;
+    const currentValue = currentDataPoint.value;
 
     let status;
     if (relationship === 'lessThan') {
-      status = currentDataPoint < threshold ? 'Passing' : 'Failing';
+      status = currentValue < threshold ? 'Passing' : 'Failing';
     } else if (relationship === 'greaterThan') {
-      status = currentDataPoint > threshold ? 'Passing' : 'Failing';
+      status = currentValue > threshold ? 'Passing' : 'Failing';
     }
 
     return (
