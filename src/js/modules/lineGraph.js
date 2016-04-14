@@ -170,11 +170,11 @@ export function render(data, opts) {
   // Append the data points
   svg.append('g')
     .selectAll('circle')
-    .data(data)
+    .data([_.last(data)])
     .enter().append('circle')
     .attr('cx', d => x(d.time))
     .attr('cy', d => y(d.value))
-    .attr('r', 2)
+    .attr('r', 5)
     .attr('class', d => {
       let status;
       if (opts.relationship === 'lessThan') {
