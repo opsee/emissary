@@ -17,6 +17,20 @@ const AssertionItem = React.createClass({
       return t.id === key;
     }).get('name').value();
   },
+  getValue(){
+    const val = this.props.item.value;
+    if (val === 'request_latency'){
+      return 'Round-Trip Time';
+    }
+    return val;
+  },
+  getOperand(){
+    let suffix = '';
+    if (this.props.item.value === 'request_latency'){
+      suffix = 'ms';
+    }
+    return `${this.props.item.operand}${suffix}`;
+  },
   getRelationship(){
     const rel = this.props.item.relationship;
     return _.chain(relationships).find(r => {
@@ -32,9 +46,9 @@ const AssertionItem = React.createClass({
           </Col>
           <Col xs={10} sm={11}>
           {this.getKey()}&nbsp;
-          {this.props.item.value ? ` - ${this.props.item.value} ` : null}
+          {this.props.item.value ? ` - ${this.getValue()} ` : null}
           <span className="text-secondary">{this.getRelationship()}&nbsp;</span>
-          <strong>{this.props.item.operand}</strong>
+          <strong>{this.getOperand()}</strong>
           </Col>
         </Row>
       </Grid>
