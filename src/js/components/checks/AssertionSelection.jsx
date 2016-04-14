@@ -13,6 +13,7 @@ import {flag, validate, getKeys} from '../../modules';
 import relationships from 'slate/src/relationships';
 import slate from 'slate';
 import {Input} from '../forms';
+import inputStyle from '../forms/input.css';
 
 const AssertionsSelection = React.createClass({
   propTypes: {
@@ -115,12 +116,12 @@ const AssertionsSelection = React.createClass({
   },
   getJsonPathMeta(assertion){
     const body = this.getJsonBody();
-    let data = null;
+    let data = undefined;
     let scalar = false;
     if (body){
       try {
         data = _.get(body, assertion.value);
-        if (data){
+        if (data !== undefined){
           scalar = (typeof data === 'string' || typeof data === 'number') ? true : false;
           data = scalar ? data : JSON.stringify(data);
         }
@@ -135,7 +136,7 @@ const AssertionsSelection = React.createClass({
   },
   getBodySnippet(assertion){
     const meta = this.getJsonPathMeta(assertion);
-    if (meta && meta.data && assertion.value){
+    if (meta && meta.data !== undefined && assertion.value){
       if (meta.scalar){
         return this.renderReturnedValue(meta.data);
       }
@@ -147,7 +148,7 @@ const AssertionsSelection = React.createClass({
           <Rule/>
         </div>
       );
-    } else if (!meta.data && assertion.value){
+    } else if (meta.data === undefined && assertion.value){
       return this.renderReturnedValue('>> No JSON data selected', 'danger');
     }
     return (
@@ -468,7 +469,7 @@ const AssertionsSelection = React.createClass({
           {this.getBodySnippet(assertion) || 'Select a header below'}
           <Padding t={0.5} b={1}>
             <div className="form-group">
-              <label className="label" htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
+              <label className={inputStyle.label} htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
               <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(), id: `json-path-${assertionIndex}`}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
             </div>
           </Padding>
