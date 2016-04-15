@@ -50,7 +50,8 @@ const PasswordChange = React.createClass({
   setUserData(data){
     this.setState(data);
   },
-  handleSubmit(){
+  handleSubmit(e){
+    e.preventDefault();
     this.props.actions.edit(_.assign(this.state, this.props.location.query));
   },
   render() {
