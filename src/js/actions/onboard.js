@@ -145,9 +145,9 @@ export function subnetSelect(payload){
       payload
     });
     analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
-    dispatch({
+    setTimeout(() => dispatch({
       type: ONBOARD_SET_INSTALL_DATA
-    });
+    }), 50);
   };
 }
 
