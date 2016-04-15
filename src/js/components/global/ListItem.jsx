@@ -4,13 +4,16 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Settings, NewWindow} from '../icons';
+import {Add, Close, Settings, NewWindow} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Col, Grid, Padding, Row} from '../layout';
 import cx from 'classnames';
 import RadialGraph from './RadialGraph';
-import {app as actions, analytics as analyticsActions} from '../../actions';
+import {
+  app as actions,
+  analytics as analyticsActions
+} from '../../actions';
 
 const ListItem = React.createClass({
   propTypes: {
@@ -24,6 +27,7 @@ const ListItem = React.createClass({
     title: PropTypes.string,
     type: PropTypes.string,
     onClose: PropTypes.func,
+    onSelect: PropTypes.func,
     noMenu: PropTypes.bool,
     actions: PropTypes.shape({
       openContextMenu: PropTypes.func
@@ -41,6 +45,11 @@ const ListItem = React.createClass({
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
     this.props.analyticsActions.trackEvent(this.props.type, 'menu-open');
+  },
+  runSelect(){
+    if (typeof this.props.onSelect === 'function'){
+      this.props.onSelect(this.props.item.toJS());
+    }
   },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
@@ -101,6 +110,13 @@ const ListItem = React.createClass({
       </Button>
     );
   },
+  renderSelectButton(){
+    const selected = this.props.item.get('selected');
+    const icon = selected ? <Close btn/> : <Add btn/>;
+    return (
+      <Button icon flat secondary onClick={this.runSelect} title="Select">{icon}</Button>
+    );
+  },
   renderMenu(){
     return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
@@ -112,17 +128,17 @@ const ListItem = React.createClass({
           <Grid fluid>
             <Row>
               <Col xs={2} sm={1}>
+                <Row className="end-xs">
+                  <Col>
+                    {this.renderSelectButton()}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={2} sm={1}>
                 {this.renderGraph()}
               </Col>
               <Col xs={8} sm={10} className="display-flex">
                 {this.renderInfo()}
-              </Col>
-              <Col xs={2} sm={1}>
-                <Row className="end-xs">
-                  <Col>
-                    {this.renderMenuButton()}
-                  </Col>
-                </Row>
               </Col>
             </Row>
           </Grid>

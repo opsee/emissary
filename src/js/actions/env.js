@@ -1,3 +1,4 @@
+import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
@@ -13,6 +14,7 @@ import {
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
   ENV_GET_BASTIONS,
+  ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
   AWS_STOP_INSTANCES
@@ -261,3 +263,5 @@ export function startInstances(InstanceIds){
     });
   };
 }
+
+export const selectToggle = createAction(ENV_SELECT_TOGGLE);

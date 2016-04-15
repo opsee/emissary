@@ -11,6 +11,7 @@ import {Button} from '../forms';
 import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions, user as userActions} from '../../actions';
+import MultiEdit from './MultiEdit';
 
 const CheckList = React.createClass({
   propTypes: {
@@ -33,6 +34,11 @@ const CheckList = React.createClass({
       })
     })
   },
+  getInitialState() {
+    return {
+      notifEditing: false
+    };
+  },
   componentWillMount(){
     this.props.actions.getChecks();
   },
@@ -45,6 +51,14 @@ const CheckList = React.createClass({
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
+  },
+  handleNotifEdit(){
+    this.setState({
+      notifEditing: true
+    });
+  },
+  handleMultiEditChange(data){
+    console.log(data);
   },
   renderAutoMessage(){
     return (
@@ -62,7 +76,7 @@ const CheckList = React.createClass({
       return (
         <div>
           <Heading level={3}>All Checks ({this.props.redux.checks.checks.size})</Heading>
-          <CheckItemList/>
+          <CheckItemList selected={this.state.notifEditing}/>
         </div>
       );
     }
@@ -81,6 +95,19 @@ const CheckList = React.createClass({
       </StatusHandler>
     );
   },
+  renderActionBar(){
+    return (
+      <Padding b={2}>
+        <Button onClick={this.handleNotifEdit}>Edit Notifications</Button>
+      </Padding>
+    );
+  },
+  renderMultiEdit(){
+    if (this.state.notifEditing){
+      return <MultiEdit checks={this.props.redux.checks.checks} onChange={this.handleMultiEditChange}/>
+    }
+    return null;
+  },
   render() {
     return (
       <div>
@@ -93,7 +120,9 @@ const CheckList = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
+                {this.renderActionBar()}
                 {this.renderChecks()}
+                {this.renderMultiEdit()}
               </BastionRequirement>
             </Col>
           </Row>

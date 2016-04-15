@@ -11,17 +11,21 @@ import {
   CHECK_TEST,
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE,
-  CHECKS_SET_FILTERED
+  CHECKS_SET_FILTERED,
+  CHECK_SELECT_TOGGLE
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
 
 export const statics = {
-  checkFromJS(data){
+  checkFromJS(data, state){
     const legit = data.instance || data;
     let newData = _.assign({}, legit, legit.check_spec.value);
     newData.name = newData.name || newData.check_spec.value.name;
     newData.check_spec.value.headers = newData.check_spec.value.headers || [];
+    newData.selected = !!state.checks.find(check => {
+      return (check.get('id') === newData.id) && (check.get('selected'));
+    });
     _.assign(newData, result.getFormattedData(data, true));
     return new Check(newData);
   },
@@ -95,7 +99,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(action.payload.data, {COMPLETE: true}));
+      const single = statics.checkFromJS(_.assign(action.payload.data, {COMPLETE: true}), state);
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -135,7 +139,7 @@ export default handleActions({
   [GET_CHECKS]: {
     next(state, action){
       const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(c);
+        return statics.checkFromJS(c, state);
       }));
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});
@@ -172,6 +176,21 @@ export default handleActions({
     next(state, action){
       const filtered = itemsFilter(state.checks, action.payload, 'checks');
       return _.assign({}, state, {filtered});
+    }
+  },
+  [CHECK_SELECT_TOGGLE]: {
+    next(state, action){
+      const index = state.checks.findIndex(item => {
+        return item.get('id') === action.payload;
+      });
+      let updated;
+      if (index > -1){
+        updated = state.checks.get(index).set('selected', !state.checks.get(index).get('selected'));
+      }
+      const checks = updated ? state.checks.update(index, () => updated) : state.checks;
+      return _.assign({}, state, {
+        checks
+      });
     }
   }
 }, initial);

@@ -19,7 +19,10 @@ const CheckItemList = React.createClass({
       PropTypes.string,
       PropTypes.array
     ]),
+    //only show items that match global search tokens
     filter: PropTypes.bool,
+    //only show items that are selected
+    selected: PropTypes.bool,
     title: PropTypes.bool,
     offset: PropTypes.number,
     limit: PropTypes.number,
@@ -52,6 +55,7 @@ const CheckItemList = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
+    arr.push(nextProps.selected !== this.props.selected);
     const string1 = 'redux.asyncActions.getChecks.status';
     arr.push(_.get(nextProps, string1) !== _.get(this.props, string1));
     const string2 = 'redux.checks.checks';
@@ -79,6 +83,9 @@ const CheckItemList = React.createClass({
     }
     if (this.props.filter){
       data = this.props.redux.checks.filtered;
+    }
+    if (this.props.selected){
+      data = data.filter(check => check.get('selected'));
     }
     return data.slice(this.props.offset, this.props.limit);
   },

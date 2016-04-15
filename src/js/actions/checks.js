@@ -13,7 +13,8 @@ import {
   CHECK_EDIT,
   CHECK_TEST,
   CHECK_TEST_RESET,
-  CHECK_TEST_SELECT_RESPONSE
+  CHECK_TEST_SELECT_RESPONSE,
+  CHECK_SELECT_TOGGLE
 } from './constants';
 
 /**
@@ -239,5 +240,15 @@ export function edit(data){
         }, reject);
       })
     });
+  };
+}
+
+export function selectToggle(id){
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECK_SELECT_TOGGLE,
+      payload: id
+    });
+    getCheck(id)(dispatch, state);
   };
 }

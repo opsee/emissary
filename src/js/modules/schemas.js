@@ -30,7 +30,8 @@ const baseEnvItem = {
   checks: List(),
   results: List(),
   passing: 0,
-  total: 0
+  total: 0,
+  selected: false
 };
 
 export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
@@ -92,6 +93,7 @@ export const Check = Record({
   //useful for displaying condensed lists of checks
   //prob remove this with graphql integration
   COMPLETE: false,
+  selected: false,
   id: undefined,
   name: undefined,
   target: Target({

@@ -13,7 +13,8 @@ const CheckItem = React.createClass({
     item: PropTypes.instanceOf(Record).isRequired,
     onClick: PropTypes.func,
     actions: PropTypes.shape({
-      del: PropTypes.func.isRequired
+      del: PropTypes.func.isRequired,
+      selectToggle: PropTypes.func
     }),
     appActions: PropTypes.shape({
       closeContextMenu: PropTypes.func
@@ -47,7 +48,7 @@ const CheckItem = React.createClass({
   render(){
     if (this.props.item.get('name')){
       return (
-        <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item}>
+        <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item} onSelect={this.props.actions.selectToggle.bind(null, this.props.item.get('id'))}>
           <ContextMenu title={`${this.props.item.get('name')} Actions`} id={this.props.item.get('id')} key="menu">
             <Button text="left" color="primary" block flat to={`/check/edit/${this.props.item.get('id')}`}>
               <Edit inline fill="primary"/> Edit
