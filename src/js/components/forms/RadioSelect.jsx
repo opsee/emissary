@@ -1,44 +1,50 @@
 import React, {PropTypes} from 'react';
-import RadioWithLabel from './RadioWithLabel.jsx';
+import _ from 'lodash';
+
 import {Padding} from '../layout';
+import Radio from './Radio';
+import style from './radioSelect.css';
+import inputStyle from './input.css';
 
 const RadioSelect = React.createClass({
   propTypes: {
-    bf: PropTypes.object.isRequired
+    onChange: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
+    data: PropTypes.object,
+    path: PropTypes.string.isRequired,
+    inline: PropTypes.bool,
+    label: PropTypes.string
   },
-  getInitialState(){
-    return {
-      data: this.props.bf.value()
-    };
-  },
-  isWidgetActive(w){
-    let val = this.props.bf.value();
-    if (Array.isArray(val)){
-      val = val[0];
+  handleRadioChange(id){
+    if (this.props.data){
+      const data = _.chain(this.props.data)
+      .cloneDeep()
+      .set(this.props.path, id)
+      .value();
+      return this.props.onChange.call(null, data);
     }
-    return val === w.choiceValue;
+    return this.props.onChange.call(null, id);
   },
-  handleChange(id, bool){
-    const data = bool ? [id] : [];
-    let obj = {};
-    obj[this.props.bf.name] = data;
-    return this.props.bf.form.updateData(obj, {
-      clearValidation: false
-    });
+  renderLabel(){
+    if (this.props.label){
+      return <div className={inputStyle.label} dangerouslySetInnerHTML={{__html: this.props.label}}/>;
+    }
+    return null;
   },
   render(){
     return (
-      <ul className="list-unstyled">
-        {this.props.bf.subWidgets().map((w, i) => {
-          return (
-            <li key={i}>
-              <Padding b={1}>
-                <RadioWithLabel on={this.isWidgetActive(w) ? true : false} onChange={this.handleChange} id={w.choiceValue} label={`${w.choiceLabel}`}/>
+      <div>
+        {this.renderLabel()}
+        <div className={this.props.inline ? style.wrapperInline : ''}>
+          {this.props.options.map((w, i) => {
+            return (
+              <Padding b={1} key={i} className={this.props.inline ? style.itemInline : ''}>
+                <Radio on={_.get(this.props.data, this.props.path) === w.id} onChange={this.handleRadioChange} label={w.label || w.name || w.id} id={w.id}/>
               </Padding>
-            </li>
-          );
-        })}
-      </ul>
+            );
+          })}
+        </div>
+      </div>
     );
   }
 });

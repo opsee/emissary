@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import {Toolbar} from '../global';
 import EnvList from './EnvList.jsx';
 

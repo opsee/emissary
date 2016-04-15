@@ -4,10 +4,9 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
 import {Table, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
-import {Padding} from '../layout';
 import {Heading} from '../type';
 import {flag} from '../../modules';
 import {

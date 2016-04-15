@@ -3,7 +3,7 @@ import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Modal} from '../../modules/bootstrap';
+import {Modal} from '../layout';
 import {app as actions} from '../../actions';
 
 const MessageModal = React.createClass({
@@ -14,7 +14,10 @@ const MessageModal = React.createClass({
     redux: PropTypes.shape({
       app: PropTypes.shape({
         modalMessage: PropTypes.shape({
-          html: PropTypes.object,
+          html: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.string
+          ]),
           color: PropTypes.object,
           show: PropTypes.bool
         })

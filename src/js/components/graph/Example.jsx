@@ -4,8 +4,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import { Padding } from '../layout';
+import {Padding, Grid, Row, Col} from '../layout';
 import {env as actions} from '../../actions';
 import MetricGraph from './MetricGraph';
 import {Button} from '../forms';

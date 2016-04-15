@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import DocumentTitle from 'react-document-title';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import style from './toolbar.css';
 import {plain as seed} from 'seedling';
 import {Heading, Hyphenate} from '../type';

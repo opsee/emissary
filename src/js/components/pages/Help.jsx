@@ -2,8 +2,7 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
 import {Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {Mail, Slack, Chat} from '../icons';
 

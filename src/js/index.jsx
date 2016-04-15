@@ -4,18 +4,15 @@ import {Provider} from 'react-redux';
 import App from './components/global/App';
 import store from './modules/store';
 
-if (process.env.NODE_ENV === 'debug'){
-  const tools = require('redux-devtools/lib/react');
-  const {DevTools, DebugPanel, LogMonitor} = tools;
+if (process.env.NODE_ENV === 'redux'){
+  const DevTools = require('./components/global/DevTools').default;
   render(
   (
     <div>
       <Provider store={store}>
         <App/>
       </Provider>
-      <DebugPanel top right bottom>
-        <DevTools store={store} monitor={LogMonitor} visibleOnLoad={false}/>
-      </DebugPanel>
+      <DevTools store={store}/>
     </div>
   ), document.getElementById('main'));
 } else {

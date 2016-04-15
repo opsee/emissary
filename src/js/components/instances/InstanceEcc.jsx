@@ -6,8 +6,7 @@ import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add, Settings} from '../icons';

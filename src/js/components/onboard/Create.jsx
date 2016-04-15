@@ -6,9 +6,8 @@ import _ from 'lodash';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
 
 const OnboardCreate = React.createClass({
@@ -44,9 +43,7 @@ const OnboardCreate = React.createClass({
     return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
-    this.setState({
-      data: data
-    });
+    return this.setState({data});
   },
   handleInputChange(e){
     if (e && e.target){
@@ -83,13 +80,13 @@ const OnboardCreate = React.createClass({
               <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['email']}  onChange={this.handleUserData} email={this.state.data.email}/>
+                  <UserInputs include={['email']} data={this.state.data} onChange={this.handleUserData}/>
                 </Padding>
                 <div className="display-flex">
                   <Padding r={1} b={1}>
                     <input id="js-tos" name="tos" value={this.state.tos} type="checkbox" onChange={this.handleInputChange} required/>
                   </Padding>
-                  <label className="label" htmlFor="js-tos">I accept the <Link to="/beta-tos" target="_blank">Opsee Terms of Service</Link></label>
+                  <label className="label" htmlFor="js-tos">I accept the <Link to="/tos" target="_blank">Opsee Terms of Service</Link></label>
                 </div>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">

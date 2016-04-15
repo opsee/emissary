@@ -1,114 +1,54 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import forms from 'newforms';
-import {BoundField} from '../forms';
 import {Mail, Person, Lock} from '../icons';
 import {Padding} from '../layout';
-
-let include = [];
-
-const InfoForm = forms.Form.extend({
-  email: forms.CharField({
-    validators: [forms.validators.validateEmail],
-    widgetAttrs: {
-      placeholder: 'address@domain.com',
-      autoCapitalize: 'off',
-      autoCorrect: 'off'
-    }
-  }),
-  name: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'Your Name',
-      icon: 'Person'
-    }
-  }),
-  password: forms.CharField({
-    widget: forms.PasswordInput,
-    widgetAttrs: {
-      placeholder: 'Your Password',
-      icon: 'Lock'
-    }
-  }),
-  render() {
-    return (
-      <div>
-      {
-        include.map(field => {
-          return <BoundField bf={this.boundField(field)} key={field}/>;
-        })
-      }
-      </div>
-    );
-  }
-});
+import {Input} from '../forms';
 
 const UserInputs = React.createClass({
   propTypes: {
-    include: PropTypes.array.isRequired
+    include: PropTypes.array.isRequired,
+    data: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    required: PropTypes.array
   },
-  componentWillMount(){
-    include = this.props.include;
-  },
-  getDefaultProps(){
+  getDefaultProps() {
     return {
-      email: '',
-      name: '',
-      password: ''
+      required: ['email', 'password', 'name']
     };
   },
-  getInitialState() {
-    const self = this;
-    return {
-      info: new InfoForm(_.extend({
-        onChange(){
-          self.props.onChange(self.state.info.cleanedData, this.isComplete());
-          self.forceUpdate();
-        },
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 300
-        }
-      }, self.getCompleteData()))
-    };
-  },
-  getCompleteData(){
-    const test = _.chain(this.props.include).map(s => this.props[s]).some().value();
-    if (test){
-      return {
-        data: _.cloneDeep(this.props)
-      };
-    }
-    return null;
+  getLabel(type){
+    const found = this.props.required.indexOf(type) > -1;
+    const suffix = found ? '*' : '';
+    return _.capitalize(type) + suffix;
   },
   renderEmail(){
     return (
-       <BoundField bf={this.state.info.boundField('email')}>
-        <Mail className="icon"/>
-       </BoundField>
+      <Input data={this.props.data} path="email" placeholder="address@domain.com" autoCapitalize="off" autoCorrect="off" onChange={this.props.onChange} label={this.getLabel('email')}>
+        <Mail/>
+      </Input>
     );
   },
   renderPassword(){
     return (
-       <BoundField bf={this.state.info.boundField('password')}>
-        <Lock className="icon"/>
-       </BoundField>
+      <Input data={this.props.data} type="password" path="password" placeholder="Password" onChange={this.props.onChange} label={this.getLabel('password')}>
+        <Lock/>
+      </Input>
     );
   },
   renderName(){
     return (
-       <BoundField bf={this.state.info.boundField('name')}>
-        <Person className="icon"/>
-       </BoundField>
+      <Input data={this.props.data} path="name" placeholder="Your Name" onChange={this.props.onChange} label={this.getLabel('name')}>
+        <Person/>
+      </Input>
     );
   },
   render() {
     return (
       <div>
-        {this.props.include.map(i => {
+        {this.props.include.map((key, i) => {
           return (
-            <Padding b={1} key={`padding-${i}`}>
-              {this[`render${_.capitalize(i)}`]()}
+            <Padding b={1} key={`user-inputs-padding-${i}`}>
+              {this[`render${_.capitalize(key)}`]()}
             </Padding>
           );
         })}

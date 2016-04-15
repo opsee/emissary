@@ -4,9 +4,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {StatusHandler} from '../global';
 import {user as actions} from '../../actions';
 
@@ -39,10 +38,7 @@ const OnboardPassword = React.createClass({
     return (!this.state.password || !this.state.name) || this.getStatus() === 'pending';
   },
   handleUserData(data){
-    this.setState(_.defaults(data, {
-      password: undefined,
-      name: undefined
-    }));
+    this.setState(data);
   },
   handleSubmit(e){
     e.preventDefault();
@@ -57,7 +53,7 @@ const OnboardPassword = React.createClass({
           <Row>
             <Col xs={12}>
               <form name="loginForm" onSubmit={this.handleSubmit}>
-                <UserInputs include={['name', 'password']}  onChange={this.handleUserData}/>
+                <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
                 <StatusHandler status={this.getStatus()}/>
                 <Padding t={1}>
                   <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>

@@ -1,9 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Toolbar, Highlight} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 
 const IAM = React.createClass({
   render() {

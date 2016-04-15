@@ -7,8 +7,7 @@ import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
 import {Analytics, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
-import {Alert, Grid, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding} from '../layout';
 /* eslint-disable no-unused-vars */
 import {yeller} from '../../modules';
 
@@ -73,7 +72,7 @@ const Opsee = React.createClass({
         <Grid>
           <Col xs={12}>
             <Padding t={2}>
-              <Alert bsStyle="danger">
+              <Alert color="danger">
                 Could not connect to Opsee. Attempting to reconnect...
               </Alert>
             </Padding>

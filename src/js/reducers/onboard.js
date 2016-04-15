@@ -74,10 +74,11 @@ function generateSubnetsForSelection(regions){
         subnetName = _.chain(subnet.tags).find({key: 'Name'}).get('value').value() || subnetName;
       }
       const nameString = subnetName !== subnet.subnet_id ? `${subnetName}&nbsp;(${subnet.subnet_id})` : subnet.subnet_id;
-      return [subnet.subnet_id, `
-      <strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${nameString}<br/>
-      <span style="color:${seed.color.text2}">${subnet.instance_count} Instances (${subnet.routing})</span>
-      `];
+      return {
+        id: subnet.subnet_id,
+        label: `<strong>${subnet.availability_zone}</strong>&nbsp;|&nbsp;${nameString}<br/>
+                <span style="color:${seed.color.text2}">${subnet.instance_count} Instances (${subnet.routing})</span>`
+      };
     }).value();
   }).flatten().value();
 }
@@ -111,9 +112,10 @@ export default handleActions({
             vpcName = _.chain(vpc.tags).find({key: 'Name'}).get('value').value() || vpcName;
           }
           const identifier = vpcName === vpc.vpc_id ? `<strong>${vpcName}</strong>` : `<strong>${vpcName}</strong> - ${vpc.vpc_id}`;
-          return [vpc.vpc_id, `
-          ${identifier} (${vpc.instance_count || 0} Instances)
-          `];
+          return {
+            id: vpc.vpc_id,
+            label: `${identifier} (${vpc.instance_count || 0} Instances)`
+          };
         }).value();
       }).flatten().value();
       return _.assign({}, state, {regionsWithVpcs, vpcsForSelection});

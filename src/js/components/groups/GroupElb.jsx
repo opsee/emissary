@@ -8,10 +8,9 @@ import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 

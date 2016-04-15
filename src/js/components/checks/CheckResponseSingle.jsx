@@ -32,11 +32,8 @@ const CheckResponseSingle = React.createClass({
     return props.body || '';
   },
   getMetric(name){
-    const data = _.chain(this.props.metrics).find((metric) => {
-      return metric.name === name ||
-      (metric.name.match('request_latency') && name.match('request_latency'));
-    }).get('value').value();
-    if (name.match('request_latency') && typeof data === 'number'){
+    const data = _.chain(this.props.metrics).find({name}).get('value').value();
+    if (name === 'request_latency' && typeof data === 'number'){
       return Math.round(data);
     }
     return data;
@@ -58,8 +55,15 @@ const CheckResponseSingle = React.createClass({
     return (
       <div>
         <Padding t={1}>
-          <strong>Status Code:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{this.props.code}</code></Color><br/>
-          <strong>Request Latency:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{this.getMetric('request_latency')} ms</code></Color><br/>
+          <div>
+            <strong>Status Code:</strong>&nbsp;<Color c="primary"><code style={{fontSize: '1.5rem'}}>{this.props.code}</code></Color>
+          </div>
+          <Padding t={1}>
+            <strong>Metrics</strong>
+          </Padding>
+          <div>
+            <code style={{fontSize: '1.5rem'}}>Round-Trip Time:&nbsp;<Color c="primary">{this.getMetric('request_latency')} ms</Color></code>
+          </div>
         </Padding>
         <Padding t={1} b={1}>
           <Padding b={0.5}>

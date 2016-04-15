@@ -2,9 +2,8 @@ import React from 'react';
 import {ArrowRight} from '../icons';
 import {StepCounter} from '../global';
 import img from '../../../img/tut-checks.svg';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 
 export default React.createClass({

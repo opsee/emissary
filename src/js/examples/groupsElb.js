@@ -112,7 +112,7 @@ export default {
                   ],
                   'metrics': [
                     {
-                      'name': 'request_latency_ms',
+                      'name': 'request_latency',
                       'value': 2.013955
                     }
                   ]
@@ -166,7 +166,7 @@ export default {
                   ],
                   'metrics': [
                     {
-                      'name': 'request_latency_ms',
+                      'name': 'request_latency',
                       'value': 12.658608
                     }
                   ]
