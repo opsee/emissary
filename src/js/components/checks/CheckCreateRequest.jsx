@@ -79,15 +79,15 @@ const CheckCreateRequest = React.createClass({
   },
   getUrl(){
     const {check} = this.props;
-    if (check.target.type === 'host' && check.target.id){
-      const s = check.check_spec.value;
+    const spec = check.check_spec.value;
+    if (check.target.type === 'host' && check.target.id && spec.path){
       let port = '';
-      if (s.protocol === 'http' && s.port !== 80){
-        port = `:${s.port}`;
-      } else if (s.protocol === 'https' && s.port !== 443){
-        port = `:${s.port}`;
+      if (spec.protocol === 'http' && spec.port !== 80){
+        port = `:${spec.port}`;
+      } else if (spec.protocol === 'https' && spec.port !== 443){
+        port = `:${spec.port}`;
       }
-      return `${s.protocol}://${check.target.id}${port}${s.path}`;
+      return `${spec.protocol}://${check.target.id}${port}${spec.path}`;
     }
     return undefined;
   },
