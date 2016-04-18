@@ -20,6 +20,8 @@ export default React.createClass({
     relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired,
 
     editable: PropTypes.bool.isRequired,
+
+    threshold: PropTypes.number
   },
 
   componentDidMount() {
@@ -52,7 +54,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log(this.props);
     const opts = _.assign({}, this.state, this.props);
     return render(this.props.data, opts);
   },

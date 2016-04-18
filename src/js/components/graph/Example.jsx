@@ -4,14 +4,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 
-import {Padding, Grid, Row, Col} from '../layout';
+import {Grid, Row, Col} from '../layout';
 import {env as actions} from '../../actions';
 // import MetricGraph from './MetricGraph';
 import {Button} from '../forms';
 import rdsMetrics from '../../modules/rdsMetrics';
-import style from '../global/metricGraph.css'; // FIXME remove
-import relationships from 'slate/src/relationships';
-import {Color, Heading} from '../type';
+import {Heading} from '../type';
 import AssertionMetric from '../checks/AssertionMetric';
 
 const GraphExample = React.createClass({
@@ -21,7 +19,7 @@ const GraphExample = React.createClass({
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
-        instances: PropTypes.array
+        instances: PropTypes.object
       })
     })
   },
@@ -39,77 +37,21 @@ const GraphExample = React.createClass({
     this.props.actions.getMetricRDS(this.state.rdsID, this.state.metric);
   },
 
-  getMeta() {
-    const name = this.state.metric;
-    const meta = _.get(rdsMetrics, name, {});
-    return _.assign({}, meta, { name });
+  getInstance() {
+    return this.props.redux.env.instances.rds.find(i => {
+      return i.get('id') === this.state.rdsID;
+    }) || new Map();
   },
 
-  getMetrics() {
-    return this.props.redux.env.metrics[0];
-  },
-
-  getCurrentDataPoint() {
-    const data = this.getDataPoints();
-    return data.length ? data[data.length-1] : {};
-  },
-
-  getStepSize() {
-    const data = this.getDataPoints();
-    const values = _.map(data, d => d.value);
-    const min = _.min(values);
-    const max = _.max(values);
-    const range = max - min;
-    const step = Math.pow(10, (Math.floor(Math.log10(2 * range)))) / 10;
-    return step;
-  },
-
-  getRelationship(){
-    const rel = this.state.relationship;
-    return _.chain(relationships).find(r => {
-      return r.id === rel;
-    }).get('name').value().toLowerCase();
-  },
-
-  getThreshold() {
-    // Return the actual threshold if there is one
-    if (this.state.threshold !== null) {
-      return this.state.threshold;
-    }
-
-    // If there isn't a threshold yet AND we have data, we can infer a good
-    // suggestion; somewhere between the average and the maximum values.
-    const data = this.getDataPoints();
-    if (!data.length) {
-      return 0;
-    }
-
-    const values = _.map(data, d => d.value);
-    const max = _.max(values);
-    const mean = _.mean(values);
-    const suggestedThreshold = (max + mean) / 2;
-    const fixedThreshold = parseFloat(Math.round(suggestedThreshold * 100) / 100).toFixed(2)
-
-    return fixedThreshold;
+  getDataPoints() {
+    const dataPoints = _.get(this.getInstance(), ['metrics', this.state.metric, 'metrics'], []);
+    // FIXME sorting is required by d3, but ultimately this should be done in compost
+    return  _.sortBy(dataPoints, d => d.timestamp);
   },
 
   onMetricChange(metric) {
     this.setState({ metric, threshold: null });
     this.props.actions.getMetricRDS(this.state.rdsID, metric);
-  },
-
-  onRelationshipChange(e) {
-    // Just toggle it for now
-    const current = this.state.relationship;
-    const relationship = current === 'lessThan' ? 'greaterThan' : 'lessThan';
-    this.setState({ relationship });
-  },
-
-  onThresholdChange(e) {
-    const threshold = e.target.value;
-    if (threshold >= 0) {
-      this.setState({ threshold });
-    }
   },
 
   renderButtons() {
@@ -126,51 +68,8 @@ const GraphExample = React.createClass({
     return buttons;
   },
 
-  renderStatus() {
-    const data = this.getDataPoints();
-    const currentDataPoint = data[data.length-1];
-
-    if (!currentDataPoint) {
-      return (
-        <span>Status: loading...</span>
-      );
-    }
-
-    const threshold = this.getThreshold();
-    const relationship = this.state.relationship;
-    const currentValue = currentDataPoint.value;
-
-    let status;
-    if (relationship === 'lessThan') {
-      status = currentValue < threshold ? 'Passing' : 'Failing';
-    } else if (relationship === 'greaterThan') {
-      status = currentValue > threshold ? 'Passing' : 'Failing';
-    }
-
-    return (
-      <span className={style[`status${status}`]}>Status: {status}</span>
-    );
-  },
-
-  getInstance() {
-    return this.props.redux.env.instances.rds.find(i => {
-      return i.get('id') === this.state.rdsID;
-    }) || new Map();
-  },
-
-  getDataPoints() {
-    const dataPoints = _.get(this.getInstance(), ['metrics', this.state.metric, 'metrics'], []);
-    // FIXME sorting is required by d3, but ultimately this should be done in compost
-    return  _.sortBy(dataPoints, d => d.timestamp);
-  },
-
   render() {
     const instance = this.getInstance().toJS();
-    // console.log(instance);
-
-    // console.log(this.getMetric());
-
-    // const threshold = this.getThreshold();
     return (
       <Grid fluid>
         <Row>
@@ -187,54 +86,6 @@ const GraphExample = React.createClass({
         </Row>
       </Grid>
     );
-
-    // return (
-    //   <div>
-    //     <Grid>
-    //       <Row>
-    //         <Col xs={12}>
-    //           <h2>{this.state.metric}</h2>
-    //           <p>{this.getMeta().description}</p>
-
-    //           <div>
-    //             <MetricGraph relationship={this.state.relationship} metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
-    //           </div>
-
-    //           <div className="text-center">
-    //             {this.renderStatus()}
-    //           </div>
-
-    //           <Padding tb={2}>
-    //             <div>
-    //               <Padding tb={1}>
-    //                 <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${this.getMeta().units}`}</Color></code>
-    //               </Padding>
-    //             </div>
-
-    //             <div className='flex-vertical-align'>
-    //               <div>
-    //                 <Padding r={1}>
-    //                   <Button flat onClick={this.onRelationshipChange}>{this.getRelationship()}</Button>
-    //                 </Padding>
-    //               </div>
-
-    //               <div className='flex-grow-1'>
-    //                 <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
-    //               </div>
-    //               <Padding l={1}>
-    //                 {this.getMeta().units}
-    //               </Padding>
-    //             </div>
-    //           </Padding>
-
-    //           <div>
-    //             {this.renderButtons()}
-    //           </div>
-    //         </Col>
-    //       </Row>
-    //     </Grid>
-    //   </div>
-    // );
   }
 });
 
