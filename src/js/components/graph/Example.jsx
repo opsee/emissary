@@ -1,17 +1,18 @@
-/* eslint-disable */
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
 
 import {Padding, Grid, Row, Col} from '../layout';
 import {env as actions} from '../../actions';
-import MetricGraph from './MetricGraph';
+// import MetricGraph from './MetricGraph';
 import {Button} from '../forms';
 import rdsMetrics from '../../modules/rdsMetrics';
-import style from './graph.css';
+import style from '../global/metricGraph.css'; // FIXME remove
 import relationships from 'slate/src/relationships';
-import {Color} from '../type';
+import {Color, Heading} from '../type';
+import AssertionMetric from '../checks/AssertionMetric';
 
 const GraphExample = React.createClass({
   propTypes: {
@@ -20,7 +21,7 @@ const GraphExample = React.createClass({
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
-        metrics: PropTypes.array
+        instances: PropTypes.array
       })
     })
   },
@@ -46,17 +47,6 @@ const GraphExample = React.createClass({
 
   getMetrics() {
     return this.props.redux.env.metrics[0];
-  },
-
-  getDataPoints() {
-    const metrics = this.getMetrics();
-    return _.get(metrics, ['metrics', this.state.metric, 'metrics'], [])
-      // FIXME put this in the reducer, ultimately should be done in compost tho
-      .sort((a, b) => {
-        if (a.timestamp < b.timestamp) return -1;
-        if (a.timestamp > b.timestamp) return 1;
-        return 0;
-      });
   },
 
   getCurrentDataPoint() {
@@ -162,56 +152,89 @@ const GraphExample = React.createClass({
     );
   },
 
+  getInstance() {
+    return this.props.redux.env.instances.rds.find(i => {
+      return i.get('id') === this.state.rdsID;
+    }) || new Map();
+  },
+
+  getDataPoints() {
+    const dataPoints = _.get(this.getInstance(), ['metrics', this.state.metric, 'metrics'], []);
+    // FIXME sorting is required by d3, but ultimately this should be done in compost
+    return  _.sortBy(dataPoints, d => d.timestamp);
+  },
+
   render() {
-    const threshold = this.getThreshold();
+    const instance = this.getInstance().toJS();
+    // console.log(instance);
 
+    // console.log(this.getMetric());
+
+    // const threshold = this.getThreshold();
     return (
-      <div>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <h2>{this.state.metric}</h2>
-              <p>{this.getMeta().description}</p>
+      <Grid fluid>
+        <Row>
+          <Col xs={12}>
+            <Heading>{_.get(instance, 'name')}</Heading>
+            <AssertionMetric metric={this.state.metric} data={this.getDataPoints()} />
+          </Col>
+        </Row>
 
-              <div>
-                <MetricGraph relationship={this.state.relationship} metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
-              </div>
-
-              <div className="text-center">
-                {this.renderStatus()}
-              </div>
-
-              <Padding tb={2}>
-                <div>
-                  <Padding tb={1}>
-                    <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${this.getMeta().units}`}</Color></code>
-                  </Padding>
-                </div>
-
-                <div className='flex-vertical-align'>
-                  <div>
-                    <Padding r={1}>
-                      <Button flat onClick={this.onRelationshipChange}>{this.getRelationship()}</Button>
-                    </Padding>
-                  </div>
-
-                  <div className='flex-grow-1'>
-                    <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
-                  </div>
-                  <Padding l={1}>
-                    {this.getMeta().units}
-                  </Padding>
-                </div>
-              </Padding>
-
-              <div>
-                {this.renderButtons()}
-              </div>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+        <Row>
+          <Col xs={12}>
+            {this.renderButtons()}
+          </Col>
+        </Row>
+      </Grid>
     );
+
+    // return (
+    //   <div>
+    //     <Grid>
+    //       <Row>
+    //         <Col xs={12}>
+    //           <h2>{this.state.metric}</h2>
+    //           <p>{this.getMeta().description}</p>
+
+    //           <div>
+    //             <MetricGraph relationship={this.state.relationship} metric={this.getMeta()} data={this.getDataPoints()} threshold={threshold} />
+    //           </div>
+
+    //           <div className="text-center">
+    //             {this.renderStatus()}
+    //           </div>
+
+    //           <Padding tb={2}>
+    //             <div>
+    //               <Padding tb={1}>
+    //                 <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${this.getMeta().units}`}</Color></code>
+    //               </Padding>
+    //             </div>
+
+    //             <div className='flex-vertical-align'>
+    //               <div>
+    //                 <Padding r={1}>
+    //                   <Button flat onClick={this.onRelationshipChange}>{this.getRelationship()}</Button>
+    //                 </Padding>
+    //               </div>
+
+    //               <div className='flex-grow-1'>
+    //                 <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
+    //               </div>
+    //               <Padding l={1}>
+    //                 {this.getMeta().units}
+    //               </Padding>
+    //             </div>
+    //           </Padding>
+
+    //           <div>
+    //             {this.renderButtons()}
+    //           </div>
+    //         </Col>
+    //       </Row>
+    //     </Grid>
+    //   </div>
+    // );
   }
 });
 
@@ -224,4 +247,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphExample);
-/*eslint-enable*/

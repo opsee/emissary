@@ -17,7 +17,9 @@ export default React.createClass({
       description: PropTypes.string
     }).isRequired,
 
-    relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired
+    relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired,
+
+    editable: PropTypes.bool.isRequired,
   },
 
   componentDidMount() {
@@ -36,6 +38,8 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
+      data: [],
+      metric: {},
       threshold: 1.0 // FIXME remove
     };
   },
@@ -48,6 +52,7 @@ export default React.createClass({
   },
 
   render() {
+    console.log(this.props);
     const opts = _.assign({}, this.state, this.props);
     return render(this.props.data, opts);
   },

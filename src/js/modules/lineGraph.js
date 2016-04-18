@@ -4,7 +4,7 @@ import d3 from 'd3';
 import moment from 'moment';
 import React from 'react'; // Not used directly but required in scope
 import ReactFauxDOM from 'react-faux-dom';
-import style from '../components/graph/graph.css';
+import style from '../components/global/metricGraph.css';
 
 function formatBytes(bytes) {
   const thresh = 1024;
