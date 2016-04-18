@@ -266,7 +266,7 @@ export function getMetricRDS(id, metric) {
                 vpc(id: "vpc-79b1491c") {
                   instances(type: "rds", id: "${id}"){
                     ... on rdsDBInstance {
-                      DBName
+                      DBInstanceIdentifier
                       metrics{
                         ${metric} {
                           metrics{

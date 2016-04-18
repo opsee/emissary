@@ -129,6 +129,10 @@ const statics = {
     const index = arr.findIndex(item => {
       return item.get('id') === single.get('id');
     });
+
+    // TODO metrics is missing from `single` here
+    console.log(single.toJS());
+
     if (index > -1){
       return arr.update(index, () => single);
     }
@@ -227,8 +231,7 @@ const initial = {
     }
   },
   bastions: [],
-  awsActionHistory: [],
-  metrics: []
+  awsActionHistory: []
 };
 
 export default handleActions({
@@ -315,8 +318,10 @@ export default handleActions({
   },
   [GET_METRIC_RDS]: {
     next(state, action) {
-      const metrics = action.payload.data;
-      return _.assign({}, state, { metrics }); // FIXME
+      const rds = statics.getInstanceRdsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
+      const instances = _.assign({}, state.instances, {rds});
+      return _.assign({}, state, { instances, filtered });
     },
     throw: yeller.reportAction
   },
