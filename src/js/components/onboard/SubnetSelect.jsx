@@ -46,6 +46,7 @@ const SubnetSelect = React.createClass({
         });
       }
     };
+    this.props.actions.subnetSelect(this.getSelectedSubnet());
   },
   getInitialState() {
     return {
