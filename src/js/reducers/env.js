@@ -130,9 +130,6 @@ const statics = {
       return item.get('id') === single.get('id');
     });
 
-    // TODO metrics is missing from `single` here
-    console.log(single.toJS());
-
     if (index > -1){
       return arr.update(index, () => single);
     }

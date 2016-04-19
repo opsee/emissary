@@ -7,47 +7,6 @@ import d3 from 'd3';
 import moment from 'moment';
 import style from './metricGraph.css';
 
-function formatBytes(bytes) {
-  const thresh = 1024;
-  if (Math.abs(bytes) < thresh) {
-    return `${bytes} B`;
-  }
-
-  const units = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-  let u = -1;
-  let val = bytes;
-
-  do {
-    val /= thresh;
-    ++u;
-  } while (Math.abs(val) >= thresh && u < units.length - 1);
-
-  return `${val.toFixed(1)} ${units[u]}`;
-}
-
-function formatVerticalTick(d, units) {
-  switch (units) {
-  case 'bytes':
-    // TODO better byte rounding
-    return formatBytes(d);
-
-  case 'bytes/second':
-    return `${d} B/s`;
-
-  case 'count/second':
-    return `${d} /s`;
-
-  case 'percent':
-    return `${d} %`;
-
-  case 'seconds':
-    return `${d} s`;
-
-  default:
-    return d;
-  }
-}
-
 export default React.createClass({
   propTypes: {
     data: PropTypes.arrayOf(PropTypes.shape({
@@ -70,53 +29,111 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    this.fitToParentSize();
-
-    window.addEventListener('resize', this.fitToParentSize);
+    this.onWindowResize();
+    window.addEventListener('resize', this.onWindowResize);
   },
 
   componentWillReceiveProps() {
-    this.fitToParentSize();
+    this.onWindowResize();
   },
 
   componentWillUnmount() {
-    window.addEventListener('resize', this.fitToParentSize);
+    window.addEventListener('resize', this.onWindowResize);
   },
 
   getDefaultProps() {
     return {
       data: [],
       metric: {},
-      threshold: 1.0 // FIXME remove
+      threshold: null
     };
   },
 
   getInitialState() {
     return {
-      width: 0,
-      aspectRatio: 0.5
+      width: 0
     };
   },
 
-  render() {
-    const opts = _.assign({}, this.state, this.props);
+  getBytes(bytes) {
+    const thresh = 1024;
+    if (Math.abs(bytes) < thresh) {
+      return `${bytes} B`;
+    }
 
-     /*eslint-disable indent*/
-    const data = this.props.data;
+    const units = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    let u = -1;
+    let val = bytes;
+
+    do {
+      val /= thresh;
+      ++u;
+    } while (Math.abs(val) >= thresh && u < units.length - 1);
+
+    return `${val.toFixed(1)} ${units[u]}`;
+  },
+
+  getVerticalTick(d, units) {
+    switch (units) {
+    case 'bytes':
+      // TODO better byte rounding
+      return this.getBytes(d);
+
+    case 'bytes/second':
+      return `${d} B/s`;
+
+    case 'count/second':
+      return `${d} /s`;
+
+    case 'percent':
+      return `${d} %`;
+
+    case 'seconds':
+      return `${d} s`;
+
+    default:
+      return d;
+    }
+  },
+
+  getData() {
+    return _.map(this.props.data, d => {
+      return _.assign({}, d, {
+        time: new Date(d.timestamp),
+        value: +d.value
+      });
+    });
+  },
+
+  getMargin() {
+    return { top: 20, right: 50, bottom: 50, left: 50 };
+  },
+
+  /*
+   * On window resizes, explicitly set the width of the d3 svg.
+   * (d3 graphs are unfortunately not responsive out of the box; luckily,
+   * React state is a good fit for this.)
+   */
+  onWindowResize() {
+    const elem = ReactDOM.findDOMNode(this);
+    const width = elem.parentNode.offsetWidth;
+    this.setState({ width });
+  },
+
+  render() {
+    // d3 indentation conventions are kinda wacky, so...
+    /* eslint-disable indent */
+    const data = this.getData();
+
     if (!data.length) {
       return <div>no data</div>;
     }
 
-    data.forEach(d => {
-      d.time = new Date(d.timestamp);
-      d.value = +d.value;
-    });
+    const margin = this.getMargin();
+    const width = this.state.width - margin.left - margin.right;
+    const height = (0.5 * this.state.width) - margin.top - margin.bottom;
 
-    const margin = {top: 20, right: 20, bottom: 100, left: 100};
-    const width = opts.width - margin.left - margin.right;
-    const height = (opts.aspectRatio * opts.width) - margin.top - margin.bottom;
-
-    const yMax = Math.max(opts.threshold, d3.max(data, d => d.value));
+    const yMax = Math.max(this.props.threshold, d3.max(data, d => d.value));
 
     // Set up the x/y scales
     const x = d3.time.scale()
@@ -141,7 +158,7 @@ export default React.createClass({
       .scale(y)
       .orient('left')
       .tickSize(-width, 0, 0) // for the guidelines to be full-width
-      .tickFormat(d => formatVerticalTick(d, opts.metric.units));
+      .tickFormat(d => this.getVerticalTick(d, this.props.metric.units));
 
     // Create the line
     const line = d3.svg.line()
@@ -203,14 +220,14 @@ export default React.createClass({
         .attr('id', 'clip-above')
       .append('rect')
         .attr('width', width)
-        .attr('height', y(opts.threshold));
+        .attr('height', y(this.props.threshold));
 
     svg.append('clipPath')
         .attr('id', 'clip-below')
       .append('rect')
-        .attr('y', y(opts.threshold))
+        .attr('y', y(this.props.threshold))
         .attr('width', width)
-        .attr('height', height - y(opts.threshold));
+        .attr('height', height - y(this.props.threshold));
 
     // Append the data points
     svg.append('g')
@@ -222,10 +239,10 @@ export default React.createClass({
       .attr('r', 5)
       .attr('class', d => {
         let status;
-        if (opts.relationship === 'lessThan') {
-          status = d.value < opts.threshold ? 'Passing' : 'Failing';
-        } else if (opts.relationship === 'greaterThan') {
-          status = d.value > opts.threshold ? 'Passing' : 'Failing';
+        if (this.props.relationship === 'lessThan') {
+          status = d.value < this.props.threshold ? 'Passing' : 'Failing';
+        } else if (this.props.relationship === 'greaterThan') {
+          status = d.value > this.props.threshold ? 'Passing' : 'Failing';
         }
         return style[`point${status}`];
       });
@@ -235,23 +252,17 @@ export default React.createClass({
       .attr('class', style.thresholdLine)
       .attr('x1', 0)
       .attr('x2', width)
-      .attr('y1', y(opts.threshold))
-      .attr('y2', y(opts.threshold));
+      .attr('y1', y(this.props.threshold))
+      .attr('y2', y(this.props.threshold));
 
     svg.selectAll(style.line)
         .data(['Above', 'Below'])
       .enter().append('path')
-        .attr('class', d => cx(style[opts.relationship], style.line + d))
+        .attr('class', d => cx(style[this.props.relationship], style.line + d))
         .attr('clip-path', d => 'url(#clip-' + d.toLowerCase() + ')')
         .datum(data)
         .attr('d', line);
 
     return node.toReact();
-  },
-
-  fitToParentSize() {
-    const elem = ReactDOM.findDOMNode(this);
-    const width = elem.parentNode.offsetWidth;
-    this.setState({ width });
   }
 });

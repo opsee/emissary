@@ -19,8 +19,11 @@ export default React.createClass({
     })).isRequired
   },
 
-  componentWillReceiveProps() {
-    // TODO reset threshold if metric is different
+  componentWillReceiveProps(nextProps) {
+    // Reset threshold if metric is different so it can be recalculated
+    if (nextProps.metric !== this.props.metric) {
+      this.setState({ threshold: null });
+    }
   },
 
   getInitialState() {
@@ -77,8 +80,7 @@ export default React.createClass({
     const mean = _.mean(values);
     const suggestedThreshold = (max + mean) / 2;
     const fixedThreshold = parseFloat(Math.round(suggestedThreshold * 100) / 100).toFixed(2);
-
-    return fixedThreshold;
+    return Number(fixedThreshold);
   },
 
   onRelationshipChange() {

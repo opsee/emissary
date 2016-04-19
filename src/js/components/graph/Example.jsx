@@ -26,10 +26,8 @@ const GraphExample = React.createClass({
 
   getInitialState() {
     return {
-      relationship: 'lessThan',
       rdsID: 'mysql',
-      metric: 'CPUUtilization',
-      threshold: null
+      metric: 'CPUUtilization'
     };
   },
 
@@ -71,7 +69,7 @@ const GraphExample = React.createClass({
   render() {
     const instance = this.getInstance().toJS();
     return (
-      <Grid fluid>
+      <Grid>
         <Row>
           <Col xs={12}>
             <Heading>{_.get(instance, 'name')}</Heading>
