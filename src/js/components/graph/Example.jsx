@@ -6,7 +6,6 @@ import {Map} from 'immutable';
 
 import {Grid, Row, Col} from '../layout';
 import {env as actions} from '../../actions';
-// import MetricGraph from './MetricGraph';
 import {Button} from '../forms';
 import rdsMetrics from '../../modules/rdsMetrics';
 import {Heading} from '../type';

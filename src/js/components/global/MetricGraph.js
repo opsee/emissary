@@ -22,9 +22,6 @@ export default React.createClass({
     }).isRequired,
 
     relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired,
-
-    editable: PropTypes.bool.isRequired,
-
     threshold: PropTypes.number
   },
 
@@ -45,7 +42,7 @@ export default React.createClass({
     return {
       data: [],
       metric: {},
-      threshold: null
+      threshold: 0
     };
   },
 
