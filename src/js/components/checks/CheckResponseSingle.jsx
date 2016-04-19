@@ -24,6 +24,9 @@ const CheckResponseSingle = React.createClass({
       metrics: []
     };
   },
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(nextProps, this.props);
+  },
   getBody(){
     const {props} = this;
     if (_.isObject(props.body)){
