@@ -110,7 +110,7 @@ export default React.createClass({
       <div>
         <Heading level={3}>{this.props.metric}</Heading>
         <p>{_.get(meta, 'description')}</p>
-        
+
         <div style={{overflow: 'hidden'}}>
           <MetricGraph threshold={threshold} metric={meta} data={this.props.data} relationship={this.state.relationship} />
         </div>
