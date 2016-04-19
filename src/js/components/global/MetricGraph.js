@@ -42,7 +42,8 @@ export default React.createClass({
     return {
       data: [],
       metric: {},
-      threshold: 0
+      threshold: 0,
+      showTooltip: true
     };
   },
 
@@ -165,6 +166,7 @@ export default React.createClass({
     const xAxis = d3.svg.axis()
       .scale(x)
       .orient('bottom')
+      .ticks(Math.max(width/40, 5)) // horizontal tick every 20px
       .tickFormat(timestamp => {
         const now = moment();
         const minAgo = now.diff(moment(timestamp), 'minutes');
@@ -174,6 +176,7 @@ export default React.createClass({
     const yAxis = d3.svg.axis()
       .scale(y)
       .orient('left')
+      .ticks(Math.max(height/40, 5)) // horizontal tick every 20px
       .tickSize(-width, 0, 0) // for the guidelines to be full-width
       .tickFormat(d => this.getVerticalTick(d, this.props.metric.units));
 
@@ -202,7 +205,7 @@ export default React.createClass({
       .attr('dx', '-.8em')
       .attr('dy', '.15em')
       .attr('transform', 'rotate(-65)')
-      .attr('class', style.xTick);
+      .attr('class', style.tick);
 
     // Background colour
     svg.append('rect')
@@ -219,7 +222,7 @@ export default React.createClass({
 
     // Configure the y-axis ticks
     yAxisGroup.selectAll('text')
-      .attr('class', style.yTick);
+      .attr('class', style.tick);
 
     // Colour the minor y-axes
     yAxisGroup.selectAll('g')
@@ -253,7 +256,7 @@ export default React.createClass({
       .enter().append('circle')
       .attr('cx', d => x(d.time))
       .attr('cy', d => y(d.value))
-      .attr('r', 5)
+      .attr('r', '0.5vmin')
       .attr('class', d => {
         let status = this.getPassFail(d);
         return style[`point${status}`];
@@ -275,46 +278,47 @@ export default React.createClass({
         .datum(data)
         .attr('d', line);
 
-    const currentDataPoint = _.last(data);
-    const isCurrentPassing = this.getPassFail(currentDataPoint);
-    const tooltipClass = style[`tooltip${isCurrentPassing}`];
-    const tooltipDimensions = { height: 35, width: 70 };
+    if (this.props.showTooltip) {
+      const currentDataPoint = _.last(data);
+      const isCurrentPassing = this.getPassFail(currentDataPoint);
+      const tooltipClass = style[`tooltip${isCurrentPassing}`];
+      const tooltipDimensions = { height: 35, width: 70 };
 
-    const tooltipGroup = svg.selectAll('#tooltip-group')
-      .data([currentDataPoint])
-      .enter().append('g')
-      .attr('id', 'tooltip-group')
-      .attr('class', style.tooltipGroup)
-      .attr('transform', d => {
-        const dX = x(d.time) + 15; // + left-padding
-        const dY = y(d.value) - (tooltipDimensions.height / 2); // vertically center
-        return `translate(${dX}, ${dY})`;
-      });
+      const tooltipGroup = svg.selectAll('.js-tooltip-group')
+        .data([currentDataPoint])
+        .enter().append('g')
+        .attr('class', 'js-tooltip-group')
+        .attr('transform', d => {
+          const dX = x(d.time) + 15; // + left-padding
+          const dY = y(d.value) - (tooltipDimensions.height / 2); // vertically center
+          return `translate(${dX}, ${dY})`;
+        });
 
-    tooltipGroup.selectAll('rect')
-      .data([currentDataPoint])
-      .enter().append('rect')
-      .attr('class', tooltipClass)
-      .attr('height', tooltipDimensions.height)
-      .attr('width', tooltipDimensions.width);
-
-    tooltipGroup.selectAll('path')
-      .data([currentDataPoint])
-      .enter().append('path')
-        .attr('d', d3.svg.symbol().type('triangle-up'))
+      tooltipGroup.selectAll('rect')
+        .data([currentDataPoint])
+        .enter().append('rect')
         .attr('class', tooltipClass)
-        .attr('transform', `translate(0, ${tooltipDimensions.height / 2}) rotate(-90)`)
+        .attr('height', tooltipDimensions.height)
+        .attr('width', tooltipDimensions.width);
 
-    tooltipGroup.selectAll('text')
-      .data([currentDataPoint])
-      .enter().append('text')
-      .attr('id', 'tooltipText')
-      .attr('class', style.tooltipText)
-      .attr('x', tooltipDimensions.width / 2)
-      .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
-      .text(d => {
-        return this.getAssertionStatus(d) ? 'PASS' : 'FAIL';
-      });
+      tooltipGroup.selectAll('path')
+        .data([currentDataPoint])
+        .enter().append('path')
+          .attr('d', d3.svg.symbol().type('triangle-up'))
+          .attr('class', tooltipClass)
+          .attr('transform', `translate(0, ${tooltipDimensions.height / 2}) rotate(-90)`)
+
+      tooltipGroup.selectAll('text')
+        .data([currentDataPoint])
+        .enter().append('text')
+        .attr('id', 'tooltipText')
+        .attr('class', style.tooltipText)
+        .attr('x', tooltipDimensions.width / 2)
+        .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
+        .text(d => {
+          return this.getAssertionStatus(d) ? 'PASS' : 'FAIL';
+        });
+    }
 
     return node.toReact();
   }

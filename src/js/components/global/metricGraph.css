@@ -15,20 +15,6 @@
   composes: axis;
 }
 
-.tick {
-  fill: var(--colorGray5);
-  font-family: var(--fontMono);
-  font-size: 10px;
-}
-
-.xTick {
-  composes: tick;
-}
-
-.yTick {
-  composes: tick;
-}
-
 .yAxis {
   composes: axis;
 }
@@ -37,6 +23,12 @@
   stroke: #111;
   stroke-opacity: 0.3;
   stroke-width: 1px;
+}
+
+.tick {
+  fill: var(--colorGray5);
+  font-family: var(--fontMono);
+  font-size: 10px;
 }
 
 .line {
