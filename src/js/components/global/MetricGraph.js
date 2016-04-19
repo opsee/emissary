@@ -104,7 +104,26 @@ export default React.createClass({
   },
 
   getMargin() {
-    return { top: 20, right: 50, bottom: 50, left: 50 };
+    return { top: 20, right: 100, bottom: 50, left: 50 };
+  },
+
+  // FIXME can this be done better with Slate?
+  getAssertionStatus(dataPoint) {
+    const value = Number(dataPoint.value);
+    const threshold = Number(this.props.threshold);
+
+    if (this.props.relationship === 'lessThan') {
+      return value < threshold;
+    } else if (this.props.relationship === 'greaterThan') {
+      return value > threshold;
+    }
+
+    return null;
+  },
+
+  getPassFail(dataPoint) {
+    const isPassing = this.getAssertionStatus(dataPoint);
+    return isPassing ? 'Passing' : 'Failing';
   },
 
   /*
@@ -236,12 +255,7 @@ export default React.createClass({
       .attr('cy', d => y(d.value))
       .attr('r', 5)
       .attr('class', d => {
-        let status;
-        if (this.props.relationship === 'lessThan') {
-          status = d.value < this.props.threshold ? 'Passing' : 'Failing';
-        } else if (this.props.relationship === 'greaterThan') {
-          status = d.value > this.props.threshold ? 'Passing' : 'Failing';
-        }
+        let status = this.getPassFail(d);
         return style[`point${status}`];
       });
 
@@ -260,6 +274,47 @@ export default React.createClass({
         .attr('clip-path', d => 'url(#clip-' + d.toLowerCase() + ')')
         .datum(data)
         .attr('d', line);
+
+    const currentDataPoint = _.last(data);
+    const isCurrentPassing = this.getPassFail(currentDataPoint);
+    const tooltipClass = style[`tooltip${isCurrentPassing}`];
+    const tooltipDimensions = { height: 35, width: 70 };
+
+    const tooltipGroup = svg.selectAll('#tooltip-group')
+      .data([currentDataPoint])
+      .enter().append('g')
+      .attr('id', 'tooltip-group')
+      .attr('class', style.tooltipGroup)
+      .attr('transform', d => {
+        const dX = x(d.time) + 15; // + left-padding
+        const dY = y(d.value) - (tooltipDimensions.height / 2); // vertically center
+        return `translate(${dX}, ${dY})`;
+      });
+
+    tooltipGroup.selectAll('rect')
+      .data([currentDataPoint])
+      .enter().append('rect')
+      .attr('class', tooltipClass)
+      .attr('height', tooltipDimensions.height)
+      .attr('width', tooltipDimensions.width);
+
+    tooltipGroup.selectAll('path')
+      .data([currentDataPoint])
+      .enter().append('path')
+        .attr('d', d3.svg.symbol().type('triangle-up'))
+        .attr('class', tooltipClass)
+        .attr('transform', `translate(0, ${tooltipDimensions.height / 2}) rotate(-90)`)
+
+    tooltipGroup.selectAll('text')
+      .data([currentDataPoint])
+      .enter().append('text')
+      .attr('id', 'tooltipText')
+      .attr('class', style.tooltipText)
+      .attr('x', tooltipDimensions.width / 2)
+      .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
+      .text(d => {
+        return this.getAssertionStatus(d) ? 'PASS' : 'FAIL';
+      });
 
     return node.toReact();
   }

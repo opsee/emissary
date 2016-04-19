@@ -81,3 +81,27 @@
 .statusFailing {
   color: var(--colorDanger);
 }
+
+.tooltipGroup {
+
+}
+
+.tooltip {
+  fill: lime;
+}
+
+.tooltipPassing {
+  composes: tooltip;
+  fill: var(--colorSuccess);
+}
+
+.tooltipFailing {
+  composes: tooltip;
+  fill: var(--colorDanger);
+}
+
+.tooltipText {
+  fill: white;
+  font-size: 12px;
+  text-anchor: middle;
+}
