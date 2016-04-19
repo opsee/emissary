@@ -40,13 +40,6 @@ const NotificationSelection = React.createClass({
       notifications: []
     };
   },
-  getInitialState() {
-    return {
-      notifications: this.props.notifications.map((n, i) => {
-        return this.getNewSchema(n.type, i, n.value);
-      })
-    };
-  },
   componentDidMount(){
     this.props.actions.getSlackChannels();
     window.addEventListener('storage', event => {
@@ -70,30 +63,27 @@ const NotificationSelection = React.createClass({
     }
     return notif.value;
   },
-  getFinalNotifications(notifs = this.state.notifications){
+  getFinalNotifications(notifs = this.props.notifications){
     return notifs.map(n => _.pick(n, ['type', 'value']));
   },
   isNotifComplete(notif){
     return _.chain(notif).pick(['type', 'value']).values().every().value();
   },
   runSetNotificationsState(iteratee){
-    const notifications = this.state.notifications.map(iteratee);
+    const notifications = this.props.notifications.map(iteratee);
     this.setState({
       notifications
     });
     return notifications;
   },
-  runChange(notifications = this.state.notifications){
-    this.setState({
-      notifications
-    });
+  runChange(notifications = this.props.notifications){
     this.props.onChange(this.getFinalNotifications(notifications));
   },
   runSetValue(index, data, e){
     if (e){
       e.preventDefault();
     }
-    const notifications = this.runSetNotificationsState((n, i) => {
+    const notifications = _.cloneDeep(this.props.notifications).map((n, i) => {
       const value = data || n.valueState;
       return _.assign({}, n, {
         value: index === i ? value : n.value
@@ -102,18 +92,18 @@ const NotificationSelection = React.createClass({
     this.props.onChange(this.getFinalNotifications(notifications));
   },
   runNewNotif(type, value){
-    const notifications = this.state.notifications.concat([
-      this.getNewSchema(type, this.state.notifications.length, value)
+    const notifications = this.props.notifications.concat([
+      this.getNewSchema(type, this.props.notifications.length, value)
     ]);
     this.runChange(notifications);
   },
   runDelete(index){
-    const notifications = _.reject(this.state.notifications, (n, i) => i === index);
+    const notifications = _.reject(this.props.notifications, (n, i) => i === index);
     this.runChange(notifications);
   },
   runTestNotif(notif){
     this.props.actions.testNotification(_.pick(notif, ['type', 'value']));
-    const notifications = this.state.notifications.map(n => {
+    const notifications = this.props.notifications.map(n => {
       return _.assign({}, n, {
         sending: n.type === notif.type && n.value === notif.value
       });
@@ -121,7 +111,7 @@ const NotificationSelection = React.createClass({
     this.runChange(notifications);
   },
   handleInputChange(index, data){
-    const notifs = this.runSetNotificationsState((n, i) => {
+    const notifs = _.cloneDeep(this.props.notifications).map((n, i) => {
       return _.assign({}, n, {
         value: index === i ? data.value : n.value
       });
@@ -288,8 +278,8 @@ const NotificationSelection = React.createClass({
     );
   },
   renderNotifList(){
-    if (this.state.notifications.length){
-      return this.state.notifications.map((notif, index) => {
+    if (this.props.notifications.length){
+      return this.props.notifications.map((notif, index) => {
         return (
           <div key={`notif-${index}`}>
             {this.renderNotif(notif, index)}
@@ -300,7 +290,7 @@ const NotificationSelection = React.createClass({
     }
     return (
       <div>
-        <p>Choose from the options below to set up notifications for this check.</p>
+        <p>Choose from the options below to set up your notifications.</p>
         <hr/>
       </div>
     );

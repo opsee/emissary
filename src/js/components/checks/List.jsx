@@ -11,7 +11,6 @@ import {Button} from '../forms';
 import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions, user as userActions} from '../../actions';
-import MultiEdit from './MultiEdit';
 
 const CheckList = React.createClass({
   propTypes: {
@@ -57,9 +56,6 @@ const CheckList = React.createClass({
       notifEditing: true
     });
   },
-  handleMultiEditChange(data){
-    console.log(data);
-  },
   renderAutoMessage(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
@@ -75,8 +71,7 @@ const CheckList = React.createClass({
     if (this.props.redux.checks.checks.size){
       return (
         <div>
-          <Heading level={3}>All Checks ({this.props.redux.checks.checks.size})</Heading>
-          <CheckItemList selected={this.state.notifEditing}/>
+          <CheckItemList title/>
         </div>
       );
     }
@@ -98,15 +93,9 @@ const CheckList = React.createClass({
   renderActionBar(){
     return (
       <Padding b={2}>
-        <Button onClick={this.handleNotifEdit}>Edit Notifications</Button>
+        <Button to="checks-notifications">Edit Notifications</Button>
       </Padding>
     );
-  },
-  renderMultiEdit(){
-    if (this.state.notifEditing){
-      return <MultiEdit checks={this.props.redux.checks.checks} onChange={this.handleMultiEditChange}/>
-    }
-    return null;
   },
   render() {
     return (
@@ -122,7 +111,6 @@ const CheckList = React.createClass({
               <BastionRequirement>
                 {this.renderActionBar()}
                 {this.renderChecks()}
-                {this.renderMultiEdit()}
               </BastionRequirement>
             </Col>
           </Row>

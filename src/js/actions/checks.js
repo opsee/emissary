@@ -14,7 +14,8 @@ import {
   CHECK_TEST,
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE,
-  CHECK_SELECT_TOGGLE
+  CHECK_SELECT_TOGGLE,
+  CHECK_MULTIEDIT_NOTIFICATIONS
 } from './constants';
 
 /**
@@ -33,6 +34,17 @@ export function getCheckFromURI(jsonURI) {
   };
 }
 
+function getNotifications(state, id){
+  return new Promise((resolve, reject) => {
+    request
+    .get(`${config.services.api}/notifications/${id}`)
+    .set('Authorization', state().user.get('auth'))
+    .then(resolve, () => {
+      resolve({body: {notifications: []}});
+    }, reject);
+  });
+}
+
 export function getCheck(id){
   return (dispatch, state) => {
     dispatch({
@@ -42,14 +54,7 @@ export function getCheck(id){
         .get(`${config.services.api}/checks/${id}`)
         .set('Authorization', state().user.get('auth'));
 
-        const r2 = new Promise((r2resolve) => {
-          request
-          .get(`${config.services.api}/notifications/${id}`)
-          .set('Authorization', state().user.get('auth'))
-          .then(r2resolve, () => {
-            r2resolve({body: {notifications: []}});
-          });
-        });
+        const r2 = getNotifications(state, id);
 
         Promise.all([r1, r2]).then((values) => {
           const check = values[0].body;
@@ -74,10 +79,38 @@ export function getChecks(redirect){
         .get(`${config.services.api}/checks`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
-          resolve({
-            data: _.get(res.body, 'checks'),
-            search: state().search
-          });
+          const selectedChecks = _.chain(state().checks.checks.toJS())
+          .filter(check => check.selected)
+          .value();
+          if (selectedChecks.length){
+            let notifsPromiseArr = selectedChecks.map(check => {
+              return getNotifications(state, check.id);
+            });
+            Promise.all(notifsPromiseArr).then((notifsValues) => {
+              const notifs = _.chain(notifsValues).map(val => {
+                return _.get(val, 'body.notifications');
+              })
+              .flatten()
+              .value();
+              let checks = _.get(res.body, 'checks') || [];
+              checks = checks.map(check => {
+                return _.assign(check, {
+                  notifications: _.filter(notifs, n => {
+                    return n.check_id === check.id;
+                  })
+                });
+              });
+              resolve({
+                data: checks,
+                search: state().search
+              });
+            });
+          } else {
+            resolve({
+              data: _.get(res.body, 'checks'),
+              search: state().search
+            });
+          }
           if (redirect){
             setTimeout(() => {
               dispatch(pushState(null, '/'));
@@ -238,6 +271,26 @@ export function edit(data){
             dispatch(pushState(null, '/'));
           }, 100);
         }, reject);
+      })
+    });
+  };
+}
+
+export function multiEditNotifications(data){
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECK_MULTIEDIT_NOTIFICATIONS,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`https://hugs.in.opsee.com/notifications-multicheck`)
+        .set('Authorization', state().user.get('auth'))
+        .send(data)
+        .then(res => {
+          resolve({
+            data:  _.get(res.body, 'checks'),
+            search: state().search
+          });
+        })
       })
     });
   };

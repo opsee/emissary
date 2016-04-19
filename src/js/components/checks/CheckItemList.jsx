@@ -23,6 +23,8 @@ const CheckItemList = React.createClass({
     filter: PropTypes.bool,
     //only show items that are selected
     selected: PropTypes.bool,
+    //should we grab notifications from the db?
+    notifications: PropTypes.bool,
     title: PropTypes.bool,
     offset: PropTypes.number,
     limit: PropTypes.number,
@@ -92,7 +94,7 @@ const CheckItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getChecks(true).size})`;
     if (this.getChecks().size < this.getChecks(true).size){
-      if (!this.props.target){
+      if (!this.props.target && !this.props.selected){
         numbers = `(${this.getChecks().size} of ${this.getChecks(true).size})`;
       } else {
         numbers = `(${this.getChecks().size})`;

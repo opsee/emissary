@@ -9,6 +9,7 @@ import EnvInstancesEC2 from '../env/EnvInstancesEC2';
 import EnvInstancesRDS from '../env/EnvInstancesRDS';
 
 import CheckList from 'react-proxy?name=checks!exports?exports.default!../checks/List';
+import CheckMultiEditNotifications from 'react-proxy?name=checks!exports?exports.default!../checks/MultiEditNotifications';
 import CheckSingle from 'react-proxy?name=checks!exports?exports.default!../checks/Single';
 import CheckEdit from 'react-proxy?name=checks!exports?exports.default!../checks/Edit';
 
@@ -81,6 +82,7 @@ const routes = (
       <IndexRoute component={CheckList}/>
     </Route>
     <Redirect from="/checks" to="/"/>
+    <Route path="/checks-notifications" component={auth(CheckMultiEditNotifications)}/>
 
     <Redirect from="/check-create" to="/check-create/type"/>
     <Route path="/check-create" component={auth(CheckCreate)}>
