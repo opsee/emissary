@@ -57,13 +57,14 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
   }),
   type: 'RDS',
   groups: List(),
-  LaunchTime: null,
+  InstanceCreateTime: null,
   Engine: null,
   EngineVersion: null,
   PubliclyAccessible: false,
   DBInstanceClass: null,
   AvailabilityZone: null,
-  VpcSecurityGroups: List()
+  VpcSecurityGroups: List(),
+  metrics: List()
 }));
 
 export const GroupSecurity = Record(_.assign({}, baseEnvItem, {

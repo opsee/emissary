@@ -1,0 +1,83 @@
+.background {
+  fill: var(--colorGray9);
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.axis line {
+  stroke: #000;
+  fill: none;
+}
+
+.xAxis {
+  composes: axis;
+}
+
+.tick {
+  fill: var(--colorGray5);
+  font-family: var(--fontMono);
+  font-size: 10px;
+}
+
+.xTick {
+  composes: tick;
+}
+
+.yTick {
+  composes: tick;
+}
+
+.yAxis {
+  composes: axis;
+}
+
+.yGuide line {
+  stroke: #111;
+  stroke-opacity: 0.3;
+  stroke-width: 1px;
+}
+
+.line {
+  fill: none;
+  stroke: var(--colorSuccess);
+  stroke-width: 1px;
+}
+
+.greaterThan.lineBelow,
+.lessThan.lineAbove {
+  fill: none;
+  stroke: var(--colorDanger);
+  stroke-width: 1px;
+}
+
+.greaterThan.lineAbove,
+.lessThan.lineBelow {
+  fill: none;
+  stroke: var(--colorSuccess);
+  stroke-width: 1px;
+}
+
+.thresholdLine {
+  stroke: var(--colorPrimary);
+  stroke-width: 1.5px;
+}
+
+.pointPassing {
+  stroke: var(--colorSuccess);
+  fill: var(--colorSuccess);
+}
+
+.pointFailing {
+  stroke: var(--colorDanger);
+  fill: var(--colorDanger);
+}
+
+.statusPassing {
+  color: var(--colorSuccess);
+}
+
+.statusFailing {
+  color: var(--colorDanger);
+}
