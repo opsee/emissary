@@ -41,7 +41,7 @@ const GraphExample = React.createClass({
   },
 
   getDataPoints() {
-    const dataPoints = _.get(this.getInstance(), ['metrics', this.state.metric, 'metrics'], []);
+    const dataPoints = _.get(this.getInstance(), ['metrics', this.state.metric, 'metrics']);
     // FIXME sorting is required by d3, but ultimately this should be done in compost
     return  _.sortBy(dataPoints, d => d.timestamp);
   },

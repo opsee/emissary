@@ -47,9 +47,10 @@ export default React.createClass({
 
   getRelationship(){
     const rel = this.state.relationship;
-    return _.chain(relationships).find(r => {
+    const string = _.chain(relationships).find(r => {
       return r.id === rel;
-    }).get('name').value().toLowerCase();
+    }).get('name').value() || '';
+    return string.toLowerCase();
   },
 
   getStepSize() {
@@ -107,28 +108,22 @@ export default React.createClass({
 
     return (
       <div>
-        <div>
-          <Heading level={3}>{this.props.metric}</Heading>
-          <p>{_.get(meta, 'description')}</p>
-        </div>
-
-        <div>
+        <Heading level={3}>{this.props.metric}</Heading>
+        <p>{_.get(meta, 'description')}</p>
+        
+        <div style={{overflow: 'hidden'}}>
           <MetricGraph threshold={threshold} metric={meta} data={this.props.data} relationship={this.state.relationship} />
         </div>
 
         <Padding tb={2}>
-          <div>
-            <Padding tb={1}>
-              <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${meta.units}`}</Color></code>
-            </Padding>
-          </div>
+          <Padding tb={1}>
+            <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${meta.units}`}</Color></code>
+          </Padding>
 
           <div className="flex-vertical-align">
-            <div>
-              <Padding r={1}>
-                <Button flat onClick={this.onRelationshipChange}>{this.state.relationship}</Button>
-              </Padding>
-            </div>
+            <Padding r={1}>
+              <Button flat onClick={this.onRelationshipChange}>{this.state.relationship}</Button>
+            </Padding>
 
             <div className="flex-grow-1">
               <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />

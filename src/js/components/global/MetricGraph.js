@@ -27,15 +27,15 @@ export default React.createClass({
 
   componentDidMount() {
     this.onWindowResize();
-    window.addEventListener('resize', this.onWindowResize);
+    window.addEventListener('resize', this.state.debouncedWindowResize);
   },
 
   componentWillReceiveProps() {
-    this.onWindowResize();
+    this.state.debouncedWindowResize();
   },
 
   componentWillUnmount() {
-    window.addEventListener('resize', this.onWindowResize);
+    window.removeEventListener('resize', this.state.debouncedWindowResize);
   },
 
   getDefaultProps() {
@@ -48,7 +48,8 @@ export default React.createClass({
 
   getInitialState() {
     return {
-      width: 0
+      width: 0,
+      debouncedWindowResize: _.debounce(this.onWindowResize, 50)
     };
   },
 

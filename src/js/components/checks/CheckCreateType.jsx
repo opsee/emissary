@@ -35,12 +35,6 @@ const CheckCreateType = React.createClass({
       })
     })
   },
-  getItemStyle(){
-    return {
-      textAlign: 'left',
-      margin: '0 1rem 1rem 0'
-    };
-  },
   getLink(type = {}){
     const data = JSON.stringify({target: {type: type.id}});
     if (type.id === 'host'){
@@ -80,8 +74,8 @@ const CheckCreateType = React.createClass({
         }
       }
     ];
-    return _.reject(initial, type => {
-      return !flag(`check-type-${type.id}`);
+    return _.filter(initial, type => {
+      return flag(`check-type-${type.id}`);
     });
   },
   runDismissHelperText(){
@@ -119,10 +113,8 @@ const CheckCreateType = React.createClass({
         </Padding>
         {this.getTypes().map(type => {
           return (
-            <Button onClick={this.handleTypeSelect.bind(null, type)} style={this.getItemStyle()} color="primary" flat key={`type-select-${type.id}`}>
-              <span>
-                <strong>{type.title}&nbsp;</strong>
-              </span>
+            <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
+              <strong>{type.title}&nbsp;</strong>
               <span style={{display: 'inline-block', textAlign: 'left'}}>
                 {type.size()}
               </span>
