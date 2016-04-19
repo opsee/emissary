@@ -62,25 +62,28 @@ export default React.createClass({
     return step;
   },
 
-  getThreshold() {
-    // Return the actual threshold if there is one
-    if (this.state.threshold !== null) {
-      return this.state.threshold;
-    }
-
-    // If there isn't a threshold yet AND we have data, we can infer a good
-    // suggestion; somewhere between the average and the maximum values.
+  /*
+   * If the user hasn't set a threshold yet BUT we have data, we can infer a good
+   * suggested threshold: somewhere between the average and the maximum values.
+   */
+  getThresholdSuggestion() {
     const data = this.props.data;
     if (!data.length) {
       return 0;
     }
 
+    // FIXME too much looping
     const values = _.map(data, d => d.value);
     const max = _.max(values);
     const mean = _.mean(values);
     const suggestedThreshold = (max + mean) / 2;
     const fixedThreshold = parseFloat(Math.round(suggestedThreshold * 100) / 100).toFixed(2);
     return Number(fixedThreshold);
+  },
+
+  getThresholdValue() {
+    const threshold = this.state.threshold;
+    return threshold !== null ? threshold : this.getThresholdSuggestion();
   },
 
   onRelationshipChange() {
@@ -100,6 +103,8 @@ export default React.createClass({
   render() {
     // TODO render status (green/red bar)
     const meta = this.getMetricMeta();
+    const threshold = this.getThresholdValue();
+
     return (
       <div>
         <div>
@@ -108,8 +113,7 @@ export default React.createClass({
         </div>
 
         <div>
-          <MetricGraph editable threshold={this.getThreshold()}
-            metric={meta} data={this.props.data} relationship={this.state.relationship} />
+          <MetricGraph threshold={threshold} metric={meta} data={this.props.data} relationship={this.state.relationship} />
         </div>
 
         <Padding tb={2}>
@@ -127,7 +131,7 @@ export default React.createClass({
             </div>
 
             <div className="flex-grow-1">
-              <input type="number" step={this.getStepSize()} value={this.state.threshold || ''} onChange={this.onThresholdChange} autoFocus />
+              <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
             </div>
             <Padding l={1}>
               {meta.units}
