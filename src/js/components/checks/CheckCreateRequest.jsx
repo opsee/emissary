@@ -59,7 +59,7 @@ const CheckCreateRequest = React.createClass({
   getInitialState() {
     return {
       url: this.getUrl(),
-      hasSetPort: false,
+      hasSetPort: this.props.renderAsInclude,
       debouncedRunUrlChange: _.debounce(this.runUrlChange, 800)
     };
   },
