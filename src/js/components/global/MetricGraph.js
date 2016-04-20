@@ -22,7 +22,10 @@ export default React.createClass({
     }).isRequired,
 
     relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired,
-    threshold: PropTypes.number
+    threshold: PropTypes.number,
+    breakpoint: PropTypes.number,
+    aspectRatio: PropTypes.number,
+    showTooltip: PropTypes.bool
   },
 
   componentDidMount() {
@@ -219,7 +222,7 @@ export default React.createClass({
     const xAxis = d3.svg.axis()
       .scale(x)
       .orient('bottom')
-      .ticks(Math.max(width/40, 5)) // horizontal tick every 20px
+      .ticks(Math.max(width / 40, 5)) // horizontal tick every 20px
       .tickFormat(timestamp => {
         const now = moment();
         const minAgo = now.diff(moment(timestamp), 'minutes');
@@ -244,7 +247,7 @@ export default React.createClass({
     const yAxis = d3.svg.axis()
       .scale(y)
       .orient('right')
-      .ticks(Math.max(graphHeight/40, 5)) // vertical tick every 20px
+      .ticks(Math.max(graphHeight / 40, 5)) // vertical tick every 20px
       .tickSize(width - margin.right) // for the guidelines to be full-width
       .tickFormat(d => this.getVerticalTick(d));
 
@@ -352,7 +355,7 @@ export default React.createClass({
         .enter().append('path')
           .attr('d', d3.svg.symbol().type('triangle-up'))
           .attr('class', tooltipClass)
-          .attr('transform', `translate(0, ${tooltipDimensions.height / 2}) rotate(-90)`)
+          .attr('transform', `translate(0, ${tooltipDimensions.height / 2}) rotate(-90)`);
 
       tooltipGroup.selectAll('text')
         .data([currentDataPoint])
