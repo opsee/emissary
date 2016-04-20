@@ -198,7 +198,7 @@ function checkCreateOrEdit(state, data, isEditing){
     [isEditing ? 'put' : 'post'](`${config.services.api}/checks${isEditing ? '/' + data.id : ''}`)
     .set('Authorization', state().user.get('auth'))
     .send(d).then(checkRes =>{
-      saveNotifications(state, data, _.get(checkRes, 'body.id') || data.id, isEditing)
+      saveNotifications(state, data, _.get(checkRes, 'body.checks[0].id') || data.id, isEditing)
       .then(() => {
         resolve(checkRes);
       }).catch(reject);
