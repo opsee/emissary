@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Col, Grid, Row} from '../layout';
 import _ from 'lodash';
 import {BastionRequirement, Toolbar} from '../global';
 import {History} from 'react-router';
@@ -77,7 +77,7 @@ const CheckCreateAssertions = React.createClass({
     return !!validate.check(this.props.check, ['assertions']).length;
   },
   runChange(data = undefined){
-    this.props.onChange(this.getFinalData(data), this.isDisabled(), 2);
+    this.props.onChange(this.getFinalData(data));
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckAssertionsHelp');
@@ -89,13 +89,13 @@ const CheckCreateAssertions = React.createClass({
   },
   handleAssertionsChange(assertions = []){
     const data = _.assign({}, this.props.check, {assertions});
-    this.props.onChange(data, this.isDisabled(), 2);
+    this.props.onChange(data);
   },
   renderHelperText(){
     return (
         <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
           </Alert>
         </UserDataRequirement>
       );
@@ -111,6 +111,17 @@ const CheckCreateAssertions = React.createClass({
     }
     return null;
   },
+  renderAssertionSelection(){
+    const {props} = this;
+    if ((props.renderAsInclude && props.check.COMPLETE) || !props.renderAsInclude){
+      return (
+        <Padding b={1}>
+          <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
@@ -118,8 +129,7 @@ const CheckCreateAssertions = React.createClass({
           <Heading level={3}>Assertions</Heading>
         </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
-        <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>
-        <div><br/></div>
+        {this.renderAssertionSelection()}
         {this.renderSubmitButton()}
       </form>
     );

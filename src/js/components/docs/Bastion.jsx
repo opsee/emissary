@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {BastionRequirement, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import {Heading} from '../type';
 
 const Bastion = React.createClass({
@@ -55,6 +55,14 @@ const Bastion = React.createClass({
                 <Heading level={3}>What language is the instance written in? Can I inspect the source code?</Heading>
                 <p>The instance is written in Go. If your company requires a source code review or if you simply want to do diligence on us, drop us a line at <a href="mailto:support@opsee.co">support@opsee.co</a>.</p>
                 <hr/>
+
+                <Heading level={3}>How do I remove the Opsee instance, and anything else Opsee adds to my environment?</Heading>
+                <p>It takes just a few quick steps to remove Opsee entirely from your environment, should you need to:</p>
+                <ul>
+                  <li>To remove the Opsee instance, as well as its security group and auto scale group, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Look for the stack named <strong>opsee-stack-[id]</strong>. Select it from the list and choose Actions -> Delete Stack</li>
+                  <li>To remove the Opsee ingress rules, allowing communication between our security group and the other groups in your VPC, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Look for the stack named <strong>opsee-stack-[id]-OpseeBastionIngressStack-[id]</strong>. Select it from the list and choose Actions -> Delete Stack</li>
+                  <li>To remove the IAM role used by our EC2 instance, go to your <a target="_blank" href="https://console.aws.amazon.com/iam/home#roles">IAM Roles List</a>. Find the role called <strong>opsee-role-[id]</strong>. Select it from the list and choose Role Actions -> Delete Role.</li>
+                </ul>
             </Col>
           </Row>
         </Grid>

@@ -1,10 +1,9 @@
 import React from 'react';
 
 import {Toolbar, Highlight} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Heading} from '../type';
-import {Padding} from '../layout';
-import {SlackConnect} from '../integrations';
+import {Col, Grid, Padding, Row} from '../layout';
+import {SlackConnect, SlackInfo} from '../integrations';
 
 const Notifications = React.createClass({
   render() {
@@ -25,7 +24,9 @@ const Notifications = React.createClass({
               <Heading level={2}>Slack Channels</Heading>
               <p>First, <SlackConnect target="_blank"/>.</p>
               <p>When successfully connected, you&rsquo;ll see a list of Slack channels available to you as notification options during check creation.</p>
-              <p><a href="https://opsee.slack.com/apps/manage/A04MVPTFN-opsee" target="_blank">Edit your Slack integration here.</a></p>
+              <Padding b={1}>
+                <SlackInfo/>
+              </Padding>
               <Heading level={2}>Webhooks</Heading>
               <p>Here is what an Opsee webhook looks like:</p>
               <Padding tb={1}>

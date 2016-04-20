@@ -1,0 +1,8 @@
+.wrapperInline {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.itemInline {
+  padding-right: 2rem;
+}

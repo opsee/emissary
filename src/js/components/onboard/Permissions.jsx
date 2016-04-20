@@ -5,9 +5,8 @@ import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
 
 import {Highlight, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Expandable, Padding} from '../layout';
+import {Col, Expandable, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions} from '../../actions';
 
@@ -86,7 +85,7 @@ const Permissions = React.createClass({
               {this.renderTemplateItem('cf')}
               {!this.state.docs && <p>If you have any questions, you can reach out to us any time on <Link target="_blank" to="https://app.opsee.com/help">email, Slack, or IRC</Link>.</p>}
             </Padding>
-            {!this.state.docs && <Button to="/start/region-select" color="success" block chevron>Next</Button>}
+            {!this.state.docs && <Button to="/start/credentials" color="success" block chevron>Next</Button>}
             </Col>
           </Row>
         </Grid>

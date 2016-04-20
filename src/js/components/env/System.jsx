@@ -5,8 +5,7 @@ import _ from 'lodash';
 import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Color, Heading} from '../type';
 import {user as actions, env as envActions} from '../../actions';
 

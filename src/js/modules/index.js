@@ -1,4 +1,3 @@
-import bootstrap from './bootstrap';
 import config from './config';
 import flag from './flag';
 import getKeys from './getKeys';
@@ -12,7 +11,6 @@ import variables from './variables';
 import yeller from './yeller';
 
 export {
-  bootstrap,
   config,
   flag,
   getKeys,

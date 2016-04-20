@@ -3,8 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Mail, Slack} from '../icons';
-import {Alert} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {
   integrations as integrationsActions
 } from '../../actions';
@@ -33,7 +32,7 @@ const NotificationItemList = React.createClass({
   },
   getSlackChannelFromId(id){
     const channels = this.props.redux.integrations.slackChannels.toJS();
-    return channels.find(c => c.id === id) || {};
+    return channels.find(c => c.id === id);
   },
   renderItem(n, i){
     if (n.type === 'email'){
@@ -44,11 +43,13 @@ const NotificationItemList = React.createClass({
       );
     } else if (n.type === 'slack_bot'){
       const channel = this.getSlackChannelFromId(n.value);
-      return (
-        <Padding key={`notif-${i}`} b={1}>
-          <Slack inline/> {channel.name}
-        </Padding>
-      );
+      if (channel){
+        return (
+          <Padding key={`notif-${i}`} b={1}>
+            <Slack inline/> {channel.name}
+          </Padding>
+        );
+      }
     }
     return null;
   },
@@ -63,7 +64,7 @@ const NotificationItemList = React.createClass({
       );
     }
     return (
-      <Alert bsStyle="warning">This check does not have any notifications. You will not be alerted if this check fails.</Alert>
+      <Alert color="warning">This check does not have any notifications. You will not be alerted if this check fails.</Alert>
     );
   }
 });

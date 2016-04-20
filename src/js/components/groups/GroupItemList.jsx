@@ -5,8 +5,7 @@ import {bindActionCreators} from 'redux';
 import {List, is} from 'immutable';
 
 import GroupItem from './GroupItem.jsx';
-import {Alert} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {SetInterval} from '../../modules/mixins';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
@@ -135,7 +134,11 @@ const GroupItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getGroups(true).size})`;
     if (this.getGroups().size < this.getGroups(true).size){
-      numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+      if (!this.props.ids && !this.props.instanceIds){
+        numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+      } else {
+        numbers = `(${this.getGroups().size})`;
+      }
     }
     if (!this.getGroups().size){
       numbers = '';
@@ -147,7 +150,7 @@ const GroupItemList = React.createClass({
   },
   renderNoMatch(){
     if (!this.getGroups().size && !this.props.noFallback){
-      return <Alert bsStyle="default">No groups found</Alert>;
+      return <Alert color="default">No groups found</Alert>;
     }
     return null;
   },
@@ -168,7 +171,7 @@ const GroupItemList = React.createClass({
       <div>
         {this.renderTitle()}
         <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
-          <Alert bsStyle="default">No groups found</Alert>
+          <Alert color="default">No groups found</Alert>
         </StatusHandler>
       </div>
     );

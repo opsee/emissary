@@ -1,27 +1,13 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import forms from 'newforms';
+import _ from 'lodash';
 
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
-import {BoundField} from '../forms';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
-
-const InfoForm = forms.Form.extend({
-  vpcs: forms.ChoiceField({
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'RadioSelect'
-    }
-  }),
-  constructor(choices, kwargs){
-    forms.Form.call(this, kwargs);
-    this.fields.vpcs.setChoices(choices);
-  }
-});
+import {RadioSelect} from '../forms';
 
 const VPCSelect = React.createClass({
   propTypes: {
@@ -49,47 +35,40 @@ const VPCSelect = React.createClass({
     }
   },
   getInitialState() {
-    const self = this;
-    let obj = {};
-    const data = this.props.redux.onboard.vpcsForSelection;
-    if (data.length){
-      obj = {
-        info: new InfoForm(data, {
-          onChange(){
-            self.forceUpdate();
-          },
-          labelSuffix: '',
-          validation: {
-            on: 'blur change',
-            onChangeDelay: 100
-          },
-          data: {
-            vpcs: [data[0][0]]
-          }
-        })
-      };
-      setTimeout(() => {
-        obj.info.validate();
-      }, 30);
-    }
-    return obj;
+    return {
+      vpc: this.getSelectedVPC()
+    };
   },
-  isDisabled(){
-    return !this.state.info.cleanedData.vpcs;
+  getSelectedVPC(){
+    const {onboard} = this.props.redux;
+    const selected = _.chain(onboard.regionsWithVpcs)
+    .head()
+    .get('vpcs')
+    .find({selected: true})
+    .get('vpc_id')
+    .value();
+    const first = _.chain(onboard.vpcsForSelection)
+    .head()
+    .get('id')
+    .value();
+    return selected || first;
+  },
+  handleSelect(state){
+    this.setState(state);
   },
   handleSubmit(e){
     e.preventDefault();
     this.props.analyticsActions.trackEvent('Onboard', 'vpc-select');
-    this.props.actions.vpcSelect(this.state.info.cleanedData.vpcs);
+    this.props.actions.vpcSelect(this.state.vpc);
   },
   renderInner(){
     if (this.props.redux.onboard.vpcsForSelection.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>
-          <BoundField bf={this.state.info.boundField('vpcs')}/>
+          <RadioSelect onChange={this.handleSelect} data={this.state} options={this.props.redux.onboard.vpcsForSelection} path="vpc"/>
           <Padding t={1}>
-            <Button type="submit" color="success" block disabled={this.isDisabled()} chevron>Next</Button>
+            <Button type="submit" color="success" block disabled={!this.state.vpc} chevron>Next</Button>
           </Padding>
         </div>
       );

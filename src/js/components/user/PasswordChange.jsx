@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import {Button} from '../forms';
 import {user as actions} from '../../actions';
 
@@ -48,7 +48,7 @@ const PasswordChange = React.createClass({
     return !this.state.password || this.getStatus() === 'pending';
   },
   setUserData(data){
-    this.setState(_.assign({}, data));
+    this.setState(data);
   },
   handleSubmit(e){
     e.preventDefault();
@@ -61,11 +61,11 @@ const PasswordChange = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <form name="loginForm" onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <p>Enter your new password here.</p>
-                <UserInputs include={['password']}  onChange={this.setUserData}/>
+                <UserInputs include={['password']} onChange={this.setUserData} data={this.state}/>
                 <StatusHandler status={this.getStatus()}/>
-                <Button color="success" block type="submit" disabled={this.isDisabled()}>
+                <Button type="submit" color="success" block disabled={this.isDisabled()}>
                   {this.getButtonText()}
                 </Button>
               </form>

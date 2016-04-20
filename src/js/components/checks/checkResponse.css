@@ -10,6 +10,11 @@
   justify-content: center;
   position: relative;
   transition: max-height var(--transitionEaseOut);
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 .checkResponse:after {
   background-size: 100%;
@@ -32,6 +37,13 @@
 .checkResponseWaiting {
   composes: checkResponse;
   align-items: center;
+  max-height:none;
+  height:auto;
+  min-height:13rem;
+}
+.checkResponseWaiting:after{
+  content:none;
+  display:none;
 }
 
 .checkResponseExpanded {

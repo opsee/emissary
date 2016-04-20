@@ -8,9 +8,8 @@ import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 

@@ -5,7 +5,7 @@ import Immutable from 'immutable';
 import _ from 'lodash';
 
 import {StatusHandler} from '../global';
-import {Alert} from '../../modules/bootstrap';
+import {Alert} from '../layout';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 import {checks as actions} from '../../actions';
@@ -85,7 +85,11 @@ const CheckItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getChecks(true).size})`;
     if (this.getChecks().size < this.getChecks(true).size){
-      numbers = `(${this.getChecks().size} of ${this.getChecks(true).size})`;
+      if (!this.props.target){
+        numbers = `(${this.getChecks().size} of ${this.getChecks(true).size})`;
+      } else {
+        numbers = `(${this.getChecks().size})`;
+      }
     }
     if (!this.getChecks().size){
       numbers = '';
@@ -110,7 +114,7 @@ const CheckItemList = React.createClass({
       <div>
         {this.renderTitle()}
         <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-          <Alert bsStyle="default">No checks found</Alert>
+          <Alert color="default">No checks found</Alert>
         </StatusHandler>
       </div>
     );

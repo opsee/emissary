@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Modal} from '../../modules/bootstrap';
+import {Modal} from '../layout';
 import {plain as seed} from 'seedling';
 
 export default React.createClass({

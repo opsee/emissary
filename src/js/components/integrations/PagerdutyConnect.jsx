@@ -5,6 +5,11 @@ const PagerdutyConnect = React.createClass({
     redirect: PropTypes.string,
     target: PropTypes.string
   },
+  getDefaultProps() {
+    return {
+      target: '_blank'
+    };
+  },
   render() {
     const redirect = this.props.redirect || `${window.location.origin}/profile?pagerduty=true`;
     return (

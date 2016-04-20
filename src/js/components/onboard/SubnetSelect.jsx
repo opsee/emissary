@@ -1,33 +1,18 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import forms from 'newforms';
+import _ from 'lodash';
 
 import {bindActionCreators} from 'redux';
 import {StatusHandler, Toolbar} from '../global';
 import img from '../../../img/tut-subnets.svg';
-import {BoundField} from '../forms';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
-
-const InfoForm = forms.Form.extend({
-  subnets: forms.ChoiceField({
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'RadioSelect'
-    }
-  }),
-  constructor(choices, kwargs){
-    forms.Form.call(this, kwargs);
-    this.fields.subnets.setChoices(choices);
-  }
-});
+import {RadioSelect} from '../forms';
 
 const SubnetSelect = React.createClass({
   propTypes: {
-    history: PropTypes.object,
     actions: PropTypes.shape({
       subnetSelect: PropTypes.func
     }),
@@ -42,7 +27,11 @@ const SubnetSelect = React.createClass({
         envGetBastions: PropTypes.object
       }),
       user: PropTypes.object
-    })
+    }),
+    history: PropTypes.shape({
+      pushState: PropTypes.func,
+      replaceState: PropTypes.func
+    }).isRequired
   },
   componentWillMount(){
     if (!this.props.redux.onboard.subnetsForSelection.length){
@@ -57,41 +46,37 @@ const SubnetSelect = React.createClass({
         });
       }
     };
+    this.props.actions.subnetSelect(this.getSelectedSubnet());
   },
   getInitialState() {
-    const self = this;
-    const data = this.props.redux.onboard.subnetsForSelection;
-    let obj = {};
-    if (data.length){
-      obj = {
-        loaded: false,
-        info: new InfoForm(data, {
-          onChange(){
-            self.forceUpdate();
-          },
-          labelSuffix: '',
-          validation: {
-            on: 'blur change',
-            onChangeDelay: 100
-          },
-          data: {
-            subnets: [data[0][0]]
-          }
-        })
-      };
-      setTimeout(() => {
-        obj.info.validate();
-      }, 30);
-    }
-    return obj;
+    return {
+      subnet: this.getSelectedSubnet()
+    };
+  },
+  getSelectedSubnet(){
+    const {onboard} = this.props.redux;
+    const selected = _.chain(onboard.regionsWithVpcs)
+    .head()
+    .get('subnets')
+    .find({selected: true})
+    .get('subnet_id')
+    .value();
+    const first = _.chain(onboard.subnetsForSelection)
+    .head()
+    .get('id')
+    .value();
+    return selected || first;
   },
   isDisabled(){
-    return !this.state.info.cleanedData.subnets;
+    return !this.state.subnet;
+  },
+  handleSelect(state){
+    this.setState(state);
+    this.props.actions.subnetSelect(state.subnet);
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.analyticsActions.trackEvent('Onboard', 'subnet-select');
-    this.props.actions.subnetSelect(this.state.info.cleanedData.subnets);
+    this.props.history.pushState(null, '/start/install');
   },
   renderInner(){
     if (!this.state.loaded){
@@ -110,7 +95,7 @@ const SubnetSelect = React.createClass({
               </Col>
               <Col xs={12} sm={8}>
                 <Heading level={3}>Your Subnets</Heading>
-                <BoundField bf={this.state.info.boundField('subnets')}/>
+                <RadioSelect onChange={this.handleSelect} data={this.state} options={this.props.redux.onboard.subnetsForSelection} path="subnet"/>
               </Col>
             </Row>
           </Grid>

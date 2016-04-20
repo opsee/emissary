@@ -5,8 +5,7 @@ import _ from 'lodash';
 import {List, is} from 'immutable';
 
 import InstanceItem from './InstanceItem.jsx';
-import {Alert} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {Link} from 'react-router';
 import {SetInterval} from '../../modules/mixins';
 import {StatusHandler} from '../global';
@@ -161,7 +160,11 @@ const InstanceItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getInstances(true).size})`;
     if (this.getInstances().size < this.getInstances(true).size){
-      numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+      if (!this.props.groupSecurity && !this.props.ids){
+        numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+      } else {
+        numbers = `(${this.getInstances().size})`;
+      }
     }
     if (!this.getInstances().size){
       numbers = '';
@@ -173,7 +176,7 @@ const InstanceItemList = React.createClass({
   },
   renderNoMatch(){
     if (!this.getInstances().size && !this.props.noFallback){
-      return <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>;
+      return <Alert color="default">No {this.getTitle()} instances found</Alert>;
     }
     return null;
   },
@@ -194,7 +197,7 @@ const InstanceItemList = React.createClass({
       <div>
         {this.renderTitle()}
         <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
-          <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>
+          <Alert color="default">No {this.getTitle()} instances found</Alert>
         </StatusHandler>
       </div>
     );
