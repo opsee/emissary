@@ -14,7 +14,8 @@ export default {
     api: 'https://api.opsee.com',
     auth: 'https://auth.opsee.com',
     stream: 'wss://api.opsee.com/stream/',
-    compost: 'https://compost.in.opsee.com'
+    compost: 'https://compost.in.opsee.com',
+    hugs:  'http://localhost:9097'
   },
   //display vpc screen despite only having 1 vpc in environment
   showVpcScreen: false,

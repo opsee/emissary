@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import PagerdutyConnect from './PagerdutyConnect';
 import {StatusHandler} from '../global';
 
-const SlackInfo = React.createClass({
+const PagerdutyInfo = React.createClass({
   propTypes: {
     data: PropTypes.shape({
       slackInfo: PropTypes.object
@@ -58,4 +58,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SlackInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(PagerdutyInfo);

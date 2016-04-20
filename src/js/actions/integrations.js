@@ -73,7 +73,7 @@ export function getPagerdutyInfo() {
       type: INTEGRATIONS_PAGERDUTY_INFO,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.services.api}/services/pagerduty`)
+        .get(`${config.services.hugs}/services/pagerduty`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(res.body);
@@ -88,17 +88,15 @@ export function pagerdutyAccess(query) {
     dispatch({
       type: INTEGRATIONS_PAGERDUTY_ACCESS,
       payload: new Promise((resolve, reject) => {
-        console.log(query);
-        return resolve();
-        // return request
-        // .post(`${config.services.api}/services/slack`)
-        // .set('Authorization', state().user.get('auth'))
-        // .send(query)
-        // .then((res) => {
-        //   resolve(res.body);
-        //   getSlackInfo()(dispatch, state);
-        //   storage.set('shouldGetSlackChannels', true);
-        // }, reject);
+         console.log(query);
+         return request
+         .post(`${config.services.hugs}/services/pagerduty`)
+         .set('Authorization', state().user.get('auth'))
+         .send(query)
+         .then((res) => {
+           resolve(res.body);
+           getPagerdutyInfo()(dispatch, state);
+         }, reject);
       })
     });
   };
