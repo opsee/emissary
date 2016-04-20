@@ -16,6 +16,7 @@ import {
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
+  GET_METRIC_RDS,
   ENV_SET_FILTERED,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -128,6 +129,7 @@ const statics = {
     const index = arr.findIndex(item => {
       return item.get('id') === single.get('id');
     });
+
     if (index > -1){
       return arr.update(index, () => single);
     }
@@ -159,7 +161,7 @@ const statics = {
     data.InstanceCreateTime = new Date(data.InstanceCreateTime);
     data.type = 'RDS';
     if (data.VpcSecurityGroups){
-     data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
+      data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
     _.assign(data, result.getFormattedData(data));
     if (data.checks && data.checks.size && !data.results.size){
@@ -308,6 +310,15 @@ export default handleActions({
       const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
       const instances = _.assign({}, state.instances, {rds});
       return _.assign({}, state, {instances, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_METRIC_RDS]: {
+    next(state, action) {
+      const rds = statics.getInstanceRdsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
+      const instances = _.assign({}, state.instances, {rds});
+      return _.assign({}, state, { instances, filtered });
     },
     throw: yeller.reportAction
   },

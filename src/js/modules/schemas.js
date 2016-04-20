@@ -63,7 +63,8 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
   PubliclyAccessible: false,
   DBInstanceClass: null,
   AvailabilityZone: null,
-  VpcSecurityGroups: List()
+  VpcSecurityGroups: List(),
+  metrics: List()
 }));
 
 export const GroupSecurity = Record(_.assign({}, baseEnvItem, {
