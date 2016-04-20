@@ -249,19 +249,6 @@ export default React.createClass({
         .attr('width', width)
         .attr('height', height - y(this.props.threshold));
 
-    // Append the data points
-    svg.append('g')
-      .selectAll('circle')
-      .data([_.last(data)])
-      .enter().append('circle')
-      .attr('cx', d => x(d.time))
-      .attr('cy', d => y(d.value))
-      .attr('r', '0.5vmin')
-      .attr('class', d => {
-        let status = this.getPassFail(d);
-        return style[`point${status}`];
-      });
-
     // Append the threshold line
     svg.append('line')
       .attr('class', style.thresholdLine)
@@ -277,6 +264,20 @@ export default React.createClass({
         .attr('clip-path', d => 'url(#clip-' + d.toLowerCase() + ')')
         .datum(data)
         .attr('d', line);
+
+        // Append the data points
+    svg.append('g')
+      .selectAll('circle')
+      .data([_.last(data)])
+      .enter().append('circle')
+      .attr('cx', d => x(d.time))
+      .attr('cy', d => y(d.value))
+      .attr('r', '0.5vmin')
+      .attr('class', d => {
+        let status = this.getPassFail(d);
+        return style[`point${status}`];
+      });
+
 
     if (this.props.showTooltip) {
       const currentDataPoint = _.last(data);

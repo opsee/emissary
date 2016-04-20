@@ -6,6 +6,10 @@
   shape-rendering: crispEdges;
 }
 
+.axis path {
+  fill: none;
+}
+
 .axis line {
   stroke: #000;
   fill: none;
