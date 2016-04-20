@@ -41,6 +41,7 @@ export default React.createClass({
   getDefaultProps() {
     return {
       aspectRatio: 0.5,
+      breakpoint: 700, // px
       data: [],
       metric: {},
       threshold: 0,
@@ -107,15 +108,22 @@ export default React.createClass({
 
   getMargin() {
     return {
-      top: 0,
+      top: 25,
       right: 100,
       bottom: 50,
       left: 50
     };
   },
 
-  // FIXME can this be done better with Slate?
+  getTooltipDimensions() {
+    return {
+      height: 35,
+      width: 70
+    };
+  },
+
   getAssertionStatus(dataPoint) {
+    // FIXME can this be done better with Slate?
     const value = Number(dataPoint.value);
     const threshold = Number(this.props.threshold);
 
@@ -131,6 +139,10 @@ export default React.createClass({
   getPassFail(dataPoint) {
     const isPassing = this.getAssertionStatus(dataPoint);
     return isPassing ? 'Passing' : 'Failing';
+  },
+
+  isSmallScreen() {
+    return this.state.width < this.props.breakpoint;
   },
 
   /*
@@ -186,17 +198,22 @@ export default React.createClass({
     const node = ReactFauxDOM.createElement('svg');
 
     // The main svg container. It fills the full width/height of the parent.
-    const svg = d3.select(node)
+    const outerSVG = d3.select(node)
       .attr('width', width)
       .attr('height', height);
 
     // Background colour
-    svg.append('rect')
+    outerSVG.append('rect')
       .attr('class', style.background)
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
       .attr('height', height - margin.bottom);
+
+    const svg = outerSVG.append('g')
+      .attr('width', width)
+      .attr('height', height - margin.bottom - margin.top)
+      .attr('transform', `translate(0, ${margin.top})`);
 
     // Set up the x-axis
     const xAxis = d3.svg.axis()
@@ -228,7 +245,7 @@ export default React.createClass({
       .scale(y)
       .orient('right')
       .ticks(Math.max(graphHeight/40, 5)) // vertical tick every 20px
-      .tickSize(width) // for the guidelines to be full-width
+      .tickSize(width - margin.right) // for the guidelines to be full-width
       .tickFormat(d => this.getVerticalTick(d));
 
     // Draw the y-axis
@@ -311,7 +328,7 @@ export default React.createClass({
       const currentDataPoint = _.last(data);
       const isCurrentPassing = this.getPassFail(currentDataPoint);
       const tooltipClass = style[`tooltip${isCurrentPassing}`];
-      const tooltipDimensions = { height: 35, width: 70 };
+      const tooltipDimensions = this.getTooltipDimensions();
 
       const tooltipGroup = graphGroup.selectAll('.js-tooltip-group')
         .data([currentDataPoint])
