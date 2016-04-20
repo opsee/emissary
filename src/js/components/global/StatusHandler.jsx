@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Alert} from '../../modules/bootstrap';
 import Loader from './Loader';
-import Padding from '../layout/Padding';
+import {Alert, Padding} from '../layout';
 
 const StatusHandler = React.createClass({
   propTypes: {
@@ -85,7 +84,7 @@ const StatusHandler = React.createClass({
     } else if (this.isError()){
       return (
         <Padding b={1}>
-          <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
+          <Alert color="danger" onDismiss={this.handleDismiss}>
             <div dangerouslySetInnerHTML={{__html: this.getErrorText()}}/>
           </Alert>
         </Padding>

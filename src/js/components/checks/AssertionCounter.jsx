@@ -7,15 +7,15 @@ import {ScreenReaderOnly} from '../type';
 
 const AssertionCounter = React.createClass({
   propTypes: {
-    key: PropTypes.string,
-    relationship: PropTypes.string,
-    operand: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    value: PropTypes.string,
-    response: PropTypes.object,
-    keyData: PropTypes.string
+    response: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      operand: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ]),
+      relationship: PropTypes.string.isRequired
+    }).isRequired
   },
   getTitle(){
     return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
@@ -40,7 +40,7 @@ const AssertionCounter = React.createClass({
     let response = _.assign({}, this.getResponse()) || {};
     //cast to string because that's what slate wants
     response.body = typeof response.body === 'object' ? JSON.stringify(response.body) : response.body;
-    return slate.checkAssertion(_.assign({}, this.props, {key: this.props.keyData}), response);
+    return slate.checkAssertion(this.props.item, response);
   },
   renderIcon(){
     return this.isPassing() ? (

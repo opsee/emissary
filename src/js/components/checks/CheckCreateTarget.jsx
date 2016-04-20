@@ -3,16 +3,14 @@ import _ from 'lodash';
 import fuzzy from 'fuzzy';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-
 import {History} from 'react-router';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
 
 import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import {EnvList} from '../env';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {Check} from '../../modules/schemas';
 import {Bar as SearchBar} from '../search';
@@ -98,7 +96,7 @@ const CheckCreateTarget = React.createClass({
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
-    this.props.onChange(check, null, 1);
+    this.props.onChange(check);
     const data = JSON.stringify(check);
     this.history.pushState(null, `/check-create/request?data=${data}`);
   },
@@ -106,8 +104,8 @@ const CheckCreateTarget = React.createClass({
     return (
       <UserDataRequirement hideIf="hasDismissedCheckTargetHelp">
         <Padding b={2}>
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Now, choose your target.</p>
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            Now, choose your target.
           </Alert>
         </Padding>
       </UserDataRequirement>

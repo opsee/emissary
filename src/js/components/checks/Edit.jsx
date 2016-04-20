@@ -9,8 +9,7 @@ import CheckCreateRequest from './CheckCreateRequest';
 import CheckCreateAssertions from './CheckCreateAssertions';
 import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
 import {Heading} from '../type';
@@ -22,20 +21,6 @@ import {
   env as envActions
 } from '../../actions';
 import {Check} from '../../modules/schemas';
-
-function getState(){
-  return {
-    step1: {
-      disabled: false
-    },
-    step2: {
-      disabled: false
-    },
-    step3: {
-      disabled: false
-    }
-  };
-}
 
 const CheckEdit = React.createClass({
   propTypes: {
@@ -64,10 +49,10 @@ const CheckEdit = React.createClass({
     })
   },
   getInitialState() {
-    return _.assign(getState(), {
+    return {
       check: null,
       showEnv: false
-    });
+    };
   },
   componentWillMount(){
     this.props.actions.getCheck(this.props.params.id);
@@ -99,11 +84,10 @@ const CheckEdit = React.createClass({
   runRemoveCheck(){
     this.props.actions.del(this.props.params.id);
   },
-  setData(data, disabled, num){
-    let obj = {};
-    obj[`step${num}`] = {disabled: disabled};
-    obj.check = _.cloneDeep(data);
-    this.setState(obj);
+  setData(data){
+    this.setState({
+      check: _.cloneDeep(data)
+    });
   },
   setShowEnv(){
     const bool = this.state.showEnv;
@@ -148,9 +132,7 @@ const CheckEdit = React.createClass({
           <Padding tb={1}>
             <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           </Padding>
-          <Padding tb={1}>
-            <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
-          </Padding>
+          <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>

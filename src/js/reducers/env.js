@@ -41,7 +41,7 @@ const statics = {
       d.group.type = 'security';
       return d;
     }).sortBy(d => {
-      return d.group.GroupName.toLowerCase();
+      return (_.get(d, 'group.GroupName') || '').toLowerCase();
     }).value();
     const changed = newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupSecurityFromJS(state, g);
@@ -142,15 +142,13 @@ const statics = {
     return newData && newData.length ? fromJS(newData) : List();
   },
   getCreatedTime(time){
-    if (time){
-      let launchTime;
-      const parsed = Date.parse(time);
-      if (typeof parsed === 'number' && !_.isNaN(parsed) && parsed > 0){
-        launchTime = parsed;
-      }
-      return launchTime;
+    let parsed;
+    if (typeof time === 'number'){
+      parsed = new Date(time);
+    } else {
+      parsed = Date.parse(time);
     }
-    return null;
+    return parsed;
   },
   instanceRdsFromJS(raw){
     let data = _.cloneDeep(raw);

@@ -30,11 +30,6 @@ const AssertionItemList = React.createClass({
         })}
       </div>
     );
-    // return (
-    //   <Alert bsStyle="default">
-    //     No assertions
-    //   </Alert>
-    // );
   }
 });
 

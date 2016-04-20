@@ -26,23 +26,39 @@ function assertion(obj = {}){
 /*Returns an array of error objects with associated "areas" if any area fails*/
 function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
   const spec = _.get(obj, 'check_spec.value') || {};
+  const type = _.get(obj, 'target.type');
   let errors = [];
 
   //request area
-  if (!spec.path){
-    errors.push('request: A check must include a path.');
-  } else if (!spec.port){
-    errors.push('request: A check must include a port.');
-  } else if (!spec.verb){
-    errors.push('request: A check must include a method.');
-  } else if (!spec.protocol){
-    errors.push('request: A check must specify a protocol.');
+  const requestErrors = [
+    ['path', 'A check must include a path.'],
+    ['port', 'A check must include a port.'],
+    ['verb', 'A check must include a method.'],
+    ['protocol', 'A check must specifiy a protocol.']
+  ];
+
+  if (type === 'host'){
+    const arr = requestErrors.map(err => {
+      return !spec[err[0]];
+    });
+    if (_.some(arr)){
+      errors.push('request: A URL check must include a valid URL.');
+    }
+  } else {
+    requestErrors.forEach(err => {
+      if (!spec[err[0]]){
+        errors.push(`request: ${err[1]}`);
+      }
+    });
   }
 
-  const headers = spec.headers.map((h = {}) => {
-    return h.name && h.values && h.values.length;
-  });
-  const numberOfIncompleteHeaders = headers.length - _.compact(headers).length;
+  let numberOfIncompleteHeaders = 0;
+  if (Array.isArray(spec.headers)){
+    const headers = spec.headers.map((h = {}) => {
+      return h.name && h.values && h.values.length;
+    });
+    numberOfIncompleteHeaders = headers.length - _.compact(headers).length;
+  }
   let parts = getVerbAndSuffix(numberOfIncompleteHeaders);
   if (numberOfIncompleteHeaders > 0){
     errors.push(`request: ${numberOfIncompleteHeaders} header${parts.suffix} ${parts.verb} incomplete.`);

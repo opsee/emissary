@@ -6,10 +6,9 @@ import _ from 'lodash';
 
 import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {flag} from '../../modules';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
 import {SlackConnect} from '../integrations';
 
@@ -59,7 +58,10 @@ const Install = React.createClass({
       return {
         id: key,
         messages: _.chain(value).map('attributes').sort((a, b) => {
-          return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
+          if (typeof a.Timestamp === 'string'){
+            return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
+          }
+          return a.Timestamp - b.Timestamp;
         }).value()
       };
     }).value();
@@ -136,7 +138,7 @@ const Install = React.createClass({
     }
     if (this.getBastionErrors().length){
       return (
-        <Alert bsStyle="danger">
+        <Alert color="danger">
           We are aware of your failed instance install and we will contact you via email as soon as possible. Thank you!
         </Alert>
       );
@@ -175,7 +177,7 @@ const Install = React.createClass({
     const self = this;
     if (this.getBastionConnectionStatus() === 'failed'){
       return (
-        <Alert bsStyle="danger">
+        <Alert color="danger">
           Our instance failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
         </Alert>
       );
@@ -196,7 +198,7 @@ const Install = React.createClass({
       );
     }
     return (
-      <Alert bsStyle="danger">
+      <Alert color="danger">
         Something went wrong before the install began. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
       </Alert>
     );

@@ -8,7 +8,7 @@ export default React.createClass({
   render() {
     return (
        <div>
-         <Toolbar title="How Opsee Works"/>
+         <Toolbar title="Tutorial: How Opsee Works"/>
          {this.props.children}
       </div>
     );
