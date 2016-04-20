@@ -40,6 +40,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
+      aspectRatio: 0.5,
       data: [],
       metric: {},
       threshold: 0,
@@ -72,8 +73,8 @@ export default React.createClass({
     return `${val.toFixed(1)} ${units[u]}`;
   },
 
-  getVerticalTick(d, units) {
-    switch (units) {
+  getVerticalTick(d) {
+    switch (this.props.metric.units) {
     case 'bytes':
       // TODO better byte rounding
       return this.getBytes(d);
@@ -105,7 +106,12 @@ export default React.createClass({
   },
 
   getMargin() {
-    return { top: 20, right: 100, bottom: 50, left: 50 };
+    return {
+      top: 0,
+      right: 100,
+      bottom: 50,
+      left: 50
+    };
   },
 
   // FIXME can this be done better with Slate?
@@ -138,31 +144,61 @@ export default React.createClass({
     this.setState({ width });
   },
 
+  renderPlaceholder() {
+    return (
+      <div>no data</div>
+    );
+  },
+
   render() {
-    // d3 indentation conventions are kinda wacky, so...
-    /* eslint-disable indent */
     const data = this.getData();
 
     if (!data.length) {
-      return <div>no data</div>;
+      return this.renderPlaceholder();
     }
 
+    // d3 indentation conventions are kinda wacky, so...
+    /* eslint-disable indent */
+    const width = this.state.width;
+    const height = this.props.aspectRatio * width;
     const margin = this.getMargin();
-    const width = this.state.width - margin.left - margin.right;
-    const height = (0.5 * this.state.width) - margin.top - margin.bottom;
 
+    // The maximum value for the y-scale should be the maximum of the threshold
+    // or the highest data point. This lets the graph resize when the threshold
+    // is well above the highest data point.
     const yMax = Math.max(this.props.threshold, d3.max(data, d => d.value));
 
-    // Set up the x/y scales
+    // Calculate the dimensions of the graph itself to properly scale the axes.
+    const graphWidth = width - margin.left - margin.right;
+    const graphHeight = height - margin.top - margin.bottom;
+
+    // Set up the x/y scales. These functions map raw data point values to
+    // positions on the graph.
     const x = d3.time.scale()
       .domain(d3.extent(data, d => d.time ))
-      .range([0, width]);
+      .range([0, graphWidth]);
 
     const y = d3.scale.linear()
       .domain([0, yMax])
-      .range([height, 0]);
+      .range([graphHeight, 0]);
 
-    // Set up the axes
+    // Start drawing the graph!
+    const node = ReactFauxDOM.createElement('svg');
+
+    // The main svg container. It fills the full width/height of the parent.
+    const svg = d3.select(node)
+      .attr('width', width)
+      .attr('height', height);
+
+    // Background colour
+    svg.append('rect')
+      .attr('class', style.background)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width)
+      .attr('height', height - margin.bottom);
+
+    // Set up the x-axis
     const xAxis = d3.svg.axis()
       .scale(x)
       .orient('bottom')
@@ -173,30 +209,10 @@ export default React.createClass({
         return `-${minAgo} min`;
       });
 
-    const yAxis = d3.svg.axis()
-      .scale(y)
-      .orient('left')
-      .ticks(Math.max(height/40, 5)) // horizontal tick every 20px
-      .tickSize(-width, 0, 0) // for the guidelines to be full-width
-      .tickFormat(d => this.getVerticalTick(d, this.props.metric.units));
-
-    // Create the line
-    const line = d3.svg.line()
-      .interpolate('monotone')
-      .x(d => x(d.time))
-      .y(d => y(d.value));
-
-    const node = ReactFauxDOM.createElement('svg');
-    const svg = d3.select(node)
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
     // Draw the x-axis
     const xAxisGroup = svg.append('g')
       .attr('class', style.xAxis)
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', `translate(${margin.left}, ${graphHeight})`)
       .call(xAxis);
 
     // Configure the x-axis ticks
@@ -207,13 +223,13 @@ export default React.createClass({
       .attr('transform', 'rotate(-65)')
       .attr('class', style.tick);
 
-    // Background colour
-    svg.append('rect')
-      .attr('class', style.background)
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', width)
-      .attr('height', height);
+    // Set up the y-axis
+    const yAxis = d3.svg.axis()
+      .scale(y)
+      .orient('right')
+      .ticks(Math.max(graphHeight/40, 5)) // vertical tick every 20px
+      .tickSize(width) // for the guidelines to be full-width
+      .tickFormat(d => this.getVerticalTick(d));
 
     // Draw the y-axis
     const yAxisGroup = svg.append('g')
@@ -222,42 +238,55 @@ export default React.createClass({
 
     // Configure the y-axis ticks
     yAxisGroup.selectAll('text')
-      .attr('class', style.tick);
+      .attr('class', style.tick)
+      .attr('x', 4)
+      .attr('dy', -4);
 
     // Colour the minor y-axes
     yAxisGroup.selectAll('g')
       .filter(d => d)
       .attr('class', style.yGuide);
 
+    // Create a group to hold the graph
+    const graphGroup = svg.append('g')
+      .attr('transform', `translate(${margin.left}, 0)`);
+
+    // Create the line
+    const line = d3.svg.line()
+      .interpolate('monotone')
+      .x(d => x(d.time))
+      .y(d => y(d.value));
+
     // The data line
-    svg.append('path')
+    graphGroup.append('path')
       .datum(data)
       .attr('class', style.line)
       .attr('d', line);
 
     // Clipping paths to color the line above/below the threshold
-    svg.append('clipPath')
+    graphGroup.append('clipPath')
         .attr('id', 'clip-above')
       .append('rect')
-        .attr('width', width)
+        .attr('width', graphWidth)
         .attr('height', y(this.props.threshold));
 
-    svg.append('clipPath')
+    graphGroup.append('clipPath')
         .attr('id', 'clip-below')
       .append('rect')
         .attr('y', y(this.props.threshold))
-        .attr('width', width)
-        .attr('height', height - y(this.props.threshold));
+        .attr('width', graphWidth)
+        .attr('height', graphHeight - y(this.props.threshold));
 
     // Append the threshold line
-    svg.append('line')
+    graphGroup.append('line')
       .attr('class', style.thresholdLine)
       .attr('x1', 0)
-      .attr('x2', width)
+      .attr('x2', graphWidth)
       .attr('y1', y(this.props.threshold))
       .attr('y2', y(this.props.threshold));
 
-    svg.selectAll(style.line)
+    // Apply the clipping paths
+    graphGroup.selectAll(style.line)
         .data(['Above', 'Below'])
       .enter().append('path')
         .attr('class', d => cx(style[this.props.relationship], style.line + d))
@@ -265,8 +294,8 @@ export default React.createClass({
         .datum(data)
         .attr('d', line);
 
-        // Append the data points
-    svg.append('g')
+    // Append the current data point
+    graphGroup.append('g')
       .selectAll('circle')
       .data([_.last(data)])
       .enter().append('circle')
@@ -278,14 +307,13 @@ export default React.createClass({
         return style[`point${status}`];
       });
 
-
     if (this.props.showTooltip) {
       const currentDataPoint = _.last(data);
       const isCurrentPassing = this.getPassFail(currentDataPoint);
       const tooltipClass = style[`tooltip${isCurrentPassing}`];
       const tooltipDimensions = { height: 35, width: 70 };
 
-      const tooltipGroup = svg.selectAll('.js-tooltip-group')
+      const tooltipGroup = graphGroup.selectAll('.js-tooltip-group')
         .data([currentDataPoint])
         .enter().append('g')
         .attr('class', 'js-tooltip-group')
