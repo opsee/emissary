@@ -110,18 +110,21 @@ export default React.createClass({
   },
 
   getMargin() {
+    const tooltipDimensions = this.getTooltipDimensions();
+
     return {
       top: 25,
-      right: 100,
+      right: tooltipDimensions.width + 30,
       bottom: 50,
       left: 50
     };
   },
 
   getTooltipDimensions() {
+    const isSmallScreen = this.isSmallScreen();
     return {
       height: 35,
-      width: 70
+      width: isSmallScreen ? 35 : 70
     };
   },
 
@@ -365,7 +368,14 @@ export default React.createClass({
         .attr('x', tooltipDimensions.width / 2)
         .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
         .text(d => {
-          return this.getAssertionStatus(d) ? 'PASS' : 'FAIL';
+          const isPassing = this.getAssertionStatus(d);
+          const isSmallScreen = this.isSmallScreen();
+
+          if (isPassing) {
+            return isSmallScreen ? '✓' : 'PASS';
+          } else {
+            return isSmallScreen ? '✕' : 'FAIL'
+          }
         });
     }
 
