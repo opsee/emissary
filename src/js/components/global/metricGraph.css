@@ -11,7 +11,7 @@
 }
 
 .axis line {
-  stroke: #000;
+  stroke: var(--colorGray7);
   fill: none;
 }
 
@@ -24,14 +24,14 @@
 }
 
 .yGuide line {
-  stroke: #111;
+  stroke: var(--colorGray8);
   stroke-opacity: 0.3;
   stroke-width: 1px;
 }
 
 .tick {
-  fill: var(--colorGray5);
-  font-family: var(--fontMono);
+  fill: var(--colorGray6);
+  /*font-family: var(--fontMono);*/
   font-size: 10px;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .thresholdLine {
-  stroke: var(--colorPrimary);
+  stroke: white;
   stroke-width: 1.5px;
 }
 
@@ -78,21 +78,11 @@
   color: var(--colorDanger);
 }
 
-.tooltipGroup {
-
-}
-
-.tooltip {
-  fill: lime;
-}
-
 .tooltipPassing {
-  composes: tooltip;
   fill: var(--colorSuccess);
 }
 
 .tooltipFailing {
-  composes: tooltip;
   fill: var(--colorDanger);
 }
 
