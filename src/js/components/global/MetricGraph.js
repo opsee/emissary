@@ -370,12 +370,10 @@ export default React.createClass({
         .text(d => {
           const isPassing = this.getAssertionStatus(d);
           const isSmallScreen = this.isSmallScreen();
-
           if (isPassing) {
             return isSmallScreen ? '✓' : 'PASS';
-          } else {
-            return isSmallScreen ? '✕' : 'FAIL'
           }
+          return isSmallScreen ? '✕' : 'FAIL';
         });
     }
 
