@@ -3,45 +3,74 @@ import {connect} from 'react-redux';
 import {integrations as actions} from '../../actions';
 import {bindActionCreators} from 'redux';
 
+import {Color} from '../type';
 import PagerdutyConnect from './PagerdutyConnect';
 import {StatusHandler} from '../global';
 
 const PagerdutyInfo = React.createClass({
   propTypes: {
     data: PropTypes.shape({
-      slackInfo: PropTypes.object
+      pagerdutyInfo: PropTypes.object
     }),
     user: PropTypes.object,
     query: PropTypes.object,
     actions: PropTypes.shape({
-      pagerdutyAccess: PropTypes.func
-    }),
+      pagerdutyAccess: PropTypes.func,
+      getPagerdutyInfo: PropTypes.func
+    }).isRequired,
+    connect: PropTypes.bool,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        integrationsPagerdutyAccess: PropTypes.object
+        integrationsPagerdutyAccess: PropTypes.object,
+        integrationsPagerdutyDisconnect: PropTypes.object
       })
-    })
+    }).isRequired
   },
   componentWillMount(){
     if (this.props.query.pagerduty){
-      this.props.actions.pagerdutyAccess(this.props.query);
+      let q = this.props.query;
+      q.enabled = true;
+      this.props.actions.pagerdutyAccess(q);
     }
   },
+  handleDisablePagerduty(){
+    let q = this.props.data.pagerdutyInfo;
+    q.enabled = false;
+    this.props.actions.pagerdutyAccess(q);
+  },
   render() {
+    const {service_name} = this.props.data.pagerdutyInfo;
+    const {enabled} = this.props.data.pagerdutyInfo;
     const {asyncActions} = this.props.redux;
     if (this.props.query.pagerduty){
+      if (asyncActions.integrationsPagerdutyInfo.status === 'success'){
+        /*eslint-disable camelcase*/
+        if (service_name && enabled) {
+          return (
+            <span>
+              Service <Color c="success">{service_name}</Color>&nbsp;connected.&nbsp;
+              <a onClick={this.handleDisablePagerduty} href="#">Disconnect</a>
+            </span>
+           );
+        }
+        /*eslint-enable camelcase*/
+      }
       return (
         <StatusHandler status={asyncActions.integrationsPagerdutyAccess.status}>
           Pagerduty connection successful.
         </StatusHandler>
       );
-    } else if (asyncActions.integrationsPagerdutyInfo.status === 'success'){
+    }
+    /*eslint-disable camelcase*/
+    if (service_name && enabled) {
       return (
-        <div>
-          Pagerduty info here.
-        </div>
+        <span>
+          Service <Color c="success">{service_name}</Color>&nbsp;connected.&nbsp;
+          <a onClick={this.handleDisablePagerduty} href="#">Disconnect</a>
+        </span>
       );
     }
+    /*eslint-enable camelcase*/
     return (
       <PagerdutyConnect redirect={`${window.location.origin}/profile?pagerduty=true`}/>
     );

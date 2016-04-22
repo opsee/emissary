@@ -9,7 +9,8 @@ import {
   INTEGRATIONS_SLACK_TEST,
   INTEGRATIONS_EMAIL_TEST,
   INTEGRATIONS_PAGERDUTY_INFO,
-  INTEGRATIONS_PAGERDUTY_ACCESS
+  INTEGRATIONS_PAGERDUTY_ACCESS,
+  INTEGRATIONS_PAGERDUTY_TEST
 } from './constants';
 
 export function getSlackChannels() {
@@ -73,7 +74,7 @@ export function getPagerdutyInfo() {
       type: INTEGRATIONS_PAGERDUTY_INFO,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.services.hugs}/services/pagerduty`)
+        .get(`${config.services.api}/services/pagerduty`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(res.body);
@@ -88,15 +89,14 @@ export function pagerdutyAccess(query) {
     dispatch({
       type: INTEGRATIONS_PAGERDUTY_ACCESS,
       payload: new Promise((resolve, reject) => {
-         console.log(query);
-         return request
-         .post(`${config.services.hugs}/services/pagerduty`)
-         .set('Authorization', state().user.get('auth'))
-         .send(query)
-         .then((res) => {
-           resolve(res.body);
-           getPagerdutyInfo()(dispatch, state);
-         }, reject);
+        return request
+        .post(`${config.services.api}/services/pagerduty`)
+        .set('Authorization', state().user.get('auth'))
+        .send(query)
+        .then((res) => {
+          resolve(res.body);
+          getPagerdutyInfo()(dispatch, state);
+        }, reject);
       })
     });
   };
@@ -107,6 +107,9 @@ export function testNotification(notif = {}) {
   switch (notif.type){
   case 'slack_bot':
     type = INTEGRATIONS_SLACK_TEST;
+    break;
+  case 'pagerduty':
+    type = INTEGRATIONS_PAGERDUTY_TEST;
     break;
   default:
     break;

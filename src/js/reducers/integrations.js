@@ -8,12 +8,16 @@ import {
   INTEGRATIONS_SLACK_CHANNELS,
   INTEGRATIONS_SLACK_INFO,
   INTEGRATIONS_SLACK_TEST,
-  INTEGRATIONS_EMAIL_TEST
+  INTEGRATIONS_EMAIL_TEST,
+  INTEGRATIONS_PAGERDUTY_INFO,
+  INTEGRATIONS_PAGERDUTY_ACCESS,
+  INTEGRATIONS_PAGERDUTY_TEST
 } from '../actions/constants';
 
 const initial = {
   slackChannels: new List(),
   slackInfo: {},
+  pagerdutyInfo: {},
   tests: []
 };
 
@@ -52,6 +56,33 @@ export default handleActions({
     }
   },
   [INTEGRATIONS_SLACK_TEST]: {
+    next(state, action){
+      const obj = _.assign({}, action.payload, {
+        success: true
+      });
+      return _.assign({}, state, {
+        tests: state.tests.concat([obj])
+      });
+    },
+    throw(state, action){
+      return _.assign({}, state, {
+        tests: state.tests.concat([action.payload])
+      });
+    }
+  },
+  [INTEGRATIONS_PAGERDUTY_INFO]: {
+    next(state, action){
+      const pagerdutyInfo = action.payload;
+      return _.assign({}, state, {pagerdutyInfo});
+    }
+  },
+  [INTEGRATIONS_PAGERDUTY_ACCESS]: {
+    next(state){
+      return state;
+    },
+    throw: yeller.reportAction
+  },
+  [INTEGRATIONS_PAGERDUTY_TEST]: {
     next(state, action){
       const obj = _.assign({}, action.payload, {
         success: true
