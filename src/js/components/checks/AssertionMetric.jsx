@@ -1,60 +1,87 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
 
-import {Button} from '../forms';
+import {Button, Input} from '../forms';
 import {Padding} from '../layout';
 import {Color, Heading} from '../type';
+import {env as actions} from '../../actions';
 import MetricGraph from '../global/MetricGraph';
 import rdsMetrics from '../../modules/rdsMetrics';
 import relationships from 'slate/src/relationships';
+import {Loader} from '../global';
 
-export default React.createClass({
+const AssertionMetric = React.createClass({
   propTypes: {
-    metric: PropTypes.oneOf(_.keys(rdsMetrics)).isRequired,
-
-    data: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string,
-      unit: PropTypes.string,
-      value: PropTypes.number.isRequired
-    })).isRequired
+    actions: PropTypes.shape({
+      getMetricRDS: PropTypes.func
+    }),
+    assertion: PropTypes.shape({
+      value: PropTypes.string,
+      operand: PropTypes.string,
+      key: PropTypes.string,
+      relationship: PropTypes.string
+    }).isRequired,
+    check: PropTypes.shape({
+      target: PropTypes.shape({
+        id: PropTypes.string,
+        type: PropTypes.string
+      })
+    }).isRequired,
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        instances: PropTypes.shape({
+          rds: PropTypes.object
+        })
+      })
+    }).isRequired
   },
-
+  componentWillMount(){
+    if (!this.getData().length){
+      this.props.actions.getMetricRDS(this.props.check.target.id, this.props.assertion.value);
+    }
+  },
   componentWillReceiveProps(nextProps) {
     // Reset threshold if metric is different so it can be recalculated
-    if (nextProps.metric !== this.props.metric) {
+    if (nextProps.assertion.value !== this.props.assertion.value) {
       this.setState({ threshold: null });
     }
   },
-
   getInitialState() {
     return {
       relationship: 'lessThan',
       threshold: null
     };
   },
-
-  getCurrentDataPoint() {
-    return _.last(this.props.data) || {};
+  getInstance() {
+    return this.props.redux.env.instances[this.props.check.target.type].find(i => {
+      return i.get('id') === this.props.check.target.id;
+    }) || new Map();
   },
-
+  getData(){
+    return _.get(this.getInstance().toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
+  },
+  getCurrentDataPoint() {
+    return _.last(this.getData()) || {};
+  },
   getMetricMeta() {
     // Populates the metric metadata (description, units, etc.)
-    const meta = _.get(rdsMetrics, this.props.metric, {});
+    const meta = _.get(rdsMetrics, this.props.assertion.value, {});
     return _.assign({}, meta, {
-      name: this.props.metric
+      name: this.props.assertion.value
     });
   },
-
   getRelationship(){
-    const rel = this.state.relationship;
+    const rel = this.props.assertion.relationship;
     const string = _.chain(relationships).find(r => {
       return r.id === rel;
     }).get('name').value() || '';
     return string.toLowerCase();
   },
-
   getStepSize() {
-    const data = this.props.data;
+    const data = this.getData();
     const values = _.map(data, d => d.value);
     const min = _.min(values);
     const max = _.max(values);
@@ -62,17 +89,15 @@ export default React.createClass({
     const step = Math.pow(10, (Math.floor(Math.log10(2 * range)))) / 10;
     return step;
   },
-
   /*
    * If the user hasn't set a threshold yet BUT we have data, we can infer a good
    * suggested threshold: somewhere between the average and the maximum values.
    */
   getThresholdSuggestion() {
-    const data = this.props.data;
+    const data = this.getData();
     if (!data.length) {
       return 0;
     }
-
     // FIXME too much looping
     const values = _.map(data, d => d.value);
     const max = _.max(values);
@@ -81,59 +106,88 @@ export default React.createClass({
     const fixedThreshold = parseFloat(Math.round(suggestedThreshold * 100) / 100).toFixed(2);
     return Number(fixedThreshold);
   },
-
   getThresholdValue() {
     const threshold = this.state.threshold;
     return threshold !== null ? threshold : this.getThresholdSuggestion();
   },
-
   onRelationshipChange() {
-    // Just toggle it for now
-    const current = this.state.relationship;
-    const relationship = current === 'lessThan' ? 'greaterThan' : 'lessThan';
-    this.setState({ relationship });
+    return this.props.onChange(_.assign({}, this.props.assertion, {relationship: undefined}));
   },
-
-  onThresholdChange(e) {
+  onThresholdChange(assertion) {
+    return this.props.onChange(assertion);
     const threshold = e.target.value;
     if (threshold >= 0) {
       this.setState({ threshold });
     }
   },
-
-  render() {
-    // TODO render status (green/red bar)
+  handleRelationshipButtonClick(relationship){
+    return this.props.onChange(_.assign({}, this.props.assertion, {relationship}));
+  },
+  renderInputArea(){
     const meta = this.getMetricMeta();
-    const threshold = this.getThresholdValue();
-
     return (
-      <div>
-        <Heading level={3}>{this.props.metric}</Heading>
-        <p>{_.get(meta, 'description')}</p>
+      <div className="flex-vertical-align">
+        <Padding r={1}>
+          <Button flat onClick={this.onRelationshipChange}>{this.props.assertion.relationship}</Button>
+        </Padding>
 
-        <div style={{overflow: 'hidden'}}>
-          <MetricGraph threshold={threshold} metric={meta} data={this.props.data} relationship={this.state.relationship} />
+        <div className="flex-grow-1">
+          <Input type="number" data={this.props.assertion} path="operand" step={this.getStepSize()} onChange={this.onThresholdChange} autoFocus />
         </div>
-
-        <Padding tb={2}>
-          <Padding tb={1}>
-            <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${meta.units}`}</Color></code>
-          </Padding>
-
-          <div className="flex-vertical-align">
-            <Padding r={1}>
-              <Button flat onClick={this.onRelationshipChange}>{this.state.relationship}</Button>
-            </Padding>
-
-            <div className="flex-grow-1">
-              <input type="number" step={this.getStepSize()} value={threshold} onChange={this.onThresholdChange} autoFocus />
-            </div>
-            <Padding l={1}>
-              {meta.units}
-            </Padding>
-          </div>
+        <Padding l={1}>
+          {meta.units}
         </Padding>
       </div>
     );
+  },
+  renderRelationshipButtons(){
+    return (
+      <div>
+        {['equal', 'notEqual', 'lessThan', 'greaterThan'].map(rel => {
+          return (
+            <Button flat onClick={this.handleRelationshipButtonClick.bind(null, rel)} key={`relationship-${rel}`} style={{margin: '0 1rem 1rem 0'}}>{rel}</Button>
+          );
+        })}
+      </div>
+    );
+  },
+  renderStep(){
+    return this.props.assertion.relationship ? this.renderInputArea() : this.renderRelationshipButtons();
+  },
+  renderGraph(meta){
+    if (this.getData().length){
+      return (
+        <div style={{overflow: 'hidden'}}>
+          <MetricGraph threshold={this.props.assertion.operand} metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship}/>
+        </div>
+      );
+    }
+    return <Loader/>
+  },
+  render() {
+    // TODO render status (green/red bar)
+    const meta = this.getMetricMeta();
+    return (
+      <Padding b={2}>
+        <p>{_.get(meta, 'description')}</p>
+        {this.renderGraph(meta)}
+        <Padding tb={2}>
+          <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${meta.units}`}</Color></code>
+          <Padding t={1}>
+            {this.renderStep()}
+          </Padding>
+        </Padding>
+      </Padding>
+    );
   }
 });
+
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AssertionMetric);

@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 
 import {Toolbar, StatusHandler} from '../global';
 import CheckCreateRequest from './CheckCreateRequest';
-import CheckCreateAssertions from './CheckCreateAssertions';
+import AssertionsHTTP from './AssertionsHTTP';
 import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -130,7 +130,7 @@ const CheckEdit = React.createClass({
             <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
           </Padding>
           <Padding tb={1}>
-            <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>
+            <AssertionsHTTP check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           </Padding>
           <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           <Padding t={1}>

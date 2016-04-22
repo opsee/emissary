@@ -125,15 +125,30 @@ const statics = {
     if (Array.isArray(instances)){
       data = instances[0];
     }
-    const single = statics.instanceRdsFromJS(data);
+    let single = statics.instanceRdsFromJS(data);
     const index = arr.findIndex(item => {
       return item.get('id') === single.get('id');
     });
-
     if (index > -1){
       return arr.update(index, () => single);
     }
     return arr.concat(new List([single]));
+  },
+  getMetricsSuccess(state, instances){
+    const arr = state.instances.rds;
+    const data = instances[0];
+    const old = arr.find(item => {
+      return item.get('id') === data.DBInstanceIdentifier;
+    }) || new Map();
+    const oldJS = old.toJS();
+    let metrics = _.assign((oldJS.metrics || {}), data.metrics);
+    //remove when compost sorts by timestamp
+    metrics = _.mapValues(metrics, (value, key) => {
+      const sorted = _.sortBy(value.metrics, m => m.timestamp);
+      return _.assign(value, {metrics: sorted});
+    });
+    const obj = _.assign(old.toJS(), data, {metrics});
+    return statics.getInstancesRdsSuccess(state, [obj]);
   },
   getInstancesRdsSuccess(state, data){
     let newData = _.chain(data)
@@ -159,7 +174,7 @@ const statics = {
       data.name = `${data.DBName} - ${data.id}`;
     }
     data.InstanceCreateTime = new Date(data.InstanceCreateTime);
-    data.type = 'RDS';
+    data.type = 'rds';
     if (data.VpcSecurityGroups){
       data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
@@ -315,7 +330,7 @@ export default handleActions({
   },
   [GET_METRIC_RDS]: {
     next(state, action) {
-      const rds = statics.getInstanceRdsSuccess(state, action.payload.data);
+      const rds = statics.getMetricsSuccess(state, action.payload.data);
       const filtered = statics.getNewFiltered(rds, state, action, 'instances.rds');
       const instances = _.assign({}, state.instances, {rds});
       return _.assign({}, state, { instances, filtered });

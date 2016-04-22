@@ -21,7 +21,8 @@ import CheckCreate from 'react-proxy?name=checkCreate!exports?exports.default!..
 import CheckCreateTarget from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateTarget';
 import CheckCreateType from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateType';
 import CheckCreateRequest from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateRequest';
-import CheckCreateAssertions from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateAssertions';
+import AssertionsHTTP from 'react-proxy?name=checkCreate!exports?exports.default!../checks/AssertionsHTTP';
+import AssertionsCloudwatch from 'react-proxy?name=checkCreate!exports?exports.default!../checks/AssertionsCloudwatch';
 import CheckCreateInfo from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateInfo';
 import CheckEvent from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckEvent';
 
@@ -89,7 +90,8 @@ const routes = (
       <Route path="/check-create/type" component={CheckCreateType}/>
       <Route path="/check-create/target" component={CheckCreateTarget}/>
       <Route path="/check-create/request" component={CheckCreateRequest}/>
-      <Route path="/check-create/assertions" component={CheckCreateAssertions}/>
+      <Route path="/check-create/assertions" component={AssertionsHTTP}/>
+      <Route path="/check-create/assertions-cloudwatch" component={AssertionsCloudwatch}/>
       <Route path="/check-create/info" component={CheckCreateInfo}/>
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>

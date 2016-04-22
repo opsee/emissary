@@ -31,32 +31,7 @@ const CheckCreateTarget = React.createClass({
       query: PropTypes.object
     }).isRequired
   },
-  getInitialState() {
-    return {
-      cleanedData: null
-    };
-  },
-  getGroupsSecurity(){
-    const string = this.state.filter.cleanedData.filter;
-    if (string){
-      const data = this.state.groupsSecurity.filter(sg => {
-        return fuzzy.filter(string, [sg.get('name')]).length;
-      });
-      return data;
-    }
-    return this.state.groupsSecurity;
-  },
-  getGroupsELB(){
-    const string = this.state.filter.cleanedData.filter;
-    if (string){
-      return this.state.groupsELB.filter(elb => {
-        return fuzzy.filter(string, [elb.get('name')]).length;
-      });
-    }
-    return this.state.groupsELB;
-  },
   getInclude(){
-    let include = ['groups.elb', 'groups.security', 'instances.ecc'];
     let data = this.props.location.query.data;
     if (data && typeof data === 'string'){
       data = JSON.parse(data);
@@ -67,20 +42,18 @@ const CheckCreateTarget = React.createClass({
     if (type){
       switch (type){
       case 'security':
-        include = ['groups.security'];
-        break;
+        return ['groups.security'];
       case 'elb':
-        include = ['groups.elb'];
-        break;
+        return ['groups.elb'];
       case 'EC2':
       case 'ecc':
-        include = ['instances.ecc'];
-        break;
-      default:
-        break;
+        return ['instances.ecc'];
+      case 'rds':
+      case 'RDS':
+        return ['instances.rds'];
       }
     }
-    return include;
+    return ['groups.elb', 'groups.security', 'instances.ecc'];
   },
   isDisabled(){
     return false;
@@ -88,17 +61,16 @@ const CheckCreateTarget = React.createClass({
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTargetHelp');
   },
-  handleSubmit(e){
-    e.preventDefault();
-    this.history.pushState(null, '/check-create/request');
-  },
   handleTargetSelect(item){
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
     this.props.onChange(check);
     const data = JSON.stringify(check);
-    this.history.pushState(null, `/check-create/request?data=${data}`);
+    if (this.props.check.target.type === 'rds'){
+      return this.props.history.pushState(null, `/check-create/assertions-cloudwatch?data=${data}`);
+    }
+    return this.history.pushState(null, `/check-create/request?data=${data}`);
   },
   renderHelperText(){
     return (

@@ -1,81 +1,82 @@
 export default {
-  BinLogDiskUsage: {
-    units: 'bytes',
-    description: 'The amount of disk space occupied by binary logs on the master. Applies to MySQL read replicas.'
+  "BinLogDiskUsage": {
+    "units": "bytes",
+    "description": "The amount of disk space occupied by binary logs on the master. Applies to MySQL read replicas.",
+    "title": "Bin Log Disk Usage"
   },
-
-  CPUUtilization: {
-    units: 'percent',
-    description: 'The percentage of CPU utilization.'
+  "CPUUtilization": {
+    "units": "percent",
+    "description": "The percentage of CPU utilization.",
+    "title": "CPU Utilization"
   },
-
-  DatabaseConnections: {
-    units: 'count',
-    description: 'The number of database connections in use.'
+  "DatabaseConnections": {
+    "units": "count",
+    "description": "The number of database connections in use.",
+    "title": "Database Connections"
   },
-
-  DiskQueueDepth: {
-    units: 'bytes',
-    description: 'The number of outstanding IOs (read/write requests) waiting to access the disk.'
+  "DiskQueueDepth": {
+    "units": "bytes",
+    "description": "The number of outstanding IOs (read/write requests) waiting to access the disk.",
+    "title": "Disk Queue Depth"
   },
-
-  FreeableMemory: {
-    units: 'bytes',
-    description: 'The amount of available random access memory.'
+  "FreeStorageSpace": {
+    "units": "bytes",
+    "description": "The amount of available storage space.",
+    "title": "Free Storage Space"
   },
-
-  FreeStorageSpace: {
-    units: 'bytes',
-    description: 'The amount of available storage space.'
+  "FreeableMemory": {
+    "units": "bytes",
+    "description": "The amount of available random access memory.",
+    "title": "Free Memory"
   },
-
-  ReplicaLag: {
-    units: 'seconds',
-    description: 'The amount of time a Read Replica DB Instance lags behind the source DB Instance. Applies to MySQL read replicas.'
+  "NetworkReceiveThroughput": {
+    "units": "bytes/second",
+    "description": "The incoming (Receive) network traffic on the DB instance, including both customer database traffic and Amazon RDS traffic used for monitoring and replication.",
+    "title": "Network Receive Throughput"
   },
-
-  SwapUsage: {
-    units: 'bytes',
-    description: 'The amount of swap space used on the DB Instance.'
+  "NetworkTransmitThroughput": {
+    "units": "bytes/second",
+    "description": "The outgoing (Transmit) network traffic on the DB instance, including both customer database traffic and Amazon RDS traffic used for monitoring and replication.",
+    "title": "Network Transmit Throughput"
   },
-
-  ReadIOPS: {
-    units: 'count/second',
-    description: 'The average number of disk I/O operations per second.'
+  "ReadIOPS": {
+    "units": "count/second",
+    "description": "The average number of disk I/O operations per second.",
+    "title": "Read IOPS"
   },
-
-  WriteIOPS: {
-    units: 'count/second',
-    description: 'The average number of disk I/O operations per second.'
+  "ReadLatency": {
+    "units": "seconds",
+    "description": "The average amount of time taken per disk I/O operation.",
+    "title": "Read Latency"
   },
-
-  ReadLatency: {
-    units: 'seconds',
-    description: 'The average amount of time taken per disk I/O operation.'
+  "ReadThroughput": {
+    "units": "bytes/second",
+    "description": "The average number of bytes read from disk per second.",
+    "title": "Read Throughput"
   },
-
-  WriteLatency: {
-    units: 'seconds',
-    description: 'The average amount of time taken per disk I/O operation.'
+  "ReplicaLag": {
+    "units": "seconds",
+    "description": "The amount of time a Read Replica DB Instance lags behind the source DB Instance. Applies to MySQL read replicas.",
+    "title": "Replica Lag"
   },
-
-  ReadThroughput: {
-    units: 'bytes/second',
-    description: 'The average number of bytes read from disk per second.'
+  "SwapUsage": {
+    "units": "bytes",
+    "description": "The amount of swap space used on the DB Instance.",
+    "title": "Swap Usage"
   },
-
-  WriteThroughput: {
-    units: 'bytes/second',
-    description: 'The average number of bytes written to disk per second.'
+  "WriteIOPS": {
+    "units": "count/second",
+    "description": "The average number of disk I/O operations per second.",
+    "title": "Write IOPS"
   },
-
-  NetworkReceiveThroughput: {
-    units: 'bytes/second',
-    description: 'The incoming (Receive) network traffic on the DB instance, including both customer database traffic and Amazon RDS traffic used for monitoring and replication.'
+  "WriteLatency": {
+    "units": "seconds",
+    "description": "The average amount of time taken per disk I/O operation.",
+    "title": "Write Latency"
   },
-
-  NetworkTransmitThroughput: {
-    units: 'bytes/second',
-    description: 'The outgoing (Transmit) network traffic on the DB instance, including both customer database traffic and Amazon RDS traffic used for monitoring and replication.'
+  "WriteThroughput": {
+    "units": "bytes/second",
+    "description": "The average number of bytes written to disk per second.",
+    "title": "Write Throughput"
   }
-};
+}

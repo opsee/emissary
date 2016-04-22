@@ -11,13 +11,13 @@ import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
-import {Padding} from '../layout';
+import {Padding, Rule} from '../layout';
 import {Button} from '../forms';
 import {user as userActions} from '../../actions';
 import {Heading} from '../type';
-import AssertionSelection from './AssertionSelection';
+import AssertionSelectionCloudwatch from './AssertionSelectionCloudwatch';
 
-const CheckCreateAssertions = React.createClass({
+const AssertionsCloudwatch = React.createClass({
   mixins: [History],
   propTypes: {
     check: PropTypes.object,
@@ -93,9 +93,9 @@ const CheckCreateAssertions = React.createClass({
   },
   renderHelperText(){
     return (
-        <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
+        <UserDataRequirement hideIf="hasDismissedCheckAssertionsCloudwatchHelp">
           <Alert color="success" onDismiss={this.runDismissHelperText}>
-            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
+            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'CPU Utilization less than 90%'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
           </Alert>
         </UserDataRequirement>
       );
@@ -116,7 +116,7 @@ const CheckCreateAssertions = React.createClass({
     if ((props.renderAsInclude && props.check.COMPLETE) || !props.renderAsInclude){
       return (
         <Padding b={1}>
-          <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>
+          <AssertionSelectionCloudwatch assertions={this.props.check.assertions} onChange={this.handleAssertionsChange} check={this.props.check}/>
         </Padding>
       );
     }
@@ -128,8 +128,11 @@ const CheckCreateAssertions = React.createClass({
         <Padding t={1}>
           <Heading level={3}>Assertions</Heading>
         </Padding>
-        <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
-        {this.renderAssertionSelection()}
+        Select the CloudWatch metrics that you&rsquo;d like to keep an eye on. You must select at least one CloudWatch metric to assert on.
+        <Rule/>
+        <Padding t={1}>
+          {this.renderAssertionSelection()}
+        </Padding>
         {this.renderSubmitButton()}
       </form>
     );
@@ -148,9 +151,6 @@ const CheckCreateAssertions = React.createClass({
               <BastionRequirement>
                 <Padding b={1}>
                   {this.renderHelperText()}
-                </Padding>
-                <Padding b={1}>
-                  <CheckResponsePaginate check={this.props.check} showBoolArea={false}/>
                 </Padding>
                 <Padding tb={1}>
                   {this.renderInner()}
@@ -175,4 +175,4 @@ const mapDispatchToProps = (dispatch) => ({
   userActions: bindActionCreators(userActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateAssertions);
+export default connect(mapStateToProps, mapDispatchToProps)(AssertionsCloudwatch);

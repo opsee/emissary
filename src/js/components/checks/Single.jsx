@@ -14,7 +14,7 @@ import {Heading} from '../type';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
-import HttpRequestItem from './HttpRequestItem';
+import HTTPRequestItem from './HTTPRequestItem';
 import {
   checks as actions
 } from '../../actions';
@@ -94,7 +94,7 @@ const CheckSingle = React.createClass({
           {this.renderTarget()}
           <Padding b={2}>
             <Heading level={3}>HTTP Request</Heading>
-            <HttpRequestItem spec={spec} target={target} />
+            <HTTPRequestItem spec={spec} target={target} />
           </Padding>
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>

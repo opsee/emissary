@@ -33,7 +33,8 @@ const CheckCreate = React.createClass({
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
       getGroupsElb: PropTypes.func,
-      getInstancesEcc: PropTypes.func
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func
     })
   },
   componentWillMount(){
@@ -42,6 +43,7 @@ const CheckCreate = React.createClass({
       this.props.envActions.getGroupsSecurity();
       this.props.envActions.getGroupsElb();
       this.props.envActions.getInstancesEcc();
+      this.props.envActions.getInstancesRds();
     }
   },
   getInitialState(){

@@ -243,7 +243,7 @@ const CheckCreateRequest = React.createClass({
     let selection;
     const target = this.props.check.target;
     let type = target.type;
-    if (!type){
+    if (!type || type === 'host'){
       return null;
     }
     type = type === 'sg' ? 'security' : type;
@@ -252,13 +252,13 @@ const CheckCreateRequest = React.createClass({
         return g.get('id') === target.id;
       }) || new Map();
     } else {
-      selection = this.props.redux.env.instances.ecc.find(g => {
+      selection = this.props.redux.env.instances[type].find(g => {
         return g.get('id') === target.id;
       }) || new Map();
     }
     if (selection && selection.get('id')){
       let inner = null;
-      if (type.match('^EC2$|^ecc$|^instance$')){
+      if (type.match('^EC2$|^ecc$|^instance$|^rds$')){
         inner = <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
       }
       inner = <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
@@ -273,10 +273,18 @@ const CheckCreateRequest = React.createClass({
     return null;
   },
   renderHelperText(){
+    let text = (
+      <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
+    );
+    if (this.props.check.target.type === 'host'){
+      text = (
+        <div>Next, enter a URL. This can be an internal or public-facing service.</div>
+      );
+    }
     return (
         <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
           <Alert color="success" onDismiss={this.runDismissHelperText}>
-            Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.
+            {text}
           </Alert>
         </UserDataRequirement>
       );

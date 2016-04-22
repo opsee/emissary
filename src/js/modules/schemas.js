@@ -55,7 +55,7 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
     created: new Date(),
     instanceSize: 't2-micro'
   }),
-  type: 'RDS',
+  type: 'rds',
   groups: List(),
   InstanceCreateTime: null,
   Engine: null,
@@ -64,7 +64,7 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
   DBInstanceClass: null,
   AvailabilityZone: null,
   VpcSecurityGroups: List(),
-  metrics: List()
+  metrics: Map()
 }));
 
 export const GroupSecurity = Record(_.assign({}, baseEnvItem, {

@@ -43,35 +43,31 @@ const CheckCreateType = React.createClass({
     return `/check-create/target?data=${data}`;
   },
   getTypes(){
-    const self = this;
     const initial = [
       {
         id: 'elb',
         title: 'ELB',
-        size(){
-          return self.props.redux.env.groups.elb.size;
-        }
+        size: () => this.props.redux.env.groups.elb.size
       },
       {
         id: 'security',
         title: 'Security Group',
-        size(){
-          return self.props.redux.env.groups.security.size;
-        }
+        size: () => this.props.redux.env.groups.security.size
       },
       {
         id: 'ecc',
         title: 'EC2 Instance',
-        size(){
-          return self.props.redux.env.instances.ecc.size;
-        }
+        size: () => this.props.redux.env.instances.ecc.size
       },
       {
         id: 'host',
         title: 'URL',
-        size(){
-          return '';
-        }
+        size: () => ''
+      },
+      {
+        id: 'rds',
+        title: 'RDS',
+        size: () => this.props.redux.env.instances.rds.size
       }
     ];
     return _.filter(initial, type => {

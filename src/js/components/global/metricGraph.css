@@ -41,7 +41,16 @@
   stroke-width: 1px;
 }
 
+.lineBelow,
+.lineAbove {
+  fill: none;
+  stroke: var(--colorPrimary);
+  stroke-width: 1px;
+}
+
 .greaterThan.lineBelow,
+.equal.lineBelow,
+.equal.lineAbove,
 .lessThan.lineAbove {
   fill: none;
   stroke: var(--colorDanger);
@@ -49,7 +58,9 @@
 }
 
 .greaterThan.lineAbove,
-.lessThan.lineBelow {
+.lessThan.lineBelow,
+.notEqual.lineBelow,
+.notEqual.lineAbove {
   fill: none;
   stroke: var(--colorSuccess);
   stroke-width: 1px;
@@ -60,14 +71,31 @@
   stroke-width: 1.5px;
 }
 
+.thresholdLine.equal {
+  stroke: var(--colorSuccess);
+}
+
+.thresholdLine.notEqual {
+  stroke: var(--colorDanger);
+}
+
 .pointPassing {
   stroke: var(--colorSuccess);
   fill: var(--colorSuccess);
 }
 
+.pointNone{
+  stroke: var(--colorPrimary);
+  fill: var(--colorPrimary);
+}
+
 .pointFailing {
   stroke: var(--colorDanger);
   fill: var(--colorDanger);
+}
+
+.statusNone {
+  color: var(--colorPrimary);
 }
 
 .statusPassing {

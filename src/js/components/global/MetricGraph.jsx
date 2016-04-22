@@ -5,9 +5,12 @@ import ReactFauxDOM from 'react-faux-dom';
 import cx from 'classnames';
 import d3 from 'd3';
 import moment from 'moment';
+import slate from 'slate';
+
+import {StatusHandler} from '../global';
 import style from './metricGraph.css';
 
-export default React.createClass({
+const MetricGraph = React.createClass({
   propTypes: {
     data: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string,
@@ -21,26 +24,29 @@ export default React.createClass({
       description: PropTypes.string
     }).isRequired,
 
-    relationship: PropTypes.oneOf(['lessThan', 'greaterThan']).isRequired,
+    assertion: PropTypes.shape({
+      relationship: PropTypes.oneOf([
+        'lessThan',
+        'greaterThan',
+        'equal',
+        'notEqual'
+      ])
+    }).isRequired,
     threshold: PropTypes.number,
     breakpoint: PropTypes.number,
     aspectRatio: PropTypes.number,
     showTooltip: PropTypes.bool
   },
-
   componentDidMount() {
     this.onWindowResize();
     window.addEventListener('resize', this.state.debouncedWindowResize);
   },
-
   componentWillReceiveProps() {
     this.state.debouncedWindowResize();
   },
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.state.debouncedWindowResize);
   },
-
   getDefaultProps() {
     return {
       aspectRatio: 0.5,
@@ -51,14 +57,12 @@ export default React.createClass({
       showTooltip: true
     };
   },
-
   getInitialState() {
     return {
       width: 0,
       debouncedWindowResize: _.debounce(this.onWindowResize, 50)
     };
   },
-
   getBytes(bytes) {
     const thresh = 1024;
     if (Math.abs(bytes) < thresh) {
@@ -99,7 +103,6 @@ export default React.createClass({
       return d;
     }
   },
-
   getData() {
     return _.map(this.props.data, d => {
       return _.assign({}, d, {
@@ -108,10 +111,8 @@ export default React.createClass({
       });
     });
   },
-
   getMargin() {
     const tooltipDimensions = this.getTooltipDimensions();
-
     return {
       top: 25,
       right: tooltipDimensions.width + 30,
@@ -119,23 +120,26 @@ export default React.createClass({
       left: 50
     };
   },
-
   getTooltipDimensions() {
-    const isSmallScreen = this.isSmallScreen();
     return {
       height: 35,
-      width: isSmallScreen ? 35 : 70
+      width: 35
     };
   },
-
   getAssertionStatus(dataPoint) {
+    const response = {
+      metrics: [dataPoint]
+    };
+    const results = slate.checkAssertion(this.props.assertion, response);
+    return !results.error;
+    return slate.checkAssertion(this.props.assertion, dataPoint).error;
     // FIXME can this be done better with Slate?
     const value = Number(dataPoint.value);
-    const threshold = Number(this.props.threshold);
+    const threshold = Number(this.props.assertion.operand);
 
-    if (this.props.relationship === 'lessThan') {
+    if (this.props.assertion.relationship === 'lessThan') {
       return value < threshold;
-    } else if (this.props.relationship === 'greaterThan') {
+    } else if (this.props.assertion.relationship === 'greaterThan') {
       return value > threshold;
     }
 
@@ -143,12 +147,11 @@ export default React.createClass({
   },
 
   getPassFail(dataPoint) {
+    if (!this.props.assertion.relationship){
+      return 'None';
+    }
     const isPassing = this.getAssertionStatus(dataPoint);
     return isPassing ? 'Passing' : 'Failing';
-  },
-
-  isSmallScreen() {
-    return this.state.width < this.props.breakpoint;
   },
 
   /*
@@ -161,13 +164,11 @@ export default React.createClass({
     const width = elem.parentNode.offsetWidth;
     this.setState({ width });
   },
-
   renderPlaceholder() {
     return (
-      <div>no data</div>
+      <StatusHandler/>
     );
   },
-
   render() {
     const data = this.getData();
 
@@ -184,7 +185,10 @@ export default React.createClass({
     // The maximum value for the y-scale should be the maximum of the threshold
     // or the highest data point. This lets the graph resize when the threshold
     // is well above the highest data point.
-    const yMax = Math.max(this.props.threshold, d3.max(data, d => d.value));
+    const yMax = Math.max(this.props.assertion.operand, d3.max(data, d => d.value)) || 1;
+    //similar for ymin
+    let yMin = Math.min(this.props.assertion.operand, d3.min(data, d => d.value));
+    yMin = yMin > 0 ? 0 : yMin;
 
     // Calculate the dimensions of the graph itself to properly scale the axes.
     const graphWidth = width - margin.left - margin.right;
@@ -197,7 +201,7 @@ export default React.createClass({
       .range([0, graphWidth]);
 
     const y = d3.scale.linear()
-      .domain([0, yMax])
+      .domain([yMin, yMax])
       .range([graphHeight, 0]);
 
     // Start drawing the graph!
@@ -291,31 +295,31 @@ export default React.createClass({
         .attr('id', 'clip-above')
       .append('rect')
         .attr('width', graphWidth)
-        .attr('height', y(this.props.threshold));
+        .attr('height', y(this.props.assertion.operand));
 
     graphGroup.append('clipPath')
         .attr('id', 'clip-below')
       .append('rect')
-        .attr('y', y(this.props.threshold))
+        .attr('y', y(this.props.assertion.operand))
         .attr('width', graphWidth)
-        .attr('height', graphHeight - y(this.props.threshold));
-
-    // Append the threshold line
-    graphGroup.append('line')
-      .attr('class', style.thresholdLine)
-      .attr('x1', 0)
-      .attr('x2', graphWidth)
-      .attr('y1', y(this.props.threshold))
-      .attr('y2', y(this.props.threshold));
+        .attr('height', graphHeight - y(this.props.assertion.operand));
 
     // Apply the clipping paths
     graphGroup.selectAll(style.line)
         .data(['Above', 'Below'])
       .enter().append('path')
-        .attr('class', d => cx(style[this.props.relationship], style.line + d))
+        .attr('class', d => cx(style[this.props.assertion.relationship || 'none'], style.line + d))
         .attr('clip-path', d => 'url(#clip-' + d.toLowerCase() + ')')
         .datum(data)
         .attr('d', line);
+
+    // Append the threshold line
+    graphGroup.append('line')
+      .attr('class', cx(style.thresholdLine, style[this.props.assertion.relationship || 'none']))
+      .attr('x1', 0)
+      .attr('x2', graphWidth)
+      .attr('y1', y(this.props.assertion.operand))
+      .attr('y2', y(this.props.assertion.operand));
 
     // Append the current data point
     graphGroup.append('g')
@@ -369,14 +373,11 @@ export default React.createClass({
         .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
         .text(d => {
           const isPassing = this.getAssertionStatus(d);
-          const isSmallScreen = this.isSmallScreen();
-          if (isPassing) {
-            return isSmallScreen ? '✓' : 'PASS';
-          }
-          return isSmallScreen ? '✕' : 'FAIL';
+          return this.getAssertionStatus(d) ? '✓' : '✕';
         });
     }
-
     return node.toReact();
   }
 });
+
+export default MetricGraph;
