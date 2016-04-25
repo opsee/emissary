@@ -3,15 +3,17 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
+import cx from 'classnames';
+import slate from 'slate';
 
 import {Button, Input} from '../forms';
-import {Padding} from '../layout';
-import {Color, Heading} from '../type';
+import {Padding, Rule} from '../layout';
+import {Color} from '../type';
 import {env as actions} from '../../actions';
 import MetricGraph from '../global/MetricGraph';
 import rdsMetrics from '../../modules/rdsMetrics';
 import relationships from 'slate/src/relationships';
-import {Loader} from '../global';
+import style from './assertionMetric.css';
 
 const AssertionMetric = React.createClass({
   propTypes: {
@@ -36,11 +38,14 @@ const AssertionMetric = React.createClass({
           rds: PropTypes.object
         })
       })
-    }).isRequired
+    }).isRequired,
+    onChange: PropTypes.func.isRequired
   },
   componentWillMount(){
     if (!this.getData().length){
-      this.props.actions.getMetricRDS(this.props.check.target.id, this.props.assertion.value);
+      setTimeout(() => {
+        this.props.actions.getMetricRDS(this.props.check.target.id, this.props.assertion.value);
+      }, 0);
     }
   },
   componentWillReceiveProps(nextProps) {
@@ -110,15 +115,29 @@ const AssertionMetric = React.createClass({
     const threshold = this.state.threshold;
     return threshold !== null ? threshold : this.getThresholdSuggestion();
   },
+  getStatusString(){
+    const bool = this.isPassing();
+    if (bool !== undefined){
+      return bool ? 'passing' : 'failing';
+    }
+    return undefined;
+  },
+  isPassing(){
+    const current = this.getCurrentDataPoint();
+    if (current && _.chain(this.props.assertion).values().every().value()){
+      const response = {
+        metrics: [current]
+      };
+      const results = slate.checkAssertion(this.props.assertion, response);
+      return !results.error;
+    }
+    return undefined;
+  },
   onRelationshipChange() {
     return this.props.onChange(_.assign({}, this.props.assertion, {relationship: undefined}));
   },
-  onThresholdChange(assertion) {
+  onOperandChange(assertion) {
     return this.props.onChange(assertion);
-    const threshold = e.target.value;
-    if (threshold >= 0) {
-      this.setState({ threshold });
-    }
   },
   handleRelationshipButtonClick(relationship){
     return this.props.onChange(_.assign({}, this.props.assertion, {relationship}));
@@ -126,26 +145,26 @@ const AssertionMetric = React.createClass({
   renderInputArea(){
     const meta = this.getMetricMeta();
     return (
-      <div className="flex-vertical-align">
+      <Padding b={1} className="flex-vertical-align">
         <Padding r={1}>
-          <Button flat onClick={this.onRelationshipChange}>{this.props.assertion.relationship}</Button>
+          <Button flat onClick={this.onRelationshipChange}>{_.find(relationships, {id: this.props.assertion.relationship}).name}</Button>
         </Padding>
 
         <div className="flex-grow-1">
-          <Input type="number" data={this.props.assertion} path="operand" step={this.getStepSize()} onChange={this.onThresholdChange} autoFocus />
+          <Input type="number" data={this.props.assertion} path="operand" step={this.getStepSize()} onChange={this.onOperandChange} autoFocus noValidate autoComplete="off" autoCorrect="off"/>
         </div>
         <Padding l={1}>
           {meta.units}
         </Padding>
-      </div>
+      </Padding>
     );
   },
   renderRelationshipButtons(){
     return (
       <div>
-        {['equal', 'notEqual', 'lessThan', 'greaterThan'].map(rel => {
+        {_.filter(relationships, rel => rel.id.match(/equal|than/gi)).map(rel => {
           return (
-            <Button flat onClick={this.handleRelationshipButtonClick.bind(null, rel)} key={`relationship-${rel}`} style={{margin: '0 1rem 1rem 0'}}>{rel}</Button>
+            <Button flat onClick={this.handleRelationshipButtonClick.bind(null, rel.id)} key={`relationship-${rel.id}`} style={{margin: '0 1rem 1rem 0'}}>{rel.name}</Button>
           );
         })}
       </div>
@@ -154,30 +173,34 @@ const AssertionMetric = React.createClass({
   renderStep(){
     return this.props.assertion.relationship ? this.renderInputArea() : this.renderRelationshipButtons();
   },
-  renderGraph(meta){
-    if (this.getData().length){
+  renderCurrentDataPoint(){
+    const data = this.getCurrentDataPoint();
+    const meta = this.getMetricMeta();
+    if (data && data.value !== undefined){
       return (
-        <div style={{overflow: 'hidden'}}>
-          <MetricGraph threshold={this.props.assertion.operand} metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship}/>
-        </div>
+        <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${data.value} ${meta.units}`}</Color></code>
       );
     }
-    return <Loader/>
+    return null;
   },
   render() {
-    // TODO render status (green/red bar)
     const meta = this.getMetricMeta();
     return (
-      <Padding b={2}>
-        <p>{_.get(meta, 'description')}</p>
-        {this.renderGraph(meta)}
-        <Padding tb={2}>
-          <code style={{fontSize: '1.4rem'}}><Color c="primary">{`${this.getCurrentDataPoint().value} ${meta.units}`}</Color></code>
-          <Padding t={1}>
-            {this.renderStep()}
+      <div>
+        <Padding className={cx(style.item, style[this.getStatusString()])} l={2}>
+          <p>{_.get(meta, 'description')}</p>
+          <div style={{overflow: 'hidden'}}>
+            <MetricGraph threshold={this.props.assertion.operand} metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship}/>
+          </div>
+          <Padding t={2}>
+            {this.renderCurrentDataPoint()}
+            <Padding t={1}>
+              {this.renderStep()}
+            </Padding>
           </Padding>
         </Padding>
-      </Padding>
+        <Rule/>
+      </div>
     );
   }
 });

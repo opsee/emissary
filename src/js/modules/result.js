@@ -11,13 +11,10 @@ const OuterResponse = Record({
 });
 
 const InnerResponse = Record({
-  type_url: undefined,
-  value: Record({
-    body: undefined,
-    code: undefined,
-    headers: List(),
-    metrics: List()
-  })
+  body: undefined,
+  code: undefined,
+  headers: List(),
+  metrics: List()
 });
 
 const Result = Record({
@@ -46,7 +43,7 @@ function fromJS(data){
         let resultData = _.cloneDeep(result);
         resultData.responses = new List(responses.map(r => {
           let d = _.cloneDeep(r);
-          d.response = new InnerResponse(r.response);
+          d.response = new InnerResponse(r.reply);
           return new OuterResponse(d);
         }));
         return new Result(resultData);
@@ -71,10 +68,10 @@ export default {
     };
     if (obj.results && obj.results.size && obj.results.get(0)){
       //this works for groups
-      let boolArray = _.chain(obj.results.toJS()).map('passing').value();
-      if (useTestsInsteadOfChecks){
-        boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
-      }
+      // let boolArray = _.chain(obj.results.toJS()).map('passing').value();
+      // if (useTestsInsteadOfChecks){
+      let boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
+      // }
       const passing = _.compact(boolArray);
       obj.passing = passing.length;
       obj.total = boolArray.length;

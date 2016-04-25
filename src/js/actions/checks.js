@@ -4,6 +4,7 @@ import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
 import _ from 'lodash';
+import graphPromise from '../modules/graphPromise';
 import {
   GET_CHECK,
   GET_CHECK_NOTIFICATION,
@@ -13,7 +14,8 @@ import {
   CHECK_EDIT,
   CHECK_TEST,
   CHECK_TEST_RESET,
-  CHECK_TEST_SELECT_RESPONSE
+  CHECK_TEST_SELECT_RESPONSE,
+  CHECK_CREATE_OR_EDIT
 } from './constants';
 
 /**
@@ -32,61 +34,201 @@ export function getCheckFromURI(jsonURI) {
   };
 }
 
+// export function getCheck(id){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: GET_CHECK,
+//       payload: new Promise((resolve, reject) => {
+//         const r1 = request
+//         .get(`${config.services.api}/checks/${id}`)
+//         .set('Authorization', state().user.get('auth'));
+
+//         const r2 = new Promise((r2resolve) => {
+//           request
+//           .get(`${config.services.api}/notifications/${id}`)
+//           .set('Authorization', state().user.get('auth'))
+//           .then(r2resolve, () => {
+//             r2resolve({body: {notifications: []}});
+//           });
+//         });
+
+//         Promise.all([r1, r2]).then((values) => {
+//           const check = values[0].body;
+//           const {notifications} = values[1].body;
+//           const obj = _.assign({}, check, {notifications});
+//           resolve({
+//             data: obj,
+//             search: state().search
+//           });
+//         }, reject);
+//       })
+//     });
+//   };
+// }
+
 export function getCheck(id){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECK,
-      payload: new Promise((resolve, reject) => {
-        const r1 = request
-        .get(`${config.services.api}/checks/${id}`)
-        .set('Authorization', state().user.get('auth'));
-
-        const r2 = new Promise((r2resolve) => {
-          request
-          .get(`${config.services.api}/notifications/${id}`)
-          .set('Authorization', state().user.get('auth'))
-          .then(r2resolve, () => {
-            r2resolve({body: {notifications: []}});
-          });
-        });
-
-        Promise.all([r1, r2]).then((values) => {
-          const check = values[0].body;
-          const {notifications} = values[1].body;
-          const obj = _.assign({}, check, {notifications});
-          resolve({
-            data: obj,
-            search: state().search
-          });
-        }, reject);
+      payload: graphPromise('checks', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query: 
+          `{
+              checks {
+                id
+                notifications {
+                  value
+                  type
+                }
+                target {
+                  address
+                  name
+                  type
+                  id
+                }
+                name
+                last_run
+                spec {
+                  ... on schemaHttpCheck {
+                    verb
+                    headers {
+                      name
+                      values
+                    }
+                  }
+                }
+                results {
+                  responses {
+                    reply {
+                      ...on schemaHttpResponse {
+                        code
+                        body
+                        headers {
+                          name
+                          values
+                        }
+                        metrics {
+                          value
+                          name
+                        }
+                        host
+                      }
+                    }
+                    target {
+                      id
+                      type
+                    }
+                  }
+                }
+                assertions {
+                  value
+                  relationship
+                  operand
+                  key
+                }
+              }
+            }`
+          })
+        }, {id})
       })
-    });
-  };
-}
+    }
+  }
+
+// export function getChecks(redirect){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: GET_CHECKS,
+//       payload: new Promise((resolve, reject) => {
+//         return request
+//         .get(`${config.services.api}/checks`)
+//         .set('Authorization', state().user.get('auth'))
+//         .then(res => {
+//           resolve({
+//             data: _.get(res.body, 'checks'),
+//             search: state().search
+//           });
+//           if (redirect){
+//             setTimeout(() => {
+//               dispatch(pushState(null, '/'));
+//             }, 30);
+//           }
+//         }, reject);
+//       })
+//     });
+//   };
+// }
 
 export function getChecks(redirect){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECKS,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('checks', () => {
         return request
-        .get(`${config.services.api}/checks`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: _.get(res.body, 'checks'),
-            search: state().search
-          });
-          if (redirect){
-            setTimeout(() => {
-              dispatch(pushState(null, '/'));
-            }, 30);
-          }
-        }, reject);
+        .send({query: `
+            {
+              checks {
+                id
+                name
+                spec {
+                  ... on schemaHttpCheck {
+                    verb
+                    headers {
+                      name
+                      values
+                    }
+                  }
+                }
+                results {
+                  responses {
+                    passing
+                    target {
+                      id
+                      type
+                    }
+                  }
+                }
+              }
+            }`
+          })
+        })
       })
-    });
-  };
-}
+    }
+  }
+
+
+// export function getChecks(redirect){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: GET_CHECKS,
+//       payload: new Promise((resolve, reject) => {
+//         return request
+//         .post(`${config.services.compost}`)
+//         .set('Authorization', state().user.get('auth'))
+//         .send({query: `
+//             {
+//               checks {
+//                 id
+//               }
+//             }
+//           `})
+//         .then(res => {
+//           const errors = _.get(res, 'body.errors');
+//           if (Array.isArray(errors) && errors.length){
+//             return reject(errors[0]);
+//           }
+//           return resolve({
+//             data: _.get(res, 'body.data'),
+//             search: state().search
+//           });
+//         }, reject);
+//       })
+//     });
+//   };
+// }
 
 export function del(id){
   return (dispatch, state) => {
@@ -106,28 +248,58 @@ export function del(id){
   };
 }
 
-function formatCheckData(data){
-  let obj = _.cloneDeep(data);
-  const spec = obj.check_spec.value;
-  if (obj.target.type === 'security'){
-    obj.target.type = 'sg';
+function getNamespace(type){
+  switch (type){
+    case 'instance':
+      return 'AWS_EC2';
+    default:
+      return 'AWS_RDS';
   }
-  if (obj.target.type.match('^EC2$|^ecc$')){
-    obj.target.type = 'instance';
+}
+
+function formatCloudwatchCheck(data){
+  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check']);
+  const namespace = getNamespace(check.target.type);
+  const metrics = check.assertions.map(assertion => {
+    return {
+      name: assertion.value,
+      namespace
+    }
+  });
+  check.cloudwatch_check = {metrics};
+  return check;
+}
+
+function formatHttpCheck(data){
+  let check = _.cloneDeep(data);
+  const spec = check.spec;
+  if (check.target.type === 'security'){
+    check.target.type = 'sg';
   }
-  let arr = obj.assertions || [];
+  if (check.target.type.match('^EC2$|^ecc$')){
+    check.target.type = 'instance';
+  }
+  let arr = check.assertions || [];
   const assertions = arr.map(a => {
     return _.assign({}, a, {
       operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
     });
   });
-  obj.check_spec.value.headers = _.filter(spec.headers, h => {
+  check.spec.headers = _.filter(spec.headers, h => {
     return h.name && h.values && h.values.length;
   });
-  obj.check_spec.value = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
-  return _.assign({}, _.pick(obj, ['target', 'interval', 'check_spec', 'name']), {
+  check.spec = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
+  return _.assign({}, _.pick(check, ['target', 'interval', 'spec', 'name']), {
     assertions
   });
+}
+
+function formatCheckData(check){
+  //TODO switch this to be more flexible
+  if (check.target.type === 'rds'){
+    return formatCloudwatchCheck(check);
+  }
+  return formatHttpCheck(check);
 }
 
 export function test(data){
@@ -136,7 +308,7 @@ export function test(data){
       type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
         if (process.env.NODE_ENV !== 'production'){
-          if (data.check_spec.value.path.match('jsonassertion')){
+          if (data.spec.path.match('jsonassertion')){
             return resolve([
               {
                 response: {
@@ -146,7 +318,7 @@ export function test(data){
               }
             ]);
           }
-          if (data.check_spec.value.path.match('services\/200')){
+          if (data.spec.path.match('services\/200')){
             return resolve([
               {
                 response: {
@@ -160,7 +332,7 @@ export function test(data){
         const check = _.chain(data)
         .thru(formatCheckData)
         .assign({name: state().user.get('email')})
-        .pick(['check_spec', 'interval', 'name', 'target'])
+        .pick(['spec', 'interval', 'name', 'target'])
         .value();
         return request
         .post(`${config.services.api}/bastions/test-check`)
@@ -205,6 +377,92 @@ function checkCreateOrEdit(state, data, isEditing){
     }).catch(reject);
   });
 }
+
+// export function create(data){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: CHECK_CREATE,
+//       payload: new Promise((resolve, reject) => {
+//         checkCreateOrEdit(state, data)
+//         .then(res => {
+//           resolve(res.body);
+//           analytics.trackEvent('Check', 'create', res.body)(dispatch, state);
+//           setTimeout(() => {
+//             dispatch(pushState(null, '/'));
+//           }, 100);
+//         }, reject);
+//       })
+//     });
+//   };
+// }
+
+// export function createOrEdit(raw){
+//   let data = Array.isArray(raw) ? raw : [raw];
+//   const checks = data.map(formatCheckData);
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: CHECK_CREATE_OR_EDIT,
+//       payload: new Promise((resolve, reject) => {
+//         return request
+//         .post(`${config.services.compost}`)
+//         .set('Authorization', state().user.get('auth'))
+//         .send({query: `
+//             mutation Mutation ($checks: [Check]){
+//               checks(checks: $checks) {
+//                 id
+//               }
+//             }
+//           `,
+//             variables: {
+//               checks
+//             }})
+//         .then(res => {
+//           const errors = _.get(res, 'body.errors');
+//           if (Array.isArray(errors) && errors.length){
+//             return reject(errors[0]);
+//           }
+//           debugger;
+//           return resolve({
+//             data: _.get(res, 'body.data'),
+//             search: state().search
+//           });
+//         }, reject);
+//       })
+//     });
+//   };
+// }
+
+export function createOrEdit(raw){
+  let data = Array.isArray(raw) ? raw : [raw];
+  const checks = data.map(formatCheckData);
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECK_CREATE_OR_EDIT,
+      payload: graphPromise('checks', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query: `
+          mutation Mutation ($checks: [Check]){
+            checks(checks: $checks) {
+              id
+            }
+          }
+        `,
+          variables: {
+            checks
+          }})
+        }, null, (payload) => {
+          analytics.trackEvent('Check', 'create')(dispatch, state);
+          const id = _.chain(payload).get('data').thru(arr => arr || []).head().get('id').value();
+          const redirect = id ? `/check/${id}` : '/';
+          setTimeout(() => {
+            dispatch(pushState(null, redirect));
+          }, 100);
+        })
+      })
+    }
+  }
 
 export function create(data){
   return (dispatch, state) => {

@@ -71,10 +71,15 @@ const routes = (
     <Route path="styleguide" component={auth(Styleguide, true)}/>
 
     <Route path="/env" component={auth(Env)}/>
+    <Redirect from="/groups-security" to="/env-groups-security"/>
     <Route path="/env-groups-security" component={auth(EnvGroupsSecurity)}/>
+    <Redirect from="/groups-elb" to="/env-groups-elb"/>
     <Route path="/env-groups-elb" component={auth(EnvGroupsELB)}/>
+    <Redirect from="/instances-ecc" to="/env-instances-ec2"/>
+    <Redirect from="/instances-ec2" to="/env-instances-ec2"/>
     <Route path="/env-instances-ecc" component={auth(EnvInstancesEC2)}/>
     <Route path="/env-instances-ec2" component={auth(EnvInstancesEC2)}/>
+    <Redirect from="/instances-rds" to="/env-instances-rds"/>
     <Route path="/env-instances-rds" component={auth(EnvInstancesRDS)}/>
     <Route path="/instance/ecc/:id" component={auth(InstanceEcc)}/>
     <Route path="/instance/ec2/:id" component={auth(InstanceEcc)}/>

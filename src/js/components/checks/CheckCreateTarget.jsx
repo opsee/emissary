@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import fuzzy from 'fuzzy';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {History} from 'react-router';
@@ -29,6 +28,9 @@ const CheckCreateTarget = React.createClass({
     }),
     location: PropTypes.shape({
       query: PropTypes.object
+    }).isRequired,
+    history: PropTypes.shape({
+      pushState: PropTypes.func.isRequired
     }).isRequired
   },
   getInclude(){
@@ -51,6 +53,8 @@ const CheckCreateTarget = React.createClass({
       case 'rds':
       case 'RDS':
         return ['instances.rds'];
+      default:
+        break;
       }
     }
     return ['groups.elb', 'groups.security', 'instances.ecc'];

@@ -67,7 +67,8 @@ const GroupElb = React.createClass({
     return <tr/>;
   },
   renderInner(){
-    if (this.getGroup().get('name')){
+    const group = this.getGroup();
+    if (group.name && group.CreatedTime){
       return (
         <div>
           <Padding b={3}>
@@ -76,11 +77,11 @@ const GroupElb = React.createClass({
             </Button>
           </Padding>
           <Padding b={2}>
-            <Heading level={3}>{this.getGroup().get('id')} Information</Heading>
+            <Heading level={3}>{group.id} Information</Heading>
             <Table>
               <tr>
                 <td><strong>Created</strong></td>
-                <td><TimeAgo date={new Date(this.getGroup().get('CreatedTime'))}/></td>
+                <td><TimeAgo date={group.CreatedTime}/></td>
               </tr>
               {this.renderDescription()}
             </Table>
@@ -89,7 +90,7 @@ const GroupElb = React.createClass({
             <CheckItemList type="groupELB" target={this.props.params.id} title/>
           </Padding>
           <Padding b={2}>
-            <InstanceItemList ids={this.getGroup().get('instances').toJS()} redux={this.props.redux} title/>
+            <InstanceItemList ids={group.Instances.map(i => i.InstanceId)} redux={this.props.redux} title/>
           </Padding>
 
         </div>

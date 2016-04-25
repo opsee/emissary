@@ -82,10 +82,11 @@ const CheckSingle = React.createClass({
     );
   },
   renderInner(){
-    if (this.getCheck().get('name')){
-      const spec = this.getCheck().get('check_spec').value;
-      const target = this.getCheck().get('target');
-      let d = _.chain(this.getCheck().toJS()).get('results').head().get('time').value() || new Date();
+    const check = this.getCheck().toJS();
+    if (check.name){
+      const spec = check.spec;
+      const target = check.target;
+      let d = _.chain(check.results).head().get('time').value() || new Date();
       if (typeof d === 'number'){
         d = new Date(d * 1000);
       }
@@ -98,7 +99,7 @@ const CheckSingle = React.createClass({
           </Padding>
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>
-            {this.getCheck().get('COMPLETE') && <AssertionItemList assertions={this.getCheck().get('assertions')}/>}
+            {check.COMPLETE && <AssertionItemList assertions={check.assertions}/>}
           </Padding>
           <Padding b={2}>
             <CheckResponsePaginate responses={this.getResponses()} date={d}/>

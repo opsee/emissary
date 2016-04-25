@@ -18,11 +18,7 @@ import {
 
 export const statics = {
   checkFromJS(data){
-    const legit = data.instance || data;
-    let newData = _.assign({}, legit, legit.check_spec.value);
-    newData.name = newData.name || newData.check_spec.value.name;
-    newData.check_spec.value.headers = newData.check_spec.value.headers || [];
-    _.assign(newData, result.getFormattedData(data, true));
+    const newData = _.assign(data, result.getFormattedData(data, true));
     return new Check(newData);
   },
   formatResponse(item){
@@ -95,7 +91,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(action.payload.data, {COMPLETE: true}));
+      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {COMPLETE: true}));
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -121,6 +117,16 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
+  [GET_CHECKS]: {
+    next(state, action){
+      const checks = new List(action.payload.data.map(c => {
+        return statics.checkFromJS(c);
+      }));
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      return _.assign({}, state, {checks, filtered});
+    },
+    throw: yeller.reportAction
+  },
   [GET_CHECK_NOTIFICATION]: {
     next(state, action) {
       const notification = fromJS(action.payload.data);
@@ -129,16 +135,6 @@ export default handleActions({
       const responsesFormatted = statics.getFormattedResponses(responses);
 
       return _.assign({}, state, { notification, responses, responsesFormatted });
-    },
-    throw: yeller.reportAction
-  },
-  [GET_CHECKS]: {
-    next(state, action){
-      const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(c);
-      }));
-      const filtered = itemsFilter(checks, action.payload.search, 'checks');
-      return _.assign({}, state, {checks, filtered});
     },
     throw: yeller.reportAction
   },

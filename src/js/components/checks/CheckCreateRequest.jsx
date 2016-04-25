@@ -64,7 +64,7 @@ const CheckCreateRequest = React.createClass({
     };
   },
   getHeaders(fromSource){
-    const arr = _.cloneDeep(_.get(this.props, 'check.check_spec.value.headers')) || [];
+    const arr = _.cloneDeep(_.get(this.props, 'check.spec.headers')) || [];
     if (fromSource){
       return arr;
     }
@@ -79,7 +79,7 @@ const CheckCreateRequest = React.createClass({
   },
   getUrl(){
     const {check} = this.props;
-    const spec = check.check_spec.value;
+    const spec = check.spec;
     if (check.target.type === 'host' && check.target.id && spec.path){
       let port = '';
       if (spec.protocol === 'http' && spec.port !== 80){
@@ -99,11 +99,11 @@ const CheckCreateRequest = React.createClass({
   },
   runChange(data){
     let check = data;
-    const spec = check.check_spec.value;
+    const spec = check.spec;
     //lets see if a user has "touched" the port
     //if not, lets give them some nice defaults
     let hasSetPort = this.state.hasSetPort;
-    if (this.props.check.check_spec.value.port !== spec.port){
+    if (this.props.check.spec.port !== spec.port){
       hasSetPort = true;
       this.setState({
         hasSetPort
@@ -117,13 +117,13 @@ const CheckCreateRequest = React.createClass({
       }
     }
     if (spec.port){
-      check.check_spec.value.port = parseInt(spec.port, 10);
+      check.spec.port = parseInt(spec.port, 10);
     }
     if (spec.path && !spec.path.match('^\/')){
-      check.check_spec.value.path = `/${spec.path}`;
+      check.spec.path = `/${spec.path}`;
     }
     if (spec.verb === 'GET'){
-      check.check_spec.value = _.omit(spec, ['body']);
+      check.spec = _.omit(spec, ['body']);
     }
     return this.props.onChange(check);
   },
@@ -132,7 +132,7 @@ const CheckCreateRequest = React.createClass({
   },
   runAddHeader(){
     let check = _.cloneDeep(this.props.check);
-    check.check_spec.value.headers.push({
+    check.spec.headers.push({
       name: undefined,
       values: []
     });
@@ -140,26 +140,26 @@ const CheckCreateRequest = React.createClass({
   },
   runRemoveHeader(index){
     let check = _.cloneDeep(this.props.check);
-    check.check_spec.value.headers.splice(index, 1);
+    check.spec.headers.splice(index, 1);
     this.runChange(check);
   },
   runUrlChange(state){
     const check = _.cloneDeep(this.props.check);
-    const spec = check.check_spec.value;
+    const spec = check.spec;
     let string = _.clone(state.url);
     if (!string.match('^http|^ws')){
       string = `http://${string}`;
     }
     try {
       const url = new window.URL(string);
-      check.check_spec.value = _.assign(spec, {
+      check.spec = _.assign(spec, {
         port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
         path: url.pathname || '/',
         protocol: (url.protocol || '').replace(':', '')
       });
       check.target.id = url.hostname;
     } catch (err) {
-      check.check_spec.value = _.pick(spec, ['verb', 'body', 'name']);
+      check.spec = _.pick(spec, ['verb', 'body', 'name']);
     }
     this.runChange(check);
   },
@@ -187,7 +187,7 @@ const CheckCreateRequest = React.createClass({
       return h;
     });
     let check = _.cloneDeep(this.props.check);
-    check.check_spec.value.headers = headers;
+    check.spec.headers = headers;
     this.runChange(check);
   },
   handleUrlChange(state){
@@ -290,10 +290,10 @@ const CheckCreateRequest = React.createClass({
       );
   },
   renderBodyInput(){
-    if (this.props.check.check_spec.value.verb !== 'GET'){
+    if (this.props.check.spec.verb !== 'GET'){
       return (
         <Padding b={1}>
-          <Input data={this.props.check} path="check_spec.value.body" onChange={this.runChange} label="Body" textarea/>
+          <Input data={this.props.check} path="spec.body" onChange={this.runChange} label="Body" textarea/>
         </Padding>
       );
     }
@@ -305,7 +305,7 @@ const CheckCreateRequest = React.createClass({
     });
     return (
       <Padding b={1}>
-        <RadioSelect inline options={methods} path="check_spec.value.verb" data={this.props.check} onChange={this.runChange} label="Method*"/>
+        <RadioSelect inline options={methods} path="spec.verb" data={this.props.check} onChange={this.runChange} label="Method*"/>
       </Padding>
     );
   },
@@ -329,14 +329,14 @@ const CheckCreateRequest = React.createClass({
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
         <Padding b={1}>
-          <RadioSelect inline options={protocols} path="check_spec.value.protocol" data={this.props.check} onChange={this.runChange} label="Protocol*"/>
+          <RadioSelect inline options={protocols} path="spec.protocol" data={this.props.check} onChange={this.runChange} label="Protocol*"/>
         </Padding>
         {this.renderVerbInput()}
         <Padding b={1}>
-          <Input data={this.props.check} path="check_spec.value.path" onChange={this.runChange} label="Path*" placeholder="/healthcheck"/>
+          <Input data={this.props.check} path="spec.path" onChange={this.runChange} label="Path*" placeholder="/healthcheck"/>
         </Padding>
         <Padding b={1}>
-          <Input data={this.props.check} path="check_spec.value.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>
+          <Input data={this.props.check} path="spec.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>
         </Padding>
         {this.renderBodyInput()}
       </Padding>

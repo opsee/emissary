@@ -73,9 +73,9 @@ const CheckResponsePaginate = React.createClass({
     if (!data){
       return [];
     }
-    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
+    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.spec[s]);
     arr.push(_.get(data, 'target.id'));
-    let headers = _.get(data, 'check_spec.value.headers');
+    let headers = _.get(data, 'spec.headers');
     if (headers){
       arr.push(headers.map(h => {
         return h.name + h.values.join(', ');
@@ -118,7 +118,7 @@ const CheckResponsePaginate = React.createClass({
       return false;
     }
     const condition1 = check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.spec[s]).every().value();
     return condition1 && condition2;
   },
   isWaiting(){

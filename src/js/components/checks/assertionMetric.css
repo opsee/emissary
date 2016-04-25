@@ -1,0 +1,11 @@
+.item {
+  border-left: .8rem solid var(--colorGray7);
+}
+
+.item.passing {
+  border-color: var(--colorSuccess);
+}
+
+.item.failing {
+  border-color: var(--colorDanger);
+}

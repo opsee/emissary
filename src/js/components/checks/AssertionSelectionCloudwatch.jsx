@@ -2,10 +2,9 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Map} from 'immutable';
 
 import {Heading} from '../type';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Padding} from '../layout';
 import {env as actions} from '../../actions';
 import {Button} from '../forms';
 import {Add, Delete} from '../icons';
@@ -26,7 +25,8 @@ const AssertionSelectionCloudwatch = React.createClass({
       target: PropTypes.shape({
         id: PropTypes.string,
         type: PropTypes.string
-      })
+      }),
+      assertions: PropTypes.array
     }).isRequired,
     onChange: PropTypes.func
   },
@@ -34,7 +34,7 @@ const AssertionSelectionCloudwatch = React.createClass({
     return _.get(rdsMetrics, `${metricName}.title`);
   },
   handleDeleteClick(index){
-    const assertions = _.reject(this.props.assertions, (n, i) => i === index);
+    const assertions = _.reject(this.props.check.assertions, (n, i) => i === index);
     return this.props.onChange(assertions);
   },
   handleMetricClick(value){
@@ -70,7 +70,7 @@ const AssertionSelectionCloudwatch = React.createClass({
             <div>
               <Heading level={3} className="display-flex flex-1 flex-vertical-align">
                 <span className="flex-1">#{index + 1}&nbsp;{_.get(rdsMetrics, `${assertion.value}.title`)}</span>
-                <Button flat color="danger" title="Remove this Assertion" onClick={this.handleDeleteClick.bind(null, index)} style={{padding: '0.2rem'}}>
+                <Button flat color="danger" title={`Remove ${assertion.value} assertion`} onClick={this.handleDeleteClick.bind(null, index)} style={{padding: '0.2rem'}}>
                   <Delete inline fill="danger"/>
                 </Button>
               </Heading>

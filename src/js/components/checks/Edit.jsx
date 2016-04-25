@@ -76,7 +76,7 @@ const CheckEdit = React.createClass({
     return this.state.check || new Check().toJS();
   },
   getCheckTitle(){
-    return _.get(this, 'state.check.check_spec.value.name') || 'Check';
+    return _.get(this, 'state.check.name') || 'Check';
   },
   isDisabled(){
     return !!validate.check(this.getCheck()).length;

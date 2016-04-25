@@ -8,7 +8,6 @@ import {bindActionCreators} from 'redux';
 
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
-import CheckResponsePaginate from './CheckResponsePaginate';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
 import {Padding, Rule} from '../layout';
@@ -116,7 +115,7 @@ const AssertionsCloudwatch = React.createClass({
     if ((props.renderAsInclude && props.check.COMPLETE) || !props.renderAsInclude){
       return (
         <Padding b={1}>
-          <AssertionSelectionCloudwatch assertions={this.props.check.assertions} onChange={this.handleAssertionsChange} check={this.props.check}/>
+          <AssertionSelectionCloudwatch onChange={this.handleAssertionsChange} check={this.props.check}/>
         </Padding>
       );
     }
@@ -124,7 +123,7 @@ const AssertionsCloudwatch = React.createClass({
   },
   renderInner() {
     return (
-      <form ref="form" onSubmit={this.handleSubmit}>
+      <form ref="form" onSubmit={this.handleSubmit} noValidate>
         <Padding t={1}>
           <Heading level={3}>Assertions</Heading>
         </Padding>

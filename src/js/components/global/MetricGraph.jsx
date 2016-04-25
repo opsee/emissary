@@ -7,7 +7,7 @@ import d3 from 'd3';
 import moment from 'moment';
 import slate from 'slate';
 
-import {StatusHandler} from '../global';
+import {Loader} from '../global';
 import style from './metricGraph.css';
 
 const MetricGraph = React.createClass({
@@ -30,6 +30,10 @@ const MetricGraph = React.createClass({
         'greaterThan',
         'equal',
         'notEqual'
+      ]),
+      operand: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
       ])
     }).isRequired,
     threshold: PropTypes.number,
@@ -132,26 +136,13 @@ const MetricGraph = React.createClass({
     };
     const results = slate.checkAssertion(this.props.assertion, response);
     return !results.error;
-    return slate.checkAssertion(this.props.assertion, dataPoint).error;
-    // FIXME can this be done better with Slate?
-    const value = Number(dataPoint.value);
-    const threshold = Number(this.props.assertion.operand);
-
-    if (this.props.assertion.relationship === 'lessThan') {
-      return value < threshold;
-    } else if (this.props.assertion.relationship === 'greaterThan') {
-      return value > threshold;
-    }
-
-    return null;
   },
 
   getPassFail(dataPoint) {
     if (!this.props.assertion.relationship){
       return 'None';
     }
-    const isPassing = this.getAssertionStatus(dataPoint);
-    return isPassing ? 'Passing' : 'Failing';
+    return this.getAssertionStatus(dataPoint) ? 'Passing' : 'Failing';
   },
 
   /*
@@ -166,7 +157,7 @@ const MetricGraph = React.createClass({
   },
   renderPlaceholder() {
     return (
-      <StatusHandler/>
+      <div className={style.placeholder}><Loader className={style.loader} timeout={0}/></div>
     );
   },
   render() {
@@ -348,7 +339,12 @@ const MetricGraph = React.createClass({
           const dX = x(d.time) + 15; // + left-padding
           const dY = y(d.value) - (tooltipDimensions.height / 2); // vertically center
           return `translate(${dX}, ${dY})`;
-        });
+        })
+
+      tooltipGroup.selectAll('.js-tooltip-group')
+        .data([currentDataPoint])
+        .enter().append('title')
+        .text(`This assertion is currently ${isCurrentPassing.toLowerCase()} with the most recent data point.`)
 
       tooltipGroup.selectAll('rect')
         .data([currentDataPoint])
@@ -372,8 +368,7 @@ const MetricGraph = React.createClass({
         .attr('x', tooltipDimensions.width / 2)
         .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
         .text(d => {
-          const isPassing = this.getAssertionStatus(d);
-          return this.getAssertionStatus(d) ? '✓' : '✕';
+          return isCurrentPassing === 'Passing' ? '✓' : '✕';
         });
     }
     return node.toReact();

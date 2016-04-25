@@ -52,17 +52,18 @@ const CheckCreateInfo = React.createClass({
   },
   getGeneratedName(){
     const {target} = this.props.check;
+    const prefix = target.type === 'rds' ? 'Cloudwatch' : 'Http';
     if (this.props.check.name){
       return this.props.check.name;
     } else if (target.name || target.id){
       const string = target.name || target.id;
-      return `Http ${string}`;
+      return `${prefix} ${string}`;
     }
-    return 'Http check';
+    return '${prefix} check';
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = check.check_spec.value.name = this.getGeneratedName();
+    check.name = this.getGeneratedName();
     return check;
   },
   isDisabled(){
@@ -115,7 +116,7 @@ const CheckCreateInfo = React.createClass({
       <div>
         <Padding b={2}>
           <form name="checkCreateInfoForm">
-            <Input data={this.props.check} path="check_spec.value.name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
+            <Input data={this.props.check} path="name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
           </form>
         </Padding>
         <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>

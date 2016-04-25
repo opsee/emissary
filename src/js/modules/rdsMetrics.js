@@ -1,3 +1,4 @@
+/*eslint-disable quotes*/
 export default {
   "BinLogDiskUsage": {
     "units": "bytes",
@@ -79,4 +80,4 @@ export default {
     "description": "The average number of bytes written to disk per second.",
     "title": "Write Throughput"
   }
-}
+};

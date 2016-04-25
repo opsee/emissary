@@ -27,89 +27,95 @@ import {
 
 const statics = {
   getGroupSecuritySuccess(state, data){
+    const group = _.head(data);
     const arr = state.groups.security;
-    const single = statics.groupSecurityFromJS(state, data);
-    const index = arr.findIndex(item => {
-      return item.get('id') === single.get('id');
-    });
-    if (index > -1){
-      return arr.update(index, () => single);
+    if (group){
+      const single = statics.groupSecurityFromJS(state, group);
+      const index = arr.findIndex(item => {
+        return item.get('id') === single.get('id');
+      });
+      if (index > -1){
+        return arr.update(index, () => single);
+      }
+      return arr.concat(new List([single]));
     }
-    return arr.concat(new List([single]));
+    return arr;
   },
   getGroupsSecuritySuccess(state, data){
     let newData = _.chain(data).map(d => {
-      d.group.type = 'security';
-      return d;
+      return _.assign(d, {
+        type: 'security'
+      });
     }).sortBy(d => {
-      return (_.get(d, 'group.GroupName') || '').toLowerCase();
+      return (_.get(d, 'GroupName') || '').toLowerCase();
     }).value();
-    const changed = newData && newData.length ? fromJS(newData.map(g => {
+    return newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupSecurityFromJS(state, g);
     })) : new List();
-    return changed;
   },
   getGroupElbSuccess(state, data){
     const arr = state.groups.elb;
-    const single = statics.groupElbFromJS(state, data);
-    const index = arr.findIndex(item => {
-      return item.get('id') === single.get('id');
-    });
-    if (index > -1){
-      return arr.update(index, () => single);
+    const elb = _.head(data);
+    if (elb){
+      const single = statics.groupElbFromJS(state, elb);
+      const index = arr.findIndex(item => {
+        return item.get('id') === single.get('id');
+      });
+      if (index > -1){
+        return arr.update(index, () => single);
+      }
+      return arr.concat(new List([single]));
     }
-    return arr.concat(new List([single]));
+    return arr;
   },
   getGroupsElbSuccess(state, data){
     let newData = _.chain(data)
     .sortBy(d => {
-      return d.group.LoadBalancerName.toLowerCase();
+      return d.LoadBalancerName.toLowerCase();
     }).value();
-    const changed = newData && newData.length ? fromJS(newData.map(g => {
+    return newData && newData.length ? fromJS(newData.map(g => {
       return statics.groupElbFromJS(state, g);
     })) : new List();
-    return changed;
   },
   groupElbFromJS(state, data){
-    let newData = data.group || data;
-    newData.instance_count = data.instance_count;
-    if (Array.isArray(newData.Instances)){
-      newData.instances = new List(_.map(newData.Instances, 'InstanceId'));
-    } else {
-      newData.instances = new List();
-    }
-    newData.name = newData.LoadBalancerName;
-    newData.id = newData.LoadBalancerName;
-    _.assign(newData, result.getFormattedData(data));
-    newData.checks = new List(newData.checks);
+    let newData = _.cloneDeep(data);
+    newData = _.assign(newData, {
+      name: newData.LoadBalancerName,
+      id: newData.LoadBalancerName,
+      checks: new List(newData.checks || [])
+    }, result.getFormattedData(data))
     if (newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
     }
     return new GroupElb(newData);
   },
   groupSecurityFromJS(state, data){
-    let newData = data.group || data;
-    newData.instance_count = data.instance_count;
-    newData.meta = fromJS(newData.meta);
-    newData.id = newData.GroupId;
-    newData.name = newData.GroupName;
-    _.assign(newData, result.getFormattedData(data));
-    newData.checks = new List(newData.checks);
-    if (newData.checks.size && !newData.results.size){
-      newData.state = 'initializing';
-    }
+    let newData = _.cloneDeep(data);
+    newData = _.assign(newData, {
+      id: newData.GroupId,
+      name: newData.GroupName,
+      checks: new List(newData.checks || [])
+    }, result.getFormattedData(data));
+    //TODO figure out if I need this
+    // if (newData.checks.size && !newData.results.size){
+    //   newData.state = 'initializing';
+    // }
     return new GroupSecurity(newData);
   },
   getInstanceEccSuccess(state, data){
+    const instance = _.head(data);
     const arr = state.instances.ecc;
-    const single = statics.instanceEccFromJS(data);
-    const index = arr.findIndex(item => {
-      return item.get('id') === single.get('id');
-    });
-    if (index > -1){
-      return arr.update(index, () => single);
+    if (instance){
+      const single = statics.instanceEccFromJS(instance);
+      const index = arr.findIndex(item => {
+        return item.get('id') === single.get('id');
+      });
+      if (index > -1){
+        return arr.update(index, () => single);
+      }
+      return arr.concat(new List([single]));
     }
-    return arr.concat(new List([single]));
+    return arr;
   },
   getInstancesEccSuccess(state, data){
     let newData = _.chain(data)
@@ -142,11 +148,6 @@ const statics = {
     }) || new Map();
     const oldJS = old.toJS();
     let metrics = _.assign((oldJS.metrics || {}), data.metrics);
-    //remove when compost sorts by timestamp
-    metrics = _.mapValues(metrics, (value, key) => {
-      const sorted = _.sortBy(value.metrics, m => m.timestamp);
-      return _.assign(value, {metrics: sorted});
-    });
     const obj = _.assign(old.toJS(), data, {metrics});
     return statics.getInstancesRdsSuccess(state, [obj]);
   },
@@ -165,7 +166,7 @@ const statics = {
     } else {
       parsed = Date.parse(time);
     }
-    return parsed;
+    return !_.isNaN(parsed) ? parsed : undefined;
   },
   instanceRdsFromJS(raw){
     let data = _.cloneDeep(raw);
@@ -185,32 +186,17 @@ const statics = {
     data.meta = fromJS(data.meta);
     return new InstanceRds(data);
   },
-  instanceEccFromJS(raw){
-    let data = raw.instance;
-    let newData = data.instance ? _.cloneDeep(data.instance) : _.cloneDeep(data);
-    if (!newData.results){
-      newData.results = raw.results || data.results;
-    }
-    newData.id = newData.InstanceId;
-    let name = newData.id;
-    if (newData.Tags && newData.Tags.length){
-      name = _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || name;
-    }
-    if (Array.isArray(newData.SecurityGroups)){
-      newData.SecurityGroups = new List(newData.SecurityGroups.map(g => fromJS(g)));
-    } else {
-      newData.SecurityGroups = new List();
-    }
-    newData.Placement = fromJS(newData.Placement);
-    newData.name = name;
-    newData.LaunchTime = statics.getCreatedTime(newData.LaunchTime);
-    newData.type = 'ecc';
-    _.assign(newData, result.getFormattedData(newData));
-    if (newData.checks && newData.checks.size && !newData.results.size){
-      newData.state = 'initializing';
-    }
-    //TODO - make sure status starts working when coming from api, have to code it like meta below
-    newData.meta = fromJS(newData.meta);
+  instanceEccFromJS(data){
+    let newData = _.cloneDeep(data);
+    const tagName = _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value();
+    newData = _.assign(newData, {
+      id: newData.InstanceId,
+      name: tagName || newData.InstanceId,
+      LaunchTime: statics.getCreatedTime(newData.LaunchTime),
+      type: 'ecc',
+      SecurityGroups: Array.isArray(newData.SecurityGroups) ? new List(newData.SecurityGroups.map(g => fromJS(g))) : new List(),
+      state: (newData.checks && newData.checks.size && !newData.results.size) ? 'initializing' : 'running'
+    }, result.getFormattedData(newData));
     return new InstanceEcc(newData);
   },
   getNewFiltered(data = new List(), state, action = {payload: {search: ''}}, type = ''){

@@ -90,7 +90,7 @@ const CheckCreate = React.createClass({
     });
   },
   handleSubmit(){
-    this.props.actions.create(this.state.check);
+    this.props.actions.createOrEdit([this.state.check]);
     this.props.userActions.putData('hasDismissedCheckCreationHelp');
   },
   render() {

@@ -25,7 +25,7 @@ function assertion(obj = {}){
 
 /*Returns an array of error objects with associated "areas" if any area fails*/
 function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
-  const spec = _.get(obj, 'check_spec.value') || {};
+  const spec = _.get(obj, 'spec') || {};
   const type = _.get(obj, 'target.type');
   let errors = [];
 
@@ -44,7 +44,7 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
     if (_.some(arr)){
       errors.push('request: A URL check must include a valid URL.');
     }
-  } else {
+  } else if (type !== 'rds') {
     requestErrors.forEach(err => {
       if (!spec[err[0]]){
         errors.push(`request: ${err[1]}`);
@@ -89,7 +89,7 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
   }
 
   //info area
-  if (!spec.name){
+  if (!obj.name){
     errors.push('info: A check must have a name.');
   }
 
