@@ -8,7 +8,7 @@ import {ListItem} from '../global';
 import {Close, ListCheckmark} from '../icons';
 import InstanceMenu from './InstanceMenu';
 import {env as actions} from '../../actions';
-import {InstanceEcc} from '../../modules/schemas';
+import {InstanceEcc, InstanceRds} from '../../modules/schemas';
 
 const InstanceItem = React.createClass({
   propTypes: {
@@ -27,8 +27,12 @@ const InstanceItem = React.createClass({
     onClick: PropTypes.func
   },
   componentWillMount(){
-    if (_.get(this.props, 'target.type')){
-      this.props.actions.getInstancesEcc();
+    const type = _.get(this.props, 'target.type');
+    if (type) {
+      if (type.match('dbinstance|rds')){
+        return this.props.actions.getInstancesRds();
+      }
+      return this.props.actions.getInstancesEcc();
     }
   },
   shouldComponentUpdate(nextProps) {
@@ -37,29 +41,35 @@ const InstanceItem = React.createClass({
     }
     return !Immutable.is(this.props.item, nextProps.item);
   },
+  getType(){
+    let type = _.get(this.props, 'target.type');
+    if (this.props.item){
+      type = _.get(this.props.item.toJS(), 'type');
+    }
+    if (type.match('dbinstance')){
+      type = 'rds';
+    } else if (type === 'instance'){
+      type = 'ecc';
+    }
+    return type;
+  },
   getItem(){
-    if (_.get(this.props, 'target.type')){
-      return this.props.instances.ecc.find(i => {
-        return i.get('id') === this.props.target.id;
-      }) || new InstanceEcc();
+    const type = this.getType();
+    if (type){
+      const schema = type === 'ecc' ? InstanceEcc : InstanceRds;
+      return this.props.instances[type].find(i => {
+        let id = _.get(this.props, 'target.id');
+        if (this.props.item){
+          id = _.get(this.props.item.toJS(), 'id');
+        }
+        return i.get('id') === id;
+      }) || new schema();
     }
     return this.props.item;
   },
   getLink(){
     const type = this.getType().toLowerCase();
     return `/instance/${type}/${this.getItem().get('id')}`;
-  },
-  getType(){
-    let type = 'EC2';
-    switch (this.getItem().get('type')){
-    case 'RDS':
-    case 'rds':
-      type = 'RDS';
-      break;
-    default:
-      break;
-    }
-    return type;
   },
   renderInfoText(){
     if (this.getItem().get('total')){

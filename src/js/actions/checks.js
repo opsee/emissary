@@ -9,7 +9,7 @@ import {
   GET_CHECK,
   GET_CHECK_NOTIFICATION,
   GET_CHECKS,
-  CHECK_DELETE,
+  CHECKS_DELETE,
   CHECK_CREATE,
   CHECK_EDIT,
   CHECK_TEST,
@@ -96,6 +96,12 @@ export function getCheck(id){
                     headers {
                       name
                       values
+                    }
+                  }
+                  ... on schemaCloudWatchCheck {
+                    metrics {
+                      namespace
+                      name
                     }
                   }
                 }
@@ -194,6 +200,12 @@ export function getChecks(redirect){
               }
             }`
           })
+        }, null, payload => {
+          if (redirect){
+            setTimeout(() => {
+              dispatch(pushState(null, '/'));
+            }, 30);
+          }
         })
       })
     }
@@ -230,22 +242,43 @@ export function getChecks(redirect){
 //   };
 // }
 
-export function del(id){
+// export function del(id){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: CHECK_DELETE,
+//       payload: new Promise((resolve, reject) => {
+//         return request
+//         .del(`${config.services.api}/checks/${id}`)
+//         .set('Authorization', state().user.get('auth'))
+//         .then(res => {
+//           resolve(res.body);
+//           getChecks(true)(dispatch, state);
+//           analytics.trackEvent('Check', 'delete', id)(dispatch, state);
+//         }, reject);
+//       })
+//     });
+//   };
+// }
+
+export function del(ids){
   return (dispatch, state) => {
     dispatch({
-      type: CHECK_DELETE,
-      payload: new Promise((resolve, reject) => {
+      type: CHECKS_DELETE,
+      payload: graphPromise('checks', () => {
         return request
-        .del(`${config.services.api}/checks/${id}`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve(res.body);
-          getChecks(true)(dispatch, state);
-          analytics.trackEvent('Check', 'delete', id)(dispatch, state);
-        }, reject);
+        .send({query:
+          `mutation Mutation {
+            deleteChecks(ids: ${JSON.stringify(ids)})
+          }`
+        })
+      }, null, payload => {
+        getChecks(true)(dispatch, state);
+        analytics.trackEvent('Check', 'delete')(dispatch, state);
       })
-    });
-  };
+    })
+  }
 }
 
 function getNamespace(type){

@@ -74,6 +74,11 @@ export const GroupSecurity = Record(_.assign({}, baseEnvItem, {
   Instances: List()
 }));
 
+export const GroupAsg = Record(_.assign({}, baseEnvItem, {
+  type: 'asg',
+  Instances: List()
+}));
+
 export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,

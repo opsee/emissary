@@ -41,6 +41,8 @@ export const ENV_GET_ALL = 'ENV_GET_ALL';
 
 export const GET_GROUP_SECURITY = 'GET_GROUP_SECURITY';
 export const GET_GROUPS_SECURITY = 'GET_GROUPS_SECURITY';
+export const GET_GROUP_ASG = 'GET_GROUP_ASG';
+export const GET_GROUPS_ASG = 'GET_GROUPS_ASG';
 export const GET_GROUP_RDS = 'GET_GROUP_RDS';
 export const GET_GROUPS_RDS = 'GET_GROUPS_RDS';
 export const GET_GROUP_ELB = 'GET_GROUP_ELB';
@@ -63,7 +65,7 @@ export const GET_CHECKS = 'GET_CHECKS';
 export const CHECK_CREATE = 'CHECK_CREATE';
 export const CHECK_EDIT = 'CHECK_EDIT';
 export const CHECK_CREATE_OR_EDIT = 'CHECK_CREATE_OR_EDIT';
-export const CHECK_DELETE = 'CHECK_DELETE';
+export const CHECKS_DELETE = 'CHECKS_DELETE';
 export const CHECK_TEST = 'CHECK_TEST';
 export const CHECK_TEST_RESET = 'CHECK_TEST_RESET';
 export const CHECK_TEST_SELECT_RESPONSE = 'CHECK_TEST_SELECT_RESPONSE';

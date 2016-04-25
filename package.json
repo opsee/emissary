@@ -113,7 +113,7 @@
     "react-faux-dom": "^2.4.0",
     "react-hammerjs": "git+ssh://git@github.com/opsee/react-hammerjs.git",
     "react-proxy-loader": "^0.3.4",
-    "react-redux": "^4.4.1",
+    "react-redux": "^4.4.5",
     "react-router": "^1.0.1",
     "react-timeago": "git+ssh://git@github.com/opsee/react-timeago.git",
     "redux": "^3.4.0",

@@ -5,6 +5,8 @@ import _ from 'lodash';
 import {
   GET_GROUP_SECURITY,
   GET_GROUPS_SECURITY,
+  GET_GROUP_ASG,
+  GET_GROUPS_ASG,
   // GET_GROUP_RDS,
   // GET_GROUPS_RDS,
   GET_GROUP_ELB,

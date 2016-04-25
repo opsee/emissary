@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {List, Map} from 'immutable';
+import {List} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -11,10 +11,10 @@ import {Edit, Delete} from '../icons';
 import {Button} from '../forms';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
-import AssertionItemList from './AssertionItemList';
-import CheckResponsePaginate from './CheckResponsePaginate';
-import NotificationItemList from './NotificationItemList';
-import HTTPRequestItem from './HTTPRequestItem';
+import ViewHTTP from './ViewHTTP';
+import ViewCloudwatch from './ViewCloudwatch';
+import {Check} from '../../modules/schemas';
+
 import {
   checks as actions
 } from '../../actions';
@@ -39,13 +39,10 @@ const CheckSingle = React.createClass({
   getCheck(){
     return this.props.redux.checks.checks.find(c => {
       return c.get('id') === this.props.params.id;
-    }) || new Map({id: this.props.params.id});
-  },
-  getResponses(){
-    return _.get(this.getCheck().get('results').get(0), 'responses') || new List();
+    }) || new Check({id: this.props.params.id});
   },
   runRemoveCheck(){
-    this.props.actions.del(this.props.params.id);
+    this.props.actions.del([this.props.params.id]);
   },
   renderNotifications(){
     let notifs = this.getCheck().get('notifications');
@@ -60,58 +57,14 @@ const CheckSingle = React.createClass({
     }
     return null;
   },
-  renderTarget(){
-    const target = this.getCheck().get('target');
-    if (target && target.type === 'host'){
-      return null;
-    }
-    let el;
-    switch (target.type){
-    case 'instance':
-      el = <InstanceItem target={target}/>;
-      break;
-    default:
-      el = <GroupItem target={target}/>;
-      break;
-    }
-    return (
-      <Padding b={1}>
-        <Heading level={3}>Target</Heading>
-        {el}
-      </Padding>
-    );
-  },
   renderInner(){
-    const check = this.getCheck().toJS();
-    if (check.name){
-      const spec = check.spec;
-      const target = check.target;
-      let d = _.chain(check.results).head().get('time').value() || new Date();
-      if (typeof d === 'number'){
-        d = new Date(d * 1000);
-      }
-      return (
-        <div>
-          {this.renderTarget()}
-          <Padding b={2}>
-            <Heading level={3}>HTTP Request</Heading>
-            <HTTPRequestItem spec={spec} target={target} />
-          </Padding>
-          <Padding b={1}>
-            <Heading level={3}>Assertions</Heading>
-            {check.COMPLETE && <AssertionItemList assertions={check.assertions}/>}
-          </Padding>
-          <Padding b={2}>
-            <CheckResponsePaginate responses={this.getResponses()} date={d}/>
-          </Padding>
-
-          {this.renderNotifications()}
-        </div>
-      );
+    const check = this.getCheck();
+    const type = _.get(check.toJS(), 'target.type');
+    //TODO change this later to be more open
+    if (this.props.redux.asyncActions.getCheck.status === 'pending'){
+      return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     }
-    return (
-      <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>
-    );
+    return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
   },
   renderLink(){
     if (this.getCheck() && this.getCheck().get('id')){
@@ -126,7 +79,7 @@ const CheckSingle = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={this.getCheck().get('name') || this.getCheck().get('id') || ''}>
+        <Toolbar title={this.getCheck().get('name') || 'Check'}>
           {this.renderLink()}
         </Toolbar>
         <Grid>
