@@ -21,7 +21,7 @@ export default [
   },
   {
     id: 'us-east-1',
-    name: 'N. Viginia'
+    name: 'N. Virginia'
   },
   {
     id: 'us-west-1',
