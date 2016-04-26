@@ -23,28 +23,22 @@ export const statics = {
   },
   formatResponse(item){
     let data = _.cloneDeep(item.toJS());
-    if (data && data.response && data.response.code){
-      data.response = {
-        value: data.response,
-        type_url: 'HttpResponse'
-      };
-    }
-    if (_.get(data, 'response.value')){
-      const headers = _.get(data, 'response.value.headers');
+    if (_.get(data, 'response')){
+      const headers = _.get(data, 'response.headers');
       if (headers){
-        data.response.value.headers = headers.map(h => {
+        data.response.headers = headers.map(h => {
           h.values = h.values.join(', ');
           return h;
         });
         let headerObj = {};
-        data.response.value.headers.forEach(h => {
+        data.response.headers.forEach(h => {
           headerObj[h.name] = h.values;
         });
-        data.response.value.headers = headerObj;
+        data.response.headers = headerObj;
         const contentType = _.chain(headers).find({name: 'Content-Type'}).get('values').value() || '';
         if (contentType.match('json')){
           try {
-            data.response.value.body = JSON.parse(data.response.value.body);
+            data.response.body = JSON.parse(data.response.body);
             data.response.json = true;
           } catch (err){
             yeller.report(err);
@@ -63,9 +57,9 @@ export const statics = {
           _.noop();
         }
       }
-      if (!data.error && !_.get(data, 'response.type_url')){
-        return {error: 'Error in sending the request'};
-      }
+      // if (!data.error && !_.get(data, 'response.type_url')){
+      //   return {error: 'Error in sending the request'};
+      // }
       return data;
     }
     if (data.error){

@@ -32,7 +32,8 @@ const GroupItemList = React.createClass({
     noFetch: PropTypes.bool,
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
-      getGroupsSecurity: PropTypes.func
+      getGroupsSecurity: PropTypes.func,
+      getGroupsAsg: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,

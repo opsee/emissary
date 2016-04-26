@@ -59,7 +59,7 @@ const AssertionsHTTP = React.createClass({
     const {checks} = this.props.redux;
     const data = checks.responses.toJS()[checks.selectedResponse];
     if (data && data.response){
-      return _.get(data, 'response.value');
+      return _.get(data, 'response');
     }
     return {};
   },

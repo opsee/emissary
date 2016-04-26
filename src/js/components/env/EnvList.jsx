@@ -14,6 +14,7 @@ const EnvList = React.createClass({
     include: PropTypes.arrayOf(PropTypes.oneOf([
       'groups.security',
       'groups.elb',
+      'groups.asg',
       'instances.ecc',
       'instances.rds',
       'checks.checks'
@@ -61,7 +62,7 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc', 'checks.checks'],
+      include: ['groups.elb', 'groups.security', 'groups.asg', 'instances.rds', 'instances.ecc', 'checks.checks'],
       limit: 1000
     };
   },
@@ -69,6 +70,14 @@ const EnvList = React.createClass({
     return (
       <div key="groupsSecurity">
         <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups" noFetch={this.props.noFetch}/>
+        <hr/>
+      </div>
+    );
+  },
+  renderGroupsAsg(){
+    return (
+      <div key="groupsAsg">
+        <GroupItemList filter={this.props.filter} type="asg" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Autoscaling Groups" noFetch={this.props.noFetch}/>
         <hr/>
       </div>
     );

@@ -35,7 +35,7 @@ const ViewHTTP = React.createClass({
     return null;
   },
   renderTarget(){
-    const target = this.props.check.get('target') || {};
+    const target = _.get(this.props.check.toJS(), 'target') || {};
     if (target && target.type === 'host'){
       return null;
     }

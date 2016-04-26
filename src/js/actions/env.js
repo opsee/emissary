@@ -75,7 +75,7 @@ export function getGroupSecurity(id){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -112,6 +112,65 @@ export function getGroupsSecurity(){
               region(id: "us-west-1") {
                 vpc(id: "vpc-79b1491c") {
                   groups(type: "security"){
+                    ... on autoscalingGroup {
+                      GroupId
+                      GroupName
+                      Description
+                    }
+                  }
+                }
+              }
+            }`
+          })
+        }, {search: state().search})
+      })
+    }
+  }
+
+export function getGroupAsg(id){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUP_ASG,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query: `
+            {
+              region(id: "us-west-1") {
+                vpc(id: "vpc-79b1491c") {
+                  groups(type: "asg", id: "${id}"){
+                    ... on autoscalingGroup {
+                      Tags {
+                        Key
+                        Value
+                      }
+                      LoadBalancerNames
+                      AutoScalingGroupName
+                    }
+                  }
+                }
+              }
+            }`
+          })
+        }, {search: state().search})
+      })
+    }
+  }
+
+export function getGroupsAsg(){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUPS_ASG,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query: `
+            {
+              region(id: "us-west-1") {
+                vpc(id: "vpc-79b1491c") {
+                  groups(type: "asg"){
                     ... on ec2SecurityGroup {
                       GroupId
                       GroupName
@@ -122,7 +181,7 @@ export function getGroupsSecurity(){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -180,7 +239,7 @@ export function getGroupElb(id) {
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -225,7 +284,7 @@ export function getGroupsElb(){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -257,7 +316,7 @@ export function getInstanceEcc(id){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -287,7 +346,7 @@ export function getInstancesEcc(){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -314,7 +373,7 @@ export function getInstancesRds(){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -362,7 +421,7 @@ export function getInstanceRds(id){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }
@@ -404,7 +463,7 @@ export function getMetricRDS(id, metric){
               }
             }`
           })
-        })
+        }, {search: state().search})
       })
     }
   }

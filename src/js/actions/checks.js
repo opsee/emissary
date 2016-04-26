@@ -76,7 +76,7 @@ export function getCheck(id){
         .set('Authorization', state().user.get('auth'))
         .send({query: 
           `{
-              checks {
+              checks (id: "${id}"){
                 id
                 notifications {
                   value
@@ -93,6 +93,9 @@ export function getCheck(id){
                 spec {
                   ... on schemaHttpCheck {
                     verb
+                    protocol
+                    path
+                    port
                     headers {
                       name
                       values
@@ -106,7 +109,9 @@ export function getCheck(id){
                   }
                 }
                 results {
+                  passing
                   responses {
+                    passing
                     reply {
                       ...on schemaHttpResponse {
                         code
@@ -120,6 +125,15 @@ export function getCheck(id){
                           name
                         }
                         host
+                      }
+                      ... on schemaCloudWatchResponse {
+                        namespace
+                        metrics {
+                          timestamp
+                          unit
+                          name
+                          value
+                        }
                       }
                     }
                     target {
@@ -137,7 +151,7 @@ export function getCheck(id){
               }
             }`
           })
-        }, {id})
+        }, {id, search: state().search})
       })
     }
   }
@@ -200,7 +214,7 @@ export function getChecks(redirect){
               }
             }`
           })
-        }, null, payload => {
+        }, {search: state().search}, payload => {
           if (redirect){
             setTimeout(() => {
               dispatch(pushState(null, '/'));
@@ -341,16 +355,16 @@ export function test(data){
       type: CHECK_TEST,
       payload: new Promise((resolve, reject) => {
         if (process.env.NODE_ENV !== 'production'){
-          if (data.spec.path.match('jsonassertion')){
-            return resolve([
-              {
-                response: {
-                  type_url: 'HttpResponse',
-                  value: require('../../files/exampleResponseJson')
-                }
-              }
-            ]);
-          }
+          // if (data.spec.path.match('jsonassertion')){
+          //   return resolve([
+          //     {
+          //       response: {
+          //         type_url: 'HttpResponse',
+          //         value: require('../../files/exampleResponseJson')
+          //       }
+          //     }
+          //   ]);
+          // }
           if (data.spec.path.match('services\/200')){
             return resolve([
               {

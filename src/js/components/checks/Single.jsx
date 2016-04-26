@@ -59,12 +59,14 @@ const CheckSingle = React.createClass({
   },
   renderInner(){
     const check = this.getCheck();
-    const type = _.get(check.toJS(), 'target.type');
+    const type = _.get(check.toJS(), 'target.type') || '';
     //TODO change this later to be more open
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
+    } if (check.COMPLETE){
+      return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
     }
-    return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
+    return null;
   },
   renderLink(){
     if (this.getCheck() && this.getCheck().get('id')){

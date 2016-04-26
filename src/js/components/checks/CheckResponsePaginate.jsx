@@ -111,7 +111,7 @@ const CheckResponsePaginate = React.createClass({
     return [];
   },
   getBody(){
-    return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.value.body');
+    return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.body');
   },
   isCheckComplete(check){
     if (!check){
@@ -186,7 +186,7 @@ const CheckResponsePaginate = React.createClass({
     );
   },
   renderHeaders(res){
-    const headers = _.get(res, 'response.value.headers') || {};
+    const headers = _.get(res, 'response.headers') || {};
     return (
       <div>
         {_.chain(headers).keys().map(key => {
@@ -215,7 +215,7 @@ const CheckResponsePaginate = React.createClass({
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
           {this.renderTopArea()}
-          <CheckResponseSingle code={_.get(res, 'response.value.code')} headers={_.get(res, 'response.value.headers') || {}} body={this.getBody()} metrics={_.get(res, 'response.value.metrics')}/>
+          <CheckResponseSingle code={_.get(res, 'response.code')} headers={_.get(res, 'response.headers') || {}} body={this.getBody()} metrics={_.get(res, 'response.metrics')}/>
         </div>
         {this.renderButton()}
       </Padding>

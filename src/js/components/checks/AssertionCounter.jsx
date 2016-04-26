@@ -28,7 +28,7 @@ const AssertionCounter = React.createClass({
   },
   getResponse(){
     if (this.props.response && this.props.response.toJS){
-      return _.get(this.props.response.toJS(), 'response.value');
+      return _.get(this.props.response.toJS(), 'response');
     }
     return this.props.response;
   },

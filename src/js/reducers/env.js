@@ -235,7 +235,6 @@ export default handleActions({
     next(state, action){
       const security = statics.getGroupsSecuritySuccess(state, action.payload.data);
       const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
-      debugger;
       const groups = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups, filtered});
     },
