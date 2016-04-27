@@ -96,6 +96,7 @@ export function pagerdutyAccess(query) {
         .then((res) => {
           resolve(res.body);
           getPagerdutyInfo()(dispatch, state);
+          storage.set('shouldSyncPagerduty', _.get(res, 'body.enabled'));
         }, reject);
       })
     });

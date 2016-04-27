@@ -50,14 +50,18 @@ const NotificationSelection = React.createClass({
   },
   componentDidMount(){
     this.props.actions.getSlackChannels();
+    this.props.actions.getPagerdutyInfo();
+
     window.addEventListener('storage', event => {
-      if (typeof event === 'object' && event.key === 'shouldGetSlackChannels' && event.newValue === 'true'){
-        this.props.actions.getSlackChannels();
-        storage.remove('shouldGetSlackChannels');
+      if (typeof event === 'object' && event.newValue === 'true') {
+        if (event.key === 'shouldGetSlackChannels'){
+          this.props.actions.getSlackChannels();
+        } else if (event.key === 'shouldSyncPagerduty') {
+          this.props.actions.getPagerdutyInfo();
+        }
+        storage.remove(event.key);
       }
     });
-
-    this.props.actions.getPagerdutyInfo();
   },
   getNewSchema(type, notifIndex, value){
     return {
