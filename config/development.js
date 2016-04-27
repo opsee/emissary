@@ -10,6 +10,6 @@ export default {
     api: 'https://api.opsee.com',
     auth: 'https://auth.opsee.com',
     stream: 'wss://api.opsee.com/stream/',
-    compost: 'https://compost.in.opsee.com'
+    compost: 'https://api.opsee.com/graphql'
   }
 };

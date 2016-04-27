@@ -7,7 +7,10 @@ import _ from 'lodash';
 import {BastionRequirement, Toolbar} from '../global';
 import {Col, Grid, Row} from '../layout';
 import EnvList from './EnvList.jsx';
-import {env as actions} from '../../actions';
+import {
+  env as actions,
+  checks as checkActions
+} from '../../actions';
 
 const Env = React.createClass({
   mixins: [State],
@@ -26,7 +29,7 @@ const Env = React.createClass({
     })
   },
   componentWillMount(){
-    this.props.actions.getBastions();
+    this.props.checkActions.getChecks();
   },
   getTitle(){
     const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};
@@ -67,7 +70,8 @@ const Env = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  checkActions: bindActionCreators(checkActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Env);

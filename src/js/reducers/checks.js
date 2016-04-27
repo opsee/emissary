@@ -18,7 +18,7 @@ import {
 
 export const statics = {
   checkFromJS(data){
-    const newData = _.assign(data, result.getFormattedData(data, true));
+    const newData = _.assign({}, data, result.getFormattedData(data, true));
     return new Check(newData);
   },
   formatResponse(item){

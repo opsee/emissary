@@ -7,8 +7,6 @@ import {
   GET_GROUPS_SECURITY,
   GET_GROUP_ASG,
   GET_GROUPS_ASG,
-  // GET_GROUP_RDS,
-  // GET_GROUPS_RDS,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
   GET_INSTANCE_ECC,
@@ -24,33 +22,11 @@ import {
 } from './constants';
 import graphPromise from '../modules/graphPromise';
 
-// export function getGroupSecurity(id){
-//   return (dispatch, state) => {
-//     dispatch({
-//       type: GET_GROUP_SECURITY,
-//       payload: new Promise((resolve, reject) => {
-//         request
-//         .get(`${config.services.api}/groups/security`)
-//         .set('Authorization', state().user.get('auth'))
-//         .then((res) => {
-//           let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
-//             return g.group.GroupId === id;
-//           });
-//           request
-//           .get(`${config.services.api}/groups/security/${id}`)
-//           .set('Authorization', state().user.get('auth'))
-//           .then((res2) => {
-//             group.instances = res2.body && res2.body.instances;
-//             resolve({
-//               data: group,
-//               search: state().search
-//             });
-//           }, reject);
-//         }, reject);
-//       })
-//     });
-//   };
-// }
+function getBastion(state){
+  return _.chain(state().bastions)
+  .find({connected: true})
+  .value() || {};
+}
 
 export function getGroupSecurity(id){
   return (dispatch, state) => {
@@ -60,10 +36,10 @@ export function getGroupSecurity(id){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
                   groups(type: "security", id: "${id}"){
                     ... on ec2SecurityGroup {
                       GroupId
@@ -73,31 +49,13 @@ export function getGroupSecurity(id){
                   }
                 }
               }
-            }`
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
           })
         }, {search: state().search})
       })
     }
   }
-
-// export function getGroupsSecurity(){
-//   return (dispatch, state) => {
-//     dispatch({
-//       type: GET_GROUPS_SECURITY,
-//       payload: new Promise((resolve, reject) => {
-//         return request
-//         .get(`${config.services.api}/groups/security`)
-//         .set('Authorization', state().user.get('auth'))
-//         .then(res => {
-//           resolve({
-//             data: res.body.groups,
-//             search: state().search
-//           });
-//         }, reject);
-//       })
-//     });
-//   };
-// }
 
 export function getGroupsSecurity(){
   return (dispatch, state) => {
@@ -107,12 +65,12 @@ export function getGroupsSecurity(){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
                   groups(type: "security"){
-                    ... on autoscalingGroup {
+                    ... on ec2SecurityGroup {
                       GroupId
                       GroupName
                       Description
@@ -120,7 +78,8 @@ export function getGroupsSecurity(){
                   }
                 }
               }
-            }`
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
           })
         }, {search: state().search})
       })
@@ -135,11 +94,11 @@ export function getGroupAsg(id){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  groups(type: "asg", id: "${id}"){
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "autoscaling", id: "${id}"){
                     ... on autoscalingGroup {
                       Tags {
                         Key
@@ -147,13 +106,17 @@ export function getGroupAsg(id){
                       }
                       LoadBalancerNames
                       AutoScalingGroupName
+                      Instances {
+                        InstanceId
+                      }
                     }
                   }
                 }
               }
-            }`
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
           })
-        }, {search: state().search})
+        }, {search: state().search, id})
       })
     }
   }
@@ -166,53 +129,32 @@ export function getGroupsAsg(){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  groups(type: "asg"){
-                    ... on ec2SecurityGroup {
-                      GroupId
-                      GroupName
-                      Description
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "autoscaling"){
+                    ... on autoscalingGroup {
+                      Tags {
+                        Key
+                        Value
+                      }
+                      LoadBalancerNames
+                      AutoScalingGroupName
+                      Instances {
+                        InstanceId
+                      }
                     }
                   }
                 }
               }
-            }`
-          })
-        }, {search: state().search})
-      })
-    }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        })
+      }, {search: state().search})
+    })
   }
-
-// export function getGroupElb(id){
-//   return (dispatch, state) => {
-//     dispatch({
-//       type: GET_GROUP_ELB,
-//       payload: new Promise((resolve, reject) => {
-//         request
-//         .get(`${config.services.api}/groups/elb`)
-//         .set('Authorization', state().user.get('auth'))
-//         .then((res) => {
-//           let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
-//             return g.group.LoadBalancerName === id;
-//           });
-//           request
-//           .get(`${config.services.api}/groups/elb/${id}`)
-//           .set('Authorization', state().user.get('auth'))
-//           .then((res2) => {
-//             group.instances = res2.body && res2.body.instances;
-//             resolve({
-//               data: group,
-//               search: state().search
-//             });
-//           }, res2 => reject(res2));
-//         }, res => reject(res));
-//       })
-//     });
-//   };
-// }
+}
 
 export function getGroupElb(id) {
   return (dispatch, state) => {
@@ -222,46 +164,28 @@ export function getGroupElb(id) {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  groups(type: "elb", id: "${id}"){
-                    ... on elbLoadBalancerDescription {
-                      LoadBalancerName
-                      CreatedTime
-                      Instances {
-                        InstanceId
-                      }
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "elb", id: "${id}"){
+                  ... on elbLoadBalancerDescription {
+                    LoadBalancerName
+                    CreatedTime
+                    Instances {
+                      InstanceId
                     }
                   }
                 }
               }
-            }`
-          })
-        }, {search: state().search})
-      })
-    }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        })
+      }, {search: state().search})
+    })
   }
-
-// export function getGroupsElb(){
-//   return (dispatch, state) => {
-//     dispatch({
-//       type: GET_GROUPS_ELB,
-//       payload: new Promise((resolve, reject) => {
-//         return request
-//         .get(`${config.services.api}/groups/elb`)
-//         .set('Authorization', state().user.get('auth'))
-//         .then(res => {
-//           resolve({
-//             data: res.body.groups,
-//             search: state().search
-//           });
-//         }, reject);
-//       })
-//     });
-//   };
-// }
+}
 
 export function getGroupsElb(){
   return (dispatch, state) => {
@@ -271,18 +195,22 @@ export function getGroupsElb(){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  groups(type: "elb"){
-                    ... on elbLoadBalancerDescription {
-                      LoadBalancerName
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "elb"){
+                  ... on elbLoadBalancerDescription {
+                    LoadBalancerName
+                    Instances {
+                      InstanceId
                     }
                   }
                 }
               }
-            }`
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
           })
         }, {search: state().search})
       })
@@ -297,24 +225,28 @@ export function getInstanceEcc(id){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  instances(type: "ec2", id: "${id}"){
-                    ... on ec2Instance {
-                      Tags {
-                        Key
-                        Value
-                      }
-                      LaunchTime
-                      InstanceType
-                      InstanceId
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "ec2", id: "${id}"){
+                  ... on ec2Instance {
+                    Tags {
+                      Key
+                      Value
+                    }
+                    LaunchTime
+                    InstanceType
+                    InstanceId
+                    SecurityGroups {
+                      GroupId
                     }
                   }
                 }
               }
-            }`
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
           })
         }, {search: state().search})
       })
@@ -329,22 +261,26 @@ export function getInstancesEcc(){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  instances(type: "ec2"){
-                    ... on ec2Instance {
-                      Tags {
-                        Key
-                        Value
-                      }
-                      InstanceId
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "ec2"){
+                  ... on ec2Instance {
+                    Tags {
+                      Key
+                      Value
+                    }
+                    InstanceId
+                    SecurityGroups {
+                      GroupId
                     }
                   }
                 }
               }
-            }`
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
           })
         }, {search: state().search})
       })
@@ -359,24 +295,25 @@ export function getInstancesRds(){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  instances(type: "rds"){
-                    ... on rdsDBInstance {
-                      DBName
-                      DBInstanceIdentifier
-                    }
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds"){
+                  ... on rdsDBInstance {
+                    DBName
+                    DBInstanceIdentifier
                   }
                 }
               }
-            }`
-          })
-        }, {search: state().search})
-      })
-    }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        })
+      }, {search: state().search})
+    })
   }
+}
 
 export function getInstanceRds(id){
   return (dispatch, state) => {
@@ -386,45 +323,46 @@ export function getInstanceRds(id){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  instances(type: "rds", id: "${id}"){
-                    ... on rdsDBInstance {
-                      #AllocatedStorage
-                      AvailabilityZone
-                      #BackupRetentionPeriod
-                      CACertificateIdentifier
-                      #DBClusterIdentifier
-                      DBInstanceClass
-                      DBInstanceIdentifier
-                      #DbInstancePort
-                      DBName
-                      Endpoint{
-                        Port
-                        Address
-                        HostedZoneId
-                      }
-                      EngineVersion
-                      #Iops
-                      InstanceCreateTime
-                      #MultiAZ
-                      #StorageType
-                      #VpcSecurityGroups {
-                      #  VpcSecurityGroupId
-                      #  Status
-                      #}
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds", id: "${id}"){
+                  ... on rdsDBInstance {
+                    #AllocatedStorage
+                    AvailabilityZone
+                    #BackupRetentionPeriod
+                    CACertificateIdentifier
+                    #DBClusterIdentifier
+                    DBInstanceClass
+                    DBInstanceIdentifier
+                    #DbInstancePort
+                    DBName
+                    Endpoint{
+                      Port
+                      Address
+                      HostedZoneId
                     }
+                    EngineVersion
+                    #Iops
+                    InstanceCreateTime
+                    #MultiAZ
+                    #StorageType
+                    #VpcSecurityGroups {
+                    #  VpcSecurityGroupId
+                    #  Status
+                    #}
                   }
                 }
               }
-            }`
-          })
-        }, {search: state().search})
-      })
-    }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        })
+      }, {search: state().search})
+    })
   }
+}
 
 /**
  * @param {string} id - the ID of the RDS instance (e.g., 'my-rds-instance')
@@ -439,34 +377,35 @@ export function getMetricRDS(id, metric){
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
-                  instances(type: "rds", id: "${id}"){
-                    ... on rdsDBInstance {
-                      DBName
-                      DBInstanceIdentifier
-                      metrics{
-                        ${metric} {
-                          metrics{
-                            name
-                            value
-                            unit
-                            timestamp
-                          }
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds", id: "${id}"){
+                  ... on rdsDBInstance {
+                    DBName
+                    DBInstanceIdentifier
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
                         }
                       }
                     }
                   }
                 }
               }
-            }`
-          })
-        }, {search: state().search})
-      })
-    }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        })
+      }, {search: state().search})
+    })
   }
+}
 
 export function getAll(){
   return (dispatch, state) => {
@@ -478,8 +417,8 @@ export function getAll(){
         .set('Authorization', state().user.get('auth'))
         .send({query: `
             {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
+              region(id: $region) {
+                vpc(id: $vpc) {
                   instances(type: "rds", id: "${id}"){
                     ... on ec2Instance {
                       InstanceId
@@ -518,8 +457,8 @@ export function getAll(){
         .set('Authorization', state().user.get('auth'))
         .send({query: `
             {
-              region(id: "us-west-1") {
-                vpc(id: "vpc-79b1491c") {
+              region(id: $region) {
+                vpc(id: $vpc) {
                   instances(type: "rds", id: "${id}"){
                     ... on ec2Instance {
                       InstanceId

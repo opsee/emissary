@@ -15,7 +15,9 @@ export const User = Record({
   ghosting: false,
   customer_id: undefined,
   data: undefined,
-  loginData: {}
+  loginData: {},
+  region: undefined,
+  vpc: undefined
 });
 
 const baseEnvItem = {
@@ -25,12 +27,13 @@ const baseEnvItem = {
   silenceDate: null,
   silenceDuration: null,
   state: 'running',
-  health: undefined,
   type: null,
   checks: List(),
   results: List(),
   passing: 0,
-  total: 0
+  total: 0,
+  failing: 0,
+  health: undefined
 };
 
 export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
@@ -70,7 +73,6 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
 export const GroupSecurity = Record(_.assign({}, baseEnvItem, {
   type: 'security',
   Description: undefined,
-  instance_count: undefined,
   Instances: List()
 }));
 
@@ -83,7 +85,6 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
-  instance_count: undefined,
   Instances: new List()
 }));
 

@@ -42,20 +42,32 @@ const GroupItem = React.createClass({
       }
     }
   },
-  shouldComponentUpdate(nextProps) {
-    const {props} = this;
-    const {target} = props;
-    let {type} = target;
-    if (type === 'sg'){
-      type = 'security';
-    }
-    let arr = [];
-    arr.push(!_.isEqual(target, nextProps.target));
-    if (target && type){
-      arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
-    }
-    arr.push(!Immutable.is(props.item, nextProps.item));
-    return _.some(arr);
+  // shouldComponentUpdate(nextProps) {
+  //   const {props} = this;
+  //   const {target} = props;
+  //   let {type} = target;
+  //   if (type === 'sg'){
+  //     type = 'security';
+  //   }
+  //   let arr = [];
+  //   arr.push(!_.isEqual(target, nextProps.target));
+  //   if (target && type){
+  //     arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
+  //   }
+  //   arr.push(!Immutable.is(props.item, nextProps.item));
+  //   return _.some(arr);
+  // },
+  getSecurityInstances(){
+    const item = this.getItem().toJS();
+    return _.chain(this.props.redux.env.instances.ecc.toJS())
+    .filter(instance => {
+      return _.map(instance.SecurityGroups, 'GroupId').indexOf(item.id) > -1;
+    })
+    .map('id')
+    .value() || [];
+  },
+  getResults(){
+    return this.getItem().toJS().results;
   },
   getItem(){
     if (_.get(this.props, 'target.type')){
@@ -84,18 +96,24 @@ const GroupItem = React.createClass({
     return `/check-create/request?data=${data}`;
   },
   getType(){
-    let type = 'SG';
     switch (this.getItem().get('type')){
     case 'elb':
-      type = 'ELB';
-      break;
+      return 'ELB';
+    case 'asg':
+      return 'ASG';
     default:
       break;
     }
-    return type;
+    return 'SG';
   },
   renderInstanceCount(){
-    const count = this.getItem().get('instance_count');
+    let count = 0;
+    const item = this.getItem().toJS();
+    if (item.type === 'elb'){
+      count = item.Instances.length;
+    } else if (item.type === 'security'){
+      count = this.getSecurityInstances().length;
+    }
     return (
       <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
         <ListInstance inline fill="textSecondary"/>
@@ -104,18 +122,18 @@ const GroupItem = React.createClass({
     );
   },
   renderInfoText(){
-    if (this.getItem().get('total')){
-      const passing = this.getItem().get('passing');
-      const failing = this.getItem().get('total') - passing;
+    const item = this.getItem().toJS();
+    const {passing, total, failing} = item;
+    if (total){
       return  (
         <span>
           <span>
-            <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
+            <span title={`${passing} response${passing === 1 ? '' : 's'} passing`}>
               <ListCheckmark inline fill="textSecondary"/>
               {passing}
             </span>
             &nbsp;&nbsp;
-            <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
+            <span title={`${failing} response${failing === 1 ? '' : 's'} failing`}>
               <ListClose inline fill="textSecondary"/>
               {failing}
             </span>
@@ -124,7 +142,7 @@ const GroupItem = React.createClass({
           </span>
         </span>
       );
-    } else if (this.getItem().get('checks').size){
+    } else if (item.checks.length){
       return 'Initializing checks';
     }
     return  (
@@ -138,7 +156,7 @@ const GroupItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
+        <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
           <ContextMenu title={`${this.getItem().get('name')} Actions`} id={this.getItem().get('id')} key="menu">
             <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
               <Add inline fill="primary"/> Create Check
@@ -158,7 +176,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  groups: state.env.groups
+  groups: state.env.groups,
+  redux: state
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupItem);

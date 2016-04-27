@@ -44,7 +44,7 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
     if (_.some(arr)){
       errors.push('request: A URL check must include a valid URL.');
     }
-  } else if (type !== 'rds') {
+  } else if (!type.match('rds|dbinstance')) {
     requestErrors.forEach(err => {
       if (!spec[err[0]]){
         errors.push(`request: ${err[1]}`);

@@ -246,6 +246,7 @@ const CheckCreateRequest = React.createClass({
     if (!type || type === 'host'){
       return null;
     }
+    type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'sg' ? 'security' : type;
     if (type.match('security|elb')){
       selection = this.props.redux.env.groups[type].find(g => {

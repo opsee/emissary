@@ -47,8 +47,10 @@ const RadialGraph = React.createClass({
     return style[`svg${_.startCase(this.getRadialState())}`];
   },
   getRadialState(){
-    let state = this.props.state;
-    state = this.state.silenceRemaining ? 'silenced' : state;
+    let state = 'running';
+    if (this.props.total){
+      state = (this.props.total === this.props.passing) ? 'passing' : 'failing';
+    }
     return state;
   },
   getTitle(){

@@ -102,9 +102,10 @@ const GroupItemList = React.createClass({
     }
     if (this.props.instanceIds){
       data = data.filter(d => {
-        return _.intersection(this.props.instanceIds, d.get('Instances').toJS().map(i => i.InstanceId)).length;
+        return _.intersection(this.props.instanceIds, d.get('Instances').map(i => i.InstanceId)).length;
       });
     }
+    data = data || new List();
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){

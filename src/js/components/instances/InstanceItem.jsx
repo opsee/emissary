@@ -35,11 +35,30 @@ const InstanceItem = React.createClass({
       return this.props.actions.getInstancesEcc();
     }
   },
-  shouldComponentUpdate(nextProps) {
-    if (this.props.target){
-      return !Immutable.is(this.props.instances, nextProps.instances);
+  // shouldComponentUpdate(nextProps) {
+  //   if (this.props.target){
+  //     return !Immutable.is(this.props.instances, nextProps.instances);
+  //   }
+  //   return !Immutable.is(this.props.item, nextProps.item);
+  // },
+  getResults(){
+    const item = this.getItem().toJS();
+    if (item && item.name && this.props.redux.checks.checks.size){
+      let toMatch = [item.id];
+      // if (item.type === 'elb'){
+      //   toMatch = toMatch.concat(_.map(item.Instances, 'InstanceId'));
+      // }
+      return _.chain(this.props.redux.checks.checks.toJS())
+      .map(check => {
+        return _.get(check, 'results[0].responses') || [];
+      })
+      .flatten()
+      .filter(response => {
+        return toMatch.indexOf(response.target.id) > -1;
+      })
+      .value();
     }
-    return !Immutable.is(this.props.item, nextProps.item);
+    return [];
   },
   getType(){
     let type = _.get(this.props, 'target.type');
@@ -72,9 +91,9 @@ const InstanceItem = React.createClass({
     return `/instance/${type}/${this.getItem().get('id')}`;
   },
   renderInfoText(){
-    if (this.getItem().get('total')){
-      const passing = this.getItem().get('passing');
-      const failing = this.getItem().get('total') - passing;
+    const item = this.getItem().toJS();
+    const {passing, failing, total} = item;
+    if (total){
       return (
         <span>
           <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
@@ -103,10 +122,12 @@ const InstanceItem = React.createClass({
   },
   render(){
     if (this.getItem().get('name')){
+      let type = this.getType().toUpperCase();
+      type = type === 'ECC' ? 'EC2': type;
       return (
-        <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState}>
+        <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} item={this.getItem()} onClose={this.runResetPageState}>
           {this.renderMenu()}
-          <div key="line1">{this.getItem().get('name')}&nbsp;({this.getType()})</div>
+          <div key="line1">{this.getItem().get('name')}&nbsp;({type})</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );

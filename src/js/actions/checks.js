@@ -193,6 +193,10 @@ export function getChecks(redirect){
               checks {
                 id
                 name
+                target {
+                  id
+                  type
+                }
                 spec {
                   ... on schemaHttpCheck {
                     verb
@@ -298,9 +302,9 @@ export function del(ids){
 function getNamespace(type){
   switch (type){
     case 'instance':
-      return 'AWS_EC2';
+      return 'AWS/EC2';
     default:
-      return 'AWS_RDS';
+      return 'AWS/RDS';
   }
 }
 
@@ -314,6 +318,8 @@ function formatCloudwatchCheck(data){
     }
   });
   check.cloudwatch_check = {metrics};
+  check.target.type = check.target.type === 'rds' ? 'dbinstance' : check.target.type;
+  check.target = _.pick(check.target, ['id', 'name', 'type']);
   return check;
 }
 
@@ -343,7 +349,7 @@ function formatHttpCheck(data){
 
 function formatCheckData(check){
   //TODO switch this to be more flexible
-  if (check.target.type === 'rds'){
+  if (check.target.type.match('rds|dbinstance')){
     return formatCloudwatchCheck(check);
   }
   return formatHttpCheck(check);

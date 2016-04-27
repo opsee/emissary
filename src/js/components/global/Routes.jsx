@@ -30,6 +30,7 @@ import CheckEvent from 'react-proxy?name=checkCreate!exports?exports.default!../
 import Slack from '../integrations/Slack';
 
 import GroupSecurity from '../groups/GroupSecurity';
+import GroupAsg from '../groups/GroupAsg';
 import GroupELB from '../groups/GroupElb';
 
 import InstanceEcc from '../instances/InstanceEcc';
@@ -106,6 +107,7 @@ const routes = (
     <Route path="/check/:id" component={auth(CheckSingle)}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
+    <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
     <Route path="/start" component={OnboardCreate}/>

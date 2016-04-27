@@ -61,7 +61,9 @@ const AssertionMetric = React.createClass({
     };
   },
   getInstance() {
-    return this.props.redux.env.instances[this.props.check.target.type].find(i => {
+    let type = this.props.check.target.type;
+    type = type === 'dbinstance' ? 'rds' : type;
+    return this.props.redux.env.instances[type].find(i => {
       return i.get('id') === this.props.check.target.id;
     }) || new Map();
   },
