@@ -198,7 +198,8 @@ const statics = {
   },
   getInstanceRdsSuccess(state, data = []){
     const arr = state.instances.rds;
-    const single = statics.instanceRdsFromJS(state, _.head(data));
+    let instance = _.head(data);
+    const single = statics.instanceRdsFromJS(state, instance);
     return statics.updateArray(arr, single);
   },
   getInstancesRdsSuccess(state, data){
@@ -252,6 +253,18 @@ const statics = {
       data.state = 'initializing';
     }
     data.meta = fromJS(data.meta);
+
+    const arr = state.instances.rds;
+    let old = arr.find(i => {
+      return i.get('id') === data.id;
+    });
+    old = old ? old.toJS() : null;
+    let metrics = {};
+    if (old && old.metrics && _.keys(old.metrics).length){
+      metrics = _.assign(old.metrics, data.metrics || {});
+    }
+    data = _.assign(data, {metrics});
+
     return new InstanceRds(data);
   },
   instanceEccFromJS(state, data){

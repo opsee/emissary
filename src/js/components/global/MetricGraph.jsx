@@ -152,7 +152,7 @@ const MetricGraph = React.createClass({
    */
   onWindowResize() {
     const elem = ReactDOM.findDOMNode(this);
-    const width = elem.parentNode.offsetWidth;
+    const width = _.clamp(elem.parentNode.offsetWidth, 0, Infinity);
     this.setState({ width });
   },
   renderPlaceholder() {
@@ -182,8 +182,8 @@ const MetricGraph = React.createClass({
     yMin = yMin > 0 ? 0 : yMin;
 
     // Calculate the dimensions of the graph itself to properly scale the axes.
-    const graphWidth = width - margin.left - margin.right;
-    const graphHeight = height - margin.top - margin.bottom;
+    const graphWidth = _.clamp(width - margin.left - margin.right, 0, Infinity);
+    const graphHeight = _.clamp(height - margin.top - margin.bottom, 0, Infinity);
 
     // Set up the x/y scales. These functions map raw data point values to
     // positions on the graph.
@@ -209,11 +209,11 @@ const MetricGraph = React.createClass({
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', height - margin.bottom);
+      .attr('height', _.clamp(height - margin.bottom, 0, Infinity));
 
     const svg = outerSVG.append('g')
       .attr('width', width)
-      .attr('height', height - margin.bottom - margin.top)
+      .attr('height', _.clamp(height - margin.bottom - margin.top, 0, Infinity))
       .attr('transform', `translate(0, ${margin.top})`);
 
     // Set up the x-axis
@@ -246,7 +246,7 @@ const MetricGraph = React.createClass({
       .scale(y)
       .orient('right')
       .ticks(Math.max(graphHeight / 40, 5)) // vertical tick every 20px
-      .tickSize(width - margin.right) // for the guidelines to be full-width
+      .tickSize(_.clamp(width - margin.right, 0, Infinity)) // for the guidelines to be full-width
       .tickFormat(d => this.getVerticalTick(d));
 
     // Draw the y-axis
@@ -286,14 +286,14 @@ const MetricGraph = React.createClass({
         .attr('id', 'clip-above')
       .append('rect')
         .attr('width', graphWidth)
-        .attr('height', y(this.props.assertion.operand));
+        .attr('height', y(_.clamp(this.props.assertion.operand, 0, Infinity)));
 
     graphGroup.append('clipPath')
         .attr('id', 'clip-below')
       .append('rect')
         .attr('y', y(this.props.assertion.operand))
         .attr('width', graphWidth)
-        .attr('height', graphHeight - y(this.props.assertion.operand));
+        .attr('height', _.clamp(graphHeight - y(this.props.assertion.operand), 0, Infinity));
 
     // Apply the clipping paths
     graphGroup.selectAll(style.line)

@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {StatusHandler} from '../global';
 import {InstanceItem} from '../instances';
 import {Padding} from '../layout';
 import {Heading} from '../type';
@@ -10,12 +9,7 @@ import NotificationItemList from './NotificationItemList';
 
 const ViewCloudwatch = React.createClass({
   propTypes: {
-    check: PropTypes.object,
-    redux: PropTypes.shape({
-      asyncActions: PropTypes.shape({
-        getCheck: PropTypes.object
-      }).isRequired
-    }).isRequired
+    check: PropTypes.object
   },
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
@@ -64,9 +58,7 @@ const ViewCloudwatch = React.createClass({
         </div>
       );
     }
-    return (
-      <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>
-    );
+    return null;
   }
 });
 

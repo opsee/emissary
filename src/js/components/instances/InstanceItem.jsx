@@ -24,11 +24,6 @@ const InstanceItem = React.createClass({
       id: PropTypes.string,
       type: PropTypes.string
     }),
-    redux: PropTypes.shape({
-      checks: PropTypes.shape({
-        checks: PropTypes.object.isRequired
-      }).isRequired
-    }).isRequired,
     noMenu: PropTypes.bool,
     onClick: PropTypes.func
   },
