@@ -56,7 +56,8 @@ const statics = {
     data = data.set('total', total);
     data = data.set('passing', passing);
     data = data.set('failing', total - passing);
-    data.set('health', Math.floor((passing.length / total.length) * 100));
+    const health = total ? Math.floor((passing / total) * 100) : undefined;
+    data = data.set('health', health);
     return data;
   },
   getGroupSecuritySuccess(state, data = []){
@@ -77,17 +78,21 @@ const statics = {
   getGroupSecurityResults(state, results = state.results){
     return state.groups.security.map(group => {
       let toMatch = [group.id];
-
-      const instanceIds = _.chain(state.instances.ecc.toJS())
-      .filter(instance => {
-        return _.map(instance.SecurityGroups, 'GroupId').indexOf(group.id) > -1;
-      })
-      .map('id')
-      .value() || [];
-
-      toMatch = toMatch.concat(instanceIds);
-
+      toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
       return statics.setResultMeta(group, results, toMatch);
+    });
+  },
+  getGroupsSecurityInstances(action){
+    let {groups, instances} = action.payload.data;
+    return groups.map(g => {
+      const Instances = _.chain(instances)
+      .filter(instance => {
+        const gIds = _.map(instance.SecurityGroups, 'GroupId');
+        return gIds.indexOf(g.GroupId) > -1;
+      })
+      .map(i => _.pick(i, ['InstanceId']))
+      .value();
+      return _.assign(g, {Instances});
     });
   },
   getGroupAsgSuccess(state, data = []){
@@ -208,7 +213,7 @@ const statics = {
   },
   getInstancesRdsSuccess(state, data){
     let newData = _.chain(data)
-    .map(statics.instanceRdsFromJS)
+    .map(d => statics.instanceRdsFromJS(state, d))
     .sortBy(i => {
       return i.name.toLowerCase();
     }).value();
@@ -243,7 +248,7 @@ const statics = {
     }
     return !_.isNaN(parsed) ? parsed : undefined;
   },
-  instanceRdsFromJS(raw){
+  instanceRdsFromJS(state, raw){
     let data = _.cloneDeep(raw);
     data.id = data.name = data.DBInstanceIdentifier;
     if (data.DBName !== data.id){
@@ -253,7 +258,6 @@ const statics = {
     if (data.VpcSecurityGroups){
       data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
-    _.assign(data, result.getFormattedData(data));
     if (data.checks && data.checks.size && !data.results.size){
       data.state = 'initializing';
     }
@@ -269,7 +273,7 @@ const statics = {
       LaunchTime: statics.getCreatedTime(newData.LaunchTime),
       SecurityGroups: Array.isArray(newData.SecurityGroups) ? new List(newData.SecurityGroups.map(g => fromJS(g))) : new List(),
       state: (newData.checks && newData.checks.size && !newData.results.size) ? 'initializing' : 'running'
-    }, result.getFormattedData(newData));
+    });
     return new InstanceEcc(newData);
   },
   getNewFiltered(data = new List(), state, action = {payload: {search: ''}}, type = ''){
@@ -322,18 +326,20 @@ export default handleActions({
   },
   [GET_GROUP_SECURITY]: {
     next(state, action){
-      const security = statics.getGroupSecuritySuccess(state, action.payload.data);
+      let groups = statics.getGroupsSecurityInstances(action);
+      const security = statics.getGroupSecuritySuccess(state, groups);
       const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
-      const groups = _.assign({}, state.groups, {security});
+      groups = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups, filtered});
     },
     throw: yeller.reportAction
   },
   [GET_GROUPS_SECURITY]: {
     next(state, action){
-      const security = statics.getGroupsSecuritySuccess(state, action.payload.data);
+      let groups = statics.getGroupsSecurityInstances(action);
+      const security = statics.getGroupsSecuritySuccess(state, groups);
       const filtered = statics.getNewFiltered(security, state, action, 'groups.security');
-      const groups = _.assign({}, state.groups, {security});
+      groups = _.assign({}, state.groups, {security});
       return _.assign({}, state, {groups, filtered});
     },
     throw: yeller.reportAction

@@ -13,6 +13,7 @@ import {Button} from '../forms';
 import {Add} from '../icons';
 import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
+import {flag} from '../../modules';
 import {env as actions} from '../../actions';
 
 const InstanceRds = React.createClass({
@@ -45,6 +46,16 @@ const InstanceRds = React.createClass({
       return i.get('id') === this.props.params.id;
     }) || new Map();
   },
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getInstance().get('id'),
+        type: 'rds',
+        name: this.getInstance().get('name')
+      }
+    });
+    return `/check-create/assertions-cloudwatch?data=${data}`;
+  },
   getGroupIds(){
     if (this.getInstance().get('name')){
       return _.map(this.getInstance().groups.toJS(), 'id');
@@ -72,10 +83,10 @@ const InstanceRds = React.createClass({
     return <tr/>;
   },
   renderCreateCheckButton(){
-    if (window.ldclient.toggle('rds-checks')) {
+    if (flag('check-type-rds')) {
       return (
         <Padding b={3}>
-          <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=RDS&name=${this.getInstance().get('name')}`} title="Create New Check">
+          <Button color="primary" flat to={this.getCreateLink()} title="Create New Check">
             <Add fill="primary" inline/> Create a Check
           </Button>
         </Padding>

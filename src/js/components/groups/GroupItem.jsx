@@ -42,21 +42,21 @@ const GroupItem = React.createClass({
       }
     }
   },
-  // shouldComponentUpdate(nextProps) {
-  //   const {props} = this;
-  //   const {target} = props;
-  //   let {type} = target;
-  //   if (type === 'sg'){
-  //     type = 'security';
-  //   }
-  //   let arr = [];
-  //   arr.push(!_.isEqual(target, nextProps.target));
-  //   if (target && type){
-  //     arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
-  //   }
-  //   arr.push(!Immutable.is(props.item, nextProps.item));
-  //   return _.some(arr);
-  // },
+  shouldComponentUpdate(nextProps) {
+    const {props} = this;
+    const {target} = props;
+    let {type} = target;
+    if (type === 'sg'){
+      type = 'security';
+    }
+    let arr = [];
+    arr.push(!_.isEqual(target, nextProps.target));
+    if (target && type){
+      arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
+    }
+    arr.push(!Immutable.is(props.item, nextProps.item));
+    return _.some(arr);
+  },
   getSecurityInstances(){
     const item = this.getItem().toJS();
     return _.chain(this.props.redux.env.instances.ecc.toJS())

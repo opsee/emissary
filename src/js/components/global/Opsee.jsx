@@ -51,8 +51,8 @@ const Opsee = React.createClass({
   componentWillMount(){
     this.props.appActions.initialize();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
+    this.props.envActions.getBastions();
     if (this.props.redux.user.get('auth')){
-      this.props.envActions.getBastions();
       this.props.checkActions.getChecks();
     }
     yeller.configure(this.props.redux);
@@ -65,7 +65,6 @@ const Opsee = React.createClass({
     //user log in
     if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
       this.props.appActions.initialize();
-      this.props.envActions.getBastions();
       this.props.checkActions.getChecks();
     }
   },

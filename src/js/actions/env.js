@@ -32,7 +32,7 @@ export function getGroupSecurity(id){
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUP_SECURITY,
-      payload: graphPromise('region.vpc.groups', () => {
+      payload: graphPromise('region.vpc', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
@@ -45,6 +45,14 @@ export function getGroupSecurity(id){
                       GroupId
                       GroupName
                       Description
+                    }
+                  }
+                  instances(type: "ec2"){
+                    ... on ec2Instance {
+                      InstanceId
+                      SecurityGroups {
+                        GroupId
+                      }
                     }
                   }
                 }
@@ -61,7 +69,7 @@ export function getGroupsSecurity(){
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUPS_SECURITY,
-      payload: graphPromise('region.vpc.groups', () => {
+      payload: graphPromise('region.vpc', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
@@ -74,6 +82,14 @@ export function getGroupsSecurity(){
                       GroupId
                       GroupName
                       Description
+                    }
+                  }
+                  instances(type: "ec2"){
+                    ... on ec2Instance {
+                      InstanceId
+                      SecurityGroups {
+                        GroupId
+                      }
                     }
                   }
                 }
@@ -490,7 +506,11 @@ export function getAll(){
 export function getBastions(){
   return (dispatch, state) => {
     if (!state().user.get('auth')){
-      return Promise.resolve();
+      return dispatch({
+        type: ENV_GET_BASTIONS,
+        payload: []
+      });
+      // return Promise.resolve([]);
     }
     return dispatch({
       type: ENV_GET_BASTIONS,

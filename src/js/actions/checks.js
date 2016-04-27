@@ -323,7 +323,7 @@ function formatCloudwatchCheck(data){
   return check;
 }
 
-function formatHttpCheck(data){
+function formatHttpCheck(data, forTestCheck){
   let check = _.cloneDeep(data);
   const spec = check.spec;
   if (check.target.type === 'security'){
@@ -332,8 +332,8 @@ function formatHttpCheck(data){
   if (check.target.type.match('^EC2$|^ecc$')){
     check.target.type = 'instance';
   }
-  let arr = check.assertions || [];
-  const assertions = arr.map(a => {
+  check.target = _.pick(check.target, ['id', 'name', 'type']);
+  const assertions = (check.assertions || []).map(a => {
     return _.assign({}, a, {
       operand: typeof a.operand === 'number' ? a.operand.toString() : a.operand
     });
@@ -342,9 +342,16 @@ function formatHttpCheck(data){
     return h.name && h.values && h.values.length;
   });
   check.spec = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
-  return _.assign({}, _.pick(check, ['target', 'interval', 'spec', 'name']), {
-    assertions
-  });
+  return _.chain(check)
+  .assign({assertions})
+  .pick(['target', 'spec', 'name', 'notifications', 'assertions'])
+  .mapKeys((value, key) => {
+    return key === 'spec' ? 'http_check' : key; 
+  })
+  .defaults({
+    name: 'Http Check'
+  })
+  .value();
 }
 
 function formatCheckData(check){
@@ -355,50 +362,103 @@ function formatCheckData(check){
   return formatHttpCheck(check);
 }
 
+// mutation poo {
+//   testCheck(check: {name: "test", notifications:[], assertions: [], http_check: {verb: "GET", path: "/", port: 80, protocol: "http"}, target: {id: "google.com", name: "google.com", type: "host"}}) {
+//     responses {
+//       reply {
+//         ... on schemaHttpResponse {
+//           code
+//         }
+//       }
+//     }
+//   }
+// }
+
+// export function test(data){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: CHECK_TEST,
+//       payload: new Promise((resolve, reject) => {
+//         if (process.env.NODE_ENV !== 'production'){
+//           // if (data.spec.path.match('jsonassertion')){
+//           //   return resolve([
+//           //     {
+//           //       response: {
+//           //         type_url: 'HttpResponse',
+//           //         value: require('../../files/exampleResponseJson')
+//           //       }
+//           //     }
+//           //   ]);
+//           // }
+//           if (data.spec.path.match('services\/200')){
+//             return resolve([
+//               {
+//                 response: {
+//                   type_url: 'HttpResponse',
+//                   value: require('../../files/exampleResponseHtml')
+//                 }
+//               }
+//             ]);
+//           }
+//         }
+//         const check = _.chain(data)
+//         .thru(formatCheckData)
+//         .assign({name: state().user.get('email')})
+//         .pick(['spec', 'interval', 'name', 'target'])
+//         .value();
+//         return request
+//         .post(`${config.services.api}/bastions/test-check`)
+//         .set('Authorization', state().user.get('auth'))
+//         .send({check, max_hosts: 3, deadline: '30s'})
+//         .then(res => {
+//           const responses = _.get(res, 'body.responses');
+//           responses ? resolve(responses) : reject(res.body);
+//         }, reject);
+//       })
+//     });
+//   };
+// }
+
 export function test(data){
+  const check = formatHttpCheck(data, true);
   return (dispatch, state) => {
     dispatch({
       type: CHECK_TEST,
-      payload: new Promise((resolve, reject) => {
-        if (process.env.NODE_ENV !== 'production'){
-          // if (data.spec.path.match('jsonassertion')){
-          //   return resolve([
-          //     {
-          //       response: {
-          //         type_url: 'HttpResponse',
-          //         value: require('../../files/exampleResponseJson')
-          //       }
-          //     }
-          //   ]);
-          // }
-          if (data.spec.path.match('services\/200')){
-            return resolve([
-              {
-                response: {
-                  type_url: 'HttpResponse',
-                  value: require('../../files/exampleResponseHtml')
+      payload: graphPromise('testCheck.responses', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `mutation Test ($check: Check){
+            testCheck(check: $check) {
+              responses {
+                reply {
+                  ...on schemaHttpResponse {
+                    code
+                    body
+                    headers {
+                      name
+                      values
+                    }
+                    metrics {
+                      value
+                      name
+                    }
+                    host
+                  }
                 }
               }
-            ]);
+            }
+          }`,
+          variables: {
+            check
           }
-        }
-        const check = _.chain(data)
-        .thru(formatCheckData)
-        .assign({name: state().user.get('email')})
-        .pick(['spec', 'interval', 'name', 'target'])
-        .value();
-        return request
-        .post(`${config.services.api}/bastions/test-check`)
-        .set('Authorization', state().user.get('auth'))
-        .send({check, max_hosts: 3, deadline: '30s'})
-        .then(res => {
-          const responses = _.get(res, 'body.responses');
-          responses ? resolve(responses) : reject(res.body);
-        }, reject);
+        })
       })
-    });
-  };
+    })
+  }
 }
+
 
 export const testCheckReset = createAction(CHECK_TEST_RESET);
 

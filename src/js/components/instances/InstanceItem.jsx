@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
-import Immutable, {Record} from 'immutable';
+import {Record, is} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {ListItem} from '../global';
-import {Close, ListCheckmark} from '../icons';
+import {ListClose, ListCheckmark} from '../icons';
 import InstanceMenu from './InstanceMenu';
 import {env as actions} from '../../actions';
 import {InstanceEcc, InstanceRds} from '../../modules/schemas';
@@ -35,12 +35,12 @@ const InstanceItem = React.createClass({
       return this.props.actions.getInstancesEcc();
     }
   },
-  // shouldComponentUpdate(nextProps) {
-  //   if (this.props.target){
-  //     return !Immutable.is(this.props.instances, nextProps.instances);
-  //   }
-  //   return !Immutable.is(this.props.item, nextProps.item);
-  // },
+  shouldComponentUpdate(nextProps) {
+    if (this.props.target){
+      return !is(this.props.instances, nextProps.instances);
+    }
+    return !is(this.props.item, nextProps.item);
+  },
   getResults(){
     const item = this.getItem().toJS();
     if (item && item.name && this.props.redux.checks.checks.size){
@@ -101,7 +101,7 @@ const InstanceItem = React.createClass({
           </span>
           &nbsp;&nbsp;
           <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
-            <Close inline fill="textSecondary"/>{failing}
+            <ListClose inline fill="textSecondary"/>{failing}
           </span>
         </span>
       );
