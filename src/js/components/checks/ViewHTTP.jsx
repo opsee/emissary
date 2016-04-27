@@ -1,13 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {List, Map} from 'immutable';
+import {List} from 'immutable';
 
-import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Edit, Delete} from '../icons';
-import {Button} from '../forms';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Padding} from '../layout';
 import {Heading} from '../type';
 import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';

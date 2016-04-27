@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';

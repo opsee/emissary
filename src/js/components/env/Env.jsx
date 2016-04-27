@@ -20,6 +20,9 @@ const Env = React.createClass({
       envSetSearch: PropTypes.func,
       getBastions: PropTypes.func
     }),
+    checkActions: PropTypes.shape({
+      getChecks: PropTypes.func
+    }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       env: PropTypes.shape({

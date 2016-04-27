@@ -339,12 +339,12 @@ const MetricGraph = React.createClass({
           const dX = x(d.time) + 15; // + left-padding
           const dY = y(d.value) - (tooltipDimensions.height / 2); // vertically center
           return `translate(${dX}, ${dY})`;
-        })
+        });
 
       tooltipGroup.selectAll('.js-tooltip-group')
         .data([currentDataPoint])
         .enter().append('title')
-        .text(`This assertion is currently ${isCurrentPassing.toLowerCase()} with the most recent data point.`)
+        .text(`This assertion is currently ${isCurrentPassing.toLowerCase()} with the most recent data point.`);
 
       tooltipGroup.selectAll('rect')
         .data([currentDataPoint])
@@ -367,7 +367,7 @@ const MetricGraph = React.createClass({
         .attr('class', style.tooltipText)
         .attr('x', tooltipDimensions.width / 2)
         .attr('y', (tooltipDimensions.height / 2) + 5) // + half of font-size, roughly
-        .text(d => {
+        .text(() => {
           return isCurrentPassing === 'Passing' ? '✓' : '✕';
         });
     }

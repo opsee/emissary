@@ -1,12 +1,9 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {List} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
-import {GroupItem} from '../groups';
-import {InstanceItem} from '../instances';
 import {Edit, Delete} from '../icons';
 import {Button} from '../forms';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -14,6 +11,7 @@ import {Heading} from '../type';
 import ViewHTTP from './ViewHTTP';
 import ViewCloudwatch from './ViewCloudwatch';
 import {Check} from '../../modules/schemas';
+import NotificationItemList from './NotificationItemList';
 
 import {
   checks as actions

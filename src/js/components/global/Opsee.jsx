@@ -21,8 +21,8 @@ import grid from '../layout/grid.css';
 import layout from '../layout/layout.css';
 
 import {
-  app as appActions, 
-  user as userActions, 
+  app as appActions,
+  user as userActions,
   env as envActions,
   checks as checkActions
 } from '../../actions';
@@ -39,6 +39,9 @@ const Opsee = React.createClass({
     appActions: PropTypes.shape({
       initialize: PropTypes.func,
       shutdown: PropTypes.func
+    }),
+    checkActions: PropTypes.shape({
+      getChecks: PropTypes.func
     }),
     userActions: PropTypes.shape({
       refresh: PropTypes.func

@@ -15,8 +15,8 @@ import {
 const CheckCreate = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      create: PropTypes.func,
-      testCheckReset: PropTypes.func
+      testCheckReset: PropTypes.func,
+      createOrEdit: PropTypes.func
     }),
     location: PropTypes.object,
     children: PropTypes.node,

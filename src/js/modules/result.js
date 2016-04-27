@@ -35,17 +35,15 @@ function fromJS(data){
       }));
       return new Result(_.assign({}, result, {responses}));
     });
-
     if (newResults && newResults.length){
       newData.results = new List(newResults);
     }
-
   }
   return newData.results;
 }
 
 export default {
-  getFormattedData(data, useTestsInsteadOfChecks){
+  getFormattedData(data){
     let obj = {
       passing: undefined,
       total: undefined,
@@ -53,11 +51,7 @@ export default {
       results: fromJS(data) || new List()
     };
     if (obj.results && obj.results.size && obj.results.get(0)){
-      //this works for groups
-      // let boolArray = _.chain(obj.results.toJS()).map('passing').value();
-      // if (useTestsInsteadOfChecks){
       let boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
-      // }
       const passing = _.compact(boolArray);
       obj.passing = passing.length;
       obj.total = boolArray.length;

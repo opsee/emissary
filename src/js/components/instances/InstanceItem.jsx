@@ -13,7 +13,8 @@ import {InstanceEcc, InstanceRds} from '../../modules/schemas';
 const InstanceItem = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getInstancesEcc: PropTypes.func
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func
     }),
     instances: PropTypes.shape({
       ecc: PropTypes.object
@@ -23,6 +24,11 @@ const InstanceItem = React.createClass({
       id: PropTypes.string,
       type: PropTypes.string
     }),
+    redux: PropTypes.shape({
+      checks: PropTypes.shape({
+        checks: PropTypes.object.isRequired
+      }).isRequired
+    }).isRequired,
     noMenu: PropTypes.bool,
     onClick: PropTypes.func
   },
@@ -34,6 +40,7 @@ const InstanceItem = React.createClass({
       }
       return this.props.actions.getInstancesEcc();
     }
+    return true;
   },
   shouldComponentUpdate(nextProps) {
     if (this.props.target){
@@ -123,7 +130,7 @@ const InstanceItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       let type = this.getType().toUpperCase();
-      type = type === 'ECC' ? 'EC2': type;
+      type = type === 'ECC' ? 'EC2' : type;
       return (
         <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} item={this.getItem()} onClose={this.runResetPageState}>
           {this.renderMenu()}

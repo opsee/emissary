@@ -1,13 +1,12 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
-import result from '../modules/result';
 import {itemsFilter, yeller} from '../modules';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
 import {
-  InstanceEcc, 
-  InstanceRds, 
-  GroupSecurity, 
+  InstanceEcc,
+  InstanceRds,
+  GroupSecurity,
   GroupElb,
   GroupAsg
 } from '../modules/schemas';
@@ -46,7 +45,7 @@ const statics = {
   },
   setResultMeta(item, results, toMatch = []){
     const foundResults = _.filter(results, r => {
-      return toMatch.indexOf(r.target.id) > -1
+      return toMatch.indexOf(r.target.id) > -1;
     });
 
     const total = foundResults.length;
@@ -157,7 +156,7 @@ const statics = {
       name: newData.LoadBalancerName,
       checks: new List(newData.checks || []),
       id: newData.LoadBalancerName
-    })
+    });
     if (newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
     }
@@ -180,7 +179,7 @@ const statics = {
     let newData = _.cloneDeep(data);
     newData = _.assign(newData, {
       id: newData.AutoScalingGroupName,
-      name: _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || newData.AutoScalingGroupName,
+      name: _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || newData.AutoScalingGroupName
     });
     return new GroupAsg(newData);
   },

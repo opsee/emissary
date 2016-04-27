@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5 {
   color: var(--colorText2);
   font-family: "Gotham SSm A", "Gotham SSm B", sans-serif;
   font-size: 1.8rem;
-  line-height: 1.8rem;
+  line-height: 2rem;
   font-weight: 700;
 }
 

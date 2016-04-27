@@ -22,7 +22,14 @@ const GroupItem = React.createClass({
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
       getGroupsSecurity: PropTypes.func
-    })
+    }),
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        instances: PropTypes.shape({
+          ecc: PropTypes.object.isRequired
+        }).isRequired
+      }).isRequired
+    }).isRequired
   },
   getDefaultProps(){
     return {

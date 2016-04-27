@@ -1,24 +1,21 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {List, Map} from 'immutable';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 
-import {BastionRequirement, Toolbar, StatusHandler} from '../global';
-import {GroupItem} from '../groups';
+import {StatusHandler} from '../global';
 import {InstanceItem} from '../instances';
-import {Edit, Delete} from '../icons';
-import {Button} from '../forms';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Padding} from '../layout';
 import {Heading} from '../type';
-import AssertionItemList from './AssertionItemList';
-import CheckResponsePaginate from './CheckResponsePaginate';
+import AssertionMetric from './AssertionMetric';
 import NotificationItemList from './NotificationItemList';
-import HTTPRequestItem from './HTTPRequestItem';
 
 const ViewCloudwatch = React.createClass({
   propTypes: {
-    check: PropTypes.object
+    check: PropTypes.object,
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        getCheck: PropTypes.object
+      }).isRequired
+    }).isRequired
   },
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
@@ -45,8 +42,6 @@ const ViewCloudwatch = React.createClass({
   render(){
     const check = this.props.check.toJS();
     if (check.name){
-      const spec = check.spec || {};
-      const target = check.target || {};
       let d = _.chain(check.results).head().get('time').value() || new Date();
       if (typeof d === 'number'){
         d = new Date(d * 1000);
@@ -56,7 +51,13 @@ const ViewCloudwatch = React.createClass({
           {this.renderTarget()}
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>
-            {check.COMPLETE && <AssertionItemList assertions={check.assertions}/>}
+            {check.COMPLETE && check.assertions.map((assertion, i) => {
+              return (
+                <Padding b={1} key={`assertion-item-${i}`}>
+                  <AssertionMetric check={check} assertion={assertion} index={i}/>
+                </Padding>
+              );
+            })}
           </Padding>
 
           {this.renderNotifications()}

@@ -135,9 +135,7 @@ export default handleActions({
   [CHECK_TEST]: {
     next(state, action){
       let responses = action.payload.data.map(response => {
-        return _.mapKeys(response, (value, key) => {
-          return 'response';
-        });
+        return _.mapKeys(response, () => 'response');
       });
       responses = fromJS(responses);
       const responsesFormatted = statics.getFormattedResponses(responses);

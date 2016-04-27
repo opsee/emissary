@@ -31,8 +31,8 @@ const CheckEdit = React.createClass({
     actions: PropTypes.shape({
       getCheck: PropTypes.func,
       del: PropTypes.func,
-      edit: PropTypes.func,
-      testCheckReset: PropTypes.func
+      testCheckReset: PropTypes.func,
+      createOrEdit: PropTypes.func
     }),
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,

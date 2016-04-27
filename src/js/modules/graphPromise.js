@@ -12,6 +12,6 @@ export default function(selector, fn, meta, callback = () => {}){
       }, meta);
       resolve(payload);
       return callback(payload);
-    }, reject)
+    }, reject);
   });
 }

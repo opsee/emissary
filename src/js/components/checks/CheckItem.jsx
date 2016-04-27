@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {is, Record} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import {ContextMenu, ListItem} from '../global';
 import {Edit, Delete, ListCheckmark, ListClose} from '../icons';
