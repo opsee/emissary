@@ -4,10 +4,10 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack} from '../icons';
+import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PhoneAlert} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
-import {SlackConnect} from '../integrations';
+import {PagerdutyConnect, SlackConnect} from '../integrations';
 import {flag, storage} from '../../modules';
 import style from './notificationSelection.css';
 import {
@@ -20,7 +20,8 @@ const NotificationSelection = React.createClass({
     check: PropTypes.object,
     actions: PropTypes.shape({
       getSlackChannels: PropTypes.func,
-      testNotification: PropTypes.func
+      testNotification: PropTypes.func,
+      getPagerdutyInfo: PropTypes.func
     }),
     notifications: PropTypes.array,
     onChange: PropTypes.func.isRequired,
@@ -55,6 +56,8 @@ const NotificationSelection = React.createClass({
         storage.remove('shouldGetSlackChannels');
       }
     });
+
+    this.props.actions.getPagerdutyInfo();
   },
   getNewSchema(type, notifIndex, value){
     return {
@@ -139,6 +142,8 @@ const NotificationSelection = React.createClass({
       el = <Slack {...props}/>;
     } else if (type === 'webhook'){
       el = <Cloud {...props}/>;
+    } else if (type === 'pagerduty'){
+      el = <PhoneAlert {...props}/>;
     }
     return (
       <span title={notif.type}>{el}</span>
@@ -157,18 +162,21 @@ const NotificationSelection = React.createClass({
     if (found){
       string = found.success ? 'sent' : 'error';
     }
+
     let color = 'warning';
     if (string === 'sent'){
       color = 'success';
     } else if (string === 'error'){
       color = 'danger';
     }
+
     const disabled = !this.isNotifComplete(notif) || !!(string.match('sent|error')) || notif.sending;
     const className = notif.type === 'slack_bot' ? style.testButtonSlack : style.testButton;
     let icon = <ChevronRight inline fill={disabled ? 'text' : 'warning'}/>;
     if (string === 'sent'){
       icon = <Checkmark inline fill="text"/>;
     }
+
     return (
       <div className="align-self-end">
         <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={className} {...props} disabled={disabled} style={{minHeight: '46px'}}>
@@ -206,11 +214,22 @@ const NotificationSelection = React.createClass({
       </div>
     );
   },
-  renderSlackConnect(notif, index){
+  renderIntegrationConnect(notif, index, integration){
+    let connectLink;
+    if (integration === 'slack_bot'){
+      connectLink = (
+        <span><SlackConnect target="_blank"/> to choose your channel.</span>
+      );
+    } else if (integration === 'pagerduty'){
+      connectLink = (
+        <span><PagerdutyConnect target="_blank"/> to start alerting.</span>
+      );
+    }
+
     return (
       <div className="display-flex">
         <Padding r={2} className="flex-1">
-          <SlackConnect target="_blank"/> to choose your channel.
+          {connectLink}
         </Padding>
         <div className="align-self-start">
           {this.renderDeleteButton(index, {minHeight: '46px'})}
@@ -254,9 +273,23 @@ const NotificationSelection = React.createClass({
       </div>
     );
   },
+  renderPagerdutyNotif(notif, index) {
+    return (
+      <div className="display-flex flex-vertical-align">
+        <div className="flex-1">
+          <div className="display-flex">
+            Pagerduty connected
+          </div>
+        </div>
+        {this.renderDeleteButton(index)}
+        {this.renderTestButton(notif)}
+      </div>
+    );
+  },
   renderNotif(notif, index){
     const {type} = notif;
     const isText = !!type.match('email|webhook');
+
     if (!notif.value || isText){
       if (isText){
         return this.renderTextNotif(notif, index);
@@ -265,7 +298,12 @@ const NotificationSelection = React.createClass({
         if (this.props.redux.integrations.slackChannels.toJS().length){
           return this.renderChannelSelect(notif, index);
         }
-        return this.renderSlackConnect(notif, index);
+        return this.renderIntegrationConnect(notif, index, type);
+      } else if (type === 'pagerduty'){
+        if (_.get(this.props.redux, 'integrations.pagerdutyInfo.enabled')) {
+          return this.renderPagerdutyNotif(notif, index);
+        }
+        return this.renderIntegrationConnect(notif, index, type);
       }
     }
     return this.renderChosenChannel(notif, index);
@@ -273,9 +311,9 @@ const NotificationSelection = React.createClass({
   renderNotifPickType(){
     return (
       <div>
-        {['email', 'slack', 'webhook'].map(type => {
+        {['email', 'slack', 'webhook', 'pagerduty'].map(type => {
           const typeCorrected = type === 'slack' ? 'slack_bot' : type;
-          if (flag(`notification-type-${type}`)){
+          if (true) { // if (flag(`notification-type-${type}`)){
             return (
               <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
                 <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}

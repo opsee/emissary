@@ -115,6 +115,7 @@ export function testNotification(notif = {}) {
     break;
   }
   const path = notif.type === 'slack_bot' ? 'slack' : notif.type;
+  notif.value = 'doestnmatter' // FIXME
   return (dispatch, state) => {
     dispatch({
       type,
