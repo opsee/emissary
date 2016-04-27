@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Settings, NewWindow} from '../icons';
+import {NewWindow} from '../icons';
 import {Button} from '../forms';
 import listItem from '../global/listItem.css';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -95,11 +95,12 @@ const ListItem = React.createClass({
         </Button>
       );
     }
-    return (
-      <Button icon flat secondary onClick={this.runMenuOpen} title="Menu">
-        <Settings fill="textSecondary" btn/>
-      </Button>
-    );
+    return null;
+    // return (
+    //   <Button icon flat secondary onClick={this.runMenuOpen} title="Menu">
+    //     <Settings fill="textSecondary" btn/>
+    //   </Button>
+    // );
   },
   renderMenu(){
     return _.find(this.props.children, {key: 'menu'}) || <div/>;
