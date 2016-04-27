@@ -48,25 +48,6 @@ const InstanceItem = React.createClass({
     }
     return !is(this.props.item, nextProps.item);
   },
-  getResults(){
-    const item = this.getItem().toJS();
-    if (item && item.name && this.props.redux.checks.checks.size){
-      let toMatch = [item.id];
-      // if (item.type === 'elb'){
-      //   toMatch = toMatch.concat(_.map(item.Instances, 'InstanceId'));
-      // }
-      return _.chain(this.props.redux.checks.checks.toJS())
-      .map(check => {
-        return _.get(check, 'results[0].responses') || [];
-      })
-      .flatten()
-      .filter(response => {
-        return toMatch.indexOf(response.target.id) > -1;
-      })
-      .value();
-    }
-    return [];
-  },
   getType(){
     let type = _.get(this.props, 'target.type');
     if (this.props.item){

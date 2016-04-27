@@ -3,6 +3,7 @@ import TimeAgo from 'react-timeago';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
+import _ from 'lodash';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
@@ -90,7 +91,7 @@ const GroupElb = React.createClass({
             <CheckItemList type="groupELB" target={this.props.params.id} title/>
           </Padding>
           <Padding b={2}>
-            <InstanceItemList ids={group.Instances.map(i => i.InstanceId)} redux={this.props.redux} title/>
+            <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} redux={this.props.redux} title/>
           </Padding>
 
         </div>

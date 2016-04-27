@@ -113,16 +113,7 @@ const statics = {
   getGroupAsgResults(state, results = state.results){
     return state.groups.asg.map(group => {
       let toMatch = [group.id];
-
-      // const instanceIds = _.chain(state.instances.ecc.toJS())
-      // .filter(instance => {
-      //   return _.map(instance.SecurityGroups, 'GroupId').indexOf(group.id) > -1;
-      // })
-      // .map('id')
-      // .value() || [];
-
-      // toMatch = toMatch.concat(instanceIds);
-
+      toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
       return statics.setResultMeta(group, results, toMatch);
     });
   },

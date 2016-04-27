@@ -114,13 +114,8 @@ const GroupItem = React.createClass({
     return 'SG';
   },
   renderInstanceCount(){
-    let count = 0;
     const item = this.getItem().toJS();
-    if (item.type === 'elb'){
-      count = item.Instances.length;
-    } else if (item.type === 'security'){
-      count = this.getSecurityInstances().length;
-    }
+    const count = item.Instances.length;
     return (
       <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
         <ListInstance inline fill="textSecondary"/>
