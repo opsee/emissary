@@ -151,9 +151,8 @@ const NotificationSelection = React.createClass({
       el = <Slack {...props}/>;
     } else if (type === 'webhook'){
       el = <Cloud {...props}/>;
-    } else if (type === 'pagerduty'){
-      el = <PagerDuty {...props}/>;
     }
+
     return (
       <span title={notif.type}>{el}</span>
     );
@@ -284,7 +283,7 @@ const NotificationSelection = React.createClass({
       <div className="display-flex flex-vertical-align">
         <div className="flex-1">
           <div className="display-flex">
-            <PagerDuty className={style.buttonIconPagerDuty} />
+            <PagerDuty fill="white" className={style.buttonIconPagerDuty} />
           </div>
         </div>
         {this.renderDeleteButton(index)}
