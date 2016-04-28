@@ -77,7 +77,7 @@ const OnboardCreate = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={2}><LogoColor/></Padding>
-              <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
+              <p>Try Opsee <strong>for free</strong> in our private beta!</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
                   <UserInputs include={['email']} data={this.state.data} onChange={this.handleUserData}/>
