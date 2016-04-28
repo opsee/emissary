@@ -62,7 +62,7 @@ const Profile = React.createClass({
     if (flag('integrations-pagerduty')){
       return (
         <tr>
-          <td><strong>Pagerduty</strong></td>
+          <td><strong>PagerDuty</strong></td>
           <td><PagerdutyInfo/></td>
         </tr>
       );

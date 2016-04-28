@@ -57,7 +57,7 @@ const PagerdutyInfo = React.createClass({
       }
       return (
         <StatusHandler status={asyncActions.integrationsPagerdutyAccess.status}>
-          Pagerduty connection successful.
+          PagerDuty connection successful.
         </StatusHandler>
       );
     }
