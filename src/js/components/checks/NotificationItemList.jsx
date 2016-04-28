@@ -22,7 +22,8 @@ const NotificationItemList = React.createClass({
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        integrationsSlackChannels: PropTypes.object
+        integrationsSlackChannels: PropTypes.object,
+        integrationsPagerdutyInfo: PropTypes.object
       }),
       integrations: PropTypes.shape({
         slackChannels: PropTypes.object
@@ -83,7 +84,6 @@ const NotificationItemList = React.createClass({
     }
   },
   render() {
-    console.log(this.props.redux.asyncActions);
     const notifications = this.props.notifications;
     if (notifications.length){
       return (
