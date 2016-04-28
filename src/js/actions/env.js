@@ -534,54 +534,104 @@ export function getBastions(){
   };
 }
 
-export function rebootInstances(InstanceIds){
+export function getMetricRDS(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_RDS,
+      payload: graphPromise('region.vpc.instances', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds", id: "${id}"){
+                  ... on rdsDBInstance {
+                    DBName
+                    DBInstanceIdentifier
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        })
+      }, {search: state().search})
+    })
+  }
+}
+
+export function rebootInstances(ids = []){
   return (dispatch, state) => {
     dispatch({
       type: AWS_REBOOT_INSTANCES,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.rebootInstances', () => {
         return request
-        .post(`${config.services.api}/aws/reboot-instances`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({InstanceIds})
-        .then(() => {
-          resolve(InstanceIds);
-        }, reject);
+        .send({
+          query: `mutation reboot($region: String!, $ids: [String]!){
+            region(id: $region) {
+              rebootInstances(ids: $ids)
+            }
+          }`,
+          variables: _.assign(_.pick(state().env, ['region']), {ids})
+        })
       })
-    });
-  };
+    })
+  }
 }
 
-export function stopInstances(InstanceIds){
+export function stopInstances(ids = []){
   return (dispatch, state) => {
     dispatch({
       type: AWS_STOP_INSTANCES,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.stopInstances', () => {
         return request
-        .post(`${config.services.api}/aws/stop-instances`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({InstanceIds})
-        .then(() => {
-          resolve(InstanceIds);
-        }, reject);
+        .send({
+          query: `mutation reboot($region: String!, $ids: [String]!){
+            region(id: $region) {
+              stopInstances(ids: $ids)
+            }
+          }`,
+          variables: _.assign(_.pick(state().env, ['region']), {ids})
+        })
       })
-    });
-  };
+    })
+  }
 }
 
-export function startInstances(InstanceIds){
+export function startInstances(ids = []){
   return (dispatch, state) => {
     dispatch({
       type: AWS_START_INSTANCES,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.startInstances', () => {
         return request
-        .post(`${config.services.api}/aws/start-instances`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({InstanceIds})
-        .then(() => {
-          resolve(InstanceIds);
-        }, reject);
+        .send({
+          query: `mutation reboot($region: String!, $ids: [String]!){
+            region(id: $region) {
+              startInstances(ids: $ids)
+            }
+          }`,
+          variables: _.assign(_.pick(state().env, ['region']), {ids})
+        })
       })
-    });
-  };
+    })
+  }
 }
 /* eslint-enable */

@@ -495,7 +495,7 @@ export default handleActions({
       const awsActionHistory = state.awsActionHistory.concat([
         {
           action: 'start',
-          ids: action.payload || [],
+          ids: action.payload.data || [],
           date: new Date()
         }
       ]);
@@ -508,7 +508,7 @@ export default handleActions({
       const awsActionHistory = state.awsActionHistory.concat([
         {
           action: 'stop',
-          ids: action.payload || [],
+          ids: action.payload.data || [],
           date: new Date()
         }
       ]);
@@ -521,7 +521,7 @@ export default handleActions({
       const awsActionHistory = state.awsActionHistory.concat([
         {
           action: 'reboot',
-          ids: action.payload || [],
+          ids: action.payload.data || [],
           date: new Date()
         }
       ]);

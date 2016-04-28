@@ -216,9 +216,11 @@ const AssertionMetric = React.createClass({
   renderTitle(){
     const meta = this.getMetricMeta();
     const a = this.props.assertion;
+    let {units} = meta;
+    units = units === 'count' ? '' : units;
     if (!this.props.onChange){
       return (
-        <Heading level={3}>#{this.props.index + 1}&nbsp;{meta.title}&nbsp;{_.find(relationships, {id: a.relationship}).name}&nbsp;{a.operand}&nbsp;{meta.units}</Heading>
+        <Heading level={3}>#{this.props.index + 1}&nbsp;{meta.title}&nbsp;{_.find(relationships, {id: a.relationship}).name}&nbsp;{a.operand}&nbsp;{units}</Heading>
       );
     }
     return null;

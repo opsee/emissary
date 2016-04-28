@@ -53,7 +53,7 @@ const MetricGraph = React.createClass({
   },
   getDefaultProps() {
     return {
-      aspectRatio: 0.5,
+      aspectRatio: 0.4,
       breakpoint: 700, // px
       data: [],
       metric: {},
@@ -170,7 +170,9 @@ const MetricGraph = React.createClass({
     // d3 indentation conventions are kinda wacky, so...
     /* eslint-disable indent */
     const width = this.state.width;
-    const height = this.props.aspectRatio * width;
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+    const aspect = isMobile ? this.props.aspectRatio * 1.5 : this.props.aspectRatio;
+    const height = aspect * width;
     const margin = this.getMargin();
 
     // The maximum value for the y-scale should be the maximum of the threshold
