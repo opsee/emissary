@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Mail, Slack} from '../icons';
+import pagerDutyLogo from '../../../img/logos/pagerduty.svg';
 import {Alert, Padding} from '../layout';
 import {
   integrations as integrationsActions
@@ -50,6 +51,12 @@ const NotificationItemList = React.createClass({
           </Padding>
         );
       }
+    } else if (n.type === 'pagerduty'){
+      return (
+        <Padding key={`notif-${i}`} b={1}>
+          <img src={pagerDutyLogo} style={{height: '1.3em', verticalAlign: 'bottom'}} />
+        </Padding>
+      );
     }
     return null;
   },
