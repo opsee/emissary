@@ -322,15 +322,21 @@ const NotificationSelection = React.createClass({
         {['email', 'slack', 'webhook', 'pagerduty'].map(type => {
           const typeCorrected = type === 'slack' ? 'slack_bot' : type;
           if (flag(`notification-type-${type}`)){
+            let disabled = false;
+            let title = null;
             let innerButton;
             if (type === 'pagerduty') {
+              // Only allow one pagerduty notif in the list
+              if (!!_.find(this.state.notifications, {type: 'pagerduty'})) {
+                disabled = true;
+                title = "PagerDuty has already been added";
+              }
               innerButton = <span><img src={pagerDutyLogo} className={style.buttonIconPagerDuty} /></span>;
             } else {
               innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
             }
-
             return (
-              <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
+              <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`} disabled={disabled} title={title}>
                 <Add inline fill="primary"/>&nbsp;{innerButton}
               </Button>
             );
