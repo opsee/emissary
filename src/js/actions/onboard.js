@@ -4,6 +4,7 @@ import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import * as analytics from './analytics';
+import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
@@ -166,8 +167,6 @@ function isBastionConnected(state){
   .value();
 }
 
-// let launchAttempts = 0;
-
 function launch(dispatch, state, resolve, reject){
   // launchAttempts ++;
   analytics.trackEvent('Onboard', 'bastion-install')(dispatch, state);
@@ -175,11 +174,27 @@ function launch(dispatch, state, resolve, reject){
   if (config.onboardInstallError){
     return reject(new Error('config.onboardInstallError'));
   }
-  return request
-  .post(`${config.services.api}/vpcs/launch`)
-  .set('Authorization', state().user.get('auth'))
-  .send(state().onboard.installData)
-  .then(resolve, reject);
+
+  let data = state().onboard.installData;
+  data.region = _.chain(data.regions).head().get('region').value();
+  data = _.assign(data, _.chain(data.regions).head().get('vpcs').head().value());
+  data.vpc_id = data.id;
+  const variables = _.pick(data, ['region', 'vpc_id', 'subnet_id', 'subnet_routing', 'instance_size']);
+
+  debugger;
+  return graphPromise('region.rebootInstances', () => {
+    return request
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({
+      query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!, $instance_size: String!){
+        region(id: $region) {
+          launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing, instance_size: $instance_size)
+        }
+      }`,
+      variables
+    })
+  })
 }
 
 export function install(){
