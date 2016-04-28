@@ -64,9 +64,13 @@ const NotificationSelection = React.createClass({
     });
   },
   getNewSchema(type, notifIndex, value){
+    // Pagerduty notifs don't have a value akin to a Slack channel.
+    // (This may change if/when we use PD service names as the value.)
+    const schemaValue = type === 'pagerduty' ? `${type}-${notifIndex}` : value;
+
     return {
       type,
-      value,
+      value: schemaValue,
       sending: false
     };
   },
@@ -81,10 +85,6 @@ const NotificationSelection = React.createClass({
     return notifs.map(n => _.pick(n, ['type', 'value']));
   },
   isNotifComplete(notif){
-    // PagerDuty notifs are complete ~the way they are~, no additional value needed
-    if (notif.type === 'pagerduty'){
-      return true;
-    }
     return _.chain(notif).pick(['type', 'value']).values().every().value();
   },
   runSetNotificationsState(iteratee){
@@ -170,21 +170,18 @@ const NotificationSelection = React.createClass({
     if (found){
       string = found.success ? 'sent' : 'error';
     }
-
     let color = 'warning';
     if (string === 'sent'){
       color = 'success';
     } else if (string === 'error'){
       color = 'danger';
     }
-
     const disabled = !this.isNotifComplete(notif) || !!(string.match('sent|error')) || notif.sending;
     const className = notif.type === 'slack_bot' ? style.testButtonSlack : style.testButton;
     let icon = <ChevronRight inline fill={disabled ? 'text' : 'warning'}/>;
     if (string === 'sent'){
       icon = <Checkmark inline fill="text"/>;
     }
-
     return (
       <div className="align-self-end">
         <Button color={color} flat onClick={this.runTestNotif.bind(this, notif)} className={className} {...props} disabled={disabled} style={{minHeight: '46px'}}>
@@ -286,7 +283,7 @@ const NotificationSelection = React.createClass({
       <div className="display-flex flex-vertical-align">
         <div className="flex-1">
           <div className="display-flex">
-            Pagerduty connected
+            {this.renderNotifIcon(notif)}&nbsp;PagerDuty
           </div>
         </div>
         {this.renderDeleteButton(index)}
@@ -296,25 +293,27 @@ const NotificationSelection = React.createClass({
   },
   renderNotif(notif, index){
     const {type} = notif;
-    const isText = !!type.match('email|webhook');
 
-    if (!notif.value || isText){
-      if (isText){
-        return this.renderTextNotif(notif, index);
-      }
-      if (type === 'slack_bot'){
+    switch (type) {
+    case 'email':
+    case 'webhook':
+      return this.renderTextNotif(notif, index);
+    case 'slack_bot':
+      if (!notif.value) {
         if (this.props.redux.integrations.slackChannels.toJS().length){
           return this.renderChannelSelect(notif, index);
         }
         return this.renderIntegrationConnect(notif, index, type);
-      } else if (type === 'pagerduty'){
-        if (_.get(this.props.redux, 'integrations.pagerdutyInfo.enabled')) {
-          return this.renderPagerdutyNotif(notif, index);
-        }
-        return this.renderIntegrationConnect(notif, index, type);
       }
+      return this.renderChosenChannel(notif, index);
+    case 'pagerduty':
+      if (_.get(this.props.redux, 'integrations.pagerdutyInfo.enabled')) {
+        return this.renderPagerdutyNotif(notif, index);
+      }
+      return this.renderIntegrationConnect(notif, index, type);
+    default:
+      return this.renderChosenChannel(notif, index);
     }
-    return this.renderChosenChannel(notif, index);
   },
   renderNotifPickType(){
     return (

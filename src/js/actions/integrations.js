@@ -113,7 +113,6 @@ export function testNotification(notif = {}) {
     break;
   case 'pagerduty':
     type = INTEGRATIONS_PAGERDUTY_TEST;
-    notif.value = 'pagerduty'; // can't be empty but value doesn't matter
     break;
   default:
     break;
