@@ -4,8 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PhoneAlert, PagerDuty} from '../icons';
-import pagerDutyLogo from '../../../img/logos/pagerduty.svg';
+import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PagerDuty} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {PagerdutyConnect, SlackConnect} from '../integrations';
@@ -330,7 +329,7 @@ const NotificationSelection = React.createClass({
               // Only allow one pagerduty notif in the list
               if (!!_.find(this.state.notifications, {type: 'pagerduty'})) {
                 disabled = true;
-                title = "PagerDuty has already been added";
+                title = 'PagerDuty has already been added';
               }
               innerButton = <span><PagerDuty fill={seed.color.primary} className={style.buttonIconPagerDuty} /></span>;
             } else {

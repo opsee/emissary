@@ -4,6 +4,7 @@ import BaseSVG from './BaseSVG';
 export default React.createClass({
   getDefaultProps() {
     return {
+      fill: '#45b754',
       height: '1.3rem',
       width: '100',
       viewBox: '0 0 500 96.2'
