@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 const BaseSVG = React.createClass({
+  propTypes: {
+    children: PropTypes.node
+  },
   getInitialState(){
     return this.getState();
   },
@@ -25,7 +28,7 @@ const BaseSVG = React.createClass({
   render() {
     return (
       <svg xmlns="http://www.w3.org/svg/2000" {...this.state}>
-        <path d={this.state.path} />
+        {this.props.children ? this.props.children : <path d={this.state.path} />}
       </svg>
     );
   }
