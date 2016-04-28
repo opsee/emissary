@@ -44,8 +44,8 @@ const NotificationSelection = React.createClass({
   },
   getInitialState() {
     return {
-      notifications: this.props.notifications.map((n, i) => {
-        return this.getNewSchema(n.type, i, n.value);
+      notifications: this.props.notifications.map(n => {
+        return this.getNewSchema(n.type, n.value);
       })
     };
   },
@@ -64,11 +64,11 @@ const NotificationSelection = React.createClass({
       }
     });
   },
-  getNewSchema(type, notifIndex, value){
-    // Pagerduty notifs don't have a value akin to a Slack channel.
+  getNewSchema(type, value){
+    // Pagerduty notifs don't have a value akin to a Slack channel, however it
+    // still needs a unique value to track xhr state of test requests.
     // (This may change if/when we use PD service names as the value.)
-    const schemaValue = type === 'pagerduty' ? `${type}-${notifIndex}` : value;
-
+    const schemaValue = type === 'pagerduty' ? `${type}-${Date.now()}` : value;
     return {
       type,
       value: schemaValue,
@@ -115,7 +115,7 @@ const NotificationSelection = React.createClass({
   },
   runNewNotif(type, value){
     const notifications = this.state.notifications.concat([
-      this.getNewSchema(type, this.state.notifications.length, value)
+      this.getNewSchema(type, value)
     ]);
     this.runChange(notifications);
   },
