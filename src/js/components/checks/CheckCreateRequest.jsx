@@ -3,7 +3,6 @@ import _ from 'lodash';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Map} from 'immutable';
 
 import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
@@ -248,21 +247,12 @@ const CheckCreateRequest = React.createClass({
     }
     type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'sg' ? 'security' : type;
-    if (type.match('security|elb')){
-      selection = this.props.redux.env.groups[type].find(g => {
-        return g.get('id') === target.id;
-      }) || new Map();
-    } else {
-      selection = this.props.redux.env.instances[type].find(g => {
-        return g.get('id') === target.id;
-      }) || new Map();
-    }
     if (selection && selection.get('id')){
       let inner = null;
-      if (type.match('^EC2$|^ecc$|^instance$|^rds$')){
-        inner = <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
+      if (type.match('^ecc$|^instance$|^rds$')){
+        inner = <InstanceItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       }
-      inner = <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>;
+      inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       return (
         <Padding b={1}>
           <Heading level={3}>Your Target</Heading>

@@ -109,8 +109,8 @@ const AssertionsSelection = React.createClass({
       const body = _.get(res, 'body');
       const json = typeof body === 'string' ? JSON.parse(body) : body;
       const type = _.chain(res).get('headers').get('Content-Type').value();
-      return type.match('json') && json;
-    } catch (err){
+      return type.match(/json/i) && json;
+    } catch (err) {
       return false;
     }
   },

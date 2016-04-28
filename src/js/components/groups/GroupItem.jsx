@@ -17,11 +17,13 @@ const GroupItem = React.createClass({
     groups: PropTypes.shape({
       security: PropTypes.object,
       elb: PropTypes.object,
-      rds: PropTypes.object
+      rds: PropTypes.object,
+      asg: PropTypes.object
     }),
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
-      getGroupsSecurity: PropTypes.func
+      getGroupsSecurity: PropTypes.func,
+      getGroupsAsg: PropTypes.func
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -41,13 +43,14 @@ const GroupItem = React.createClass({
     if (_.get(this.props, 'target.type')){
       switch (this.props.target.type){
       case 'elb':
-        this.props.actions.getGroupsElb();
-        break;
+        return this.props.actions.getGroupsElb();
+      case 'asg':
+        return this.props.actions.getGroupsAsg();
       default:
-        this.props.actions.getGroupsSecurity();
-        break;
+        return this.props.actions.getGroupsSecurity();
       }
     }
+    return true;
   },
   shouldComponentUpdate(nextProps) {
     const {props} = this;
@@ -84,6 +87,11 @@ const GroupItem = React.createClass({
           return group.get('id') === this.props.target.id;
         });
         return elb || new Map();
+      case 'asg':
+        const asg = this.props.groups.asg.find(group => {
+          return group.get('id') === this.props.target.id;
+        });
+        return asg || new Map();
       default:
         const sg = this.props.groups.security.find(group => {
           return group.get('id') === this.props.target.id;

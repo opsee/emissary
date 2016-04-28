@@ -36,7 +36,7 @@ export const statics = {
         });
         data.response.headers = headerObj;
         const contentType = _.chain(headers).find({name: 'Content-Type'}).get('values').value() || '';
-        if (contentType.match('json')){
+        if (contentType.match(/json/i)){
           try {
             data.response.body = JSON.parse(data.response.body);
             data.response.json = true;
@@ -135,7 +135,9 @@ export default handleActions({
   [CHECK_TEST]: {
     next(state, action){
       let responses = action.payload.data.map(response => {
-        return _.mapKeys(response, () => 'response');
+        return _.mapKeys(response, (value, key) => {
+          return key === 'reply' ? 'response' : key;
+        });
       });
       responses = fromJS(responses);
       const responsesFormatted = statics.getFormattedResponses(responses);

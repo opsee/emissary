@@ -3,6 +3,7 @@ import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
@@ -56,7 +57,7 @@ const GroupAsg = React.createClass({
   },
   renderInner(){
     const group = this.getGroup().toJS();
-    if (group.name){
+    if (group.name && group.CreatedTime){
       return (
         <div>
           <Padding b={3}>
@@ -67,12 +68,18 @@ const GroupAsg = React.createClass({
           <Padding b={2}>
             <Heading level={3}>{group.id} Information</Heading>
             <Table>
-              {
-              //   <tr>
-              //   <td><strong>Description</strong></td>
-              //   <td>{this.renderDescription()}</td>
-                // </tr>
-              }
+              <tr>
+                <td><strong>Created</strong></td>
+                <td><TimeAgo date={group.CreatedTime}/></td>
+              </tr>
+              <tr>
+                <td><strong>Minimum Size</strong></td>
+                <td>{group.MinSize}</td>
+              </tr>
+              <tr>
+                <td><strong>Maximum Size</strong></td>
+                <td>{group.MinSize}</td>
+              </tr>
             </Table>
           </Padding>
           <Padding b={2}>

@@ -43,7 +43,20 @@ const statics = {
     }
     return arr.concat(new List([single]));
   },
-  setResultMeta(item, results, toMatch = []){
+  setResultMeta(item, checks, toMatch = []){
+    const foundChecks = _.filter(checks, r => {
+      return toMatch.indexOf(r.target.id) > -1;
+    }).map(check => {
+      return check.id;
+    });
+
+    const results = _.chain(checks)
+    .map(check => {
+      return _.get(check, 'results[0].responses') || [];
+    })
+    .flatten()
+    .value();
+
     const foundResults = _.filter(results, r => {
       return toMatch.indexOf(r.target.id) > -1;
     });
@@ -55,8 +68,14 @@ const statics = {
     data = data.set('total', total);
     data = data.set('passing', passing);
     data = data.set('failing', total - passing);
+    data = data.set('checks', foundChecks);
     const health = total ? Math.floor((passing / total) * 100) : undefined;
     data = data.set('health', health);
+    let state = total ? ((passing && 'passing') || 'failing') : 'running';
+    if (state === 'running' && foundChecks.length){
+      state = 'initializing';
+    }
+    data = data.set('state', state);
     return data;
   },
   getGroupSecuritySuccess(state, data = []){
@@ -72,13 +91,13 @@ const statics = {
       return statics.groupSecurityFromJS(state, g);
     })) || new List();
     let newState = _.assign({}, state, {groups: _.assign({}, state.groups, {security})});
-    return statics.getGroupSecurityResults(newState, state.results);
+    return statics.getGroupSecurityResults(newState, state.checks);
   },
-  getGroupSecurityResults(state, results = state.results){
+  getGroupSecurityResults(state, checks = state.checks){
     return state.groups.security.map(group => {
       let toMatch = [group.id];
       toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
-      return statics.setResultMeta(group, results, toMatch);
+      return statics.setResultMeta(group, checks, toMatch);
     });
   },
   getGroupsSecurityInstances(action){
@@ -108,13 +127,13 @@ const statics = {
       return statics.groupAsgFromJS(state, g);
     })) || new List();
     let newState = _.assign({}, state, {groups: _.assign({}, state.groups, {asg})});
-    return statics.getGroupAsgResults(newState, state.results);
+    return statics.getGroupAsgResults(newState, state.checks);
   },
-  getGroupAsgResults(state, results = state.results){
+  getGroupAsgResults(state, checks = state.checks){
     return state.groups.asg.map(group => {
       let toMatch = [group.id];
       toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
-      return statics.setResultMeta(group, results, toMatch);
+      return statics.setResultMeta(group, checks, toMatch);
     });
   },
   getGroupElbSuccess(state, data = []){
@@ -132,13 +151,13 @@ const statics = {
       return statics.groupElbFromJS(state, g);
     })) || new List();
     let newState = _.assign({}, state, {groups: _.assign({}, state.groups, {elb})});
-    return statics.getGroupElbResults(newState, state.results);
+    return statics.getGroupElbResults(newState, state.checks);
   },
-  getGroupElbResults(state, results = state.results){
+  getGroupElbResults(state, checks = state.checks){
     return state.groups.elb.map(group => {
       let toMatch = [group.id];
       toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
-      return statics.setResultMeta(group, results, toMatch);
+      return statics.setResultMeta(group, checks, toMatch);
     });
   },
   groupElbFromJS(state, data = {}){
@@ -188,12 +207,12 @@ const statics = {
 
     const ecc = fromJS(newData);
     let newState = _.assign({}, state, {instances: _.assign({}, state.instances, {ecc})});
-    return statics.getInstanceEccResults(newState, state.results);
+    return statics.getInstanceEccResults(newState, state.checks);
   },
-  getInstanceEccResults(state, results = state.results){
+  getInstanceEccResults(state, checks = state.checks){
     return state.instances.ecc.map(instance => {
       let toMatch = [instance.id];
-      return statics.setResultMeta(instance, results, toMatch);
+      return statics.setResultMeta(instance, checks, toMatch);
     });
   },
   getInstanceRdsSuccess(state, data = []){
@@ -211,12 +230,12 @@ const statics = {
 
     const rds = fromJS(newData);
     let newState = _.assign({}, state, {instances: _.assign({}, state.instances, {rds})});
-    return statics.getInstanceRdsResults(newState, state.results);
+    return statics.getInstanceRdsResults(newState, state.checks);
   },
-  getInstanceRdsResults(state, results = state.results){
+  getInstanceRdsResults(state, checks = state.checks){
     return state.instances.rds.map(instance => {
       let toMatch = [instance.id];
-      return statics.setResultMeta(instance, results, toMatch);
+      return statics.setResultMeta(instance, checks, toMatch);
     });
   },
   getMetricsSuccess(state, instances){
@@ -314,7 +333,7 @@ const initial = {
   awsActionHistory: [],
   region: undefined,
   vpc: undefined,
-  results: []
+  checks: []
 };
 
 export default handleActions({
@@ -457,21 +476,15 @@ export default handleActions({
   [GET_CHECKS]: {
     next(state, action){
       const checks = action.payload.data;
-      const results = _.chain(checks)
-      .map(check => {
-        return _.get(check, 'results[0].responses') || [];
-      })
-      .flatten()
-      .value();
 
-      const security = statics.getGroupSecurityResults(state, results);
-      const elb = statics.getGroupElbResults(state, results);
-      const asg = statics.getGroupAsgResults(state, results);
+      const security = statics.getGroupSecurityResults(state, checks);
+      const elb = statics.getGroupElbResults(state, checks);
+      const asg = statics.getGroupAsgResults(state, checks);
 
-      const ecc = statics.getInstanceEccResults(state, results);
-      const rds = statics.getInstanceRdsResults(state, results);
+      const ecc = statics.getInstanceEccResults(state, checks);
+      const rds = statics.getInstanceRdsResults(state, checks);
 
-      return _.assign({}, state, {results}, {
+      return _.assign({}, state, {checks}, {
         groups: {security, elb, asg},
         instances: {ecc, rds}
       });

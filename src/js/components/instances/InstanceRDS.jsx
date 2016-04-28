@@ -95,10 +95,10 @@ const InstanceRds = React.createClass({
     return null;
   },
   renderChecks(){
-    if (window.ldclient.toggle('rds-checks')) {
+    if (flag('check-type-rds')) {
       return (
         <Padding b={1}>
-          <CheckItemList type="instance" target={this.props.params.id} title/>
+          <CheckItemList type="rds" target={this.props.params.id} title/>
         </Padding>
       );
     }

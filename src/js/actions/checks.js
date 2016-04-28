@@ -270,6 +270,7 @@ export function test(data){
           query: `mutation Test ($check: Check){
             testCheck(check: $check) {
               responses {
+                error
                 reply {
                   ...on schemaHttpResponse {
                     code

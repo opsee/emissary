@@ -25,7 +25,10 @@ const AssertionMetric = React.createClass({
     }),
     assertion: PropTypes.shape({
       value: PropTypes.string,
-      operand: PropTypes.string,
+      operand: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ]),
       key: PropTypes.string,
       relationship: PropTypes.string
     }).isRequired,

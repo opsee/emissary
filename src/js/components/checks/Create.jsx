@@ -23,7 +23,8 @@ const CheckCreate = React.createClass({
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object,
-        getGroupsSecurity: PropTypes.object
+        getGroupsSecurity: PropTypes.object,
+        getGroupsAsg: PropTypes.object
       }),
       user: PropTypes.object
     }).isRequired,
@@ -33,6 +34,7 @@ const CheckCreate = React.createClass({
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
       getGroupsElb: PropTypes.func,
+      getGroupsAsg: PropTypes.func,
       getInstancesEcc: PropTypes.func,
       getInstancesRds: PropTypes.func
     })
@@ -41,6 +43,7 @@ const CheckCreate = React.createClass({
     this.props.actions.testCheckReset();
     if (!this.props.redux.asyncActions.getGroupsSecurity.history.length){
       this.props.envActions.getGroupsSecurity();
+      this.props.envActions.getGroupsAsg();
       this.props.envActions.getGroupsElb();
       this.props.envActions.getInstancesEcc();
       this.props.envActions.getInstancesRds();

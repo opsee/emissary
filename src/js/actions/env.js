@@ -125,6 +125,10 @@ export function getGroupAsg(id){
                       Instances {
                         InstanceId
                       }
+                      Status
+                      CreatedTime
+                      MinSize
+                      MaxSize
                     }
                   }
                 }

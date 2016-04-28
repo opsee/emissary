@@ -52,7 +52,7 @@ const ListItem = React.createClass({
   },
   renderGraph(){
     const graph = (
-      <RadialGraph state={this.props.item.get('state')} passing={this.props.item.get('passing')} total={this.props.item.get('total')} type={this.props.type}/>
+      <RadialGraph item={this.props.item} type={this.props.type}/>
     );
     if (this.props.onClick){
       return (
