@@ -335,9 +335,11 @@ const NotificationSelection = React.createClass({
               innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
             }
             return (
-              <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`} disabled={disabled} title={title}>
-                <Add inline fill="primary"/>&nbsp;{innerButton}
-              </Button>
+              <div title={title} style={{display: 'inline'}}>
+                <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`} disabled={disabled} title={title}>
+                  <Add inline fill="primary"/>&nbsp;{innerButton}
+                </Button>
+              </div>
             );
           }
           return null;
