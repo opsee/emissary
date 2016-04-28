@@ -4,13 +4,14 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PhoneAlert} from '../icons';
+import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PhoneAlert, PagerDuty} from '../icons';
 import pagerDutyLogo from '../../../img/logos/pagerduty.svg';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {PagerdutyConnect, SlackConnect} from '../integrations';
 import {flag, storage} from '../../modules';
 import style from './notificationSelection.css';
+import {plain as seed} from 'seedling';
 import {
   integrations as actions
 } from '../../actions';
@@ -152,7 +153,7 @@ const NotificationSelection = React.createClass({
     } else if (type === 'webhook'){
       el = <Cloud {...props}/>;
     } else if (type === 'pagerduty'){
-      el = <PhoneAlert {...props}/>;
+      el = <PagerDuty {...props}/>;
     }
     return (
       <span title={notif.type}>{el}</span>
@@ -284,7 +285,7 @@ const NotificationSelection = React.createClass({
       <div className="display-flex flex-vertical-align">
         <div className="flex-1">
           <div className="display-flex">
-            <img src={pagerDutyLogo} className={style.buttonIconPagerDuty} />
+            <PagerDuty className={style.buttonIconPagerDuty} />
           </div>
         </div>
         {this.renderDeleteButton(index)}
@@ -331,7 +332,7 @@ const NotificationSelection = React.createClass({
                 disabled = true;
                 title = "PagerDuty has already been added";
               }
-              innerButton = <span><img src={pagerDutyLogo} className={style.buttonIconPagerDuty} /></span>;
+              innerButton = <span><PagerDuty fill={seed.color.primary} className={style.buttonIconPagerDuty} /></span>;
             } else {
               innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
             }
