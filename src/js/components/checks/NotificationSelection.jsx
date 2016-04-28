@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import {Button} from '../forms';
 import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PhoneAlert} from '../icons';
+import pagerDutyLogo from '../../../img/logos/pagerduty.svg';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {PagerdutyConnect, SlackConnect} from '../integrations';
@@ -278,12 +279,12 @@ const NotificationSelection = React.createClass({
       </div>
     );
   },
-  renderPagerdutyNotif(notif, index) {
+  renderPagerDutyNotif(notif, index) {
     return (
       <div className="display-flex flex-vertical-align">
         <div className="flex-1">
           <div className="display-flex">
-            {this.renderNotifIcon(notif)}&nbsp;PagerDuty
+            <img src={pagerDutyLogo} className={style.buttonIconPagerDuty} />
           </div>
         </div>
         {this.renderDeleteButton(index)}
@@ -308,7 +309,7 @@ const NotificationSelection = React.createClass({
       return this.renderChosenChannel(notif, index);
     case 'pagerduty':
       if (_.get(this.props.redux, 'integrations.pagerdutyInfo.enabled')) {
-        return this.renderPagerdutyNotif(notif, index);
+        return this.renderPagerDutyNotif(notif, index);
       }
       return this.renderIntegrationConnect(notif, index, type);
     default:
@@ -321,9 +322,16 @@ const NotificationSelection = React.createClass({
         {['email', 'slack', 'webhook', 'pagerduty'].map(type => {
           const typeCorrected = type === 'slack' ? 'slack_bot' : type;
           if (flag(`notification-type-${type}`)){
+            let innerButton;
+            if (type === 'pagerduty') {
+              innerButton = <span><img src={pagerDutyLogo} className={style.buttonIconPagerDuty} /></span>;
+            } else {
+              innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
+            }
+
             return (
               <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
-                <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}
+                <Add inline fill="primary"/>&nbsp;{innerButton}
               </Button>
             );
           }
