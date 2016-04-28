@@ -81,6 +81,10 @@ const NotificationSelection = React.createClass({
     return notifs.map(n => _.pick(n, ['type', 'value']));
   },
   isNotifComplete(notif){
+    // PagerDuty notifs are complete ~the way they are~, no additional value needed
+    if (notif.type === 'pagerduty'){
+      return true;
+    }
     return _.chain(notif).pick(['type', 'value']).values().every().value();
   },
   runSetNotificationsState(iteratee){
@@ -317,7 +321,7 @@ const NotificationSelection = React.createClass({
       <div>
         {['email', 'slack', 'webhook', 'pagerduty'].map(type => {
           const typeCorrected = type === 'slack' ? 'slack_bot' : type;
-          if (true) { // if (flag(`notification-type-${type}`)){
+          if (flag(`notification-type-${type}`)){
             return (
               <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
                 <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}

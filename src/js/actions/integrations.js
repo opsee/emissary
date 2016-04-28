@@ -105,18 +105,20 @@ export function pagerdutyAccess(query) {
 
 export function testNotification(notif = {}) {
   let type = INTEGRATIONS_EMAIL_TEST;
+  let path = notif.type;
   switch (notif.type){
   case 'slack_bot':
+    path = 'slack';
     type = INTEGRATIONS_SLACK_TEST;
     break;
   case 'pagerduty':
     type = INTEGRATIONS_PAGERDUTY_TEST;
+    notif.value = 'pagerduty'; // can't be empty but value doesn't matter
     break;
   default:
     break;
   }
-  const path = notif.type === 'slack_bot' ? 'slack' : notif.type;
-  notif.value = 'doestnmatter' // FIXME
+
   return (dispatch, state) => {
     dispatch({
       type,
