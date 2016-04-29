@@ -56,6 +56,9 @@ import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!.
 import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
 import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
 
+import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
+import OnboardAddInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/AddInstance';
+
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
 
 import Help from 'react-proxy?name=help!exports?exports.default!../pages/Help';
@@ -107,6 +110,12 @@ const routes = (
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
+
+    <Route path="/s" component={OnboardLaunchStack} />
+    <Route path="/s/region" component={OnboardRegionSelect} />
+    <Route path="/s/add-instance" component={OnboardAddInstance} />
+    <Route path="/s/choose-vpc" component={auth(OnboardVPCSelect)}/>
+
 
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
