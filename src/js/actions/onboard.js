@@ -12,11 +12,13 @@ import {
   ONBOARD_VPC_SELECT,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
+  ONBOARD_MAKE_LAUNCH_TEMPLATE,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
   ONBOARD_GET_TEMPLATES,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT
+  ONBOARD_SUBNET_SELECT,
+  ONBOARD_SCAN_REGION
 } from './constants';
 
 export function signupCreate(data) {
@@ -75,6 +77,54 @@ export function setRegion(data) {
       dispatch(pushState(null, '/s/add-instance'));
     }, 100);
   };
+}
+
+export function makeLaunchRoleUrlTemplate() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
+      payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
+        return request
+          .post(`${config.services.compost}`)
+          .set('Authorization', state().user.get('auth'))
+          .send({query:
+            `mutation Mutation {
+              makeLaunchRoleUrlTemplate
+            }`
+          });
+        })
+    });
+  };
+}
+
+export function scanRegion(region) {
+  console.log('scanning region', region);
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SCAN_REGION,
+      payload: graphPromise('region.scan', () => {
+        return request
+          .post(`${config.services.compost}`)
+          .set('Authorization', state().user.get('auth'))
+          .send({query:
+            `mutation Mutation {
+              region(id: "${region}") {
+                scan {
+                  subnets {
+                    routing
+                    subnet_id
+                  },
+                  vpcs {
+                    vpc_id,
+                    instance_count
+                  },
+                }
+              }
+            }`
+          });
+        })
+    })
+  }
 }
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);

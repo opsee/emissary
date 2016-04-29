@@ -11,7 +11,9 @@ import {
   ONBOARD_SET_INSTALL_DATA,
   ONBOARD_SUBNET_SELECT,
   ONBOARD_INSTALL,
-  ONBOARD_GET_TEMPLATES
+  ONBOARD_GET_TEMPLATES,
+  ONBOARD_MAKE_LAUNCH_TEMPLATE,
+  ONBOARD_SCAN_REGION
 } from '../actions/constants';
 
 const initial = {
@@ -24,7 +26,8 @@ const initial = {
   bastionLaunching: undefined,
   installData: undefined,
   installing: false,
-  templates: []
+  templates: [],
+  regionLaunchURL: null
 };
 
 function getFinalInstallData(state){
@@ -156,6 +159,19 @@ export default handleActions({
   [ONBOARD_INSTALL]: {
     next(state){
       return _.assign({}, state, {installing: true});
+    }
+  },
+  [ONBOARD_MAKE_LAUNCH_TEMPLATE]: {
+    next(state, action){
+      const regionLaunchURL = _.get(action.payload, 'data');
+      return _.assign({}, state, {regionLaunchURL});
+    }
+  },
+  [ONBOARD_SCAN_REGION]: {
+    next(state, action) {
+      const vpcsForSelection = _.get(action.payload.data, 'vpcs');
+      const subnetsForSelection = _.get(action.payload.data, 'subnets');
+      return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
     }
   }
 }, initial);

@@ -34,9 +34,9 @@ const SubnetSelect = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    if (!this.props.redux.onboard.subnetsForSelection.length){
-      this.props.history.replaceState(null, '/start/region-select');
-    }
+    // if (!this.props.redux.onboard.subnetsForSelection.length){
+    //   this.props.history.replaceState(null, '/start/region-select');
+    // }
     const newImg = new Image();
     newImg.src = img;
     newImg.onload = () => {
@@ -46,7 +46,7 @@ const SubnetSelect = React.createClass({
         });
       }
     };
-    this.props.actions.subnetSelect(this.getSelectedSubnet());
+    // this.props.actions.subnetSelect(this.getSelectedSubnet());
   },
   getInitialState() {
     return {
@@ -55,17 +55,17 @@ const SubnetSelect = React.createClass({
   },
   getSelectedSubnet(){
     const {onboard} = this.props.redux;
-    const selected = _.chain(onboard.regionsWithVpcs)
-    .head()
-    .get('subnets')
-    .find({selected: true})
-    .get('subnet_id')
-    .value();
+    // const selected = _.chain(onboard.regionsWithVpcs)
+    // .head()
+    // .get('subnets')
+    // .find({selected: true})
+    // .get('subnet_id')
+    // .value();
     const first = _.chain(onboard.subnetsForSelection)
     .head()
-    .get('id')
+    .get('subnet_id')
     .value();
-    return selected || first;
+    return first;
   },
   isDisabled(){
     return !this.state.subnet;
@@ -82,6 +82,12 @@ const SubnetSelect = React.createClass({
     if (!this.state.loaded){
       return <StatusHandler status="pending"/>;
     } else if (this.props.redux.onboard.subnetsForSelection.length){
+      const subnets = this.props.redux.onboard.subnetsForSelection.map(s => {
+        return _.assign({}, s, {
+          id: _.get(s, 'subnet_id')
+        });
+      });
+
       return (
         <div>
           <Padding b={1}>
@@ -91,11 +97,10 @@ const SubnetSelect = React.createClass({
             <Row>
               <Col xs={12} sm={4}>
                 <img src={img}/>
-
               </Col>
               <Col xs={12} sm={8}>
                 <Heading level={3}>Your Subnets</Heading>
-                <RadioSelect onChange={this.handleSelect} data={this.state} options={this.props.redux.onboard.subnetsForSelection} path="subnet"/>
+                <RadioSelect onChange={this.handleSelect} data={this.state} options={subnets} path="subnet"/>
               </Col>
             </Row>
           </Grid>

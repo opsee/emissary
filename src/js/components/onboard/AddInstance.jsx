@@ -90,7 +90,7 @@ const AddInstance = React.createClass({
 
         <p>If you have any questions, you reach out to us any time on email, Slack, or IRC.</p>
 
-        <Button to="/s/choose-vpc" color="success" block>Choose a VPC</Button>
+        <Button to={`/s/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
       </div>
     );
   }

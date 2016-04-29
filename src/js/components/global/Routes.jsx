@@ -115,7 +115,7 @@ const routes = (
     <Route path="/s/region" component={OnboardRegionSelect} />
     <Route path="/s/add-instance" component={OnboardAddInstance} />
     <Route path="/s/choose-vpc" component={auth(OnboardVPCSelect)}/>
-
+    <Route path="/s/choose-subnet" component={auth(OnboardSubnetSelect)}/>
 
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
