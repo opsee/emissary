@@ -68,6 +68,12 @@ const GroupAsg = React.createClass({
           <Padding b={2}>
             <Heading level={3}>{group.id} Information</Heading>
             <Table>
+              {group.Status && (
+                <tr>
+                  <td><strong>Status</strong></td>
+                  <td>{group.Status}</td>
+                </tr>
+              )}
               <tr>
                 <td><strong>Created</strong></td>
                 <td><TimeAgo date={group.CreatedTime}/></td>
@@ -79,6 +85,20 @@ const GroupAsg = React.createClass({
               <tr>
                 <td><strong>Maximum Size</strong></td>
                 <td>{group.MinSize}</td>
+              </tr>
+              <tr>
+                <td><strong>Desired Capacity</strong></td>
+                <td>{group.DesiredCapacity}</td>
+              </tr>
+              <tr>
+                <td><strong>Availability Zones</strong></td>
+                <td>{group.AvailabilityZones}</td>
+              </tr>
+              <tr>
+                <td><strong>Suspended Processes</strong></td>
+                <td>{group.SuspendedProcesses.length && group.SuspendedProcesses.map(process => {
+                  return `${process.ProcessName} [${process.SuspensionReason}]`;
+                }) || 'None'}</td>
               </tr>
             </Table>
           </Padding>

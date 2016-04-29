@@ -129,6 +129,12 @@ export function getGroupAsg(id){
                       CreatedTime
                       MinSize
                       MaxSize
+                      DesiredCapacity
+                      AvailabilityZones
+                      SuspendedProcesses {
+                        ProcessName
+                        SuspensionReason
+                      }
                     }
                   }
                 }

@@ -204,7 +204,7 @@ function getNamespace(type){
 }
 
 function formatCloudwatchCheck(data){
-  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check']);
+  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check', 'id']);
   const namespace = getNamespace(check.target.type);
   const metrics = check.assertions.map(assertion => {
     return {
@@ -239,7 +239,7 @@ function formatHttpCheck(data){
   check.spec = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
   return _.chain(check)
   .assign({assertions})
-  .pick(['target', 'spec', 'name', 'notifications', 'assertions'])
+  .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id'])
   .mapKeys((value, key) => {
     return key === 'spec' ? 'http_check' : key;
   })

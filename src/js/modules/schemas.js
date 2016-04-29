@@ -82,7 +82,10 @@ export const GroupAsg = Record(_.assign({}, baseEnvItem, {
   Status: undefined,
   CreatedTime: undefined,
   MinSize: undefined,
-  MaxSize: undefined
+  MaxSize: undefined,
+  DesiredCapacity: undefined,
+  AvailabilityZones: undefined,
+  SuspendedProcesses: List()
 }));
 
 export const GroupElb = Record(_.assign({}, baseEnvItem, {
