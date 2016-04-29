@@ -45,9 +45,8 @@ const statics = {
   },
   setResultMeta(item, checks, toMatch = []){
     const foundChecks = _.filter(checks, r => {
-      return toMatch.indexOf(r.target.id) > -1;
-    }).map(check => {
-      return check.id;
+      return item.get('id') === r.target.id;
+      // return toMatch.indexOf(r.target.id) > -1;
     });
 
     const results = _.chain(checks)
@@ -57,9 +56,20 @@ const statics = {
     .flatten()
     .value();
 
-    const foundResults = _.filter(results, r => {
+    let foundResults = _.filter(results, r => {
       return toMatch.indexOf(r.target.id) > -1;
     });
+
+    //this seems wacky but,
+    //we use checks instead of results for determining health for such things
+    if (item.type.match('elb|security|asg')){
+      foundResults = foundChecks;
+      //only use checks that have results for counting
+      //otherwise we want to show initializing
+      foundResults = _.filter(foundResults, check => {
+        return (_.get(check, 'results[0].responses') || []).length;
+      });
+    }
 
     const total = foundResults.length;
     const passing =  _.filter(foundResults, {passing: true}).length;
@@ -96,7 +106,7 @@ const statics = {
   getGroupSecurityResults(state, checks = state.checks){
     return state.groups.security.map(group => {
       let toMatch = [group.id];
-      toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
+      // toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
       return statics.setResultMeta(group, checks, toMatch);
     });
   },
@@ -132,7 +142,7 @@ const statics = {
   getGroupAsgResults(state, checks = state.checks){
     return state.groups.asg.map(group => {
       let toMatch = [group.id];
-      toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
+      // toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
       return statics.setResultMeta(group, checks, toMatch);
     });
   },
@@ -156,7 +166,7 @@ const statics = {
   getGroupElbResults(state, checks = state.checks){
     return state.groups.elb.map(group => {
       let toMatch = [group.id];
-      toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
+      // toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
       return statics.setResultMeta(group, checks, toMatch);
     });
   },
@@ -179,10 +189,6 @@ const statics = {
       name: newData.GroupName,
       checks: new List(newData.checks || [])
     });
-    //TODO figure out if I need this
-    // if (newData.checks.size && !newData.results.size){
-    //   newData.state = 'initializing';
-    // }
     return new GroupSecurity(newData);
   },
   groupAsgFromJS(state, data = {}){
@@ -268,11 +274,9 @@ const statics = {
     if (data.VpcSecurityGroups){
       data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
-    if (data.checks && data.checks.size && !data.results.size){
-      data.state = 'initializing';
-    }
     data.meta = fromJS(data.meta);
 
+    //let's keep the metrics we grabbed from other places
     const arr = state.instances.rds;
     let old = arr.find(i => {
       return i.get('id') === data.id;

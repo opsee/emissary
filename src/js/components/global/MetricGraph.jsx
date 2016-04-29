@@ -36,7 +36,6 @@ const MetricGraph = React.createClass({
         PropTypes.number
       ])
     }).isRequired,
-    threshold: PropTypes.number,
     breakpoint: PropTypes.number,
     aspectRatio: PropTypes.number,
     showTooltip: PropTypes.bool
@@ -57,7 +56,6 @@ const MetricGraph = React.createClass({
       breakpoint: 700, // px
       data: [],
       metric: {},
-      threshold: 0,
       showTooltip: true
     };
   },
@@ -151,9 +149,11 @@ const MetricGraph = React.createClass({
    * React state is a good fit for this.)
    */
   onWindowResize() {
-    const elem = ReactDOM.findDOMNode(this);
-    const width = _.clamp(elem.parentNode.offsetWidth, 0, Infinity);
-    this.setState({ width });
+    if (this.isMounted()){
+      const elem = ReactDOM.findDOMNode(this);
+      const width = _.clamp(elem.parentNode.offsetWidth, 0, Infinity);
+      this.setState({ width });
+    }
   },
   renderPlaceholder() {
     return (

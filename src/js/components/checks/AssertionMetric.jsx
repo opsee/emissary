@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Map} from 'immutable';
+import {Map, is} from 'immutable';
 import cx from 'classnames';
 import slate from 'slate';
 import TimeAgo from 'react-timeago';
@@ -63,6 +63,18 @@ const AssertionMetric = React.createClass({
     if (nextProps.assertion.value !== this.props.assertion.value) {
       this.setState({ threshold: null });
     }
+    const oldInstance = this.getInstance();
+    const newInstance = this.getInstance(nextProps);
+    if (!is(oldInstance, newInstance)){
+      if (!this.props.assertion.operand && this.getData(nextProps).length){
+        //hey let's set a nice suggestion!
+        const assertion = _.assign(this.props.assertion, {
+          operand: this.getThresholdSuggestion()
+        });
+        return this.props.onChange(assertion);
+      }
+    }
+    return true;
   },
   getDefaultProps() {
     return {
@@ -75,15 +87,15 @@ const AssertionMetric = React.createClass({
       threshold: null
     };
   },
-  getInstance() {
-    let type = this.props.check.target.type;
+  getInstance(props = this.props) {
+    let type = props.check.target.type;
     type = type === 'dbinstance' ? 'rds' : type;
-    return this.props.redux.env.instances[type].find(i => {
-      return i.get('id') === this.props.check.target.id;
+    return props.redux.env.instances[type].find(i => {
+      return i.get('id') === props.check.target.id;
     }) || new Map();
   },
-  getData(){
-    return _.get(this.getInstance().toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
+  getData(props = this.props){
+    return _.get(this.getInstance(props).toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
   },
   getCurrentDataPoint() {
     return _.last(this.getData());
@@ -233,7 +245,7 @@ const AssertionMetric = React.createClass({
           {this.renderTitle()}
           {this.renderDescription()}
           <div style={{overflow: 'hidden'}}>
-            <MetricGraph threshold={this.props.assertion.operand} metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship}/>
+            <MetricGraph metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship}/>
           </div>
           <Padding t={2}>
             {this.renderCurrentDataPoint()}
