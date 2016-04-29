@@ -86,7 +86,7 @@ const AssertionMetric = React.createClass({
     return _.get(this.getInstance().toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
   },
   getCurrentDataPoint() {
-    return _.last(this.getData()) || {};
+    return _.last(this.getData());
   },
   getMetricMeta() {
     // Populates the metric metadata (description, units, etc.)
