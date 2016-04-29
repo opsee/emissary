@@ -1,13 +1,64 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
+import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Highlight, Toolbar} from '../global';
 import {Expandable, Padding} from '../layout';
 import {Heading} from '../type';
 import ec2InstaceImage from '../../../img/tut-ec2-instance.svg';
 
-export default React.createClass({
+const AddInstance = React.createClass({
+  propTypes: {
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        onboardGetTemplates: PropTypes.object
+      }),
+      onboard: PropTypes.shape({
+        templates: PropTypes.array
+      })
+    }),
+    actions: PropTypes.shape({
+      getTemplates: PropTypes.func
+    }),
+    location: PropTypes.shape({
+      pathname: PropTypes.string
+    }).isRequired
+  },
+  componentWillMount(){
+    const item = this.props.redux.asyncActions.onboardGetTemplates;
+    if (!item.status){
+      this.props.actions.getTemplates();
+    }
+  },
+  renderTemplateItem(title){
+    const arr = ['ingress', 'cf', 'role'];
+    const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
+    const links = ['bastion-ingress-cf.template', 'bastion-cf.template', 'opsee-role.json'];
+    const index = arr.indexOf(title);
+    const data = this.props.redux.onboard.templates[index];
+    if (data){
+      return (
+        <Padding b={2}>
+          <Heading level={4}>Last modified: {data.headers['last-modified']}</Heading>
+          <Expandable style={{background: seed.color.gray9}}>
+            <Highlight style={{padding: '1rem'}}>
+              {data.text}
+            </Highlight>
+          </Expandable>
+        </Padding>
+      );
+    } else if (typeof this.props.redux.asyncActions.onboardGetTemplates.status === 'object'){
+      return (
+        <Padding b={1}>
+          <a href={`${base}/${links[index]}`} target="_blank">View File</a>
+        </Padding>
+      );
+    }
+    return null;
+  },
   render() {
     return (
       <div>
@@ -29,25 +80,13 @@ export default React.createClass({
         auto-scale group (to set rules requiring at least one running Opsee instance
         at all times), and add our instance to both groups.</p>
 
-        <Padding>
-          <Expandable style={{background: seed.color.gray9}}>
-            <Highlight style={{padding: '1rem'}}>
-              {JSON.stringify({ foo: 'bar' })}
-            </Highlight>
-          </Expandable>
-        </Padding>
+        {this.renderTemplateItem('cf')}
 
         <Heading level={4}>Ingress IAM Role</Heading>
         <p>Used to ensure communication between your security groups and the Opsee security group
         within your chosen VPC.</p>
 
-        <Padding>
-          <Expandable style={{background: seed.color.gray9}}>
-            <Highlight style={{padding: '1rem'}}>
-              {JSON.stringify({ foo: 'bar' })}
-            </Highlight>
-          </Expandable>
-        </Padding>
+        {this.renderTemplateItem('ingress')}
 
         <p>If you have any questions, you reach out to us any time on email, Slack, or IRC.</p>
 
@@ -55,4 +94,11 @@ export default React.createClass({
       </div>
     );
   }
-})
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(AddInstance);
+
