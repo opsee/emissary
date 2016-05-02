@@ -135,20 +135,3 @@ export function testNotification(notif = {}) {
     });
   };
 }
-
-export function emailTest(notif = {type: undefined, value: undefined}) {
-  return (dispatch, state) => {
-    dispatch({
-      type: INTEGRATIONS_EMAIL_TEST,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .post(`${config.services.api}/services/email/test`)
-        .set('Authorization', state().user.get('auth'))
-        .send(notif)
-        .then((res) => {
-          resolve(res.body);
-        }, reject);
-      })
-    });
-  };
-}

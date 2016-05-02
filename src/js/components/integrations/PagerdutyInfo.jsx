@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {integrations as actions} from '../../actions';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import {Color} from '../type';
 import PagerdutyConnect from './PagerdutyConnect';
@@ -28,9 +29,9 @@ const PagerdutyInfo = React.createClass({
   },
   componentWillMount(){
     if (this.props.query.pagerduty){
-      let q = this.props.query;
-      q.enabled = true;
-      this.props.actions.pagerdutyAccess(q);
+      this.props.actions.pagerdutyAccess(_.assign(this.props.query, {
+        enabled: true
+      }));
     }
   },
   handleDisablePagerduty(){
