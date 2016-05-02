@@ -66,11 +66,11 @@ export function getTemplates(){
   };
 }
 
-export function setRegion(data) {
+export function setRegion(region) {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SET_REGION,
-      payload: {region: data}
+      payload: {region}
     });
     analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
     getTemplates()(dispatch, state);
@@ -209,7 +209,7 @@ export function vpcSelect(payload){
     });
     analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
     setTimeout(() => {
-      dispatch(pushState(null, '/start/subnet-select'));
+      dispatch(pushState(null, '/start/choose-subnet'));
     }, 100);
   };
 }
@@ -250,27 +250,33 @@ function launch(dispatch, state, resolve, reject){
     return reject(new Error('config.onboardInstallError'));
   }
 
-  let data = state().onboard.installData;
-  data.region = _.chain(data.regions).head().get('region').value();
-  data = _.assign(data, _.chain(data.regions).head().get('vpcs').head().value());
-  data.vpc_id = data.id;
-  const variables = _.pick(data, ['region', 'vpc_id', 'subnet_id', 'subnet_routing', 'instance_size']);
-  console.log(variables);
-  return null;
-  // debugger;
-  // return graphPromise('region.rebootInstances', () => {
-  //   return request
-  //   .post(`${config.services.compost}`)
-  //   .set('Authorization', state().user.get('auth'))
-  //   .send({
-  //     query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!, $instance_size: String!){
-  //       region(id: $region) {
-  //         launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing, instance_size: $instance_size)
-  //       }
-  //     }`,
-  //     variables
-  //   });
-  // });
+  const onboardState = state().onboard;
+  const subnet = _.chain(onboardState.subnetsForSelection)
+    .filter(s => {
+      return s.subnet_id === onboardState.selectedSubnet
+    })
+    .head().value();
+
+  const variables = {
+    region: onboardState.region,
+    vpc_id: onboardState.selectedVPC,
+    subnet_id: subnet.subnet_id,
+    subnet_routing: subnet.routing
+  };
+
+  return graphPromise('region.rebootInstances', () => {
+    return request
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({
+      query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!){
+        region(id: $region) {
+          launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing)
+        }
+      }`,
+      variables
+    });
+  });
 }
 
 export function install(){

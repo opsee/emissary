@@ -17,7 +17,8 @@ const RegionSelect = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
       hasRole: PropTypes.func,
-      makeLaunchRoleUrlTemplate: PropTypes.func
+      makeLaunchRoleUrlTemplate: PropTypes.func,
+      setRegion: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
@@ -43,8 +44,8 @@ const RegionSelect = React.createClass({
     }, 1000);
   },
   componentWillReceiveProps(){
-    if (this.props.redux.onboard.hasRole && !!this.state.region) {
-      this.history.pushState(null, `/start/add-instance?region=${this.state.region}`);
+    if (this.props.redux.onboard.hasRole && this.state.isPolling) {
+      this.history.pushState(null, '/start/add-instance');
     }
   },
   getInitialState() {
@@ -59,6 +60,7 @@ const RegionSelect = React.createClass({
     return region ? _.replace(urlTemplate, '${region}', region) : urlTemplate;
   },
   handleSelect(region){
+    this.props.actions.setRegion(region);
     this.setState({ region,
       isPolling: true
     });

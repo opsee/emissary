@@ -22,6 +22,7 @@ const AddInstance = React.createClass({
         onboardGetTemplates: PropTypes.object
       }),
       onboard: PropTypes.shape({
+        region: PropTypes.string,
         templates: PropTypes.array
       })
     }),
@@ -35,12 +36,11 @@ const AddInstance = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    const region = this.props.location.query.region;
-    if (!region) {
+    if (!this.props.redux.onboard.region) {
       this.props.history.replaceState(null, '/start/choose-region');
     }
     // Optimistically scan region for the VPC/subnet selection steps
-    this.props.actions.scanRegion(region);
+    this.props.actions.scanRegion(this.props.redux.onboard.region);
     // Grab the URL template to populate the AWS console links
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
@@ -130,7 +130,7 @@ const AddInstance = React.createClass({
           <Row>
             <Col xs={12}>
               <div>
-                <Button to={`/start/choose-vpc?region=${this.props.location.query.region}`} color="success" block chevron>Choose a VPC</Button>
+                <Button to="/start/choose-vpc" color="success" block chevron>Choose a VPC</Button>
                 <p className="text-center"><small className="text-muted">Questions? Reach out to us any time on email, Slack, or IRC.</small></p>
               </div>
             </Col>

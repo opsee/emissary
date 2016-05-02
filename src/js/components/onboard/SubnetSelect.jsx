@@ -23,6 +23,7 @@ const SubnetSelect = React.createClass({
     }),
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
+        region: PropTypes.string,
         subnetsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
@@ -31,32 +32,18 @@ const SubnetSelect = React.createClass({
       }),
       user: PropTypes.object
     }),
-    location: PropTypes.shape({
-      query: PropTypes.shape({
-        region: PropTypes.string.isRequired,
-        vpc: PropTypes.string.isRequired
-      })
-    }),
     history: PropTypes.shape({
       pushState: PropTypes.func,
       replaceState: PropTypes.func
     }).isRequired
   },
   componentWillMount(){
-    const region = this.props.location.query.region;
-    if (!region) {
+    if (!this.props.redux.onboard.region) {
       this.props.history.replaceState(null, '/start/choose-region');
     }
-
-    const vpc = this.props.location.query.vpc;
-    if (!vpc) {
-      this.props.history.replaceState(null, `/start/choose-vpc?region=${region}`);
-    }
-
     if (!this.props.redux.onboard.subnetsForSelection.length) {
       this.props.actions.scanRegion(region);
     }
-
     const newImg = new Image();
     newImg.src = img;
     newImg.onload = () => {
@@ -66,7 +53,7 @@ const SubnetSelect = React.createClass({
         });
       }
     };
-    // this.props.actions.subnetSelect(this.getSelectedSubnet());
+    this.props.actions.subnetSelect(this.getSelectedSubnet());
   },
   getInitialState() {
     return {
@@ -143,10 +130,10 @@ const SubnetSelect = React.createClass({
             <Col xs={12}>
               <Padding b={2}>
                 <Heading level={3}>Your chosen region</Heading>
-                <p>{this.props.location.query.region} - <Link to="/start/choose-region">change region</Link></p>
+                <p>{this.props.redux.onboard.region} - <Link to="/start/choose-region">change region</Link></p>
 
                 <Heading level={3}>Your chosen VPC</Heading>
-                <p>{this.props.location.query.vpc} - <Link to={`/start/choose-vpc?region=${this.props.location.query.region}`}>change VPC</Link></p>
+                <p>{this.props.redux.onboard.selectedVPC} - <Link to="/start/choose-vpc">change VPC</Link></p>
               </Padding>
             </Col>
           </Row>

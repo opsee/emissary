@@ -21,6 +21,8 @@ const initial = {
   'access_key': config.access_key,
   'secret_key': config.secret_key,
   region: config.region,
+  selectedSubnet: null,
+  selectedVPC: null,
   regionsWithVpcs: [],
   vpcsForSelection: [],
   subnetsForSelection: [],
@@ -129,27 +131,14 @@ export default handleActions({
   },
   [ONBOARD_VPC_SELECT]: {
     next(state, action){
-      const regions = _.cloneDeep(state.regionsWithVpcs);
-      const regionsWithVpcs = regions.map(parent => {
-        const children = parent.vpcs.map(child => {
-          return _.assign({}, child, {selected: child.vpc_id === action.payload});
-        });
-        return _.assign({}, parent, {vpcs: children});
-      });
-      const subnetsForSelection = generateSubnetsForSelection(regionsWithVpcs);
-      return _.assign({}, state, {regionsWithVpcs, subnetsForSelection});
+      const selectedVPC = action.payload;
+      return _.assign({}, state, {selectedVPC});
     }
   },
   [ONBOARD_SUBNET_SELECT]: {
     next(state, action){
-      const regions = _.cloneDeep(state.regionsWithVpcs);
-      const regionsWithVpcs = regions.map(parent => {
-        const children = parent.subnets.map(child => {
-          return _.assign({}, child, {selected: child.subnet_id === action.payload});
-        });
-        return _.assign({}, parent, {subnets: children});
-      });
-      return _.assign({}, state, {regionsWithVpcs});
+      const selectedSubnet = action.payload;
+      return _.assign({}, state, {selectedSubnet});
     }
   },
   [ONBOARD_SET_INSTALL_DATA]: {

@@ -15,11 +15,6 @@ const VPCSelect = React.createClass({
   mixins: [History],
   propTypes: {
     history: PropTypes.object,
-    location: PropTypes.shape({
-      query: PropTypes.shape({
-        region: PropTypes.string.isRequired
-      })
-    }),
     actions: PropTypes.shape({
       vpcSelect: PropTypes.func,
       scanRegion: PropTypes.func
@@ -29,6 +24,7 @@ const VPCSelect = React.createClass({
     }),
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
+        region: PropTypes.string,
         regionsWithVpcs: PropTypes.array,
         vpcsForSelection: PropTypes.array
       }),
@@ -39,18 +35,16 @@ const VPCSelect = React.createClass({
     })
   },
   componentWillMount(){
-    const region = this.props.location.query.region;
-    if (!region) {
+    if (!this.props.redux.onboard.region) {
       this.props.history.replaceState(null, '/start/choose-region');
     }
 
     if (!this.props.redux.onboard.vpcsForSelection.length) {
-      this.props.actions.scanRegion(region);
+      this.props.actions.scanRegion(this.props.redux.onboard.region);
     }
   },
   getInitialState() {
     return {
-      region: this.props.location.query.region,
       vpc: this.getSelectedVPC()
     };
   },
@@ -77,14 +71,14 @@ const VPCSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.analyticsActions.trackEvent('Onboard', 'vpc-select');
-    this.history.pushState(null, `/start/choose-subnet?region=${this.state.region}&vpc=${this.state.vpc}`);
+    // TODO get selected VPC
+    this.props.actions.vpcSelect(this.state.vpc);
   },
   renderInner(){
     if (_.get(this.props.redux.asyncActions.onboardScanRegion, 'status') === 'pending') {
       return (
         <div>
-          Scanning your {this.props.location.query.region} environment for VPCs...
+          Scanning your {this.props.redux.onboard.region} environment for VPCs...
         </div>
       );
     } else if (this.props.redux.onboard.vpcsForSelection.length){
@@ -113,7 +107,7 @@ const VPCSelect = React.createClass({
             <Col xs={12}>
               <Padding b={2}>
                 <Heading level={3}>Your chosen region</Heading>
-                <p>{this.props.location.query.region} - <Link to="/start/choose-region">change region</Link></p>
+                <p>{this.props.redux.onboard.region} - <Link to="/start/choose-region">change region</Link></p>
               </Padding>
 
               <form name="loginForm" onSubmit={this.handleSubmit}>
