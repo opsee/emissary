@@ -154,53 +154,6 @@ export function hasRole() {
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
 
-export function vpcScan(data) {
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SET_CREDENTIALS,
-      payload: data
-    });
-    const sendData = _.chain(data)
-    .assign({
-      regions: [state().onboard.region]
-    })
-    .pick(['access_key', 'secret_key', 'regions'])
-    .value();
-    dispatch({
-      type: ONBOARD_VPC_SCAN,
-      payload: new Promise((resolve, reject) => {
-        analytics.trackEvent('Onboard', 'vpc-scan')(dispatch, state);
-        if (config.onboardVpcScanError){
-          return reject(new Error('config.onboardVpcScanError'));
-        }
-        return request
-        .post(`${config.services.api}/vpcs/scan`)
-        .set('Authorization', state().user.get('auth'))
-        .send(sendData)
-        .then((res) => {
-          const regions = res.body.regions;
-          if (Array.isArray(regions)){
-            const bool = _.chain(regions).map('supported_platforms').map(platforms => {
-              return !(platforms.indexOf('VPC') > -1);
-            }).compact().some().value();
-            if (bool){
-              const message = 'One or more of the regions selected does not support VPCs. This probably indicates that a region in your account is AWS Classic. Opsee does not support Classic at this time. Please choose a different region or refer to our <a href="/help" target="_blank">Help Page</a>.';
-              return reject({
-                message
-              });
-            }
-            resolve(regions);
-            setTimeout(() => {
-              dispatch(pushState(null, '/start/vpc-select'));
-            }, 100);
-          }
-          return reject(new Error('Something went wrong trying to get VPCs.'));
-        }, reject);
-      })
-    });
-  };
-}
-
 export function vpcSelect(payload){
   return (dispatch, state) => {
     dispatch({
@@ -250,20 +203,6 @@ function launch(dispatch, state, resolve, reject){
     return reject(new Error('config.onboardInstallError'));
   }
 
-  const onboardState = state().onboard;
-  const subnet = _.chain(onboardState.subnetsForSelection)
-    .filter(s => {
-      return s.subnet_id === onboardState.selectedSubnet
-    })
-    .head().value();
-
-  const variables = {
-    region: onboardState.region,
-    vpc_id: onboardState.selectedVPC,
-    subnet_id: subnet.subnet_id,
-    subnet_routing: subnet.routing
-  };
-
   return graphPromise('region.rebootInstances', () => {
     return request
     .post(`${config.services.compost}`)
@@ -274,7 +213,7 @@ function launch(dispatch, state, resolve, reject){
           launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing)
         }
       }`,
-      variables
+      state().onboard.installData
     });
   });
 }

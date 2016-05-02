@@ -25,7 +25,6 @@ const VPCSelect = React.createClass({
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
         region: PropTypes.string,
-        regionsWithVpcs: PropTypes.array,
         vpcsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
