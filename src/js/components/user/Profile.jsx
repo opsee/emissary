@@ -11,9 +11,10 @@ import {Heading} from '../type';
 import {flag} from '../../modules';
 import {
   user as actions,
-  app as appActions
+  app as appActions,
+  integrations as integrationsActions
 } from '../../actions';
-import {SlackInfo} from '../integrations';
+import {SlackInfo, PagerdutyInfo} from '../integrations';
 
 const Profile = React.createClass({
   propTypes: {
@@ -28,7 +29,20 @@ const Profile = React.createClass({
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
+    }),
+    integrationsActions: PropTypes.shape({
+      getSlackInfo: PropTypes.func,
+      getSlackChannels: PropTypes.func,
+      getPagerdutyInfo: PropTypes.func
     })
+  },
+  componentWillMount() {
+    if (!this.props.location.query.slack && flag('integrations-slack')){
+      this.props.integrationsActions.getSlackInfo();
+    }
+    if (!this.props.location.query.pagerduty && flag('integrations-pagerduty')){
+      this.props.integrationsActions.getPagerdutyInfo();
+    }
   },
   handleLogout(){
     this.props.actions.logout();
@@ -39,6 +53,17 @@ const Profile = React.createClass({
         <tr>
           <td><strong>Slack</strong></td>
           <td><SlackInfo connect/></td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderPagerdutyArea(){
+    if (flag('integrations-pagerduty')){
+      return (
+        <tr>
+          <td><strong>PagerDuty</strong></td>
+          <td><PagerdutyInfo/></td>
         </tr>
       );
     }
@@ -68,6 +93,7 @@ const Profile = React.createClass({
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
                   {this.renderSlackArea()}
+                  {this.renderPagerdutyArea()}
                 </Table>
               </Padding>
               <Padding t={3}>
@@ -85,7 +111,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch),
+  integrationsActions: bindActionCreators(integrationsActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

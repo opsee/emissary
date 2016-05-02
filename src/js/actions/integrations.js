@@ -7,7 +7,10 @@ import {
   INTEGRATIONS_SLACK_ACCESS,
   INTEGRATIONS_SLACK_CHANNELS,
   INTEGRATIONS_SLACK_TEST,
-  INTEGRATIONS_EMAIL_TEST
+  INTEGRATIONS_EMAIL_TEST,
+  INTEGRATIONS_PAGERDUTY_INFO,
+  INTEGRATIONS_PAGERDUTY_ACCESS,
+  INTEGRATIONS_PAGERDUTY_TEST
 } from './constants';
 
 export function getSlackChannels() {
@@ -65,16 +68,56 @@ export function slackAccess(query) {
   };
 }
 
+export function getPagerdutyInfo() {
+  return (dispatch, state) => {
+    dispatch({
+      type: INTEGRATIONS_PAGERDUTY_INFO,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.services.api}/services/pagerduty`)
+        .set('Authorization', state().user.get('auth'))
+        .then((res) => {
+          resolve(res.body);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function pagerdutyAccess(query) {
+  return (dispatch, state) => {
+    dispatch({
+      type: INTEGRATIONS_PAGERDUTY_ACCESS,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.services.api}/services/pagerduty`)
+        .set('Authorization', state().user.get('auth'))
+        .send(query)
+        .then((res) => {
+          resolve(res.body);
+          getPagerdutyInfo()(dispatch, state);
+          storage.set('shouldSyncPagerduty', _.get(res, 'body.enabled'));
+        }, reject);
+      })
+    });
+  };
+}
+
 export function testNotification(notif = {}) {
   let type = INTEGRATIONS_EMAIL_TEST;
+  let path = notif.type;
   switch (notif.type){
   case 'slack_bot':
+    path = 'slack';
     type = INTEGRATIONS_SLACK_TEST;
+    break;
+  case 'pagerduty':
+    type = INTEGRATIONS_PAGERDUTY_TEST;
     break;
   default:
     break;
   }
-  const path = notif.type === 'slack_bot' ? 'slack' : notif.type;
+
   return (dispatch, state) => {
     dispatch({
       type,

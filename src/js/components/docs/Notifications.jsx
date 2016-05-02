@@ -16,17 +16,21 @@ const Notifications = React.createClass({
               <p>If a health check fails, Opsee can send one or more notifications via:</p>
               <ul>
                 <li>Email</li>
-                <li>A Slack channel</li>
-                <li>A Webhook</li>
+                <li>Slack channel</li>
+                <li>Webhook</li>
+                <li>Pagerduty</li>
               </ul>
+
               <Heading level={2}>Email</Heading>
               <p>Speak to your IT professional if you&rsquo;ve never used email before.</p>
+
               <Heading level={2}>Slack Channels</Heading>
               <p>First, <SlackConnect target="_blank"/>.</p>
               <p>When successfully connected, you&rsquo;ll see a list of Slack channels available to you as notification options during check creation.</p>
               <Padding b={1}>
                 <SlackInfo/>
               </Padding>
+
               <Heading level={2}>Webhooks</Heading>
               <p>Here is what an Opsee webhook looks like:</p>
               <Padding tb={1}>
@@ -64,6 +68,11 @@ const Notifications = React.createClass({
                   <li>If any response is failing, the check is deemed failing.</li>
                 </ul>
               </Padding>
+
+              <Heading level={2}>Pagerduty</Heading>
+              <p>First, <a href="/profile">Connect to Pagerduty</a>.</p>
+              <p>When successfully connected, you&rsquo;ll be able to send any Opsee check to Pagerduty.</p>
+
             </Col>
           </Row>
         </Grid>

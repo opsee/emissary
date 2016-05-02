@@ -181,7 +181,10 @@ export const selectResponse = createAction(CHECK_TEST_SELECT_RESPONSE);
 
 function saveNotifications(state, data, checkId, isEditing){
   //ensure no duplicate notifications
-  const notifications = _.uniqBy(data.notifications, n => n.type + n.value);
+  const notifications = _.uniqBy(data.notifications, n => {
+    // pagerduty values are both bogus and unique, so just filter by type for that
+    return n.type === 'pagerduty' ? n.type : n.type + n.value;
+  });
   return request
   [isEditing ? 'put' : 'post'](`${config.services.api}/notifications${isEditing ? '/' + checkId : ''}`)
   .set('Authorization', state().user.get('auth'))
