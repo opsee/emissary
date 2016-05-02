@@ -30,7 +30,9 @@ const RegionSelect = React.createClass({
     })
   },
   componentWillMount(){
-    this.props.actions.makeLaunchRoleUrlTemplate();
+    if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
+      this.props.actions.makeLaunchRoleUrlTemplate();
+    }
   },
   getInitialState() {
     return {
