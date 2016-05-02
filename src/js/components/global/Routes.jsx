@@ -111,23 +111,16 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
-    <Redirect from="/s" to="/s/stack" />
-    <Route path="/s/stack" component={OnboardLaunchStack} />
-    <Route path="/s/region" component={OnboardRegionSelect} />
-    <Route path="/s/add-instance" component={OnboardAddInstance} />
-    <Route path="/s/choose-vpc" component={auth(OnboardVPCSelect)}/>
-    <Route path="/s/choose-subnet" component={auth(OnboardSubnetSelect)}/>
-
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
     <Route path="/start/password" component={OnboardPassword}/>
-
-    <Redirect from="/start/tutorial" to="/start/tutorial/1"/>
-    <Route path="/start/tutorial" component={auth(OnboardTutorial)}>
-      <Route path="/start/tutorial/1" component={OnboardTutorial1}/>
-      <Route path="/start/tutorial/2" component={OnboardTutorial2}/>
-      <Route path="/start/tutorial/3" component={OnboardTutorial3}/>
-    </Route>
+    <Route path="/start/launch-stack" component={auth(OnboardLaunchStack)} />
+    <Route path="/start/choose-region" component={auth(OnboardRegionSelect)} />
+    <Route path="/start/add-instance" component={OnboardAddInstance} />
+    <Route path="/start/choose-vpc" component={auth(OnboardVPCSelect)}/>
+    <Route path="/start/choose-subnet" component={auth(OnboardSubnetSelect)}/>
+    <Route path="/start/install" component={auth(OnboardInstall)}/>
+    <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 
     <Route path="/start/permissions" component={auth(Permissions)}/>
     <Route path="/start/profile" component={auth(Help)}/>
@@ -135,8 +128,6 @@ const routes = (
     <Route path="/start/credentials" component={auth(OnboardCredentials)}/>
     <Route path="/start/vpc-select" component={auth(OnboardVPCSelect)}/>
     <Route path="/start/subnet-select" component={auth(OnboardSubnetSelect)}/>
-    <Route path="/start/install" component={auth(OnboardInstall)}/>
-    <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
 
     <Route path="/system" component={auth(System)}/>
 
