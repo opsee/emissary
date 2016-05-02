@@ -14,6 +14,7 @@ import {RadioSelect} from '../forms';
 const SubnetSelect = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
+      scanRegion: PropTypes.func,
       subnetSelect: PropTypes.func
     }),
     analyticsActions: PropTypes.shape({
@@ -28,6 +29,12 @@ const SubnetSelect = React.createClass({
       }),
       user: PropTypes.object
     }),
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        region: PropTypes.string.isRequired,
+        vpc: PropTypes.string.isRequired
+      })
+    }),
     history: PropTypes.shape({
       pushState: PropTypes.func,
       replaceState: PropTypes.func
@@ -37,6 +44,11 @@ const SubnetSelect = React.createClass({
     const region = this.props.location.query.region;
     if (!region) {
       this.props.history.replaceState(null, '/s/region');
+    }
+
+    const vpc = this.props.location.query.vpc;
+    if (!vpc) {
+      this.props.history.replaceState(null, `/s/choose-vpc?region=${region}`);
     }
 
     if (!this.props.redux.onboard.subnetsForSelection.length) {

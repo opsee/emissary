@@ -26,8 +26,13 @@ const AddInstance = React.createClass({
       })
     }),
     actions: PropTypes.shape({
-      getTemplates: PropTypes.func
-    })
+      getTemplates: PropTypes.func,
+      scanRegion: PropTypes.func
+    }),
+    history: PropTypes.shape({
+      pushState: PropTypes.func,
+      replaceState: PropTypes.func
+    }).isRequired
   },
   componentWillMount(){
     const region = this.props.location.query.region;

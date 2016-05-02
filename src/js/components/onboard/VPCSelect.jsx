@@ -17,7 +17,7 @@ const VPCSelect = React.createClass({
     history: PropTypes.object,
     location: PropTypes.shape({
       query: PropTypes.shape({
-        region: PropTypes.string
+        region: PropTypes.string.isRequired
       })
     }),
     actions: PropTypes.shape({
