@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {integrations as actions} from '../../actions';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 import {Color} from '../type';
 import PagerdutyConnect from './PagerdutyConnect';
@@ -27,22 +28,22 @@ const PagerdutyInfo = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    if (this.props.query.pagerduty){
-      let q = this.props.query;
-      q.enabled = true;
-      this.props.actions.pagerdutyAccess(q);
+    if (this.props.query.pagerduty && !this.props.query.error){
+      this.props.actions.pagerdutyAccess(_.assign(this.props.query, {
+        enabled: true
+      }));
     }
   },
   handleDisablePagerduty(){
-    let q = this.props.data.pagerdutyInfo;
-    q.enabled = false;
-    this.props.actions.pagerdutyAccess(q);
+    this.props.actions.pagerdutyAccess(_.assign(this.props.data.pagerdutyInfo, {
+      enabled: false
+    }));
   },
   render() {
     const {service_name} = this.props.data.pagerdutyInfo;
     const {enabled} = this.props.data.pagerdutyInfo;
     const {asyncActions} = this.props.redux;
-    if (this.props.query.pagerduty){
+    if (this.props.query.pagerduty && !this.props.query.error){
       if (asyncActions.integrationsPagerdutyInfo.status === 'success'){
         /*eslint-disable camelcase*/
         if (service_name && enabled) {

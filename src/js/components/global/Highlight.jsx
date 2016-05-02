@@ -4,6 +4,7 @@ import xml from 'highlight.js/lib/languages/xml';
 import css from 'highlight.js/lib/languages/css';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import cx from 'classnames';
 /* eslint-disable no-unused-vars */
 import style from './hljs.css';
@@ -32,6 +33,9 @@ const Highlight = React.createClass({
   },
   componentDidMount() {
     this.runHighlightCode();
+  },
+  shouldComponentUpdate(nextProps) {
+    return !_.isEqual(nextProps.children, this.props.children);
   },
   componentDidUpdate() {
     this.runHighlightCode();
