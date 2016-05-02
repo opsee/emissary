@@ -95,10 +95,10 @@ const AddInstance = React.createClass({
             </Col>
             <Col xs={12} sm={8}>
               <Heading level={3}>Our EC2 Instance</Heading>
-              <p>The instance is a t2.micro and is free-tier eligible. It's responsible for running checks,
+              <p>The instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks,
               and it inherits all of its permissions from the cross-account role you set up in the last step.
               The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
-              which are both available in are documentation.</p>
+              which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
             </Col>
           </Row>
 
@@ -130,7 +130,7 @@ const AddInstance = React.createClass({
           <Row>
             <Col xs={12}>
               <div>
-                <Button to={`/start/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
+                <Button to={`/start/choose-vpc?region=${this.props.location.query.region}`} color="success" block chevron>Choose a VPC</Button>
                 <p className="text-center"><small className="text-muted">Questions? Reach out to us any time on email, Slack, or IRC.</small></p>
               </div>
             </Col>

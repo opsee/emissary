@@ -97,7 +97,7 @@ const RegionSelect = React.createClass({
         <Heading level={2}>What to do in the AWS Console</Heading>
         <p>Here's the TLDR version of what to do in your AWS console:</p>
         <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
-        <p>See all the details in our install documentation. If you have any
+        <p>See all the details in <a href="/docs/IAM" target="_blank">our install documentation</a>. If you have any
         trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
       </div>
     );

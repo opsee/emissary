@@ -74,23 +74,25 @@ const LaunchStack = React.createClass({
             </Col>
             <Col xs={12} sm={6}>
               <Heading level={3}>About cross-account access</Heading>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in your IAM console.</p>
+              <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
             </Col>
           </Row>
 
           <Row>
             <Col xs={12}>
-              <Heading level={4}>Cross-account Access CloudFormation Template</Heading>
-              <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also available in our docs.</p>
+              <Padding tb={2}>
+                <Heading level={4}>Cross-account Access CloudFormation Template</Heading>
+                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>.</p>
 
-              {this.renderTemplate()}
+                {this.renderTemplate()}
+              </Padding>
             </Col>
           </Row>
 
           <Row>
             <Col xs={12}>
-              <p>Next, you'll choose where to launch our CloudFormation stack.</p>
-              <Button to="/start/choose-region" color="success" block>Select a region</Button>
+              <p>Next, you'll choose which region the CloudFormation stack will live in.</p>
+              <Button to="/start/choose-region" color="success" block chevron>Select a region</Button>
             </Col>
           </Row>
         </Grid>

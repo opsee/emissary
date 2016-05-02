@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import {History} from 'react-router';
+import {History, Link} from 'react-router';
 
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
@@ -93,7 +93,7 @@ const VPCSelect = React.createClass({
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>
           <RadioSelect onChange={this.handleSelect} data={{vpc: this.state.vpc}} options={this.getVPCs()} path="vpc"/>
           <Padding t={1}>
-            <Button type="submit" color="success" block disabled={!this.state.vpc} chevron>Next</Button>
+            <Button type="submit" color="success" block disabled={!this.state.vpc} chevron>Select a subnet</Button>
           </Padding>
         </div>
       );
@@ -113,7 +113,7 @@ const VPCSelect = React.createClass({
             <Col xs={12}>
               <Padding b={2}>
                 <Heading level={3}>Your chosen region</Heading>
-                <p>{this.props.location.query.region}</p>
+                <p>{this.props.location.query.region} - <Link to="/start/choose-region">change region</Link></p>
               </Padding>
 
               <form name="loginForm" onSubmit={this.handleSubmit}>
