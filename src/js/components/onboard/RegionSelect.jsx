@@ -10,11 +10,13 @@ import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions} from '../../actions';
 import regions from '../../modules/regions';
+import {SetInterval} from '../../modules/mixins';
 
 const RegionSelect = React.createClass({
-  mixins: [History],
+  mixins: [History, SetInterval],
   propTypes: {
     actions: PropTypes.shape({
+      hasRole: PropTypes.func,
       makeLaunchRoleUrlTemplate: PropTypes.func
     }),
     redux: PropTypes.shape({
@@ -25,6 +27,7 @@ const RegionSelect = React.createClass({
         bastions: PropTypes.array
       }),
       onboard: PropTypes.shape({
+        hasRole: PropTypes.bool,
         regionLaunchURL: PropTypes.string
       })
     })
@@ -34,8 +37,20 @@ const RegionSelect = React.createClass({
       this.props.actions.makeLaunchRoleUrlTemplate();
     }
   },
+  componentDidMount() {
+    this.setInterval(() => {
+      this.props.actions.hasRole();
+    }, 1000);
+  },
+  componentWillReceiveProps(){
+    if (this.props.redux.onboard.hasRole && !!this.state.region) {
+      this.history.pushState(null, `/start/add-instance?region=${this.state.region}`);
+    }
+  },
   getInitialState() {
     return {
+      // technically, we are always polling in the background
+      isPolling: false,
       region: null
     };
   },
@@ -44,8 +59,9 @@ const RegionSelect = React.createClass({
     return region ? _.replace(urlTemplate, '${region}', region) : urlTemplate;
   },
   handleSelect(region){
-    this.setState({ region });
-    this.history.pushState(null, `/start/add-instance?region=${region}`);
+    this.setState({ region,
+      isPolling: true
+    });
   },
   renderRegions(){
     const templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
@@ -59,6 +75,7 @@ const RegionSelect = React.createClass({
     return regions.map((region, i) => {
       let regionID = _.get(region, 'id');
       let boundClick = this.handleSelect.bind(null, regionID);
+      let url = this.props.redux.onboard.hasRole ? null : this.getTemplateURL(regionID);
       return (
         <Row key={i}>
           <Col xs={8}>
@@ -68,11 +85,22 @@ const RegionSelect = React.createClass({
             </div>
           </Col>
           <Col xs={4}>
-            <Button onClick={boundClick} to={this.getTemplateURL(regionID)} target="_blank" color="warning" flat secondary>Launch stack</Button>
+            <Button onClick={boundClick} to={url} target="_blank" color="warning" flat secondary>Launch stack</Button>
           </Col>
         </Row>
       );
     });
+  },
+  renderInstructions() {
+    return (
+      <div>
+        <Heading level={2}>What to do in the AWS Console</Heading>
+        <p>Here's the TLDR version of what to do in your AWS console:</p>
+        <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
+        <p>See all the details in our install documentation. If you have any
+        trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
+      </div>
+    );
   },
   renderInner(){
     if (_.find(this.props.redux.env.bastions, 'connected')){
@@ -86,17 +114,28 @@ const RegionSelect = React.createClass({
         </Padding>
       );
     }
+
+    if (this.state.isPolling) {
+      return (
+        <div>
+          <Padding tb={1}>
+            {this.renderInstructions()}
+          </Padding>
+
+          <p>Waiting for your CloudFormation role creation to complete...</p>
+        </div>
+      );
+    }
+
     return (
       <div>
         <p>It's time to launch our CloudFormation stack. This will launch the AWS console.
         Choose a region by clicking one of the buttons below.
         When you're finished, come back to Opsee to continue installation.</p>
 
-        <Heading level={2}>What to do in the AWS Console</Heading>
-        <p>Here's the TLDR version of what to do in your AWS console:</p>
-        <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
-        <p>See all the details in our install documentation. If you have any
-        trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
+        <Padding tb={1}>
+          {this.renderInstructions()}
+        </Padding>
 
         {this.renderRegions()}
       </div>

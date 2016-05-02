@@ -13,7 +13,8 @@ import {
   ONBOARD_INSTALL,
   ONBOARD_GET_TEMPLATES,
   ONBOARD_MAKE_LAUNCH_TEMPLATE,
-  ONBOARD_SCAN_REGION
+  ONBOARD_SCAN_REGION,
+  ONBOARD_HAS_ROLE
 } from '../actions/constants';
 
 const initial = {
@@ -27,7 +28,8 @@ const initial = {
   installData: undefined,
   installing: false,
   templates: [],
-  regionLaunchURL: null
+  regionLaunchURL: null,
+  hasRole: false
 };
 
 function getFinalInstallData(state){
@@ -172,6 +174,12 @@ export default handleActions({
       const vpcsForSelection = _.get(action.payload.data, 'vpcs');
       const subnetsForSelection = _.get(action.payload.data, 'subnets');
       return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
+    }
+  },
+  [ONBOARD_HAS_ROLE]: {
+    next(state, action) {
+      const hasRole = action.payload.data;
+      return _.assign({}, state, {hasRole});
     }
   }
 }, initial);
