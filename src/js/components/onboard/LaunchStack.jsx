@@ -1,13 +1,57 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
+import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Highlight, Toolbar} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
+import templates from '../../modules/awsTemplates';
 
-export default React.createClass({
+const LaunchStack = React.createClass({
+  propTypes: {
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        onboardGetTemplates: PropTypes.object
+      }),
+      onboard: PropTypes.shape({
+        templates: PropTypes.array
+      })
+    }),
+    actions: PropTypes.shape({
+      getTemplates: PropTypes.func
+    })
+  },
+  componentWillMount() {
+    const item = this.props.redux.asyncActions.onboardGetTemplates;
+    if (!item.status){
+      this.props.actions.getTemplates();
+    }
+  },
+  renderTemplate() {
+    console.log(this.props.redux.onboard.templates);
+    const data = this.props.redux.onboard.templates[2];
+    if (data){
+      return (
+        <Padding b={2}>
+          <p><small className="text-muted">Last modified: {data.headers['last-modified']}</small></p>
+          <Expandable style={{background: seed.color.gray9}}>
+            <Highlight style={{padding: '1rem'}}>
+              {data.text}
+            </Highlight>
+          </Expandable>
+        </Padding>
+      );
+    }
+    return (
+      <Padding b={1}>
+        <a href={_.get(templates, 'role')} target="_blank">View File</a>
+      </Padding>
+    );
+  },
   render() {
     return (
       <div>
@@ -28,13 +72,7 @@ export default React.createClass({
               <Heading level={4}>Cross-account Access CloudFormation Template</Heading>
               <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also available in our docs.</p>
 
-              <Padding>
-                <Expandable style={{background: seed.color.gray9}}>
-                  <Highlight style={{padding: '1rem'}}>
-                    {JSON.stringify({ foo: 'bar' })}
-                  </Highlight>
-                </Expandable>
-              </Padding>
+              {this.renderTemplate()}
 
               <p>Next, you'll choose where to launch our CloudFormation stack.</p>
               <Button to="/s/region" color="success" block>Select a region</Button>
@@ -45,3 +83,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(LaunchStack);
