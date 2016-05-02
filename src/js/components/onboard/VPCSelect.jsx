@@ -58,7 +58,10 @@ const VPCSelect = React.createClass({
     });
   },
   getSelectedVPC(){
-    // TODO grab from URL parameter if present
+    if (this.props.redux.onboard.selectedVPC) {
+      return this.props.redux.onboard.selectedVPC;
+    }
+
     const first = _.chain(this.props.redux.onboard.vpcsForSelection)
     .head()
     .get('vpc_id')

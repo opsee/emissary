@@ -65,6 +65,10 @@ const SubnetSelect = React.createClass({
     return this.props.redux.onboard.subnetsForSelection;
   },
   getSelectedSubnet(){
+    if (this.props.redux.onboard.selectedSubnet) {
+      return this.props.redux.onboard.selectedSubnet;
+    }
+
     const first = _.chain(this.getSubnets())
     .head()
     .get('subnet_id')
