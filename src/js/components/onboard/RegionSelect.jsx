@@ -45,7 +45,7 @@ const RegionSelect = React.createClass({
   },
   handleSelect(region){
     this.setState({ region });
-    this.history.pushState(null, `/s/add-instance?region=${region}`);
+    this.history.pushState(null, `/start/add-instance?region=${region}`);
   },
   renderRegions(){
     const templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');

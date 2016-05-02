@@ -74,7 +74,7 @@ export function setRegion(data) {
     analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
     getTemplates()(dispatch, state);
     setTimeout(() => {
-      dispatch(pushState(null, '/s/add-instance'));
+      dispatch(pushState(null, '/start/add-instance'));
     }, 100);
   };
 }

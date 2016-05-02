@@ -90,7 +90,7 @@ const LaunchStack = React.createClass({
           <Row>
             <Col xs={12}>
               <p>Next, you'll choose where to launch our CloudFormation stack.</p>
-              <Button to="/s/region" color="success" block>Select a region</Button>
+              <Button to="/start/choose-region" color="success" block>Select a region</Button>
             </Col>
           </Row>
         </Grid>

@@ -41,7 +41,7 @@ const VPCSelect = React.createClass({
   componentWillMount(){
     const region = this.props.location.query.region;
     if (!region) {
-      this.props.history.replaceState(null, '/s/region');
+      this.props.history.replaceState(null, '/start/choose-region');
     }
 
     if (!this.props.redux.onboard.vpcsForSelection.length) {
@@ -78,7 +78,7 @@ const VPCSelect = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     this.props.analyticsActions.trackEvent('Onboard', 'vpc-select');
-    this.history.pushState(null, `/s/choose-subnet?region=${this.state.region}&vpc=${this.state.vpc}`);
+    this.history.pushState(null, `/start/choose-subnet?region=${this.state.region}&vpc=${this.state.vpc}`);
   },
   renderInner(){
     if (_.get(this.props.redux.asyncActions.onboardScanRegion, 'status') === 'pending') {

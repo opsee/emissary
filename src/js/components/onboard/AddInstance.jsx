@@ -37,7 +37,7 @@ const AddInstance = React.createClass({
   componentWillMount(){
     const region = this.props.location.query.region;
     if (!region) {
-      this.props.history.replaceState(null, '/s/region');
+      this.props.history.replaceState(null, '/start/choose-region');
     }
     // Optimistically scan region for the VPC/subnet selection steps
     this.props.actions.scanRegion(region);
@@ -130,7 +130,7 @@ const AddInstance = React.createClass({
           <Row>
             <Col xs={12}>
               <div>
-                <Button to={`/s/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
+                <Button to={`/start/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
                 <p className="text-center"><small className="text-muted">Questions? Reach out to us any time on email, Slack, or IRC.</small></p>
               </div>
             </Col>

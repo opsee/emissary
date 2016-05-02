@@ -44,12 +44,12 @@ const SubnetSelect = React.createClass({
   componentWillMount(){
     const region = this.props.location.query.region;
     if (!region) {
-      this.props.history.replaceState(null, '/s/region');
+      this.props.history.replaceState(null, '/start/choose-region');
     }
 
     const vpc = this.props.location.query.vpc;
     if (!vpc) {
-      this.props.history.replaceState(null, `/s/choose-vpc?region=${region}`);
+      this.props.history.replaceState(null, `/start/choose-vpc?region=${region}`);
     }
 
     if (!this.props.redux.onboard.subnetsForSelection.length) {
