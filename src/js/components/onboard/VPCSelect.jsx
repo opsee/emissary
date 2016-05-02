@@ -38,7 +38,6 @@ const VPCSelect = React.createClass({
     if (!this.props.redux.onboard.region) {
       this.props.history.replaceState(null, '/start/choose-region');
     }
-
     if (!this.props.redux.onboard.vpcsForSelection.length) {
       this.props.actions.scanRegion(this.props.redux.onboard.region);
     }
