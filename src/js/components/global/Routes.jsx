@@ -45,13 +45,7 @@ import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../use
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
 import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
 import OnboardPassword from 'react-proxy?name=onboard!exports?exports.default!../onboard/Password';
-import OnboardTutorial from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial';
-import OnboardTutorial1 from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial1';
-import OnboardTutorial2 from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial2';
-import OnboardTutorial3 from 'react-proxy?name=onboard!exports?exports.default!../onboard/Tutorial3';
-import Permissions from 'react-proxy?name=onboard!exports?exports.default!../onboard/Permissions';
 import OnboardRegionSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/RegionSelect';
-import OnboardCredentials from 'react-proxy?name=onboard!exports?exports.default!../onboard/Credentials';
 import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
 import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
 import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
@@ -121,13 +115,7 @@ const routes = (
     <Route path="/start/choose-subnet" component={auth(OnboardSubnetSelect)}/>
     <Route path="/start/install" component={auth(OnboardInstall)}/>
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
-
-    <Route path="/start/permissions" component={auth(Permissions)}/>
     <Route path="/start/profile" component={auth(Help)}/>
-    <Route path="/start/region-select" component={auth(OnboardRegionSelect)}/>
-    <Route path="/start/credentials" component={auth(OnboardCredentials)}/>
-    <Route path="/start/vpc-select" component={auth(OnboardVPCSelect)}/>
-    <Route path="/start/subnet-select" component={auth(OnboardSubnetSelect)}/>
 
     <Route path="/system" component={auth(System)}/>
 

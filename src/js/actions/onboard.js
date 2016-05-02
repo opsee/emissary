@@ -274,7 +274,7 @@ export function install(){
           if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
           }
-          dispatch(pushState(null, '/start/region-select'));
+          dispatch(pushState(null, '/start/choose-region'));
           return reject();
         }, 30000);
       })
