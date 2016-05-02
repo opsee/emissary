@@ -47,6 +47,8 @@ const CheckCreateTarget = React.createClass({
         return ['groups.security'];
       case 'elb':
         return ['groups.elb'];
+      case 'asg':
+        return ['groups.asg'];
       case 'EC2':
       case 'ecc':
         return ['instances.ecc'];

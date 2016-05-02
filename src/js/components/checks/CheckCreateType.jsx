@@ -26,7 +26,8 @@ const CheckCreateType = React.createClass({
       env: PropTypes.shape({
         groups: PropTypes.shape({
           security: PropTypes.object,
-          elb: PropTypes.object
+          elb: PropTypes.object,
+          asg: PropTypes.object
         }),
         instances: PropTypes.shape({
           ecc: PropTypes.object,
@@ -55,19 +56,24 @@ const CheckCreateType = React.createClass({
         size: () => this.props.redux.env.groups.security.size
       },
       {
+        id: 'asg',
+        title: 'Auto Scaling Group',
+        size: () => this.props.redux.env.groups.asg.size
+      },
+      {
         id: 'ecc',
         title: 'EC2 Instance',
         size: () => this.props.redux.env.instances.ecc.size
       },
       {
+        id: 'rds',
+        title: 'RDS Instance',
+        size: () => this.props.redux.env.instances.rds.size
+      },
+      {
         id: 'host',
         title: 'URL',
         size: () => ''
-      },
-      {
-        id: 'rds',
-        title: 'RDS',
-        size: () => this.props.redux.env.instances.rds.size
       }
     ];
     return _.filter(initial, type => {

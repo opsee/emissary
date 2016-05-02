@@ -17,7 +17,6 @@ import {Heading} from '../type';
 import {validate} from '../../modules';
 import {Input, RadioSelect} from '../forms';
 import {
-  env as envActions,
   checks as checkActions,
   user as userActions
 } from '../../actions';
@@ -28,11 +27,6 @@ const CheckCreateRequest = React.createClass({
     renderAsInclude: PropTypes.bool,
     onChange: PropTypes.func,
     onTargetClick: PropTypes.func,
-    envActions: PropTypes.shape({
-      getGroupsSecurity: PropTypes.func,
-      getGroupsElb: PropTypes.func,
-      getInstancesEcc: PropTypes.func
-    }),
     checkActions: PropTypes.shape({
       testCheckReset: PropTypes.func
     }),
@@ -239,15 +233,14 @@ const CheckCreateRequest = React.createClass({
       ) : <div/>;
   },
   renderTargetSelection(){
-    let selection;
-    const target = this.props.check.target;
-    let type = target.type;
+    const {target} = this.props.check;
+    let {type} = target;
     if (!type || type === 'host'){
       return null;
     }
     type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'sg' ? 'security' : type;
-    if (selection && selection.get('id')){
+    if (type && target.id){
       let inner = null;
       if (type.match('^ecc$|^instance$|^rds$')){
         inner = <InstanceItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
@@ -402,7 +395,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  envActions: bindActionCreators(envActions, dispatch),
   checkActions: bindActionCreators(checkActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch)
 });
