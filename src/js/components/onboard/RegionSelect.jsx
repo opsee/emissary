@@ -9,18 +9,18 @@ import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions} from '../../actions';
-import config from '../../modules/config';
 import regions from '../../modules/regions';
-import {RadioSelect} from '../forms';
-import {NewWindow} from '../icons';
 
 const RegionSelect = React.createClass({
   mixins: [History],
   propTypes: {
     actions: PropTypes.shape({
-      setRegion: PropTypes.func
+      makeLaunchRoleUrlTemplate: PropTypes.func
     }),
     redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        onboardMakeLaunchTemplate: PropTypes.object
+      }),
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),

@@ -85,14 +85,14 @@ export function makeLaunchRoleUrlTemplate() {
       type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
       payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
         return request
-          .post(`${config.services.compost}`)
-          .set('Authorization', state().user.get('auth'))
-          .send({query:
-            `mutation Mutation {
-              makeLaunchRoleUrlTemplate
-            }`
-          });
-        })
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          `mutation Mutation {
+            makeLaunchRoleUrlTemplate
+          }`
+        });
+      })
     });
   };
 }
@@ -103,27 +103,27 @@ export function scanRegion(region) {
       type: ONBOARD_SCAN_REGION,
       payload: graphPromise('region.scan', () => {
         return request
-          .post(`${config.services.compost}`)
-          .set('Authorization', state().user.get('auth'))
-          .send({query:
-            `mutation Mutation {
-              region(id: "${region}") {
-                scan {
-                  subnets {
-                    routing
-                    subnet_id
-                  },
-                  vpcs {
-                    vpc_id,
-                    instance_count
-                  },
-                }
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          `mutation Mutation {
+            region(id: "${region}") {
+              scan {
+                subnets {
+                  routing
+                  subnet_id
+                },
+                vpcs {
+                  vpc_id,
+                  instance_count
+                },
               }
-            }`
-          });
-        })
-    })
-  }
+            }
+          }`
+        });
+      })
+    });
+  };
 }
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
@@ -242,8 +242,8 @@ function launch(dispatch, state, resolve, reject){
         }
       }`,
       variables
-    })
-  })
+    });
+  });
 }
 
 export function install(){

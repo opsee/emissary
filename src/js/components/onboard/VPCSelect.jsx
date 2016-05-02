@@ -15,6 +15,11 @@ const VPCSelect = React.createClass({
   mixins: [History],
   propTypes: {
     history: PropTypes.object,
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        region: PropTypes.string
+      })
+    }),
     actions: PropTypes.shape({
       vpcSelect: PropTypes.func,
       scanRegion: PropTypes.func
@@ -28,7 +33,7 @@ const VPCSelect = React.createClass({
         vpcsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
-        envGetBastions: PropTypes.object
+        onboardScanRegion: PropTypes.object
       }),
       user: PropTypes.object
     })
@@ -85,8 +90,7 @@ const VPCSelect = React.createClass({
           Scanning {this.props.location.query.region}...
         </div>
       );
-    }
-    else if (this.props.redux.onboard.vpcsForSelection.length){
+    } else if (this.props.redux.onboard.vpcsForSelection.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>

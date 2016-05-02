@@ -12,6 +12,11 @@ import ec2InstaceImage from '../../../img/tut-ec2-instance.svg';
 
 const AddInstance = React.createClass({
   propTypes: {
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        region: PropTypes.string
+      })
+    }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         onboardGetTemplates: PropTypes.object
@@ -22,10 +27,7 @@ const AddInstance = React.createClass({
     }),
     actions: PropTypes.shape({
       getTemplates: PropTypes.func
-    }),
-    location: PropTypes.shape({
-      pathname: PropTypes.string
-    }).isRequired
+    })
   },
   componentWillMount(){
     const item = this.props.redux.asyncActions.onboardGetTemplates;
