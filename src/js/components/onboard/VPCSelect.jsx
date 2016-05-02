@@ -38,9 +38,6 @@ const VPCSelect = React.createClass({
     if (!region) {
       this.props.history.replaceState(null, '/s/region');
     }
-  },
-  componentDidMount() {
-    let region = this.props.location.query.region;
     this.props.actions.scanRegion(region);
   },
   getInitialState() {
@@ -82,7 +79,14 @@ const VPCSelect = React.createClass({
     this.history.pushState(null, `/s/choose-subnet?region=${this.state.region}&vpc=${this.state.vpc}`);
   },
   renderInner(){
-    if (this.props.redux.onboard.vpcsForSelection.length){
+    if (_.get(this.props.redux.asyncActions.onboardScanRegion, 'status') === 'pending') {
+      return (
+        <div>
+          Scanning {this.props.location.query.region}...
+        </div>
+      );
+    }
+    else if (this.props.redux.onboard.vpcsForSelection.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>
@@ -106,7 +110,6 @@ const VPCSelect = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-
               <Padding b={2}>
                 <Heading level={3}>Your chosen region</Heading>
                 <p>{this.props.location.query.region}</p>
