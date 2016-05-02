@@ -34,9 +34,15 @@ const SubnetSelect = React.createClass({
     }).isRequired
   },
   componentWillMount(){
-    // if (!this.props.redux.onboard.subnetsForSelection.length){
-    //   this.props.history.replaceState(null, '/start/region-select');
-    // }
+    const region = this.props.location.query.region;
+    if (!region) {
+      this.props.history.replaceState(null, '/s/region');
+    }
+
+    if (!this.props.redux.onboard.subnetsForSelection.length) {
+      this.props.actions.scanRegion(region);
+    }
+
     const newImg = new Image();
     newImg.src = img;
     newImg.onload = () => {
@@ -55,12 +61,6 @@ const SubnetSelect = React.createClass({
   },
   getSelectedSubnet(){
     const {onboard} = this.props.redux;
-    // const selected = _.chain(onboard.regionsWithVpcs)
-    // .head()
-    // .get('subnets')
-    // .find({selected: true})
-    // .get('subnet_id')
-    // .value();
     const first = _.chain(onboard.subnetsForSelection)
     .head()
     .get('subnet_id')

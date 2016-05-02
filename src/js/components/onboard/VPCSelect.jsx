@@ -39,11 +39,14 @@ const VPCSelect = React.createClass({
     })
   },
   componentWillMount(){
-    const region = this.props.location.query.region; // TODO put into redux state?
+    const region = this.props.location.query.region;
     if (!region) {
       this.props.history.replaceState(null, '/s/region');
     }
-    this.props.actions.scanRegion(region);
+
+    if (!this.props.redux.onboard.vpcsForSelection.length) {
+      this.props.actions.scanRegion(region);
+    }
   },
   getInitialState() {
     return {
@@ -60,18 +63,11 @@ const VPCSelect = React.createClass({
     });
   },
   getSelectedVPC(){
-    // const {onboard} = this.props.redux;
-    // const selected = _.chain(onboard.regionsWithVpcs)
-    // .head()
-    // .get('vpcs')
-    // .find({selected: true})
-    // .get('vpc_id')
-    // .value();
+    // TODO grab from URL parameter if present
     const first = _.chain(this.props.redux.onboard.vpcsForSelection)
     .head()
     .get('vpc_id')
     .value();
-    // return selected || first;
     return first;
   },
   handleSelect(state){
@@ -80,21 +76,20 @@ const VPCSelect = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     this.props.analyticsActions.trackEvent('Onboard', 'vpc-select');
-    // this.props.actions.vpcSelect(this.state.vpc);
     this.history.pushState(null, `/s/choose-subnet?region=${this.state.region}&vpc=${this.state.vpc}`);
   },
   renderInner(){
     if (_.get(this.props.redux.asyncActions.onboardScanRegion, 'status') === 'pending') {
       return (
         <div>
-          Scanning {this.props.location.query.region}...
+          Scanning your {this.props.location.query.region} environment for VPCs...
         </div>
       );
     } else if (this.props.redux.onboard.vpcsForSelection.length){
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>
-          <RadioSelect onChange={this.handleSelect} data={{ vpc: this.state.vpc }} options={this.getVPCs()} path="vpc"/>
+          <RadioSelect onChange={this.handleSelect} data={{vpc: this.state.vpc}} options={this.getVPCs()} path="vpc"/>
           <Padding t={1}>
             <Button type="submit" color="success" block disabled={!this.state.vpc} chevron>Next</Button>
           </Padding>

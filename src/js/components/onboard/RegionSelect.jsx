@@ -46,6 +46,14 @@ const RegionSelect = React.createClass({
     this.history.pushState(null, `/s/add-instance?region=${region}`);
   },
   renderRegions(){
+    const templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
+    if (templateStatus === 'pending') {
+      return (
+        <div>
+          Scanning your AWS environment...
+        </div>
+      );
+    }
     return regions.map((region, i) => {
       let regionID = _.get(region, 'id');
       let boundClick = this.handleSelect.bind(null, regionID);
@@ -74,14 +82,6 @@ const RegionSelect = React.createClass({
             If you need more, please <a href="mailto:support@opsee.co">contact us</a>.
           </Alert>
         </Padding>
-      );
-    }
-    let templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
-    if (templateStatus === 'pending') {
-      return (
-        <div>
-          Scanning your AWS environment...
-        </div>
       );
     }
     return (

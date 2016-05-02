@@ -111,7 +111,8 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
-    <Route path="/s" component={OnboardLaunchStack} />
+    <Redirect from="/s" to="/s/stack" />
+    <Route path="/s/stack" component={OnboardLaunchStack} />
     <Route path="/s/region" component={OnboardRegionSelect} />
     <Route path="/s/add-instance" component={OnboardAddInstance} />
     <Route path="/s/choose-vpc" component={auth(OnboardVPCSelect)}/>

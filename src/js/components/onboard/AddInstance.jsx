@@ -30,6 +30,13 @@ const AddInstance = React.createClass({
     })
   },
   componentWillMount(){
+    const region = this.props.location.query.region;
+    if (!region) {
+      this.props.history.replaceState(null, '/s/region');
+    }
+    // Optimistically scan region for the VPC/subnet selection steps
+    this.props.actions.scanRegion(region);
+    // Grab the URL template to populate the AWS console links
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
       this.props.actions.getTemplates();
