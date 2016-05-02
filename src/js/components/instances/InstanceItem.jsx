@@ -79,11 +79,11 @@ const InstanceItem = React.createClass({
     if (total){
       return (
         <span>
-          <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
+          <span title={`${passing} response${passing === 1 ? '' : 's'} passing`}>
             <ListCheckmark inline fill="textSecondary"/>{passing}
           </span>
           &nbsp;&nbsp;
-          <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
+          <span title={`${failing} response${failing === 1 ? '' : 's'} failing`}>
             <ListClose inline fill="textSecondary"/>{failing}
           </span>
         </span>
