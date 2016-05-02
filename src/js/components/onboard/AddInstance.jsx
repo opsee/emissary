@@ -67,20 +67,29 @@ const AddInstance = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <p>Now we're going to add our EC2 instance to your environment. <strong>This is the last step in installation... hooray!</strong></p>
-
-              <Padding tb={1}>
-                <Padding b={1}>
-                  <img src={ec2InstaceImage} alt="Our EC2 instance inside your AWS environment" />
-                </Padding>
-
-                <Heading level={3}>Our EC2 Instance</Heading>
-                <p>The instance is a t2.micro and is free-tier eligible. It's responsible for running checks,
-                and it inherits all of its permissions from the cross-account role you set up in the last step.
-                The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
-                which are both available in are documentation.</p>
+              <Padding b={2}>
+                <p>Now we're going to add our EC2 instance to your environment. <strong>This is the last step in installation... hooray!</strong></p>
               </Padding>
+            </Col>
+          </Row>
 
+          <Row className="middle-xs">
+            <Col xs={12} sm={4} style={{textAlign: 'center'}}>
+              <Padding a={2}>
+                <img src={ec2InstaceImage} alt="Our EC2 instance inside your AWS environment" style={{width: '100%', maxWidth: '200px'}} />
+              </Padding>
+            </Col>
+            <Col xs={12} sm={8}>
+              <Heading level={3}>Our EC2 Instance</Heading>
+              <p>The instance is a t2.micro and is free-tier eligible. It's responsible for running checks,
+              and it inherits all of its permissions from the cross-account role you set up in the last step.
+              The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
+              which are both available in are documentation.</p>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs={12}>
               <Padding tb={2}>
                 <Heading level={4}>Instance CloudFormation Template</Heading>
                 <p>Used to install our EC2 instance. Notably, we create a security group and
@@ -101,7 +110,11 @@ const AddInstance = React.createClass({
                   {this.renderTemplateItem('ingress')}
                 </Padding>
               </Padding>
+            </Col>
+          </Row>
 
+          <Row>
+            <Col xs={12}>
               <div>
                 <Button to={`/s/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
                 <p className="text-center"><small className="text-muted">Questions? Reach out to us any time on email, Slack, or IRC.</small></p>
