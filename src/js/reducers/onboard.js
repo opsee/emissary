@@ -163,7 +163,7 @@ export default handleActions({
   },
   [ONBOARD_MAKE_LAUNCH_TEMPLATE]: {
     next(state, action){
-      const regionLaunchURL = _.get(action.payload, 'data');
+      const regionLaunchURL = atob(_.get(action.payload, 'data'));
       return _.assign({}, state, {regionLaunchURL});
     }
   },
