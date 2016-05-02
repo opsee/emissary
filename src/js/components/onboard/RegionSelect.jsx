@@ -29,34 +29,26 @@ const RegionSelect = React.createClass({
       })
     })
   },
-  componentWillReceiveProps(nextProps) {
-    const thisURL = _.get(this.props.redux, 'onboard.regionLaunchURL');
-    const nextURL = _.get(nextProps.redux, 'onboard.regionLaunchURL');
-
-    if (this.state.region && thisURL !== nextURL) {
-      const formattedURL = _.replace(nextURL, '${region}', this.state.region);
-      window.open(this.history.createHref(formattedURL));
-      this.history.pushState(null, `/s/add-instance?region=${this.state.region}`);
-    }
+  componentWillMount(){
+    this.props.actions.makeLaunchRoleUrlTemplate();
   },
   getInitialState() {
     return {
       region: null
     };
   },
+  getTemplateURL(region) {
+    const urlTemplate = _.get(this.props.redux, 'onboard.regionLaunchURL');
+    return region ? _.replace(urlTemplate, '${region}', region) : urlTemplate;
+  },
   handleSelect(region){
     this.setState({ region });
-    this.props.actions.makeLaunchRoleUrlTemplate();
+    this.history.pushState(null, `/s/add-instance?region=${region}`);
   },
   renderRegions(){
-    let templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
-    let isPending = templateStatus === 'pending';
-
     return regions.map((region, i) => {
       let regionID = _.get(region, 'id');
       let boundClick = this.handleSelect.bind(null, regionID);
-      let isLoading = isPending && regionID === this.state.region;
-      let buttonText = isLoading ? 'Launching...' : 'Launch stack';
       return (
         <Row key={i}>
           <Col xs={8}>
@@ -66,38 +58,46 @@ const RegionSelect = React.createClass({
             </div>
           </Col>
           <Col xs={4}>
-            <Button onClick={boundClick} color="warning" disabled={isPending} flat secondary>{buttonText}</Button>
+            <Button onClick={boundClick} to={this.getTemplateURL(regionID)} target="_blank" color="warning" flat secondary>Launch stack</Button>
           </Col>
         </Row>
       );
     });
   },
   renderInner(){
-    if (!_.find(this.props.redux.env.bastions, 'connected')){
+    if (_.find(this.props.redux.env.bastions, 'connected')){
+      return (
+        <Padding tb={1}>
+          <Alert color="info">
+            It looks like you already have an instance in your environment.
+            At this time, Opsee only supports one instance per customer.
+            If you need more, please <a href="mailto:support@opsee.co">contact us</a>.
+          </Alert>
+        </Padding>
+      );
+    }
+    let templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
+    if (templateStatus === 'pending') {
       return (
         <div>
-          <p>It's time to launch our CloudFormation stack. This will launch the AWS console.
-          Choose a region by clicking one of the buttons below.
-          When you're finished, come back to Opsee to continue installation.</p>
-
-          <Heading level={2}>What to do in the AWS Console</Heading>
-          <p>Here's the TLDR version of what to do in your AWS console:</p>
-          <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
-          <p>See all the details in our install documentation. If you have any
-          trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
-
-          {this.renderRegions()}
+          Scanning your AWS environment...
         </div>
       );
     }
     return (
-      <Padding tb={1}>
-        <Alert color="info">
-          It looks like you already have an instance in your environment.
-          At this time, Opsee only supports one instance per customer.
-          If you need more, please <a href="mailto:support@opsee.co">contact us</a>.
-        </Alert>
-      </Padding>
+      <div>
+        <p>It's time to launch our CloudFormation stack. This will launch the AWS console.
+        Choose a region by clicking one of the buttons below.
+        When you're finished, come back to Opsee to continue installation.</p>
+
+        <Heading level={2}>What to do in the AWS Console</Heading>
+        <p>Here's the TLDR version of what to do in your AWS console:</p>
+        <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
+        <p>See all the details in our install documentation. If you have any
+        trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
+
+        {this.renderRegions()}
+      </div>
     );
   },
   render() {
