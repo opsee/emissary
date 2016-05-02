@@ -42,7 +42,7 @@ const SubnetSelect = React.createClass({
       this.props.history.replaceState(null, '/start/choose-region');
     }
     if (!this.props.redux.onboard.subnetsForSelection.length) {
-      this.props.actions.scanRegion(region);
+      this.props.actions.scanRegion(this.props.redux.onboard.region);
     }
     const newImg = new Image();
     newImg.src = img;
