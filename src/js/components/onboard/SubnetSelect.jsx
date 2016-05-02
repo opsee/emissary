@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 import _ from 'lodash';
 
 import {bindActionCreators} from 'redux';
@@ -142,10 +143,10 @@ const SubnetSelect = React.createClass({
             <Col xs={12}>
               <Padding b={2}>
                 <Heading level={3}>Your chosen region</Heading>
-                <p>{this.props.location.query.region}</p>
+                <p>{this.props.location.query.region} - <Link to="/start/choose-region">change region</Link></p>
 
                 <Heading level={3}>Your chosen VPC</Heading>
-                <p>{this.props.location.query.vpc}</p>
+                <p>{this.props.location.query.vpc} - <Link to={`/start/choose-vpc?region=${this.props.location.query.region}`}>change VPC</Link></p>
               </Padding>
             </Col>
           </Row>
