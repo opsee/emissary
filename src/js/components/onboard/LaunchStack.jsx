@@ -32,8 +32,7 @@ const LaunchStack = React.createClass({
     }
   },
   renderTemplate() {
-    console.log(this.props.redux.onboard.templates);
-    const data = this.props.redux.onboard.templates[2];
+    const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
       return (
         <Padding b={2}>
@@ -60,20 +59,35 @@ const LaunchStack = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <p>Opsee uses two tools to monitor your environment: cross-account access and our EC2 instance. We'll start by adding cross-account access.</p>
-
-              <Padding>
-                <img src={crossAccountImg} alt="Cross-account access between Opsee and your AWS environment" />
+              <Padding b={2}>
+                <p>Opsee uses two tools to monitor your environment: cross-account access and our EC2 instance. We'll start by adding cross-account access.</p>
               </Padding>
+            </Col>
+          </Row>
 
+          <Row className="middle-xs">
+            <Col xs={12} sm={6} style={{textAlign: 'center'}}>
+              <Padding a={2}>
+                <img src={crossAccountImg} alt="Cross-account access between Opsee and your AWS environment" style={{width: '100%', maxWidth: '400px'}} />
+              </Padding>
+            </Col>
+            <Col xs={12} sm={6}>
               <Heading level={3}>About cross-account access</Heading>
               <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in your IAM console.</p>
+            </Col>
+          </Row>
 
+          <Row>
+            <Col xs={12}>
               <Heading level={4}>Cross-account Access CloudFormation Template</Heading>
               <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also available in our docs.</p>
 
               {this.renderTemplate()}
+            </Col>
+          </Row>
 
+          <Row>
+            <Col xs={12}>
               <p>Next, you'll choose where to launch our CloudFormation stack.</p>
               <Button to="/s/region" color="success" block>Select a region</Button>
             </Col>

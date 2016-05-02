@@ -101,7 +101,6 @@ const RegionSelect = React.createClass({
     );
   },
   render() {
-    console.log(this.props.redux.asyncActions.onboardMakeLaunchTemplate);
     return (
        <div>
         <Toolbar title="Choose a Region"/>

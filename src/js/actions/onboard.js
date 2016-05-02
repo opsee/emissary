@@ -98,7 +98,6 @@ export function makeLaunchRoleUrlTemplate() {
 }
 
 export function scanRegion(region) {
-  console.log('scanning region', region);
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SCAN_REGION,
