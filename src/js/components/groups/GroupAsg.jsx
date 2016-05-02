@@ -14,6 +14,7 @@ import {Add} from '../icons';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
+import {flag} from '../../modules';
 
 const GroupAsg = React.createClass({
   mixins: [SetInterval],
@@ -55,16 +56,24 @@ const GroupAsg = React.createClass({
     });
     return `/check-create/request?data=${data}`;
   },
+  renderCreateCheckButton(){
+    if (flag('check-type-asg')){
+      return (
+        <Padding b={3}>
+          <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
+            <Add fill="primary" inline/> Create a Check
+          </Button>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderInner(){
     const group = this.getGroup().toJS();
     if (group.name && group.CreatedTime){
       return (
         <div>
-          <Padding b={3}>
-            <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
-              <Add fill="primary" inline/> Create a Check
-            </Button>
-          </Padding>
+          {this.renderCreateCheckButton()}
           <Padding b={2}>
             <Heading level={3}>{group.id} Information</Heading>
             <Table>
