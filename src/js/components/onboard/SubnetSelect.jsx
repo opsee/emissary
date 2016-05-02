@@ -71,9 +71,11 @@ const SubnetSelect = React.createClass({
       subnet: this.getSelectedSubnet()
     };
   },
+  getSubnets() {
+    return this.props.redux.onboard.subnetsForSelection;
+  },
   getSelectedSubnet(){
-    const {onboard} = this.props.redux;
-    const first = _.chain(onboard.subnetsForSelection)
+    const first = _.chain(this.getSubnets())
     .head()
     .get('subnet_id')
     .value();
@@ -91,41 +93,43 @@ const SubnetSelect = React.createClass({
     this.props.history.pushState(null, '/start/install');
   },
   renderInner(){
-    if (!this.state.loaded){
+    if (_.get(this.props.redux.asyncActions.onboardScanRegion, 'status') === 'pending') {
       return <StatusHandler status="pending"/>;
-    } else if (this.props.redux.onboard.subnetsForSelection.length){
-      const subnets = this.props.redux.onboard.subnetsForSelection.map(s => {
-        return _.assign({}, s, {
-          id: _.get(s, 'subnet_id')
-        });
-      });
-
+    } else if (!this.props.redux.onboard.subnetsForSelection.length){
       return (
-        <div>
-          <Padding b={1}>
-            <p>Choose a Subnet to install your instance in. The instance needs to communicate with both Opsee and any private subnets you want to check.  If you're not sure which subnet to choose, we've selected the one we think is the best fit.</p>
-          </Padding>
-          <Grid>
-            <Row>
-              <Col xs={12} sm={4}>
-                <img src={img}/>
-              </Col>
-              <Col xs={12} sm={8}>
-                <Heading level={3}>Your Subnets</Heading>
-                <RadioSelect onChange={this.handleSelect} data={this.state} options={subnets} path="subnet"/>
-              </Col>
-            </Row>
-          </Grid>
-          <Padding t={1}>
-            <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
-          </Padding>
-        </div>
+        <Alert type="danger">
+          Either you have no active Subnets or something else went wrong.
+        </Alert>
       );
     }
+    const subnets = this.props.redux.onboard.subnetsForSelection.map(s => {
+      let subnetID = _.get(s, 'subnet_id');
+      let instanceCount = _.get(s, 'instance_count');
+      return _.assign({}, s, {
+        id: subnetID,
+        label: `${subnetID} (${instanceCount} instances)`
+      });
+    });
     return (
-      <Alert type="danger">
-        Either you have no active Subnets or something else went wrong.
-      </Alert>
+      <div>
+        <Padding b={1}>
+          <p>Choose a Subnet to install your instance in. The instance needs to communicate with both Opsee and any private subnets you want to check.  If you're not sure which subnet to choose, we've selected the one we think is the best fit.</p>
+        </Padding>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={4}>
+              <img src={img}/>
+            </Col>
+            <Col xs={12} sm={8}>
+              <Heading level={3}>Your Subnets</Heading>
+              <RadioSelect onChange={this.handleSelect} data={this.state} options={subnets} path="subnet"/>
+            </Col>
+          </Row>
+        </Grid>
+        <Padding t={1}>
+          <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
+        </Padding>
+      </div>
     );
   },
   render() {
@@ -133,6 +137,17 @@ const SubnetSelect = React.createClass({
        <div>
         <Toolbar title="Select a Subnet"/>
         <Grid>
+          <Row>
+            <Col xs={12}>
+              <Padding b={2}>
+                <Heading level={3}>Your chosen region</Heading>
+                <p>{this.props.location.query.region}</p>
+
+                <Heading level={3}>Your chosen VPC</Heading>
+                <p>{this.props.location.query.vpc}</p>
+              </Padding>
+            </Col>
+          </Row>
           <Row>
             <Col xs={12}>
               <form name="loginForm" onSubmit={this.handleSubmit}>

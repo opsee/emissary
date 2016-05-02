@@ -110,12 +110,21 @@ export function scanRegion(region) {
             region(id: "${region}") {
               scan {
                 subnets {
-                  routing
                   subnet_id
+                  routing
+                  instance_count
+                  tags {
+                    Key
+                    Value
+                  }
                 },
                 vpcs {
                   vpc_id,
                   instance_count
+                  tags {
+                    Key
+                    Value
+                  }
                 },
               }
             }
