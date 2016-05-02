@@ -42,7 +42,7 @@ const AddInstance = React.createClass({
     if (data){
       return (
         <Padding b={2}>
-          <Heading level={4}>Last modified: {data.headers['last-modified']}</Heading>
+          <p><small className="text-muted">Last modified: {data.headers['last-modified']}</small></p>
           <Expandable style={{background: seed.color.gray9}}>
             <Highlight style={{padding: '1rem'}}>
               {data.text}
@@ -69,32 +69,43 @@ const AddInstance = React.createClass({
             <Col xs={12}>
               <p>Now we're going to add our EC2 instance to your environment. <strong>This is the last step in installation... hooray!</strong></p>
 
-              <Heading level={3}>Our EC2 Instance</Heading>
-              <p>The instance is a t2.micro and is free-tier eligible. It's responsible for running checks,
-              and it inherits all of its permissions from the cross-account role you set up in the last step.
-              The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
-              which are both available in are documentation.</p>
+              <Padding tb={1}>
+                <Padding b={1}>
+                  <img src={ec2InstaceImage} alt="Our EC2 instance inside your AWS environment" />
+                </Padding>
 
-              <Padding>
-                <img src={ec2InstaceImage} alt="Our EC2 instance inside your AWS environment" />
+                <Heading level={3}>Our EC2 Instance</Heading>
+                <p>The instance is a t2.micro and is free-tier eligible. It's responsible for running checks,
+                and it inherits all of its permissions from the cross-account role you set up in the last step.
+                The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
+                which are both available in are documentation.</p>
               </Padding>
 
-              <Heading level={4}>Instance CloudFormation Template</Heading>
-              <p>Used to install our EC2 instance. Notably, we create a security group and
-              auto-scale group (to set rules requiring at least one running Opsee instance
-              at all times), and add our instance to both groups.</p>
+              <Padding tb={2}>
+                <Heading level={4}>Instance CloudFormation Template</Heading>
+                <p>Used to install our EC2 instance. Notably, we create a security group and
+                auto-scale group (to set rules requiring at least one running Opsee instance
+                at all times), and add our instance to both groups.</p>
 
-              {this.renderTemplateItem('cf')}
+                <Padding t={1}>
+                  {this.renderTemplateItem('cf')}
+                </Padding>
+              </Padding>
 
-              <Heading level={4}>Ingress IAM Role</Heading>
-              <p>Used to ensure communication between your security groups and the Opsee security group
-              within your chosen VPC.</p>
+              <Padding tb={2}>
+                <Heading level={4}>Ingress IAM Role</Heading>
+                <p>Used to ensure communication between your security groups and the Opsee security group
+                within your chosen VPC.</p>
 
-              {this.renderTemplateItem('ingress')}
+                <Padding t={1}>
+                  {this.renderTemplateItem('ingress')}
+                </Padding>
+              </Padding>
 
-              <p>If you have any questions, you reach out to us any time on email, Slack, or IRC.</p>
-
-              <Button to={`/s/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
+              <div>
+                <Button to={`/s/choose-vpc?region=${this.props.location.query.region}`} color="success" block>Choose a VPC</Button>
+                <p className="text-center"><small className="text-muted">Questions? Reach out to us any time on email, Slack, or IRC.</small></p>
+              </div>
             </Col>
           </Row>
         </Grid>

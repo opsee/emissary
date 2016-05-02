@@ -12,6 +12,7 @@ import {onboard as actions} from '../../actions';
 import config from '../../modules/config';
 import regions from '../../modules/regions';
 import {RadioSelect} from '../forms';
+import {NewWindow} from '../icons';
 
 const RegionSelect = React.createClass({
   mixins: [History],
@@ -48,36 +49,42 @@ const RegionSelect = React.createClass({
     this.props.actions.makeLaunchRoleUrlTemplate();
   },
   renderRegions(){
-/*                  <form onSubmit={this.handleSubmit}>
-          <Heading level={3}>Choose a region to launch your stack</Heading>
+    let templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
+    let isPending = templateStatus === 'pending';
 
-           <RadioSelect onChange={this.handleSelect} data={this.state} options={this.getRegions()} path="region"/>
-            <Padding t={1}>
-              <Button color="success" block type="submit" disabled={!this.state.region} title={!this.state.region ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
-            </Padding>
-          </form>*/
     return regions.map((region, i) => {
-      let boundClick = this.handleSelect.bind(null, _.get(region, 'id'));
+      let regionID = _.get(region, 'id');
+      let boundClick = this.handleSelect.bind(null, regionID);
+      let isLoading = isPending && regionID === this.state.region;
+      let buttonText = isLoading ? 'Launching...' : 'Launch stack';
       return (
-        <div key={i}>
-          <div>{_.get(region, 'id')}</div>
-          <div>{_.get(region, 'name')} <Button onClick={boundClick} flat secondary>Launch stack</Button></div>
-        </div>
+        <Row key={i}>
+          <Col xs={8}>
+            <div>{regionID}</div>
+            <div>
+              <small className="text-muted">{_.get(region, 'name')}</small>
+            </div>
+          </Col>
+          <Col xs={4}>
+            <Button onClick={boundClick} color="warning" disabled={isPending} flat secondary>{buttonText}</Button>
+          </Col>
+        </Row>
       );
     });
   },
   renderInner(){
-
     if (!_.find(this.props.redux.env.bastions, 'connected')){
       return (
         <div>
-          <p>It's time to launch our CloudFormation stack. Choose a region by clicking one of the buttons below.
+          <p>It's time to launch our CloudFormation stack. This will launch the AWS console.
+          Choose a region by clicking one of the buttons below.
           When you're finished, come back to Opsee to continue installation.</p>
 
           <Heading level={2}>What to do in the AWS Console</Heading>
           <p>Here's the TLDR version of what to do in your AWS console:</p>
           <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
-          <p>See all the details in our install documentation. If you have any trouble here, reach out to us any time at support@opsee.com.</p>
+          <p>See all the details in our install documentation. If you have any
+          trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
 
           {this.renderRegions()}
         </div>
@@ -86,12 +93,15 @@ const RegionSelect = React.createClass({
     return (
       <Padding tb={1}>
         <Alert color="info">
-          It looks like you already have an instance in your environment. At this time, Opsee only supports one instance per customer. If you need more, <a href="mailto:support@opsee.co">contact us</a>.
+          It looks like you already have an instance in your environment.
+          At this time, Opsee only supports one instance per customer.
+          If you need more, please <a href="mailto:support@opsee.co">contact us</a>.
         </Alert>
       </Padding>
     );
   },
   render() {
+    console.log(this.props.redux.asyncActions.onboardMakeLaunchTemplate);
     return (
        <div>
         <Toolbar title="Choose a Region"/>
