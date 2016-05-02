@@ -238,21 +238,22 @@ function launch(dispatch, state, resolve, reject){
   data = _.assign(data, _.chain(data.regions).head().get('vpcs').head().value());
   data.vpc_id = data.id;
   const variables = _.pick(data, ['region', 'vpc_id', 'subnet_id', 'subnet_routing', 'instance_size']);
-
-  debugger;
-  return graphPromise('region.rebootInstances', () => {
-    return request
-    .post(`${config.services.compost}`)
-    .set('Authorization', state().user.get('auth'))
-    .send({
-      query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!, $instance_size: String!){
-        region(id: $region) {
-          launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing, instance_size: $instance_size)
-        }
-      }`,
-      variables
-    });
-  });
+  console.log(variables);
+  return null;
+  // debugger;
+  // return graphPromise('region.rebootInstances', () => {
+  //   return request
+  //   .post(`${config.services.compost}`)
+  //   .set('Authorization', state().user.get('auth'))
+  //   .send({
+  //     query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!, $instance_size: String!){
+  //       region(id: $region) {
+  //         launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing, instance_size: $instance_size)
+  //       }
+  //     }`,
+  //     variables
+  //   });
+  // });
 }
 
 export function install(){

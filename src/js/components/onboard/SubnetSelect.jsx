@@ -25,7 +25,8 @@ const SubnetSelect = React.createClass({
         subnetsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
-        envGetBastions: PropTypes.object
+        envGetBastions: PropTypes.object,
+        onboardScanRegion: PropTypes.object
       }),
       user: PropTypes.object
     }),
