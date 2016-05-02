@@ -36,13 +36,13 @@ function getFinalInstallData(state){
     .filter(s => {
       return s.subnet_id === state.selectedSubnet;
     })
-    .head().value();
+    .head().value() || {};
 
   return {
     instance_size: 't2.micro',
     region: state.region,
     vpc_id: state.selectedVPC,
-    subnet_id: subnet.subnet_id,
+    subnet_id: state.selectedSubnet,
     subnet_routing: subnet.routing,
     access_key: state.access_key,
     secret_key: state.secret_key

@@ -113,6 +113,7 @@ export function scanRegion(region) {
                   subnet_id
                   routing
                   instance_count
+                  vpc_id
                   tags {
                     Key
                     Value

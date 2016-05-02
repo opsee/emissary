@@ -25,7 +25,8 @@ const SubnetSelect = React.createClass({
       onboard: PropTypes.shape({
         region: PropTypes.string,
         subnetsForSelection: PropTypes.array,
-        selectedVPC: PropTypes.string
+        selectedVPC: PropTypes.string,
+        selectedSubnet: PropTypes.string
       }),
       asyncActions: PropTypes.shape({
         envGetBastions: PropTypes.object,
@@ -41,6 +42,9 @@ const SubnetSelect = React.createClass({
   componentWillMount(){
     if (!this.props.redux.onboard.region) {
       this.props.history.replaceState(null, '/start/choose-region');
+    }
+    if (!this.props.redux.onboard.selectedVPC) {
+      this.props.history.replaceState(null, '/start/choose-vpc');
     }
     if (!this.props.redux.onboard.subnetsForSelection.length) {
       this.props.actions.scanRegion(this.props.redux.onboard.region);
@@ -62,13 +66,14 @@ const SubnetSelect = React.createClass({
     };
   },
   getSubnets() {
-    return this.props.redux.onboard.subnetsForSelection;
+    return _.filter(this.props.redux.onboard.subnetsForSelection, s => {
+      return s.vpc_id === this.props.redux.onboard.selectedVPC;
+    });
   },
   getSelectedSubnet(){
     if (this.props.redux.onboard.selectedSubnet) {
       return this.props.redux.onboard.selectedSubnet;
     }
-
     const first = _.chain(this.getSubnets())
     .head()
     .get('subnet_id')
@@ -96,7 +101,7 @@ const SubnetSelect = React.createClass({
         </Alert>
       );
     }
-    const subnets = this.props.redux.onboard.subnetsForSelection.map(s => {
+    const subnets = this.getSubnets().map(s => {
       let subnetID = _.get(s, 'subnet_id');
       let instanceCount = _.get(s, 'instance_count');
       return _.assign({}, s, {
