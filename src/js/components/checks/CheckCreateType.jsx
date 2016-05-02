@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {History} from 'react-router';
 
 import {Button} from '../forms';
-import {BastionRequirement, Toolbar} from '../global';
+import {BastionRequirement, StatusHandler, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
@@ -23,6 +23,9 @@ const CheckCreateType = React.createClass({
       putData: PropTypes.func
     }),
     redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        getGroupsSecurity: PropTypes.object
+      }),
       env: PropTypes.shape({
         groups: PropTypes.shape({
           security: PropTypes.object,
@@ -76,9 +79,13 @@ const CheckCreateType = React.createClass({
         size: () => ''
       }
     ];
-    return _.filter(initial, type => {
+    return _.chain(initial).filter(type => {
       return flag(`check-type-${type.id}`);
-    });
+    })
+    .filter(type => {
+      return type.size() > 0 || type.id === 'host';
+    })
+    .value();
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
@@ -100,7 +107,7 @@ const CheckCreateType = React.createClass({
       <UserDataRequirement hideIf="hasDismissedCheckTypeHelp">
         <Padding b={2}>
           <Alert color="success" onDismiss={this.runDismissHelperText}>
-          Let’s create a check! The first step is to choose your target type. If you choose a Group or ELB, Opsee will automatically check all of its instances, even if it changes.
+          Let’s create a check! The first step is to choose your target type. If you choose a Security Group, Auto Scaling Group, or ELB, Opsee will automatically check all of its instances, even if it changes.
           </Alert>
         </Padding>
       </UserDataRequirement>
@@ -113,16 +120,18 @@ const CheckCreateType = React.createClass({
         <Padding b={1}>
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
-        {this.getTypes().map(type => {
-          return (
-            <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
-              <strong>{type.title}&nbsp;</strong>
-              <span style={{display: 'inline-block', textAlign: 'left'}}>
-                {type.size()}
-              </span>
-            </Button>
-          );
-        })}
+        <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status}>
+          {this.getTypes().map(type => {
+            return (
+              <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
+                <strong>{type.title}&nbsp;</strong>
+                <span style={{display: 'inline-block', textAlign: 'left'}}>
+                  {type.size()}
+                </span>
+              </Button>
+            );
+          })}
+        </StatusHandler>
       </div>
     );
   },
