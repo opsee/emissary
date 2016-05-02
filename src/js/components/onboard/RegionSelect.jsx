@@ -41,7 +41,7 @@ const RegionSelect = React.createClass({
   componentDidMount() {
     this.setInterval(() => {
       this.props.actions.hasRole();
-    }, 1000);
+    }, 1000 * 2); // every 2 seconds
   },
   componentWillReceiveProps(){
     if (this.props.redux.onboard.hasRole && this.state.isPolling) {

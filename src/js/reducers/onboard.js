@@ -2,11 +2,9 @@ import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
 import {yeller} from '../modules';
-import {plain as seed} from 'seedling';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
-  ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
   ONBOARD_SET_INSTALL_DATA,
   ONBOARD_SUBNET_SELECT,
@@ -42,6 +40,7 @@ function getFinalInstallData(state){
 
   return {
     instance_size: 't2.micro',
+    region: state.region,
     vpc_id: state.selectedVPC,
     subnet_id: subnet.subnet_id,
     subnet_routing: subnet.routing,

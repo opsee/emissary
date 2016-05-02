@@ -8,7 +8,6 @@ import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
-  ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
@@ -203,6 +202,7 @@ function launch(dispatch, state, resolve, reject){
     return reject(new Error('config.onboardInstallError'));
   }
 
+  const variables = state().onboard.installData;
   return graphPromise('region.rebootInstances', () => {
     return request
     .post(`${config.services.compost}`)
@@ -213,7 +213,7 @@ function launch(dispatch, state, resolve, reject){
           launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing)
         }
       }`,
-      state().onboard.installData
+      variables
     });
   });
 }
