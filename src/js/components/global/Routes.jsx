@@ -134,7 +134,6 @@ const routes = (
     <Route path="/docs/IAM" component={DocsIAM}/>
     <Route path="/docs/checks" component={DocsChecks}/>
     <Route path="/docs/notifications" component={DocsNotifications}/>
-    <Route path="/docs/permissions" component={Permissions}/>
 
     <Route path="/integrations/slack" component={Slack}/>
 
