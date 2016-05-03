@@ -50,10 +50,10 @@ const VPCSelect = React.createClass({
   getVPCs() {
     return this.props.redux.onboard.vpcsForSelection.map(v => {
       let vpcID = _.get(v, 'vpc_id');
-      let instanceCount = _.get(v, 'instance_count');
+      let labelName = v.name ? `<strong>${v.name}</strong> - ` : '';
       return _.assign({}, v, {
         id: vpcID,
-        label: `${vpcID}<br/><small>(${instanceCount} instances)</small>`
+        label: `${labelName}${vpcID}<br/><small>(${_.get(v, 'instance_count')} instances)</small>`
       });
     });
   },

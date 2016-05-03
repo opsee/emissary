@@ -103,14 +103,10 @@ const SubnetSelect = React.createClass({
     }
     const subnets = this.getSubnets().map(s => {
       let subnetID = _.get(s, 'subnet_id');
-      let instanceCount = _.get(s, 'instance_count');
-      let routing = _.get(s, 'routing');
-      let subnetName = _.chain(s.tags).filter(t => t.Key === "Name").head().get('Value').value();
-      let labelName = subnetName ? `<strong>${subnetName}</strong> - ` : '';
-
+      let labelName = s.name ? `<strong>${s.name}</strong> - ` : '';
       return _.assign({}, s, {
         id: subnetID,
-        label: `${labelName}${subnetID}<br/><small>(${instanceCount} instances, ${routing} routing)</small>`
+        label: `${labelName}${subnetID}<br/><small>(${_.get(s, 'instance_count')} instances, ${_.get(s, 'routing')} routing)</small>`
       });
     });
     return (
