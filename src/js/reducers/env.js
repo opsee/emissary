@@ -28,7 +28,8 @@ import {
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
   AWS_STOP_INSTANCES,
-  GET_CHECKS
+  GET_CHECKS,
+  APP_SOCKET_MSG
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -536,5 +537,22 @@ export default handleActions({
       return _.assign({}, state, {awsActionHistory});
     },
     throw: yeller.reportAction
+  },
+  [APP_SOCKET_MSG]: {
+    next(state, action){
+      if (_.get(action.payload, 'command') === 'bastions'){
+        const bastion = _.chain(action.payload)
+        .get('attributes.bastions')
+        .thru(arr => {
+          return Array.isArray(arr) ? arr : [];
+        })
+        .find(msg => _.get(msg, 'connected'))
+        .value() || {};
+        if (bastion && bastion.region){
+          return _.assign({}, state, {region: bastion.region, vpc: bastion.vpc_id || false});
+        }
+      }
+      return state;
+    }
   }
 }, initial);
