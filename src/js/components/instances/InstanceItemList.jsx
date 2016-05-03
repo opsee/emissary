@@ -17,6 +17,7 @@ const InstanceItemList = React.createClass({
   propTypes: {
     instances: PropTypes.instanceOf(List),
     groupSecurity: PropTypes.string,
+    asg: PropTypes.string,
     offset: PropTypes.number,
     limit: PropTypes.number,
     ids: PropTypes.array,
@@ -106,6 +107,14 @@ const InstanceItemList = React.createClass({
       });
     }
     if (this.props.groupSecurity){
+      data = data.filter(d => {
+        if (type === 'rds'){
+          return _.chain(d.toJS()).get('VpcSecurityGroups').map('VpcSecurityGroupId').indexOf(this.props.groupSecurity).value() > -1;
+        }
+        return _.chain(d.toJS()).get('SecurityGroups').map('GroupId').indexOf(this.props.groupSecurity).value() > -1;
+      });
+    }
+    if (this.props.asg){
       data = data.filter(d => {
         if (type === 'rds'){
           return _.chain(d.toJS()).get('VpcSecurityGroups').map('VpcSecurityGroupId').indexOf(this.props.groupSecurity).value() > -1;

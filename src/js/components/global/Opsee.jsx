@@ -20,7 +20,12 @@ import forms from '../forms/forms.css';
 import grid from '../layout/grid.css';
 import layout from '../layout/layout.css';
 
-import {app as appActions, user as userActions, env as envActions} from '../../actions';
+import {
+  app as appActions,
+  user as userActions,
+  env as envActions,
+  checks as checkActions
+} from '../../actions';
 import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
@@ -35,6 +40,9 @@ const Opsee = React.createClass({
       initialize: PropTypes.func,
       shutdown: PropTypes.func
     }),
+    checkActions: PropTypes.shape({
+      getChecks: PropTypes.func
+    }),
     userActions: PropTypes.shape({
       refresh: PropTypes.func
     }),
@@ -46,6 +54,10 @@ const Opsee = React.createClass({
   componentWillMount(){
     this.props.appActions.initialize();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
+    this.props.envActions.getBastions();
+    if (this.props.redux.user.get('auth')){
+      this.props.checkActions.getChecks();
+    }
     yeller.configure(this.props.redux);
   },
   componentWillReceiveProps(nextProps) {
@@ -56,7 +68,7 @@ const Opsee = React.createClass({
     //user log in
     if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
       this.props.appActions.initialize();
-      this.props.envActions.getBastions();
+      this.props.checkActions.getChecks();
     }
   },
   getMeatClass(){
@@ -82,7 +94,7 @@ const Opsee = React.createClass({
     );
   },
   renderInner(){
-    if (!this.props.redux.app.ready){
+    if (!this.props.redux.app.ready || this.props.redux.env.vpc === undefined){
       return null;
     }
     if (this.props.redux.app.socketError && !config.bypassSocketError){
@@ -125,7 +137,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  envActions: bindActionCreators(envActions, dispatch)
+  envActions: bindActionCreators(envActions, dispatch),
+  checkActions: bindActionCreators(checkActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Opsee);

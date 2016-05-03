@@ -15,7 +15,9 @@ export const User = Record({
   ghosting: false,
   customer_id: undefined,
   data: undefined,
-  loginData: {}
+  loginData: {},
+  region: undefined,
+  vpc: undefined
 });
 
 const baseEnvItem = {
@@ -25,13 +27,14 @@ const baseEnvItem = {
   silenceDate: null,
   silenceDuration: null,
   state: 'running',
-  health: undefined,
   type: null,
   checks: List(),
   results: List(),
   passing: 0,
+  failing: 0,
   total: 0,
-  selected: false
+  selected: false,
+  health: undefined
 };
 
 export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
@@ -56,30 +59,41 @@ export const InstanceRds = Record(_.assign({}, baseEnvItem, {
     created: new Date(),
     instanceSize: 't2-micro'
   }),
-  type: 'RDS',
+  type: 'rds',
   groups: List(),
-  LaunchTime: null,
+  InstanceCreateTime: null,
   Engine: null,
   EngineVersion: null,
   PubliclyAccessible: false,
   DBInstanceClass: null,
   AvailabilityZone: null,
-  VpcSecurityGroups: List()
+  VpcSecurityGroups: List(),
+  metrics: Map()
 }));
 
 export const GroupSecurity = Record(_.assign({}, baseEnvItem, {
   type: 'security',
   Description: undefined,
-  instance_count: undefined,
-  instances: List()
+  Instances: List()
+}));
+
+export const GroupAsg = Record(_.assign({}, baseEnvItem, {
+  type: 'asg',
+  Instances: List(),
+  Status: undefined,
+  CreatedTime: undefined,
+  MinSize: undefined,
+  MaxSize: undefined,
+  DesiredCapacity: undefined,
+  AvailabilityZones: undefined,
+  SuspendedProcesses: List()
 }));
 
 export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
-  instance_count: undefined,
-  instances: new List()
+  Instances: new List()
 }));
 
 const Target = Record({
@@ -112,18 +126,14 @@ export const Check = Record({
   results: List(),
   passing: undefined,
   total: undefined,
-  check_spec: Map({
-    type_url: 'HttpCheck',
-    value: Map({
-      name: undefined,
-      path: config.checkDefaultPath,
-      protocol: config.checkDefaultProtocol || 'http',
-      port: config.checkDefaultPort || 80,
-      verb: config.checkDefaultVerb || 'GET',
-      body: undefined,
-      headers: new List(),
-      metrics: new List()
-    })
+  spec: Map({
+    path: config.checkDefaultPath,
+    protocol: config.checkDefaultProtocol || 'http',
+    port: config.checkDefaultPort || 80,
+    verb: config.checkDefaultVerb || 'GET',
+    body: undefined,
+    headers: new List(),
+    metrics: new List()
   })
 });
 

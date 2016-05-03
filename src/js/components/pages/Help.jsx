@@ -17,11 +17,11 @@ export default React.createClass({
       return (
         <Padding b={1} t={1}>
           <Heading level={3}>Onboarding Pages</Heading>
-          <div><Link to="/start/tutorial">Tutorial</Link></div>
+          <div><Link to="/start/launch-stack">Launch Stack</Link></div>
           <div><Link to="/start/password">Set Password</Link></div>
-          <div><Link to="/start/region-select">Region Select</Link></div>
-          <div><Link to="/start/credentials">Credentials</Link></div>
-          <div><Link to="/start/vpc-select">VPC Scan + Select</Link></div>
+          <div><Link to="/start/choose-region">Region Select</Link></div>
+          <div><Link to="/start/choose-vpc">VPC Scan + Select</Link></div>
+          <div><Link to="/start/choose-subnet">Subnet Scan + Select</Link></div>
           <div><Link to="/start/install">Instance Installation</Link></div>
           <Padding t={2}>
             <Heading level={3}>Admin Pages</Heading>

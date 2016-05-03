@@ -49,7 +49,8 @@ function setUser(state, action){
       token: action.payload.token || state.token,
       loginDate: action.payload.loginDate || new Date(),
       intercom_hmac: action.payload.intercom_hmac || state.intercom_hmac
-    }
+    },
+    action.payload.bastion
   );
   obj.ghosting = obj.admin_id > 0 || config.ghosting;
   const auth = getAuth(obj);

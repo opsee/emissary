@@ -25,15 +25,10 @@ if (process.env.NODE_ENV === 'production') {
     reduxRouter
   )(createStore);
 } else {
-  const tools = require('redux-devtools');
-  const DevTools = require('../components/global/DevTools').default;
   finalCreateStore = compose(
     applyMiddleware(...middleware),
     reduxRouter,
-    DevTools.instrument(),
-    tools.persistState(
-      window.location.href.match(/[?&]debug_session=([^&]+)\b/)
-    )
+    window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore);
 }
 

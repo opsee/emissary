@@ -4,12 +4,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack} from '../icons';
+import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PagerDuty} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
-import {SlackConnect} from '../integrations';
+import {PagerdutyConnect, SlackConnect} from '../integrations';
 import {flag, storage} from '../../modules';
 import style from './notificationSelection.css';
+import {plain as seed} from 'seedling';
 import {
   integrations as actions
 } from '../../actions';
@@ -20,7 +21,8 @@ const NotificationSelection = React.createClass({
     check: PropTypes.object,
     actions: PropTypes.shape({
       getSlackChannels: PropTypes.func,
-      testNotification: PropTypes.func
+      testNotification: PropTypes.func,
+      getPagerdutyInfo: PropTypes.func
     }),
     notifications: PropTypes.array,
     onChange: PropTypes.func.isRequired,
@@ -40,19 +42,36 @@ const NotificationSelection = React.createClass({
       notifications: []
     };
   },
+  getInitialState() {
+    return {
+      notifications: this.props.notifications.map(n => {
+        return this.getNewSchema(n.type, n.value);
+      })
+    };
+  },
   componentDidMount(){
     this.props.actions.getSlackChannels();
+    this.props.actions.getPagerdutyInfo();
+
     window.addEventListener('storage', event => {
-      if (typeof event === 'object' && event.key === 'shouldGetSlackChannels' && event.newValue === 'true'){
-        this.props.actions.getSlackChannels();
-        storage.remove('shouldGetSlackChannels');
+      if (typeof event === 'object' && event.newValue === 'true') {
+        if (event.key === 'shouldGetSlackChannels'){
+          this.props.actions.getSlackChannels();
+        } else if (event.key === 'shouldSyncPagerduty') {
+          this.props.actions.getPagerdutyInfo();
+        }
+        storage.remove(event.key);
       }
     });
   },
-  getNewSchema(type, notifIndex, value){
+  getNewSchema(type, value){
+    // Pagerduty notifs don't have a value akin to a Slack channel, however it
+    // still needs a unique value to track xhr state of test requests.
+    // (This may change if/when we use PD service names as the value.)
+    const schemaValue = type === 'pagerduty' ? `${type}-${Date.now()}` : value;
     return {
       type,
-      value,
+      value: schemaValue,
       sending: false
     };
   },
@@ -92,8 +111,8 @@ const NotificationSelection = React.createClass({
     this.props.onChange(this.getFinalNotifications(notifications));
   },
   runNewNotif(type, value){
-    const notifications = this.props.notifications.concat([
-      this.getNewSchema(type, this.props.notifications.length, value)
+    const notifications = this.state.notifications.concat([
+      this.getNewSchema(type, value)
     ]);
     this.runChange(notifications);
   },
@@ -130,6 +149,7 @@ const NotificationSelection = React.createClass({
     } else if (type === 'webhook'){
       el = <Cloud {...props}/>;
     }
+
     return (
       <span title={notif.type}>{el}</span>
     );
@@ -196,11 +216,22 @@ const NotificationSelection = React.createClass({
       </div>
     );
   },
-  renderSlackConnect(notif, index){
+  renderIntegrationConnect(notif, index, integration){
+    let connectLink;
+    if (integration === 'slack_bot'){
+      connectLink = (
+        <span><SlackConnect target="_blank"/> to choose your channel.</span>
+      );
+    } else if (integration === 'pagerduty'){
+      connectLink = (
+        <span><PagerdutyConnect target="_blank"/> to start alerting.</span>
+      );
+    }
+
     return (
       <div className="display-flex">
         <Padding r={2} className="flex-1">
-          <SlackConnect target="_blank"/> to choose your channel.
+          {connectLink}
         </Padding>
         <div className="align-self-start">
           {this.renderDeleteButton(index, {minHeight: '46px'})}
@@ -244,32 +275,68 @@ const NotificationSelection = React.createClass({
       </div>
     );
   },
+  renderPagerDutyNotif(notif, index) {
+    return (
+      <div className="display-flex flex-vertical-align">
+        <div className="flex-1">
+          <div className="display-flex">
+            <PagerDuty fill="white" className={style.buttonIconPagerDuty} />
+          </div>
+        </div>
+        {this.renderDeleteButton(index)}
+        {this.renderTestButton(notif)}
+      </div>
+    );
+  },
   renderNotif(notif, index){
     const {type} = notif;
-    const isText = !!type.match('email|webhook');
-    if (!notif.value || isText){
-      if (isText){
-        return this.renderTextNotif(notif, index);
-      }
-      if (type === 'slack_bot'){
+
+    switch (type) {
+    case 'email':
+    case 'webhook':
+      return this.renderTextNotif(notif, index);
+    case 'slack_bot':
+      if (!notif.value) {
         if (this.props.redux.integrations.slackChannels.toJS().length){
           return this.renderChannelSelect(notif, index);
         }
-        return this.renderSlackConnect(notif, index);
+        return this.renderIntegrationConnect(notif, index, type);
       }
+      return this.renderChosenChannel(notif, index);
+    case 'pagerduty':
+      if (_.get(this.props.redux, 'integrations.pagerdutyInfo.enabled')) {
+        return this.renderPagerDutyNotif(notif, index);
+      }
+      return this.renderIntegrationConnect(notif, index, type);
+    default:
+      return this.renderChosenChannel(notif, index);
     }
-    return this.renderChosenChannel(notif, index);
   },
   renderNotifPickType(){
     return (
       <div>
-        {['email', 'slack', 'webhook'].map(type => {
+        {['email', 'slack', 'webhook', 'pagerduty'].map(type => {
           const typeCorrected = type === 'slack' ? 'slack_bot' : type;
           if (flag(`notification-type-${type}`)){
+            let disabled = false;
+            let title = null;
+            let innerButton;
+            if (type === 'pagerduty') {
+              // Only allow one pagerduty notif in the list
+              if (!!_.find(this.state.notifications, {type: 'pagerduty'})) {
+                disabled = true;
+                title = 'PagerDuty has already been added';
+              }
+              innerButton = <span><PagerDuty fill={disabled ? 'white' : seed.color.primary} className={style.buttonIconPagerDuty} /></span>;
+            } else {
+              innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
+            }
             return (
-              <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`}>
-                <Add inline fill="primary"/>&nbsp;{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}
-              </Button>
+              <div title={title} style={{display: 'inline'}}>
+                <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`} disabled={disabled} title={title}>
+                  <Add inline fill={disabled ? 'white' : 'primary'}/>&nbsp;{innerButton}
+                </Button>
+              </div>
             );
           }
           return null;

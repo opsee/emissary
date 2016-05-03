@@ -4,18 +4,21 @@ import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import * as analytics from './analytics';
+import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
-  ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
+  ONBOARD_MAKE_LAUNCH_TEMPLATE,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
   ONBOARD_GET_TEMPLATES,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT
+  ONBOARD_SUBNET_SELECT,
+  ONBOARD_SCAN_REGION,
+  ONBOARD_HAS_ROLE
 } from './constants';
 
 export function signupCreate(data) {
@@ -62,68 +65,91 @@ export function getTemplates(){
   };
 }
 
-export function setRegion(data) {
+export function setRegion(region) {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SET_REGION,
-      payload: {region: data}
+      payload: {region}
     });
     analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
     getTemplates()(dispatch, state);
-    setTimeout(() => {
-      dispatch(pushState(null, '/start/permissions'));
-    }, 100);
   };
 }
 
-export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
-
-export function vpcScan(data) {
+export function makeLaunchRoleUrlTemplate() {
   return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_SET_CREDENTIALS,
-      payload: data
-    });
-    const sendData = _.chain(data)
-    .assign({
-      regions: [state().onboard.region]
-    })
-    .pick(['access_key', 'secret_key', 'regions'])
-    .value();
-    dispatch({
-      type: ONBOARD_VPC_SCAN,
-      payload: new Promise((resolve, reject) => {
-        analytics.trackEvent('Onboard', 'vpc-scan')(dispatch, state);
-        if (config.onboardVpcScanError){
-          return reject(new Error('config.onboardVpcScanError'));
-        }
+      type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
+      payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
         return request
-        .post(`${config.services.api}/vpcs/scan`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send(sendData)
-        .then((res) => {
-          const regions = res.body.regions;
-          if (Array.isArray(regions)){
-            const bool = _.chain(regions).map('supported_platforms').map(platforms => {
-              return !(platforms.indexOf('VPC') > -1);
-            }).compact().some().value();
-            if (bool){
-              const message = 'One or more of the regions selected does not support VPCs. This probably indicates that a region in your account is AWS Classic. Opsee does not support Classic at this time. Please choose a different region or refer to our <a href="/help" target="_blank">Help Page</a>.';
-              return reject({
-                message
-              });
-            }
-            resolve(regions);
-            setTimeout(() => {
-              dispatch(pushState(null, '/start/vpc-select'));
-            }, 100);
-          }
-          return reject(new Error('Something went wrong trying to get VPCs.'));
-        }, reject);
+        .send({query:
+          `mutation Mutation {
+            makeLaunchRoleUrlTemplate
+          }`
+        });
       })
     });
   };
 }
+
+export function scanRegion(region) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SCAN_REGION,
+      payload: graphPromise('region.scan', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          `mutation Mutation {
+            region(id: "${region}") {
+              scan {
+                subnets {
+                  subnet_id
+                  routing
+                  instance_count
+                  vpc_id
+                  tags {
+                    Key
+                    Value
+                  }
+                },
+                vpcs {
+                  vpc_id,
+                  instance_count
+                  tags {
+                    Key
+                    Value
+                  }
+                },
+              }
+            }
+          }`
+        });
+      })
+    });
+  };
+}
+
+export function hasRole() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_HAS_ROLE,
+      payload: graphPromise('hasRole', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          '{ hasRole }'
+        });
+      })
+    });
+  };
+}
+
+export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
 
 export function vpcSelect(payload){
   return (dispatch, state) => {
@@ -133,7 +159,7 @@ export function vpcSelect(payload){
     });
     analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
     setTimeout(() => {
-      dispatch(pushState(null, '/start/subnet-select'));
+      dispatch(pushState(null, '/start/choose-subnet'));
     }, 100);
   };
 }
@@ -166,8 +192,6 @@ function isBastionConnected(state){
   .value();
 }
 
-// let launchAttempts = 0;
-
 function launch(dispatch, state, resolve, reject){
   // launchAttempts ++;
   analytics.trackEvent('Onboard', 'bastion-install')(dispatch, state);
@@ -175,11 +199,21 @@ function launch(dispatch, state, resolve, reject){
   if (config.onboardInstallError){
     return reject(new Error('config.onboardInstallError'));
   }
-  return request
-  .post(`${config.services.api}/vpcs/launch`)
-  .set('Authorization', state().user.get('auth'))
-  .send(state().onboard.installData)
-  .then(resolve, reject);
+
+  const variables = state().onboard.installData;
+  return graphPromise('region.rebootInstances', () => {
+    return request
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({
+      query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!){
+        region(id: $region) {
+          launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing)
+        }
+      }`,
+      variables
+    });
+  });
 }
 
 export function install(){
@@ -200,7 +234,7 @@ export function install(){
           if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
           }
-          dispatch(pushState(null, '/start/region-select'));
+          dispatch(pushState(null, '/start/choose-region'));
           return reject();
         }, 30000);
       })

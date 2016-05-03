@@ -10,11 +10,8 @@ const radialWidth = 40;
 const RadialGraph = React.createClass({
   mixins: [SetInterval],
   propTypes: {
-    state: PropTypes.string,
-    health: PropTypes.number,
     type: PropTypes.string,
-    passing: PropTypes.number,
-    total: PropTypes.number
+    item: PropTypes.object.isRequired
   },
   getDefaultProps(){
     return {
@@ -24,7 +21,7 @@ const RadialGraph = React.createClass({
   getInitialState() {
     return _.defaults({
       silenceRemaining: 0
-    }, this.props);
+    }, this.getItem());
   },
   componentDidMount(){
     this.runSetupSilence();
@@ -34,8 +31,12 @@ const RadialGraph = React.createClass({
       this.runSetupSilence();
     }
   },
+  getItem(){
+    return this.props.item.toJS ? this.props.item.toJS() : this.props.item;
+  },
   getHealth(){
-    return this.props.total ? Math.floor((this.props.passing / this.props.total) * 100) : undefined;
+    const item = this.getItem();
+    return item.total ? Math.floor((item.passing / item.total) * 100) : undefined;
   },
   getBaseClass(){
     return style[`base${_.startCase(this.getRadialState())}`];
@@ -47,9 +48,7 @@ const RadialGraph = React.createClass({
     return style[`svg${_.startCase(this.getRadialState())}`];
   },
   getRadialState(){
-    let state = this.props.state;
-    state = this.state.silenceRemaining ? 'silenced' : state;
-    return state;
+    return this.getItem().state;
   },
   getTitle(){
     switch (this.state.state){

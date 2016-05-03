@@ -62,10 +62,13 @@ const AssertionsSelection = React.createClass({
       return path.match(`^${_.escapeRegExp(assertion.value)}`);
     });
   },
-  getJsonPlaceholder(){
-    const keys = this.getJsonBodyKeys();
-    const last = _.chain(keys).sortBy(keys, k => k.length).last().value();
-    return last || 'animals.dogs[0].breed';
+  getJsonPlaceholder(assertionIndex){
+    if (!this.props.assertions[assertionIndex].value){
+      const keys = this.getJsonBodyKeys();
+      const last = _.chain(keys).sortBy(keys, k => k.length).last().value();
+      return last || 'animals.dogs[0].breed';
+    }
+    return null;
   },
   getFinalAssertions(assertions = this.props.assertions){
     return _.cloneDeep(assertions).map(n => _.pick(n, ['key', 'value', 'relationship', 'operand']));
@@ -74,7 +77,7 @@ const AssertionsSelection = React.createClass({
     const {checks} = this.props.redux;
     const data = checks.responses.toJS()[checks.selectedResponse];
     if (data && data.response){
-      return _.get(data, 'response.value');
+      return _.get(data, 'response');
     }
     return {};
   },
@@ -87,7 +90,7 @@ const AssertionsSelection = React.createClass({
       body: undefined
     };
     if (data && data.response){
-      return _.chain(data).get('response.value').defaults(initial).value();
+      return _.chain(data).get('response').defaults(initial).value();
     }
     return initial;
   },
@@ -109,8 +112,8 @@ const AssertionsSelection = React.createClass({
       const body = _.get(res, 'body');
       const json = typeof body === 'string' ? JSON.parse(body) : body;
       const type = _.chain(res).get('headers').get('Content-Type').value();
-      return type.match('json') && json;
-    } catch (err){
+      return type.match(/json/i) && json;
+    } catch (err) {
       return false;
     }
   },
@@ -470,7 +473,7 @@ const AssertionsSelection = React.createClass({
           <Padding t={0.5} b={1}>
             <div className="form-group">
               <label className={inputStyle.label} htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
-              <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(), id: `json-path-${assertionIndex}`}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
+              <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(assertionIndex), id: `json-path-${assertionIndex}`}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
             </div>
           </Padding>
           <div className="display-flex">
