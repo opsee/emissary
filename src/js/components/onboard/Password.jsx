@@ -52,6 +52,7 @@ const OnboardPassword = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <p>Let's get started using Opsee. Enter your name and choose a password to continue.</p>
               <form name="loginForm" onSubmit={this.handleSubmit}>
                 <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
                 <StatusHandler status={this.getStatus()}/>
