@@ -103,10 +103,10 @@ const SubnetSelect = React.createClass({
     }
     const subnets = this.getSubnets().map(s => {
       let subnetID = _.get(s, 'subnet_id');
-      let instanceCount = _.get(s, 'instance_count');
+      let labelName = s.name ? `<strong>${s.name}</strong> - ` : '';
       return _.assign({}, s, {
         id: subnetID,
-        label: `${subnetID} (${instanceCount} instances)`
+        label: `${labelName}${subnetID}<br/><small>(${_.get(s, 'instance_count')} instances, ${_.get(s, 'routing')} routing)</small>`
       });
     });
     return (
@@ -116,17 +116,21 @@ const SubnetSelect = React.createClass({
         </Padding>
         <Grid>
           <Row>
-            <Col xs={12} sm={4}>
-              <img src={img}/>
+            <Col xs={12} sm={5} className="text-center">
+              <Padding a={2}>
+                <img src={img} style={{maxWidth: '350px', width: '100%'}}/>
+              </Padding>
             </Col>
-            <Col xs={12} sm={8}>
-              <Heading level={3}>Your Subnets</Heading>
-              <RadioSelect onChange={this.handleSelect} data={this.state} options={subnets} path="subnet"/>
+            <Col xs={12} sm={7}>
+              <Padding tb={1}>
+                <Heading level={3}>Your Subnets</Heading>
+                <RadioSelect onChange={this.handleSelect} data={this.state} options={subnets} path="subnet"/>
+              </Padding>
             </Col>
           </Row>
         </Grid>
         <Padding t={1}>
-          <Button type="submit" color="success" block disabled={this.isDisabled()}>Install</Button>
+          <Button type="submit" color="success" block disabled={this.isDisabled()} chevron>Install</Button>
         </Padding>
       </div>
     );
@@ -134,7 +138,7 @@ const SubnetSelect = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Select a Subnet"/>
+        <Toolbar title="Step 2: Select a Subnet"/>
         <Grid>
           <Row>
             <Col xs={12}>

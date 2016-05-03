@@ -49,6 +49,11 @@ function getFinalInstallData(state){
   };
 }
 
+function getNameFromTags(vpcOrSubnet) {
+  const tags = _.get(vpcOrSubnet, 'tags', []);
+  return _.chain(tags).filter(t => _.get(t, 'Key') === 'Name').head().get('Value').value();
+}
+
 export default handleActions({
   [ONBOARD_SET_REGION]: {
     next(state, action){
@@ -99,8 +104,13 @@ export default handleActions({
   },
   [ONBOARD_SCAN_REGION]: {
     next(state, action) {
-      const vpcsForSelection = _.get(action.payload.data, 'vpcs');
-      const subnetsForSelection = _.get(action.payload.data, 'subnets');
+      // Use the "Name" tag as name, if present
+      const vpcsForSelection = _.chain(action.payload.data).get('vpcs').map(vpc => {
+        return _.assign({}, vpc, { name: getNameFromTags(vpc) });
+      }).value();
+      const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
+        return _.assign({}, subnet, { name: getNameFromTags(subnet) });
+      }).value();
       return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
     },
     throw: yeller.reportAction

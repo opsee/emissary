@@ -50,10 +50,10 @@ const VPCSelect = React.createClass({
   getVPCs() {
     return this.props.redux.onboard.vpcsForSelection.map(v => {
       let vpcID = _.get(v, 'vpc_id');
-      let instanceCount = _.get(v, 'instance_count');
+      let labelName = v.name ? `<strong>${v.name}</strong> - ` : '';
       return _.assign({}, v, {
         id: vpcID,
-        label: `${vpcID} (${instanceCount} instances)`
+        label: `${labelName}${vpcID}<br/><small>(${_.get(v, 'instance_count')} instances)</small>`
       });
     });
   },
@@ -103,7 +103,7 @@ const VPCSelect = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Select a VPC"/>
+        <Toolbar title="Step 2: Select a VPC"/>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -113,7 +113,7 @@ const VPCSelect = React.createClass({
               </Padding>
 
               <form name="loginForm" onSubmit={this.handleSubmit}>
-              {this.renderInner()}
+                {this.renderInner()}
               </form>
             </Col>
           </Row>

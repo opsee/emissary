@@ -36,13 +36,13 @@ const LaunchStack = React.createClass({
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
       return (
-        <Padding b={2}>
-          <p><small className="text-muted">Last modified: {data.headers['last-modified']}</small></p>
+        <Padding tb={1}>
           <Expandable style={{background: seed.color.gray9}}>
             <Highlight style={{padding: '1rem'}}>
               {data.text}
             </Highlight>
           </Expandable>
+          <p><small className="text-muted">Last modified: {data.headers['last-modified']}</small></p>
         </Padding>
       );
     }
