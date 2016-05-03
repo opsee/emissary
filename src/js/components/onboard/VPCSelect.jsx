@@ -87,7 +87,7 @@ const VPCSelect = React.createClass({
       return (
         <div>
           <p>Here are the active VPCs Opsee found in the regions you chose. Choose which VPC you&rsquo;d like to install our instance in.</p>
-          <RadioSelect onChange={this.handleSelect} data={{vpc: this.state.vpc}} options={this.getVPCs()} path="vpc"/>
+          <RadioSelect onChange={this.handleSelect} data={this.state} options={this.getVPCs()} path="vpc"/>
           <Padding t={1}>
             <Button type="submit" color="success" block disabled={!this.state.vpc} chevron>Select a subnet</Button>
           </Padding>

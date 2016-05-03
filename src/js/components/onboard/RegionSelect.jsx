@@ -41,7 +41,7 @@ const RegionSelect = React.createClass({
   componentDidMount() {
     this.setInterval(() => {
       this.props.actions.hasRole();
-    }, 1000 * 2); // every 2 seconds
+    }, 1000 * 5); // every 5 seconds
   },
   componentWillReceiveProps(){
     if (this.props.redux.onboard.hasRole && this.state.isPolling) {
@@ -97,7 +97,7 @@ const RegionSelect = React.createClass({
     return (
       <div>
         <Heading level={2}>What to do in the AWS Console</Heading>
-        <p>Here's the TLDR version of what to do in your AWS console:</p>
+        <p>Here&rsquo;s the TLDR version of what to do in your AWS console:</p>
         <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
         <p>See all the details in <a href="/docs/IAM" target="_blank">our install documentation</a>. If you have any
         trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
@@ -116,7 +116,6 @@ const RegionSelect = React.createClass({
         </Padding>
       );
     }
-
     if (this.state.isPolling) {
       return (
         <div>
@@ -131,9 +130,9 @@ const RegionSelect = React.createClass({
 
     return (
       <div>
-        <p>It's time to launch our CloudFormation stack. This will launch the AWS console.
+        <p>It&rsquo;s time to launch our CloudFormation stack. This will launch the AWS console.
         Choose a region by clicking one of the buttons below.
-        When you're finished, come back to Opsee to continue installation.</p>
+        When you&rsquo;re finished, come back to Opsee to continue installation.</p>
 
         <Padding tb={1}>
           {this.renderInstructions()}
