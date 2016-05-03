@@ -151,6 +151,7 @@ export function getChecks(redirect){
                 }
               }
               results {
+                passing
                 responses {
                   passing
                   target {

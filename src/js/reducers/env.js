@@ -63,7 +63,11 @@ const statics = {
     //this seems wacky but,
     //we use checks instead of results for determining health for such things
     if (item.type.match('elb|security|asg')){
-      foundResults = foundChecks;
+      foundResults = foundChecks.map(check => {
+        return _.assign(check, {
+          passing: _.get(check, 'results[0].passing') || false
+        });
+      });
       //only use checks that have results for counting
       //otherwise we want to show initializing
       foundResults = _.filter(foundResults, check => {
@@ -72,7 +76,7 @@ const statics = {
     }
 
     const total = foundResults.length;
-    const passing =  _.filter(foundResults, {passing: true}).length;
+    const passing =  _.filter(foundResults, (r) => r.passing).length;
 
     let data = item.set('results', foundResults);
     data = data.set('total', total);
