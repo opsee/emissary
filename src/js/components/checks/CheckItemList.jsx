@@ -47,8 +47,10 @@ const CheckItemList = React.createClass({
     };
   },
   componentWillMount(){
-    this.props.actions.getChecks();
-    this.setInterval(this.props.actions.getChecks, 15000);
+    if (!this.props.redux.asyncActions.getChecks.history.length){
+      this.props.actions.getChecks();
+    }
+    this.setInterval(this.props.actions.getChecks, 40000);
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];

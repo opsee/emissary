@@ -60,6 +60,7 @@ const System = React.createClass({
                   {this.renderState(bastion)}
                   <div><strong>Created:</strong> <TimeAgo date={new Date(bastion.created_at)}/></div>
                   <div><strong>ID:</strong> {bastion.id}</div>
+                  <div><strong>Region</strong>: {bastion.region}</div>
                   <div><strong>Group</strong>: {bastion.group_id.String}</div>
                   <div><strong>Instance</strong>: {bastion.instance_id.String}</div>
                   <div><strong>VPC</strong>: {bastion.vpc_id}</div>

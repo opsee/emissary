@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react';
+import cx from 'classnames';
 import style from './loader.css';
 
 const Loader = React.createClass({
   propTypes: {
     //wait X number of seconds until showing the loader
-    timeout: PropTypes.number
+    timeout: PropTypes.number,
+    className: PropTypes.string
   },
   getInitialState(){
     return {
@@ -24,7 +26,7 @@ const Loader = React.createClass({
   render(){
     if (this.state.show){
       return (
-        <div className="display-flex justify-content-center">
+        <div className={cx('display-flex', 'justify-content-center', this.props.className)}>
           <div className={style.loader}></div>
         </div>
       );

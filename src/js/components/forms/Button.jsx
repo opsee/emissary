@@ -116,6 +116,7 @@ const Button = React.createClass({
       e.stopPropagation();
       window.open(this.history.createHref(this.props.to));
     }
+    this.handleClick();
   },
   handleKeyDown(e){
     if (e.keyCode.toString().match('13|32')){

@@ -52,17 +52,18 @@ const CheckCreateInfo = React.createClass({
   },
   getGeneratedName(){
     const {target} = this.props.check;
+    const prefix = target.type === 'rds' ? 'Cloudwatch' : 'Http';
     if (this.props.check.name){
       return this.props.check.name;
     } else if (target.name || target.id){
       const string = target.name || target.id;
-      return `Http ${string}`;
+      return `${prefix} ${string}`;
     }
-    return 'Http check';
+    return '${prefix} check';
   },
   getFinalData(){
     let check = _.cloneDeep(this.props.check);
-    check.name = check.check_spec.value.name = this.getGeneratedName();
+    check.name = this.getGeneratedName();
     return check;
   },
   isDisabled(){

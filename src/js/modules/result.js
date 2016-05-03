@@ -3,7 +3,6 @@ import _ from 'lodash';
 import moment from 'moment';
 
 const OuterResponse = Record({
-  check_id: undefined,
   passing: undefined,
   response: undefined,
   target: undefined,
@@ -11,17 +10,13 @@ const OuterResponse = Record({
 });
 
 const InnerResponse = Record({
-  type_url: undefined,
-  value: Record({
-    body: undefined,
-    code: undefined,
-    headers: List(),
-    metrics: List()
-  })
+  body: undefined,
+  code: undefined,
+  headers: List(),
+  metrics: List()
 });
 
 const Result = Record({
-  check_id: undefined,
   host: undefined,
   passing: undefined,
   responses: List(),
@@ -32,28 +27,14 @@ function fromJS(data){
   let newData = {};
   let results = _.cloneDeep(data.results);
   if (results && results.length){
-    if (data.instance){
-      results = _.filter(results, 'response');
-    }
     let newResults = results.map(result => {
-      // old, crap?
-      // let responses = result.responses || result.response;
-      // use just 'result' for instances while bartnet is screwy
-      let responses = result.responses || result;
-      responses = Array.isArray(responses) ? responses : [responses];
-      responses = _.compact(responses);
-      if (responses && responses.length){
-        let resultData = _.cloneDeep(result);
-        resultData.responses = new List(responses.map(r => {
-          let d = _.cloneDeep(r);
-          d.response = new InnerResponse(r.response);
-          return new OuterResponse(d);
-        }));
-        return new Result(resultData);
-      }
-      return new Result();
+      const responses = new List(result.responses.map(r => {
+        let d = _.cloneDeep(r);
+        d.response = new InnerResponse(r.reply);
+        return new OuterResponse(d);
+      }));
+      return new Result(_.assign({}, result, {responses}));
     });
-    newResults = _.compact(newResults);
     if (newResults && newResults.length){
       newData.results = new List(newResults);
     }
@@ -62,7 +43,7 @@ function fromJS(data){
 }
 
 export default {
-  getFormattedData(data, useTestsInsteadOfChecks){
+  getFormattedData(data){
     let obj = {
       passing: undefined,
       total: undefined,
@@ -70,11 +51,7 @@ export default {
       results: fromJS(data) || new List()
     };
     if (obj.results && obj.results.size && obj.results.get(0)){
-      //this works for groups
-      let boolArray = _.chain(obj.results.toJS()).map('passing').value();
-      if (useTestsInsteadOfChecks){
-        boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
-      }
+      let boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
       const passing = _.compact(boolArray);
       obj.passing = passing.length;
       obj.total = boolArray.length;

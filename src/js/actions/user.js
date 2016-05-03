@@ -15,7 +15,8 @@ import {
   USER_PUT_DATA,
   USER_SEND_RESET_EMAIL,
   USER_APPLY,
-  USER_SET_LOGIN_DATA
+  USER_SET_LOGIN_DATA,
+  ENV_GET_BASTIONS
 } from './constants';
 import storage from '../modules/storage';
 
@@ -31,13 +32,21 @@ export function login(data) {
           const user = res.body.user;
           analytics.trackEvent('User', 'login', null, user)(dispatch, state);
 
-          resolve(res.body);
-
-          //TODO fix this somehow
-          setTimeout(() => {
-            const string = state().router.location.query.redirect || '/';
-            dispatch(pushState(null, string));
-          }, 100);
+          request
+          .get(`${config.services.api}/vpcs/bastions`)
+          .set('Authorization', `Bearer ${res.body.token}`)
+          .then(bastionRes => {
+            dispatch({
+              type: ENV_GET_BASTIONS,
+              payload: _.get(bastionRes, 'body.bastions') || []
+            });
+            resolve(res.body);
+            //TODO fix this somehow
+            setTimeout(() => {
+              const string = state().router.location.query.redirect || '/';
+              dispatch(pushState(null, string));
+            }, 100);
+          }, reject);
         }, reject);
       })
     });
@@ -58,7 +67,7 @@ export function setPassword(data) {
           resolve(res.body);
           analytics.updateUser(res.body.user)(dispatch, state);
           setTimeout(() => {
-            dispatch(pushState(null, '/start/tutorial'));
+            dispatch(pushState(null, '/start/launch-stack'));
           }, 100);
         }, reject);
       })

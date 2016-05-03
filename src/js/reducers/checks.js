@@ -18,37 +18,27 @@ import {
 
 export const statics = {
   checkFromJS(data){
-    const legit = data.instance || data;
-    let newData = _.assign({}, legit, legit.check_spec.value);
-    newData.name = newData.name || newData.check_spec.value.name;
-    newData.check_spec.value.headers = newData.check_spec.value.headers || [];
-    _.assign(newData, result.getFormattedData(data, true));
+    const newData = _.assign({}, data, result.getFormattedData(data, true));
     return new Check(newData);
   },
   formatResponse(item){
     let data = _.cloneDeep(item.toJS());
-    if (data && data.response && data.response.code){
-      data.response = {
-        value: data.response,
-        type_url: 'HttpResponse'
-      };
-    }
-    if (_.get(data, 'response.value')){
-      const headers = _.get(data, 'response.value.headers');
+    if (_.get(data, 'response')){
+      const headers = _.get(data, 'response.headers');
       if (headers){
-        data.response.value.headers = headers.map(h => {
+        data.response.headers = headers.map(h => {
           h.values = h.values.join(', ');
           return h;
         });
         let headerObj = {};
-        data.response.value.headers.forEach(h => {
+        data.response.headers.forEach(h => {
           headerObj[h.name] = h.values;
         });
-        data.response.value.headers = headerObj;
+        data.response.headers = headerObj;
         const contentType = _.chain(headers).find({name: 'Content-Type'}).get('values').value() || '';
-        if (contentType.match('json')){
+        if (contentType.match(/json/i)){
           try {
-            data.response.value.body = JSON.parse(data.response.value.body);
+            data.response.body = JSON.parse(data.response.body);
             data.response.json = true;
           } catch (err){
             yeller.report(err);
@@ -67,9 +57,9 @@ export const statics = {
           _.noop();
         }
       }
-      if (!data.error && !_.get(data, 'response.type_url')){
-        return {error: 'Error in sending the request'};
-      }
+      // if (!data.error && !_.get(data, 'response.type_url')){
+      //   return {error: 'Error in sending the request'};
+      // }
       return data;
     }
     if (data.error){
@@ -95,7 +85,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(action.payload.data, {COMPLETE: true}));
+      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {COMPLETE: true}));
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -121,6 +111,16 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
+  [GET_CHECKS]: {
+    next(state, action){
+      const checks = new List(action.payload.data.map(c => {
+        return statics.checkFromJS(c);
+      }));
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      return _.assign({}, state, {checks, filtered});
+    },
+    throw: yeller.reportAction
+  },
   [GET_CHECK_NOTIFICATION]: {
     next(state, action) {
       const notification = fromJS(action.payload.data);
@@ -132,22 +132,13 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
-  [GET_CHECKS]: {
-    next(state, action){
-      const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(c);
-      }));
-      const filtered = itemsFilter(checks, action.payload.search, 'checks');
-      return _.assign({}, state, {checks, filtered});
-    },
-    throw: yeller.reportAction
-  },
   [CHECK_TEST]: {
     next(state, action){
-      let responses = _.get(action.payload, 'responses') ? action.payload.responses : action.payload;
-      if (!responses){
-        return state;
-      }
+      let responses = action.payload.data.map(response => {
+        return _.mapKeys(response, (value, key) => {
+          return key === 'reply' ? 'response' : key;
+        });
+      });
       responses = fromJS(responses);
       const responsesFormatted = statics.getFormattedResponses(responses);
       return _.assign({}, state, {responses, responsesFormatted});

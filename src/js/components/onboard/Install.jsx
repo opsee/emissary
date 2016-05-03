@@ -19,7 +19,6 @@ const Install = React.createClass({
     example: PropTypes.bool,
     actions: PropTypes.shape({
       setCredentials: PropTypes.func,
-      vpcScan: PropTypes.func,
       onboardExampleInstall: PropTypes.func,
       install: PropTypes.func.isRequired,
       exampleInstall: PropTypes.func
