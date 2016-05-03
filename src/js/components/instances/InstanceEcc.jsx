@@ -96,7 +96,8 @@ const InstanceEcc = React.createClass({
     return <tr/>;
   },
   renderInner(){
-    if (this.getInstance().get('name')){
+    const instance = this.getInstance().toJS();
+    if (instance.name && instance.LaunchTime){
       return (
         <div>
           <Padding b={3}>
@@ -111,12 +112,12 @@ const InstanceEcc = React.createClass({
               <tr>
                 <td><strong>Launched</strong></td>
                 <td>
-                  <TimeAgo date={this.getInstance().get('LaunchTime')}/>
+                  <TimeAgo date={instance.LaunchTime}/>
                 </td>
               </tr>
               <tr>
                 <td><strong>Instance Type</strong></td>
-                <td>{this.getInstance().get('InstanceType')}</td>
+                <td>{instance.InstanceType}</td>
               </tr>
               {this.renderAvailabilityZone()}
             </Table>
@@ -128,7 +129,7 @@ const InstanceEcc = React.createClass({
             <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>
           </Padding>
           <Padding b={2}>
-            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
+            <GroupItemList type="elb" instanceIds={[instance.id]} title="ELBs" noFallback/>
           </Padding>
         </div>
       );

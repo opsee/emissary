@@ -14,9 +14,10 @@ const EnvList = React.createClass({
     include: PropTypes.arrayOf(PropTypes.oneOf([
       'groups.security',
       'groups.elb',
+      'groups.asg',
       'instances.ecc',
       'instances.rds',
-      'checks.checks'
+      'checks'
     ])),
     filter: PropTypes.bool,
     onFilterChange: PropTypes.func,
@@ -61,14 +62,44 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc', 'checks.checks'],
+      include: ['groups.elb', 'groups.security', 'groups.asg', 'instances.rds', 'instances.ecc', 'checks'],
       limit: 1000
     };
+  },
+  getIncludes(){
+    let {include, redux} = this.props;
+    include = _.sortBy(include, i => {
+      let size = _.get(redux.env, `${this.props.filter && 'filtered.' || ''}${i}.size`);
+      if (i === 'checks'){
+        const string = this.props.filter ? 'filtered' : 'checks';
+        size = _.get(redux.checks, `${string}.size`);
+      }
+      //let's do some secondary sorting
+      if (size && !this.props.filter){
+        if (i === 'groups.elb'){
+          size = 5000;
+        } else if (i === 'groups.asg'){
+          size = 4000;
+        } else if (i === 'groups.security'){
+          size = 3000;
+        }
+      }
+      return (-1 * size) || 0;
+    });
+    return include;
   },
   renderGroupsSecurity(){
     return (
       <div key="groupsSecurity">
         <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups" noFetch={this.props.noFetch}/>
+        <hr/>
+      </div>
+    );
+  },
+  renderGroupsAsg(){
+    return (
+      <div key="groupsAsg">
+        <GroupItemList filter={this.props.filter} type="asg" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Autoscaling Groups" noFetch={this.props.noFetch}/>
         <hr/>
       </div>
     );
@@ -97,7 +128,7 @@ const EnvList = React.createClass({
       </div>
     );
   },
-  renderChecksChecks(){
+  renderChecks(){
     return (
       <div key="checks">
         <CheckItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title noFetch={this.props.noFetch}/>
@@ -112,23 +143,12 @@ const EnvList = React.createClass({
     return null;
   },
   render(){
-    const self = this;
-    let {include} = this.props;
-    if (this.props.filter){
-      include = _.sortBy(include, i => {
-        let size = _.get(this.props.redux.env.filtered, `${i}.size`);
-        if (i === 'checks.checks'){
-          size = this.props.redux.checks.filtered.size;
-        }
-        return (-1 * size) || 0;
-      });
-    }
     return (
       <div>
         {this.renderFilterButtons()}
-        {include.map(i => {
+        {this.getIncludes().map(i => {
           const string = i.split('.').map(_.capitalize).reduce((total, n) => total + n);
-          return self[`render${string}`]();
+          return this[`render${string}`]();
         })}
       </div>
     );

@@ -29,7 +29,10 @@ const AssertionItem = React.createClass({
     if (this.props.item.value === 'request_latency'){
       suffix = 'ms';
     }
-    return `${this.props.item.operand}${suffix}`;
+    if (this.props.item.operand){
+      return `${this.props.item.operand}${suffix}`;
+    }
+    return null;
   },
   getRelationship(){
     const rel = this.props.item.relationship;

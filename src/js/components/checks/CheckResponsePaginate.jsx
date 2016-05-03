@@ -73,9 +73,9 @@ const CheckResponsePaginate = React.createClass({
     if (!data){
       return [];
     }
-    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
+    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.spec[s]);
     arr.push(_.get(data, 'target.id'));
-    let headers = _.get(data, 'check_spec.value.headers');
+    let headers = _.get(data, 'spec.headers');
     if (headers){
       arr.push(headers.map(h => {
         return h.name + h.values.join(', ');
@@ -111,14 +111,14 @@ const CheckResponsePaginate = React.createClass({
     return [];
   },
   getBody(){
-    return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.value.body');
+    return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.body');
   },
   isCheckComplete(check){
     if (!check){
       return false;
     }
     const condition1 = check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.spec[s]).every().value();
     return condition1 && condition2;
   },
   isWaiting(){
@@ -186,7 +186,7 @@ const CheckResponsePaginate = React.createClass({
     );
   },
   renderHeaders(res){
-    const headers = _.get(res, 'response.value.headers') || {};
+    const headers = _.get(res, 'response.headers') || {};
     return (
       <div>
         {_.chain(headers).keys().map(key => {
@@ -215,7 +215,7 @@ const CheckResponsePaginate = React.createClass({
       <Padding a={1} className={this.getResponseClass()}>
         <div style={{width: '100%'}}>
           {this.renderTopArea()}
-          <CheckResponseSingle code={_.get(res, 'response.value.code')} headers={_.get(res, 'response.value.headers') || {}} body={this.getBody()} metrics={_.get(res, 'response.value.metrics')}/>
+          <CheckResponseSingle code={_.get(res, 'response.code')} headers={_.get(res, 'response.headers') || {}} body={this.getBody()} metrics={_.get(res, 'response.metrics')}/>
         </div>
         {this.renderButton()}
       </Padding>

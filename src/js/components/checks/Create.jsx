@@ -15,15 +15,16 @@ import {
 const CheckCreate = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      create: PropTypes.func,
-      testCheckReset: PropTypes.func
+      testCheckReset: PropTypes.func,
+      createOrEdit: PropTypes.func
     }),
     location: PropTypes.object,
     children: PropTypes.node,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object,
-        getGroupsSecurity: PropTypes.object
+        getGroupsSecurity: PropTypes.object,
+        getGroupsAsg: PropTypes.object
       }),
       user: PropTypes.object
     }).isRequired,
@@ -33,15 +34,19 @@ const CheckCreate = React.createClass({
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
       getGroupsElb: PropTypes.func,
-      getInstancesEcc: PropTypes.func
+      getGroupsAsg: PropTypes.func,
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func
     })
   },
   componentWillMount(){
     this.props.actions.testCheckReset();
     if (!this.props.redux.asyncActions.getGroupsSecurity.history.length){
       this.props.envActions.getGroupsSecurity();
+      this.props.envActions.getGroupsAsg();
       this.props.envActions.getGroupsElb();
       this.props.envActions.getInstancesEcc();
+      this.props.envActions.getInstancesRds();
     }
   },
   getInitialState(){
@@ -88,7 +93,7 @@ const CheckCreate = React.createClass({
     });
   },
   handleSubmit(){
-    this.props.actions.create(this.state.check);
+    this.props.actions.createOrEdit([this.state.check]);
     this.props.userActions.putData('hasDismissedCheckCreationHelp');
   },
   render() {

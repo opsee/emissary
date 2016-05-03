@@ -29,7 +29,7 @@ const CheckList = React.createClass({
       }),
       asyncActions: PropTypes.shape({
         getChecks: PropTypes.object,
-        checkDelete: PropTypes.object
+        checksDelete: PropTypes.object
       })
     })
   },
@@ -37,8 +37,8 @@ const CheckList = React.createClass({
     this.props.actions.getChecks();
   },
   componentWillUpdate(nextProps) {
-    const oldStatus = this.props.redux.asyncActions.checkDelete.status;
-    const newStatus = nextProps.redux.asyncActions.checkDelete.status;
+    const oldStatus = this.props.redux.asyncActions.checksDelete.status;
+    const newStatus = nextProps.redux.asyncActions.checksDelete.status;
     if (oldStatus !== newStatus && newStatus === 'success'){
       this.props.actions.getChecks();
     }

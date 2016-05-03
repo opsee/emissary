@@ -6,7 +6,8 @@ import {bindActionCreators} from 'redux';
 
 import {Toolbar, StatusHandler} from '../global';
 import CheckCreateRequest from './CheckCreateRequest';
-import CheckCreateAssertions from './CheckCreateAssertions';
+import AssertionsHTTP from './AssertionsHTTP';
+import AssertionsCloudwatch from './AssertionsCloudwatch';
 import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -30,8 +31,8 @@ const CheckEdit = React.createClass({
     actions: PropTypes.shape({
       getCheck: PropTypes.func,
       del: PropTypes.func,
-      edit: PropTypes.func,
-      testCheckReset: PropTypes.func
+      testCheckReset: PropTypes.func,
+      createOrEdit: PropTypes.func
     }),
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
@@ -76,13 +77,13 @@ const CheckEdit = React.createClass({
     return this.state.check || new Check().toJS();
   },
   getCheckTitle(){
-    return _.get(this, 'state.check.check_spec.value.name') || 'Check';
+    return _.get(this, 'state.check.name') || 'Check';
   },
   isDisabled(){
     return !!validate.check(this.getCheck()).length;
   },
   runRemoveCheck(){
-    this.props.actions.del(this.props.params.id);
+    this.props.actions.del([this.props.params.id]);
   },
   setData(data){
     this.setState({
@@ -94,7 +95,7 @@ const CheckEdit = React.createClass({
     this.setState({showEnv: !bool});
   },
   handleSubmit(){
-    return this.props.actions.edit(this.getCheck());
+    return this.props.actions.createOrEdit(this.getCheck());
   },
   handleTargetSelect(target){
     let check = _.cloneDeep(this.getCheck());
@@ -121,16 +122,30 @@ const CheckEdit = React.createClass({
     )
      : <div/>;
   },
+  renderRequest(){
+    if (!_.get(this.getCheck(), 'target.type').match('dbinstance|rds')){
+      return (
+        <Padding tb={1}>
+          <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
+        </Padding>
+      );
+    }
+    return null;
+  },
+  renderAssertions(){
+    if (_.get(this.getCheck(), 'target.type').match('dbinstance|rds')){
+      return <AssertionsCloudwatch check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
+    }
+    return <AssertionsHTTP check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
+  },
   renderInner(){
     if (this.getCheck().id && this.getCheck().COMPLETE){
       return (
         <div>
           {this.renderEnv()}
+          {this.renderRequest()}
           <Padding tb={1}>
-            <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
-          </Padding>
-          <Padding tb={1}>
-            <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>
+            {this.renderAssertions()}
           </Padding>
           <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           <Padding t={1}>

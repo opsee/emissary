@@ -1,19 +1,20 @@
 import React, {PropTypes} from 'react';
-import Immutable, {Record} from 'immutable';
+import {Record, is} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {ListItem} from '../global';
-import {Close, ListCheckmark} from '../icons';
+import {ListClose, ListCheckmark} from '../icons';
 import InstanceMenu from './InstanceMenu';
 import {env as actions} from '../../actions';
-import {InstanceEcc} from '../../modules/schemas';
+import {InstanceEcc, InstanceRds} from '../../modules/schemas';
 
 const InstanceItem = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getInstancesEcc: PropTypes.func
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func
     }),
     instances: PropTypes.shape({
       ecc: PropTypes.object
@@ -27,21 +28,44 @@ const InstanceItem = React.createClass({
     onClick: PropTypes.func
   },
   componentWillMount(){
-    if (_.get(this.props, 'target.type')){
-      this.props.actions.getInstancesEcc();
+    const type = _.get(this.props, 'target.type');
+    if (type) {
+      if (type.match('dbinstance|rds')){
+        return this.props.actions.getInstancesRds();
+      }
+      return this.props.actions.getInstancesEcc();
     }
+    return true;
   },
   shouldComponentUpdate(nextProps) {
     if (this.props.target){
-      return !Immutable.is(this.props.instances, nextProps.instances);
+      return !is(this.props.instances, nextProps.instances);
     }
-    return !Immutable.is(this.props.item, nextProps.item);
+    return !is(this.props.item, nextProps.item);
+  },
+  getType(){
+    let type = _.get(this.props, 'target.type');
+    if (this.props.item){
+      type = _.get(this.props.item.toJS(), 'type');
+    }
+    if (type.match('dbinstance')){
+      type = 'rds';
+    } else if (type === 'instance'){
+      type = 'ecc';
+    }
+    return type;
   },
   getItem(){
-    if (_.get(this.props, 'target.type')){
-      return this.props.instances.ecc.find(i => {
-        return i.get('id') === this.props.target.id;
-      }) || new InstanceEcc();
+    const type = this.getType();
+    if (type){
+      const schema = type === 'ecc' ? InstanceEcc : InstanceRds;
+      return this.props.instances[type].find(i => {
+        let id = _.get(this.props, 'target.id');
+        if (this.props.item){
+          id = _.get(this.props.item.toJS(), 'id');
+        }
+        return i.get('id') === id;
+      }) || new schema();
     }
     return this.props.item;
   },
@@ -49,30 +73,18 @@ const InstanceItem = React.createClass({
     const type = this.getType().toLowerCase();
     return `/instance/${type}/${this.getItem().get('id')}`;
   },
-  getType(){
-    let type = 'EC2';
-    switch (this.getItem().get('type')){
-    case 'RDS':
-    case 'rds':
-      type = 'RDS';
-      break;
-    default:
-      break;
-    }
-    return type;
-  },
   renderInfoText(){
-    if (this.getItem().get('total')){
-      const passing = this.getItem().get('passing');
-      const failing = this.getItem().get('total') - passing;
+    const item = this.getItem().toJS();
+    const {passing, failing, total} = item;
+    if (total){
       return (
         <span>
-          <span title={`${passing} check${passing === 1 ? '' : 's'} passing`}>
+          <span title={`${passing} response${passing === 1 ? '' : 's'} passing`}>
             <ListCheckmark inline fill="textSecondary"/>{passing}
           </span>
           &nbsp;&nbsp;
-          <span title={`${failing} check${failing === 1 ? '' : 's'} failing`}>
-            <Close inline fill="textSecondary"/>{failing}
+          <span title={`${failing} response${failing === 1 ? '' : 's'} failing`}>
+            <ListClose inline fill="textSecondary"/>{failing}
           </span>
         </span>
       );
@@ -93,10 +105,12 @@ const InstanceItem = React.createClass({
   },
   render(){
     if (this.getItem().get('name')){
+      let type = this.getType().toUpperCase();
+      type = type === 'ECC' ? 'EC2' : type;
       return (
-        <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} onClose={this.runResetPageState}>
+        <ListItem type="instance" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} item={this.getItem()} onClose={this.runResetPageState}>
           {this.renderMenu()}
-          <div key="line1">{this.getItem().get('name')}&nbsp;({this.getType()})</div>
+          <div key="line1">{this.getItem().get('name')}&nbsp;({type})</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
