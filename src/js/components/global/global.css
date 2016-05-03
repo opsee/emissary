@@ -117,6 +117,10 @@ small {
   color: var(--colorText2);
 }
 
+:global .text-center {
+  text-align: center;
+}
+
 :global .text-info {
   color: var(--colorInfo);
 }
@@ -144,7 +148,7 @@ a.text-danger:focus {
   color: #d23b0e;
 }
 
-:global .list-unstyled, 
+:global .list-unstyled,
 :global .react-autosuggest__suggestions {
   padding-left: 0;
   list-style: none;

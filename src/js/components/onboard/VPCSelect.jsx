@@ -53,7 +53,7 @@ const VPCSelect = React.createClass({
       let instanceCount = _.get(v, 'instance_count');
       return _.assign({}, v, {
         id: vpcID,
-        label: `${vpcID} (${instanceCount} instances)`
+        label: `${vpcID}<br/><small>(${instanceCount} instances)</small>`
       });
     });
   },
@@ -103,7 +103,7 @@ const VPCSelect = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Select a VPC"/>
+        <Toolbar title="Step 2: Select a VPC"/>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -113,7 +113,7 @@ const VPCSelect = React.createClass({
               </Padding>
 
               <form name="loginForm" onSubmit={this.handleSubmit}>
-              {this.renderInner()}
+                {this.renderInner()}
               </form>
             </Col>
           </Row>
