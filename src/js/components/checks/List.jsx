@@ -56,6 +56,9 @@ const CheckList = React.createClass({
       notifEditing: true
     });
   },
+  handleSelectorClick(){
+    console.log('hi');
+  },
   renderAutoMessage(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
@@ -92,8 +95,11 @@ const CheckList = React.createClass({
   },
   renderActionBar(){
     return (
-      <Padding b={2}>
-        <Button to="checks-notifications">Edit Notifications</Button>
+      <Padding b={2} className="display-flex">
+        <div className="flex-1">
+          <Button to="checks-notifications">Edit Notifications</Button>
+        </div>
+        <Button onClick={this.handleSelectorClick}>Selector</Button>
       </Padding>
     );
   },

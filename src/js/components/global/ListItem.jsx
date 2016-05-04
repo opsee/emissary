@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 
 import {Add, Close, Settings, NewWindow} from '../icons';
 import {Button} from '../forms';
-import listItem from '../global/listItem.css';
+import style from '../global/listItem.css';
 import {Col, Grid, Padding, Row} from '../layout';
 import cx from 'classnames';
 import RadialGraph from './RadialGraph';
@@ -46,11 +46,6 @@ const ListItem = React.createClass({
     this.props.actions.openContextMenu(this.props.item.get('id'));
     this.props.analyticsActions.trackEvent(this.props.type, 'menu-open');
   },
-  runSelect(){
-    if (typeof this.props.onSelect === 'function'){
-      this.props.onSelect(this.props.item.toJS());
-    }
-  },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
       if (e){
@@ -65,13 +60,13 @@ const ListItem = React.createClass({
     );
     if (this.props.onClick){
       return (
-        <div className={listItem.link} onClick={this.handleClick}>
+        <div className={style.link} onClick={this.handleClick}>
           {graph}
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={listItem.link}>
+      <Link to={this.props.link} params={this.props.params} className={style.link}>
        {graph}
       </Link>
     );
@@ -79,14 +74,14 @@ const ListItem = React.createClass({
   renderInfo(){
     if (this.props.onClick){
       return (
-        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
+        <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
           <div>{_.find(this.props.children, {key: 'line1'})}</div>
           <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} title={this.props.title}>
+      <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column'])} title={this.props.title}>
         <div>{_.find(this.props.children, {key: 'line1'})}</div>
         <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
       </Link>
@@ -113,34 +108,37 @@ const ListItem = React.createClass({
   },
   renderSelectButton(){
     const selected = this.props.item.get('selected');
-    const icon = selected ? <Close btn/> : <Add btn/>;
-    return (
-      <Button icon flat secondary onClick={this.runSelect} title="Select">{icon}</Button>
-    );
+    const fn = this.props.onSelect;
+    if (fn && typeof fn === 'function'){
+      const icon = selected ? <Close btn/> : <Add btn/>;
+      return (
+        <Col xs={2} sm={1}>
+          <Row className="end-xs">
+            <Col>
+              <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select">{icon}</Button>
+            </Col>
+          </Row>
+        </Col>
+      );
+    }
   },
   renderMenu(){
     return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
   render(){
     return (
-      <div className={listItem.item}>
+      <div className={style.item}>
         <Padding b={1}>
           {this.renderMenu()}
           <Grid fluid>
             <Row>
-              <Col xs={2} sm={1}>
-                <Row className="end-xs">
-                  <Col>
-                    {this.renderSelectButton()}
-                  </Col>
-                </Row>
-              </Col>
               <Col xs={2} sm={1}>
                 {this.renderGraph()}
               </Col>
               <Col xs={8} sm={10} className="display-flex">
                 {this.renderInfo()}
               </Col>
+              {this.renderSelectButton()}
             </Row>
           </Grid>
         </Padding>

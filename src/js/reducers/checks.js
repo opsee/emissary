@@ -18,7 +18,7 @@ import {
 /* eslint-disable no-use-before-define */
 
 export const statics = {
-  checkFromJS(data){
+  checkFromJS(data, state){
     const newData = _.assign({}, data, result.getFormattedData(data, true), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
@@ -90,7 +90,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {COMPLETE: true}));
+      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {COMPLETE: true}), state);
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -119,7 +119,7 @@ export default handleActions({
   [GET_CHECKS]: {
     next(state, action){
       const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(c);
+        return statics.checkFromJS(c, state);
       }));
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});
