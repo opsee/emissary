@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import config from '../modules/config';
 import {storage, request} from '../modules';
+import * as analytics from './analytics';
 import {
   INTEGRATIONS_SLACK_INFO,
   INTEGRATIONS_SLACK_ACCESS,
@@ -60,6 +61,7 @@ export function slackAccess(query) {
         .send(query)
         .then((res) => {
           resolve(res.body);
+          analytics.trackEvent('Integrations', 'slack-added')(dispatch, state);
           getSlackInfo()(dispatch, state);
           storage.set('shouldGetSlackChannels', true);
         }, reject);
@@ -95,8 +97,10 @@ export function pagerdutyAccess(query) {
         .send(query)
         .then((res) => {
           resolve(res.body);
+          const isEnabled = _.get(res, 'body.enabled');
+          analytics.trackEvent('Integrations', isEnabled ? 'pagerduty-added' : 'pageduty-removed')(dispatch, state);
           getPagerdutyInfo()(dispatch, state);
-          storage.set('shouldSyncPagerduty', _.get(res, 'body.enabled'));
+          storage.set('shouldSyncPagerduty', isEnabled);
         }, reject);
       })
     });
