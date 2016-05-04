@@ -91,42 +91,42 @@ const EnvList = React.createClass({
   },
   renderGroupsSecurity(){
     return (
-      <Padding b={3}>
+      <Padding b={3} key={`env-list-groups-security`}>
         <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups" noFetch={this.props.noFetch}/>
       </Padding>
     );
   },
   renderGroupsAsg(){
     return (
-      <Padding b={3}>
+      <Padding b={3} key={`env-list-groups-asg`}>
         <GroupItemList filter={this.props.filter} type="asg" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Autoscaling Groups" noFetch={this.props.noFetch}/>
       </Padding>
     );
   },
   renderGroupsElb(){
     return (
-      <Padding b={3}>
+      <Padding b={3} key={`env-list-groups-elb`}>
         <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs" noFetch={this.props.noFetch}/>
       </Padding>
     );
   },
   renderInstancesEcc(){
     return (
-      <Padding b={3}>
+      <Padding b={3} key={`env-list-instances-ecc`}>
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="ecc" title noFetch={this.props.noFetch}/>
       </Padding>
     );
   },
   renderInstancesRds(){
     return (
-      <Padding b={3}>
+      <Padding b={3} key={`env-list-instances-rds`}>
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="rds" title noFetch={this.props.noFetch}/>
       </Padding>
     );
   },
   renderChecks(){
     return (
-      <Padding b={3}>
+      <Padding b={3} key={`env-list-checks`}>
         <CheckItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title noFetch={this.props.noFetch}/>
       </Padding>
     );

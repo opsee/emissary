@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import NotificationSelection from './NotificationSelection';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import {is} from 'immutable';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add} from '../icons';
@@ -35,18 +36,28 @@ const MultiEditNotifications = React.createClass({
       })
     })
   },
+  componentWillMount(){
+    this.props.actions.getChecksNotifications();
+  },
+  componentWillReceiveProps(nextProps) {
+    if (!is(nextProps.redux.checks.checks, this.props.redux.checks.checks)){
+      this.setState({
+        notifications: this.getNotifications(nextProps)
+      });
+    }
+  },
   getInitialState() {
     return {
-      notifications: this.getInitialNotifications()
+      notifications: this.getNotifications()
     };
   },
-  getSelectedChecks(){
-    const data = this.props.redux.checks.checks;
+  getSelectedChecks(props = this.props){
+    const data = props.redux.checks.checks;
     const checks = data.toJS ? data.toJS() : data;
     return _.filter(checks, check => check.selected);
   },
-  getInitialNotifications(){
-    return _.chain(this.getSelectedChecks())
+  getNotifications(props = this.props){
+    return _.chain(this.getSelectedChecks(props))
     .map('notifications')
     .flatten()
     .uniqBy(notif => {
@@ -69,39 +80,35 @@ const MultiEditNotifications = React.createClass({
   },
   handleEdit(){
     const checks = this.getSelectedChecks().map(check => {
-      return _.assign(check, this.state, {
-        'check-id': check.id
-      });
+      return _.assign(check, this.state);
     });
     this.props.actions.multiEditNotifications(checks);
   },
   renderInner(){
     if (this.getSelectedChecks().length){
       return (
-        <BastionRequirement>
-          <Alert>Here you can bulk-edit notifications for selected checks. All notifications for every selected check will be replaced with the data below.</Alert>
-          <Padding b={2} t={2}>
-            <CheckItemList title selected/>
-          </Padding>
-          <NotificationSelection {...this.state} onChange={this.handleChange}/>
-          <Button onClick={this.handleEdit} color="success" block disabled={this.isDisabled()}>Set All Notifications</Button>
-        </BastionRequirement>
+        <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
+          <BastionRequirement>
+            <Alert>Here you can bulk-edit notifications for selected checks. All notifications for every selected check will be replaced with the data below.</Alert>
+            <Padding b={2} t={2}>
+              <CheckItemList title selected noFetch/>
+            </Padding>
+            <NotificationSelection notifications={this.state.notifications} onChange={this.handleChange}/>
+            <Button onClick={this.handleEdit} color="success" block disabled={this.isDisabled()}>Set All Notifications</Button>
+          </BastionRequirement>
+        </StatusHandler>
       );
     }
     return (
-      <div>
+      <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
         You must select at least 1 check to edit notifications.
-      </div>
+      </StatusHandler>
     );
   },
   render() {
     return (
       <div>
-        <Toolbar title="Edit Check Notifications">
-          <Button color="primary" fab to="/check-create" title="Create New Check">
-            <Add btn/>
-          </Button>
-        </Toolbar>
+        <Toolbar title="Edit Check Notifications"/>
         <Grid>
           <Row>
             <Col xs={12}>

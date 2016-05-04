@@ -29,6 +29,8 @@ const CheckItemList = React.createClass({
     offset: PropTypes.number,
     limit: PropTypes.number,
     noFallback: PropTypes.bool,
+    //do not poll for updates
+    noFetch: PropTypes.bool,
     actions: PropTypes.shape({
       getChecks: PropTypes.func
     }),
@@ -48,14 +50,17 @@ const CheckItemList = React.createClass({
   getDefaultProps() {
     return {
       limit: 1000,
-      offset: 0
+      offset: 0,
+      noFetch: false
     };
   },
   componentWillMount(){
     if (!this.props.redux.asyncActions.getChecks.history.length){
       this.props.actions.getChecks();
     }
-    this.setInterval(this.props.actions.getChecks, 40000);
+    if (!this.props.noFetch){
+      this.setInterval(this.props.actions.getChecks, 40000);
+    }
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
@@ -116,7 +121,7 @@ const CheckItemList = React.createClass({
         <div>
           {this.renderTitle()}
           {this.getChecks().map(c => {
-            return <CheckItem item={c} key={c.get('id')}/>;
+            return <CheckItem item={c} key={c.get('id')} selectable={this.props.selected}/>;
           })}
         </div>
       );

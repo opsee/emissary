@@ -2,15 +2,17 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
-import {Add} from '../icons';
+import {Add, Checkmark} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions, user as userActions} from '../../actions';
+import listItem from '../global/listItem.css';
 
 const CheckList = React.createClass({
   propTypes: {
@@ -57,7 +59,7 @@ const CheckList = React.createClass({
     });
   },
   handleSelectorClick(){
-    console.log('hi');
+    this.props.actions.selectToggle();
   },
   renderAutoMessage(){
     return (
@@ -94,12 +96,17 @@ const CheckList = React.createClass({
     );
   },
   renderActionBar(){
+    const selected = this.props.redux.checks.checks.filter(check => {
+      return check.get('selected');
+    }).size;
+    const title = selected > 0 ? 'Unselect All' : 'Select All';
+    const inner = selected > 0 ? <div className={listItem.selectorInner}/> : null;
     return (
       <Padding b={2} className="display-flex">
         <div className="flex-1">
           <Button to="checks-notifications">Edit Notifications</Button>
         </div>
-        <Button onClick={this.handleSelectorClick}>Selector</Button>
+        <Button className={cx(listItem.selector, selected > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title}>{inner}</Button>
       </Padding>
     );
   },

@@ -3,12 +3,13 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {plain as seed} from 'seedling';
+import cx from 'classnames';
 
-import {Add, Close, Settings, NewWindow} from '../icons';
+import {Add, Close, Checkmark, NewWindow, Settings} from '../icons';
 import {Button} from '../forms';
 import style from '../global/listItem.css';
 import {Col, Grid, Padding, Row} from '../layout';
-import cx from 'classnames';
 import RadialGraph from './RadialGraph';
 import {
   app as actions,
@@ -110,12 +111,12 @@ const ListItem = React.createClass({
     const selected = this.props.item.get('selected');
     const fn = this.props.onSelect;
     if (fn && typeof fn === 'function'){
-      const icon = selected ? <Close btn/> : <Add btn/>;
+      const icon = selected ? <Checkmark btn fill={seed.color.gray9}/> : null;
       return (
         <Col xs={2} sm={1}>
           <Row className="end-xs">
             <Col>
-              <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select">{icon}</Button>
+              <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
             </Col>
           </Row>
         </Col>
@@ -127,7 +128,7 @@ const ListItem = React.createClass({
   },
   render(){
     return (
-      <div className={style.item}>
+      <div className={cx(style.item, this.props.item.get('selected') && style.itemSelected)}>
         <Padding b={1}>
           {this.renderMenu()}
           <Grid fluid>

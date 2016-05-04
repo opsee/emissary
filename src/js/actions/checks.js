@@ -154,15 +154,6 @@ export function getChecks(redirect){
                 id
                 type
               }
-              spec {
-                ... on schemaHttpCheck {
-                  verb
-                  headers {
-                    name
-                    values
-                  }
-                }
-              }
               results {
                 passing
                 responses {
@@ -183,6 +174,72 @@ export function getChecks(redirect){
           }, 30);
         }
       })
+    });
+  };
+}
+
+export function getChecksNotifications(redirect){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_CHECKS,
+      payload: graphPromise('checks', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `{
+            checks {
+              id
+              notifications {
+                value
+                type
+              }
+              target {
+                address
+                name
+                type
+                id
+              }
+              name
+              last_run
+              spec {
+                ... on schemaHttpCheck {
+                  verb
+                  protocol
+                  path
+                  port
+                  headers {
+                    name
+                    values
+                  }
+                }
+                ... on schemaCloudWatchCheck {
+                  metrics {
+                    namespace
+                    name
+                  }
+                }
+              }
+              results {
+                passing
+                responses {
+                  passing
+                  target {
+                    id
+                    type
+                  }
+                }
+              }
+              assertions {
+                value
+                relationship
+                operand
+                key
+              }
+            }
+          }`
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -414,25 +471,55 @@ export function edit(data){
   };
 }
 
-export function multiEditNotifications(data){
+export function multiEditNotifications(raw){
+  let data = Array.isArray(raw) ? raw : [raw];
+  const checks = data.map(formatCheckData);
   return (dispatch, state) => {
     dispatch({
       type: CHECK_MULTIEDIT_NOTIFICATIONS,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('checks', () => {
         return request
-        .post(`https://hugs.in.opsee.com/notifications-multicheck`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send(data)
-        .then(res => {
-          resolve({
-            data:  _.get(res.body, 'checks'),
-            search: state().search
-          });
-        })
+        .send({
+          query: `mutation Mutation ($checks: [Check]){
+            checks(checks: $checks) {
+              id
+            }
+          }`,
+          variables: {
+            checks
+          }
+        });
+      }, null, (payload) => {
+        analytics.trackEvent('Check', 'multiedit notifications')(dispatch, state);
+        setTimeout(() => {
+          dispatch(pushState(null, '/'));
+        }, 100);
       })
     });
   };
 }
+
+// export function multiEditNotifications(data){
+//   return (dispatch, state) => {
+//     dispatch({
+//       type: CHECK_MULTIEDIT_NOTIFICATIONS,
+//       payload: new Promise((resolve, reject) => {
+//         return request
+//         .post(`https://hugs.in.opsee.com/notifications-multicheck`)
+//         .set('Authorization', state().user.get('auth'))
+//         .send(data)
+//         .then(res => {
+//           resolve({
+//             data:  _.get(res.body, 'checks'),
+//             search: state().search
+//           });
+//         })
+//       })
+//     });
+//   };
+// }
 
 export function selectToggle(id){
   return (dispatch, state) => {
@@ -440,6 +527,6 @@ export function selectToggle(id){
       type: CHECK_SELECT_TOGGLE,
       payload: id
     });
-    getCheck(id)(dispatch, state);
+    // getCheck(id)(dispatch, state);
   };
 }

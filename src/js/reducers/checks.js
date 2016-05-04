@@ -172,14 +172,24 @@ export default handleActions({
   },
   [CHECK_SELECT_TOGGLE]: {
     next(state, action){
-      const index = state.checks.findIndex(item => {
-        return item.get('id') === action.payload;
-      });
-      let updated;
-      if (index > -1){
-        updated = state.checks.get(index).set('selected', !state.checks.get(index).get('selected'));
+      let checks = state.checks;
+      if (action.payload){
+        const index = checks.findIndex(item => {
+          return item.get('id') === action.payload;
+        });
+        let updated;
+        if (index > -1){
+          updated = checks.get(index).set('selected', !checks.get(index).get('selected'));
+        }
+        checks = updated ? checks.update(index, () => updated) : checks;
+      } else {
+        const foundSelected = checks.filter(check => {
+          return check.get('selected');
+        }).size;
+        checks = checks.map(check => {
+          return check.set('selected', !foundSelected);
+        });
       }
-      const checks = updated ? state.checks.update(index, () => updated) : state.checks;
       return _.assign({}, state, {
         checks
       });

@@ -60,6 +60,7 @@ const GroupItemList = React.createClass({
     };
   },
   componentWillMount(){
+    console.log('mounting ' +this.props.type);
     this.setInterval(this.getData, this.props.interval);
     if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
       return true;
