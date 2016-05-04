@@ -61,7 +61,7 @@ export function slackAccess(query) {
         .send(query)
         .then((res) => {
           resolve(res.body);
-          analytics.trackEvent('Integrations', 'slack-added');
+          analytics.trackEvent('Integrations', 'slack-added')(dispatch, state);
           getSlackInfo()(dispatch, state);
           storage.set('shouldGetSlackChannels', true);
         }, reject);
@@ -98,7 +98,7 @@ export function pagerdutyAccess(query) {
         .then((res) => {
           resolve(res.body);
           const isEnabled = _.get(res, 'body.enabled');
-          analytics.trackEvent('Integrations', isEnabled ? 'pagerduty-added' : 'pageduty-removed');
+          analytics.trackEvent('Integrations', isEnabled ? 'pagerduty-added' : 'pageduty-removed')(dispatch, state);
           getPagerdutyInfo()(dispatch, state);
           storage.set('shouldSyncPagerduty', isEnabled);
         }, reject);
