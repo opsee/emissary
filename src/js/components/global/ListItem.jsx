@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import cx from 'classnames';
 
-import {Add, Close, Checkmark, NewWindow, Settings} from '../icons';
+import {Checkmark, NewWindow} from '../icons';
 import {Button} from '../forms';
 import style from '../global/listItem.css';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -101,11 +101,6 @@ const ListItem = React.createClass({
       );
     }
     return null;
-    // return (
-    //   <Button icon flat secondary onClick={this.runMenuOpen} title="Menu">
-    //     <Settings fill="textSecondary" btn/>
-    //   </Button>
-    // );
   },
   renderSelectButton(){
     const selected = this.props.item.get('selected');
@@ -122,6 +117,7 @@ const ListItem = React.createClass({
         </Col>
       );
     }
+    return null;
   },
   renderMenu(){
     return _.find(this.props.children, {key: 'menu'}) || <div/>;

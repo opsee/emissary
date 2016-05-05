@@ -6,11 +6,10 @@ import cx from 'classnames';
 import _ from 'lodash';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
-import {Add, Checkmark} from '../icons';
+import {Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
-import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions, user as userActions} from '../../actions';
 import listItem from '../global/listItem.css';
@@ -18,7 +17,9 @@ import listItem from '../global/listItem.css';
 const CheckList = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getChecks: PropTypes.func.isRequired
+      getChecks: PropTypes.func.isRequired,
+      selectToggle: PropTypes.func.isRequired,
+      delSelected: PropTypes.func.isRequired
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
@@ -110,10 +111,10 @@ const CheckList = React.createClass({
       <Padding b={2} r={1} className="display-flex">
         <div className="flex-1 display-flex">
           <Padding r={1}>
-            <Button to={`checks-notifications`} query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={size < 1} style={{opacity: size > 0 ? 1 : .3}}>Edit Notifications</Button>
+            <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Edit Notifications</Button>
           </Padding>
           <Padding r={1}>
-            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={size < 1} style={{opacity: size > 0 ? 1 : .3}}>Delete</Button>
+            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Delete</Button>
           </Padding>
         </div>
         <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title}>{inner}</Button>

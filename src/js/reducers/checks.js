@@ -92,7 +92,7 @@ if (query && query.selected){
     return new Check({
       id,
       selected: true
-    })
+    });
   });
 }
 

@@ -3,22 +3,19 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import NotificationSelection from './NotificationSelection';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router';
 import {is} from 'immutable';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
-import {Add} from '../icons';
-import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
-import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions} from '../../actions';
 
 const MultiEditNotifications = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getChecksNotifications: PropTypes.func.isRequired
+      getChecksNotifications: PropTypes.func.isRequired,
+      multiEditNotifications: PropTypes.func.isRequired
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
@@ -86,7 +83,7 @@ const MultiEditNotifications = React.createClass({
   },
   renderInner(){
     const checks = this.getSelectedChecks();
-    if (checks.length && _.find(checks[0].tags, t => 'notifications')){
+    if (checks.length && _.find(checks[0].tags, () => 'notifications')){
       return (
         <StatusHandler status={this.props.redux.asyncActions.getChecksNotifications.status}>
           <BastionRequirement>
