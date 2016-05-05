@@ -4,6 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var fs = require('fs');
 var _ = require('lodash');
 var seedling = require('seedling');
+var crypto = require('crypto');
 
 var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
@@ -16,9 +17,12 @@ var definePlugin = new webpack.DefinePlugin({
   }
 });
 
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
+var deps = JSON.parse(fs.readFileSync('package.json')).dependencies;
+var outlaws = ['flexboxgrid', 'react-bootstrap'];
+var vendors = _.omit(deps, outlaws);
+var vendorHash = crypto.createHash('md5').update(JSON.stringify(vendors)).digest('hex');
 
-var vendors = ['lodash', 'react', 'moment', 'slate', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'react-document-title', 'react-timeago'];
+var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', `vendor.${vendorHash}.js`);
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
   mangle: true,
@@ -38,13 +42,13 @@ var config = {
       'babel-polyfill',
       './js/index.jsx'
     ],
-    vendor:vendors
+    vendor: _.keys(vendors)
   },
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
-    filename: "bundle.js",
-    chunkFilename: "[name]-[id].js"
+    filename: "bundle.[hash].js",
+    chunkFilename: "[name]-[id].[hash].js"
   },
   postcss: function(webpack){
     return [
@@ -96,7 +100,7 @@ var config = {
       }
     ]
   },
-  noParse:vendors.map(v => `${node_modules}/${v}`),
+  noParse: _.keys(vendors).map(v => `${node_modules}/${v}`),
   resolve: {
     extensions: ['', '.jsx', '.js', '.json', '.svg', '.png', '.jpg'],
     modulesDirectories: ['node_modules']
@@ -117,7 +121,7 @@ var config = {
 if (process.env.NODE_ENV === 'production'){
   config.eslint.failOnWarning = true;
   config.plugins.push(uglify);
-  config.plugins.push(new ExtractTextPlugin('style.css'));
+  config.plugins.push(new ExtractTextPlugin('style.[hash].css'));
   config.module.loaders = config.module.loaders.map(item => {
     if (_.isEqual(item.test, /\.css$/)){
       item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[path][name]-[local]!postcss-loader')
