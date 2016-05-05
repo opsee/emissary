@@ -1,18 +1,20 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
+import queryString from 'query-string';
 import result from '../modules/result';
 import {handleActions} from 'redux-actions';
 import {Check, CheckEvent} from '../modules/schemas';
 import {itemsFilter, yeller} from '../modules';
 import {
   GET_CHECK,
-  GET_CHECK_NOTIFICATION,
+  GET_CHECK_FROM_S3,
   GET_CHECKS,
   CHECK_TEST,
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE,
   CHECKS_SET_FILTERED,
-  CHECK_SELECT_TOGGLE
+  CHECK_SELECT_TOGGLE,
+  GET_CHECKS_NOTIFICATIONS
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -77,8 +79,25 @@ export const statics = {
   }
 };
 
+let selected = [];
+const query = queryString.parse(window.location.search);
+if (query && query.selected){
+  let arr = [];
+  try {
+    arr = JSON.parse(query.selected);
+  } catch (err){
+    _.noop();
+  }
+  selected = arr.map(id => {
+    return new Check({
+      id,
+      selected: true
+    })
+  });
+}
+
 const initial = {
-  checks: new List(),
+  checks: new List(selected),
   responses: new List(),
   responsesFormatted: [],
   selectedResponse: 0,
@@ -90,7 +109,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {COMPLETE: true}), state);
+      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {tags: ['complete']}), state);
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -126,7 +145,17 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
-  [GET_CHECK_NOTIFICATION]: {
+  [GET_CHECKS_NOTIFICATIONS]: {
+    next(state, action){
+      const checks = new List(action.payload.data.map(c => {
+        return statics.checkFromJS(_.assign(c, {tags: ['notifications']}), state);
+      }));
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      return _.assign({}, state, {checks, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_CHECK_FROM_S3]: {
     next(state, action) {
       const notification = fromJS(action.payload.data);
       let responses = notification.get('responses');

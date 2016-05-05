@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import cx from 'classnames';
+import _ from 'lodash';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add, Checkmark} from '../icons';
@@ -101,20 +102,21 @@ const CheckList = React.createClass({
   renderActionBar(){
     const selected = this.props.redux.checks.checks.filter(check => {
       return check.get('selected');
-    }).size;
-    const title = selected > 0 ? 'Unselect All' : 'Select All';
-    const inner = selected > 0 ? <div className={listItem.selectorInner}/> : null;
+    });
+    const {size} = selected;
+    const title = size > 0 ? 'Unselect All' : 'Select All';
+    const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
     return (
       <Padding b={2} r={1} className="display-flex">
         <div className="flex-1 display-flex">
           <Padding r={1}>
-            <Button to="checks-notifications" flat color="default" disabled={selected < 1} style={{opacity: selected > 0 ? 1 : .3}}>Edit Notifications</Button>
+            <Button to={`checks-notifications`} query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={size < 1} style={{opacity: size > 0 ? 1 : .3}}>Edit Notifications</Button>
           </Padding>
           <Padding r={1}>
-            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={selected < 1} style={{opacity: selected > 0 ? 1 : .3}}>Delete</Button>
+            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={size < 1} style={{opacity: size > 0 ? 1 : .3}}>Delete</Button>
           </Padding>
         </div>
-        <Button className={cx(listItem.selector, selected > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title}>{inner}</Button>
+        <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title}>{inner}</Button>
       </Padding>
     );
   },

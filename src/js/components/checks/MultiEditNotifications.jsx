@@ -18,7 +18,7 @@ import {checks as actions} from '../../actions';
 const MultiEditNotifications = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getChecks: PropTypes.func.isRequired
+      getChecksNotifications: PropTypes.func.isRequired
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
@@ -31,7 +31,7 @@ const MultiEditNotifications = React.createClass({
         bastions: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
-        getChecks: PropTypes.object,
+        getChecksNotifications: PropTypes.object,
         checkDelete: PropTypes.object
       })
     })
@@ -85,9 +85,10 @@ const MultiEditNotifications = React.createClass({
     this.props.actions.multiEditNotifications(checks);
   },
   renderInner(){
-    if (this.getSelectedChecks().length){
+    const checks = this.getSelectedChecks();
+    if (checks.length && _.find(checks[0].tags, t => 'notifications')){
       return (
-        <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
+        <StatusHandler status={this.props.redux.asyncActions.getChecksNotifications.status}>
           <BastionRequirement>
             <Alert>Here you can bulk-edit notifications for selected checks. All notifications for every selected check will be replaced with the data below.</Alert>
             <Padding b={2} t={2}>
@@ -100,7 +101,7 @@ const MultiEditNotifications = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
+      <StatusHandler status={this.props.redux.asyncActions.getChecksNotifications.status}>
         You must select at least 1 check to edit notifications.
       </StatusHandler>
     );

@@ -103,10 +103,7 @@ const Target = Record({
 });
 
 export const Check = Record({
-  //set complete to true if we have all keys that we will ever have
-  //useful for displaying condensed lists of checks
-  //prob remove this with graphql integration
-  COMPLETE: false,
+  tags: List(),
   selected: false,
   id: undefined,
   name: undefined,

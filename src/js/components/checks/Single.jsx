@@ -45,7 +45,7 @@ const CheckSingle = React.createClass({
   renderNotifications(){
     let notifs = this.getCheck().get('notifications');
     notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (this.getCheck().get('COMPLETE')){
+    if (_.find(this.getCheck().toJS().tags, () => 'complete')){
       return (
         <Padding b={1}>
           <Heading level={3}>Notifications</Heading>
@@ -61,7 +61,7 @@ const CheckSingle = React.createClass({
     //TODO change this later to be more open
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
-    } if (check.COMPLETE){
+    } if (_.find(check.tags, () => 'complete')){
       return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
     }
     return null;

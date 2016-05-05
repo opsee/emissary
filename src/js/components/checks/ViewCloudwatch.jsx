@@ -14,7 +14,7 @@ const ViewCloudwatch = React.createClass({
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
     notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (this.props.check.get('COMPLETE')){
+    if (_.find(this.props.check.toJS().tags, () => 'complete')){
       return (
         <Padding b={1}>
           <Heading level={3}>Notifications</Heading>
@@ -45,7 +45,7 @@ const ViewCloudwatch = React.createClass({
           {this.renderTarget()}
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>
-            {check.COMPLETE && check.assertions.map((assertion, i) => {
+            {_.find(check.tags, () => 'complete') && check.assertions.map((assertion, i) => {
               return (
                 <Padding b={1} key={`assertion-item-${i}`}>
                   <AssertionMetric check={check} assertion={assertion} index={i}/>

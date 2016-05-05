@@ -7,8 +7,9 @@ import _ from 'lodash';
 import graphPromise from '../modules/graphPromise';
 import {
   GET_CHECK,
-  GET_CHECK_NOTIFICATION,
+  GET_CHECK_FROM_S3,
   GET_CHECKS,
+  GET_CHECKS_NOTIFICATIONS,
   CHECKS_DELETE,
   CHECK_CREATE,
   CHECK_EDIT,
@@ -27,7 +28,7 @@ import {
 export function getCheckFromURI(jsonURI) {
   return dispatch => {
     dispatch({
-      type: GET_CHECK_NOTIFICATION,
+      type: GET_CHECK_FROM_S3,
       payload: request.get(jsonURI)
         .then(res => {
           return { data: res.body };
@@ -170,7 +171,7 @@ export function getChecks(redirect){
 export function getChecksNotifications(){
   return (dispatch, state) => {
     dispatch({
-      type: GET_CHECKS,
+      type: GET_CHECKS_NOTIFICATIONS,
       payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)

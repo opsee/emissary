@@ -113,7 +113,7 @@ const AssertionsHTTP = React.createClass({
   },
   renderAssertionSelection(){
     const {props} = this;
-    if ((props.renderAsInclude && props.check.COMPLETE) || !props.renderAsInclude){
+    if ((props.renderAsInclude && _.find(props.check.tags, () => 'complete')) || !props.renderAsInclude){
       return (
         <Padding b={1}>
           <AssertionSelection assertions={this.props.check.assertions} onChange={this.handleAssertionsChange}/>

@@ -138,7 +138,7 @@ const NotificationSelection = React.createClass({
         value: index === i ? data.value : n.value
       });
     });
-    this.props.onChange(this.getFinalNotifications(notifs));
+    this.runChange(notifs);
   },
   handleSubmit(e){
     e.preventDefault();

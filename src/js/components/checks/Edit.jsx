@@ -67,7 +67,7 @@ const CheckEdit = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Check();
     const check = data.toJS();
-    if (!this.state.check && check.COMPLETE){
+    if (!this.state.check && _.find(check.tags, () => 'complete')){
       this.setState({
         check
       });
@@ -139,7 +139,7 @@ const CheckEdit = React.createClass({
     return <AssertionsHTTP check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
   },
   renderInner(){
-    if (this.getCheck().id && this.getCheck().COMPLETE){
+    if (this.getCheck().id && _.find(this.getCheck().tags, () => 'complete')) {
       return (
         <div>
           {this.renderEnv()}
