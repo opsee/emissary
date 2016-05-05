@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {fromJS, List} from 'immutable';
-import queryString from 'query-string';
+import {parse} from 'query-string';
 import result from '../modules/result';
 import {handleActions} from 'redux-actions';
 import {Check, CheckEvent} from '../modules/schemas';
@@ -80,7 +80,7 @@ export const statics = {
 };
 
 let selected = [];
-const query = queryString.parse(window.location.search);
+const query = parse(window.location.search);
 if (query && query.selected){
   let arr = [];
   try {
