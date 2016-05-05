@@ -32,10 +32,13 @@ var uglify = new webpack.optimize.UglifyJsPlugin({
 });
 
 var config = {
-  cache:true,
-  context:context_dir,
+  cache: true,
+  context: context_dir,
   eslint:{
     configFile: `${node_modules}/opsee-style/.eslintrc`
+  },
+  node: {
+    fs: 'empty'
   },
   entry: {
     'index': [
