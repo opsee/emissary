@@ -136,7 +136,7 @@ const ListItem = React.createClass({
               <Col xs={2} sm={1}>
                 {this.renderGraph()}
               </Col>
-              <Col xs={8} sm={10} className="display-flex">
+              <Col xs={this.props.onSelect ? 8 : 10} sm={this.props.onSelect ? 10 : 11} className="display-flex">
                 {this.renderInfo()}
               </Col>
               {this.renderSelectButton()}

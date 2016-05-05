@@ -16,7 +16,7 @@ import {
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE,
   CHECK_SELECT_TOGGLE,
-  CHECK_MULTIEDIT_NOTIFICATIONS,
+  CHECK_MULTIEDIT,
   CHECK_CREATE_OR_EDIT
 } from './constants';
 
@@ -34,17 +34,6 @@ export function getCheckFromURI(jsonURI) {
         })
     });
   };
-}
-
-function getNotifications(state, id){
-  return new Promise((resolve, reject) => {
-    request
-    .get(`${config.services.api}/notifications/${id}`)
-    .set('Authorization', state().user.get('auth'))
-    .then(resolve, () => {
-      resolve({body: {notifications: []}});
-    }, reject);
-  });
 }
 
 export function getCheck(id){
@@ -178,7 +167,7 @@ export function getChecks(redirect){
   };
 }
 
-export function getChecksNotifications(redirect){
+export function getChecksNotifications(){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECKS,
@@ -262,6 +251,16 @@ export function del(ids){
         analytics.trackEvent('Check', 'delete')(dispatch, state);
       })
     });
+  };
+}
+
+export function delSelected(){
+  return (dispatch, state) => {
+    const ids = _.chain(state().checks.checks.toJS())
+    .filter(check => check.selected)
+    .map('id')
+    .value();
+    del(ids)(dispatch, state);
   };
 }
 
@@ -476,7 +475,7 @@ export function multiEditNotifications(raw){
   const checks = data.map(formatCheckData);
   return (dispatch, state) => {
     dispatch({
-      type: CHECK_MULTIEDIT_NOTIFICATIONS,
+      type: CHECK_MULTIEDIT,
       payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)
@@ -491,7 +490,7 @@ export function multiEditNotifications(raw){
             checks
           }
         });
-      }, null, (payload) => {
+      }, null, () => {
         analytics.trackEvent('Check', 'multiedit notifications')(dispatch, state);
         setTimeout(() => {
           dispatch(pushState(null, '/'));
@@ -504,7 +503,7 @@ export function multiEditNotifications(raw){
 // export function multiEditNotifications(data){
 //   return (dispatch, state) => {
 //     dispatch({
-//       type: CHECK_MULTIEDIT_NOTIFICATIONS,
+//       type: CHECK_MULTIEDIT,
 //       payload: new Promise((resolve, reject) => {
 //         return request
 //         .post(`https://hugs.in.opsee.com/notifications-multicheck`)
@@ -522,11 +521,10 @@ export function multiEditNotifications(raw){
 // }
 
 export function selectToggle(id){
-  return (dispatch, state) => {
+  return (dispatch) => {
     dispatch({
       type: CHECK_SELECT_TOGGLE,
       payload: id
     });
-    // getCheck(id)(dispatch, state);
   };
 }

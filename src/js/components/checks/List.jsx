@@ -61,6 +61,9 @@ const CheckList = React.createClass({
   handleSelectorClick(){
     this.props.actions.selectToggle();
   },
+  handleDeleteClick(){
+    this.props.actions.delSelected();
+  },
   renderAutoMessage(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
@@ -76,7 +79,7 @@ const CheckList = React.createClass({
     if (this.props.redux.checks.checks.size){
       return (
         <div>
-          <CheckItemList title/>
+          <CheckItemList title selectable/>
         </div>
       );
     }
@@ -102,9 +105,14 @@ const CheckList = React.createClass({
     const title = selected > 0 ? 'Unselect All' : 'Select All';
     const inner = selected > 0 ? <div className={listItem.selectorInner}/> : null;
     return (
-      <Padding b={2} className="display-flex">
-        <div className="flex-1">
-          <Button to="checks-notifications">Edit Notifications</Button>
+      <Padding b={2} r={1} className="display-flex">
+        <div className="flex-1 display-flex">
+          <Padding r={1}>
+            <Button to="checks-notifications" flat color="default" disabled={selected < 1} style={{opacity: selected > 0 ? 1 : .3}}>Edit Notifications</Button>
+          </Padding>
+          <Padding r={1}>
+            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={selected < 1} style={{opacity: selected > 0 ? 1 : .3}}>Delete</Button>
+          </Padding>
         </div>
         <Button className={cx(listItem.selector, selected > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title}>{inner}</Button>
       </Padding>

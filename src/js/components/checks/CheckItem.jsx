@@ -46,7 +46,7 @@ const CheckItem = React.createClass({
     if (this.props.selectable){
       return {
         onSelect: this.props.actions.selectToggle.bind(null, this.props.item.get('id'))
-      }
+      };
     }
     return {};
   },

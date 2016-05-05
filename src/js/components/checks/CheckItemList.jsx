@@ -23,6 +23,8 @@ const CheckItemList = React.createClass({
     filter: PropTypes.bool,
     //only show items that are selected
     selected: PropTypes.bool,
+    //allow items to be selected
+    selectable: PropTypes.bool,
     //should we grab notifications from the db?
     notifications: PropTypes.bool,
     title: PropTypes.bool,
@@ -121,7 +123,7 @@ const CheckItemList = React.createClass({
         <div>
           {this.renderTitle()}
           {this.getChecks().map(c => {
-            return <CheckItem item={c} key={c.get('id')} selectable={this.props.selected}/>;
+            return <CheckItem item={c} key={c.get('id')} selectable={this.props.selectable}/>;
           })}
         </div>
       );
