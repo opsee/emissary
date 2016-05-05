@@ -133,8 +133,10 @@ const CheckList = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
-                {this.renderActionBar()}
-                {this.renderChecks()}
+                <Padding t={1}>
+                  {this.renderActionBar()}
+                  {this.renderChecks()}
+                </Padding>
               </BastionRequirement>
             </Col>
           </Row>
