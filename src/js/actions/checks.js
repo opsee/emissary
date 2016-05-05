@@ -501,26 +501,6 @@ export function multiEditNotifications(raw){
   };
 }
 
-// export function multiEditNotifications(data){
-//   return (dispatch, state) => {
-//     dispatch({
-//       type: CHECK_MULTIEDIT,
-//       payload: new Promise((resolve, reject) => {
-//         return request
-//         .post(`https://hugs.in.opsee.com/notifications-multicheck`)
-//         .set('Authorization', state().user.get('auth'))
-//         .send(data)
-//         .then(res => {
-//           resolve({
-//             data:  _.get(res.body, 'checks'),
-//             search: state().search
-//           });
-//         })
-//       })
-//     });
-//   };
-// }
-
 export function selectToggle(id){
   return (dispatch) => {
     dispatch({
