@@ -10,7 +10,7 @@ import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {flag} from '../../modules';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
-import {SlackConnect} from '../integrations';
+import {PagerdutyConnect, SlackConnect} from '../integrations';
 
 const Install = React.createClass({
   propTypes: {
@@ -163,12 +163,22 @@ const Install = React.createClass({
     return <p>Checking installation status...</p>;
   },
   renderSlack(){
-    if (flag('integrations-slack') && !this.isComplete()){
-      return (
-        <Padding>
-          While you&rsquo;re waiting, <SlackConnect target="_blank"/> to get notifications in your favorite channel.
-        </Padding>
-      );
+    const slack = !!flag('integrations-slack');
+    const pagerduty = !!flag('integrations-pagerduty');
+    if (!this.isComplete()){
+      if (slack && !pagerduty){
+        return (
+          <Padding>
+            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel.
+          </Padding>
+        );
+      } else if (slack && pagerduty){
+        return (
+          <Padding>
+            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel. <br/>You can also set up a connection to <PagerdutyConnect>PagerDuty</PagerdutyConnect>.
+          </Padding>
+        );
+      }
     }
     return null;
   },

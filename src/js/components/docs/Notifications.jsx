@@ -25,7 +25,7 @@ const Notifications = React.createClass({
               <p>Speak to your IT professional if you&rsquo;ve never used email before.</p>
 
               <Heading level={2}>Slack Channels</Heading>
-              <p>First, <SlackConnect target="_blank"/>.</p>
+              <p>First, <SlackConnect/>.</p>
               <p>When successfully connected, you&rsquo;ll see a list of Slack channels available to you as notification options during check creation.</p>
               <Padding b={1}>
                 <SlackInfo/>
