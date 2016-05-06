@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import cx from 'classnames';
 import DocumentTitle from 'react-document-title';
 import {Col, Grid, Row} from '../layout';
 import style from './toolbar.css';
@@ -12,7 +13,8 @@ const Toolbar = React.createClass({
     btnPosition: PropTypes.string,
     bg: PropTypes.string,
     children: PropTypes.node,
-    pageTitle: PropTypes.string
+    pageTitle: PropTypes.string,
+    className: PropTypes.string
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
@@ -33,7 +35,7 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={style.outer} style={this.getStyle()}>
+      <div className={cx(style.outer, this.props.className)} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>
