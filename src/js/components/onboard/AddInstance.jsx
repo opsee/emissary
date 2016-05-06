@@ -5,10 +5,11 @@ import {plain as seed} from 'seedling';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
-import {Highlight, Toolbar} from '../global';
+import {Highlight, ProgressBar, Toolbar} from '../global';
 import {Expandable, Padding, Grid, Row, Col} from '../layout';
 import {Heading} from '../type';
 import ec2InstaceImage from '../../../img/tut-ec2-instance.svg';
+import style from './onboard.css';
 
 const AddInstance = React.createClass({
   propTypes: {
@@ -76,7 +77,10 @@ const AddInstance = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Step 2: Add our EC2 Instance"/>
+        <Toolbar title="Step 2: Add our EC2 Instance" className={style.toolbar} />
+        <Padding b={2}>
+          <ProgressBar percentage={45} color={seed.color.success} flat />
+        </Padding>
 
         <Grid>
           <Row>

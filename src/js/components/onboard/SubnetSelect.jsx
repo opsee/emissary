@@ -2,15 +2,17 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import _ from 'lodash';
+import {plain as seed} from 'seedling';
 
 import {bindActionCreators} from 'redux';
-import {StatusHandler, Toolbar} from '../global';
+import {StatusHandler, ProgressBar, Toolbar} from '../global';
 import img from '../../../img/tut-subnets.svg';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
 import {RadioSelect} from '../forms';
+import style from './onboard.css';
 
 const SubnetSelect = React.createClass({
   propTypes: {
@@ -138,7 +140,11 @@ const SubnetSelect = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Step 2: Select a Subnet"/>
+        <Toolbar title="Step 2: Select a Subnet" className={style.toolbar} />
+        <Padding b={2}>
+          <ProgressBar percentage={75} color={seed.color.success} flat />
+        </Padding>
+
         <Grid>
           <Row>
             <Col xs={12}>

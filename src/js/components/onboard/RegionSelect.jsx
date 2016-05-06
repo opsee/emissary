@@ -3,8 +3,9 @@ import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {plain as seed} from 'seedling';
 
-import {StatusHandler, Toolbar} from '../global';
+import {StatusHandler, ProgressBar, Toolbar} from '../global';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
@@ -12,6 +13,7 @@ import {onboard as actions} from '../../actions';
 import regions from '../../modules/regions';
 import {SetInterval} from '../../modules/mixins';
 import {NewWindow} from '../icons';
+import style from './onboard.css';
 
 const RegionSelect = React.createClass({
   mixins: [History, SetInterval],
@@ -168,7 +170,11 @@ const RegionSelect = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Step 1: Choose a Region"/>
+        <Toolbar title="Step 1: Choose a region" className={style.toolbar} />
+        <Padding b={2}>
+          <ProgressBar percentage={30} color={seed.color.success} flat />
+        </Padding>
+
         <Grid>
           <Row>
             <Col xs={12}>

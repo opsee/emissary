@@ -2,14 +2,16 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import {History, Link} from 'react-router';
+import {plain as seed} from 'seedling';
 
 import {bindActionCreators} from 'redux';
-import {Toolbar} from '../global';
+import {ProgressBar, Toolbar} from '../global';
 import {Button} from '../forms';
 import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {onboard as actions, analytics as analyticsActions} from '../../actions';
 import {RadioSelect} from '../forms';
+import style from './onboard.css';
 
 const VPCSelect = React.createClass({
   mixins: [History],
@@ -102,8 +104,11 @@ const VPCSelect = React.createClass({
   },
   render() {
     return (
-       <div>
-        <Toolbar title="Step 2: Select a VPC"/>
+      <div>
+        <Toolbar title="Step 2: Select a VPC" className={style.toolbar} />
+        <Padding b={2}>
+          <ProgressBar percentage={60} color={seed.color.success} flat />
+        </Padding>
         <Grid>
           <Row>
             <Col xs={12}>
