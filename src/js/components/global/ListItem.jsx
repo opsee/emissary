@@ -9,7 +9,7 @@ import cx from 'classnames';
 import {Checkmark, NewWindow} from '../icons';
 import {Button} from '../forms';
 import style from '../global/listItem.css';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Padding} from '../layout';
 import RadialGraph from './RadialGraph';
 import {
   app as actions,
@@ -108,13 +108,9 @@ const ListItem = React.createClass({
     if (fn && typeof fn === 'function'){
       const icon = selected ? <Checkmark btn fill={seed.color.gray9}/> : null;
       return (
-        <Col xs={2} sm={1}>
-          <Row className="end-xs">
-            <Col>
-              <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
-            </Col>
-          </Row>
-        </Col>
+        <div className="display-flex align-items-center justify-content-center">
+          <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
+        </div>
       );
     }
     return null;
@@ -123,21 +119,18 @@ const ListItem = React.createClass({
     return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
   render(){
+    const item = this.props.item.toJS();
     return (
-      <div className={cx(style.item, this.props.item.get('selected') && style.itemSelected)}>
-        <Padding b={1}>
+      <div className={cx(style.item, item.selected && style.itemSelected, style[item.state])}>
+        <Padding b={1} className="display-flex">
           {this.renderMenu()}
-          <Grid fluid>
-            <Row>
-              <Col xs={2} sm={1}>
-                {this.renderGraph()}
-              </Col>
-              <Col xs={this.props.onSelect ? 8 : 10} sm={this.props.onSelect ? 10 : 11} className="display-flex">
-                {this.renderInfo()}
-              </Col>
-              {this.renderSelectButton()}
-            </Row>
-          </Grid>
+          <Padding r={2} l={0.5}>
+            {this.renderGraph()}
+          </Padding>
+          <Padding className="flex-1 display-flex" r={0.5}>
+            {this.renderInfo()}
+          </Padding>
+          {this.renderSelectButton()}
         </Padding>
       </div>
     );
