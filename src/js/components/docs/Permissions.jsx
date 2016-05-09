@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -8,6 +9,7 @@ import {Highlight, Toolbar} from '../global';
 import {Col, Expandable, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {onboard as actions} from '../../actions';
+import awsTemplates from '../../modules/awsTemplates';
 
 const Permissions = React.createClass({
   propTypes: {
@@ -34,10 +36,9 @@ const Permissions = React.createClass({
   },
   renderTemplateItem(title){
     const arr = ['ingress', 'cf', 'role'];
-    const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
-    const links = ['bastion-ingress-cf.template', 'bastion-cf.template', 'opsee-role.json'];
     const index = arr.indexOf(title);
     const data = this.props.redux.onboard.templates[index];
+
     if (data){
       return (
         <Padding b={2}>
@@ -52,7 +53,7 @@ const Permissions = React.createClass({
     } else if (typeof this.props.redux.asyncActions.onboardGetTemplates.status === 'object'){
       return (
         <Padding b={1}>
-          <a href={`${base}/${links[index]}`} target="_blank">View File</a>
+          <a href={_.get(awsTemplates, title)} target="_blank">View File</a>
         </Padding>
       );
     }
