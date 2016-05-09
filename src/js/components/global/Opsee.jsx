@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {Analytics, Header, MessageModal, Toolbar} from './';
+import {Analytics, Confirm, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
 import {Alert, Col, Grid, Padding} from '../layout';
 /* eslint-disable no-unused-vars */

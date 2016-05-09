@@ -1,6 +1,7 @@
 import Analytics from './Analytics.jsx';
 import Authenticator from './Authenticator.jsx';
 import BastionRequirement from './BastionRequirement.jsx';
+import Confirm from './Confirm.jsx';
 import ContextMenu from './ContextMenu.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
@@ -25,6 +26,7 @@ export {
   Analytics,
   Authenticator,
   BastionRequirement,
+  Confirm,
   ContextMenu,
   Header,
   Highlight,
