@@ -7,13 +7,22 @@ import style from './confirm.css';
 
 const Confirm = React.createClass({
   propTypes: {
-    html: PropTypes.string,
-    type: PropTypes.oneOf(['info', 'success', 'warning', 'danger']),
-    color: PropTypes.string,
-    confirmText: PropTypes.string,
-    dismissText: PropTypes.string,
-    onConfirm: PropTypes.func,
-    onDismiss: PropTypes.func
+    actions: PropTypes.shape({
+      confirmClose: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      app: PropTypes.shape({
+        confirmMessage: PropTypes.shape({
+          show: PropTypes.bool,
+          color: PropTypes.string,
+          html: PropTypes.string,
+          confirmText: PropTypes.string,
+          dismissText: PropTypes.string,
+          onConfirm: PropTypes.func,
+          onDismiss: PropTypes.func
+        })
+      })
+    })
   },
   componentDidMount(){
     document.getElementById('main').addEventListener('click', this.onDocumentClick);
@@ -48,7 +57,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch),
+  actions: bindActionCreators(actions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Confirm);
