@@ -24,6 +24,9 @@ const CheckList = React.createClass({
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func
+    }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         checks: PropTypes.object
@@ -76,7 +79,7 @@ const CheckList = React.createClass({
       html: `<p>Are you sure you want to delete ${copy}?</p>`,
       confirmText: 'delete',
       color: 'danger',
-      onConfirm: () => { console.log('deleting') } //this.props.actions.delSelected
+      onConfirm: this.props.actions.delSelected
     });
   },
   renderAutoMessage(){
