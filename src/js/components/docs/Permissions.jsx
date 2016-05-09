@@ -23,10 +23,7 @@ const Permissions = React.createClass({
     }),
     actions: PropTypes.shape({
       getTemplates: PropTypes.func
-    }),
-    location: PropTypes.shape({
-      pathname: PropTypes.string
-    }).isRequired
+    })
   },
   componentWillMount(){
     const item = this.props.redux.asyncActions.onboardGetTemplates;
