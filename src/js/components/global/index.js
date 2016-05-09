@@ -1,4 +1,5 @@
 import Analytics from './Analytics.jsx';
+import AppStatus from './AppStatus.jsx';
 import Authenticator from './Authenticator.jsx';
 import BastionRequirement from './BastionRequirement.jsx';
 import ContextMenu from './ContextMenu.jsx';
@@ -23,6 +24,7 @@ import Toolbar from './Toolbar.jsx';
 
 export {
   Analytics,
+  AppStatus,
   Authenticator,
   BastionRequirement,
   ContextMenu,
