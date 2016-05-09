@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/app';
 
 import {Button} from '../forms';
+import {Close} from '../icons';
 import {Padding} from '../layout';
 import style from './confirm.css';
 
@@ -21,8 +22,7 @@ const Confirm = React.createClass({
           html: PropTypes.string,
           confirmText: PropTypes.string,
           dismissText: PropTypes.string,
-          onConfirm: PropTypes.func,
-          onDismiss: PropTypes.func
+          onConfirm: PropTypes.func
         })
       })
     })
@@ -50,15 +50,23 @@ const Confirm = React.createClass({
     }
     return (
       <div>
-        <div className={style.curtain}>
-        </div>
+        <div className={style.curtain} />
+
         <div ref="confirm" className={style.confirm}>
-          <Padding a={2}>
-            <div dangerouslySetInnerHTML={{__html: props.html}} />
-            <Padding t={1}>
-              <Button onClick={this.onConfirm} color={props.color}>{props.confirmText || 'confirm'}</Button>
+          <div className={style.inner}>
+            <div onClick={this.props.actions.confirmClose} className={style.closeButton}>
+              <Padding a={2}>
+                <Close />
+              </Padding>
+            </div>
+
+            <Padding a={2}>
+              <div dangerouslySetInnerHTML={{__html: props.html}} />
+              <Padding t={1}>
+                <Button onClick={this.onConfirm} color={props.color}>{props.confirmText || 'confirm'}</Button>
+              </Padding>
             </Padding>
-          </Padding>
+          </div>
         </div>
       </div>
     );

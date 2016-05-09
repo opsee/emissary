@@ -52,6 +52,11 @@ const CheckList = React.createClass({
       this.props.actions.getChecks();
     }
   },
+  getSelectedChecks(){
+    return this.props.redux.checks.checks.filter(check => {
+      return check.get('selected');
+    });
+  },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
   },
@@ -64,8 +69,11 @@ const CheckList = React.createClass({
     this.props.actions.selectToggle();
   },
   handleDeleteClick(){
+    const selected = this.getSelectedChecks();
+    const {size} = selected;
+    const copy = size > 1 ? `these ${size} checks` : 'this check';
     this.props.appActions.confirmOpen({
-      html: `<p>hello world</p>`,
+      html: `<p>Are you sure you want to delete ${copy}?</p>`,
       color: 'danger',
       onConfirm: () => { console.log('deleting') } //this.props.actions.delSelected
     });
@@ -105,9 +113,7 @@ const CheckList = React.createClass({
     );
   },
   renderActionBar(){
-    const selected = this.props.redux.checks.checks.filter(check => {
-      return check.get('selected');
-    });
+    const selected = this.getSelectedChecks();
     const {size} = selected;
     const title = size > 0 ? 'Unselect All' : 'Select All';
     const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
