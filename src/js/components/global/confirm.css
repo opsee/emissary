@@ -12,7 +12,7 @@
 .confirm {
   position: fixed;
   bottom: 0;
-  height: 40vh;
+  min-height: 25vh;
   width: 100%;
   z-index: 25;
   display: flex;

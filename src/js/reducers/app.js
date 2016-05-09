@@ -28,9 +28,9 @@ const initial = {
     show: false
   },
   confirmMessage: {
+    show: false,
     color: null,
-    html: undefined,
-    show: true,
+    html: null,
     type: false
   }
 };

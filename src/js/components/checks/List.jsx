@@ -11,7 +11,7 @@ import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
-import {checks as actions, user as userActions} from '../../actions';
+import {checks as actions, user as userActions, app as appActions} from '../../actions';
 import listItem from '../global/listItem.css';
 
 const CheckList = React.createClass({
@@ -64,7 +64,11 @@ const CheckList = React.createClass({
     this.props.actions.selectToggle();
   },
   handleDeleteClick(){
-    this.props.actions.delSelected();
+    this.props.appActions.confirmOpen({
+      html: `<p>hello world</p>`,
+      color: 'danger',
+      onConfirm: () => { console.log('deleting') } //this.props.actions.delSelected
+    });
   },
   renderAutoMessage(){
     return (
@@ -148,7 +152,8 @@ const CheckList = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckList);

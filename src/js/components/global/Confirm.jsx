@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/app';
+
+import {Button} from '../forms';
+import {Padding} from '../layout';
 import style from './confirm.css';
 
 const Confirm = React.createClass({
@@ -32,12 +35,17 @@ const Confirm = React.createClass({
   },
   onDocumentClick(e){
     const area = ReactDOM.findDOMNode(this.refs.confirm);
-    if (!area.contains(e.target)) {
+    if (area && !area.contains(e.target)) {
       this.props.actions.confirmClose();
     }
   },
+  onConfirm(){
+    this.props.redux.app.confirmMessage.onConfirm();
+    this.props.actions.confirmClose();
+  },
   render() {
-    if (!this.props.redux.app.confirmMessage.show) {
+    const props = this.props.redux.app.confirmMessage;
+    if (!props.show) {
       return null;
     }
     return (
@@ -45,7 +53,12 @@ const Confirm = React.createClass({
         <div className={style.curtain}>
         </div>
         <div ref="confirm" className={style.confirm}>
-          confirmation
+          <Padding a={2}>
+            <div dangerouslySetInnerHTML={{__html: props.html}} />
+            <Padding t={1}>
+              <Button onClick={this.onConfirm} color={props.color}>{props.confirmText || 'confirm'}</Button>
+            </Padding>
+          </Padding>
         </div>
       </div>
     );
