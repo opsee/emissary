@@ -122,7 +122,7 @@ const CheckList = React.createClass({
     const title = size > 0 ? 'Unselect All' : 'Select All';
     const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
     return (
-      <Padding b={2} r={1} className="display-flex">
+      <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
         <div className="flex-1 display-flex">
           <Padding r={1}>
             <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Edit Notifications</Button>
@@ -131,7 +131,7 @@ const CheckList = React.createClass({
             <Button onClick={this.handleDeleteClick} flat color="danger" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Delete</Button>
           </Padding>
         </div>
-        <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title}>{inner}</Button>
+        <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
       </Padding>
     );
   },
@@ -147,7 +147,7 @@ const CheckList = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
-                <Padding t={1}>
+                <Padding t={2}>
                   {this.renderActionBar()}
                   {this.renderChecks()}
                 </Padding>
