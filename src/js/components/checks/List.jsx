@@ -121,14 +121,16 @@ const CheckList = React.createClass({
     const {size} = selected;
     const title = size > 0 ? 'Unselect All' : 'Select All';
     const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
+    const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
+    const isDisabled = isDeleting || size < 1;
     return (
       <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
         <div className="flex-1 display-flex">
           <Padding r={1}>
-            <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Edit Notifications</Button>
+            <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={isDisabled} style={{opacity: size > 0 ? 1 : 0.3}}>Edit Notifications</Button>
           </Padding>
           <Padding r={1}>
-            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Delete</Button>
+            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: size > 0 ? 1 : 0.3}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
           </Padding>
         </div>
         <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
