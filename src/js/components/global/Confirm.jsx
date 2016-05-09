@@ -21,7 +21,6 @@ const Confirm = React.createClass({
           color: PropTypes.string,
           html: PropTypes.string,
           confirmText: PropTypes.string,
-          dismissText: PropTypes.string,
           onConfirm: PropTypes.func
         })
       })
@@ -60,10 +59,10 @@ const Confirm = React.createClass({
               </Padding>
             </div>
 
-            <Padding a={2}>
+            <Padding t={4} b={1} lr={2}>
               <div dangerouslySetInnerHTML={{__html: props.html}} />
               <Padding t={1}>
-                <Button onClick={this.onConfirm} color={props.color}>{props.confirmText || 'confirm'}</Button>
+                <Button onClick={this.onConfirm} color={props.color}>{props.confirmText}</Button>
               </Padding>
             </Padding>
           </div>

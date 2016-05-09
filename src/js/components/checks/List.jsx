@@ -74,6 +74,7 @@ const CheckList = React.createClass({
     const copy = size > 1 ? `these ${size} checks` : 'this check';
     this.props.appActions.confirmOpen({
       html: `<p>Are you sure you want to delete ${copy}?</p>`,
+      confirmText: 'delete',
       color: 'danger',
       onConfirm: () => { console.log('deleting') } //this.props.actions.delSelected
     });
