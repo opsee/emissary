@@ -29,6 +29,10 @@
   text-align: center;
 }
 
+.content {
+  max-width: 350px;
+}
+
 .closeButton {
   cursor: pointer;
   position: absolute;

@@ -59,12 +59,14 @@ const Confirm = React.createClass({
               </Padding>
             </div>
 
-            <Padding t={4} b={1} lr={2}>
-              <div dangerouslySetInnerHTML={{__html: props.html}} />
-              <Padding t={1}>
-                <Button onClick={this.onConfirm} color={props.color}>{props.confirmText}</Button>
+            <div className={style.content}>
+              <Padding t={4} b={1} lr={2}>
+                <div dangerouslySetInnerHTML={{__html: props.html}} />
+                <Padding t={1}>
+                  <Button onClick={this.onConfirm} color={props.color} block>{props.confirmText}</Button>
+                </Padding>
               </Padding>
-            </Padding>
+            </div>
           </div>
         </div>
       </div>
