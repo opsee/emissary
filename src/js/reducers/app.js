@@ -30,7 +30,8 @@ const initial = {
   confirmMessage: {
     color: null,
     html: undefined,
-    show: false
+    show: true,
+    type: false
   }
 };
 

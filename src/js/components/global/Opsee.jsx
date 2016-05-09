@@ -125,6 +125,7 @@ const Opsee = React.createClass({
         }
         </div>
         <MessageModal/>
+        <Confirm />
       </div>
     );
   }
