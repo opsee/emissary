@@ -72,7 +72,7 @@
     "casper": "npm run serve | casperjs test util/test-deploy.js",
     "casper-debug": "npm run serve | casperjs test util/test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080",
     "compare": "node visreg/compare",
-    "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
+    "deploy": "npm run vendor && npm run build && docker build -t quay.io/opsee/emissary:latest .",
     "fix": "npm install",
     "lint": "eslint src/. --ext .js,.jsx --max-warnings 0 --config ./node_modules/opsee-style/.eslintrc",
     "serve": "node util/connect",
