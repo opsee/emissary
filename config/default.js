@@ -14,7 +14,8 @@ export default {
     api: 'https://api.opsee.com',
     auth: 'https://auth.opsee.com',
     stream: 'wss://api.opsee.com/stream/',
-    compost: 'https://api.opsee.com/graphql'
+    compost: 'https://api.opsee.com/graphql',
+    statusPage: 'https://mdpjjlblknkm.statuspage.io/api/v2'
   },
   //display vpc screen despite only having 1 vpc in environment
   showVpcScreen: false,

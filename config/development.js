@@ -11,6 +11,7 @@ export default {
     api: 'https://api.opsee.com',
     auth: 'https://auth.opsee.com',
     stream: 'wss://api.opsee.com/stream/',
-    compost: 'https://api.opsee.com/graphql'
+    compost: 'https://api.opsee.com/graphql',
+    statuspage: 'https://mdpjjlblknkm.statuspage.io/api/v2'
   }
 };

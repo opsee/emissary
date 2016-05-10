@@ -1,6 +1,7 @@
 // import storage from '../modules/storage';
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
+import {Map} from 'immutable';
 import {
   APP_INITIALIZE,
   APP_SOCKET_OPEN,
@@ -11,7 +12,8 @@ import {
   APP_CLOSE_CONTEXT_MENU,
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
-  APP_SET_DROPDOWN_ID
+  APP_SET_DROPDOWN_ID,
+  GET_STATUS_PAGE_INFO
 } from '../actions/constants';
 
 const initial = {
@@ -24,7 +26,8 @@ const initial = {
     color: undefined,
     html: undefined,
     show: false
-  }
+  },
+  statusPageInfo: new Map()
 };
 
 export default handleActions({
@@ -101,6 +104,11 @@ export default handleActions({
   [APP_SET_DROPDOWN_ID]: {
     next(state, action){
       return _.assign({}, state, {dropdownId: action.payload});
+    }
+  },
+  [GET_STATUS_PAGE_INFO]: {
+    next(state, action){
+      return _.assign({}, state, {statusPageInfo: new Map(action.payload)});
     }
   }
 }, initial);
