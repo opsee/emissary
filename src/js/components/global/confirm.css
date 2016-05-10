@@ -2,7 +2,7 @@
   height: 100%;
   min-height: 100vh;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   top: 0;
   left: 0;
@@ -14,11 +14,10 @@
   bottom: 0;
   width: 100%;
   z-index: 25;
-  background-color: var(--colorGray8);
+  background-color: var(--colorGray9);
 }
 
 .inner {
-  min-height: 25vh;
   height: 100%;
   width: 100%;
   position: relative;
@@ -29,18 +28,35 @@
   text-align: center;
 }
 
+.closeButton {
+  display: none;
+}
+
 .content {
   max-width: 350px;
 }
 
-.closeButton {
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-  opacity: 0.5;
-}
-
 .closeButton:hover {
   opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .confirm {
+    position: fixed;
+    top: 50vh;
+    bottom: initial;
+    left: 50vw;
+    width: 500px;
+    margin-left: -250px;
+    margin-top: -250px;
+  }
+
+  .closeButton {
+    cursor: pointer;
+    position: absolute;
+    top: -20px;
+    right: -50px;
+    opacity: 0.5;
+  }
+
 }

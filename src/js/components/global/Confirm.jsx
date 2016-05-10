@@ -60,7 +60,7 @@ const Confirm = React.createClass({
             </div>
 
             <div className={style.content}>
-              <Padding t={4} b={1} lr={2}>
+              <Padding a={4}>
                 <div dangerouslySetInnerHTML={{__html: props.html}} />
                 <Padding t={1}>
                   <Button onClick={this.onConfirm} color={props.color} block>{props.confirmText}</Button>
