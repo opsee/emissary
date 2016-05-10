@@ -235,5 +235,14 @@ export default handleActions({
       });
       return _.assign({}, state, { checks });
     }
+  },
+  [CHECKS_DELETE]: {
+    throw(state, action){
+      const deleteIDs = _.get(action.payload, 'ids');
+      const checks = state.checks.map(check => {
+        return check.set('deleting', false);
+      });
+      return _.assign({}, state, { checks });
+    }
   }
 }, initial);
