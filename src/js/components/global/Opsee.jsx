@@ -38,7 +38,8 @@ const Opsee = React.createClass({
     children: PropTypes.node,
     appActions: PropTypes.shape({
       initialize: PropTypes.func,
-      shutdown: PropTypes.func
+      shutdown: PropTypes.func,
+      getStatusPageInfo: PropTypes.func
     }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
