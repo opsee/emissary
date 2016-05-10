@@ -10,10 +10,12 @@ var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
+var revision = fs.readFileSync('/dev/stdin').toString();
+
 var definePlugin = new webpack.DefinePlugin({
   'process.env': {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    REVISION: JSON.stringify(fs.readFileSync('/dev/stdin').toString())
+    REVISION: JSON.stringify(revision)
   }
 });
 
@@ -22,7 +24,7 @@ var outlaws = ['flexboxgrid', 'react-bootstrap'];
 var vendors = _.omit(deps, outlaws);
 var vendorHash = crypto.createHash('md5').update(JSON.stringify(vendors)).digest('hex');
 
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', `vendor.${vendorHash}.js`);
+var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', `vendor.${revision}.js`);
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
   mangle: true,
@@ -50,8 +52,8 @@ var config = {
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
-    filename: "bundle.[hash].js",
-    chunkFilename: "[name]-[id].[hash].js"
+    filename: `bundle.${revision}.js`,
+    chunkFilename: `[name]-[id].${revision}.js`
   },
   postcss: function(webpack){
     return [
@@ -124,7 +126,7 @@ var config = {
 if (process.env.NODE_ENV === 'production'){
   config.eslint.failOnWarning = true;
   config.plugins.push(uglify);
-  config.plugins.push(new ExtractTextPlugin('style.[hash].css'));
+  config.plugins.push(new ExtractTextPlugin(`style.${revision}.css`));
   config.module.loaders = config.module.loaders.map(item => {
     if (_.isEqual(item.test, /\.css$/)){
       item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[path][name]-[local]!postcss-loader')
