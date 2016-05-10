@@ -211,6 +211,7 @@ export default handleActions({
           updated = checks.get(index).set('selected', !checks.get(index).get('selected'));
         }
         checks = updated ? checks.update(index, () => updated) : checks;
+        console.log(performance.now() - _.find(performance.getEntries(), {name: 'select'}).startTime);
       } else {
         const foundSelected = checks.filter(check => {
           return check.get('selected');
