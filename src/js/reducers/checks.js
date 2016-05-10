@@ -30,6 +30,11 @@ export const statics = {
     });
     return new Check(newData);
   },
+  checksFromJS(data, state){
+    return new List(data.map(c => {
+      return statics.checkFromJS(c, state);
+    }));
+  },
   formatResponse(item){
     let data = _.cloneDeep(item.toJS());
     if (_.get(data, 'response')){
@@ -139,9 +144,7 @@ export default handleActions({
   },
   [GET_CHECKS]: {
     next(state, action){
-      const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(c, state);
-      }));
+      const checks = statics.checksFromJS(action.payload.data, state);
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});
     },
@@ -237,8 +240,12 @@ export default handleActions({
     }
   },
   [CHECKS_DELETE]: {
-    throw(state, action){
-      const deleteIDs = _.get(action.payload, 'ids');
+    next(state, action){
+      const checks = statics.checksFromJS(action.payload.data, state);
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      return _.assign({}, state, {checks, filtered});
+    },
+    throw(state){
       const checks = state.checks.map(check => {
         return check.set('deleting', false);
       });
