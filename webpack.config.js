@@ -12,6 +12,7 @@ var node_modules = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
 var revision = fs.readFileSync('/dev/stdin').toString();
+var vendors = require(path.join(__dirname, '/util/vendors'));
 
 var definePlugin = new webpack.DefinePlugin({
   'process.env': {
@@ -112,7 +113,11 @@ var config = {
     definePlugin,
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src/index.html'),
-      favicon: path.join(__dirname, 'src/img/favicon/favicon.ico')
+      favicon: path.join(__dirname, 'src/img/favicon/favicon.ico'),
+      vendorHash: vendors.hash
+    }),
+    new AddAssetHtmlPlugin({
+      filename: require.resolve(`./dist/vendor.${vendors.hash}.js`)
     })
   ]
 };

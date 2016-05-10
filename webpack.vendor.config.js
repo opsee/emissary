@@ -9,12 +9,9 @@ const node_modules = path.resolve(__dirname, 'node_modules');
 const context_dir = path.join(__dirname, '/src');
 const vendors = require(path.join(__dirname, '/util/vendors'));
 
-const revision = fs.readFileSync('/dev/stdin').toString();
-
 const definePlugin = new webpack.DefinePlugin({
   'process.env': {
-    NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    REVISION: JSON.stringify(revision)
+    NODE_ENV: JSON.stringify(process.env.NODE_ENV)
   }
 });
 
