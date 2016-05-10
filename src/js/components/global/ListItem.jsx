@@ -48,7 +48,7 @@ const ListItem = React.createClass({
     return cx(style.item, {
       [style.itemSelected]: item.selected,
       [style.itemPending]: item.pending
-    }, style[item.state])
+    }, style[item.state]);
   },
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));

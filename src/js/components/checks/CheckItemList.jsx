@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
-import _ from 'lodash';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../layout';
@@ -66,7 +65,6 @@ const CheckItemList = React.createClass({
     }
   },
   getChecks(noFilter){
-    const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
     let data = this.props.redux.checks.checks;
     data = data
     .map(item => {
