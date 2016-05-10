@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import fuzzy from 'fuzzy';
 
 import {Button} from '../forms';
 import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PagerDuty} from '../icons';
@@ -46,7 +47,8 @@ const NotificationSelection = React.createClass({
     return {
       notifications: this.props.notifications.map(n => {
         return this.getNewSchema(n.type, n.value);
-      })
+      }),
+      slackSearch: undefined
     };
   },
   componentDidMount(){
@@ -84,6 +86,31 @@ const NotificationSelection = React.createClass({
   },
   getFinalNotifications(notifs = this.state.notifications){
     return notifs.map(n => _.pick(n, ['type', 'value']));
+  },
+  getSlackChannels(){
+    let channels = this.props.redux.integrations.slackChannels.toJS();
+    if (this.state.slackSearch){
+      channels = _.chain(channels)
+      .map(channel => {
+        const hits = fuzzy.filter(channel.name);
+        return _.assign(channel, {
+          score: fuzzy.filter(this.state.slackSearch, channel.name).map(el => el.score).reduce((total, n) => total + n) || 0
+        })
+      })
+      .filter('score')
+      .sortBy(c => c.score)
+      .map(c => _.omit(c, 'score'))
+      .value();
+    }
+    return channels;
+    // const results = newItems.toJS().map(item => {
+    //   const fields = [item.name, item.id];
+    //   const hits = fuzzy.filter(stringQuery, fields);
+    //   return {
+    //     score: _.chain(hits).map('score').reduce((total, n) => total + n).value() || 0,
+    //     id: item.id
+    //   };
+    // });
   },
   isNotifComplete(notif){
     return _.chain(notif).pick(['type', 'value']).values().every().value();
@@ -139,6 +166,9 @@ const NotificationSelection = React.createClass({
       });
     });
     this.props.onChange(this.getFinalNotifications(notifs));
+  },
+  handleSlackSearch(state){
+    this.setState(state);
   },
   handleSubmit(e){
     e.preventDefault();
@@ -243,21 +273,24 @@ const NotificationSelection = React.createClass({
     );
   },
   renderChannelSelect(notif, index){
-    const channels = this.props.redux.integrations.slackChannels.toJS();
+    const channels = this.getSlackChannels();
     return (
       <div>
         <Heading level={4}>Slack Channel</Heading>
-        <div className="display-flex">
-          <div className="flex-1">
+        <div className="display-flex flex-wrap">
+          <Padding className="flex-1" r={1}>
+            <Input data={this.state} path="slackSearch" onChange={this.handleSlackSearch}/>
+          </Padding>
+          <div className="align-self-start">
+            {this.renderDeleteButton(index, {minHeight: '46px'})}
+          </div>
+          <div style={{width: '100%'}}>
             {channels.map(c => {
               return (
                 <Button flat onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem', textTransform: 'lowercase'}} key={`slack-channel-${c.id}`}>#{c.name}</Button>
               );
             })}
-            </div>
-            <div className="align-self-start">
-              {this.renderDeleteButton(index, {minHeight: '46px'})}
-            </div>
+          </div>
         </div>
       </div>
     );
