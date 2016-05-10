@@ -10,12 +10,12 @@ var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
-var revision = JSON.stringify(fs.readFileSync('/dev/stdin').toString());
+var revision = fs.readFileSync('/dev/stdin').toString();
 
 var definePlugin = new webpack.DefinePlugin({
   'process.env': {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    REVISION: revision
+    REVISION: JSON.stringify(revision)
   }
 });
 
