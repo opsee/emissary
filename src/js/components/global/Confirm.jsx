@@ -28,13 +28,20 @@ const Confirm = React.createClass({
   },
   componentDidMount(){
     document.getElementById('main').addEventListener('click', this.onDocumentClick);
+    document.addEventListener('keydown', this.onKeydown);
   },
   componentWillUnmount(){
     document.getElementById('main').removeEventListener('click', this.onDocumentClick);
+    document.removeEventListener('keydown', this.onKeydown);
   },
   onDocumentClick(e){
     const area = ReactDOM.findDOMNode(this.refs.confirm);
     if (area && !area.contains(e.target)) {
+      this.props.actions.confirmClose();
+    }
+  },
+  onKeydown(e){
+    if (e.keyCode === 27){
       this.props.actions.confirmClose();
     }
   },

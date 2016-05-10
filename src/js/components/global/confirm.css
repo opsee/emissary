@@ -52,11 +52,12 @@
   }
 
   .closeButton {
+    display: block;
     cursor: pointer;
     position: absolute;
     top: -20px;
     right: -50px;
-    opacity: 0.5;
+    opacity: 0.75;
   }
 
 }
