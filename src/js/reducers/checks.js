@@ -14,7 +14,9 @@ import {
   CHECK_TEST_SELECT_RESPONSE,
   CHECKS_SET_FILTERED,
   CHECK_SELECT_TOGGLE,
-  GET_CHECKS_NOTIFICATIONS
+  GET_CHECKS_NOTIFICATIONS,
+  CHECKS_DELETE,
+  CHECKS_DELETE_PENDING
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -222,6 +224,16 @@ export default handleActions({
       return _.assign({}, state, {
         checks
       });
+    }
+  },
+  [CHECKS_DELETE_PENDING]: {
+    next(state, action){
+      const deleteIDs = _.get(action.payload, 'ids');
+      const checks = state.checks.map(check => {
+        let isDeleting = _.includes(deleteIDs, check.get('id'));
+        return check.set('deleting', isDeleting);
+      });
+      return _.assign({}, state, { checks });
     }
   }
 }, initial);

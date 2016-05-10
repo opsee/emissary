@@ -11,6 +11,7 @@ import {
   GET_CHECKS,
   GET_CHECKS_NOTIFICATIONS,
   CHECKS_DELETE,
+  CHECKS_DELETE_PENDING,
   CHECK_CREATE,
   CHECK_EDIT,
   CHECK_TEST,
@@ -261,6 +262,10 @@ export function delSelected(){
     .filter(check => check.selected)
     .map('id')
     .value();
+    dispatch({
+      type: CHECKS_DELETE_PENDING,
+      payload: { ids }
+    });
     del(ids)(dispatch, state);
   };
 }

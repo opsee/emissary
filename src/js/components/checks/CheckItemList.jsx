@@ -70,8 +70,7 @@ const CheckItemList = React.createClass({
     let data = this.props.redux.checks.checks;
     data = data
     .map(item => {
-      let pending = isDeleting && item.selected;
-      return Immutable.Map(item).set('pending', pending);
+      return Immutable.Map(item).set('pending', item.deleting);
     })
     .sortBy(item => item.name)
     .sortBy(item => {
