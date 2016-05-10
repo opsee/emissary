@@ -68,10 +68,6 @@ const AppStatus = React.createClass({
     return _.chain(this.getData())
     .get('scheduled_maintenances')
     .thru(arr => arr || [])
-    // .filter(maint => {
-    //   const impact = _.get(maint, 'impact');
-    //   return typeof impact === 'string' && impact !== 'none';
-    // })
     .sortBy(c => {
       return -1 * Date.parse(c.created_at);
     })
