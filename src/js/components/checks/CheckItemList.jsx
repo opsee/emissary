@@ -45,7 +45,8 @@ const CheckItemList = React.createClass({
         string: PropTypes.string
       }),
       asyncActions: PropTypes.shape({
-        getChecks: PropTypes.object
+        getChecks: PropTypes.object,
+        checksDelete: PropTypes.object
       })
     })
   },
@@ -64,21 +65,14 @@ const CheckItemList = React.createClass({
       this.setInterval(this.props.actions.getChecks, 40000);
     }
   },
-  shouldComponentUpdate(nextProps) {
-    let arr = [];
-    arr.push(nextProps.selected !== this.props.selected);
-    const string1 = 'redux.asyncActions.getChecks.status';
-    arr.push(_.get(nextProps, string1) !== _.get(this.props, string1));
-    const string2 = 'redux.checks.checks';
-    arr.push(!Immutable.is(_.get(nextProps, string2), _.get(this.props, string2)));
-    const string3 = 'redux.checks.filtered';
-    arr.push(!Immutable.is(_.get(nextProps, string3), _.get(this.props, string3)));
-    arr.push(!_.isEqual(this.props.target, nextProps.target));
-    return _.some(arr);
-  },
   getChecks(noFilter){
+    const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
     let data = this.props.redux.checks.checks;
     data = data
+    .map(item => {
+      let pending = isDeleting && item.selected;
+      return Immutable.Map(item).set('pending', pending);
+    })
     .sortBy(item => item.name)
     .sortBy(item => {
       return item.health === undefined ? 101 : item.health;

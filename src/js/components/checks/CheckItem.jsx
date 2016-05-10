@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {is, Record} from 'immutable';
+import {is, Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -10,7 +10,7 @@ import {checks as actions, app as appActions} from '../../actions';
 
 const CheckItem = React.createClass({
   propTypes: {
-    item: PropTypes.instanceOf(Record).isRequired,
+    item: PropTypes.instanceOf(Map).isRequired,
     onClick: PropTypes.func,
     actions: PropTypes.shape({
       del: PropTypes.func.isRequired,
