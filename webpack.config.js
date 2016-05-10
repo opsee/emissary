@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var fs = require('fs');
 var _ = require('lodash');
 var seedling = require('seedling');
@@ -18,13 +19,6 @@ var definePlugin = new webpack.DefinePlugin({
     REVISION: JSON.stringify(revision)
   }
 });
-
-var deps = JSON.parse(fs.readFileSync('package.json')).dependencies;
-var outlaws = ['flexboxgrid', 'react-bootstrap'];
-var vendors = _.omit(deps, outlaws);
-var vendorHash = crypto.createHash('md5').update(JSON.stringify(vendors)).digest('hex');
-
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', `vendor.${revision}.js`);
 
 var uglify = new webpack.optimize.UglifyJsPlugin({
   mangle: true,
@@ -46,8 +40,7 @@ var config = {
     'index': [
       'babel-polyfill',
       './js/index.jsx'
-    ],
-    vendor: _.keys(vendors)
+    ]
   },
   output: {
     path: path.join(__dirname, "dist"),
@@ -105,21 +98,22 @@ var config = {
       }
     ]
   },
-  noParse: _.keys(vendors).map(v => `${node_modules}/${v}`),
   resolve: {
     extensions: ['', '.jsx', '.js', '.json', '.svg', '.png', '.jpg'],
     modulesDirectories: ['node_modules']
   },
   plugins: [
+    new webpack.DllReferencePlugin({
+      context: context_dir,
+      manifest: require(path.join(__dirname, 'dist/opseeVendorManifest.json'))
+    }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     definePlugin,
     new HtmlWebpackPlugin({
-      hash:false,
-      template:'src/index.html',
-      favicon: 'src/img/favicon/favicon.ico'
-    }),
-    commonsPlugin
+      template: path.join(__dirname, 'src/index.html'),
+      favicon: path.join(__dirname, 'src/img/favicon/favicon.ico')
+    })
   ]
 };
 
