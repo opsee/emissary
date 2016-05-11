@@ -14,7 +14,8 @@ import {Check} from '../../modules/schemas';
 import NotificationItemList from './NotificationItemList';
 
 import {
-  checks as actions
+  checks as actions,
+  app as appActions
 } from '../../actions';
 
 const CheckSingle = React.createClass({
@@ -23,6 +24,9 @@ const CheckSingle = React.createClass({
     actions: PropTypes.shape({
       getCheck: PropTypes.func.isRequired,
       del: PropTypes.func.isRequired
+    }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       checks: PropTypes.object,
@@ -40,12 +44,17 @@ const CheckSingle = React.createClass({
     }) || new Check({id: this.props.params.id});
   },
   runRemoveCheck(){
-    this.props.actions.del([this.props.params.id]);
+    this.props.appActions.confirmOpen({
+      html: `<p>Are you sure you want to delete <br/><strong>${this.getCheck().get('name')}?</strong></p>`,
+      confirmText: 'Yes, delete',
+      color: 'danger',
+      onConfirm: this.props.actions.del.bind(null, [this.props.params.id], true)
+    });
   },
   renderNotifications(){
     let notifs = this.getCheck().get('notifications');
     notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (this.getCheck().get('COMPLETE')){
+    if (_.find(this.getCheck().toJS().tags, () => 'complete')){
       return (
         <Padding b={1}>
           <Heading level={3}>Notifications</Heading>
@@ -61,7 +70,7 @@ const CheckSingle = React.createClass({
     //TODO change this later to be more open
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
-    } if (check.COMPLETE){
+    } if (_.find(check.tags, () => 'complete')){
       return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
     }
     return null;
@@ -102,7 +111,8 @@ const CheckSingle = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckSingle);

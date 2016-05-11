@@ -1,0 +1,23 @@
+.selector {
+  width: 4rem;
+  height: 4rem;
+  border: 1px solid var(--colorGray5);
+  border-radius: 1px;
+  background: none;
+}
+.selectorSelected {
+  background: var(--colorGray5);
+}
+.selector:focus, .selector:active, .selector:hover{
+  background: var(--colorGray4);
+}
+.selector:focus svg, .selector:active svg, .selector:hover svg{
+  fill: var(--colorGray9) !important;
+}
+
+.selectorInner {
+  width: 85%;
+  height: 0.3rem;
+  border-radius: 2px;
+  background: var(--colorGray9);
+}

@@ -7,6 +7,7 @@ import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {FilterButtons} from '../search';
+import {Padding} from '../layout';
 
 const EnvList = React.createClass({
   mixins: [SetInterval],
@@ -90,50 +91,44 @@ const EnvList = React.createClass({
   },
   renderGroupsSecurity(){
     return (
-      <div key="groupsSecurity">
+      <Padding b={3} key="env-list-groups-security">
         <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups" noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderGroupsAsg(){
     return (
-      <div key="groupsAsg">
+      <Padding b={3} key="env-list-groups-asg">
         <GroupItemList filter={this.props.filter} type="asg" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Autoscaling Groups" noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderGroupsElb(){
     return (
-      <div key="groupsELB">
+      <Padding b={3} key="env-list-groups-elb">
         <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs" noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderInstancesEcc(){
     return (
-      <div key="instancesECC">
+      <Padding b={3} key="env-list-instances-ecc">
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="ecc" title noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderInstancesRds(){
     return (
-      <div key="instancesRds">
+      <Padding b={3} key="env-list-instances-rds">
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="rds" title noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderChecks(){
     return (
-      <div key="checks">
+      <Padding b={3} key="env-list-checks">
         <CheckItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderFilterButtons(){

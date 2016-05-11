@@ -3,14 +3,18 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-
-import {NewWindow} from '../icons';
-import {Button} from '../forms';
-import listItem from '../global/listItem.css';
-import {Col, Grid, Padding, Row} from '../layout';
+import {plain as seed} from 'seedling';
 import cx from 'classnames';
+
+import {Checkmark, NewWindow} from '../icons';
+import {Button} from '../forms';
+import style from '../global/listItem.css';
+import {Padding} from '../layout';
 import RadialGraph from './RadialGraph';
-import {app as actions, analytics as analyticsActions} from '../../actions';
+import {
+  app as actions,
+  analytics as analyticsActions
+} from '../../actions';
 
 const ListItem = React.createClass({
   propTypes: {
@@ -24,6 +28,7 @@ const ListItem = React.createClass({
     title: PropTypes.string,
     type: PropTypes.string,
     onClose: PropTypes.func,
+    onSelect: PropTypes.func,
     noMenu: PropTypes.bool,
     actions: PropTypes.shape({
       openContextMenu: PropTypes.func
@@ -37,6 +42,13 @@ const ListItem = React.createClass({
       menuTitle: 'Actions',
       type: 'GroupItem'
     };
+  },
+  getClass(){
+    const item = this.props.item.toJS();
+    return cx(style.item, {
+      [style.itemSelected]: item.selected,
+      [style.itemPending]: item.pending
+    }, style[item.state]);
   },
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
@@ -56,13 +68,13 @@ const ListItem = React.createClass({
     );
     if (this.props.onClick){
       return (
-        <div className={listItem.link} onClick={this.handleClick}>
+        <div className={style.link} onClick={this.handleClick}>
           {graph}
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={listItem.link}>
+      <Link to={this.props.link} params={this.props.params} className={style.link}>
        {graph}
       </Link>
     );
@@ -70,14 +82,14 @@ const ListItem = React.createClass({
   renderInfo(){
     if (this.props.onClick){
       return (
-        <div className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
+        <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
           <div>{_.find(this.props.children, {key: 'line1'})}</div>
           <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx([listItem.link, 'display-flex', 'flex-1', 'flex-column'])} title={this.props.title}>
+      <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column'])} title={this.props.title}>
         <div>{_.find(this.props.children, {key: 'line1'})}</div>
         <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
       </Link>
@@ -96,37 +108,35 @@ const ListItem = React.createClass({
       );
     }
     return null;
-    // return (
-    //   <Button icon flat secondary onClick={this.runMenuOpen} title="Menu">
-    //     <Settings fill="textSecondary" btn/>
-    //   </Button>
-    // );
+  },
+  renderSelectButton(){
+    const selected = this.props.item.get('selected');
+    const fn = this.props.onSelect;
+    if (fn && typeof fn === 'function'){
+      const icon = selected ? <Checkmark btn fill={seed.color.gray9}/> : null;
+      return (
+        <div className="display-flex align-items-center justify-content-center">
+          <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
+        </div>
+      );
+    }
+    return null;
   },
   renderMenu(){
     return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
   render(){
     return (
-      <div className={listItem.item}>
-        <Padding b={1}>
+      <div className={this.getClass()}>
+        <Padding b={1} className="display-flex">
           {this.renderMenu()}
-          <Grid fluid>
-            <Row>
-              <Col xs={2} sm={1}>
-                {this.renderGraph()}
-              </Col>
-              <Col xs={8} sm={10} className="display-flex">
-                {this.renderInfo()}
-              </Col>
-              <Col xs={2} sm={1}>
-                <Row className="end-xs">
-                  <Col>
-                    {this.renderMenuButton()}
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Grid>
+          <Padding r={2} l={0.5}>
+            {this.renderGraph()}
+          </Padding>
+          <Padding className="flex-1 display-flex" r={0.5}>
+            {this.renderInfo()}
+          </Padding>
+          {this.renderSelectButton()}
         </Padding>
       </div>
     );

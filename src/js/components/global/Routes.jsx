@@ -10,6 +10,7 @@ import EnvInstancesEC2 from '../env/EnvInstancesEC2';
 import EnvInstancesRDS from '../env/EnvInstancesRDS';
 
 import CheckList from 'react-proxy?name=checks!exports?exports.default!../checks/List';
+import CheckMultiEditNotifications from 'react-proxy?name=checks!exports?exports.default!../checks/MultiEditNotifications';
 import CheckSingle from 'react-proxy?name=checks!exports?exports.default!../checks/Single';
 import CheckEdit from 'react-proxy?name=checks!exports?exports.default!../checks/Edit';
 
@@ -88,6 +89,7 @@ const routes = (
       <IndexRoute component={CheckList}/>
     </Route>
     <Redirect from="/checks" to="/"/>
+    <Route path="/checks-notifications" component={auth(CheckMultiEditNotifications)}/>
 
     <Redirect from="/check-create" to="/check-create/type"/>
     <Route path="/check-create" component={auth(CheckCreate)}>
@@ -106,6 +108,10 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
+    <Redirect from="/start/tutorial" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/1" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/2" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/3" to="/start/launch-stack"/>
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
     <Route path="/start/password" component={OnboardPassword}/>

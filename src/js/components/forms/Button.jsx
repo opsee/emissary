@@ -25,7 +25,7 @@ const Button = React.createClass({
     className: PropTypes.string,
     target: PropTypes.string,
     to: PropTypes.string,
-    params: PropTypes.object,
+    query: PropTypes.object,
     chevron: PropTypes.bool,
     disabled: PropTypes.bool,
     children: PropTypes.node,

@@ -10,6 +10,7 @@
     "url": "git://github.com/opsee/emissary.git"
   },
   "devDependencies": {
+    "add-asset-html-webpack-plugin": "0.0.3",
     "assets-webpack-plugin": "^3.0.0",
     "babel-core": "^6.2.1",
     "babel-eslint": "^5.0.0",
@@ -34,7 +35,7 @@
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
     "git-rev": "^0.2.1",
-    "html-webpack-plugin": "^1.6.2",
+    "html-webpack-plugin": "^2.16.1",
     "json-loader": "^0.5.3",
     "mkdirp": "^0.5.1",
     "nightmare": "^2.1.2",
@@ -67,14 +68,15 @@
   },
   "scripts": {
     "build": "node util/rev | NODE_ENV=production webpack --bail && cp -r src/fonts/ dist/fonts/",
+    "vendor": "node util/rev | NODE_ENV=production webpack --bail --config webpack.vendor.config.js",
     "casper": "npm run serve | casperjs test util/test-deploy.js",
     "casper-debug": "npm run serve | casperjs test util/test-deploy.js --remote-debugger-port=9000 --url=http://localhost:8080",
     "compare": "node visreg/compare",
-    "deploy": "npm run build && docker build -t quay.io/opsee/emissary:latest .",
+    "deploy": "npm run vendor && npm run build && docker build -t quay.io/opsee/emissary:latest .",
     "fix": "npm install",
     "lint": "eslint src/. --ext .js,.jsx --max-warnings 0 --config ./node_modules/opsee-style/.eslintrc",
     "serve": "node util/connect",
-    "start": "node util/rev | node util/server",
+    "start": "npm run vendor && node util/rev | node util/server",
     "stats": "webpack --profile --json > stats.json"
   },
   "jest": {
@@ -102,7 +104,7 @@
     "lodash": "^4.11.1",
     "moment": "^2.13.0",
     "path": "^0.11.14",
-    "query-string": "^3.0.0",
+    "query-string": "^3.0.3",
     "react": "^15.0.0",
     "react-addons-css-transition-group": "^15.0.0",
     "react-autosuggest": "^3.7.0",

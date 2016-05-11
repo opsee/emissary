@@ -257,6 +257,9 @@ const CheckCreateRequest = React.createClass({
     return null;
   },
   renderHelperText(){
+    if (this.props.renderAsInclude){
+      return null;
+    }
     let text = (
       <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
     );
