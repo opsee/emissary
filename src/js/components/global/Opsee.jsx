@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {Analytics, Confirm, Header, MessageModal, Toolbar} from './';
+import {AppStatus, Analytics, Confirm, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
 import {Alert, Col, Grid, Padding} from '../layout';
 /* eslint-disable no-unused-vars */
@@ -38,7 +38,8 @@ const Opsee = React.createClass({
     children: PropTypes.node,
     appActions: PropTypes.shape({
       initialize: PropTypes.func,
-      shutdown: PropTypes.func
+      shutdown: PropTypes.func,
+      getStatusPageInfo: PropTypes.func
     }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -54,6 +55,8 @@ const Opsee = React.createClass({
   componentWillMount(){
     this.props.appActions.initialize();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
+    this.props.appActions.getStatusPageInfo();
+    this.setInterval(this.props.appActions.getStatusPageInfo, (1000 * 60 * 2));
     this.props.envActions.getBastions();
     if (this.props.redux.user.get('auth')){
       this.props.checkActions.getChecks();
@@ -110,19 +113,14 @@ const Opsee = React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
+        <AppStatus/>
         <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
         <div id="header-search">
           <SearchBar />
         </div>
         <Analytics/>
         <div className={this.getMeatClass()}>
-        {
-          // <CSSTransitionGroup component="div" transitionName="page">
-        }
           {this.renderInner()}
-        {
-          // </CSSTransitionGroup>
-        }
         </div>
         <MessageModal/>
         <Confirm />

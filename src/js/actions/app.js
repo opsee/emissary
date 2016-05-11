@@ -1,4 +1,5 @@
 import config from '../modules/config';
+import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
 import {
@@ -15,7 +16,8 @@ import {
   APP_CLOSE_CONFIRM,
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
-  APP_SET_DROPDOWN_ID
+  APP_SET_DROPDOWN_ID,
+  GET_STATUS_PAGE_INFO
 } from './constants';
 
 function socketStart(dispatch, state){
@@ -109,6 +111,16 @@ export function initialize(){
     }
     dispatch({
       type: APP_INITIALIZE
+    });
+  };
+}
+
+export function getStatusPageInfo() {
+  return dispatch => {
+    dispatch({
+      type: GET_STATUS_PAGE_INFO,
+      payload: request.get(`${config.services.statusPage}/summary.json`)
+        .then(res => res.body)
     });
   };
 }
