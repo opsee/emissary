@@ -47,8 +47,7 @@
     bottom: initial;
     left: 50vw;
     width: 500px;
-    margin-left: -250px;
-    margin-top: -250px;
+    transform: translateX(-50%) translateY(-50%);
   }
 
   .inner {
