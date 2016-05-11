@@ -31,7 +31,8 @@ const initial = {
     show: false,
     color: null,
     html: null,
-    type: false
+    confirmText: '',
+    onConfirm: null
   }
 };
 
