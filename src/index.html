@@ -8,6 +8,11 @@
     <meta name="application-name" content="Opsee"/>
     <meta name="msapplication-TileColor" content="#00589B" />
     <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="<%=htmlWebpackPlugin.files.favicon%>">
+    <meta name="msapplication-TileImage" content="<%=htmlWebpackPlugin.files.favicon%>" />
+    <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="/style.css?v=<%=htmlWebpackPlugin.options.revision%>" rel="stylesheet">
+    <% } %>
     <script>
     //prototype.bind shim (mostly for capserjs CI testing)
     !function(){var a=Array.prototype,b=a.slice,c=Function.prototype;c.bind||(c.bind=function(a){function e(){var e=c.prototype&&this instanceof c;return c.apply(!e&&a||this,d.concat(b.call(arguments)))}var c=this,d=b.call(arguments,1);return e.prototype=c.prototype,e})}();
@@ -28,5 +33,7 @@
   </head>
   <body>
     <div id="main"></div>
+    <script src="/vendor.bundle.js?v=<%=htmlWebpackPlugin.options.vendorHash%>"></script>
+    <script src="/bundle.js?v=<%=htmlWebpackPlugin.options.revision%>"></script>
   </body>
 </html>
