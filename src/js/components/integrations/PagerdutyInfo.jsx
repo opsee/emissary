@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {integrations as actions} from '../../actions';
+import {integrations as actions, app as appActions} from '../../actions';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
@@ -19,6 +19,9 @@ const PagerdutyInfo = React.createClass({
       pagerdutyAccess: PropTypes.func,
       getPagerdutyInfo: PropTypes.func
     }).isRequired,
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func
+    }),
     connect: PropTypes.bool,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
@@ -35,26 +38,29 @@ const PagerdutyInfo = React.createClass({
     }
   },
   handleDisablePagerduty(){
-    this.props.actions.pagerdutyAccess(_.assign(this.props.data.pagerdutyInfo, {
-      enabled: false
-    }));
+    this.props.appActions.confirmOpen({
+      html: '<p>Are you sure you no longer want to receive PagerDuty notifications?</p>',
+      confirmText: 'Yes, disconnect',
+      color: 'danger',
+      onConfirm: this.props.actions.pagerdutyAccess.bind(null, _.assign(this.props.data.pagerdutyInfo, {
+        enabled: false
+      }))
+    });
   },
   render() {
-    const {service_name} = this.props.data.pagerdutyInfo;
+    const serviceName = _.get(this.props.data.pagerdutyInfo, 'service_name');
     const {enabled} = this.props.data.pagerdutyInfo;
     const {asyncActions} = this.props.redux;
     if (this.props.query.pagerduty && !this.props.query.error){
       if (asyncActions.integrationsPagerdutyInfo.status === 'success'){
-        /*eslint-disable camelcase*/
-        if (service_name && enabled) {
+        if (serviceName && enabled) {
           return (
             <span>
-              Service <Color c="success">{service_name}</Color>&nbsp;connected.&nbsp;
+              Service <Color c="success">{serviceName}</Color>&nbsp;connected.&nbsp;
               <a onClick={this.handleDisablePagerduty} href="#">Disconnect</a>
             </span>
            );
         }
-        /*eslint-enable camelcase*/
       }
       return (
         <StatusHandler status={asyncActions.integrationsPagerdutyAccess.status}>
@@ -63,10 +69,10 @@ const PagerdutyInfo = React.createClass({
       );
     }
     /*eslint-disable camelcase*/
-    if (service_name && enabled) {
+    if (serviceName && enabled) {
       return (
         <span>
-          Service <Color c="success">{service_name}</Color>&nbsp;connected.&nbsp;
+          Service <Color c="success">{serviceName}</Color>&nbsp;connected.&nbsp;
           <a onClick={this.handleDisablePagerduty} href="#">Disconnect</a>
         </span>
       );
@@ -85,7 +91,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PagerdutyInfo);
