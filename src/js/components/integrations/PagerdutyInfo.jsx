@@ -68,7 +68,6 @@ const PagerdutyInfo = React.createClass({
         </StatusHandler>
       );
     }
-    /*eslint-disable camelcase*/
     if (serviceName && enabled) {
       return (
         <span>
@@ -77,7 +76,6 @@ const PagerdutyInfo = React.createClass({
         </span>
       );
     }
-    /*eslint-enable camelcase*/
     return (
       <PagerdutyConnect redirect={`${window.location.origin}/profile?pagerduty=true`}/>
     );
