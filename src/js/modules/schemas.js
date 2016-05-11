@@ -105,6 +105,7 @@ const Target = Record({
 export const Check = Record({
   tags: List(),
   selected: false,
+  deleting: false,
   id: undefined,
   name: undefined,
   target: Target({

@@ -11,7 +11,7 @@ import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
-import {checks as actions, user as userActions} from '../../actions';
+import {checks as actions, user as userActions, app as appActions} from '../../actions';
 import listItem from '../global/listItem.css';
 
 const CheckList = React.createClass({
@@ -23,6 +23,9 @@ const CheckList = React.createClass({
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
+    }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
@@ -52,6 +55,11 @@ const CheckList = React.createClass({
       this.props.actions.getChecks();
     }
   },
+  getSelectedChecks(){
+    return this.props.redux.checks.checks.filter(check => {
+      return check.get('selected');
+    });
+  },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
   },
@@ -64,7 +72,15 @@ const CheckList = React.createClass({
     this.props.actions.selectToggle();
   },
   handleDeleteClick(){
-    this.props.actions.delSelected();
+    const selected = this.getSelectedChecks();
+    const {size} = selected;
+    const copy = size > 1 ? `these ${size} checks` : 'this check';
+    this.props.appActions.confirmOpen({
+      html: `<p>Are you sure you want to delete ${copy}?</p>`,
+      confirmText: 'Yes, delete',
+      color: 'danger',
+      onConfirm: this.props.actions.delSelected
+    });
   },
   renderAutoMessage(){
     return (
@@ -101,20 +117,20 @@ const CheckList = React.createClass({
     );
   },
   renderActionBar(){
-    const selected = this.props.redux.checks.checks.filter(check => {
-      return check.get('selected');
-    });
+    const selected = this.getSelectedChecks();
     const {size} = selected;
     const title = size > 0 ? 'Unselect All' : 'Select All';
     const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
+    const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
+    const isDisabled = isDeleting || size < 1;
     return (
       <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
         <div className="flex-1 display-flex">
           <Padding r={1}>
-            <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Edit Notifications</Button>
+            <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
           </Padding>
           <Padding r={1}>
-            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={size < 1} style={{opacity: size > 0 ? 1 : 0.3}}>Delete</Button>
+            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
           </Padding>
         </div>
         <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
@@ -148,7 +164,8 @@ const CheckList = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckList);

@@ -43,6 +43,13 @@ const ListItem = React.createClass({
       type: 'GroupItem'
     };
   },
+  getClass(){
+    const item = this.props.item.toJS();
+    return cx(style.item, {
+      [style.itemSelected]: item.selected,
+      [style.itemPending]: item.pending
+    }, style[item.state]);
+  },
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
     this.props.analyticsActions.trackEvent(this.props.type, 'menu-open');
@@ -119,9 +126,8 @@ const ListItem = React.createClass({
     return _.find(this.props.children, {key: 'menu'}) || <div/>;
   },
   render(){
-    const item = this.props.item.toJS();
     return (
-      <div className={cx(style.item, item.selected && style.itemSelected, style[item.state])}>
+      <div className={this.getClass()}>
         <Padding b={1} className="display-flex">
           {this.renderMenu()}
           <Padding r={2} l={0.5}>

@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Immutable from 'immutable';
-import _ from 'lodash';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../layout';
@@ -45,7 +44,8 @@ const CheckItemList = React.createClass({
         string: PropTypes.string
       }),
       asyncActions: PropTypes.shape({
-        getChecks: PropTypes.object
+        getChecks: PropTypes.object,
+        checksDelete: PropTypes.object
       })
     })
   },
@@ -64,21 +64,12 @@ const CheckItemList = React.createClass({
       this.setInterval(this.props.actions.getChecks, 40000);
     }
   },
-  shouldComponentUpdate(nextProps) {
-    let arr = [];
-    arr.push(nextProps.selected !== this.props.selected);
-    const string1 = 'redux.asyncActions.getChecks.status';
-    arr.push(_.get(nextProps, string1) !== _.get(this.props, string1));
-    const string2 = 'redux.checks.checks';
-    arr.push(!Immutable.is(_.get(nextProps, string2), _.get(this.props, string2)));
-    const string3 = 'redux.checks.filtered';
-    arr.push(!Immutable.is(_.get(nextProps, string3), _.get(this.props, string3)));
-    arr.push(!_.isEqual(this.props.target, nextProps.target));
-    return _.some(arr);
-  },
   getChecks(noFilter){
     let data = this.props.redux.checks.checks;
     data = data
+    .map(item => {
+      return Immutable.Map(item).set('pending', item.deleting);
+    })
     .sortBy(item => item.name)
     .sortBy(item => {
       return item.health === undefined ? 101 : item.health;

@@ -14,7 +14,9 @@ import {
   CHECK_TEST_SELECT_RESPONSE,
   CHECKS_SET_FILTERED,
   CHECK_SELECT_TOGGLE,
-  GET_CHECKS_NOTIFICATIONS
+  GET_CHECKS_NOTIFICATIONS,
+  CHECKS_DELETE,
+  CHECKS_DELETE_PENDING
 } from '../actions/constants';
 
 /* eslint-disable no-use-before-define */
@@ -27,6 +29,11 @@ export const statics = {
       })
     });
     return new Check(newData);
+  },
+  checksFromJS(data, state){
+    return new List(data.map(c => {
+      return statics.checkFromJS(c, state);
+    }));
   },
   formatResponse(item){
     let data = _.cloneDeep(item.toJS());
@@ -137,9 +144,7 @@ export default handleActions({
   },
   [GET_CHECKS]: {
     next(state, action){
-      const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(c, state);
-      }));
+      const checks = statics.checksFromJS(action.payload.data, state);
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});
     },
@@ -222,6 +227,29 @@ export default handleActions({
       return _.assign({}, state, {
         checks
       });
+    }
+  },
+  [CHECKS_DELETE_PENDING]: {
+    next(state, action){
+      const deleteIDs = _.get(action.payload, 'ids');
+      const checks = state.checks.map(check => {
+        let isDeleting = _.includes(deleteIDs, check.get('id'));
+        return check.set('deleting', isDeleting);
+      });
+      return _.assign({}, state, { checks });
+    }
+  },
+  [CHECKS_DELETE]: {
+    next(state, action){
+      const checks = statics.checksFromJS(action.payload.data, state);
+      const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      return _.assign({}, state, {checks, filtered});
+    },
+    throw(state){
+      const checks = state.checks.map(check => {
+        return check.set('deleting', false);
+      });
+      return _.assign({}, state, { checks });
     }
   }
 }, initial);
