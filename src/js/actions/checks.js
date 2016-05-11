@@ -239,23 +239,32 @@ export function getChecksNotifications(){
   };
 }
 
-export function del(ids){
+export function del(ids, redirect){
   return (dispatch, state) => {
     dispatch({
       type: CHECKS_DELETE,
       payload: graphPromise('checks', () => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query:
-          `mutation Mutation {
-            deleteChecks(ids: ${JSON.stringify(ids)})
-          }`
-        })
-        .then(() => {
-          // Don't resolve until we have a fresh set of checks; otherwise, it's
-          // a pain to manage selected/deleting state
-          return fetchChecks(state);
+        return new Promise((resolve, reject) => {
+          request
+          .post(`${config.services.compost}`)
+          .set('Authorization', state().user.get('auth'))
+          .send({query:
+            `mutation Mutation {
+              deleteChecks(ids: ${JSON.stringify(ids)})
+            }`
+          })
+          .then(() => {
+            // Don't resolve until we have a fresh set of checks; otherwise, it's
+            // a pain to manage selected/deleting state
+            fetchChecks(state).then(res => {
+              resolve(res);
+              if (redirect){
+                setTimeout(() => {
+                  dispatch(pushState(null, '/'));
+                }, 100);
+              }
+            }).catch(reject);
+          }).catch(reject);
         });
       }, null, () => {
         analytics.trackEvent('Check', 'delete')(dispatch, state);
