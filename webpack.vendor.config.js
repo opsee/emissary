@@ -37,7 +37,7 @@ const config = {
   output: {
     path: path.join(__dirname, 'dist'),
     // publicPath: "/",
-    filename: `vendor.${vendors.hash}.js`,
+    filename: `vendor.bundle.js`,
     library: 'opseeVendor'
   },
   module: {

@@ -46,8 +46,8 @@ var config = {
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
-    filename: `bundle.${revision}.js`,
-    chunkFilename: `[name]-[id].${revision}.js`
+    filename: `bundle.js`,
+    chunkFilename: `[name]-[id].js`
   },
   postcss: function(webpack){
     return [
@@ -114,10 +114,12 @@ var config = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src/index.html'),
       favicon: path.join(__dirname, 'src/img/favicon/favicon.ico'),
-      vendorHash: vendors.hash
+      vendorHash: vendors.hash,
+      revision: revision,
+      inject: false
     }),
     new AddAssetHtmlPlugin({
-      filename: require.resolve(`./dist/vendor.${vendors.hash}.js`)
+      filename: require.resolve(`./dist/vendor.bundle.js`)
     })
   ]
 };
@@ -125,7 +127,7 @@ var config = {
 if (process.env.NODE_ENV === 'production'){
   config.eslint.failOnWarning = true;
   config.plugins.push(uglify);
-  config.plugins.push(new ExtractTextPlugin(`style.${revision}.css`));
+  config.plugins.push(new ExtractTextPlugin(`style.css`));
   config.module.loaders = config.module.loaders.map(item => {
     if (_.isEqual(item.test, /\.css$/)){
       item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[path][name]-[local]!postcss-loader')
