@@ -92,9 +92,13 @@ const NotificationSelection = React.createClass({
     if (this.state.slackSearch){
       channels = _.chain(channels)
       .map(channel => {
-        const hits = fuzzy.filter(channel.name);
+        let score = 0;
+        const hits = fuzzy.filter(this.state.slackSearch, [channel.name]);
+        if (hits.length){
+          score = hits.map(el => el.score).reduce((total, n) => total + n) || 0;
+        }
         return _.assign(channel, {
-          score: fuzzy.filter(this.state.slackSearch, channel.name).map(el => el.score).reduce((total, n) => total + n) || 0
+          score
         })
       })
       .filter('score')
@@ -102,6 +106,7 @@ const NotificationSelection = React.createClass({
       .map(c => _.omit(c, 'score'))
       .value();
     }
+    console.log(channels);
     return channels;
     // const results = newItems.toJS().map(item => {
     //   const fields = [item.name, item.id];
@@ -138,7 +143,7 @@ const NotificationSelection = React.createClass({
         value: index === i ? value : n.value
       });
     }, true);
-    this.props.onChange(this.getFinalNotifications(notifications));
+    this.runChange(notifications);
   },
   runNewNotif(type, value){
     const notifications = this.state.notifications.concat([
