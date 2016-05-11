@@ -111,7 +111,7 @@ const NotificationSelection = React.createClass({
         value: index === i ? value : n.value
       });
     }, true);
-    this.props.onChange(this.getFinalNotifications(notifications));
+    this.runChange(notifications);
   },
   runNewNotif(type, value){
     const notifications = this.state.notifications.concat([
