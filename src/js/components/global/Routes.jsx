@@ -106,6 +106,10 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
+    <Redirect from="/start/tutorial" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/1" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/2" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/3" to="/start/launch-stack"/>
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
     <Route path="/start/password" component={OnboardPassword}/>
