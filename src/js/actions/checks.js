@@ -7,16 +7,48 @@ import _ from 'lodash';
 import graphPromise from '../modules/graphPromise';
 import {
   GET_CHECK,
-  GET_CHECK_NOTIFICATION,
+  GET_CHECK_FROM_S3,
   GET_CHECKS,
+  GET_CHECKS_NOTIFICATIONS,
   CHECKS_DELETE,
+  CHECKS_DELETE_PENDING,
   CHECK_CREATE,
   CHECK_EDIT,
   CHECK_TEST,
   CHECK_TEST_RESET,
   CHECK_TEST_SELECT_RESPONSE,
+  CHECK_SELECT_TOGGLE,
+  CHECK_MULTIEDIT,
   CHECK_CREATE_OR_EDIT
 } from './constants';
+
+export function fetchChecks(state) {
+  return request
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({
+      query: `{
+        checks {
+          id
+          name
+          target {
+            id
+            type
+          }
+          results {
+            passing
+            responses {
+              passing
+              target {
+                id
+                type
+              }
+            }
+          }
+        }
+      }`
+    });
+}
 
 /**
  * Fetches check data as JSON from the given JSON URI (e.g., an S3 URL).
@@ -25,7 +57,7 @@ import {
 export function getCheckFromURI(jsonURI) {
   return dispatch => {
     dispatch({
-      type: GET_CHECK_NOTIFICATION,
+      type: GET_CHECK_FROM_S3,
       payload: request.get(jsonURI)
         .then(res => {
           return { data: res.body };
@@ -129,6 +161,23 @@ export function getChecks(redirect){
     dispatch({
       type: GET_CHECKS,
       payload: graphPromise('checks', () => {
+        return fetchChecks(state);
+      }, {search: state().search}, () => {
+        if (redirect){
+          setTimeout(() => {
+            dispatch(pushState(null, '/'));
+          }, 30);
+        }
+      })
+    });
+  };
+}
+
+export function getChecksNotifications(){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_CHECKS_NOTIFICATIONS,
+      payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
@@ -136,17 +185,33 @@ export function getChecks(redirect){
           query: `{
             checks {
               id
-              name
-              target {
-                id
+              notifications {
+                value
                 type
               }
+              target {
+                address
+                name
+                type
+                id
+              }
+              name
+              last_run
               spec {
                 ... on schemaHttpCheck {
                   verb
+                  protocol
+                  path
+                  port
                   headers {
                     name
                     values
+                  }
+                }
+                ... on schemaCloudWatchCheck {
+                  metrics {
+                    namespace
+                    name
                   }
                 }
               }
@@ -160,38 +225,65 @@ export function getChecks(redirect){
                   }
                 }
               }
+              assertions {
+                value
+                relationship
+                operand
+                key
+              }
             }
           }`
         });
-      }, {search: state().search}, () => {
-        if (redirect){
-          setTimeout(() => {
-            dispatch(pushState(null, '/'));
-          }, 30);
-        }
+      }, {search: state().search})
+    });
+  };
+}
+
+export function del(ids, redirect){
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECKS_DELETE,
+      payload: graphPromise('checks', () => {
+        return new Promise((resolve, reject) => {
+          request
+          .post(`${config.services.compost}`)
+          .set('Authorization', state().user.get('auth'))
+          .send({query:
+            `mutation Mutation {
+              deleteChecks(ids: ${JSON.stringify(ids)})
+            }`
+          })
+          .then(() => {
+            // Don't resolve until we have a fresh set of checks; otherwise, it's
+            // a pain to manage selected/deleting state
+            fetchChecks(state).then(res => {
+              resolve(res);
+              if (redirect){
+                setTimeout(() => {
+                  dispatch(pushState(null, '/'));
+                }, 100);
+              }
+            }).catch(reject);
+          }).catch(reject);
+        });
+      }, null, () => {
+        analytics.trackEvent('Check', 'delete')(dispatch, state);
       })
     });
   };
 }
 
-export function del(ids){
+export function delSelected(){
   return (dispatch, state) => {
+    const ids = _.chain(state().checks.checks.toJS())
+    .filter(check => check.selected)
+    .map('id')
+    .value();
     dispatch({
-      type: CHECKS_DELETE,
-      payload: graphPromise('checks', () => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query:
-          `mutation Mutation {
-            deleteChecks(ids: ${JSON.stringify(ids)})
-          }`
-        });
-      }, null, () => {
-        getChecks(true)(dispatch, state);
-        analytics.trackEvent('Check', 'delete')(dispatch, state);
-      })
+      type: CHECKS_DELETE_PENDING,
+      payload: { ids }
     });
+    del(ids)(dispatch, state);
   };
 }
 
@@ -397,6 +489,45 @@ export function edit(data){
           }, 100);
         }, reject);
       })
+    });
+  };
+}
+
+export function multiEditNotifications(raw){
+  let data = Array.isArray(raw) ? raw : [raw];
+  const checks = data.map(formatCheckData);
+  return (dispatch, state) => {
+    dispatch({
+      type: CHECK_MULTIEDIT,
+      payload: graphPromise('checks', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `mutation Mutation ($checks: [Check]){
+            checks(checks: $checks) {
+              id
+            }
+          }`,
+          variables: {
+            checks
+          }
+        });
+      }, null, () => {
+        analytics.trackEvent('Check', 'multiedit notifications')(dispatch, state);
+        setTimeout(() => {
+          dispatch(pushState(null, '/'));
+        }, 100);
+      })
+    });
+  };
+}
+
+export function selectToggle(id){
+  return (dispatch) => {
+    dispatch({
+      type: CHECK_SELECT_TOGGLE,
+      payload: id
     });
   };
 }

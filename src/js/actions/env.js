@@ -1,4 +1,4 @@
-/* eslint-disable */
+import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
@@ -15,18 +15,12 @@ import {
   GET_INSTANCES_RDS,
   GET_METRIC_RDS,
   ENV_GET_BASTIONS,
+  ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
-  AWS_STOP_INSTANCES,
-  ENV_GET_ALL
+  AWS_STOP_INSTANCES
 } from './constants';
 import graphPromise from '../modules/graphPromise';
-
-function getBastion(state){
-  return _.chain(state().bastions)
-  .find({connected: true})
-  .value() || {};
-}
 
 export function getGroupSecurity(id){
   return (dispatch, state) => {
@@ -59,13 +53,14 @@ export function getGroupSecurity(id){
               }
             }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-          })
-        }, {search: state().search})
-      })
-    }
-  }
+        });
+      }, {search: state().search})
+    });
+  };
+}
 
 export function getGroupsSecurity(){
+  console.log('groupsSecurity');
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUPS_SECURITY,
@@ -96,11 +91,11 @@ export function getGroupsSecurity(){
               }
             }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-          })
-        }, {search: state().search})
-      })
-    }
-  }
+        });
+      }, {search: state().search})
+    });
+  };
+}
 
 export function getGroupAsg(id){
   return (dispatch, state) => {
@@ -141,11 +136,11 @@ export function getGroupAsg(id){
               }
             }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-          })
-        }, {search: state().search, id})
-      })
-    }
-  }
+        });
+      }, {search: state().search, id})
+    });
+  };
+}
 
 export function getGroupsAsg(){
   return (dispatch, state) => {
@@ -176,10 +171,10 @@ export function getGroupsAsg(){
               }
             }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-        })
+        });
       }, {search: state().search})
-    })
-  }
+    });
+  };
 }
 
 export function getGroupElb(id) {
@@ -207,10 +202,10 @@ export function getGroupElb(id) {
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-        })
+        });
       }, {search: state().search})
-    })
-  }
+    });
+  };
 }
 
 export function getGroupsElb(){
@@ -237,11 +232,11 @@ export function getGroupsElb(){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-          })
-        }, {search: state().search})
-      })
-    }
-  }
+        });
+      }, {search: state().search})
+    });
+  };
+}
 
 export function getInstanceEcc(id){
   return (dispatch, state) => {
@@ -273,11 +268,11 @@ export function getInstanceEcc(id){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-          })
-        }, {search: state().search})
-      })
-    }
-  }
+        });
+      }, {search: state().search})
+    });
+  };
+}
 
 export function getInstancesEcc(){
   return (dispatch, state) => {
@@ -307,11 +302,11 @@ export function getInstancesEcc(){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-          })
-        }, {search: state().search})
-      })
-    }
-  }
+        });
+      }, {search: state().search})
+    });
+  };
+}
 
 export function getInstancesRds(){
   return (dispatch, state) => {
@@ -335,10 +330,10 @@ export function getInstancesRds(){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-        })
+        });
       }, {search: state().search})
-    })
-  }
+    });
+  };
 }
 
 export function getInstanceRds(id){
@@ -384,10 +379,10 @@ export function getInstanceRds(id){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-        })
+        });
       }, {search: state().search})
-    })
-  }
+    });
+  };
 }
 
 /**
@@ -427,88 +422,8 @@ export function getMetricRDS(id, metric){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-        })
+        });
       }, {search: state().search})
-    })
-  }
-}
-
-export function getAll(){
-  return (dispatch, state) => {
-    dispatch({
-      type: ENV_GET_ALL,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: $region) {
-                vpc(id: $vpc) {
-                  instances(type: "rds", id: "${id}"){
-                    ... on ec2Instance {
-                      InstanceId
-                    }
-                    ... on rdsDBInstance {
-                      DBName
-                      DBInstanceIdentifier
-                    }
-                  }
-                }
-              }
-            }
-          `})
-        .then(res => {
-          const errors = _.get(res, 'body.errors');
-          if (Array.isArray(errors) && errors.length){
-            return reject(errors[0]);
-          }
-          return resolve({
-            data: _.get(res, 'body.data.region.vpc.instances'),
-            search: state().search
-          });
-        }, reject);
-      })
-    });
-  };
-}
-
-export function getAll(){
-  return (dispatch, state) => {
-    dispatch({
-      type: ENV_GET_BASTIONS,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query: `
-            {
-              region(id: $region) {
-                vpc(id: $vpc) {
-                  instances(type: "rds", id: "${id}"){
-                    ... on ec2Instance {
-                      InstanceId
-                    }
-                    ... on rdsDBInstance {
-                      DBName
-                      DBInstanceIdentifier
-                    }
-                  }
-                }
-              }
-            }
-          `})
-        .then(res => {
-          const errors = _.get(res, 'body.errors');
-          if (Array.isArray(errors) && errors.length){
-            return reject(errors[0]);
-          }
-          return resolve({
-            data: _.get(res, 'body.data.region.vpc.instances'),
-            search: state().search
-          });
-        }, reject);
-      })
     });
   };
 }
@@ -572,10 +487,10 @@ export function getMetricRDS(id, metric){
             }
           }`,
           variables: _.pick(state().env, ['region', 'vpc'])
-        })
+        });
       }, {search: state().search})
-    })
-  }
+    });
+  };
 }
 
 export function rebootInstances(ids = []){
@@ -593,10 +508,10 @@ export function rebootInstances(ids = []){
             }
           }`,
           variables: _.assign(_.pick(state().env, ['region']), {ids})
-        })
+        });
       })
-    })
-  }
+    });
+  };
 }
 
 export function stopInstances(ids = []){
@@ -614,10 +529,10 @@ export function stopInstances(ids = []){
             }
           }`,
           variables: _.assign(_.pick(state().env, ['region']), {ids})
-        })
+        });
       })
-    })
-  }
+    });
+  };
 }
 
 export function startInstances(ids = []){
@@ -635,9 +550,10 @@ export function startInstances(ids = []){
             }
           }`,
           variables: _.assign(_.pick(state().env, ['region']), {ids})
-        })
+        });
       })
-    })
-  }
+    });
+  };
 }
-/* eslint-enable */
+
+export const selectToggle = createAction(ENV_SELECT_TOGGLE);

@@ -105,7 +105,7 @@ const NotificationSelection = React.createClass({
     if (e){
       e.preventDefault();
     }
-    const notifications = this.runSetNotificationsState((n, i) => {
+    const notifications = _.cloneDeep(this.state.notifications).map((n, i) => {
       const value = data || n.valueState;
       return _.assign({}, n, {
         value: index === i ? value : n.value
@@ -133,12 +133,12 @@ const NotificationSelection = React.createClass({
     this.runChange(notifications);
   },
   handleInputChange(index, data){
-    const notifs = this.runSetNotificationsState((n, i) => {
+    const notifs = _.cloneDeep(this.state.notifications).map((n, i) => {
       return _.assign({}, n, {
         value: index === i ? data.value : n.value
       });
     });
-    this.props.onChange(this.getFinalNotifications(notifs));
+    this.runChange(notifs);
   },
   handleSubmit(e){
     e.preventDefault();
@@ -335,7 +335,7 @@ const NotificationSelection = React.createClass({
               innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
             }
             return (
-              <div title={title} style={{display: 'inline'}}>
+              <div title={title} style={{display: 'inline'}} key={`notif-pick-type-${type}`}>
                 <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`} disabled={disabled} title={title}>
                   <Add inline fill={disabled ? 'white' : 'primary'}/>&nbsp;{innerButton}
                 </Button>
@@ -360,7 +360,7 @@ const NotificationSelection = React.createClass({
     }
     return (
       <div>
-        <p>Choose from the options below to set up notifications for this check.</p>
+        <p>Choose from the options below to set up your notifications.</p>
         <hr/>
       </div>
     );

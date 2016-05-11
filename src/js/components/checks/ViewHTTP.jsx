@@ -21,7 +21,7 @@ const ViewHTTP = React.createClass({
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
     notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (this.props.check.get('COMPLETE')){
+    if (_.find(this.props.check.toJS().tags, () => 'complete')){
       return (
         <Padding b={1}>
           <Heading level={3}>Notifications</Heading>
@@ -69,7 +69,7 @@ const ViewHTTP = React.createClass({
         </Padding>
         <Padding b={1}>
           <Heading level={3}>Assertions</Heading>
-          {check.COMPLETE && <AssertionItemList assertions={check.assertions}/>}
+          {_.find(check.tags, () => 'complete') && <AssertionItemList assertions={check.assertions}/>}
         </Padding>
         <Padding b={2}>
           <CheckResponsePaginate responses={this.getResponses()} date={d}/>
