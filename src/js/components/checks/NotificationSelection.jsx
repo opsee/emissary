@@ -107,14 +107,6 @@ const NotificationSelection = React.createClass({
       .value();
     }
     return channels;
-    // const results = newItems.toJS().map(item => {
-    //   const fields = [item.name, item.id];
-    //   const hits = fuzzy.filter(stringQuery, fields);
-    //   return {
-    //     score: _.chain(hits).map('score').reduce((total, n) => total + n).value() || 0,
-    //     id: item.id
-    //   };
-    // });
   },
   isNotifComplete(notif){
     return _.chain(notif).pick(['type', 'value']).values().every().value();
