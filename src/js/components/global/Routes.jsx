@@ -51,12 +51,14 @@ import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../
 import OnboardReviewAccess from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewAccess';
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
 import OnboardReviewInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewInstance';
+import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchInstance';
+import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
 
 // import OnboardPassword from 'react-proxy?name=onboard!exports?exports.default!../onboard/Password';
 // import OnboardRegionSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/RegionSelect';
 // import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
 // import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
-// import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
+
 
 
 // import OnboardAddInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/AddInstance';
@@ -127,8 +129,7 @@ const routes = (
     <Route path="/start/add-instance" component={OnboardAddInstance} />
     <Route path="/start/choose-vpc" component={auth(OnboardVPCSelect)}/>
     <Route path="/start/choose-subnet" component={auth(OnboardSubnetSelect)}/>
-    <Route path="/start/install" component={auth(OnboardInstall)}/>
-    <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
+
     <Route path="/start/profile" component={auth(Help)}/> */}
 
     <Route path="/start/thanks" component={OnboardThanks}/>
@@ -140,6 +141,9 @@ const routes = (
       <Route path="/start/review-stack" component={OnboardReviewAccess} />
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
       <Route path="/start/review-instance" component={OnboardReviewInstance} />
+      <Route path="/start/launch-instance" component={OnboardLaunchInstance} />
+      <Route path="/start/install" component={OnboardInstall} />
+      <Route path="/start/install-example" component={OnboardInstall} example />
     </Route>
 
     <Route path="/system" component={auth(System)}/>

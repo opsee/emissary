@@ -1,7 +1,8 @@
 .container {
   background-color: #303030;
-  min-height: 100vh;
-  min-width: 100vw;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
 }
 
 .transitionContainer {
@@ -10,4 +11,21 @@
 
 .transitionPanel {
   position: absolute;
+  width: 100%;
+  padding-top: 4rem;
+}
+
+.closeWrapper {
+  position: absolute;
+  top: 0;
+  right: 2rem;
+}
+
+.closeButton {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.closeButton:hover {
+  opacity: 1;
 }

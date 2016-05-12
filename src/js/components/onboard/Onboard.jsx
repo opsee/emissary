@@ -3,6 +3,7 @@ import { RouteTransition } from 'react-router-transition';
 import { spring } from 'react-motion';
 import { OrderedMap } from 'immutable';
 
+import { Close } from '../icons';
 import { Padding } from '../layout';
 import style from './onboard.css';
 
@@ -32,12 +33,13 @@ const slideLeft = {
 };
 
 export default React.createClass({
-  renderPips(){
-
-  },
   render(){
     return(
       <div className={style.container}>
+        <Padding a={2} className={style.closeWrapper} >
+          <Close className={style.closeButton} />
+        </Padding>
+
         <Padding t={4}>
           <RouteTransition pathname={this.props.location.pathname} {...slideLeft} className={style.transitionContainer}>
             {this.props.children}

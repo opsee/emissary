@@ -38,7 +38,7 @@ const Install = React.createClass({
     if (this.props.location.pathname.match('install-example')){
       return this.props.actions.exampleInstall();
     }
-    return this.props.actions.install();
+    // return this.props.actions.install();
   },
   getBastionMessages(){
     let msgs = _.chain(this.props.redux.app.socketMessages).filter({command: 'launch-bastion'}).filter(m => {
@@ -215,11 +215,10 @@ const Install = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Instance Installation"/>
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              let's dew the install
             </Col>
           </Row>
         </Grid>
