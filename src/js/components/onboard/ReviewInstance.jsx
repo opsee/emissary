@@ -62,7 +62,6 @@ const ReviewInstance = React.createClass({
               <Padding tb={1}>
                 <h2>About the Opsee EC2 instance</h2>
               </Padding>
-
               <p>The instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks,
               and it inherits all of its permissions from the cross-account role you set up in the last step.
               The instance is controlled by both a CloudFormation template and an Ingress IAM Role,

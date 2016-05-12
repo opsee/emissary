@@ -62,7 +62,12 @@ const LaunchStack = React.createClass({
     if (this.state.showTemplate){
       return (
         <div>
-          <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>
+          <Padding tb={1}>
+            <h2>Opsee Cross-Account Access</h2>
+          </Padding>
+          <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
+          <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>.</p>
+          <p>We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.</p>
           {this.renderTemplate()}
           <Padding tb={1}>
             <Button onClick={this.setState.bind(this, {showTemplate: false})} color="success" block>Got it</Button>

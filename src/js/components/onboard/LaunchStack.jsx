@@ -105,6 +105,8 @@ const LaunchStack = React.createClass({
       return (
         <div>
           <p>Here's some cool information on how to install.</p>
+          <p>tl;dr click next three times and "accept"</p>
+          <p>We should add more in-depth instructions and/or screenshots.</p>
           <Padding tb={1}>
             <Button onClick={this.toggleInstructions.bind(null, false)} block>Got it</Button>
           </Padding>
