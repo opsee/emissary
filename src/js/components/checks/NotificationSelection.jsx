@@ -317,7 +317,7 @@ const NotificationSelection = React.createClass({
         <Heading level={4}>Slack Channel</Heading>
         <div className="display-flex flex-wrap">
           <Padding className="flex-1" r={1}>
-            <Input data={this.state} path={`notifications[${index}].search`} onChange={this.handleSlackSearch} placeholder="Search for a Slack channel">
+            <Input data={this.state} path={`notifications[${index}].search`} onChange={this.handleSlackSearch} placeholder="Search Slack channels">
               <Search/>
             </Input>
           </Padding>
