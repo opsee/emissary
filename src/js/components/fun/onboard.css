@@ -1,0 +1,7 @@
+.transitionContainer {
+  position: relative;
+}
+
+.transitionPanel {
+  position: absolute;
+}

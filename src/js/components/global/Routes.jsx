@@ -63,6 +63,11 @@ import System from 'react-proxy?name=system!exports?exports.default!../env/Syste
 import TOS from 'react-proxy?name=tos!exports?exports.default!../pages/TOS';
 import NotFound from 'react-proxy?name=notfound!exports?exports.default!../pages/NotFound';
 
+import Onboard from 'react-proxy?name=onboard!exports?exports.default!../fun/Onboard';
+import OnboardSetName from 'react-proxy?name=onboard!exports?exports.default!../fun/SetName';
+import OnboardSetPassword from 'react-proxy?name=onboard!exports?exports.default!../fun/SetPassword';
+import OnboardAccountSuccess from 'react-proxy?name=onboard!exports?exports.default!../fun/AccountSuccess';
+
 import {auth} from '../global/Authenticator';
 
 const routes = (
@@ -123,6 +128,12 @@ const routes = (
     <Route path="/start/install" component={auth(OnboardInstall)}/>
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
     <Route path="/start/profile" component={auth(Help)}/>
+
+    <Route path="/s" component={Onboard}>
+      <Route path="/s/name" component={OnboardSetName} />
+      <Route path="/s/password" component={OnboardSetPassword} />
+      <Route path="/s/account-created" component={OnboardAccountSuccess} />
+    </Route>
 
     <Route path="/system" component={auth(System)}/>
 
