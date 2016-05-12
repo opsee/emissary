@@ -47,7 +47,7 @@ const ListItem = React.createClass({
     const item = this.props.item.toJS();
     return cx(style.item, {
       [style.itemSelected]: item.selected,
-      [style.itemPending]: item.pending
+      [style.itemPending]: item.deleting
     }, style[item.state]);
   },
   runMenuOpen(){

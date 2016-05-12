@@ -55,11 +55,6 @@ const CheckItem = React.createClass({
     this.props.appActions.closeContextMenu();
   },
   render(){
-    console.log('render-' + this.props.item.get('id'));
-    const entry = _.find(performance.getEntries(), {name: 'select'});
-    if (entry){
-      console.log(performance.now() - entry.startTime);
-    }
     if (this.props.item.get('name')){
       return (
         <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item} {...this.getSelectable()}>
