@@ -47,6 +47,7 @@ import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../use
 import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
 import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
+import OnboardReviewAccess from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewAccess';
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
 import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
 
@@ -135,6 +136,7 @@ const routes = (
     <Route path="/start" component={Onboard}>
       <Route path="/start/create" component={OnboardCreate}/>
       <Route path="/start/account" component={OnboardAccount} />
+      <Route path="/start/review-stack" component={OnboardReviewAccess} />
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
     </Route>
 

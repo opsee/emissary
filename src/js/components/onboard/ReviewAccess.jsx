@@ -27,19 +27,11 @@ const LaunchStack = React.createClass({
       getTemplates: PropTypes.func
     })
   },
-  getInitialState(){
-    return {
-      hasClicked: false
-    };
-  },
   componentWillMount() {
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
       this.props.actions.getTemplates();
     }
-  },
-  onOpenConsole(e) {
-    this.setState({ hasClicked: true })
   },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
@@ -67,23 +59,17 @@ const LaunchStack = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              { !this.state.hasClicked ?
-                <div>
-                  <h2>Install the CloudFormation template through your AWS console.</h2>
-                  <p>When your Opsee role has been created, return here to finish installation. You'll automatically be redirected to the next step.</p>
-                </div>
-              :
-                <div>
-                  <h2>Waiting...</h2>
-                  <p>When your Opsee role has been created, return here to finish installation. You'll automatically be redirected to the next step.</p>
-                </div>
-              }
+              <h2>Let's add Opsee to your AWS environment.</h2>
+              <p>We'll start by launching Opsee's CloudFormation template.
+              This sets up cross-account access between Opsee and your AWS environment.
+              Opsee uses these permissions to continuously discover your AWS environment
+              and to run health checks.</p>
 
               <Padding tb={1}>
-                <Button block>How to Install</Button>
+                <Button block>View the template</Button>
               </Padding>
               <Padding tb={1}>
-                <Button onClick={this.onOpenConsole} color="success" block chevron>{this.state.hasClicked ? 'Relaunch' : 'Launch'} AWS Console</Button>
+                <Button to="/start/launch-stack" color="success" block chevron>Got it</Button>
               </Padding>
             </Col>
           </Row>

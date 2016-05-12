@@ -77,7 +77,7 @@ const OnboardAccount = React.createClass({
       <div>
         <p>Great you're done</p>
         <Padding tb={2}>
-          <Button to="/start/launch-stack" color="success" block chevron>Next</Button>
+          <Button to="/start/review-stack" color="success" block chevron>Next</Button>
         </Padding>
       </div>
     );
