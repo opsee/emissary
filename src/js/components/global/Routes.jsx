@@ -18,6 +18,7 @@ import DocsBastion from 'react-proxy?name=docsBastion!exports?exports.default!..
 import DocsIAM from 'react-proxy?name=docsIAM!exports?exports.default!../docs/IAM';
 import DocsChecks from 'react-proxy?name=docsChecks!exports?exports.default!../docs/Checks.jsx';
 import DocsNotifications from 'react-proxy?name=docsNotifications!exports?exports.default!../docs/Notifications.jsx';
+import DocsPermissions from 'react-proxy?name=docsPermissions!exports?exports.default!../docs/Permissions.jsx';
 
 import CheckCreate from 'react-proxy?name=checkCreate!exports?exports.default!../checks/Create';
 import CheckCreateTarget from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateTarget';
@@ -107,6 +108,10 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
+    <Redirect from="/start/tutorial" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/1" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/2" to="/start/launch-stack"/>
+    <Redirect from="/start/tutorial/3" to="/start/launch-stack"/>
     <Route path="/start" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
     <Route path="/start/password" component={OnboardPassword}/>
@@ -136,6 +141,7 @@ const routes = (
     <Route path="/docs/IAM" component={DocsIAM}/>
     <Route path="/docs/checks" component={DocsChecks}/>
     <Route path="/docs/notifications" component={DocsNotifications}/>
+    <Route path="/docs/permissions" component={DocsPermissions}/>
 
     <Route path="/integrations/slack" component={Slack}/>
 

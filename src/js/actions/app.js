@@ -1,4 +1,5 @@
 import config from '../modules/config';
+import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
 import {
@@ -11,9 +12,12 @@ import {
   APP_SOCKET_CLOSE,
   APP_OPEN_CONTEXT_MENU,
   APP_CLOSE_CONTEXT_MENU,
+  APP_OPEN_CONFIRM,
+  APP_CLOSE_CONFIRM,
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
-  APP_SET_DROPDOWN_ID
+  APP_SET_DROPDOWN_ID,
+  GET_STATUS_PAGE_INFO
 } from './constants';
 
 function socketStart(dispatch, state){
@@ -111,8 +115,20 @@ export function initialize(){
   };
 }
 
+export function getStatusPageInfo() {
+  return dispatch => {
+    dispatch({
+      type: GET_STATUS_PAGE_INFO,
+      payload: request.get(`${config.services.statusPage}/summary.json`)
+        .then(res => res.body)
+    });
+  };
+}
+
 export const openContextMenu = createAction(APP_OPEN_CONTEXT_MENU);
 export const closeContextMenu = createAction(APP_CLOSE_CONTEXT_MENU);
 export const modalMessageOpen = createAction(APP_MODAL_MESSAGE_OPEN);
 export const modalMessageClose = createAction(APP_MODAL_MESSAGE_CLOSE);
+export const confirmOpen = createAction(APP_OPEN_CONFIRM);
+export const confirmClose = createAction(APP_CLOSE_CONFIRM);
 export const setDropdownId = createAction(APP_SET_DROPDOWN_ID);

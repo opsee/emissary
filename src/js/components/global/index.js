@@ -1,6 +1,8 @@
 import Analytics from './Analytics.jsx';
+import AppStatus from './AppStatus.jsx';
 import Authenticator from './Authenticator.jsx';
 import BastionRequirement from './BastionRequirement.jsx';
+import Confirm from './Confirm.jsx';
 import ContextMenu from './ContextMenu.jsx';
 import Header from './Header.jsx';
 import Highlight from './Highlight.jsx';
@@ -23,8 +25,10 @@ import Toolbar from './Toolbar.jsx';
 
 export {
   Analytics,
+  AppStatus,
   Authenticator,
   BastionRequirement,
+  Confirm,
   ContextMenu,
   Header,
   Highlight,

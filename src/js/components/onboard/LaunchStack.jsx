@@ -6,11 +6,12 @@ import {plain as seed} from 'seedling';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
-import {Highlight, Toolbar} from '../global';
+import {Highlight, ProgressBar, Toolbar} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
 import templates from '../../modules/awsTemplates';
+import style from './onboard.css';
 
 const LaunchStack = React.createClass({
   propTypes: {
@@ -55,7 +56,10 @@ const LaunchStack = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Step 1: Launch our stack"/>
+        <Toolbar title="Step 1: Launch our stack" className={style.toolbar} />
+        <Padding b={2}>
+          <ProgressBar percentage={15} color={seed.color.success} flat />
+        </Padding>
 
         <Grid>
           <Row>

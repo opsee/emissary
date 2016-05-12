@@ -28,11 +28,10 @@
   background-color: var(--colorGray8);
 }
 
-.alert a{
+.alert a, .alert a:hover, .alert a:active, .alert a:focus{
   color: white;
   text-decoration: underline;
 }
-
 
 .dismiss {
   position: relative;

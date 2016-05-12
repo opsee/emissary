@@ -223,7 +223,7 @@ const NotificationSelection = React.createClass({
     let connectLink;
     if (integration === 'slack_bot'){
       connectLink = (
-        <span><SlackConnect target="_blank"/> to choose your channel.</span>
+        <span><SlackConnect/> to choose your channel.</span>
       );
     } else if (integration === 'pagerduty'){
       connectLink = (
