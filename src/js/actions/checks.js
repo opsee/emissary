@@ -524,7 +524,6 @@ export function multiEditNotifications(raw){
 }
 
 export function selectToggle(id){
-  window.performance.mark('select');
   return (dispatch) => {
     dispatch({
       type: CHECK_SELECT_TOGGLE,
