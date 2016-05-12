@@ -1,10 +1,15 @@
 import React, {PropTypes} from 'react';
+
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import { RouteTransition } from 'react-router-transition';
 import { spring } from 'react-motion';
+import { History } from 'react-router';
 import { OrderedMap } from 'immutable';
 
 import { Close } from '../icons';
 import { Padding } from '../layout';
+import { app as actions } from '../../actions';
 import style from './onboard.css';
 
 const fadeConfig = { stiffness: 200, damping: 22 };
@@ -32,13 +37,27 @@ const slideLeft = {
   }
 };
 
-export default React.createClass({
+const Onboard = React.createClass({
+  mixins: [History],
+  propTypes: {
+
+  },
+  onClose(){
+    this.props.actions.confirmOpen({
+      html: '<p>Are you sure you want to cancel installation? You can come back at any time.</p>',
+      confirmText: 'Yes, cancel',
+      color: 'danger',
+      onConfirm: this.props.history.pushState.bind(null, null, '/')
+    });
+  },
   render(){
     return(
       <div className={style.container}>
-        <Padding a={2} className={style.closeWrapper} >
-          <Close className={style.closeButton} />
-        </Padding>
+        <div onClick={this.onClose}>
+          <Padding a={2} className={style.closeWrapper} >
+            <Close className={style.closeButton} />
+          </Padding>
+        </div>
 
         <Padding t={4}>
           <RouteTransition pathname={this.props.location.pathname} {...slideLeft} className={style.transitionContainer}>
@@ -49,3 +68,9 @@ export default React.createClass({
     );
   }
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(Onboard);
