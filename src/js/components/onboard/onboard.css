@@ -1,3 +1,7 @@
-.toolbar {
-  margin-bottom: 0;
+.transitionContainer {
+  position: relative;
+}
+
+.transitionPanel {
+  position: absolute;
 }

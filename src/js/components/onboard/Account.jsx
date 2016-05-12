@@ -8,6 +8,7 @@ import {Button} from '../forms';
 import {Col, Grid, Padding, Row} from '../layout';
 import {StatusHandler} from '../global';
 import {user as actions} from '../../actions';
+import style from './onboard.css';
 
 const OnboardPassword = React.createClass({
   propTypes: {
