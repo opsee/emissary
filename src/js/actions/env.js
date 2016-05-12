@@ -60,7 +60,6 @@ export function getGroupSecurity(id){
 }
 
 export function getGroupsSecurity(){
-  console.log('groupsSecurity');
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUPS_SECURITY,
