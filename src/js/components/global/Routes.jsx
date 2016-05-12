@@ -44,15 +44,19 @@ import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
 
-// import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
-// import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
+import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
+import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
+import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
+import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
+import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
+
 // import OnboardPassword from 'react-proxy?name=onboard!exports?exports.default!../onboard/Password';
 // import OnboardRegionSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/RegionSelect';
 // import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
 // import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
 // import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
 
-// import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
+
 // import OnboardAddInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/AddInstance';
 
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
@@ -62,9 +66,6 @@ import Styleguide from 'react-proxy?name=styleguide!exports?exports.default!../p
 import System from 'react-proxy?name=system!exports?exports.default!../env/System';
 import TOS from 'react-proxy?name=tos!exports?exports.default!../pages/TOS';
 import NotFound from 'react-proxy?name=notfound!exports?exports.default!../pages/NotFound';
-
-import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
-import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
 
 import {auth} from '../global/Authenticator';
 
@@ -116,10 +117,10 @@ const routes = (
     <Redirect from="/start/tutorial/1" to="/start/launch-stack"/>
     <Redirect from="/start/tutorial/2" to="/start/launch-stack"/>
     <Redirect from="/start/tutorial/3" to="/start/launch-stack"/>
-    <Route path="/start" component={OnboardCreate}/>
-    <Route path="/start/thanks" component={OnboardThanks}/>
+
+
     <Route path="/start/password" component={OnboardPassword}/>
-    <Route path="/start/launch-stack" component={auth(OnboardLaunchStack)} />
+
     <Route path="/start/choose-region" component={auth(OnboardRegionSelect)} />
     <Route path="/start/add-instance" component={OnboardAddInstance} />
     <Route path="/start/choose-vpc" component={auth(OnboardVPCSelect)}/>
@@ -128,9 +129,13 @@ const routes = (
     <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
     <Route path="/start/profile" component={auth(Help)}/> */}
 
-    <Redirect from="/start" to="/start/account" />
+    <Route path="/start/thanks" component={OnboardThanks}/>
+
+    <Redirect from="/start" to="/start/create" />
     <Route path="/start" component={Onboard}>
+      <Route path="/start/create" component={OnboardCreate}/>
       <Route path="/start/account" component={OnboardAccount} />
+      <Route path="/start/launch-stack" component={OnboardLaunchStack} />
     </Route>
 
     <Route path="/system" component={auth(System)}/>

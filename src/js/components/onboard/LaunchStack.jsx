@@ -55,48 +55,22 @@ const LaunchStack = React.createClass({
   },
   render() {
     return (
-      <div>
-        <Toolbar title="Step 1: Launch our stack" className={style.toolbar} />
-        <Padding b={2}>
-          <ProgressBar percentage={15} color={seed.color.success} flat />
-        </Padding>
-
+      <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding b={2}>
-                <p>Opsee uses two tools to monitor your environment: cross-account access and our EC2 instance. We'll start by adding cross-account access.</p>
+              <h2>Let's add Opsee to your AWS environment.</h2>
+              <p>We'll start by launching Opsee's CloudFormation template.
+              This sets up cross-account access between Opsee and your AWS environment.
+              Opsee uses these permissions to continuously discover your AWS environment
+              and to run health checks.</p>
+
+              <Padding tb={1}>
+                <Button block>View the template</Button>
               </Padding>
-            </Col>
-          </Row>
-
-          <Row className="middle-xs">
-            <Col xs={12} sm={6} style={{textAlign: 'center'}}>
-              <Padding a={2}>
-                <img src={crossAccountImg} alt="Cross-account access between Opsee and your AWS environment" style={{width: '100%', maxWidth: '400px'}} />
+              <Padding tb={1}>
+                <Button color="success" block chevron>Got it</Button>
               </Padding>
-            </Col>
-            <Col xs={12} sm={6}>
-              <Heading level={3}>About cross-account access</Heading>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <Padding tb={2}>
-                <Heading level={4}>Cross-account Access CloudFormation Template</Heading>
-                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>.</p>
-
-                {this.renderTemplate()}
-              </Padding>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <p>Next, you'll choose which region the CloudFormation stack will live in.</p>
-              <Button to="/start/choose-region" color="success" block chevron>Select a region</Button>
             </Col>
           </Row>
         </Grid>
@@ -105,8 +79,12 @@ const LaunchStack = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(LaunchStack);
+export default connect(mapStateToProps, mapDispatchToProps)(LaunchStack);

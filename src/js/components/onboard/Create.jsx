@@ -107,8 +107,12 @@ const OnboardCreate = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(OnboardCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardCreate);

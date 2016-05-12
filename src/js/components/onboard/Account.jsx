@@ -10,11 +10,14 @@ import {StatusHandler} from '../global';
 import {user as actions} from '../../actions';
 import style from './onboard.css';
 
-const OnboardPassword = React.createClass({
+const OnboardAccount = React.createClass({
   propTypes: {
     location: PropTypes.object,
     actions: PropTypes.shape({
       setPassword: PropTypes.func
+    }),
+    history: PropTypes.shape({
+      pushState: PropTypes.func
     }),
     redux: PropTypes.shape({
       user: PropTypes.object,
@@ -22,6 +25,15 @@ const OnboardPassword = React.createClass({
         userSetPassword: PropTypes.object
       })
     })
+  },
+  componentWillReceiveProps(nextProps){
+    const wasPending = this.getStatus() === 'pending';
+    const isDone = nextProps.redux.asyncActions.userSetPassword.status === 'success';
+    if (wasPending && isDone) {
+      setTimeout(() => {
+        history.pushState(null, '/start/launch-stack')
+      }, 2000);
+    }
   },
   getInitialState(){
     return {
@@ -46,21 +58,37 @@ const OnboardPassword = React.createClass({
     const data = _.chain({}).assign(this.state, this.props.location.query).pick(['id', 'token', 'password', 'name']).value();
     this.props.actions.setPassword(data);
   },
+  renderForm(){
+    return (
+      <div>
+        <p>Let's get started using Opsee. Enter your name and choose a password to continue.</p>
+        <form name="loginForm" onSubmit={this.handleSubmit}>
+          <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
+          <StatusHandler status={this.getStatus()}/>
+          <Padding t={1}>
+            <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>
+          </Padding>
+        </form>
+      </div>
+    );
+  },
+  renderSuccess(){
+    return (
+      <div>
+        <p>Great you're done</p>
+        <Padding tb={2}>
+          <Button to="/start/launch-stack" color="success" block chevron>Next</Button>
+        </Padding>
+      </div>
+    );
+  },
   render() {
     return (
-       <div>
-        <Toolbar title="Get Started"/>
+      <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>
-              <p>Let's get started using Opsee. Enter your name and choose a password to continue.</p>
-              <form name="loginForm" onSubmit={this.handleSubmit}>
-                <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
-                <StatusHandler status={this.getStatus()}/>
-                <Padding t={1}>
-                  <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>
-                </Padding>
-              </form>
+              {this.getStatus() === 'success' ? this.renderSuccess() : this.renderForm()}
             </Col>
           </Row>
         </Grid>
@@ -69,8 +97,12 @@ const OnboardPassword = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(OnboardPassword);
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardAccount);

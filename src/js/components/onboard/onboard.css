@@ -1,3 +1,9 @@
+.container {
+  background-color: #303030;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
 .transitionContainer {
   position: relative;
 }

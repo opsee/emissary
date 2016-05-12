@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import { RouteTransition } from 'react-router-transition';
 import { spring } from 'react-motion';
 import { OrderedMap } from 'immutable';
+
+import { Padding } from '../layout';
 import style from './onboard.css';
 
 const fadeConfig = { stiffness: 200, damping: 22 };
@@ -30,14 +32,17 @@ const slideLeft = {
 };
 
 export default React.createClass({
+  renderPips(){
+
+  },
   render(){
-    console.log(this.props.location);
     return(
-      <div>
-        <h1>onboarding</h1>
-        <RouteTransition pathname={this.props.location.pathname} {...slideLeft} className={style.transitionContainer}>
-          {this.props.children}
-        </RouteTransition>
+      <div className={style.container}>
+        <Padding t={4}>
+          <RouteTransition pathname={this.props.location.pathname} {...slideLeft} className={style.transitionContainer}>
+            {this.props.children}
+          </RouteTransition>
+        </Padding>
       </div>
     );
   }
