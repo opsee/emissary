@@ -27,6 +27,11 @@ const LaunchStack = React.createClass({
       getTemplates: PropTypes.func
     })
   },
+  getInitialState(){
+    return {
+      showTemplate: false
+    };
+  },
   componentWillMount() {
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
@@ -53,24 +58,43 @@ const LaunchStack = React.createClass({
       </Padding>
     );
   },
+  renderInner(){
+    if (this.state.showTemplate){
+      return (
+        <div>
+          <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>
+          {this.renderTemplate()}
+          <Padding tb={1}>
+            <Button onClick={this.setState.bind(this, {showTemplate: false})} color="success" block>Got it</Button>
+          </Padding>
+        </div>
+      )
+    }
+
+    return (
+      <div>
+       <h2>Let's add Opsee to your AWS environment.</h2>
+        <p>We'll start by launching Opsee's CloudFormation template.
+        This sets up cross-account access between Opsee and your AWS environment.
+        Opsee uses these permissions to continuously discover your AWS environment
+        and to run health checks.</p>
+
+        <Padding tb={1}>
+          <Button onClick={this.setState.bind(this, {showTemplate: true})}block>View the template</Button>
+        </Padding>
+        <Padding tb={1}>
+          <Button to="/start/launch-stack" color="success" block chevron>Got it</Button>
+        </Padding>
+      </div>
+    );
+  },
   render() {
     return (
       <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>
-              <h2>Let's add Opsee to your AWS environment.</h2>
-              <p>We'll start by launching Opsee's CloudFormation template.
-              This sets up cross-account access between Opsee and your AWS environment.
-              Opsee uses these permissions to continuously discover your AWS environment
-              and to run health checks.</p>
-
-              <Padding tb={1}>
-                <Button block>View the template</Button>
-              </Padding>
-              <Padding tb={1}>
-                <Button to="/start/launch-stack" color="success" block chevron>Got it</Button>
-              </Padding>
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>

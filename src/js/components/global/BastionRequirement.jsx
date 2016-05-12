@@ -77,7 +77,7 @@ const BastionRequirement = React.createClass({
     } else if (state === 'active'){
       return (
         <div>
-          Your Opsee instance is disconnected or has been removed. If you need to install another, <Link to="/start/launch-stack" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+          Your Opsee instance is disconnected or has been removed. If you need to install another, <Link to="/start/review-stack" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
         </div>
       );
     }

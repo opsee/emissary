@@ -32,7 +32,8 @@ const LaunchStack = React.createClass({
   },
   getInitialState(){
     return {
-      hasClicked: false
+      hasClicked: false,
+      showInstructions: false
     };
   },
   componentWillMount() {
@@ -63,6 +64,9 @@ const LaunchStack = React.createClass({
   onOpenConsole(e) {
     this.setState({ hasClicked: true })
   },
+  toggleInstructions(shouldShow) {
+    this.setState({ showInstructions: shouldShow });
+  },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
@@ -90,12 +94,24 @@ const LaunchStack = React.createClass({
       );
     }
 
+    console.log(`This would open ${this.getTemplateURL()} in non-debug mode.`);
     const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
     return (
-      <Button to={this.getTemplateURL()} onClick={this.onOpenConsole} target="_blank" color="success" block chevron>{verb} AWS Console</Button>
+      <Button to='/start/review-instance' onClick={this.onOpenConsole} color="success" block chevron>{verb} AWS Console</Button>
     );
   },
   renderInner(){
+    if (this.state.showInstructions) {
+      return (
+        <div>
+          <p>Here's some cool information on how to install.</p>
+          <Padding tb={1}>
+            <Button onClick={this.toggleInstructions.bind(null, false)} block>Got it</Button>
+          </Padding>
+        </div>
+      );
+    }
+
     if (!this.props.redux.onboard.hasRole) {
       return (
         <div>
@@ -103,7 +119,7 @@ const LaunchStack = React.createClass({
           <p>When your Opsee role has been created, return here to finish installation. You'll automatically be redirected to the next step.</p>
 
           <Padding tb={1}>
-            <Button block>How to Install</Button>
+            <Button onClick={this.toggleInstructions.bind(null, true)} block>How to Install</Button>
           </Padding>
           <Padding tb={1}>
             {this.renderLaunchButton()}
