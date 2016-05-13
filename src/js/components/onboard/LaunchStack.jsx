@@ -56,10 +56,13 @@ const LaunchStack = React.createClass({
     }, 1000 * 5); // every 5 seconds
   },
   componentWillReceiveProps(){
-    console.log(`Has role? ${this.props.redux.onboard.hasRole}`);
-    if (this.props.redux.onboard.hasRole && this.state.hasClicked) {
-      // this.history.pushState(null, '/start/review-instance');
-    }
+    //
+    // if (this.hasRole() && !this.state.hasClicked) {
+    //   this.history.pushState(null, '/start/launch-instance');
+    // }
+  },
+  hasRole(){
+    return !!this.props.redux.onboard.role.region;
   },
   getTemplateURL() {
     const urlTemplate = _.get(this.props.redux, 'onboard.regionLaunchURL');
@@ -158,7 +161,8 @@ const LaunchStack = React.createClass({
       <div>
         <Checkmark />
         <Padding tb={2}>
-          <p className="text-center">Awesome! Cross-account access has been set up.</p>
+          <h3 className="text-center">Awesome!</h3>
+          <p className="text-center">Cross-account access has been set up.</p>
         </Padding>
         <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
       </div>
@@ -181,11 +185,12 @@ const LaunchStack = React.createClass({
       return this.renderLearnMore();
     }
 
-    if (this.state.hasClicked) {
-      if (!this.props.redux.onboard.hasRole) {
-        return this.renderInstructions();
-      }
+    if (this.hasRole()) {
       return this.renderDone();
+    }
+
+    if (this.state.hasClicked && !this.hasRole()) {
+      return this.renderInstructions();
     }
 
     return (
@@ -211,6 +216,7 @@ const LaunchStack = React.createClass({
     );
   },
   render() {
+    console.log(`Has role? ${this.hasRole()}`);
     return (
       <div className={style.transitionPanel}>
         <Grid>

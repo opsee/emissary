@@ -137,12 +137,15 @@ export function hasRole() {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_HAS_ROLE,
-      payload: graphPromise('hasRole', () => {
+      payload: graphPromise('role', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
         .send({query:
-          '{ hasRole }'
+          `{ role {
+              region
+              stack_id
+            }}`
         });
       })
     });

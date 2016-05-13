@@ -2,7 +2,11 @@
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {History} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {plain as seed} from 'seedling';
 
+import {onboard as actions} from '../../actions';
 import {Heading} from '../type';
 import {Button} from '../forms';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
@@ -11,7 +15,10 @@ import ReviewInstance from './ReviewInstance';
 import ConfigureInstance from './ConfigureInstance';
 import style from './onboard.css';
 
-export default React.createClass({
+const LaunchInstance = React.createClass({
+  componentWillMount(){
+    this.props.actions.hasRole();
+  },
   getInitialState(){
     return {
       showConfigure: false,
@@ -65,7 +72,7 @@ export default React.createClass({
         <p>Here's our best guess on where we should install it, based on your environment:</p>
 
         <Padding tb={2} className="text-center">
-          <h3 style={{color: 'white', 'fontWeight': 300}}>{this.state.region} > {this.state.vpc} > {this.state.subnet}</h3>
+          <h3 style={{color: 'white', 'fontWeight': 300}}>{this.props.redux.onboard.region} > {this.state.vpc} > {this.state.subnet}</h3>
           <p><small><a href="#" onClick={this.toggleConfigure.bind(this, true)}>(Change)</a></small></p>
         </Padding>
 
@@ -94,3 +101,13 @@ export default React.createClass({
     );
   }
 })
+
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LaunchInstance);

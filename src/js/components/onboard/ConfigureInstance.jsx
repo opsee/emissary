@@ -85,7 +85,7 @@ const ConfigureInstance = React.createClass({
       <div>
         <h2>Configure Instance</h2>
 
-        {this.renderChosen('region', this.state.region)}
+        {this.renderChosen('region', this.props.redux.onboard.region)}
         {this.renderSubnet()}
         {this.renderVPC()}
 

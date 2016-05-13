@@ -28,7 +28,10 @@ const initial = {
   installing: false,
   templates: [],
   regionLaunchURL: null,
-  hasRole: false
+  role: {
+    stack_id: null,
+    region: null
+  }
 };
 
 function getFinalInstallData(state){
@@ -117,8 +120,9 @@ export default handleActions({
   },
   [ONBOARD_HAS_ROLE]: {
     next(state, action) {
-      const hasRole = action.payload.data;
-      return _.assign({}, state, {hasRole});
+      const role = action.payload.data;
+      const region = _.get(action.payload.data, 'region');
+      return _.assign({}, state, {role, region});
     },
     throw: yeller.reportAction
   }
