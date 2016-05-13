@@ -59,8 +59,6 @@ import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../
 // import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
 // import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
 
-
-
 // import OnboardAddInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/AddInstance';
 
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
@@ -121,7 +119,6 @@ const routes = (
     <Redirect from="/start/tutorial/1" to="/start/launch-stack"/>
     <Redirect from="/start/tutorial/2" to="/start/launch-stack"/>
     <Redirect from="/start/tutorial/3" to="/start/launch-stack"/>
-
 
     <Route path="/start/password" component={OnboardPassword}/>
 

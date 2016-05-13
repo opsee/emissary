@@ -1,3 +1,4 @@
+/* eslint-disable */
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {History, Link} from 'react-router';
