@@ -97,7 +97,7 @@ const LaunchStack = React.createClass({
             <Button onClick={this.setState.bind(this, {showTemplate: true})} color="primary" block>View the template</Button>
           </Padding>
           <Padding b={1}>
-            <Button to="/start/launch-stack" color="success" block chevron>Got it</Button>
+            <Button to="/start/launch-stack" color="success" block chevron>Continue</Button>
           </Padding>
         </Padding>
       </div>

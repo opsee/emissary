@@ -113,7 +113,7 @@ const ReviewInstance = React.createClass({
             <Button onClick={this.setState.bind(this, {showDetails: true})} color="primary" block>More about the instance</Button>
           </Padding>
           <Padding tb={1}>
-            <Button to="/start/launch-instance" color="success" block chevron>Got it</Button>
+            <Button to="/start/launch-instance" color="success" block chevron>Continue</Button>
           </Padding>
         </Col>
       </Row>
