@@ -114,11 +114,11 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
+    <Route path="/start/create" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
 
-    <Redirect from="/start" to="/start/create" />
+    <Redirect from="/start" to="/start/review-stack" />
     <Route path="/start" component={Onboard}>
-      <Route path="/start/create" component={OnboardCreate}/>
       <Route path="/start/account" component={OnboardAccount} />
       <Route path="/start/review-stack" component={OnboardReviewAccess} />
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
