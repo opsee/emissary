@@ -71,6 +71,22 @@ const LaunchStack = React.createClass({
   toggleInstructions(shouldShow) {
     this.setState({ showInstructions: shouldShow });
   },
+  renderHowTo(){
+    return (
+      <div>
+        <strong>How to install the CloudFormation Stack</strong>
+        <p>We enable cross-account access using a CloudFormation stack. To launch
+        the stack in your AWS environment, do the following in your AWS console:</p>
+        <ol>
+          <li>Click "next" on the "Select Template" screen. The S3 URl for the Opsee CloudFormation template will be prefilled for you.</li>
+          <li>Click "next" on the "Specify Details" page, changing the stack name if you wish.</li>
+          <li>Click "next" on the "Options" page.</li>
+          <li>Check the acknowledgement that IAM resources will be created, and click "create" on the "Review" page.</li>
+        </ol>
+        <p>When it's done, return to this screen to finish installation. You can monitor the progress of the role creation in your AWS console.</p>
+      </div>
+    );
+  },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
@@ -129,7 +145,9 @@ const LaunchStack = React.createClass({
           <h3 className="text-center">Waiting for cross-account role to finish...</h3>
         </Padding>
 
-        how to install
+        <Padding tb={2}>
+          {this.renderHowTo()}
+        </Padding>
 
         {this.renderButtons()}
       </div>
