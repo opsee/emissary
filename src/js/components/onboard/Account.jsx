@@ -3,6 +3,9 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {History} from 'react-router';
+
+import {Checkmark} from '../icons';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Button} from '../forms';
@@ -12,6 +15,8 @@ import {user as actions} from '../../actions';
 import style from './onboard.css';
 
 const OnboardAccount = React.createClass({
+  mixins: [History],
+
   propTypes: {
     location: PropTypes.object,
     actions: PropTypes.shape({
@@ -32,9 +37,16 @@ const OnboardAccount = React.createClass({
     const isDone = nextProps.redux.asyncActions.userSetPassword.status === 'success';
     if (wasPending && isDone) {
       setTimeout(() => {
-        history.pushState(null, '/start/launch-stack')
-      }, 2000);
+        this.history.pushState(null, '/start/launch-stack')
+      }, 500);
     }
+  },
+  doRedirect(){
+
+    setTimeout(() => {
+      console.log('redirecting');
+      this.history.pushState(null, '/start/launch-stack')
+    }, 500);
   },
   getInitialState(){
     return {
@@ -59,6 +71,23 @@ const OnboardAccount = React.createClass({
     const data = _.chain({}).assign(this.state, this.props.location.query).pick(['id', 'token', 'password', 'name']).value();
     this.props.actions.setPassword(data);
   },
+  renderSubmitButton(){
+    let text;
+    let chevron = true;
+    const status = this.getStatus();
+    if (status === 'pending') {
+      text = 'Saving...';
+    } else if (status === 'success') {
+      chevron = false;
+      text = <Checkmark btn />;
+    } else {
+      text = 'Save';
+    }
+    const disabled = this.isDisabled();
+    return (
+      <Button type="submit" block color="success" chevron={chevron} disabled={disabled}>{text}</Button>
+    );
+  },
   renderForm(){
     return (
       <div>
@@ -67,19 +96,9 @@ const OnboardAccount = React.createClass({
           <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
           <StatusHandler status={this.getStatus()}/>
           <Padding t={1}>
-            <Button type="submit" block color="success" chevron disabled={this.isDisabled()}>{this.getButtonText()}</Button>
+            {this.renderSubmitButton()}
           </Padding>
         </form>
-      </div>
-    );
-  },
-  renderSuccess(){
-    return (
-      <div>
-        <p>Great you're done</p>
-        <Padding tb={2}>
-          <Button to="/start/review-stack" color="success" block chevron>Next</Button>
-        </Padding>
       </div>
     );
   },
@@ -89,7 +108,7 @@ const OnboardAccount = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.getStatus() === 'success' ? this.renderSuccess() : this.renderForm()}
+              {this.renderForm()}
             </Col>
           </Row>
         </Grid>

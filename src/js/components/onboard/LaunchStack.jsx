@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
+import Checkmark from '../svgs/Checkmark';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {NewWindow} from '../icons';
@@ -15,6 +16,7 @@ import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
 import templates from '../../modules/awsTemplates';
 import {SetInterval} from '../../modules/mixins';
+import ReviewAccess from './ReviewAccess';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
@@ -69,18 +71,6 @@ const LaunchStack = React.createClass({
   toggleInstructions(shouldShow) {
     this.setState({ showInstructions: shouldShow });
   },
-  renderLoading(message) {
-    return (
-      <div>
-        <Padding tb={4} className="text-center">
-          <Padding tb={2}>
-            <StatusHandler status="pending" />
-          </Padding>
-          <small className="text-muted">{message}</small>
-        </Padding>
-      </div>
-    );
-  },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
@@ -112,50 +102,93 @@ const LaunchStack = React.createClass({
     return (
       <div>
         <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="success" block>{verb} AWS Console <NewWindow btn /></Button>
-        <p className="text-center"><Link to="/start/review-instance"><small>DEBUG: click to skip</small></Link></p>
+        <p className="text-center"><Link to="/start/launch-instance"><small>DEBUG: click to skip</small></Link></p>
       </div>
+    );
+  },
+  renderLearnMore(){
+    return (
+      <div>
+        <ReviewAccess />
+        <Padding tb={1}>
+          <Button onClick={this.toggleInstructions.bind(null, false)} color="primary" block>Got it</Button>
+        </Padding>
+      </div>
+    );
+  },
+  renderInstructions(){
+    return (
+      <div>
+        <Padding tb={4} className="text-center">
+          <Padding tb={2}>
+            <StatusHandler status="pending" />
+          </Padding>
+        </Padding>
+
+        <Padding tb={2}>
+          <h3 className="text-center">Waiting for cross-account role to finish...</h3>
+        </Padding>
+
+        how to install
+
+        {this.renderButtons()}
+      </div>
+    );
+  },
+  renderDone(){
+    return (
+      <div>
+        <Checkmark />
+        <Padding tb={2}>
+          <p className="text-center">Awesome! Cross-account access has been set up.</p>
+        </Padding>
+        <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
+      </div>
+    );
+  },
+  renderButtons(){
+    return (
+      <Padding tb={1}>
+        <Padding b={1}>
+          <Button onClick={this.toggleInstructions.bind(null, true)} color="primary" block>Learn More</Button>
+        </Padding>
+        <Padding b={1}>
+          {this.renderLaunchButton()}
+        </Padding>
+      </Padding>
     );
   },
   renderInner(){
     if (this.state.showInstructions) {
-      return (
-        <div>
-          <p>Here's some cool information on how to install.</p>
-          <p>tl;dr click next three times and "accept"</p>
-          <p>We should add more in-depth instructions and/or screenshots.</p>
-          <Padding tb={1}>
-            <Button onClick={this.toggleInstructions.bind(null, false)} color="primary" block>Got it</Button>
-          </Padding>
-        </div>
-      );
+      return this.renderLearnMore();
     }
 
-    if (!this.props.redux.onboard.hasRole) {
-      return (
-        <div>
-          {this.state.hasClicked ? this.renderLoading() : null}
-          <Padding tb={2}>
-            <h2>{this.state.hasClicked ? 'Waiting...' : 'Install the CloudFormation template through your AWS console.'}</h2>
-          </Padding>
-
-          <p>When your Opsee role has been created, return here to finish installation. You'll automatically be redirected to the next step.</p>
-
-          <Padding tb={1}>
-            <Button onClick={this.toggleInstructions.bind(null, true)} color="primary" block>How to Install</Button>
-          </Padding>
-          <Padding tb={1}>
-            {this.renderLaunchButton()}
-          </Padding>
-        </div>
-      );
+    if (this.state.hasClicked) {
+      if (!this.props.redux.onboard.hasRole) {
+        return this.renderInstructions();
+      }
+      return this.renderDone();
     }
 
     return (
       <div>
-        <p>Cool you're done</p>
-        <Padding tb={1}>
-          <Button to="/start/review-instance" color="success" block chevron>Cool</Button>
+        <Padding a={4} className="text-center">
+          <img src={crossAccountImg} />
         </Padding>
+
+        <Padding tb={2}>
+          <h2>Set Up Cross-Account Access.</h2>
+        </Padding>
+
+        <p>Cross-account access is like giving a cat sitter the key to your house.
+        Opsee will be able to take actions in your AWS environment on your behalf.
+        We need this capability to launch an EC2 instance to healthcheck your
+        services and manage that instance throughout its lifecycle.</p>
+
+        <p>To set up cross-account access, you'll need to install Opsee's
+        CloudFormation Stack in your AWS console.</p>
+
+        {this.renderButtons()}
       </div>
     );
   },

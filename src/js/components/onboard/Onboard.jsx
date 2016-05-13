@@ -19,9 +19,9 @@ const popConfig = { stiffness: 360, damping: 25 };
 const slideConfig = { stiffness: 330, damping: 30 };
 
 const routes = [
-  '/start/review-stack',
+  // '/start/review-stack',
   '/start/launch-stack',
-  '/start/review-instance',
+  // '/start/review-instance',
   '/start/launch-instance'
 ];
 
@@ -51,13 +51,21 @@ const Onboard = React.createClass({
   propTypes: {
 
   },
+  isInstalling(){
+    const pathname = this.props.location.pathname;
+    return pathname === '/start/install' || pathname === '/start/install-example';
+  },
   onClose(){
-    this.props.actions.confirmOpen({
-      html: '<p>Are you sure you want to cancel installation? You can come back at any time.</p>',
-      confirmText: 'Yes, cancel',
-      color: 'danger',
-      onConfirm: this.props.history.pushState.bind(null, null, '/')
-    });
+    if (this.isInstalling()) {
+      this.history.pushState(null, '/');
+    } else {
+      this.props.actions.confirmOpen({
+        html: '<p>Are you sure you want to cancel installation? You can come back at any time.</p>',
+        confirmText: 'Yes, cancel',
+        color: 'danger',
+        onConfirm: this.props.history.pushState.bind(null, null, '/')
+      });
+    }
   },
   renderPips(){
     const route = this.props.location.pathname;

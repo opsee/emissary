@@ -13,6 +13,7 @@ import {flag} from '../../modules';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
 import {PagerdutyConnect, SlackConnect} from '../integrations';
+import style from './onboard.css';
 
 const Install = React.createClass({
   propTypes: {
@@ -177,7 +178,7 @@ const Install = React.createClass({
       } else if (slack && pagerduty){
         return (
           <Padding>
-            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel. <br/>You can also set up a connection to <PagerdutyConnect>PagerDuty</PagerdutyConnect>.
+            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel. You can also set up a connection to <PagerdutyConnect>PagerDuty</PagerdutyConnect>.
           </Padding>
         );
       }
@@ -216,7 +217,7 @@ const Install = React.createClass({
   },
   render() {
     return (
-       <div>
+       <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>

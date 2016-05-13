@@ -1,3 +1,4 @@
+/* eslint-disable */
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
@@ -43,11 +44,11 @@ const LaunchStack = React.createClass({
     }
     this.props.actions.hasRole();
   },
-  componentWillReceiveProps(nextProps){
-    if (nextProps.redux.onboard.hasRole) {
-      this.history.pushState(null, '/start/review-instance');
-    }
-  },
+  // componentWillReceiveProps(nextProps){
+  //   if (nextProps.redux.onboard.hasRole) {
+  //     this.history.pushState(null, '/start/launch-instance');
+  //   }
+  // },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
@@ -68,66 +69,17 @@ const LaunchStack = React.createClass({
       </Padding>
     );
   },
-  renderInner(){
-    if (!this.props.redux.asyncActions.onboardHasRole.status) {
-      // FIXME
-      return null;
-    }
-
-    if (this.state.showTemplate){
-      return (
-        <div>
-          <Padding tb={1}>
-            <h2>Opsee Cross-Account Access</h2>
-          </Padding>
-          <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
-          <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>.</p>
-          <p>We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.</p>
-          {this.renderTemplate()}
-          <Padding tb={1}>
-            <Button onClick={this.setState.bind(this, {showTemplate: false})} color="primary" block>Got it</Button>
-          </Padding>
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        <Padding a={4} className="text-center">
-          <img src={crossAccountImg} />
-        </Padding>
-
-        <Padding tb={2}>
-          <h2>Let's add Opsee to your AWS environment.</h2>
-        </Padding>
-
-        <p>We'll start by launching Opsee's CloudFormation template.
-        This sets up cross-account access between Opsee and your AWS environment.
-        Opsee uses these permissions to continuously discover your AWS environment
-        and to run health checks.</p>
-
-        <Padding tb={2}>
-          <Padding b={1}>
-            <Button onClick={this.setState.bind(this, {showTemplate: true})} color="primary" block>View the template</Button>
-          </Padding>
-          <Padding b={1}>
-            <Button to="/start/launch-stack" color="success" block chevron>Continue</Button>
-          </Padding>
-        </Padding>
-      </div>
-    );
-  },
   render() {
     return (
-      <div className={style.transitionPanel}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              {this.renderInner()}
-            </Col>
-          </Row>
-        </Grid>
-       </div>
+      <div>
+        <Padding tb={1}>
+          <h2>Opsee Cross-Account Access</h2>
+        </Padding>
+        <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
+        <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>.</p>
+        <p>We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.</p>
+        {this.renderTemplate()}
+      </div>
     );
   }
 });

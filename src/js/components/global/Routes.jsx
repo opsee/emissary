@@ -48,7 +48,6 @@ import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
 import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
 import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
-import OnboardReviewAccess from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewAccess';
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
 import OnboardReviewInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewInstance';
 import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchInstance';
@@ -114,13 +113,12 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
+    <Redirect from="/start" to="/start/create" />
     <Route path="/start/create" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
 
-    <Redirect from="/start" to="/start/review-stack" />
     <Route path="/start" component={Onboard}>
-      <Route path="/start/account" component={OnboardAccount} />
-      <Route path="/start/review-stack" component={OnboardReviewAccess} />
+      <Route path="/start/password" component={OnboardAccount} />
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
       <Route path="/start/review-instance" component={OnboardReviewInstance} />
       <Route path="/start/launch-instance" component={OnboardLaunchInstance} />
