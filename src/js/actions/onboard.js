@@ -244,35 +244,35 @@ export function install(){
 
 let exampleMessages;
 let exampleInstallFn;
-if (process.env.NODE_ENV !== 'production'){
-  const msgs = require('../../files/bastion-install-messages-example.json');
-  exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
-  exampleInstallFn = () => {
-    return (dispatch) => {
-      return dispatch({
-        type: ONBOARD_EXAMPLE_INSTALL,
-        payload: new Promise(() => {
-          exampleMessages.forEach((payload, i) => {
-            setTimeout(() => {
-              dispatch({
-                type: APP_SOCKET_MSG,
-                payload
-              });
-            }, i * 2000);
-          });
+
+const msgs = require('../../files/bastion-install-messages-example.json');
+exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
+exampleInstallFn = () => {
+  return (dispatch) => {
+    return dispatch({
+      type: ONBOARD_EXAMPLE_INSTALL,
+      payload: new Promise(() => {
+        exampleMessages.forEach((payload, i) => {
           setTimeout(() => {
             dispatch({
               type: APP_SOCKET_MSG,
-              payload: {
-                command: 'connect-bastion',
-                state: 'complete'
-              }
+              payload
             });
-          }, (exampleMessages.length + 5) * 400);
-        })
-      });
-    };
+          }, i * 2000);
+        });
+        setTimeout(() => {
+          dispatch({
+            type: APP_SOCKET_MSG,
+            payload: {
+              command: 'connect-bastion',
+              state: 'complete'
+            }
+          });
+        }, (exampleMessages.length + 5) * 400);
+      })
+    });
   };
-}
+};
+
 
 export const exampleInstall = exampleInstallFn;
