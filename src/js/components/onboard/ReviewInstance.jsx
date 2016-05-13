@@ -9,6 +9,7 @@ import {Heading} from '../type';
 import {Button} from '../forms';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Highlight, ProgressBar, Toolbar} from '../global';
+import instanceImg from '../../../img/tut-ec2-instance.svg';
 import style from './onboard.css';
 
 const ReviewInstance = React.createClass({
@@ -94,6 +95,10 @@ const ReviewInstance = React.createClass({
     return (
       <Row>
         <Col xs={12}>
+          <Padding lr={4} tb={2} className="text-center">
+            <img src={instanceImg} style={{maxHeight: '300px'}}/>
+          </Padding>
+
           <Padding tb={2}>
             <h2>About the Opsee EC2 instance</h2>
           </Padding>

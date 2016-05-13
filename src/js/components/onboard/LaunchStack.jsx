@@ -1,13 +1,14 @@
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
-import {History} from 'react-router';
+import {History, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
-import {Highlight, ProgressBar, Toolbar} from '../global';
+import {NewWindow} from '../icons';
+import {Highlight, ProgressBar, StatusHandler, Toolbar} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
@@ -67,6 +68,18 @@ const LaunchStack = React.createClass({
   toggleInstructions(shouldShow) {
     this.setState({ showInstructions: shouldShow });
   },
+  renderLoading(message) {
+    return (
+      <div>
+        <Padding tb={4} className="text-center">
+          <Padding tb={2}>
+            <StatusHandler status="pending" />
+          </Padding>
+          <small className="text-muted">{message}</small>
+        </Padding>
+      </div>
+    );
+  },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){
@@ -94,10 +107,12 @@ const LaunchStack = React.createClass({
       );
     }
 
-    console.log(`This would open ${this.getTemplateURL()} in non-debug mode.`);
     const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
     return (
-      <Button to='/start/review-instance' onClick={this.onOpenConsole} color="success" block chevron>{verb} AWS Console</Button>
+      <div>
+        <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="success" block>{verb} AWS Console <NewWindow btn /></Button>
+        <p className="text-center"><Link to="/start/review-instance"><small>DEBUG: click to skip</small></Link></p>
+      </div>
     );
   },
   renderInner(){
@@ -117,8 +132,9 @@ const LaunchStack = React.createClass({
     if (!this.props.redux.onboard.hasRole) {
       return (
         <div>
+          {this.state.hasClicked ? this.renderLoading() : null}
           <Padding tb={2}>
-            <h2>{this.state.clicked ? 'Waiting...' : 'Install the CloudFormation template through your AWS console.'}</h2>
+            <h2>{this.state.hasClicked ? 'Waiting...' : 'Install the CloudFormation template through your AWS console.'}</h2>
           </Padding>
 
           <p>When your Opsee role has been created, return here to finish installation. You'll automatically be redirected to the next step.</p>

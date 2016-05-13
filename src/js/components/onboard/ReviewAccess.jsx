@@ -78,6 +78,10 @@ const LaunchStack = React.createClass({
 
     return (
       <div>
+        <Padding a={4} className="text-center">
+          <img src={crossAccountImg} />
+        </Padding>
+
         <Padding tb={2}>
           <h2>Let's add Opsee to your AWS environment.</h2>
         </Padding>
