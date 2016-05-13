@@ -274,5 +274,4 @@ exampleInstallFn = () => {
   };
 };
 
-
 export const exampleInstall = exampleInstallFn;
