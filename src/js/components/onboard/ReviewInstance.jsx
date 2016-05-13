@@ -85,7 +85,7 @@ const ReviewInstance = React.createClass({
               </Padding>
             </Col>
           </Row>          <Padding tb={1}>
-            <Button onClick={this.setState.bind(this, {showDetails: false})} block>Got it</Button>
+            <Button onClick={this.setState.bind(this, {showDetails: false})} color="primary" block>Got it</Button>
           </Padding>
         </div>
       );
@@ -94,14 +94,17 @@ const ReviewInstance = React.createClass({
     return (
       <Row>
         <Col xs={12}>
-          <h2>About the Opsee EC2 instance</h2>
+          <Padding tb={2}>
+            <h2>About the Opsee EC2 instance</h2>
+          </Padding>
+
           <p>Our EC2 instance is responsible for running checks in your AWS environment.</p>
           <p>The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
           which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.
           You can manage it any time from your AWS console.</p>
 
           <Padding tb={1}>
-            <Button onClick={this.setState.bind(this, {showDetails: true})} block>More about the instance</Button>
+            <Button onClick={this.setState.bind(this, {showDetails: true})} color="primary" block>More about the instance</Button>
           </Padding>
           <Padding tb={1}>
             <Button to="/start/launch-instance" color="success" block chevron>Got it</Button>

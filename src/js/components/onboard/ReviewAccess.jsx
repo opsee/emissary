@@ -70,7 +70,7 @@ const LaunchStack = React.createClass({
           <p>We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.</p>
           {this.renderTemplate()}
           <Padding tb={1}>
-            <Button onClick={this.setState.bind(this, {showTemplate: false})} color="success" block>Got it</Button>
+            <Button onClick={this.setState.bind(this, {showTemplate: false})} color="primary" block>Got it</Button>
           </Padding>
         </div>
       )
@@ -78,17 +78,22 @@ const LaunchStack = React.createClass({
 
     return (
       <div>
-       <h2>Let's add Opsee to your AWS environment.</h2>
+        <Padding tb={2}>
+          <h2>Let's add Opsee to your AWS environment.</h2>
+        </Padding>
+
         <p>We'll start by launching Opsee's CloudFormation template.
         This sets up cross-account access between Opsee and your AWS environment.
         Opsee uses these permissions to continuously discover your AWS environment
         and to run health checks.</p>
 
-        <Padding tb={1}>
-          <Button onClick={this.setState.bind(this, {showTemplate: true})}block>View the template</Button>
-        </Padding>
-        <Padding tb={1}>
-          <Button to="/start/launch-stack" color="success" block chevron>Got it</Button>
+        <Padding tb={2}>
+          <Padding b={1}>
+            <Button onClick={this.setState.bind(this, {showTemplate: true})} color="primary" block>View the template</Button>
+          </Padding>
+          <Padding b={1}>
+            <Button to="/start/launch-stack" color="success" block chevron>Got it</Button>
+          </Padding>
         </Padding>
       </div>
     );

@@ -1,5 +1,6 @@
+import _ from 'lodash';
+import cx from 'classnames';
 import React, {PropTypes} from 'react';
-
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { RouteTransition } from 'react-router-transition';
@@ -7,7 +8,7 @@ import { spring } from 'react-motion';
 import { History } from 'react-router';
 import { OrderedMap } from 'immutable';
 
-import { Close } from '../icons';
+import { Circle, Close } from '../icons';
 import { Padding } from '../layout';
 import { app as actions } from '../../actions';
 import style from './onboard.css';
@@ -15,6 +16,13 @@ import style from './onboard.css';
 const fadeConfig = { stiffness: 200, damping: 22 };
 const popConfig = { stiffness: 360, damping: 25 };
 const slideConfig = { stiffness: 330, damping: 30 };
+
+const routes = [
+  '/start/review-stack',
+  '/start/launch-stack',
+  '/start/review-instance',
+  '/start/launch-instance'
+];
 
 const slideLeft = {
   atEnter: {
@@ -50,6 +58,20 @@ const Onboard = React.createClass({
       onConfirm: this.props.history.pushState.bind(null, null, '/')
     });
   },
+  renderPips(){
+    const route = this.props.location.pathname;
+    const activePip = routes.indexOf(route);
+    if (activePip < 0) {
+      return null;
+    }
+    const totalPips = routes.length;
+    return _.times(totalPips, i => {
+      const className = cx(style.pip, {[style.activePip]: i == activePip});
+      return (
+        <Circle className={className} />
+      );
+    });
+  },
   render(){
     return(
       <div className={style.container}>
@@ -64,6 +86,10 @@ const Onboard = React.createClass({
             {this.props.children}
           </RouteTransition>
         </Padding>
+
+        <div className={style.pips}>
+          {this.renderPips()}
+        </div>
       </div>
     );
   }

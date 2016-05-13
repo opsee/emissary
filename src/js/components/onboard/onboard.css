@@ -1,8 +1,10 @@
+:global(#main) {
+  padding-bottom: 0;
+}
+
 .container {
   background-color: #303030;
   height: 100vh;
-  width: 100vw;
-  position: relative;
 }
 
 .transitionContainer {
@@ -27,5 +29,22 @@
 }
 
 .closeButton:hover {
+  opacity: 1;
+}
+
+.pips {
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.pip {
+  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+}
+
+.activePip {
   opacity: 1;
 }

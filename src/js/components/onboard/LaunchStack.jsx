@@ -108,7 +108,7 @@ const LaunchStack = React.createClass({
           <p>tl;dr click next three times and "accept"</p>
           <p>We should add more in-depth instructions and/or screenshots.</p>
           <Padding tb={1}>
-            <Button onClick={this.toggleInstructions.bind(null, false)} block>Got it</Button>
+            <Button onClick={this.toggleInstructions.bind(null, false)} color="primary" block>Got it</Button>
           </Padding>
         </div>
       );
@@ -117,11 +117,14 @@ const LaunchStack = React.createClass({
     if (!this.props.redux.onboard.hasRole) {
       return (
         <div>
-          <h2>{this.state.clicked ? 'Waiting...' : 'Install the CloudFormation template through your AWS console.'}</h2>
+          <Padding tb={2}>
+            <h2>{this.state.clicked ? 'Waiting...' : 'Install the CloudFormation template through your AWS console.'}</h2>
+          </Padding>
+
           <p>When your Opsee role has been created, return here to finish installation. You'll automatically be redirected to the next step.</p>
 
           <Padding tb={1}>
-            <Button onClick={this.toggleInstructions.bind(null, true)} block>How to Install</Button>
+            <Button onClick={this.toggleInstructions.bind(null, true)} color="primary" block>How to Install</Button>
           </Padding>
           <Padding tb={1}>
             {this.renderLaunchButton()}
