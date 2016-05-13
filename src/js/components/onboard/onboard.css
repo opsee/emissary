@@ -2,6 +2,16 @@
   padding-bottom: 0;
 }
 
+:global(.container) {
+  max-width: 680px;
+}
+
+p {
+  color: #AAA;
+  font-size: 14px;
+  line-height: 24px;
+}
+
 .container {
   background-color: #303030;
   height: 100vh;

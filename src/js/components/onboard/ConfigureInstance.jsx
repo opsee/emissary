@@ -36,7 +36,7 @@ const ConfigureInstance = React.createClass({
         <div className="flex-1">
           {_.map(vals, (val, i) => {
             return (
-              <Button onClick={this.setState.bind(this, {[key]: val})} flat color="text" key={i} style={{margin: '0.5rem'}}>{val}</Button>
+              <Button onClick={this.setState.bind(this, {[key]: val})} flat color="primary" key={i} style={{margin: '0.5rem'}}>{val}</Button>
             );
           })}
         </div>
@@ -89,7 +89,7 @@ const ConfigureInstance = React.createClass({
         {this.renderSubnet()}
         {this.renderVPC()}
 
-        <Padding tb={1}>
+        <Padding tb={2}>
           <Button onClick={this.onSave} color="success" disabled={!isDone} block>Save configuration</Button>
         </Padding>
       </div>

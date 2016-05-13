@@ -56,7 +56,7 @@ export default React.createClass({
           <img src={instanceImg} style={{maxHeight: '300px'}}/>
         </Padding>
 
-        <Padding tb={1}>
+        <Padding tb={2}>
           <h2>Install the Opsee EC2 instance.</h2>
         </Padding>
 
@@ -65,7 +65,7 @@ export default React.createClass({
         <p>Here's our best guess on where we should install it, based on your environment:</p>
 
         <Padding tb={2} className="text-center">
-          <p>{this.state.region} > {this.state.vpc} > {this.state.subnet}</p>
+          <h3 style={{color: 'white', 'fontWeight': 300}}>{this.state.region} > {this.state.vpc} > {this.state.subnet}</h3>
           <p><small><a href="#" onClick={this.toggleConfigure.bind(this, true)}>(Change)</a></small></p>
         </Padding>
 
