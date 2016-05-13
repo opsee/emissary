@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {PropTypes} from 'react';
 import style from './checkmark.css';
 
