@@ -1,30 +1,33 @@
-/* eslint-disable */
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {History} from 'react-router';
 import {plain as seed} from 'seedling';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
-import {Highlight, ProgressBar, Toolbar} from '../global';
+import {Highlight} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
-import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
 import templates from '../../modules/awsTemplates';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
+  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        onboardGetTemplates: PropTypes.object
+        onboardGetTemplates: PropTypes.object,
+        onboardHasRole: PropTypes.object
       }),
       onboard: PropTypes.shape({
+        hasRole: PropTypes.bool,
         templates: PropTypes.array
       })
     }),
     actions: PropTypes.shape({
+      hasRole: PropTypes.func,
       getTemplates: PropTypes.func
     })
   },
@@ -37,6 +40,12 @@ const LaunchStack = React.createClass({
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
       this.props.actions.getTemplates();
+    }
+    this.props.actions.hasRole();
+  },
+  componentWillReceiveProps(nextProps){
+    if (nextProps.redux.onboard.hasRole) {
+      this.history.pushState(null, '/start/review-instance');
     }
   },
   renderTemplate() {
@@ -60,6 +69,11 @@ const LaunchStack = React.createClass({
     );
   },
   renderInner(){
+    if (!this.props.redux.asyncActions.onboardHasRole.status) {
+      // FIXME
+      return null;
+    }
+
     if (this.state.showTemplate){
       return (
         <div>
@@ -74,7 +88,7 @@ const LaunchStack = React.createClass({
             <Button onClick={this.setState.bind(this, {showTemplate: false})} color="primary" block>Got it</Button>
           </Padding>
         </div>
-      )
+      );
     }
 
     return (

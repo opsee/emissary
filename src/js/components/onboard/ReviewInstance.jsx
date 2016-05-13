@@ -104,7 +104,7 @@ const ReviewInstance = React.createClass({
             <h2>About the Opsee EC2 instance</h2>
           </Padding>
 
-          <p>Our EC2 instance is responsible for running checks in your AWS environment.</p>
+          <p>Next, we're going to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
           <p>The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
           which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.
           You can manage it any time from your AWS console.</p>

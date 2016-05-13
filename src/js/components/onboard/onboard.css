@@ -32,6 +32,20 @@
   opacity: 1;
 }
 
+.checkWrapper {
+  margin: 0 auto;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--colorSuccess);
+  text-align: center;
+}
+
+.check {
+  height: 20px !important;
+  width: 20px !important;
+}
+
 .pips {
   text-align: center;
   position: fixed;

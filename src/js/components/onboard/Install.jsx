@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
+import Checkmark from '../svgs/Checkmark';
 import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
@@ -219,7 +220,7 @@ const Install = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              let's dew the install
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>
@@ -228,8 +229,12 @@ const Install = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(Install);
+export default connect(mapStateToProps, mapDispatchToProps)(Install);
