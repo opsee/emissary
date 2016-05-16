@@ -247,10 +247,9 @@ const CheckCreateRequest = React.createClass({
       }
       inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       return (
-        <Padding b={1}>
+        <Padding b={3}>
           <Heading level={3}>Your Target</Heading>
           {inner}
-          <hr/>
         </Padding>
       );
     }
