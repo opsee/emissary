@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {History} from 'react-router';
 
 import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
@@ -16,7 +15,6 @@ import {Bar as SearchBar} from '../search';
 import {checks as actions, user as userActions} from '../../actions';
 
 const CheckCreateTarget = React.createClass({
-  mixins: [History],
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
@@ -30,8 +28,11 @@ const CheckCreateTarget = React.createClass({
       query: PropTypes.object
     }).isRequired,
     history: PropTypes.shape({
-      pushState: PropTypes.func.isRequired
+      push: PropTypes.func.isRequired
     }).isRequired
+  },
+  contextTypes: {
+    router: PropTypes.object.isRequired
   },
   getInclude(){
     let data = this.props.location.query.data;
@@ -74,9 +75,9 @@ const CheckCreateTarget = React.createClass({
     this.props.onChange(check);
     const data = JSON.stringify(check);
     if (this.props.check.target.type === 'rds'){
-      return this.props.history.pushState(null, `/check-create/assertions-cloudwatch?data=${data}`);
+      return this.context.router.push(`/check-create/assertions-cloudwatch?data=${data}`);
     }
-    return this.history.pushState(null, `/check-create/request?data=${data}`);
+    return this.context.router.push(`/check-create/request?data=${data}`);
   },
   renderHelperText(){
     return (

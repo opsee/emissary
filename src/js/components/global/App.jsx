@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import {pushState, ReduxRouter} from 'redux-router';
+import {push, ReduxRouter} from 'redux-router';
 
 import config from '../../modules/config';
 import routes from './Routes.jsx';
@@ -27,4 +27,4 @@ const App = React.createClass({
   }
 });
 
-export default connect(null, {pushState})(App);
+export default connect(null, {push})(App);

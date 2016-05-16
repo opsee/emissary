@@ -3,10 +3,16 @@ import thunk from 'redux-thunk';
 import reducer from '../reducers';
 import {reduxReactRouter} from 'redux-router';
 import {createHistory} from 'history';
-import useSimpleScroll from 'scroll-behavior/lib/useSimpleScroll';
+import withScroll from 'scroll-behavior';
 import {promiseMiddleware} from './promiseMiddleware';
 
-const scrollableHistory = useSimpleScroll(createHistory);
+const scrollableHistory = () => {
+  return withScroll(createHistory(), () => {
+    return true;
+    // always scroll to top;
+    // return [0, 0];
+  });
+};
 
 const reduxRouter = reduxReactRouter({
   createHistory: scrollableHistory

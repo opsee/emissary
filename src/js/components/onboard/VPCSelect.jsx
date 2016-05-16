@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import {History, Link} from 'react-router';
+import {Link} from 'react-router';
 import {plain as seed} from 'seedling';
 
 import {bindActionCreators} from 'redux';
@@ -14,7 +14,6 @@ import {RadioSelect} from '../forms';
 import style from './onboard.css';
 
 const VPCSelect = React.createClass({
-  mixins: [History],
   propTypes: {
     history: PropTypes.object,
     actions: PropTypes.shape({
@@ -36,9 +35,12 @@ const VPCSelect = React.createClass({
       user: PropTypes.object
     })
   },
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   componentWillMount(){
     if (!this.props.redux.onboard.region) {
-      this.props.history.replaceState(null, '/start/choose-region');
+      this.props.history.replace('/start/choose-region');
     }
     if (!this.props.redux.onboard.vpcsForSelection.length) {
       this.props.actions.scanRegion(this.props.redux.onboard.region);

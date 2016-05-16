@@ -1,4 +1,4 @@
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
@@ -36,7 +36,7 @@ export function signupCreate(data) {
 
           //TODO remove timeout somehow
           setTimeout(() => {
-            dispatch(pushState(null, `/start/thanks?referrer=${data.referrer}`));
+            dispatch(push(`/start/thanks?referrer=${data.referrer}`));
           }, 100);
         }, err => {
           let msg = _.get(err, 'response.body.message');
@@ -159,7 +159,7 @@ export function vpcSelect(payload){
     });
     analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
     setTimeout(() => {
-      dispatch(pushState(null, '/start/choose-subnet'));
+      dispatch(push('/start/choose-subnet'));
     }, 100);
   };
 }
@@ -234,7 +234,7 @@ export function install(){
           if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
           }
-          dispatch(pushState(null, '/start/choose-region'));
+          dispatch(push('/start/choose-region'));
           return reject();
         }, 30000);
       })

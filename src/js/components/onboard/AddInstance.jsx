@@ -32,13 +32,13 @@ const AddInstance = React.createClass({
       scanRegion: PropTypes.func
     }),
     history: PropTypes.shape({
-      pushState: PropTypes.func,
-      replaceState: PropTypes.func
+      push: PropTypes.func,
+      replace: PropTypes.func
     }).isRequired
   },
   componentWillMount(){
     if (!this.props.redux.onboard.region) {
-      this.props.history.replaceState(null, '/start/choose-region');
+      this.props.history.replace('/start/choose-region');
     }
     // Optimistically scan region for the VPC/subnet selection steps
     this.props.actions.scanRegion(this.props.redux.onboard.region);

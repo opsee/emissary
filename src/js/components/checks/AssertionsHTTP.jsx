@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {Alert, Col, Grid, Row} from '../layout';
 import _ from 'lodash';
 import {BastionRequirement, Toolbar} from '../global';
-import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -18,7 +17,6 @@ import {Heading} from '../type';
 import AssertionSelection from './AssertionSelection';
 
 const AssertionsHTTP = React.createClass({
-  mixins: [History],
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
@@ -33,9 +31,12 @@ const AssertionsHTTP = React.createClass({
       })
     })
   },
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   componentWillMount(){
     if (!this.props.check.target.type && process.env.NODE_ENV !== 'debug'){
-      this.history.pushState(null, '/check-create/target');
+      this.context.router.push('/check-create/target');
     }
     //setup default assertions if we can
     const check = _.cloneDeep(this.props.check);
@@ -85,7 +86,7 @@ const AssertionsHTTP = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     const data = JSON.stringify(this.props.check);
-    this.history.pushState(null, `/check-create/info?data=${data}`);
+    this.context.router.push(`/check-create/info?data=${data}`);
   },
   handleAssertionsChange(assertions = []){
     const data = _.assign({}, this.props.check, {assertions});
