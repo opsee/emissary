@@ -96,9 +96,9 @@ const Onboard = React.createClass({
           </RouteTransition>
         </Padding>
 
-        <div className={style.pips}>
+        {/*<div className={style.pips}>
           {this.renderPips()}
-        </div>
+        </div>*/}
       </div>
     );
   }
