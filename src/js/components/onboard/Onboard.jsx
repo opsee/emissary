@@ -89,16 +89,12 @@ const Onboard = React.createClass({
             <Close className={style.closeButton} />
           </Padding>
         </div>
-
-        <Padding t={4}>
-          <RouteTransition pathname={this.props.location.pathname} {...slideLeft} className={style.transitionContainer}>
-            {this.props.children}
-          </RouteTransition>
+        <Padding t={1}>
+          {this.props.children}
         </Padding>
-
-        {/*<div className={style.pips}>
+        <Padding className={style.pips}>
           {this.renderPips()}
-        </div>*/}
+        </Padding>
       </div>
     );
   }

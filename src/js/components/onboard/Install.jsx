@@ -1,19 +1,14 @@
-/* eslint-disable */
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import {plain as seed} from 'seedling';
 
-import Checkmark from '../svgs/Checkmark';
-import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
-import {flag} from '../../modules';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
-import {PagerdutyConnect, SlackConnect} from '../integrations';
+import PostInstall from './PostInstall';
 import style from './onboard.css';
 
 const Install = React.createClass({
@@ -40,9 +35,10 @@ const Install = React.createClass({
   },
   componentWillMount(){
     if (this.props.location.pathname.match('install-example')){
-      return this.props.actions.exampleInstall();
+      this.props.actions.exampleInstall();
+    } else {
+      this.props.actions.install();
     }
-    // return this.props.actions.install();
   },
   getBastionMessages(){
     let msgs = _.chain(this.props.redux.app.socketMessages).filter({command: 'launch-bastion'}).filter(m => {
@@ -166,67 +162,6 @@ const Install = React.createClass({
     }
     return <p>Checking installation status...</p>;
   },
-  renderSlack(){
-    const slack = !!flag('integrations-slack');
-    const pagerduty = !!flag('integrations-pagerduty');
-    if (!this.isComplete()){
-      return (
-        <Padding tb={2}>
-          <p>While you're waiting, you can set up notification channels for alerts.</p>
-          <Padding b={1}>
-            <Button color="primary" block>Connect to Slack</Button>
-          </Padding>
-          <Button color="primary" block>Connect to PagerDuty</Button>
-        </Padding>
-      );
-    }
-    return null;
-  },
-  renderSuccess(){
-    if (this.isComplete()) {
-      return (
-        <div>
-          <Padding b={4} className="text-center">
-            <Checkmark />
-            <h2>You're all done!</h2>
-            <p>The Opsee instance was successfully installed. Here's what Opsee found...</p>
-          </Padding>
-
-          <Grid fluid>
-            <Row>
-              <Col xs={4}>
-                <div className="text-center">
-                  <h3>120</h3>
-                  <div style={{opacity: 0.5}}><small>EC2 instances</small></div>
-                </div>
-              </Col>
-              <Col xs={4}>
-                <div className="text-center">
-                  <h3>89</h3>
-                  <div style={{opacity: 0.5}}><small>security groups</small></div>
-                </div>
-              </Col>
-              <Col xs={4}>
-                <div className="text-center">
-                  <h3>10</h3>
-                  <div style={{opacity: 0.5}}><small>load balancers</small></div>
-                </div>
-              </Col>
-            </Row>
-          </Grid>
-
-          <Padding tb={4} className="text-center">
-            <h2>420</h2>
-            <h3>health checks</h3>
-            <p>were generated for you! Nice.</p>
-          </Padding>
-          <div>
-            <Button to="/" color="success" block chevron>View checks</Button>
-          </div>
-        </div>
-      );
-    }
-  },
   renderInner(){
     const self = this;
     if (this.getBastionConnectionStatus() === 'failed'){
@@ -236,19 +171,18 @@ const Install = React.createClass({
         </Alert>
       );
     } else if (this.isComplete()) {
-      return this.renderSuccess();
+      return <PostInstall />;
     } else if (!this.isInstallError()){
       return (
         <div>
           {this.getBastionMessages().map((b, i) => {
             return (
-              <Padding b={1} key={`bastion-installer-${i}`}>
+              <Padding tb={2} key={`bastion-installer-${i}`}>
                 <BastionInstaller messages={b.messages} connected={self.isComplete()}/>
               </Padding>
             );
           })}
           {this.renderText()}
-          {this.renderSlack()}
           {this.renderBtn()}
         </div>
       );
