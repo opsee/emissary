@@ -1,20 +1,24 @@
-@import '../global/vars.css';
-
 .checkResponse {
-  align-items: flex-start;
-  background: var(--gray900);
-  border: 2px solid var(--gray900);
   display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  background: var(--colorGray9);
+  border: 2px solid var(--colorGray9);
   height: 13rem;
   max-height: 13rem;
   overflow: hidden;
   justify-content: center;
   position: relative;
   transition: max-height var(--transitionEaseOut);
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 .checkResponse:after {
   background-size: 100%;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--gray900));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
   bottom: 0;
   content: '';
   display: block;
@@ -33,6 +37,13 @@
 .checkResponseWaiting {
   composes: checkResponse;
   align-items: center;
+  max-height:none;
+  height:auto;
+  min-height:13rem;
+}
+.checkResponseWaiting:after{
+  content:none;
+  display:none;
 }
 
 .checkResponseExpanded {

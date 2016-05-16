@@ -5,7 +5,7 @@ import {Padding} from '../layout';
 import {ProgressBar} from '../global';
 import {Heading} from '../type';
 
-const itemTypes = ['AWS::CloudFormation::Stack', 'AWS::IAM::Role', 'AWS::EC2::SecurityGroup', 'AWS::IAM::InstanceProfile', 'AWS::EC2::Instance'];
+const itemTypes = ['AWS::CloudFormation::Stack', 'AWS::EC2::SecurityGroup', 'AWS::EC2::Instance'];
 
 const BastionInstaller = React.createClass({
   propTypes: {
@@ -41,7 +41,7 @@ const BastionInstaller = React.createClass({
       }
       if (items[0].status !== 'CREATE_COMPLETE'){
         return 'Cloud Finishing';
-      }else if (items[0].status === 'CREATE_COMPLETE'){
+      } else if (items[0].status === 'CREATE_COMPLETE'){
         return 'Complete';
       }
       return 'AWS::CloudFormation::Stack';
@@ -49,12 +49,12 @@ const BastionInstaller = React.createClass({
     if (!items[1].status){
       return 'Reading';
     }
-    return 'AWS::IAM::Role';
+    return 'AWS::EC2::SecurityGroup';
   },
   getPercentComplete(){
     const num = this.getText().num;
     if (num && num > 0){
-      return (num / 8) * 100;
+      return (num / 6) * 100;
     }
     return num;
   },
@@ -76,50 +76,42 @@ const BastionInstaller = React.createClass({
     let string;
     switch (item){
     case 'Connected':
-      num = 8;
-      string = 'Bastion installed and connected.';
+      num = 6;
+      string = 'The Opsee instance is installed and connected.';
       break;
     case 'Reading':
       num = 1;
       string = 'Reading CloudFormation template';
       break;
-    case 'AWS::IAM::Role':
-      num = 2;
-      string = 'Creating Instance Role';
-      break;
     case 'AWS::EC2::SecurityGroup':
-      num = 3;
+      num = 2;
       string = 'Creating Security Group';
       break;
-    case 'AWS::IAM::InstanceProfile':
-      num = 4;
-      string = 'Creating Instance Profile';
-      break;
     case 'AWS::EC2::Instance':
-      num = 5;
+      num = 3;
       string = 'Launching Instance.';
       break;
     case 'Cloud Finishing':
-      num = 6;
+      num = 4;
       string = 'Finishing CloudFormation setup.';
       break;
     case 'Complete':
-      num = 7;
-      string = 'Bastion successfully installed. Waiting for connection to Opsee...';
+      num = 5;
+      string = 'The Opsee instance is successfully installed. Waiting for connection to Opsee...';
       break;
     case 'Deleting':
       num = 0;
-      string = 'Bastion install failed. Cleaning up.';
+      string = 'Instance install failed. Cleaning up.';
       break;
     case 'Rollback':
       num = -1;
-      string = 'Bastion install failed. Finished with cleanup.';
+      string = 'Instance install failed. Finished with cleanup.';
       break;
     default:
       break;
     }
-    if (num && num < 8 && num > 0){
-      string = `(${num}/8) ${string}`;
+    if (num && num < 6 && num > 0){
+      string = `(${num}/6) ${string}`;
     }
     return {string, num};
   },
@@ -127,7 +119,7 @@ const BastionInstaller = React.createClass({
     return (
       <Padding b={2}>
         <Heading level={2}>{this.id}</Heading>
-        <ProgressBar percentage={this.getPercentComplete()} steps={8}/>
+        <ProgressBar percentage={this.getPercentComplete()} steps={6}/>
         <div style={{textAlign: 'center'}}>
         {this.getText().string}
         </div>

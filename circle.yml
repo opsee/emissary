@@ -9,12 +9,12 @@ machine:
   services:
     - docker
   node:
-    version: 5.0.0
+    version: 5.5.0
 test:
   override:
     - docker run -d -p 8080:80 quay.io/opsee/emissary:latest; sleep 10;
     - curl http://localhost:8080/
-    - casperjs test test-deploy.js
+    - casperjs test util/test-deploy.js
     - docker tag quay.io/opsee/emissary quay.io/opsee/emissary:$CIRCLE_SHA1
     - docker push quay.io/opsee/emissary:$CIRCLE_SHA1
 deployment:

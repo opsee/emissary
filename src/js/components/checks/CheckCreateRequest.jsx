@@ -1,86 +1,25 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import forms from 'newforms';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import {BoundField, Button} from '../forms';
+import {Button} from '../forms';
 import {BastionRequirement, Toolbar} from '../global';
-import {Close, Add} from '../icons';
+import {Add, Close, Delete} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate.jsx';
+import CheckDisabledReason from './CheckDisabledReason.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
+import {validate} from '../../modules';
+import {Input, RadioSelect} from '../forms';
 import {
-  env as envActions,
   checks as checkActions,
   user as userActions
 } from '../../actions';
-
-const verbOptions = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(name => [name, name]);
-
-const HeaderForm = forms.Form.extend({
-  key: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. content-type'
-    }
-  }),
-  value: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. application/json'
-    }
-  })
-});
-
-const HeaderFormSet = forms.FormSet.extend({
-  form: HeaderForm,
-  canDelete: true
-});
-
-const InfoForm = forms.Form.extend({
-  protocol: forms.ChoiceField({
-    choices: ['http', 'https'].map(name => [name, name]),
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['http']
-  }),
-  verb: forms.ChoiceField({
-    choices: verbOptions,
-    widget: forms.RadioSelect,
-    label: 'Method',
-    widgetAttrs: {
-      widgetType: 'InlineRadioSelect'
-    },
-    initial: ['GET']
-  }),
-  port: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. 8080'
-    },
-    widget: forms.NumberInput
-  }),
-  body: forms.CharField({
-    widget: forms.Textarea,
-    required: false,
-    widgetAttrs: {
-      widgetType: 'Textarea'
-    }
-  }),
-  path: forms.CharField({
-    widgetAttrs: {
-      placeholder: 'e.g. /healthcheck'
-    }
-  }),
-  constructor(data, kwargs){
-    forms.Form.call(this, kwargs);
-  }
-});
 
 const CheckCreateRequest = React.createClass({
   propTypes: {
@@ -88,17 +27,14 @@ const CheckCreateRequest = React.createClass({
     renderAsInclude: PropTypes.bool,
     onChange: PropTypes.func,
     onTargetClick: PropTypes.func,
-    envActions: PropTypes.shape({
-      getGroupsSecurity: PropTypes.func,
-      getGroupsElb: PropTypes.func,
-      getInstancesEcc: PropTypes.func
-    }),
     checkActions: PropTypes.shape({
       testCheckReset: PropTypes.func
     }),
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    //allows user to edit target in /check/edit mode
+    handleTargetClick: PropTypes.func,
     history: PropTypes.object,
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -107,143 +43,176 @@ const CheckCreateRequest = React.createClass({
       })
     })
   },
-  getInitialState() {
-    const self = this;
-    const initialHeaders = _.get(this.props, 'check.check_spec.value.headers') || [];
-    let initialData = _.cloneDeep(_.get(self.props, 'check.check_spec.value') || {});
-    if (typeof initialData.verb === 'string'){
-      initialData.verb = [initialData.verb];
-    }
-    if (typeof initialData.protocol === 'string'){
-      initialData.protocol = [initialData.protocol];
-    }
-    initialData = _.mapValues(initialData, val => {
-      return val || null;
-    });
-    const obj = {
-      info: new InfoForm(initialData, _.assign({
-        onChange: self.runChange,
-        labelSuffix: '',
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 700
-        },
-        initial: self.isDataComplete() ? initialData : null
-      }, self.isDataComplete() ? {data: initialData} : null)),
-      headers: new HeaderFormSet({
-        onChange: self.runChange,
-        labelSuffix: '',
-        emptyPermitted: false,
-        initial: initialHeaders.length ? initialHeaders : null,
-        // minNum:!initialHeaders.length ? 1 : 0,
-        extra: 0,
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 700
-        }
-      }),
-      check: this.props.check,
-      hasSetHeaders: !self.isDataComplete()
-    };
-    //this is a workaround because the library is not working correctly with initial + data formset
-    setTimeout(() => {
-      self.state.headers.forms().forEach((form, i) => {
-        const h = self.props.check.check_spec.value.headers[i];
-        const data = {
-          key: h.name,
-          value: h.values.join(', ')
-        };
-        form.setData(data);
-      });
-      if (this.isMounted()){
-        this.setState({hasSetHeaders: true});
-      }
-    }, 50);
-    return _.extend(obj, {
-      cleanedData: null
-    });
-  },
   componentWillMount(){
-    if (!this.props.check.target.id){
-      return this.props.history.pushState(null, '/check-create/target');
+    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
+      return this.props.history.push('/check-create/target');
     }
-    this.props.checkActions.testCheckReset();
+    return this.props.checkActions.testCheckReset();
   },
-  componentDidMount(){
-    if (this.props.renderAsInclude){
-      this.runChange();
+  getInitialState() {
+    return {
+      url: this.getUrl(),
+      hasSetPort: this.props.renderAsInclude,
+      debouncedRunUrlChange: _.debounce(this.runUrlChange, 800)
+    };
+  },
+  getHeaders(fromSource){
+    const arr = _.cloneDeep(_.get(this.props, 'check.spec.headers')) || [];
+    if (fromSource){
+      return arr;
     }
-  },
-  getHeaderForms(){
-    return _.reject(this.state.headers.forms(), f => {
-      return f.cleanedData.DELETE;
+    return arr.map(h => {
+      if (Array.isArray(h.values)){
+        return _.assign(h, {
+          values: h.values.join(', ')
+        });
+      }
+      return h;
     });
+  },
+  getUrl(){
+    const {check} = this.props;
+    const spec = check.spec;
+    if (check.target.type === 'host' && check.target.id && spec.path){
+      let port = '';
+      if (spec.protocol === 'http' && spec.port !== 80){
+        port = `:${spec.port}`;
+      } else if (spec.protocol === 'https' && spec.port !== 443){
+        port = `:${spec.port}`;
+      }
+      return `${spec.protocol}://${check.target.id}${port}${spec.path}`;
+    }
+    return undefined;
   },
   getCheck(){
     return _.cloneDeep(this.props.check);
   },
-  getFinalData(){
-    let check = _.cloneDeep(this.props.check);
-    let val = check.check_spec.value;
-    if (this.state.hasSetHeaders){
-      val.headers = _.chain(this.state.headers.cleanedData()).reject('DELETE').map(h => {
-        return {
-          name: h.key,
-          values: h.value ? h.value.split(', ') : undefined
-        };
-      }).value();
-    }
-    let cleaned = this.state.info.cleanedData;
-    if (cleaned.path && !cleaned.path.match('^\/')){
-      cleaned.path = `/${cleaned.path}`;
-    }
-    if (cleaned.port){
-      cleaned.port = parseInt(cleaned.port, 10);
-    }
-    val = _.assign(val, cleaned);
-    return check;
-  },
-  isDataComplete(){
-    const condition1 = this.props.check.target.id;
-    const condition2 = _.chain(['port', 'path']).map(s => this.props.check.check_spec.value[s]).some().value();
-    return condition1 && condition2;
-  },
   isDisabled(){
-    let headersComplete = _.chain(this.getHeaderForms()).map(h => h.isComplete()).every().value();
-    return !(this.state.info.isComplete() && headersComplete);
+    return !!validate.check(this.props.check, ['request']).length;
   },
-  runChange(){
-    let data = this.getFinalData();
-    this.props.onChange(data, this.isDisabled(), 1);
+  runChange(data){
+    let check = data;
+    const spec = check.spec;
+    //lets see if a user has "touched" the port
+    //if not, lets give them some nice defaults
+    let hasSetPort = this.state.hasSetPort;
+    if (this.props.check.spec.port !== spec.port){
+      hasSetPort = true;
+      this.setState({
+        hasSetPort
+      });
+    }
+    if (!hasSetPort){
+      if (spec.protocol === 'http'){
+        spec.port = 80;
+      } else if (spec.protocol === 'https'){
+        spec.port = 443;
+      }
+    }
+    if (spec.port){
+      check.spec.port = parseInt(spec.port, 10);
+    }
+    if (spec.path && !spec.path.match('^\/')){
+      check.spec.path = `/${spec.path}`;
+    }
+    if (spec.verb === 'GET'){
+      check.spec = _.omit(spec, ['body']);
+    }
+    return this.props.onChange(check);
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckRequestHelp');
   },
+  runAddHeader(){
+    let check = _.cloneDeep(this.props.check);
+    check.spec.headers.push({
+      name: undefined,
+      values: []
+    });
+    this.runChange(check);
+  },
+  runRemoveHeader(index){
+    let check = _.cloneDeep(this.props.check);
+    check.spec.headers.splice(index, 1);
+    this.runChange(check);
+  },
+  runUrlChange(state){
+    const check = _.cloneDeep(this.props.check);
+    const spec = check.spec;
+    let string = _.clone(state.url);
+    if (!string.match('^http|^ws')){
+      string = `http://${string}`;
+    }
+    try {
+      const url = new window.URL(string);
+      check.spec = _.assign(spec, {
+        port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
+        path: url.pathname || '/',
+        protocol: (url.protocol || '').replace(':', '')
+      });
+      check.target.id = url.hostname;
+    } catch (err) {
+      check.spec = _.pick(spec, ['verb', 'body', 'name']);
+    }
+    this.runChange(check);
+  },
   handleSubmit(e){
     e.preventDefault();
-    this.props.history.pushState(null, '/check-create/assertions');
+    if (!this.props.renderAsInclude){
+      const data = JSON.stringify(this.props.check);
+      this.props.history.push(`/check-create/assertions?data=${data}`);
+    }
   },
   handleTargetClick(){
-    this.props.history.pushState(null, '/check-create/target');
+    if (!this.props.renderAsInclude){
+      this.props.history.push('/check-create/target');
+    } else if (typeof this.props.handleTargetClick === 'function'){
+      this.props.handleTargetClick();
+    }
+  },
+  handleHeaderChange(index, data){
+    const headers = this.getHeaders(true).map((h, i) => {
+      if (index === i){
+        return _.assign(data, {
+          values: data.values.split(', ')
+        });
+      }
+      return h;
+    });
+    let check = _.cloneDeep(this.props.check);
+    check.spec.headers = headers;
+    this.runChange(check);
+  },
+  handleUrlChange(state){
+    this.setState(state);
+    this.state.debouncedRunUrlChange(state);
   },
   renderHeaderForm(){
     return (
       <div>
         <Heading level={3}>Request Headers</Heading>
-        {this.getHeaderForms().map((form, index) => {
+        {this.getHeaders().map((header, index) => {
           return (
-            <Padding b={2} key={`header-form-${index}`}>
+            <Padding b={2} key={`header-${index}`}>
               <Grid fluid>
                 <Row>
                   <Col xs={12} sm={5} key={`header-field-${index}-key`}>
-                    <BoundField bf={form.boundField('key')}/>
+                    <Padding b={1}>
+                      <Input data={header} path="name" onChange={this.handleHeaderChange.bind(null, index)} placeholder="content-type" label="Key*"/>
+                    </Padding>
                   </Col>
                   <Col xs={10} sm={5} key={`header-field-${index}-value`}>
-                    <BoundField bf={form.boundField('value')}/>
+                    <Padding b={1}>
+                      <Input data={header} path="values" onChange={this.handleHeaderChange.bind(null, index)} placeholder="application/json" label="Value*"/>
+                    </Padding>
                   </Col>
                   <Col xs={2}>
                     <Padding t={3}>
-                      <BoundField bf={form.boundField('DELETE')}/>
+                      <Padding t={0.5}>
+                        <Button flat color="danger" className="pull-right" title="Remove this Header" onClick={this.runRemoveHeader.bind(null, index)}>
+                          <Delete inline fill="danger"/>
+                        </Button>
+                      </Padding>
                     </Padding>
                   </Col>
                 </Row>
@@ -252,22 +221,11 @@ const CheckCreateRequest = React.createClass({
           );
         })
         }
-        <Button flat color="primary" onClick={this.state.headers.addAnother.bind(this.state.headers)}>
-          <Add fill={colors.primary} inline/> Add {!this.state.headers.forms().length ? 'A' : 'Another'} Header
+        <Button flat color="primary" onClick={this.runAddHeader}>
+          <Add fill={seed.color.primary} inline/> Add {!this.getHeaders().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     );
-  },
-  renderSubmitButton(){
-    if (!this.props.renderAsInclude){
-      return (
-        <div>
-          <Padding tb={1}/>
-          <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Complete the form to move on.' : 'Define Assertions'} chevron>Next: Define Assertions</Button>
-        </div>
-      );
-    }
-    return null;
   },
   renderLink(){
     return this.state.check.id ? (
@@ -275,68 +233,119 @@ const CheckCreateRequest = React.createClass({
       ) : <div/>;
   },
   renderTargetSelection(){
-    let selection;
-    const target = this.props.check.target;
-    let type = target.type;
-    if (!type){
+    const {target} = this.props.check;
+    let {type} = target;
+    if (!type || type === 'host'){
       return null;
     }
+    type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'sg' ? 'security' : type;
-    if (type.match('security|elb')){
-      selection = this.props.redux.env.groups[type].find(g => {
-        return g.get('id') === target.id;
-      }) || new Map();
-    }else {
-      selection = this.props.redux.env.instances.ecc.find(g => {
-        return g.get('id') === target.id;
-      }) || new Map();
-    }
-    if (selection && selection.get('id')){
-      if (type.match('EC2|instance')){
-        return (
-          <InstanceItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
-        );
+    if (type && target.id){
+      let inner = null;
+      if (type.match('^ecc$|^instance$|^rds$')){
+        inner = <InstanceItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       }
-      return (
-        <GroupItem item={selection} noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection"/>
-      );
-    }
-    return null;
-  },
-  renderHelperText(){
-    return (
-        <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
-          <Alert bsStyle="success" onDismiss={this.runDismissHelperText}>
-            <p>Your Request defines the check you want to run on your chosen target. You can try a typical HTTP request by choosing to GET the '/' route on port 80.</p>
-          </Alert>
-        </UserDataRequirement>
-      );
-  },
-  renderBodyInput(){
-    if (this.state.info.cleanedData.verb !== 'GET'){
+      inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       return (
         <Padding b={1}>
-          <BoundField bf={this.state.info.boundField('body')} key={`bound-field-body`}/>
+          <Heading level={3}>Your Target</Heading>
+          {inner}
+          <hr/>
         </Padding>
       );
     }
     return null;
   },
-  renderInfoForm(){
-    const self = this;
+  renderHelperText(){
+    if (this.props.renderAsInclude){
+      return null;
+    }
+    let text = (
+      <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
+    );
+    if (this.props.check.target.type === 'host'){
+      text = (
+        <div>Next, enter a URL. This can be an internal or public-facing service.</div>
+      );
+    }
+    return (
+        <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
+          <Alert color="success" onDismiss={this.runDismissHelperText}>
+            {text}
+          </Alert>
+        </UserDataRequirement>
+      );
+  },
+  renderBodyInput(){
+    if (this.props.check.spec.verb !== 'GET'){
+      return (
+        <Padding b={1}>
+          <Input data={this.props.check} path="spec.body" onChange={this.runChange} label="Body" textarea/>
+        </Padding>
+      );
+    }
+    return null;
+  },
+  renderVerbInput(){
+    const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(id => {
+      return {id};
+    });
+    return (
+      <Padding b={1}>
+        <RadioSelect inline options={methods} path="spec.verb" data={this.props.check} onChange={this.runChange} label="Method*"/>
+      </Padding>
+    );
+  },
+  renderUrlInputs(){
     return (
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
-        {['protocol', 'verb', 'path', 'port'].map(string => {
-          return (
-            <Padding b={1} key={`form-input-${string}`}>
-              <BoundField bf={self.state.info.boundField(string)} key={`bound-field-${string}`}/>
-            </Padding>
-          );
-        })}
+        {this.renderVerbInput()}
+        <Padding b={1}>
+          <Input data={this.state} path="url" onChange={this.handleUrlChange} label="URL*" placeholder="https://try.opsee.com or http://192.168.1.1:80"/>
+        </Padding>
         {this.renderBodyInput()}
       </Padding>
     );
+  },
+  renderHttpInputs(){
+    const protocols = ['http', 'https', 'ws', 'wss'].map(id => {
+      return {id};
+    });
+    return (
+      <Padding b={1}>
+        <Heading level={3}>Define Your HTTP Request</Heading>
+        <Padding b={1}>
+          <RadioSelect inline options={protocols} path="spec.protocol" data={this.props.check} onChange={this.runChange} label="Protocol*"/>
+        </Padding>
+        {this.renderVerbInput()}
+        <Padding b={1}>
+          <Input data={this.props.check} path="spec.path" onChange={this.runChange} label="Path*" placeholder="/healthcheck"/>
+        </Padding>
+        <Padding b={1}>
+          <Input data={this.props.check} path="spec.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>
+        </Padding>
+        {this.renderBodyInput()}
+      </Padding>
+    );
+  },
+  renderInputs(){
+    if (this.props.check.target.type === 'host'){
+      return this.renderUrlInputs();
+    }
+    return this.renderHttpInputs();
+  },
+  renderSubmitButton(){
+    if (!this.props.renderAsInclude){
+      return (
+        <div>
+          <Padding tb={1}/>
+          <Button color="success" block type="submit" disabled={this.isDisabled()} title="Define Assertions" chevron>Next: Define Assertions</Button>
+          <CheckDisabledReason check={this.getCheck()} areas={['request']}/>
+        </div>
+      );
+    }
+    return null;
   },
   renderInner(){
     return (
@@ -344,13 +353,9 @@ const CheckCreateRequest = React.createClass({
         <Padding b={2}>
           {this.renderHelperText()}
         </Padding>
+        {this.renderTargetSelection()}
         <Padding b={1}>
-          <Heading level={3}>Your Target</Heading>
-          {this.renderTargetSelection()}
-          <hr/>
-        </Padding>
-        <Padding b={1}>
-          {this.renderInfoForm()}
+          {this.renderInputs()}
           {this.renderHeaderForm()}
         </Padding>
         <hr/>
@@ -366,7 +371,7 @@ const CheckCreateRequest = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (2 of 4)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create Check (3 of 5)" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>
@@ -393,7 +398,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  envActions: bindActionCreators(envActions, dispatch),
   checkActions: bindActionCreators(checkActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch)
 });

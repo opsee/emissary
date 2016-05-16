@@ -17,40 +17,67 @@ const GroupItem = React.createClass({
     groups: PropTypes.shape({
       security: PropTypes.object,
       elb: PropTypes.object,
-      rds: PropTypes.object
+      rds: PropTypes.object,
+      asg: PropTypes.object
     }),
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
-      getGroupsSecurity: PropTypes.func
-    })
+      getGroupsSecurity: PropTypes.func,
+      getGroupsAsg: PropTypes.func
+    }),
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        instances: PropTypes.shape({
+          ecc: PropTypes.object.isRequired
+        }).isRequired
+      }).isRequired
+    }).isRequired
   },
   getDefaultProps(){
     return {
-      item: new Map()
+      item: new Map(),
+      target: {}
     };
   },
   componentWillMount(){
     if (_.get(this.props, 'target.type')){
       switch (this.props.target.type){
       case 'elb':
-        this.props.actions.getGroupsElb();
-        break;
+        return this.props.actions.getGroupsElb();
+      case 'asg':
+        return this.props.actions.getGroupsAsg();
       default:
-        this.props.actions.getGroupsSecurity();
-        break;
+        return this.props.actions.getGroupsSecurity();
       }
     }
+    return true;
   },
   shouldComponentUpdate(nextProps) {
     const {props} = this;
     const {target} = props;
+    let {type} = target;
+    if (type === 'sg'){
+      type = 'security';
+    }
     let arr = [];
     arr.push(!_.isEqual(target, nextProps.target));
-    if (target && target.type){
-      arr.push(!Immutable.is(props.groups[target.type], nextProps.groups[target.type]));
+    if (target && type){
+      arr.push(!Immutable.is(props.groups[type], nextProps.groups[type]));
     }
     arr.push(!Immutable.is(props.item, nextProps.item));
     return _.some(arr);
+  },
+  getSecurityInstances(){
+    const item = this.getItem().toJS();
+    return _.chain(this.props.redux.env.instances.ecc.toJS())
+    .filter(instance => {
+      return _.map(instance.SecurityGroups, 'GroupId').indexOf(item.id) > -1;
+    })
+    .map('id')
+    .value() || [];
+  },
+  getResults(){
+    return this.getItem().toJS().results;
   },
   getItem(){
     if (_.get(this.props, 'target.type')){
@@ -60,6 +87,11 @@ const GroupItem = React.createClass({
           return group.get('id') === this.props.target.id;
         });
         return elb || new Map();
+      case 'asg':
+        const asg = this.props.groups.asg.find(group => {
+          return group.get('id') === this.props.target.id;
+        });
+        return asg || new Map();
       default:
         const sg = this.props.groups.security.find(group => {
           return group.get('id') === this.props.target.id;
@@ -73,8 +105,25 @@ const GroupItem = React.createClass({
     const type = this.getItem().get('type').toLowerCase();
     return `/group/${type}/${this.getItem().get('id')}`;
   },
+  getCreateCheckLink(){
+    const target = _.pick(this.getItem().toJS(), ['id', 'type', 'name']);
+    const data = JSON.stringify({target});
+    return `/check-create/request?data=${data}`;
+  },
+  getType(){
+    switch (this.getItem().get('type')){
+    case 'elb':
+      return 'ELB';
+    case 'asg':
+      return 'ASG';
+    default:
+      break;
+    }
+    return 'SG';
+  },
   renderInstanceCount(){
-    const count = this.getItem().get('instance_count');
+    const item = this.getItem().toJS();
+    const count = item.Instances.length;
     return (
       <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
         <ListInstance inline fill="textSecondary"/>
@@ -83,9 +132,9 @@ const GroupItem = React.createClass({
     );
   },
   renderInfoText(){
-    if (this.getItem().get('total')){
-      const passing = this.getItem().get('passing');
-      const failing = this.getItem().get('total') - passing;
+    const item = this.getItem().toJS();
+    const {passing, total, failing} = item;
+    if (total){
       return  (
         <span>
           <span>
@@ -103,7 +152,7 @@ const GroupItem = React.createClass({
           </span>
         </span>
       );
-    }else if (this.getItem().get('checks').size){
+    } else if (item.checks.length){
       return 'Initializing checks';
     }
     return  (
@@ -117,13 +166,13 @@ const GroupItem = React.createClass({
   render(){
     if (this.getItem().get('name')){
       return (
-        <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} state={this.getItem().state} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
-          <ContextMenu title={`${this.props.item.get('name')} Actions`} id={this.getItem().get('id')} key="menu">
-            <Button color="primary" text="left" to={`/check-create/request?id=${this.getItem().get('id')}&type=${this.getItem().get('type')}&name=${this.getItem().get('name')}`} block flat>
+        <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
+          <ContextMenu title={`${this.getItem().get('name')} Actions`} id={this.getItem().get('id')} key="menu">
+            <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
               <Add inline fill="primary"/> Create Check
             </Button>
           </ContextMenu>
-          <div key="line1">{this.getItem().get('name')}</div>
+          <div key="line1">{this.getItem().get('name')}&nbsp;({this.getType()})</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>
       );
@@ -137,7 +186,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  groups: state.env.groups
+  groups: state.env.groups,
+  redux: state
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupItem);

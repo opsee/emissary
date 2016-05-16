@@ -1,44 +1,62 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import colors from 'seedling/colors';
+import cx from 'classnames';
+import {plain as seed} from 'seedling';
+import style from './progressBar.css';
 
 export default React.createClass({
   propTypes: {
     percentage: PropTypes.number.isRequired,
-    steps: PropTypes.number
+    color: PropTypes.string,
+    steps: PropTypes.number,
+    flat: PropTypes.bool
   },
   getDefaultProps(){
     return {
-      steps: 7
+      flat: false
     };
   },
   getBg(){
-    if (this.props.percentage >= 100){
-      return colors.success;
-    }else if (this.props.percentage === 0){
-      return colors.warning;
-    }else if (this.props.percentage === -1){
-      return colors.danger;
+    if (this.props.color) {
+      return this.props.color;
     }
-    return colors.primary;
+    const {color} = seed;
+    if (this.props.percentage >= 100){
+      return color.success;
+    } else if (this.props.percentage === 0){
+      return color.warning;
+    } else if (this.props.percentage === -1){
+      return color.danger;
+    }
+    return color.primary;
+  },
+  getClass(){
+    return cx(style.progress, {
+      [style.progressFlat]: this.props.flat
+    });
   },
   getWidth(){
     if (this.props.percentage === 0 || this.props.percentage === -1){
-      return '100%';
+      return 100;
     }
-    return `${this.props.percentage}%`;
+    return this.props.percentage;
+  },
+  renderTicks(){
+    return (
+      <div className={style.ticks}>
+        {_.range(this.props.steps - 1).map(i => {
+          return (
+            <div className={style.tick} style={{margin: `0 ${100 / this.props.steps / 2}%`}} key={`progress-bar-${i}`}/>
+          );
+        })}
+      </div>
+    );
   },
   render() {
     return (
-     <div className="progress">
-        <div className="progress_bar" style={{width: this.getWidth(), background: this.getBg()}}></div>
-        <div className="ticks">
-          {_.range(this.props.steps - 1).map(i => {
-            return (
-              <div className="tick" style={{margin: `0 ${100 / this.props.steps / 2}%`}} key={`progress-bar-${i}`}/>
-            );
-          })}
-        </div>
+     <div className={this.getClass()}>
+        <div className={style.bar} style={{width: `${this.getWidth()}%`, background: this.getBg()}}></div>
+        {!!this.props.steps ? this.renderTicks() : null}
       </div>
     );
   }

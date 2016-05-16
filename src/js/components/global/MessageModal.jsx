@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Modal} from '../../modules/bootstrap';
+import {Modal} from '../layout';
 import {app as actions} from '../../actions';
 
 const MessageModal = React.createClass({
@@ -14,7 +14,10 @@ const MessageModal = React.createClass({
     redux: PropTypes.shape({
       app: PropTypes.shape({
         modalMessage: PropTypes.shape({
-          html: PropTypes.object,
+          html: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.string
+          ]),
           color: PropTypes.object,
           show: PropTypes.bool
         })
@@ -24,12 +27,8 @@ const MessageModal = React.createClass({
   getStyle(){
     const color = this.props.redux.app.modalMessage.color;
     return {
-      background: color ? colors[color] : colors.warning
+      background: color ? seed.color[color] : seed.color.warning
     };
-  },
-  getClassName(){
-    return 'notify';
-    // return this.state.type || 'notify';
   },
   handleHide(){
     this.props.actions.modalMessageClose();
@@ -37,20 +36,10 @@ const MessageModal = React.createClass({
   render() {
     return (
       <div>
-        <Modal show={!!this.props.redux.app.modalMessage.show} onHide={this.handleHide} className={this.getClassName()}>
-        {
-          // <Modal.Header closeButton>
-          //   <Modal.Title>Modal heading</Modal.Title>
-          // </Modal.Header>
-        }
+        <Modal show={!!this.props.redux.app.modalMessage.show} onHide={this.handleHide} className="notify">
           <Modal.Body style={this.getStyle()}>
             <div dangerouslySetInnerHTML={{__html: this.props.redux.app.modalMessage.html}}/>
           </Modal.Body>
-          {
-          // <Modal.Footer>
-          //   <button className="btn btn-primary" onClick={this.handleHide}>Close</button>
-          // </Modal.Footer>
-          }
         </Modal>
       </div>
     );

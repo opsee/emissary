@@ -1,35 +1,27 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Toolbar, StatusHandler} from '../global';
-import CheckCreateRequest from './CheckCreateRequest.jsx';
-import CheckCreateAssertions from './CheckCreateAssertions.jsx';
-import CheckCreateInfo from './CheckCreateInfo.jsx';
+import CheckCreateRequest from './CheckCreateRequest';
+import AssertionsHTTP from './AssertionsHTTP';
+import AssertionsCloudwatch from './AssertionsCloudwatch';
+import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
 import {Heading} from '../type';
-import {checks as actions, env as envActions} from '../../actions';
+import CheckDisabledReason from './CheckDisabledReason';
+import CheckDebug from './CheckDebug';
+import {validate} from '../../modules';
+import {
+  checks as actions,
+  env as envActions
+} from '../../actions';
 import {Check} from '../../modules/schemas';
-
-function getState(){
-  return {
-    step1: {
-      disabled: false
-    },
-    step2: {
-      disabled: false
-    },
-    step3: {
-      disabled: false
-    }
-  };
-}
 
 const CheckEdit = React.createClass({
   propTypes: {
@@ -39,8 +31,8 @@ const CheckEdit = React.createClass({
     actions: PropTypes.shape({
       getCheck: PropTypes.func,
       del: PropTypes.func,
-      edit: PropTypes.func,
-      testCheckReset: PropTypes.func
+      testCheckReset: PropTypes.func,
+      createOrEdit: PropTypes.func
     }),
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
@@ -58,10 +50,10 @@ const CheckEdit = React.createClass({
     })
   },
   getInitialState() {
-    return _.assign(getState(), {
+    return {
       check: null,
       showEnv: false
-    });
+    };
   },
   componentWillMount(){
     this.props.actions.getCheck(this.props.params.id);
@@ -75,7 +67,7 @@ const CheckEdit = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Check();
     const check = data.toJS();
-    if (!this.state.check && check.assertions.length){
+    if (!this.state.check && _.find(check.tags, () => 'complete')){
       this.setState({
         check
       });
@@ -85,31 +77,29 @@ const CheckEdit = React.createClass({
     return this.state.check || new Check().toJS();
   },
   getCheckTitle(){
-    return _.get(this, 'state.check.check_spec.value.name') || 'Check';
+    return _.get(this, 'state.check.name') || 'Check';
   },
   isDisabled(){
-    return this.state.step1.disabled || this.state.step2.disabled || this.state.step3.disabled;
+    return !!validate.check(this.getCheck()).length;
   },
   runRemoveCheck(){
-    this.props.actions.del(this.props.params.id);
+    this.props.actions.del([this.props.params.id]);
   },
-  setData(data, disabled, num){
-    let obj = {};
-    obj[`step${num}`] = {disabled: disabled};
-    obj.check = _.cloneDeep(data);
-    this.setState(obj);
+  setData(data){
+    this.setState({
+      check: _.cloneDeep(data)
+    });
   },
   setShowEnv(){
     const bool = this.state.showEnv;
     this.setState({showEnv: !bool});
   },
   handleSubmit(){
-    return this.props.actions.edit(this.getCheck());
+    return this.props.actions.createOrEdit(this.getCheck());
   },
-  handleTargetSelect(id, type){
+  handleTargetSelect(target){
     let check = _.cloneDeep(this.getCheck());
-    check.target.id = id;
-    check.target.type = type || 'sg';
+    check.target = _.pick(target, ['id', 'name', 'type']);
     this.setData(check);
     this.setShowEnv();
   },
@@ -132,25 +122,38 @@ const CheckEdit = React.createClass({
     )
      : <div/>;
   },
+  renderRequest(){
+    if (!_.get(this.getCheck(), 'target.type').match('dbinstance|rds')){
+      return (
+        <Padding tb={1}>
+          <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
+        </Padding>
+      );
+    }
+    return null;
+  },
+  renderAssertions(){
+    if (_.get(this.getCheck(), 'target.type').match('dbinstance|rds')){
+      return <AssertionsCloudwatch check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
+    }
+    return <AssertionsHTTP check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
+  },
   renderInner(){
-    if (this.getCheck().id){
+    if (this.getCheck().id && _.find(this.getCheck().tags, () => 'complete')) {
       return (
         <div>
           {this.renderEnv()}
+          {this.renderRequest()}
           <Padding tb={1}>
-            <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude/>
+            {this.renderAssertions()}
           </Padding>
-          <Padding tb={1}>
-            <CheckCreateAssertions check={this.getCheck()} onChange={this.setData} renderAsInclude/>
-          </Padding>
-          <Padding tb={1}>
-            <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
-          </Padding>
+          <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-            Finish <Checkmark inline fill={colors.success}/>
+            Finish <Checkmark inline fill={seed.color.success}/>
           </Button>
+          <CheckDisabledReason check={this.getCheck()}/>
           </Padding>
           <Padding t={4}>
             <Padding t={4}>
@@ -161,8 +164,6 @@ const CheckEdit = React.createClass({
           </Padding>
         </div>
       );
-    }else if (!this.getCheck().assertions.length){
-      return <StatusHandler status="pending"/>;
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getCheck.status}>
@@ -180,6 +181,7 @@ const CheckEdit = React.createClass({
           <Row>
             <Col xs={12}>
               {this.renderInner()}
+              <CheckDebug check={_.omit(this.getCheck(), 'results')}/>
             </Col>
           </Row>
         </Grid>

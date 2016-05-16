@@ -1,26 +1,50 @@
 import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json';
+import xml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
+import cx from 'classnames';
+/* eslint-disable no-unused-vars */
+import style from './hljs.css';
+/* eslint-enable no-unused-vars */
 
 hljs.registerLanguage('json', json);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('css', css);
 
 const Highlight = React.createClass({
   propTypes: {
     innerHTML: PropTypes.string,
     className: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    noBg: PropTypes.bool,
+    wrap: PropTypes.bool,
+    style: PropTypes.object
   },
   getDefaultProps() {
     return {
-      className: ''
+      className: '',
+      noBg: false,
+      wrap: false,
+      style: {}
     };
   },
   componentDidMount() {
     this.runHighlightCode();
   },
+  shouldComponentUpdate(nextProps) {
+    return !_.isEqual(nextProps.children, this.props.children);
+  },
   componentDidUpdate() {
     this.runHighlightCode();
+  },
+  getClassName(){
+    return cx(this.props.className, {
+      'noBg': this.props.noBg,
+      'wrap': this.props.wrap
+    });
   },
   runHighlightCode() {
     if (this.isMounted()){
@@ -35,16 +59,16 @@ const Highlight = React.createClass({
   },
   render() {
     if (this.props.innerHTML) {
-      return React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.children }, className: this.props.className || null });
+      return (
+        <div dangerouslySetInnerHTML={{__html: this.props.children}} className={this.getClassName()} style={this.props.style}/>
+      );
     }
-    return React.createElement(
-      'pre',
-      null,
-      React.createElement(
-        'code',
-        { className: this.props.className },
-        this.props.children
-      )
+    return (
+      <pre>
+        <code className={this.getClassName()} style={this.props.style}>
+          {this.props.children}
+        </code>
+      </pre>
     );
   }
 });

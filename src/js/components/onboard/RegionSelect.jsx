@@ -1,111 +1,180 @@
 import React, {PropTypes} from 'react';
+import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import forms from 'newforms';
+import {plain as seed} from 'seedling';
 
-import {Toolbar} from '../global';
-import {BoundField} from '../forms';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
+import {StatusHandler, ProgressBar, Toolbar} from '../global';
 import {Button} from '../forms';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Heading} from '../type';
 import {onboard as actions} from '../../actions';
 import regions from '../../modules/regions';
-
-const regionChoices = regions.map(r => {
-  return [r.id, `${r.id} - ${r.name}`];
-});
-
-const InfoForm = forms.Form.extend({
-  regions: forms.ChoiceField({
-    choices: regionChoices,
-    widget: forms.RadioSelect,
-    widgetAttrs: {
-      widgetType: 'RadioSelect'
-    }
-  })
-});
+import {SetInterval} from '../../modules/mixins';
+import {NewWindow} from '../icons';
+import style from './onboard.css';
 
 const RegionSelect = React.createClass({
+  mixins: [History, SetInterval],
   propTypes: {
     actions: PropTypes.shape({
+      hasRole: PropTypes.func,
+      makeLaunchRoleUrlTemplate: PropTypes.func,
       setRegion: PropTypes.func
     }),
     redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        onboardMakeLaunchTemplate: PropTypes.object
+      }),
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),
       onboard: PropTypes.shape({
+        hasRole: PropTypes.bool,
+        regionLaunchURL: PropTypes.string,
         region: PropTypes.string
       })
     })
   },
-  getInitialState() {
-    const self = this;
-    const obj = {
-      info: new InfoForm({
-        onChange(){
-          if (self.isMounted()){
-            self.forceUpdate();
-          }
-        },
-        labelSuffix: '',
-        data: {
-          regions: [this.props.redux.onboard.region]
-        },
-        validation: {
-          on: 'blur change',
-          onChangeDelay: 100
-        }
-      })
-    };
-    setTimeout(() => {
-      obj.info.validate();
-    }, 10);
-    return obj;
-  },
-  isDisabled(){
-    return !this.state.info.cleanedData.regions || !this.state.info.cleanedData.regions.length;
-  },
-  runToggleAll(value){
-    if (value){
-      this.state.info.updateData({
-        regions: regions.map(r => {
-          return r.id;
-        })
-      });
-    }else {
-      this.state.info.updateData({regions: []});
+  componentWillMount(){
+    if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
+      this.props.actions.makeLaunchRoleUrlTemplate();
     }
   },
-  handleSubmit(e){
+  componentDidMount() {
+    this.setInterval(() => {
+      this.props.actions.hasRole();
+    }, 1000 * 5); // every 5 seconds
+  },
+  componentWillReceiveProps(){
+    if (this.props.redux.onboard.hasRole && this.state.isPolling) {
+      this.history.push('/start/add-instance');
+    }
+  },
+  getInitialState() {
+    return {
+      // technically, we are always polling hasRole in the background
+      isPolling: false
+    };
+  },
+  getTemplateURL(region) {
+    const urlTemplate = _.get(this.props.redux, 'onboard.regionLaunchURL');
+    return region ? _.replace(urlTemplate, '${region}', region) : urlTemplate;
+  },
+  handleSelect(region){
+    this.props.actions.setRegion(region);
+    this.setState({ isPolling: true });
+  },
+  handleChangeRegion(e) {
     e.preventDefault();
-    this.props.actions.setRegion(this.state.info.cleanedData.regions);
+    this.setState({ isPolling: false });
+  },
+  renderLoading(message) {
+    return (
+      <div>
+        <Padding tb={4} className="text-center">
+          <Padding tb={2}>
+            <StatusHandler status="pending" />
+          </Padding>
+          <small className="text-muted">{message}</small>
+        </Padding>
+      </div>
+    );
+  },
+  renderRegions(){
+    const templateStatus = _.get(this.props.redux.asyncActions, 'onboardMakeLaunchTemplate.status');
+    if (templateStatus === 'pending') {
+      return this.renderLoading('Scanning your AWS environment...');
+    }
+    return regions.map((region, i) => {
+      let regionID = _.get(region, 'id');
+      let boundClick = this.handleSelect.bind(null, regionID);
+      let url = this.props.redux.onboard.hasRole ? null : this.getTemplateURL(regionID);
+      return (
+        <Row key={i}>
+          <Col xs={6}>
+            <Padding b={1}>
+              <div>{regionID}</div>
+              <div>
+                <small className="text-muted">{_.get(region, 'name')}</small>
+              </div>
+            </Padding>
+          </Col>
+          <Col xs={6} style={{textAlign: 'right'}}>
+            <Padding b={1}>
+              <Button onClick={boundClick} to={url} target="_blank" color="warning" flat secondary style={{margin: 0}}>Launch stack&nbsp;<NewWindow btn fill="warning"/></Button>
+            </Padding>
+          </Col>
+        </Row>
+      );
+    });
+  },
+  renderInstructions() {
+    return (
+      <div>
+        <Heading level={2}>What to do in the AWS Console</Heading>
+        <p>Here&rsquo;s the TLDR version of what to do in your AWS console:</p>
+        <p><strong>Click Next 3 times, then check the "acknowledge" box, and click Create.</strong></p>
+        <p>When the creation of your Opsee role is complete, return here to finish installation. You will be automatically redirected to the next step.</p>
+        <p>See all the details in <a href="/docs/IAM" target="_blank">our install documentation</a>. If you have any
+        trouble here, reach out to us any time at <a href="mailto:support@opsee.co">support@opsee.com</a>.</p>
+      </div>
+    );
   },
   renderInner(){
-    if (!_.find(this.props.redux.env.bastions, 'connected')){
+    if (_.find(this.props.redux.env.bastions, 'connected')){
       return (
-        <form name="loginForm" onSubmit={this.handleSubmit}>
-         <p>Choose the region where you want to launch your Opsee Bastion Instance. The Bastion Instance will only be able to run health checks within this region.</p>
-          <BoundField bf={this.state.info.boundField('regions')}/>
-          <Padding t={1}>
-            <Button color="success" block type="submit" disabled={this.isDisabled()} title={this.isDisabled() ? 'Choose a region to move on.' : 'Next'} chevron>Next</Button>
+        <Padding tb={1}>
+          <Alert color="info">
+            It looks like you already have an instance in your environment.
+            At this time, Opsee only supports one instance per customer.
+            If you need more, please <a href="mailto:support@opsee.co">contact us</a>.
+          </Alert>
+        </Padding>
+      );
+    }
+    if (this.state.isPolling) {
+      return (
+        <div>
+          <Padding b={1}>
+            {this.renderInstructions()}
           </Padding>
-        </form>
+          {this.renderLoading(`Waiting for your CloudFormation role creation to complete in ${this.props.redux.onboard.region}...`)}
+
+          <Padding tb={1} className="text-center">
+            <small><a href={this.getTemplateURL(this.props.redux.onboard.region)} target="_blank">Relaunch AWS console</a></small>
+          </Padding>
+          <Padding tb={1} className="text-center">
+            <small><a href="#" onClick={this.handleChangeRegion}>Change region</a></small>
+          </Padding>
+        </div>
       );
     }
     return (
-      <Padding tb={1}>
-        <Alert bsStyle="info">
-          It looks like you already have a bastion in your environment. At this time, Opsee only supports one bastion.
-        </Alert>
-      </Padding>
+      <div>
+        <p>It&rsquo;s time to launch our CloudFormation stack. This will launch the AWS console.
+        Choose a region by clicking one of the buttons below.
+        When you&rsquo;re finished, come back to Opsee to continue installation.</p>
+
+        <Padding tb={1}>
+          {this.renderInstructions()}
+        </Padding>
+
+        <Grid fluid>
+          {this.renderRegions()}
+        </Grid>
+      </div>
     );
   },
   render() {
     return (
        <div>
-        <Toolbar title="Choose a Region"/>
+        <Toolbar title="Step 1: Choose a region" className={style.toolbar} />
+        <Padding b={2}>
+          <ProgressBar percentage={30} color={seed.color.success} flat />
+        </Padding>
+
         <Grid>
           <Row>
             <Col xs={12}>
@@ -118,8 +187,12 @@ const RegionSelect = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(RegionSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(RegionSelect);

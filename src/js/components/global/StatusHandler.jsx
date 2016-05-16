@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Alert} from '../../modules/bootstrap';
 import Loader from './Loader';
-import Padding from '../layout/Padding';
+import {Alert, Padding} from '../layout';
 
 const StatusHandler = React.createClass({
   propTypes: {
@@ -17,7 +16,8 @@ const StatusHandler = React.createClass({
     children: PropTypes.node,
     noFallback: PropTypes.bool,
     onDismiss: PropTypes.func,
-    history: PropTypes.array
+    history: PropTypes.array,
+    waitingText: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -42,13 +42,19 @@ const StatusHandler = React.createClass({
     this.setState(state);
   },
   shouldComponentUpdate(nextProps, nextState) {
-    return !_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState);
+    let arr = [];
+    arr.push(!_.isEqual(this.props.status, nextProps.status) || !_.isEqual(this.state, nextState));
+    arr.push(!_.isEqual(this.props.children, nextProps.children));
+    return _.some(arr);
   },
   getErrorText(){
-    return _.get(this.props, 'status.message') ||
-    _.get(this.props, 'status.response.body.message') ||
-    this.props.errorText ||
-    'Something went wrong.';
+    let string = _.get(this.props, 'status.response.body.message') ||
+    _.get(this.props, 'status.message') ||
+    this.props.errorText;
+    if (string.match('^Parser is unable')){
+      string = _.get(this.props, 'status.rawResponse');
+    }
+    return string || 'Something went wrong.';
   },
   isError(){
     return !!(this.props.status && typeof this.props.status !== 'string');
@@ -66,16 +72,24 @@ const StatusHandler = React.createClass({
       return null;
     }
     if (this.props.status === 'pending' && this.state.attempts < 1){
+      if (this.props.waitingText){
+        return (
+          <div>
+            <Padding b={1}>{this.props.waitingText}</Padding>
+             <Loader timeout={this.props.timeout}/>
+          </div>
+        );
+      }
       return <Loader timeout={this.props.timeout}/>;
-    }else if (this.isError()){
+    } else if (this.isError()){
       return (
         <Padding b={1}>
-          <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
+          <Alert color="danger" onDismiss={this.handleDismiss}>
             <div dangerouslySetInnerHTML={{__html: this.getErrorText()}}/>
           </Alert>
         </Padding>
       );
-    }else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
+    } else if ((this.props.status === 'success' || this.state.attempts > 0) && !this.props.noFallback){
       return (
         <div>{this.props.children}</div>
       );

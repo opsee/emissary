@@ -1,20 +1,24 @@
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import _ from 'lodash';
 import * as analytics from './analytics';
+import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
-  ONBOARD_VPC_SCAN,
   ONBOARD_VPC_SELECT,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
+  ONBOARD_MAKE_LAUNCH_TEMPLATE,
   ONBOARD_SET_CREDENTIALS,
   ONBOARD_SET_REGION,
+  ONBOARD_GET_TEMPLATES,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT
+  ONBOARD_SUBNET_SELECT,
+  ONBOARD_SCAN_REGION,
+  ONBOARD_HAS_ROLE
 } from './constants';
 
 export function signupCreate(data) {
@@ -23,7 +27,7 @@ export function signupCreate(data) {
       type: ONBOARD_SIGNUP_CREATE,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.authApi}/signups`)
+        .post(`${config.services.auth}/signups/new`)
         .send(data)
         .then((res) => {
           const user = res.body;
@@ -32,7 +36,7 @@ export function signupCreate(data) {
 
           //TODO remove timeout somehow
           setTimeout(() => {
-            dispatch(pushState(null, '/start/thanks'));
+            dispatch(push(`/start/thanks?referrer=${data.referrer}`));
           }, 100);
         }, err => {
           let msg = _.get(err, 'response.body.message');
@@ -44,99 +48,149 @@ export function signupCreate(data) {
   };
 }
 
-export function setRegion(data) {
+export function getTemplates(){
+  const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
   return (dispatch) => {
     dispatch({
-      type: ONBOARD_SET_REGION,
-      payload: {region: data}
+      type: ONBOARD_GET_TEMPLATES,
+      payload: new Promise((resolve, reject) => {
+        const r1 = request.get(`${base}/bastion-ingress-cf.template`);
+        const r2 = request.get(`${base}/bastion-cf.template`);
+        const r3 = request.get(`${base}/opsee-role-annotated.json`);
+        Promise.all([r1, r2, r3]).then(values => {
+          resolve(values);
+        }).catch(reject);
+      })
     });
-    setTimeout(() => {
-      dispatch(pushState(null, '/start/credentials'));
-    }, 100);
   };
 }
 
-export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
-
-export function vpcScan(data) {
+export function setRegion(region) {
   return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_SET_CREDENTIALS,
-      payload: data
+      type: ONBOARD_SET_REGION,
+      payload: {region}
     });
-    const sendData = _.assign({}, data, {regions: [state().onboard.region]});
+    analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
+    getTemplates()(dispatch, state);
+  };
+}
+
+export function makeLaunchRoleUrlTemplate() {
+  return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_VPC_SCAN,
-      payload: new Promise((resolve, reject) => {
-        if (config.onboardVpcScanError){
-          return reject(new Error('config.onboardVpcScanError'));
-        }
+      type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
+      payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
         return request
-        .post(`${config.api}/vpcs/scan`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send(sendData)
-        .then((res) => {
-          const regions = res.body.regions;
-          if (Array.isArray(regions)){
-            const bool = _.chain(regions).map('supported_platforms').map(platforms => {
-              return !(platforms.indexOf('VPC') > -1);
-            }).compact().some().value();
-            if (bool){
-              const message = 'One or more of the regions selected does not support VPCs. This probably indicates that a region in your account is AWS Classic. Opsee does not support Classic at this time. Please choose a different region or refer to our <a href="/help" target="_blank">Help Page</a>.';
-              return reject({
-                message
-              });
-            }
-            resolve(regions);
-            setTimeout(() => {
-              dispatch(pushState(null, '/start/vpc-select'));
-            }, 100);
-          }
-          return reject({
-            message: 'Something went wrong trying to get VPCs.'
-          });
-        }, (err) => {
-          let message = err.message || err.response;
-          return reject({message});
+        .send({query:
+          `mutation Mutation {
+            makeLaunchRoleUrlTemplate
+          }`
         });
       })
     });
   };
 }
 
+export function scanRegion(region) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SCAN_REGION,
+      payload: graphPromise('region.scan', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          `mutation Mutation {
+            region(id: "${region}") {
+              scan {
+                subnets {
+                  subnet_id
+                  routing
+                  instance_count
+                  vpc_id
+                  tags {
+                    Key
+                    Value
+                  }
+                },
+                vpcs {
+                  vpc_id,
+                  instance_count
+                  tags {
+                    Key
+                    Value
+                  }
+                },
+              }
+            }
+          }`
+        });
+      })
+    });
+  };
+}
+
+export function hasRole() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_HAS_ROLE,
+      payload: graphPromise('hasRole', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          '{ hasRole }'
+        });
+      })
+    });
+  };
+}
+
+export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
+
 export function vpcSelect(payload){
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_VPC_SELECT,
       payload
     });
+    analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
     setTimeout(() => {
-      dispatch(pushState(null, '/start/subnet-select'));
+      dispatch(push('/start/choose-subnet'));
     }, 100);
   };
 }
 
 export function subnetSelect(payload){
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SUBNET_SELECT,
       payload
     });
-    dispatch({
+    analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
+    setTimeout(() => dispatch({
       type: ONBOARD_SET_INSTALL_DATA
-    });
-    setTimeout(() => {
-      dispatch(pushState(null, '/start/install'));
-    }, 100);
+    }), 50);
   };
 }
 
 function isBastionLaunching(state){
   return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length ||
-  !!_.filter(state().app.socketMessages, {command: 'connect-bastion'}).length;
+  !!_.filter(state().app.socketMessages, {command: 'connect-bastion'}).length ||
+  state().onboard.installing;
 }
 
-// let launchAttempts = 0;
+function isBastionConnected(state){
+  return _.chain(state().app.socketMessages)
+  .filter({command: 'bastions'})
+  .find(msg => {
+    return _.chain(msg).get('attributes.bastions').find('connected').value();
+  })
+  .value();
+}
 
 function launch(dispatch, state, resolve, reject){
   // launchAttempts ++;
@@ -145,37 +199,44 @@ function launch(dispatch, state, resolve, reject){
   if (config.onboardInstallError){
     return reject(new Error('config.onboardInstallError'));
   }
-  request
-  .post(`${config.api}/vpcs/launch`)
-  .set('Authorization', state().user.get('auth'))
-  .send(state().onboard.installData)
-  .then(resolve, (err) => {
-    //save this for retrying later
-    // if (launchAttempts < 0){
-    //   return setTimeout(() => {
-    //     launch(state, resolve, reject);
-    //   }, 5000);
-    // }
-    return reject(err);
+
+  const variables = state().onboard.installData;
+  return graphPromise('region.rebootInstances', () => {
+    return request
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({
+      query: `mutation launch($region: String!, $vpc_id: String!, $subnet_id: String!, $subnet_routing: String!){
+        region(id: $region) {
+          launchStack(vpc_id: $vpc_id, subnet_id: $subnet_id, subnet_routing: $subnet_routing)
+        }
+      }`,
+      variables
+    });
   });
 }
 
-export function install(retry){
+export function install(){
   return (dispatch, state) => {
     return dispatch({
       type: ONBOARD_INSTALL,
       payload: new Promise((resolve, reject) => {
-        if (isBastionLaunching(state)){
+        //user has launched
+        if (isBastionLaunching(state) || state().onboard.installing || isBastionConnected(state)){
           return resolve();
         }
-        setTimeout(() => {
-          if (isBastionLaunching(state)){
+        //user has install data but has not launched
+        if (state().onboard.installData && !state().onboard.installing && !isBastionConnected(state)){
+          return launch(dispatch, state, resolve, reject);
+        }
+        //we aren't sure at this point, so let's wait
+        return setTimeout(() => {
+          if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
-          }else if (state().onboard.installData){
-            return launch(dispatch, state, resolve, reject);
           }
-          return dispatch(pushState(null, '/start/region-select'));
-        }, retry ? 6000 : 17000);
+          dispatch(push('/start/choose-region'));
+          return reject();
+        }, 30000);
       })
     });
   };
@@ -183,7 +244,7 @@ export function install(retry){
 
 let exampleMessages;
 let exampleInstallFn;
-if (config.env !== 'production'){
+if (process.env.NODE_ENV !== 'production'){
   const msgs = require('../../files/bastion-install-messages-example.json');
   exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
   exampleInstallFn = () => {
@@ -197,7 +258,7 @@ if (config.env !== 'production'){
                 type: APP_SOCKET_MSG,
                 payload
               });
-            }, i * 400);
+            }, i * 2000);
           });
           setTimeout(() => {
             dispatch({

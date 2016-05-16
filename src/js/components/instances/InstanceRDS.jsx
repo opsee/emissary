@@ -7,13 +7,13 @@ import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add} from '../icons';
 import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
+import {flag} from '../../modules';
 import {env as actions} from '../../actions';
 
 const InstanceRds = React.createClass({
@@ -46,10 +46,21 @@ const InstanceRds = React.createClass({
       return i.get('id') === this.props.params.id;
     }) || new Map();
   },
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getInstance().get('id'),
+        type: 'rds',
+        name: this.getInstance().get('name')
+      }
+    });
+    return `/check-create/assertions-cloudwatch?data=${data}`;
+  },
   getGroupIds(){
     if (this.getInstance().get('name')){
       return _.map(this.getInstance().groups.toJS(), 'id');
     }
+    return [];
   },
   getGroupsSecurity(){
     if (this.getInstance().get('name')){
@@ -72,10 +83,10 @@ const InstanceRds = React.createClass({
     return <tr/>;
   },
   renderCreateCheckButton(){
-    if (window.ldclient.toggle('rds-checks')) {
+    if (flag('check-type-rds')) {
       return (
         <Padding b={3}>
-          <Button color="primary" flat to={`/check-create/request?id=${this.getInstance().get('id')}&type=RDS&name=${this.getInstance().get('name')}`} title="Create New Check">
+          <Button color="primary" flat to={this.getCreateLink()} title="Create New Check">
             <Add fill="primary" inline/> Create a Check
           </Button>
         </Padding>
@@ -84,17 +95,18 @@ const InstanceRds = React.createClass({
     return null;
   },
   renderChecks(){
-    if (window.ldclient.toggle('rds-checks')) {
+    if (flag('check-type-rds')) {
       return (
         <Padding b={1}>
-          <CheckItemList type="instance" target={this.props.params.id} title/>
+          <CheckItemList type="rds" target={this.props.params.id} title/>
         </Padding>
       );
     }
     return null;
   },
   renderInner(){
-    if (this.getInstance().get('name')){
+    const instance = this.getInstance().toJS();
+    if (instance.name && instance.DBInstanceClass){
       return (
         <div>
           {this.renderCreateCheckButton()}
@@ -104,24 +116,24 @@ const InstanceRds = React.createClass({
               <tr>
                 <td><strong>Launched</strong></td>
                 <td>
-                  <TimeAgo date={this.getInstance().get('LaunchTime')}/>
+                  <TimeAgo date={instance.InstanceCreateTime}/>
                 </td>
               </tr>
               <tr>
                 <td><strong>Public</strong></td>
-                <td>{this.getInstance().get('PubliclyAccessible') ? 'Yes' : 'No'}</td>
+                <td>{instance.PubliclyAccessible ? 'Yes' : 'No'}</td>
               </tr>
               <tr>
                 <td><strong>Engine</strong></td>
-                <td>{this.getInstance().get('Engine')} {this.getInstance().get('EngineVersion')}</td>
+                <td>{instance.Engine} {instance.EngineVersion}</td>
               </tr>
               <tr>
                 <td><strong>Instance Type</strong></td>
-                <td>{this.getInstance().get('DBInstanceClass')}</td>
+                <td>{instance.DBInstanceClass}</td>
               </tr>
               <tr>
                 <td><strong>Availability Zone</strong></td>
-                <td>{this.getInstance().get('AvailabilityZone')}</td>
+                <td>{instance.AvailabilityZone}</td>
               </tr>
               {this.renderLastChecked()}
             </Table>
@@ -131,7 +143,7 @@ const InstanceRds = React.createClass({
             <GroupItemList ids={this.getGroupsSecurity()} title="Security Groups"/>
           </Padding>
           <Padding b={2}>
-            <GroupItemList type="elb" instanceIds={[this.getInstance().get('id')]} title="ELBs" noFallback/>
+            <GroupItemList type="elb" instanceIds={[instance.id]} title="ELBs" noFallback/>
           </Padding>
         </div>
       );

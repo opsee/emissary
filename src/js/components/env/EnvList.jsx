@@ -7,6 +7,7 @@ import {GroupItemList} from '../groups';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {FilterButtons} from '../search';
+import {Padding} from '../layout';
 
 const EnvList = React.createClass({
   mixins: [SetInterval],
@@ -14,9 +15,10 @@ const EnvList = React.createClass({
     include: PropTypes.arrayOf(PropTypes.oneOf([
       'groups.security',
       'groups.elb',
+      'groups.asg',
       'instances.ecc',
       'instances.rds',
-      'checks.checks'
+      'checks'
     ])),
     filter: PropTypes.bool,
     onFilterChange: PropTypes.func,
@@ -61,48 +63,72 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc', 'checks.checks'],
+      include: ['groups.elb', 'groups.security', 'groups.asg', 'instances.rds', 'instances.ecc', 'checks'],
       limit: 1000
     };
   },
+  getIncludes(){
+    let {include, redux} = this.props;
+    include = _.sortBy(include, i => {
+      let size = _.get(redux.env, `${this.props.filter && 'filtered.' || ''}${i}.size`);
+      if (i === 'checks'){
+        const string = this.props.filter ? 'filtered' : 'checks';
+        size = _.get(redux.checks, `${string}.size`);
+      }
+      //let's do some secondary sorting
+      if (size && !this.props.filter){
+        if (i === 'groups.elb'){
+          size = 5000;
+        } else if (i === 'groups.asg'){
+          size = 4000;
+        } else if (i === 'groups.security'){
+          size = 3000;
+        }
+      }
+      return (-1 * size) || 0;
+    });
+    return include;
+  },
   renderGroupsSecurity(){
     return (
-      <div key="groupsSecurity">
+      <Padding b={3} key="env-list-groups-security">
         <GroupItemList filter={this.props.filter} type="security" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Security Groups" noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
+    );
+  },
+  renderGroupsAsg(){
+    return (
+      <Padding b={3} key="env-list-groups-asg">
+        <GroupItemList filter={this.props.filter} type="asg" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Autoscaling Groups" noFetch={this.props.noFetch}/>
+      </Padding>
     );
   },
   renderGroupsElb(){
     return (
-      <div key="groupsELB">
+      <Padding b={3} key="env-list-groups-elb">
         <GroupItemList type="elb" filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="ELBs" noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderInstancesEcc(){
     return (
-      <div key="instancesECC">
+      <Padding b={3} key="env-list-instances-ecc">
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="ecc" title noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderInstancesRds(){
     return (
-      <div key="instancesRds">
+      <Padding b={3} key="env-list-instances-rds">
         <InstanceItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} type="rds" title noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
-  renderChecksChecks(){
+  renderChecks(){
     return (
-      <div key="checks">
+      <Padding b={3} key="env-list-checks">
         <CheckItemList filter={this.props.filter} onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title noFetch={this.props.noFetch}/>
-        <hr/>
-      </div>
+      </Padding>
     );
   },
   renderFilterButtons(){
@@ -112,23 +138,12 @@ const EnvList = React.createClass({
     return null;
   },
   render(){
-    const self = this;
-    let {include} = this.props;
-    if (this.props.filter){
-      include = _.sortBy(include, i => {
-        let size = _.get(this.props.redux.env.filtered, `${i}.size`);
-        if (i === 'checks.checks'){
-          size = this.props.redux.checks.filtered.size;
-        }
-        return (-1 * size) || 0;
-      });
-    }
     return (
       <div>
         {this.renderFilterButtons()}
-        {include.map(i => {
+        {this.getIncludes().map(i => {
           const string = i.split('.').map(_.capitalize).reduce((total, n) => total + n);
-          return self[`render${string}`]();
+          return this[`render${string}`]();
         })}
       </div>
     );

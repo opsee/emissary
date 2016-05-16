@@ -1,95 +1,146 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var AssetsPlugin = require('assets-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var fs = require('fs');
+var _ = require('lodash');
+var seedling = require('seedling');
+var crypto = require('crypto');
 
 var path = require('path');
-var node_modules_dir = path.resolve(__dirname, 'node_modules');
+var node_modules = path.resolve(__dirname, 'node_modules');
 var context_dir = path.join(__dirname, '/src');
 
-var config;
-try{
-  config = JSON.stringify(fs.readFileSync(path.join(__dirname, '/config.json')).toString());
-}catch(err){}
+var revision = fs.readFileSync('/dev/stdin').toString();
+var vendors = require(path.join(__dirname, '/util/vendors'));
 
 var definePlugin = new webpack.DefinePlugin({
-  __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-  __API__: JSON.stringify(process.env.CONFIG_API),
-  __AUTH__: JSON.stringify(process.env.CONFIG_AUTH),
-  'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)},
-  __REVISION__: JSON.stringify(fs.readFileSync('/dev/stdin').toString()),
-  __CONFIG__: config
+  'process.env': {
+    NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    REVISION: JSON.stringify(revision)
+  }
 });
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js');
 
-var vendors = ['lodash', 'react', 'moment', 'slate', 'newforms', 'react-bootstrap', 'immutable', 'q', 'react-router', 'superagent', 'fuzzy', 'react-document-title', 'react-timeago'];
+var uglify = new webpack.optimize.UglifyJsPlugin({
+  mangle: true,
+  compress: {
+    warnings: false
+  }
+});
 
-module.exports = {
-  cache:true,
-  context:context_dir,
+var config = {
+  cache: true,
+  context: context_dir,
   eslint:{
-    configFile:'./node_modules/opsee-style/.eslintrc'
+    configFile: `${node_modules}/opsee-style/.eslintrc`
+  },
+  node: {
+    fs: 'empty'
   },
   entry: {
     'index': [
       'babel-polyfill',
       './js/index.jsx'
-    ],
-    vendor:vendors
+    ]
   },
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
-    filename: "bundle.js",
-    chunkFilename: "[name]-[id].[hash].js"
+    filename: `bundle.js`,
+    chunkFilename: `[name]-[id].js`
   },
   postcss: function(webpack){
     return [
       require('postcss-import')({
         addDependencyTo: webpack
       }),
-      require('postcss-cssnext')(),
+      require('postcss-cssnext')({
+        browsers: 'last 1 version, > 10%',
+        features: {
+          customProperties: {
+            variables: seedling.flat
+          }
+        }
+      }),
       require('postcss-url')()
     ];
   },
   module: {
     preLoaders:[
-      { test: /\.js$|\.jsx$/, loaders: ['eslint-loader'], include: [context_dir] },
-    ],
-    loaders: [
-      { test: /\.global\.css$/, loader: 'style-loader!css-loader?&importLoaders=1!postcss-loader', include: [context_dir]},
-      { test: /^(?!.*global\.css$).*\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1!postcss-loader'},
-      {test: /\.js$|\.jsx$/, loaders: ['react-hot'], include: [context_dir] },
       {
         test: /\.js$|\.jsx$/, 
+        loaders: ['eslint-loader'], 
+        exclude: [node_modules]
+      },
+    ],
+    loaders: [
+      {
+        test: /\.js$|\.jsx$/,
         loader: 'babel-loader',
         query: {
           plugins: ['transform-runtime'],
           presets: ['es2015', 'react']
         },
-        include: [context_dir]
+        exclude: [node_modules]
       },
-      { test: /\.json$/, loaders: ['json'], include: [context_dir]},
-      {test: /\.(png|jpg|svg)$/, loader: 'url-loader?limit=8192', include: [context_dir]}
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader?module&localIdentName=[path][name]-[local]!postcss',
+        exclude: [node_modules]
+      },
+      {
+        test: /\.json$/,
+        loaders: ['json']
+      },
+      {
+        test: /\.(png|jpg|svg)$/,
+        loader: 'url-loader?limit=8192',
+        exclude: [node_modules]
+      }
     ]
   },
-  noParse:vendors.map(v => path.join(__dirname, 'node_modules/'+v)),
   resolve: {
     extensions: ['', '.jsx', '.js', '.json', '.svg', '.png', '.jpg'],
     modulesDirectories: ['node_modules']
   },
-
   plugins: [
-    new ExtractTextPlugin('style.css'),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DllReferencePlugin({
+      context: context_dir,
+      manifest: require(path.join(__dirname, 'dist/opseeVendorManifest.json'))
+    }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     definePlugin,
     new HtmlWebpackPlugin({
-      hash:false,
-      template:'src/index.html'
+      template: path.join(__dirname, 'src/index.html'),
+      favicon: path.join(__dirname, 'src/img/favicon/favicon.ico'),
+      vendorHash: vendors.hash,
+      revision: revision,
+      inject: false
     }),
-    commonsPlugin
+    new AddAssetHtmlPlugin({
+      filename: require.resolve(`./dist/vendor.bundle.js`)
+    })
   ]
 };
+
+if (process.env.NODE_ENV === 'production'){
+  config.eslint.failOnWarning = true;
+  config.plugins.push(uglify);
+  config.plugins.push(new ExtractTextPlugin(`style.css`));
+  config.module.loaders = config.module.loaders.map(item => {
+    if (_.isEqual(item.test, /\.css$/)){
+      item.loader = ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[path][name]-[local]!postcss-loader')
+    }
+    return item;
+  });
+} else {
+  config.module.loaders.splice(0, 0, {
+    test: /\.js$|\.jsx$/,
+    loaders: ['react-hot'],
+    include: [context_dir]
+  });
+  config.plugins.splice(1, 0, new webpack.HotModuleReplacementPlugin());
+}
+
+module.exports = config;

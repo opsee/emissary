@@ -1,5 +1,3 @@
-@import '../global/vars.css';
-
 .btn{
   /*position: absolute;
   left:50%;
@@ -43,40 +41,40 @@
   fill:var(--colorError);
 }
 .fillGray50{
-  fill:var(--gray50);
+  fill:var(--colorGray);
 }
 .fillGray100{
-  fill:var(--gray100);
+  fill:var(--colorGray1);
 }
 .fillGray200{
-  fill:var(--gray200);
+  fill:var(--colorGray2);
 }
 .fillGray300{
-  fill:var(--gray300);
+  fill:var(--colorGray3);
 }
 .fillGray400{
-  fill:var(--gray400);
+  fill:var(--colorGray4);
 }
 .fillGray500{
-  fill:var(--gray500);
+  fill:var(--colorGray5);
 }
 .fillGray600{
-  fill:var(--gray600);
+  fill:var(--colorGray6);
 }
 .fillGray700{
-  fill:var(--gray700);
+  fill:var(--colorGray7);
 }
 .fillGray800{
-  fill:var(--gray800);
+  fill:var(--colorGray8);
 }
 .fillGray900{
-  fill:var(--gray900);
+  fill:var(--colorGray9);
 }
 .fillText{
   fill:var(--colorText);
 }
 .fillTextSecondary{
-  fill:var(--colorTextSecondary);
+  fill:var(--colorText2);
 }
 .fillHeader{
   fill:var(--colorHeader);

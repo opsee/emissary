@@ -1,12 +1,16 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {BastionRequirement, Toolbar} from '../global';
-import EnvList from './EnvList.jsx';
 import {State} from 'react-router';
-import {env as actions} from '../../actions';
 import _ from 'lodash';
+
+import {BastionRequirement, Toolbar} from '../global';
+import {Col, Grid, Row} from '../layout';
+import EnvList from './EnvList.jsx';
+import {
+  env as actions,
+  checks as checkActions
+} from '../../actions';
 
 const Env = React.createClass({
   mixins: [State],
@@ -15,6 +19,9 @@ const Env = React.createClass({
     actions: PropTypes.shape({
       envSetSearch: PropTypes.func,
       getBastions: PropTypes.func
+    }),
+    checkActions: PropTypes.shape({
+      getChecks: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
@@ -25,7 +32,7 @@ const Env = React.createClass({
     })
   },
   componentWillMount(){
-    this.props.actions.getBastions();
+    this.props.checkActions.getChecks();
   },
   getTitle(){
     const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};
@@ -35,13 +42,13 @@ const Env = React.createClass({
   },
   getIncludes(){
     const {pathname} = this.props.location;
-    let include = ['groups.elb', 'groups.security', 'instances.rds', 'instances.ecc'];
+    let include = ['groups.elb', 'groups.security', 'groups.asg', 'instances.rds', 'instances.ecc'];
     if (pathname){
       if (pathname.match('groups-security')){
         include = ['groups.security'];
-      }else if (pathname.match('groups-elb')){
+      } else if (pathname.match('groups-elb')){
         include = ['groups.elb'];
-      }else if (pathname.match('instances-ec2')){
+      } else if (pathname.match('instances-ec2')){
         include = ['instances.ecc'];
       }
     }
@@ -66,7 +73,8 @@ const Env = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  checkActions: bindActionCreators(checkActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Env);

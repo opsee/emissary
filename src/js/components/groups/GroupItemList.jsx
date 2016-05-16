@@ -5,8 +5,7 @@ import {bindActionCreators} from 'redux';
 import {List, is} from 'immutable';
 
 import GroupItem from './GroupItem.jsx';
-import {Alert} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {SetInterval} from '../../modules/mixins';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
@@ -33,7 +32,8 @@ const GroupItemList = React.createClass({
     noFetch: PropTypes.bool,
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
-      getGroupsSecurity: PropTypes.func
+      getGroupsSecurity: PropTypes.func,
+      getGroupsAsg: PropTypes.func
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
@@ -64,7 +64,7 @@ const GroupItemList = React.createClass({
     if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
       return true;
     }
-    this.getData();
+    return this.getData();
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
@@ -102,9 +102,10 @@ const GroupItemList = React.createClass({
     }
     if (this.props.instanceIds){
       data = data.filter(d => {
-        return _.intersection(this.props.instanceIds, d.get('instances').toJS()).length;
+        return _.intersection(this.props.instanceIds, d.get('Instances').map(i => i.InstanceId)).length;
       });
     }
+    data = data || new List();
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){
@@ -135,7 +136,11 @@ const GroupItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getGroups(true).size})`;
     if (this.getGroups().size < this.getGroups(true).size){
-      numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+      if (!this.props.ids && !this.props.instanceIds){
+        numbers = `(${this.getGroups().size} of ${this.getGroups(true).size})`;
+      } else {
+        numbers = `(${this.getGroups().size})`;
+      }
     }
     if (!this.getGroups().size){
       numbers = '';
@@ -147,7 +152,7 @@ const GroupItemList = React.createClass({
   },
   renderNoMatch(){
     if (!this.getGroups().size && !this.props.noFallback){
-      return <Alert bsStyle="default">No groups found</Alert>;
+      return <Alert color="default">No groups found</Alert>;
     }
     return null;
   },
@@ -168,7 +173,7 @@ const GroupItemList = React.createClass({
       <div>
         {this.renderTitle()}
         <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
-          <Alert bsStyle="default">No groups found</Alert>
+          <Alert color="default">No groups found</Alert>
         </StatusHandler>
       </div>
     );

@@ -1,5 +1,3 @@
-@import './vars.css';
-
 .header{
   background:var(--colorHeader);
   position: fixed;
@@ -38,7 +36,7 @@
 .navbarIcon {
   transition: fill var(--transitionEaseOut);
   display: block;
-  fill: var(--colorTextSecondary);
+  fill: var(--colorText2);
   height: 24px;
   margin: 0 auto;
   width: 24px;
@@ -53,7 +51,7 @@
 }
 .navbarLink {
   transition: color var(--transitionEaseOut);
-  color: var(--colorTextSecondary);
+  color: var(--colorText2);
   display: block;
   font-size: 0.75em;
   overflow: hidden;
@@ -64,7 +62,7 @@
 }
 .navbarLink svg {
   transition: fill var(--transitionEaseOut);
-  fill: var(--colorTextSecondary);
+  fill: var(--colorText2);
 }
 .navbarLink:hover, .navbarLink:active, .navbarLink:focus {
   color: var(--colorText);

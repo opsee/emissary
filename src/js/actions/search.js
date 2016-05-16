@@ -1,4 +1,4 @@
-import {pushState, replaceState} from 'redux-router';
+import {push, replace} from 'redux-router';
 import _ from 'lodash';
 import {stringFromTokens} from '../modules';
 import tokenizer from 'search-text-tokenizer';
@@ -19,9 +19,9 @@ export function setString(string, noRedirect){
           if (string || state().router.location.pathname === '/search'){
             if (!noRedirect){
               if (state().router.location.pathname !== '/search'){
-                dispatch(pushState(null, `/search?s=${string}`));
-              }else {
-                dispatch(replaceState(null, `/search?s=${string}`));
+                dispatch(push(`/search?s=${string}`));
+              } else {
+                dispatch(replace(`/search?s=${string}`));
               }
             }
           }
@@ -68,9 +68,9 @@ export function setTokens(payloadTokens = []){
             payload: {string, tokens}
           });
           if (state().router.location.pathname !== '/search'){
-            dispatch(pushState(null, `/search?s=${string}`));
-          }else {
-            dispatch(replaceState(null, `/search?s=${string}`));
+            dispatch(push(`/search?s=${string}`));
+          } else {
+            dispatch(replace(`/search?s=${string}`));
           }
         }
         return resolve(true);

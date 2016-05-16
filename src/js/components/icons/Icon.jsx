@@ -11,7 +11,8 @@ const Icon = React.createClass({
     //fill is either a named opsee color, or any css color
     fill: PropTypes.string,
     className: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    title: PropTypes.string
   },
   getColorClassFromProp(prop){
     const cased = _.startCase(this.props[prop]).split(' ').join('');
@@ -22,7 +23,7 @@ const Icon = React.createClass({
     for (const prop in this.props){
       if (prop === 'fill'){
         arr.push(this.getColorClassFromProp(prop));
-      }else {
+      } else {
         arr.push(style[prop]);
       }
     }
@@ -38,7 +39,7 @@ const Icon = React.createClass({
   },
   render(){
     return (
-      <BaseSVG className={this.getClass()} style={this.props.style} fill={this.getFill()} path={this.props.path}/>
+      <BaseSVG className={this.getClass()} style={this.props.style} fill={this.getFill()} path={this.props.path} title={this.props.title}/>
     );
   }
 });

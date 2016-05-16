@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import SearchBox from './SearchBox.jsx';
 import {Link} from 'react-router';
-import {Person, Checks, Help, Cloud, Login} from '../icons';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 
+import SearchBox from './SearchBox.jsx';
+import {Person, Checks, Help, Cloud, Login} from '../icons';
+import {Col, Grid, Row} from '../layout';
 import style from './header.css';
 
 const Header = React.createClass({
@@ -20,7 +20,7 @@ const Header = React.createClass({
   getHeaderStyle(){
     let obj = {};
     if (this.props.user.get('ghosting')){
-      obj.background = colors.danger;
+      obj.background = seed.color.danger;
     }
     return obj;
   },
@@ -42,7 +42,7 @@ const Header = React.createClass({
   },
   renderNavItems(){
     return (
-      <ul className={`list-unstyled display-flex justify-content-around`} style={{margin: 0}}>
+      <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checks nav/>&nbsp;

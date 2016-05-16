@@ -1,8 +1,8 @@
-@import '../global/vars';
-
 .wrapper {
-  height: 26px;
+  min-height: 26px;
   cursor: pointer;
+  display:flex;
+  align-items: center;
 }
 
 .radio {
@@ -38,4 +38,16 @@
 }
 .radioActive:after {
   background-color: var(--colorPrimary);
+}
+
+.label {
+  flex: 1;
+  padding-left: 1rem;
+  cursor: pointer;
+}
+
+.labelActive{
+  composes: label;
+  color: var(--colorPrimary);
+  user-select: none;
 }

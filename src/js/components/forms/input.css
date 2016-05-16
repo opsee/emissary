@@ -1,0 +1,55 @@
+.wrapper {
+  position: relative;
+}
+
+.label {
+  transition: color var(--transitionEaseOut);
+  color: var(--colorText2);
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 300;
+  margin:0;
+  padding: 0.5em 0;
+}
+
+.iconLabel {
+  display: block;
+  bottom: 1rem;
+  right: 1.3rem;
+  position: absolute;
+  line-height: 1.4rem;
+}
+
+.wrapper svg {
+  width: 2rem;
+  height: 2rem;
+  transition: fill var(--transitionEaseOut);
+  fill: var(--colorText2);
+}
+
+.input, input{
+  box-shadow: none;
+  transition: background-color var(--transitionEaseOut);
+  background-color: var(--colorGray9);
+  border: none;
+  color: var(--colorText);
+  width: 100%;
+  padding: 0.75em 0;
+  text-indent: 0.5em;
+}
+
+input[type="checkbox"]{
+  background:none;
+  width: auto;
+  padding: 0;
+  text-indent: 0;
+}
+
+.input:focus {
+  background-color: black;
+  outline: none;
+}
+
+.input::placeholder {
+  color: color(var(--colorText) lightness(50%));
+}

@@ -1,0 +1,46 @@
+.alert {
+  padding: 1em;
+  border: 1px solid transparent;
+  color: white;
+}
+
+.success {
+  background-color: var(--colorSuccess);
+}
+
+.primary {
+  background-color: var(--colorPrimary);
+}
+
+.info {
+  background-color: var(--colorInfo);
+}
+
+.warning {
+  background-color: var(--colorWarning);
+}
+
+.danger {
+  background-color: var(--colorDanger);
+}
+
+.default {
+  background-color: var(--colorGray8);
+}
+
+.alert a, .alert a:hover, .alert a:active, .alert a:focus{
+  color: white;
+  text-decoration: underline;
+}
+
+.dismiss {
+  position: relative;
+  font-size: 24px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  top: -0.2rem;
+  right: -0.4rem;
+  line-height: 2rem;
+  align-self: flex-start;
+}

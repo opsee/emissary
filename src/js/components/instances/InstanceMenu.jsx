@@ -30,7 +30,8 @@ const InstanceMenu = React.createClass({
       awsStartInstances: PropTypes.object,
       awsStopInstances: PropTypes.object,
       awsRebootInstances: PropTypes.object
-    })
+    }),
+    actionHistory: PropTypes.array
   },
   getInitialState() {
     return {
@@ -39,14 +40,21 @@ const InstanceMenu = React.createClass({
     };
   },
   shouldComponentUpdate(nextProps, nextState) {
+    let arr = [];
     const async1 = this.props.asyncActions;
     const async2 = nextProps.asyncActions;
-    const cond1 = !is(this.props.item, nextProps.item);
-    const cond2 = async1.awsStartInstances.status !== async2.awsStartInstances.status;
-    const cond3 = async1.awsStopInstances.status !== async2.awsStopInstances.status;
-    const cond4 = async1.awsRebootInstances.status !== async2.awsRebootInstances.status;
-    const cond5 = !_.isEqual(this.state, nextState);
-    return (cond1 || cond2 || cond3 || cond4 || cond5);
+    arr.push(!is(this.props.item, nextProps.item));
+    arr.push(async1.awsStartInstances.status !== async2.awsStartInstances.status);
+    arr.push(async1.awsStopInstances.status !== async2.awsStopInstances.status);
+    arr.push(async1.awsRebootInstances.status !== async2.awsRebootInstances.status);
+    arr.push(nextProps.actionHistory.length !== this.props.actionHistory.length);
+    arr.push(!_.isEqual(this.state, nextState));
+    return _.some(arr);
+  },
+  getCreateCheckLink(){
+    const target = _.pick(this.props.item.toJS(), ['id', 'type', 'name']);
+    const data = JSON.stringify({target});
+    return `/check-create/request?data=${data}`;
   },
   runStartConfirm(){
     this.props.actions.startInstances([this.props.item.get('id')]);
@@ -102,14 +110,28 @@ const InstanceMenu = React.createClass({
     }
     return null;
   },
+  renderActionResult(action){
+    const history =  this.props.actionHistory;
+    const entry = _.chain(history).filter({action}).filter(obj => {
+      return obj.ids.indexOf(this.props.item.get('id')) > -1;
+    }).last().value();
+    if (entry){
+      return (
+        <div>
+          Command successfully sent to <strong>{_.capitalize(action)}</strong> instance {this.props.item.get('id')}<br/><TimeAgo date={entry.date}/>.
+        </div>
+      );
+    }
+    return null;
+  },
   renderPage0(){
     const {item} = this.props;
     return (
       <div key="page0">
         <Padding lr={1} t={2}>
-          <Heading level={3}>{this.props.item.get('name')} Actions</Heading>
+          <Heading level={3}>{item.get('name')} Actions</Heading>
         </Padding>
-        <Button color="primary" text="left" to={`/check-create/request?id=${item.get('id')}&type=${item.get('type')}&name=${item.get('name')}`} block flat>
+        <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
           <Add inline fill="primary"/> Create Check
         </Button>
         {this.renderActions()}
@@ -120,7 +142,7 @@ const InstanceMenu = React.createClass({
     const {asyncActions} = this.props;
     return (
       <div key="page1">
-        <Padding lr={1}>
+        <Padding lr={1} t={2}>
           <Heading level={3}>Start this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
@@ -128,7 +150,7 @@ const InstanceMenu = React.createClass({
         <Button color="primary" text="left" block flat disabled={asyncActions.awsStartInstances.status === 'pending'} onPressUp={this.runStartConfirm}>Yes</Button>
         <Padding>
           <StatusHandler status={asyncActions.awsStartInstances.status}>
-            Command successfully sent to <strong>Start</strong> instance {this.props.item.get('id')}<br/><TimeAgo date={asyncActions.awsStartInstances.time}/>.
+            {this.renderActionResult('start')}
           </StatusHandler>
         </Padding>
       </div>
@@ -138,7 +160,7 @@ const InstanceMenu = React.createClass({
     const {asyncActions} = this.props;
     return (
       <div key="page2">
-        <Padding lr={1}>
+        <Padding lr={1} t={2}>
           <Heading level={3}>Stop this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
@@ -146,7 +168,7 @@ const InstanceMenu = React.createClass({
         <Button color="primary" text="left" block flat onPressUp={this.runStopConfirm} disabled={asyncActions.awsStopInstances.status === 'pending'}>Yes</Button>
         <Padding>
           <StatusHandler status={asyncActions.awsStopInstances.status}>
-            Command successfully sent to <strong>Stop</strong> instance {this.props.item.get('id')}<br/><TimeAgo date={asyncActions.awsStopInstances.time}/>.
+            {this.renderActionResult('stop')}
           </StatusHandler>
         </Padding>
       </div>
@@ -156,7 +178,7 @@ const InstanceMenu = React.createClass({
     const {asyncActions} = this.props;
     return (
       <div key="page3">
-        <Padding lr={1}>
+        <Padding lr={1} t={2}>
           <Heading level={3}>Reboot this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
@@ -164,7 +186,7 @@ const InstanceMenu = React.createClass({
         <Button color="primary" text="left" block flat onPressUp={this.runRebootConfirm} disabled={asyncActions.awsRebootInstances.status === 'pending'}>Yes</Button>
         <Padding>
           <StatusHandler status={asyncActions.awsRebootInstances.status}>
-            Command successfully sent to <strong>Reboot</strong> instance {this.props.item.get('id')}<br/><TimeAgo date={asyncActions.awsRebootInstances.time}/>.
+            {this.renderActionResult('reboot')}
           </StatusHandler>
         </Padding>
       </div>
@@ -194,7 +216,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  asyncActions: state.asyncActions
+  asyncActions: state.asyncActions,
+  actionHistory: state.env.awsActionHistory
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(InstanceMenu);

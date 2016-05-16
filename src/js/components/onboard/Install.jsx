@@ -6,11 +6,11 @@ import _ from 'lodash';
 
 import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
-import {Alert, Grid, Row, Col} from '../../modules/bootstrap';
-import config from '../../modules/config';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {flag} from '../../modules';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
+import {PagerdutyConnect, SlackConnect} from '../integrations';
 
 const Install = React.createClass({
   propTypes: {
@@ -19,7 +19,6 @@ const Install = React.createClass({
     example: PropTypes.bool,
     actions: PropTypes.shape({
       setCredentials: PropTypes.func,
-      vpcScan: PropTypes.func,
       onboardExampleInstall: PropTypes.func,
       install: PropTypes.func.isRequired,
       exampleInstall: PropTypes.func
@@ -31,6 +30,7 @@ const Install = React.createClass({
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),
+      user: PropTypes.object,
       asyncActions: PropTypes.object
     }).isRequired
   },
@@ -46,7 +46,7 @@ const Install = React.createClass({
     }).value();
 
     let reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
-    if (config.env !== 'production'){
+    if (process.env.NODE_ENV !== 'production'){
       if (this.props.location.query.fail){
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }
@@ -57,7 +57,10 @@ const Install = React.createClass({
       return {
         id: key,
         messages: _.chain(value).map('attributes').sort((a, b) => {
-          return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
+          if (typeof a.Timestamp === 'string'){
+            return Date.parse(a.Timestamp) - Date.parse(b.Timestamp);
+          }
+          return a.Timestamp - b.Timestamp;
         }).value()
       };
     }).value();
@@ -92,6 +95,10 @@ const Install = React.createClass({
   isBastionLaunching(){
     return !!(_.filter(this.props.redux.app.socketMessages, {command: 'launch-bastion'}).length);
   },
+  isBastionConnecting(){
+    const {socketMessages} = this.props.redux.app;
+    return !!(_.chain(socketMessages).filter({command: 'connect-bastion'}).last().get('state').value() === 'in-progress');
+  },
   isDiscoveryComplete(){
     if (this.props.location.pathname.match('install-example')){
       return true;
@@ -102,69 +109,105 @@ const Install = React.createClass({
     return this.getBastionConnectionStatus() === 'complete';
   },
   isComplete(){
-    return this.isBastionConnected() && this.isDiscoveryComplete();
+    //the bastion connection can be determined an alternate way that indicates discovery is fully complete:
+    const bool1 = _.chain(this.props.redux.app.socketMessages)
+    .filter({command: 'bastions'})
+    .find(msg => {
+      return _.chain(msg).get('attributes.bastions').find('connected').value();
+    })
+    .value();
+    const bool2 = this.isBastionConnected() && this.isDiscoveryComplete();
+    return !!(bool1 || bool2);
   },
   areBastionsComplete(){
     const stats = this.getBastionStatuses();
-    return (_.every(stats) && stats.length) ||  _.filter(this.props.redux.app.socketMessages, {command: 'connect-bastion'}).length;
+    const {socketMessages} = this.props.redux.app;
+    return (_.every(stats) && stats.length) ||
+    _.filter(socketMessages, {command: 'connect-bastion', state: 'complete'}).length;
   },
   renderBtn(){
-    if (this.areBastionsComplete()){
-      if (this.isComplete()){
-        return (
-          <Padding tb={3}>
-            <Button to="/check-create" color="primary" block chevron>
-              Create a Check
-            </Button>
-          </Padding>
-        );
-      }
+    if (this.isComplete()){
+      return (
+        <Padding tb={3}>
+          <Button to="/check-create" color="primary" block chevron>
+            Create a Check
+          </Button>
+        </Padding>
+      );
     }
     if (this.getBastionErrors().length){
       return (
-        <Alert bsStyle="danger">
-          We are aware of your failed Bastion install and we will contact you via email as soon as possible. Thank you!
+        <Alert color="danger">
+          We are aware of your failed instance install and we will contact you via email as soon as possible. Thank you!
         </Alert>
       );
     }
     return null;
   },
   renderText(){
-    if (this.isBastionLaunching() && !this.areBastionsComplete() && !this.getBastionErrors().length){
+    if (this.isBastionLaunching() && !this.isComplete()){
       return (
         <Padding b={1}>
-          <p>We are now installing the bastion in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
+          <p>We are now installing our instance in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
         </Padding>
       );
-    }else if (this.areBastionsComplete()){
-      return null;
+    } else if (this.isComplete()){
+      return (
+        <p>You are all set. Create a check to get started.</p>
+      );
+    } else if (this.isBastionConnecting()){
+      return (
+        <p>Your instance is currently attempting to connect. Hang on...</p>
+      );
     }
     return <p>Checking installation status...</p>;
   },
+  renderSlack(){
+    const slack = !!flag('integrations-slack');
+    const pagerduty = !!flag('integrations-pagerduty');
+    if (!this.isComplete()){
+      if (slack && !pagerduty){
+        return (
+          <Padding>
+            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel.
+          </Padding>
+        );
+      } else if (slack && pagerduty){
+        return (
+          <Padding>
+            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel. <br/>You can also set up a connection to <PagerdutyConnect>PagerDuty</PagerdutyConnect>.
+          </Padding>
+        );
+      }
+    }
+    return null;
+  },
   renderInner(){
+    const self = this;
     if (this.getBastionConnectionStatus() === 'failed'){
       return (
-        <Alert bsStyle="danger">
-          The bastion failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
+        <Alert color="danger">
+          Our instance failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
         </Alert>
       );
-    }else if (!this.isInstallError()){
+    } else if (!this.isInstallError()){
       return (
         <div>
           {this.renderText()}
           {this.getBastionMessages().map((b, i) => {
             return (
               <Padding b={1} key={`bastion-installer-${i}`}>
-                <BastionInstaller {...b} connected={this.isBastionConnected()}/>
+                <BastionInstaller messages={b.messages} connected={self.isComplete()}/>
               </Padding>
             );
           })}
           {this.renderBtn()}
+          {this.renderSlack()}
         </div>
       );
     }
     return (
-      <Alert bsStyle="danger">
+      <Alert color="danger">
         Something went wrong before the install began. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
       </Alert>
     );
@@ -172,7 +215,7 @@ const Install = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Bastion Installation"/>
+        <Toolbar title="Instance Installation"/>
         <Grid>
           <Row>
             <Col xs={12}>

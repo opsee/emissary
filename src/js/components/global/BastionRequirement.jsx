@@ -4,7 +4,7 @@ import StatusHandler from './StatusHandler';
 import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Alert} from '../../modules/bootstrap';
+import {Alert} from '../layout';
 import config from '../../modules/config';
 
 const BastionRequirement = React.createClass({
@@ -49,7 +49,6 @@ const BastionRequirement = React.createClass({
       if (bastion && bastion.state){
         return bastion.state;
       }
-      return false;
     }
     return false;
   },
@@ -72,32 +71,32 @@ const BastionRequirement = React.createClass({
     if (state === 'launching'){
       return (
         <div>
-          Your Opsee Bastion is currently installing. You can visit the <Link to="/start/install" style={{color: 'white', textDecoration: 'underline'}}>Install Page</Link> to view progress.
+          Your Opsee instance is currently installing. You can visit the <Link to="/start/install" style={{color: 'white', textDecoration: 'underline'}}>Install Page</Link> to view progress.
         </div>
       );
-    }else if (state === 'active'){
+    } else if (state === 'active'){
       return (
         <div>
-          Your Opsee Bastion is disconnected or has been removed. If you need to install another, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+          Your Opsee instance is disconnected or has been removed. If you need to install another, <Link to="/start/launch-stack" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
         </div>
       );
     }
     return (
       <div>
-        Opsee requires a <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>Bastion Instance</Link>. If you need to install one, <Link to="/start/region-select" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        Opsee requires <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>our instance</Link> to be installed. To install one, just <Link to="/start/launch-stack" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
       </div>
     );
   },
   renderInner(){
     if (this.state.disconnected && !this.getFirstMsg()){
       return (
-        <Alert bsStyle="danger">
-          Opsee is having trouble talking to the Bastion.
+        <Alert color="danger">
+          Opsee is having trouble communicating with our instance.
         </Alert>
       );
     }
     return (
-      <Alert bsStyle="danger">
+      <Alert color="danger">
         {this.renderReason()}
       </Alert>
     );

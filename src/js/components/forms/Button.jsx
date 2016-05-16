@@ -4,7 +4,7 @@ import _ from 'lodash';
 import Hammer from 'react-hammerjs';
 
 import {ChevronRight} from '../icons';
-import colors from 'seedling/colors';
+import {plain as seed} from 'seedling';
 import cx from 'classnames';
 import style from './button.css';
 
@@ -25,7 +25,7 @@ const Button = React.createClass({
     className: PropTypes.string,
     target: PropTypes.string,
     to: PropTypes.string,
-    params: PropTypes.object,
+    query: PropTypes.object,
     chevron: PropTypes.bool,
     disabled: PropTypes.bool,
     children: PropTypes.node,
@@ -93,6 +93,7 @@ const Button = React.createClass({
         pressing: 1
       });
     }
+    return null;
   },
   handlePressUp(){
     if (this.state.pressStart && this.state.pressing){
@@ -115,6 +116,7 @@ const Button = React.createClass({
       e.stopPropagation();
       window.open(this.history.createHref(this.props.to));
     }
+    this.handleClick();
   },
   handleKeyDown(e){
     if (e.keyCode.toString().match('13|32')){
@@ -125,17 +127,19 @@ const Button = React.createClass({
   },
   handleKeyUp(e){
     if (e.keyCode.toString().match('13|32')){
-      this.handlePressUp();
+      return this.handlePressUp();
     }
+    return null;
   },
   renderChevron(){
     if (this.props.chevron){
-      let fill = colors.textColor;
+      let fill = seed.color.text;
       if (this.props.disabled){
-        fill = colors.textColorSecondary;
+        fill = seed.color.text2;
       }
       return <ChevronRight inline fill={fill}/>;
     }
+    return null;
   },
   renderInner(){
     return (
@@ -152,13 +156,13 @@ const Button = React.createClass({
           {this.renderInner()}
         </Link>
       );
-    }else if (this.props.href){
+    } else if (this.props.href){
       return (
         <a className={this.getClass()} onClick={this.props.onClick} href={this.props.href} target={this.props.target} title={this.props.title} style={this.props.style}>
           {this.renderInner()}
         </a>
       );
-    }else if (this.props.onPressUp){
+    } else if (this.props.onPressUp){
       return (
         <Hammer onPress={this.handlePress} onPressUp={this.handlePressUp} options={this.getHammerOptions()} onPanStart={this.runResetPressing} onSwipe={this.runResetPressing}>
           <button className={this.getClass()} type={this.props.type} disabled={this.props.disabled} title={this.props.title} style={this.props.style} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}>

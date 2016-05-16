@@ -3,55 +3,81 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {StatusHandler} from '../global';
 import {Check} from '../../modules/schemas';
-import {checks as actions, user as userActions, env as envActions} from '../../actions';
+import CheckDebug from './CheckDebug';
+import config from '../../modules/config';
+import {
+  checks as actions,
+  user as userActions,
+  env as envActions
+} from '../../actions';
 
 const CheckCreate = React.createClass({
   propTypes: {
+    actions: PropTypes.shape({
+      testCheckReset: PropTypes.func,
+      createOrEdit: PropTypes.func
+    }),
     location: PropTypes.object,
     children: PropTypes.node,
-    redux: PropTypes.object.isRequired,
-    actions: PropTypes.shape({
-      create: PropTypes.func,
-      testCheckReset: PropTypes.func
-    }),
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        checkCreate: PropTypes.object,
+        getGroupsSecurity: PropTypes.object,
+        getGroupsAsg: PropTypes.object
+      }),
+      user: PropTypes.object
+    }).isRequired,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
       getGroupsElb: PropTypes.func,
-      getInstancesEcc: PropTypes.func
+      getGroupsAsg: PropTypes.func,
+      getInstancesEcc: PropTypes.func,
+      getInstancesRds: PropTypes.func
     })
   },
   componentWillMount(){
     this.props.actions.testCheckReset();
     if (!this.props.redux.asyncActions.getGroupsSecurity.history.length){
       this.props.envActions.getGroupsSecurity();
+      this.props.envActions.getGroupsAsg();
       this.props.envActions.getGroupsElb();
       this.props.envActions.getInstancesEcc();
+      this.props.envActions.getInstancesRds();
     }
   },
   getInitialState(){
     return this.getState();
   },
   getState(){
-    const obj = {
-      check: new Check({
-        target: this.props.location.query,
-        assertions: [
-          {
-            key: 'code',
-            operand: 200,
-            relationship: 'equal'
-          }
-        ]
-      }).toJS(),
+    let data = this.props.location.query.data;
+    if (data && typeof data === 'string'){
+      try {
+        data = JSON.parse(data);
+      } catch (err){
+        data = {};
+      }
+    }
+    const initial = _.chain(data).defaults({
+      target: {
+        name: config.checkDefaultTargetName,
+        type: config.checkDefaultTargetType,
+        id: config.checkDefaultTargetId
+      },
+      notifications: [
+        {
+          type: 'email',
+          value: this.props.redux.user.get('email')
+        }
+      ]
+    }).value();
+    return {
+      check: new Check(initial).toJS(),
       filter: null
     };
-    return obj;
   },
   setStatus(obj){
     this.setState(_.extend(this.state.statuses, obj));
@@ -67,7 +93,7 @@ const CheckCreate = React.createClass({
     });
   },
   handleSubmit(){
-    this.props.actions.create(this.state.check);
+    this.props.actions.createOrEdit([this.state.check]);
     this.props.userActions.putData('hasDismissedCheckCreationHelp');
   },
   render() {
@@ -79,13 +105,7 @@ const CheckCreate = React.createClass({
           onFilterChange: this.handleFilterChange
         }, this.state)
         )}
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
-            </Col>
-          </Row>
-        </Grid>
+        <CheckDebug check={this.state.check}/>
       </div>
     );
   }

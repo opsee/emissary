@@ -1,0 +1,42 @@
+.expandable {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  height: 13rem;
+  max-height: 13rem;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+  transition: max-height var(--transitionEaseOut);
+}
+
+.fade{
+  background-size: 100%;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
+  bottom: 0;
+  content: '';
+  display: block;
+  height: 4rem;
+  overflow: visible;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.open {
+  composes: expandable;
+  align-items: flex-start;
+  height: auto;
+  max-height: none;
+  padding-bottom: 5rem;
+}
+.open:after {
+  display: none;
+}
+
+.button {
+  bottom: 1rem;
+  position: absolute;
+  right: 1rem;
+  z-index: 2;
+}

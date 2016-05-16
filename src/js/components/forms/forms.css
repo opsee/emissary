@@ -1,0 +1,30 @@
+input, textarea {
+  box-shadow: none;
+  transition: background-color var(--transitionEaseOut);
+  background-color: var(--colorGray9);
+  border: none;
+  color: var(--colorText);
+  width: 100%;
+  padding: 0.75em 0;
+  text-indent: 0.5em;
+}
+
+input[type="checkbox"]{
+  width: auto;
+  padding: 0;
+}
+
+input:focus, textarea:focus{
+  background-color: black;
+  outline: none;
+}
+
+:global .form-message {
+  color: #f05223;
+  font-weight: 700;
+  transition: transform var(--transitionEaseOut), opacity var(--transitionEaseOut), visibility var(--transitionEaseOut);
+  margin-left: 0.6em;
+}
+:global .form-message.form-message-good {
+  color: var(--colorSuccess);
+}

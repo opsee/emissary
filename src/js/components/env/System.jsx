@@ -5,10 +5,8 @@ import _ from 'lodash';
 import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
-import {Heading} from '../type';
-import config from '../../modules/config';
+import {Col, Grid, Padding, Row} from '../layout';
+import {Color, Heading} from '../type';
 import {user as actions, env as envActions} from '../../actions';
 
 const System = React.createClass({
@@ -40,31 +38,43 @@ const System = React.createClass({
     this.props.actions.getData();
     this.props.envActions.getBastions();
   },
+  renderState(b){
+    let el = <Color c="success">Connected</Color>;
+    if (!b.connected){
+      el = <Color c="danger">Disconnected</Color>;
+    }
+    return (
+      <div><strong>State:</strong>&nbsp; {el}</div>
+    );
+  },
   renderBastionList(){
-    const bastions = _.filter(this.props.redux.env.bastions, 'connected');
+    const bastions = _.chain(this.props.redux.env.bastions).sortBy(['created_at']).reverse().value();
     if (bastions.length){
       return (
         <div>
-          <Heading level={3}>Connected Bastions</Heading>
-          <ul>
+          <Heading level={3}>Bastions</Heading>
+          <Padding l={2}>
             {bastions.map((bastion, i) => {
               return (
-                <li key={`bastion-${i}`}>
-                  <strong>Created:</strong> <TimeAgo date={new Date(bastion.created_at)}/><br/>
-                  <strong>ID:</strong> {bastion.id}<br/>
-                  <strong>Group</strong>: {bastion.group_id.String}<br/>
-                  <strong>Instance</strong>: {bastion.instance_id.String}<br/>
-                  <strong>VPC</strong>: {bastion.vpc_id}<br/>
-                  <strong>Subnet</strong>: {bastion.subnet_id}<br/>
-                  <strong>Routing</strong>: {bastion.subnet_routing}
-                </li>
+                <div key={`bastion-${i}`}>
+                  {this.renderState(bastion)}
+                  <div><strong>Created:</strong> <TimeAgo date={new Date(bastion.created_at)}/></div>
+                  <div><strong>ID:</strong> {bastion.id}</div>
+                  <div><strong>Region</strong>: {bastion.region}</div>
+                  <div><strong>Group</strong>: {bastion.group_id.String}</div>
+                  <div><strong>Instance</strong>: {bastion.instance_id.String}</div>
+                  <div><strong>VPC</strong>: {bastion.vpc_id}</div>
+                  <div><strong>Subnet</strong>: {bastion.subnet_id}</div>
+                  <div><strong>Routing</strong>: {bastion.subnet_routing}</div>
+                  <hr/>
+                </div>
                 );
             })}
-          </ul>
+          </Padding>
         </div>
       );
     }
-    return <Heading level={3}>No Connected Bastions.</Heading>;
+    return <Heading level={3}>No Bastions.</Heading>;
   },
   renderBastionsInfo(){
     const status = this.props.redux.asyncActions.envGetBastions.status;
@@ -76,9 +86,9 @@ const System = React.createClass({
   renderCustomerInfo(){
     if (this.props.redux.user.get('customer_id')){
       return (
-        <Padding t={3}>
-          <div><strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customer_id')}</span></div>
-        </Padding>
+          <div>
+            <strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customer_id')}</span>
+          </div>
       );
     }
     return null;
@@ -90,9 +100,11 @@ const System = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderBastionsInfo()}
               {this.renderCustomerInfo()}
-              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{config.revision}</span>
+              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
+              <Padding t={2}>
+                {this.renderBastionsInfo()}
+              </Padding>
             </Col>
           </Row>
         </Grid>

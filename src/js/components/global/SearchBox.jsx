@@ -18,7 +18,7 @@ const SearchBox = React.createClass({
   //   cb(null, data);
   // },
   // handleSelect(choice){
-  //   this.history.pushState(null, choice);
+  //   this.history.push(choice);
   //   this.setState({hidden: true});
   // },
   render(){

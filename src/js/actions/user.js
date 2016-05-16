@@ -1,4 +1,4 @@
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
@@ -15,7 +15,8 @@ import {
   USER_PUT_DATA,
   USER_SEND_RESET_EMAIL,
   USER_APPLY,
-  USER_SET_LOGIN_DATA
+  USER_SET_LOGIN_DATA,
+  ENV_GET_BASTIONS
 } from './constants';
 import storage from '../modules/storage';
 
@@ -25,19 +26,27 @@ export function login(data) {
       type: USER_LOGIN,
       payload: new Promise((resolve, reject) => {
         request
-        .post(`${config.authApi}/authenticate/password`)
+        .post(`${config.services.auth}/authenticate/password`)
         .send(data)
         .then((res) => {
           const user = res.body.user;
           analytics.trackEvent('User', 'login', null, user)(dispatch, state);
 
-          resolve(res.body);
-
-          //TODO fix this somehow
-          setTimeout(() => {
-            const string = state().router.location.query.redirect || '/';
-            dispatch(pushState(null, string));
-          }, 100);
+          request
+          .get(`${config.services.api}/vpcs/bastions`)
+          .set('Authorization', `Bearer ${res.body.token}`)
+          .then(bastionRes => {
+            dispatch({
+              type: ENV_GET_BASTIONS,
+              payload: _.get(bastionRes, 'body.bastions') || []
+            });
+            resolve(res.body);
+            //TODO fix this somehow
+            setTimeout(() => {
+              const string = state().router.location.query.redirect || '/';
+              dispatch(push(string));
+            }, 100);
+          }, reject);
         }, reject);
       })
     });
@@ -50,13 +59,15 @@ export function setPassword(data) {
       type: USER_SET_PASSWORD,
       payload: new Promise((resolve, reject) => {
         return request
-        .post(`${config.authApi}/signups/${data.id}/claim`)
-        .send(data)
+        .post(`${config.services.auth}/signups/${data.id}/claim`)
+        .send(_.defaults(data, {
+          invite: true
+        }))
         .then((res) => {
           resolve(res.body);
           analytics.updateUser(res.body.user)(dispatch, state);
           setTimeout(() => {
-            dispatch(pushState(null, '/start/tutorial'));
+            dispatch(push('/start/launch-stack'));
           }, 100);
         }, reject);
       })
@@ -64,7 +75,7 @@ export function setPassword(data) {
   };
 }
 
-export function logout(query){
+export function logout(){
   return (dispatch, state) => {
     storage.remove('user');
     analytics.trackEvent('User', 'logout')(dispatch, state);
@@ -72,7 +83,7 @@ export function logout(query){
       type: USER_LOGOUT
     });
     setTimeout(() => {
-      dispatch(pushState(null, '/login', query));
+      dispatch(push('/login'));
     }, 30);
   };
 }
@@ -83,11 +94,11 @@ export function refresh() {
     if (!state().user.get('auth')){
       return false;
     }
-    dispatch({
+    return dispatch({
       type: USER_REFRESH,
       payload: new Promise((resolve, reject) => {
         request
-        .put(`${config.authApi}/authenticate/refresh`)
+        .put(`${config.services.auth}/authenticate/refresh`)
         .set('Authorization', state().user.get('auth'))
         .timeout(7000)
         .then((res) => {
@@ -96,7 +107,7 @@ export function refresh() {
           const redirect = state().router.location.pathname;
           let string = redirect ? '/login' : `/login?redirect=${redirect}`;
           storage.remove('user');
-          dispatch(pushState(null, string));
+          dispatch(push(string));
           reject(err);
         });
       })
@@ -112,14 +123,14 @@ export function edit(data) {
       type: USER_EDIT,
       payload: new Promise((resolve, reject) => {
         request
-        .put(`${config.authApi}/users/${data.id}`)
+        .put(`${config.services.auth}/users/${data.id}`)
         .set('Authorization', state().user.get('auth'))
         .send(data)
         .then((res) => {
           resolve(res.body);
           //TODO fix this somehow
           setTimeout(() => {
-            dispatch(pushState(null, '/profile'));
+            dispatch(push('/profile'));
           }, 100);
           const user = _.get(res, 'body.user');
           if (user){
@@ -137,7 +148,7 @@ export function getCustomer(){
       type: USER_GET_CUSTOMER,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/customer`)
+        .get(`${config.services.api}/customer`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
           let body = _.get(res, 'body.body');
@@ -145,7 +156,7 @@ export function getCustomer(){
             try {
               body = JSON.parse(body);
               return resolve({customerId: body.customer.id});
-            }catch (err){
+            } catch (err){
               _.noop();
             }
           }
@@ -162,7 +173,7 @@ export function getData(){
       type: USER_GET_DATA,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.authApi}/users/${state().user.get('id')}/data`)
+        .get(`${config.services.auth}/users/${state().user.get('id')}/data`)
         .set('Authorization', state().user.get('auth'))
         .then(res => resolve(res.body), reject);
       })
@@ -176,7 +187,7 @@ export function putData(key, data, reset){
       type: USER_PUT_DATA,
       payload: new Promise((resolve, reject) => {
         request
-        .get(`${config.authApi}/users/${state().user.get('id')}/data`)
+        .get(`${config.services.auth}/users/${state().user.get('id')}/data`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           let user = res.body;
@@ -184,7 +195,7 @@ export function putData(key, data, reset){
           let index;
           if (history && Array.isArray(history) && history.length){
             index = history.length - 1;
-          }else {
+          } else {
             index = 0;
             user[key] = [];
           }
@@ -200,7 +211,7 @@ export function putData(key, data, reset){
             user[key] = false;
           }
           return request
-          .put(`${config.authApi}/users/${state().user.get('id')}/data`)
+          .put(`${config.services.auth}/users/${state().user.get('id')}/data`)
           .set('Authorization', state().user.get('auth'))
           .send(user)
           .then(res2 => resolve(res2.body), reject);
@@ -216,7 +227,7 @@ export function sendResetEmail(data) {
       type: USER_SEND_RESET_EMAIL,
       payload: new Promise((resolve, reject) => {
         request
-        .post(`${config.authApi}/authenticate/token`)
+        .post(`${config.services.auth}/authenticate/token`)
         .send(data)
         .then(res => resolve(res.body), reject);
       })

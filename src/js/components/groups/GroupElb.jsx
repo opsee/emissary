@@ -2,15 +2,16 @@ import React, {PropTypes} from 'react';
 import TimeAgo from 'react-timeago';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Map} from 'immutable';
+import _ from 'lodash';
 
 import {Table, Toolbar, StatusHandler} from '../global';
 import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
@@ -44,6 +45,16 @@ const GroupElb = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Map();
   },
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getGroup().get('id'),
+        type: 'elb',
+        name: this.getGroup().get('name')
+      }
+    });
+    return `/check-create/request?data=${data}`;
+  },
   renderDescription(){
     const desc = this.getGroup().get('Description');
     if (desc && desc !== ''){
@@ -57,20 +68,21 @@ const GroupElb = React.createClass({
     return <tr/>;
   },
   renderInner(){
-    if (this.getGroup().get('name')){
+    const group = this.getGroup();
+    if (group.name && group.CreatedTime){
       return (
         <div>
           <Padding b={3}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=elb&name=${this.getGroup().get('name')}`}>
+            <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
           <Padding b={2}>
-            <Heading level={3}>{this.getGroup().get('id')} Information</Heading>
+            <Heading level={3}>{group.id} Information</Heading>
             <Table>
               <tr>
                 <td><strong>Created</strong></td>
-                <td><TimeAgo date={new Date(this.getGroup().get('CreatedTime'))}/></td>
+                <td><TimeAgo date={group.CreatedTime}/></td>
               </tr>
               {this.renderDescription()}
             </Table>
@@ -79,7 +91,7 @@ const GroupElb = React.createClass({
             <CheckItemList type="groupELB" target={this.props.params.id} title/>
           </Padding>
           <Padding b={2}>
-            <InstanceItemList ids={this.getGroup().get('instances').toJS()} redux={this.props.redux} title/>
+            <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} redux={this.props.redux} title/>
           </Padding>
 
         </div>

@@ -3,18 +3,19 @@ import _ from 'lodash';
 import slate from 'slate';
 import {Close, Checkmark} from '../icons';
 import style from './assertionCounter.css';
+import {ScreenReaderOnly} from '../type';
 
 const AssertionCounter = React.createClass({
   propTypes: {
-    key: PropTypes.string,
-    relationship: PropTypes.string,
-    operand: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    value: PropTypes.string,
-    response: PropTypes.object,
-    keyData: PropTypes.string
+    response: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      operand: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ]),
+      relationship: PropTypes.string.isRequired
+    }).isRequired
   },
   getTitle(){
     return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
@@ -27,7 +28,7 @@ const AssertionCounter = React.createClass({
   },
   getResponse(){
     if (this.props.response && this.props.response.toJS){
-      return _.get(this.props.response.toJS(), 'response.value');
+      return _.get(this.props.response.toJS(), 'response');
     }
     return this.props.response;
   },
@@ -36,7 +37,10 @@ const AssertionCounter = React.createClass({
     return test && test.success;
   },
   runTest(){
-    return slate.checkAssertion(_.assign({}, this.props, {key: this.props.keyData}), this.getResponse());
+    let response = _.assign({}, this.getResponse()) || {};
+    //cast to string because that's what slate wants
+    response.body = typeof response.body === 'object' ? JSON.stringify(response.body) : response.body;
+    return slate.checkAssertion(this.props.item, response);
   },
   renderIcon(){
     return this.isPassing() ? (
@@ -49,7 +53,7 @@ const AssertionCounter = React.createClass({
     return (
       <div title={this.getTitle()} className={this.getClass()}>
         {this.renderIcon()}
-      <span className="sr-only">{this.runTest().error}</span>
+        <ScreenReaderOnly>{this.runTest().error}</ScreenReaderOnly>
     </div>
     );
   }

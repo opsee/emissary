@@ -2,17 +2,17 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {plain as seed} from 'seedling';
+import TimeAgo from 'react-timeago';
 
-import {Alert} from '../../modules/bootstrap';
-import Highlight from '../global/Highlight.jsx';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Refresh} from '../icons';
 import {Button} from '../forms';
 import style from './checkResponse.css';
 import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
-import color from '../type/color.css';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
+import CheckResponseSingle from './CheckResponseSingle';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -39,7 +39,8 @@ const CheckResponsePaginate = React.createClass({
      * expanded with a button click. If false, the entire response body will
      * be shown, and the expansion button will be hidden.
      */
-    allowCollapse: PropTypes.bool
+    allowCollapse: PropTypes.bool,
+    date: PropTypes.instanceOf(Date)
   },
   getDefaultProps() {
     return {
@@ -52,7 +53,8 @@ const CheckResponsePaginate = React.createClass({
     return {
       complete: false,
       expanded: false,
-      activeItem: 0
+      activeItem: 0,
+      debouncedTestAction: _.debounce(this.props.actions.test, 500)
     };
   },
   componentDidMount(){
@@ -71,9 +73,9 @@ const CheckResponsePaginate = React.createClass({
     if (!data){
       return [];
     }
-    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.check_spec.value[s]);
+    let arr = _.map(['protocol', 'port', 'verb', 'path', 'body'], s => data.spec[s]);
     arr.push(_.get(data, 'target.id'));
-    let headers = _.get(data, 'check_spec.value.headers');
+    let headers = _.get(data, 'spec.headers');
     if (headers){
       arr.push(headers.map(h => {
         return h.name + h.values.join(', ');
@@ -103,17 +105,20 @@ const CheckResponsePaginate = React.createClass({
   getResponses(){
     if (this.props.responses){
       return this.props.responses;
-    }else if (this.state.complete){
+    } else if (this.state.complete){
       return this.props.redux.checks.responses;
     }
     return [];
+  },
+  getBody(){
+    return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.body');
   },
   isCheckComplete(check){
     if (!check){
       return false;
     }
     const condition1 = check.target.id;
-    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.check_spec.value[s]).every().value();
+    const condition2 = _.chain(['port', 'verb', 'path']).map(s => check.spec[s]).every().value();
     return condition1 && condition2;
   },
   isWaiting(){
@@ -125,11 +130,9 @@ const CheckResponsePaginate = React.createClass({
     }
     const complete = this.isCheckComplete(data.check);
     if (complete){
-      // if (this.getStatus() !== 'pending'){
-      this.props.actions.test(data.check);
-      // }
+      this.state.debouncedTestAction(data.check);
     }
-    this.setState({complete: true});
+    return this.setState({complete: true});
   },
   runNext(){
     const activeItem = this.props.redux.checks.selectedResponse + 1;
@@ -169,24 +172,30 @@ const CheckResponsePaginate = React.createClass({
       return (
         <div className={style.checkResponseWaiting}>Sending request...</div>
       );
-    }else if (this.getStatus() && typeof this.getStatus() !== 'string'){
+    } else if (this.getStatus() && typeof this.getStatus() !== 'string'){
       return (
-        <Alert bsStyle="danger">There was an error sending your request.</Alert>
+        <Alert color="danger" className="flex-1">There was an error sending your request.</Alert>
       );
-    }else if (this.props.responses){
+    } else if (this.props.responses){
       return null;
     }
     return (
-      <div className={style.checkResponseWaiting}>Your response will appear here</div>
+      <div className={style.checkResponseWaiting}>
+        <div>Your response will appear here</div>
+      </div>
     );
   },
-  renderCode(){
+  renderHeaders(res){
+    const headers = _.get(res, 'response.headers') || {};
     return (
-      <div className={this.getResponseClass()}>
-        <Highlight>
-          {JSON.stringify(_.get(this.getFormattedResponses(), 'response.value'), null, ' ')}
-        </Highlight>
-        {this.renderButton()}
+      <div>
+        {_.chain(headers).keys().map(key => {
+          return (
+            <div>
+              <code style={{fontSize: '1.4rem'}}>{key}:&nbsp;<Color c="primary">{headers[key]}</Color></code>
+            </div>
+          );
+        }).value()}
       </div>
     );
   },
@@ -198,33 +207,32 @@ const CheckResponsePaginate = React.createClass({
     if (res.error){
       return (
         <div className={style.checkResponseWaiting}>
-          <Alert bsStyle="danger">{res.error}</Alert>
+          <Alert color="danger" className="flex-1">{res.error}</Alert>
         </div>
       );
     }
     return (
-      <div className={this.getResponseClass()}>
-        <Highlight>
-          {JSON.stringify(_.get(res, 'response.value'), null, ' ')}
-        </Highlight>
+      <Padding a={1} className={this.getResponseClass()}>
+        <div style={{width: '100%'}}>
+          {this.renderTopArea()}
+          <CheckResponseSingle code={_.get(res, 'response.code')} headers={_.get(res, 'response.headers') || {}} body={this.getBody()} metrics={_.get(res, 'response.metrics')}/>
+        </div>
         {this.renderButton()}
-      </div>
+      </Padding>
     );
   },
   renderWaiting(){
     return (
       <div>
         {this.renderTitle()}
-        <div className={this.getResponseClass()}>
-          {this.renderWaitingResponse()}
-        </div>
+        {this.renderWaitingResponse()}
       </div>
     );
   },
   renderError(){
     return (
       <div className={style.checkResponseWaiting}>
-        <Alert bsStyle="danger">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
+        <Alert color="danger" className="flex-1">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
       </div>
     );
   },
@@ -240,11 +248,9 @@ const CheckResponsePaginate = React.createClass({
     const passing = this.getNumberPassing();
     if (passing){
       return (
-        <span>
-          <Padding r={1} inline>
-            <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
-          </Padding>
-        </span>
+        <Padding r={1} inline>
+          <ListCheckmark inline fill="success"/>&nbsp;{this.getNumberPassing()} Passing
+        </Padding>
       );
     }
     return null;
@@ -253,11 +259,9 @@ const CheckResponsePaginate = React.createClass({
     const failing = this.getNumberFailing();
     if (failing){
       return (
-        <span>
-          <Padding r={1} inline>
-            <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
-          </Padding>
-        </span>
+        <Padding r={1} inline>
+          <ListClose inline fill="danger"/>&nbsp;{this.getNumberFailing()} Failing
+        </Padding>
       );
     }
     return null;
@@ -269,8 +273,8 @@ const CheckResponsePaginate = React.createClass({
           <Padding b={1}>
             {this.renderPassing()}
             {this.renderFailing()}
+            {this.renderDate()}
           </Padding>
-          <div className="clearfix"/>
         </div>
       );
     }
@@ -290,7 +294,12 @@ const CheckResponsePaginate = React.createClass({
     if (!this.props.showRerunButton) {
       return null;
     }
-    return <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={this.getStatus() === 'pending'}><Refresh fill="primary"/></Button>;
+    const disabled = this.getStatus() === 'pending';
+    return (
+      <Button sm flat color="primary" onClick={this.runTestCheck} title="Re-run check request" style={{height: '3rem'}} disabled={disabled}>
+        <Refresh fill={disabled ? 'textSecondary' : 'primary'}/>
+      </Button>
+    );
   },
   renderTitle(){
     return (
@@ -300,21 +309,34 @@ const CheckResponsePaginate = React.createClass({
       </Padding>
     );
   },
+  renderDate(){
+    if (this.props.date instanceof Date){
+      const s = this.props.date.toString();
+      return (
+        <Color c="gray500">
+          <small title="The date this event was processed.">{`- ${s}`}&nbsp;-&nbsp;<TimeAgo date={this.props.date}/></small>
+        </Color>
+      );
+    }
+    return null;
+  },
   renderTopArea(){
     const arr = this.getFormattedResponses();
+    const selected = arr[this.props.redux.checks.selectedResponse];
+    const title = _.get(selected, 'target.address') || _.get(selected, 'target.id');
     if (arr.length){
-      const passing = _.get(arr[this.props.redux.checks.selectedResponse], 'passing');
+      const passing = _.get(selected, 'passing');
       if (!this.props.showBoolArea){
         return (
-          <Padding a={0.5}>
-          <strong>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
-          </Padding>
+          <div>
+            <strong>{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          </div>
         );
       }
       return (
-        <Padding a={0.5}>
-          <strong className={passing ? color.success : color.danger}>{_.get(arr[this.props.redux.checks.selectedResponse], 'target.id')}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
-        </Padding>
+        <div>
+          <strong className={passing ? seed.color.success : seed.color.danger}>{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+        </div>
       );
     }
     return null;
@@ -322,18 +344,15 @@ const CheckResponsePaginate = React.createClass({
   render() {
     if (this.props.responses && !this.props.responses.size){
       return null;
-    }else if (this.isWaiting()){
+    } else if (this.isWaiting()){
       return this.renderWaiting();
-    }else if (this.getResponses().size){
+    } else if (this.getResponses().size){
       return (
         <div>
         {this.renderTitle()}
         {this.renderBoolArea()}
-          <div style={{background: '#212121'}}>
-            <Padding a={0.5}>
-              {this.renderTopArea()}
-              {this.renderItem()}
-            </Padding>
+          <div>
+            {this.renderItem()}
           </div>
           {this.renderFlippers()}
         </div>

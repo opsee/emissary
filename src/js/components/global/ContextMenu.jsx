@@ -2,9 +2,8 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Grid, Row} from '../../modules/bootstrap';
 import Modal from './Modal';
-import {Padding} from '../layout';
+import {Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {app as actions} from '../../actions';
 

@@ -5,8 +5,7 @@ import _ from 'lodash';
 import {List, is} from 'immutable';
 
 import InstanceItem from './InstanceItem.jsx';
-import {Alert} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Padding} from '../layout';
 import {Link} from 'react-router';
 import {SetInterval} from '../../modules/mixins';
 import {StatusHandler} from '../global';
@@ -18,6 +17,7 @@ const InstanceItemList = React.createClass({
   propTypes: {
     instances: PropTypes.instanceOf(List),
     groupSecurity: PropTypes.string,
+    asg: PropTypes.string,
     offset: PropTypes.number,
     limit: PropTypes.number,
     ids: PropTypes.array,
@@ -55,7 +55,7 @@ const InstanceItemList = React.createClass({
     if (this.props.noFetch && this.props.redux.asyncActions[this.getAction()].history.length){
       return true;
     }
-    this.getData();
+    return this.getData();
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
@@ -89,6 +89,7 @@ const InstanceItemList = React.createClass({
       }
       return this.props.actions.getInstancesEcc();
     }
+    return null;
   },
   getInstances(noFilter){
     const {type} = this.props;
@@ -106,6 +107,14 @@ const InstanceItemList = React.createClass({
       });
     }
     if (this.props.groupSecurity){
+      data = data.filter(d => {
+        if (type === 'rds'){
+          return _.chain(d.toJS()).get('VpcSecurityGroups').map('VpcSecurityGroupId').indexOf(this.props.groupSecurity).value() > -1;
+        }
+        return _.chain(d.toJS()).get('SecurityGroups').map('GroupId').indexOf(this.props.groupSecurity).value() > -1;
+      });
+    }
+    if (this.props.asg){
       data = data.filter(d => {
         if (type === 'rds'){
           return _.chain(d.toJS()).get('VpcSecurityGroups').map('VpcSecurityGroupId').indexOf(this.props.groupSecurity).value() > -1;
@@ -160,7 +169,11 @@ const InstanceItemList = React.createClass({
   renderTitle(){
     let numbers = `(${this.getInstances(true).size})`;
     if (this.getInstances().size < this.getInstances(true).size){
-      numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+      if (!this.props.groupSecurity && !this.props.ids){
+        numbers = `(${this.getInstances().size} of ${this.getInstances(true).size})`;
+      } else {
+        numbers = `(${this.getInstances().size})`;
+      }
     }
     if (!this.getInstances().size){
       numbers = '';
@@ -172,7 +185,7 @@ const InstanceItemList = React.createClass({
   },
   renderNoMatch(){
     if (!this.getInstances().size && !this.props.noFallback){
-      return <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>;
+      return <Alert color="default">No {this.getTitle()} instances found</Alert>;
     }
     return null;
   },
@@ -182,7 +195,7 @@ const InstanceItemList = React.createClass({
         <div>
           {this.renderTitle()}
           {this.getInstances().map(instance => {
-            return <InstanceItem item={instance} key={instance.get('id')} {...this.props} noMenu={instance.type !== 'EC2'}/>;
+            return <InstanceItem item={instance} key={instance.get('id')} {...this.props} noMenu={instance.type !== 'ecc'}/>;
           })}
           {this.renderNoMatch()}
           {this.renderLink()}
@@ -193,7 +206,7 @@ const InstanceItemList = React.createClass({
       <div>
         {this.renderTitle()}
         <StatusHandler status={this.getStatus().status} history={this.getStatus().history} noFallback={this.props.noFallback}>
-          <Alert bsStyle="default">No {this.getTitle()} instances found</Alert>
+          <Alert color="default">No {this.getTitle()} instances found</Alert>
         </StatusHandler>
       </div>
     );

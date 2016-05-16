@@ -3,11 +3,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Row, Col} from '../../modules/bootstrap';
-
 import {Button} from '../forms';
 import {Circle} from '../icons';
-import {Padding} from '../layout';
+import {Col, Padding, Row} from '../layout';
 import {search as actions} from '../../actions';
 
 const SearchFilterButtons = React.createClass({
@@ -22,6 +20,9 @@ const SearchFilterButtons = React.createClass({
       })
     })
   },
+  shouldComponentUpdate(nextProps) {
+    return !_.isEqual(nextProps.redux.search.tokens, this.props.redux.search.tokens);
+  },
   isStateSelected(state){
     const {tokens} = this.props.redux.search;
     return _.filter(tokens, {tag: 'state', term: state}).length;
@@ -34,7 +35,7 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/> Passing</Button>
+          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/>&nbsp;Passing</Button>
         </Padding>
       </Col>
     );
@@ -43,7 +44,7 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>Failing</Button>
+          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>&nbsp;Failing</Button>
         </Padding>
       </Col>
     );
@@ -52,7 +53,7 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>Unmonitored</Button>
+          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>&nbsp;Unmonitored</Button>
         </Padding>
       </Col>
     );

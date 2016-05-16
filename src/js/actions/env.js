@@ -1,47 +1,60 @@
+import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
 import {
   GET_GROUP_SECURITY,
   GET_GROUPS_SECURITY,
-  // GET_GROUP_RDS,
-  // GET_GROUPS_RDS,
+  GET_GROUP_ASG,
+  GET_GROUPS_ASG,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
+  GET_METRIC_RDS,
   ENV_GET_BASTIONS,
+  ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
   AWS_STOP_INSTANCES
 } from './constants';
+import graphPromise from '../modules/graphPromise';
 
 export function getGroupSecurity(id){
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUP_SECURITY,
-      payload: new Promise((resolve, reject) => {
-        request
-        .get(`${config.api}/groups/security`)
+      payload: graphPromise('region.vpc', () => {
+        return request
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then((res) => {
-          let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
-            return g.group.GroupId === id;
-          });
-          request
-          .get(`${config.api}/groups/security/${id}`)
-          .set('Authorization', state().user.get('auth'))
-          .then((res2) => {
-            group.instances = res2.body && res2.body.instances;
-            resolve({
-              data: group,
-              search: state().search
-            });
-          }, reject);
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "security", id: "${id}"){
+                    ... on ec2SecurityGroup {
+                      GroupId
+                      GroupName
+                      Description
+                    }
+                  }
+                  instances(type: "ec2"){
+                    ... on ec2Instance {
+                      InstanceId
+                      SecurityGroups {
+                        GroupId
+                      }
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -50,45 +63,146 @@ export function getGroupsSecurity(){
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUPS_SECURITY,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.vpc', () => {
         return request
-        .get(`${config.api}/groups/security`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: res.body.groups,
-            search: state().search
-          });
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "security"){
+                    ... on ec2SecurityGroup {
+                      GroupId
+                      GroupName
+                      Description
+                    }
+                  }
+                  instances(type: "ec2"){
+                    ... on ec2Instance {
+                      InstanceId
+                      SecurityGroups {
+                        GroupId
+                      }
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
 
-export function getGroupElb(id){
+export function getGroupAsg(id){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUP_ASG,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "autoscaling", id: "${id}"){
+                    ... on autoscalingGroup {
+                      Tags {
+                        Key
+                        Value
+                      }
+                      LoadBalancerNames
+                      AutoScalingGroupName
+                      Instances {
+                        InstanceId
+                      }
+                      Status
+                      CreatedTime
+                      MinSize
+                      MaxSize
+                      DesiredCapacity
+                      AvailabilityZones
+                      SuspendedProcesses {
+                        ProcessName
+                        SuspensionReason
+                      }
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search, id})
+    });
+  };
+}
+
+export function getGroupsAsg(){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUPS_ASG,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "autoscaling"){
+                    ... on autoscalingGroup {
+                      Tags {
+                        Key
+                        Value
+                      }
+                      LoadBalancerNames
+                      AutoScalingGroupName
+                      Instances {
+                        InstanceId
+                      }
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getGroupElb(id) {
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUP_ELB,
-      payload: new Promise((resolve, reject) => {
-        request
-        .get(`${config.api}/groups/elb`)
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then((res) => {
-          let group = res.body && res.body.groups && _.find(res.body.groups, (g) => {
-            return g.group.LoadBalancerName === id;
-          });
-          request
-          .get(`${config.api}/groups/elb/${id}`)
-          .set('Authorization', state().user.get('auth'))
-          .then((res2) => {
-            group.instances = res2.body && res2.body.instances;
-            resolve({
-              data: group,
-              search: state().search
-            });
-          }, res2 => reject(res2));
-        }, res => reject(res));
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "elb", id: "${id}"){
+                  ... on elbLoadBalancerDescription {
+                    LoadBalancerName
+                    CreatedTime
+                    Instances {
+                      InstanceId
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -97,17 +211,28 @@ export function getGroupsElb(){
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUPS_ELB,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.vpc.groups', () => {
         return request
-        .get(`${config.api}/groups/elb`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: res.body.groups,
-            search: state().search
-          });
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "elb"){
+                  ... on elbLoadBalancerDescription {
+                    LoadBalancerName
+                    Instances {
+                      InstanceId
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -116,17 +241,34 @@ export function getInstanceEcc(id){
   return (dispatch, state) => {
     dispatch({
       type: GET_INSTANCE_ECC,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.vpc.instances', () => {
         return request
-        .get(`${config.api}/instances/ec2/${id}`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: res.body,
-            search: state().search
-          });
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "ec2", id: "${id}"){
+                  ... on ec2Instance {
+                    Tags {
+                      Key
+                      Value
+                    }
+                    LaunchTime
+                    InstanceType
+                    InstanceId
+                    SecurityGroups {
+                      GroupId
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -135,17 +277,32 @@ export function getInstancesEcc(){
   return (dispatch, state) => {
     dispatch({
       type: GET_INSTANCES_ECC,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.vpc.instances', () => {
         return request
-        .get(`${config.api}/instances/ec2`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: res.body.instances,
-            search: state().search
-          });
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "ec2"){
+                  ... on ec2Instance {
+                    Tags {
+                      Key
+                      Value
+                    }
+                    InstanceId
+                    SecurityGroups {
+                      GroupId
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -154,17 +311,26 @@ export function getInstancesRds(){
   return (dispatch, state) => {
     dispatch({
       type: GET_INSTANCES_RDS,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.vpc.instances', () => {
         return request
-        .get(`${config.api}/instances/rds`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: res.body.instances,
-            search: state().search
-          });
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds"){
+                  ... on rdsDBInstance {
+                    DBName
+                    DBInstanceIdentifier
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -173,17 +339,90 @@ export function getInstanceRds(id){
   return (dispatch, state) => {
     dispatch({
       type: GET_INSTANCE_RDS,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.vpc.instances', () => {
         return request
-        .get(`${config.api}/instances/rds/${id}`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          resolve({
-            data: res.body,
-            search: state().search
-          });
-        }, reject);
-      })
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds", id: "${id}"){
+                  ... on rdsDBInstance {
+                    #AllocatedStorage
+                    AvailabilityZone
+                    #BackupRetentionPeriod
+                    CACertificateIdentifier
+                    #DBClusterIdentifier
+                    DBInstanceClass
+                    DBInstanceIdentifier
+                    #DbInstancePort
+                    DBName
+                    Endpoint{
+                      Port
+                      Address
+                      HostedZoneId
+                    }
+                    EngineVersion
+                    #Iops
+                    InstanceCreateTime
+                    #MultiAZ
+                    #StorageType
+                    #VpcSecurityGroups {
+                    #  VpcSecurityGroupId
+                    #  Status
+                    #}
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+/**
+ * @param {string} id - the ID of the RDS instance (e.g., 'my-rds-instance')
+ * @param {string} metric - the name of the metric (e.g., 'CPUUtilization')
+ */
+
+export function getMetricRDS(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_RDS,
+      payload: graphPromise('region.vpc.instances', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds", id: "${id}"){
+                  ... on rdsDBInstance {
+                    DBName
+                    DBInstanceIdentifier
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
     });
   };
 }
@@ -191,17 +430,21 @@ export function getInstanceRds(id){
 export function getBastions(){
   return (dispatch, state) => {
     if (!state().user.get('auth')){
-      return Promise.resolve();
+      return dispatch({
+        type: ENV_GET_BASTIONS,
+        payload: []
+      });
+      // return Promise.resolve([]);
     }
-    dispatch({
+    return dispatch({
       type: ENV_GET_BASTIONS,
       payload: new Promise((resolve, reject) => {
         return request
-        .get(`${config.api}/vpcs/bastions`)
+        .get(`${config.services.api}/vpcs/bastions`)
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           const arr = _.get(res, 'body.bastions');
-          if (!arr && config.env !== 'production'){
+          if (!arr && process.env.NODE_ENV !== 'production'){
             console.error('No array from GET /bastions');
           }
           resolve(arr || []);
@@ -211,53 +454,105 @@ export function getBastions(){
   };
 }
 
-export function rebootInstances(InstanceIds){
+export function getMetricRDS(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_RDS,
+      payload: graphPromise('region.vpc.instances', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "rds", id: "${id}"){
+                  ... on rdsDBInstance {
+                    DBName
+                    DBInstanceIdentifier
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function rebootInstances(ids = []){
   return (dispatch, state) => {
     dispatch({
       type: AWS_REBOOT_INSTANCES,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.rebootInstances', () => {
         return request
-        .post(`${config.api}/aws/reboot-instances`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({InstanceIds})
-        .then(res => {
-          resolve(res.body);
-        }, reject);
+        .send({
+          query: `mutation reboot($region: String!, $ids: [String]!){
+            region(id: $region) {
+              rebootInstances(ids: $ids)
+            }
+          }`,
+          variables: _.assign(_.pick(state().env, ['region']), {ids})
+        });
       })
     });
   };
 }
 
-export function stopInstances(InstanceIds){
+export function stopInstances(ids = []){
   return (dispatch, state) => {
     dispatch({
       type: AWS_STOP_INSTANCES,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.stopInstances', () => {
         return request
-        .post(`${config.api}/aws/stop-instances`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({InstanceIds})
-        .then(res => {
-          resolve(res.body);
-        }, reject);
+        .send({
+          query: `mutation reboot($region: String!, $ids: [String]!){
+            region(id: $region) {
+              stopInstances(ids: $ids)
+            }
+          }`,
+          variables: _.assign(_.pick(state().env, ['region']), {ids})
+        });
       })
     });
   };
 }
 
-export function startInstances(InstanceIds){
+export function startInstances(ids = []){
   return (dispatch, state) => {
     dispatch({
       type: AWS_START_INSTANCES,
-      payload: new Promise((resolve, reject) => {
+      payload: graphPromise('region.startInstances', () => {
         return request
-        .post(`${config.api}/aws/start-instances`)
+        .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
-        .send({InstanceIds})
-        .then(res => {
-          resolve(res.body);
-        }, reject);
+        .send({
+          query: `mutation reboot($region: String!, $ids: [String]!){
+            region(id: $region) {
+              startInstances(ids: $ids)
+            }
+          }`,
+          variables: _.assign(_.pick(state().env, ['region']), {ids})
+        });
       })
     });
   };
 }
+
+export const selectToggle = createAction(ENV_SELECT_TOGGLE);

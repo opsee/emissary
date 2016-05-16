@@ -1,8 +1,10 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import cx from 'classnames';
 import DocumentTitle from 'react-document-title';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Row} from '../layout';
 import style from './toolbar.css';
+import {plain as seed} from 'seedling';
 import {Heading, Hyphenate} from '../type';
 
 const Toolbar = React.createClass({
@@ -11,21 +13,20 @@ const Toolbar = React.createClass({
     btnPosition: PropTypes.string,
     bg: PropTypes.string,
     children: PropTypes.node,
-    pageTitle: PropTypes.string
+    pageTitle: PropTypes.string,
+    className: PropTypes.string
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
     key = _.startCase(key).split(' ').join('');
     return style[`btn${key}`];
   },
-  getOuterClass(){
-    let c = {};
-    if (this.props.bg === 'info'){
-      c = style.outerInfo;
-    } else {
-      c = style.outer;
+  getStyle(){
+    let obj = {};
+    if (this.props.bg){
+      obj.background = seed.color[this.props.bg];
     }
-    return c;
+    return obj;
   },
   renderTitle(){
     return (
@@ -34,7 +35,7 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={this.getOuterClass()}>
+      <div className={cx(style.outer, this.props.className)} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>

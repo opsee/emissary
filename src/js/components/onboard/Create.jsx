@@ -2,12 +2,12 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import _ from 'lodash';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Grid, Row, Col} from '../../modules/bootstrap';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Padding} from '../layout';
 import {onboard as actions} from '../../actions';
 
 const OnboardCreate = React.createClass({
@@ -20,11 +20,16 @@ const OnboardCreate = React.createClass({
       asyncActions: PropTypes.shape({
         onboardSignupCreate: PropTypes.object
       })
-    })
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.object
+    }).isRequired
   },
   getInitialState(){
     return {
-      data: this.props.redux.user.get('loginData')
+      data: this.props.redux.user.get('loginData'),
+      tos: false,
+      validationError: undefined
     };
   },
   getButtonText(){
@@ -34,20 +39,35 @@ const OnboardCreate = React.createClass({
     return this.props.redux.asyncActions.onboardSignupCreate.status;
   },
   isDisabled(){
-    const incomplete = !(this.state.data.name && this.state.data.email);
+    const incomplete = !this.state.data.email || !this.state.tos;
     return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
-    this.setState({
-      data: data
-    });
+    return this.setState({data});
+  },
+  handleInputChange(e){
+    if (e && e.target){
+      const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      let state = {
+        [e.target.name]: value
+      };
+      if (e.target.name === 'tos' && value){
+        state.validationError = undefined;
+      }
+      this.setState(state);
+    }
   },
   handleSubmit(e){
     e.preventDefault();
-    this.setState({
-      submitting: true
-    });
-    this.props.actions.signupCreate(this.state.data);
+    if (!this.state.tos){
+      return this.setState({
+        validationError: 'You must accept the Terms of Service below.'
+      });
+    }
+    return this.props.actions.signupCreate(_.defaults(this.state.data, {
+      name: 'default',
+      referrer: this.props.location.query.referrer || ''
+    }));
   },
   render() {
     return (
@@ -57,11 +77,17 @@ const OnboardCreate = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={2}><LogoColor/></Padding>
-              <p>Try Opsee <strong>for free</strong> in our private beta. If you <a target="_blank" href="https://opsee.typeform.com/to/JHiTKr">fill out our survey</a> and you're a good fit, we'll <em>bump you to the top of the list</em>.</p>
+              <p>Try Opsee <strong>for free</strong> in our private beta!</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['name', 'email']}  onChange={this.handleUserData} email={this.state.data.email} name={this.state.data.name}/>
+                  <UserInputs include={['email']} data={this.state.data} onChange={this.handleUserData}/>
                 </Padding>
+                <div className="display-flex">
+                  <Padding r={1} b={1}>
+                    <input id="js-tos" name="tos" value={this.state.tos} type="checkbox" onChange={this.handleInputChange} required/>
+                  </Padding>
+                  <label className="label" htmlFor="js-tos">I accept the <Link to="/tos" target="_blank">Opsee Terms of Service</Link></label>
+                </div>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>

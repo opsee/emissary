@@ -4,8 +4,7 @@ import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 
 import {checks as actions} from '../../actions';
-import {Grid, Row, Col} from '../../modules/bootstrap';
-import Padding from '../layout/Padding';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import style from './screenshot.css';
 
@@ -51,7 +50,7 @@ const CheckScreenshot = React.createClass({
     return (
       <div className="js-screenshot-results">
         <Padding tb={1}>
-          <CheckResponsePaginate responses={this.getFailingResponses().take(1)}
+          <CheckResponsePaginate responses={this.getNotification().get('responses')}
             allowCollapse={false} showRerunButton={false} />
         </Padding>
       </div>

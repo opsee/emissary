@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 const BaseSVG = React.createClass({
+  propTypes: {
+    children: PropTypes.node
+  },
   getInitialState(){
     return this.getState();
   },
@@ -18,20 +21,14 @@ const BaseSVG = React.createClass({
       path: data.path || '',
       viewBox: data.viewBox || [0, 0, width, height].join(' '),
       style: data.style || {},
-      className: data.className
+      className: data.className,
+      title: data.title
     };
   },
   render() {
     return (
-      <svg xmlns="http://www.w3.org/svg/2000"
-        viewBox={this.state.viewBox}
-        width={this.state.width}
-        height={this.state.height}
-        fill={this.state.fill}
-        style={this.state.style}
-        className={this.state.className}
-        >
-        <path d={this.state.path} />
+      <svg xmlns="http://www.w3.org/svg/2000" {...this.state}>
+        {this.props.children ? this.props.children : <path d={this.state.path} />}
       </svg>
     );
   }

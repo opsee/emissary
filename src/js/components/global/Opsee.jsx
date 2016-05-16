@@ -5,20 +5,31 @@ import {bindActionCreators} from 'redux';
 
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {Analytics, Header, MessageModal, Toolbar} from './';
+import {AppStatus, Analytics, Confirm, Header, MessageModal, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
-import {Alert, Grid, Col} from '../../modules/bootstrap';
-import {Padding} from '../layout';
+import {Alert, Col, Grid, Padding} from '../layout';
 /* eslint-disable no-unused-vars */
 import {yeller} from '../../modules';
-import styleGlobal from './style.global.css';
-import grid from './grid.global.css';
-import style from './opsee.css';
-import {app as appActions, user as userActions, env as envActions} from '../../actions';
+
+import reset from './reset.css';
+import style from './global.css';
+import alert from './alert.css';
+import modal from './modal.css';
+import autosuggest from './autosuggest.css';
+import forms from '../forms/forms.css';
+import grid from '../layout/grid.css';
+import layout from '../layout/layout.css';
+
+import {
+  app as appActions,
+  user as userActions,
+  env as envActions,
+  checks as checkActions
+} from '../../actions';
 import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
-const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/profile\/edit', '^\/password-forgot'];
+const hideNavList = ['^\/start', '^\/login', '^\/check-create', '^\/check\/edit', '^\/check\/.*\/event', '^\/profile\/edit', '^\/password-forgot'];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],
@@ -27,7 +38,11 @@ const Opsee = React.createClass({
     children: PropTypes.node,
     appActions: PropTypes.shape({
       initialize: PropTypes.func,
-      shutdown: PropTypes.func
+      shutdown: PropTypes.func,
+      getStatusPageInfo: PropTypes.func
+    }),
+    checkActions: PropTypes.shape({
+      getChecks: PropTypes.func
     }),
     userActions: PropTypes.shape({
       refresh: PropTypes.func
@@ -40,6 +55,12 @@ const Opsee = React.createClass({
   componentWillMount(){
     this.props.appActions.initialize();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
+    this.props.appActions.getStatusPageInfo();
+    this.setInterval(this.props.appActions.getStatusPageInfo, (1000 * 60 * 2));
+    this.props.envActions.getBastions();
+    if (this.props.redux.user.get('auth')){
+      this.props.checkActions.getChecks();
+    }
     yeller.configure(this.props.redux);
   },
   componentWillReceiveProps(nextProps) {
@@ -50,7 +71,7 @@ const Opsee = React.createClass({
     //user log in
     if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
       this.props.appActions.initialize();
-      this.props.envActions.getBastions();
+      this.props.checkActions.getChecks();
     }
   },
   getMeatClass(){
@@ -66,7 +87,7 @@ const Opsee = React.createClass({
         <Grid>
           <Col xs={12}>
             <Padding t={2}>
-              <Alert bsStyle="danger">
+              <Alert color="danger">
                 Could not connect to Opsee. Attempting to reconnect...
               </Alert>
             </Padding>
@@ -76,7 +97,7 @@ const Opsee = React.createClass({
     );
   },
   renderInner(){
-    if (!this.props.redux.app.ready){
+    if (!this.props.redux.app.ready || this.props.redux.env.vpc === undefined){
       return null;
     }
     if (this.props.redux.app.socketError && !config.bypassSocketError){
@@ -92,21 +113,17 @@ const Opsee = React.createClass({
     return (
       <div>
         <DocumentTitle title="Opsee"/>
+        <AppStatus/>
         <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
         <div id="header-search">
           <SearchBar />
         </div>
         <Analytics/>
         <div className={this.getMeatClass()}>
-        {
-          // <CSSTransitionGroup component="div" transitionName="page">
-        }
           {this.renderInner()}
-        {
-          // </CSSTransitionGroup>
-        }
         </div>
         <MessageModal/>
+        <Confirm />
       </div>
     );
   }
@@ -119,7 +136,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  envActions: bindActionCreators(envActions, dispatch)
+  envActions: bindActionCreators(envActions, dispatch),
+  checkActions: bindActionCreators(checkActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Opsee);

@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {Map} from 'immutable';
-import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -9,9 +8,8 @@ import {CheckItemList} from '../checks';
 import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
-import {Grid, Row, Col} from '../../modules/bootstrap';
 import {Add} from '../icons';
-import {Padding} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
@@ -37,9 +35,6 @@ const GroupSecurity = React.createClass({
   componentDidMount(){
     this.setInterval(this.getData, 30000);
   },
-  // shouldComponentUpdate(nextProps) {
-  //   return !Immutable.is(this.props.group, nextProps.group);
-  // },
   getData(){
     this.props.actions.getGroupSecurity(this.props.params.id);
   },
@@ -48,10 +43,15 @@ const GroupSecurity = React.createClass({
       return g.get('id') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
-  getInstanceIds(){
-    if (this.getGroup().get('name')){
-      return _.map(this.getGroup().get('instances').toJS(), 'id');
-    }
+  getCreateLink(){
+    const data = JSON.stringify({
+      target: {
+        id: this.getGroup().get('id'),
+        type: 'security',
+        name: this.getGroup().get('name')
+      }
+    });
+    return `/check-create/request?data=${data}`;
   },
   renderDescription(){
     const desc = this.getGroup().get('Description');
@@ -65,7 +65,7 @@ const GroupSecurity = React.createClass({
       return (
         <div>
           <Padding b={3}>
-            <Button color="primary" flat to={`/check-create/request?id=${this.getGroup().get('id')}&type=security&name=${this.getGroup().get('name')}`} title="Create New Check">
+            <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
           </Padding>
