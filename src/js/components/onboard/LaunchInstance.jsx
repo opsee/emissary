@@ -28,6 +28,16 @@ const LaunchInstance = React.createClass({
       vpc: 'some-cool-vpc'
     };
   },
+  componentWillMount(){
+    this.props.actions.hasRole();
+  },
+  componentWillReceiveProps(nextProps) {
+    const region = nextProps.redux.onboard.role.region;
+    const hasScanned = !!nextProps.redux.asyncActions.onboardScanRegion.status;
+    if (region && !hasScanned) {
+      this.props.actions.scanRegion(region);
+    }
+  },
   toggleInfo(shouldShow) {
     this.setState({ showInfo: shouldShow });
   },
@@ -38,6 +48,25 @@ const LaunchInstance = React.createClass({
     this.setState(_.assign({
       showConfigure: false
     }, config));
+  },
+  hasConfig() {
+    const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
+  },
+  renderConfig(){
+    const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
+    if (this.props.redux.asyncActions.onboardScanRegion.status === 'pending') {
+      return (
+        <Padding tb={2} className="text-center">
+          <span>Scanning your environment in {region}...</span>
+        </Padding>
+      );
+    }
+    return (
+      <Padding tb={2} className="text-center">
+        <h3 style={{color: 'white', 'fontWeight': 300}}>{region} <span style={{opacity: 0.3}}>></span> {selectedVPC} <span style={{opacity: 0.3}}>></span> {selectedSubnet}</h3>
+        <p><small><a href="#" onClick={this.toggleConfigure.bind(this, true)}>(Change)</a></small></p>
+      </Padding>
+    );
   },
   renderInner(){
     if (this.state.showConfigure) {
@@ -57,6 +86,7 @@ const LaunchInstance = React.createClass({
         </div>
       );
     }
+
     return (
       <div>
         <Padding lr={4} tb={2} className="text-center">
@@ -68,13 +98,9 @@ const LaunchInstance = React.createClass({
         </Padding>
 
         <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
-
         <p>Here's our best guess on where we should install it, based on your environment:</p>
 
-        <Padding tb={2} className="text-center">
-          <h3 style={{color: 'white', 'fontWeight': 300}}>{this.props.redux.onboard.region} > {this.state.vpc} > {this.state.subnet}</h3>
-          <p><small><a href="#" onClick={this.toggleConfigure.bind(this, true)}>(Change)</a></small></p>
-        </Padding>
+        {this.renderConfig()}
 
         <Padding tb={1}>
           <Padding b={1}>

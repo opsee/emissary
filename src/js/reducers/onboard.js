@@ -114,7 +114,14 @@ export default handleActions({
       const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
         return _.assign({}, subnet, { name: getNameFromTags(subnet) });
       }).value();
-      return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
+      const newState = { vpcsForSelection, subnetsForSelection };
+      if (!state.selectedVPC) {
+        newState.selectedVPC = _.get(_.first(vpcsForSelection), 'vpc_id');
+      }
+      if (!state.selectedSubnet) {
+        newState.selectedSubnet = _.get(_.first(subnetsForSelection), 'subnet_id');
+      }
+      return _.assign({}, state, newState);
     },
     throw: yeller.reportAction
   },

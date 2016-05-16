@@ -83,7 +83,7 @@ const LaunchStack = React.createClass({
             <li>Check the acknowledgement that IAM resources will be created, and click "create" on the "Review" page.</li>
           </ol>
         </Padding>
-        <p>When it's done, return to this screen to finish installation. You can monitor the progress of the role creation in your AWS console.</p>
+        <p>You can monitor the progress of the role creation in your AWS console. It can take a couple of minutes. When it's done, return to this screen to finish installation.</p>
       </div>
     );
   },
