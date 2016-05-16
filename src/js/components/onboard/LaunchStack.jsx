@@ -14,7 +14,6 @@ import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
 import templates from '../../modules/awsTemplates';
 import {SetInterval} from '../../modules/mixins';
-import ReviewAccess from './ReviewAccess';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
@@ -40,8 +39,7 @@ const LaunchStack = React.createClass({
   },
   getInitialState(){
     return {
-      hasClicked: false,
-      showInstructions: false
+      hasClicked: false
     };
   },
   componentWillMount() {
@@ -107,16 +105,6 @@ const LaunchStack = React.createClass({
       </Padding>
     );
   },
-  renderLearnMore(){
-    return (
-      <div>
-        <ReviewAccess />
-        <Padding tb={1}>
-          <Button onClick={this.setState.bind(this, {showInstructions: false})} color="primary" block>Got it</Button>
-        </Padding>
-      </div>
-    );
-  },
   renderInstructions(){
     return (
       <div>
@@ -166,16 +154,13 @@ const LaunchStack = React.createClass({
         <Padding b={1}>
           {this.renderLaunchButton()}
         </Padding>
-        <Button onClick={this.setState.bind(this, {showInstructions: true})} color="primary" flat block>About Cross-Account Access</Button>
+        <Button to="/start/review-stack" color="primary" flat block>About Cross-Account Access</Button>
       </Padding>
     );
   },
   renderInner(){
     if (this.getRole()) {
       return this.renderDone();
-    }
-    if (this.state.showInstructions) {
-      return this.renderLearnMore();
     }
     if (this.state.hasClicked && !this.getRole()) {
       return this.renderInstructions();

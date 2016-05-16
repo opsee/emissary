@@ -4,8 +4,10 @@ import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
 import {onboard as actions} from '../../actions';
-import {Expandable, Padding} from '../layout';
+import {Button} from '../forms';
+import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Highlight} from '../global';
+import style from './onboard.css';
 
 const ReviewInstance = React.createClass({
   propTypes: {
@@ -56,25 +58,34 @@ const ReviewInstance = React.createClass({
   },
   render(){
     return (
-      <div>
-        <Padding tb={2}>
-          <h2>About the Opsee EC2 instance</h2>
-        </Padding>
-        <p>The instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks,
-        and it inherits all of its permissions from the cross-account role you set up in the last step.
-        The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
-        which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
-        <Padding tb={1}>
-          <h4>Instance CloudFormation Template</h4>
-          <p>Used to install our EC2 instance. Notably, we create a security group and auto-scale group (to set rules requiring at least one running Opsee instance at all times), and add our instance to both groups.</p>
-          {this.renderTemplateItem('cf')}
-        </Padding>
-        <Padding b={1}>
-          <h4>Ingress IAM Role</h4>
-          <p>Used to ensure communication between your security groups and the Opsee security group within your chosen VPC.</p>
-          {this.renderTemplateItem('ingress')}
-        </Padding>
-        <p>If you'd like to know more, reach out to us any time on <a href="mailto:support@opsee.co">email</a>, <a href="https://opsee-support.slack.com" target="_blank">Slack</a>, or <a href="irc://irc.freenode.org/opsee" target="_blank">IRC</a>.</p>
+      <div className={style.transitionPanel}>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <Padding tb={2}>
+                <h2>About the Opsee EC2 instance</h2>
+              </Padding>
+              <p>The instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks,
+              and it inherits all of its permissions from the cross-account role you set up in the last step.
+              The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
+              which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
+              <Padding tb={1}>
+                <h4>Instance CloudFormation Template</h4>
+                <p>Used to install our EC2 instance. Notably, we create a security group and auto-scale group (to set rules requiring at least one running Opsee instance at all times), and add our instance to both groups.</p>
+                {this.renderTemplateItem('cf')}
+              </Padding>
+              <Padding b={1}>
+                <h4>Ingress IAM Role</h4>
+                <p>Used to ensure communication between your security groups and the Opsee security group within your chosen VPC.</p>
+                {this.renderTemplateItem('ingress')}
+              </Padding>
+              <p>If you'd like to know more, reach out to us any time on <a href="mailto:support@opsee.co">email</a>, <a href="https://opsee-support.slack.com" target="_blank">Slack</a>, or <a href="irc://irc.freenode.org/opsee" target="_blank">IRC</a>.</p>
+              <Padding tb={2}>
+                <Button to="/start/launch-instance" color="primary" block>Got it</Button>
+              </Padding>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

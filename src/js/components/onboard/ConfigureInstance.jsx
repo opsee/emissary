@@ -10,7 +10,6 @@ import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Padding} from '../layout';
 import {SetInterval} from '../../modules/mixins';
-import ReviewAccess from './ReviewAccess';
 import style from './onboard.css';
 
 const ConfigureInstance = React.createClass({

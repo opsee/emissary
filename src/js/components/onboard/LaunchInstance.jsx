@@ -7,7 +7,6 @@ import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Padding, Col, Grid, Row} from '../layout';
 import instanceImg from '../../../img/tut-ec2-instance.svg';
-import ReviewInstance from './ReviewInstance';
 import ConfigureInstance from './ConfigureInstance';
 import style from './onboard.css';
 
@@ -33,8 +32,7 @@ const LaunchInstance = React.createClass({
   },
   getInitialState(){
     return {
-      showConfigure: false,
-      showInfo: false
+      showConfigure: false
     };
   },
   componentWillReceiveProps(nextProps) {
@@ -73,17 +71,6 @@ const LaunchInstance = React.createClass({
         </div>
       );
     }
-    if (this.state.showInfo) {
-      return (
-        <div>
-          <ReviewInstance />
-          <Padding tb={1}>
-            <Button onClick={this.setState.bind(this, {showInfo: false})} color="primary" block>Got it</Button>
-          </Padding>
-        </div>
-      );
-    }
-
     return (
       <div>
         <Padding lr={4} tb={2} className="text-center">
@@ -105,7 +92,7 @@ const LaunchInstance = React.createClass({
         <Padding b={1}>
           <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
         </Padding>
-        <Button onClick={this.setState.bind(this, {showInfo: true})} color="primary" flat block>About the Opsee Instance</Button>
+        <Button to="/start/review-instance" color="primary" flat block>About the Opsee Instance</Button>
       </Padding>
     );
   },

@@ -72,7 +72,9 @@ const LaunchStack = React.createClass({
   renderHowTo(){
     return (
       <div>
-        <strong>How to install the CloudFormation Stack</strong>
+        <Padding tb={1}>
+          <h3>How to install the CloudFormation Stack</h3>
+        </Padding>
         <p>We enable cross-account access using a CloudFormation stack. To launch
         the stack in your AWS environment, do the following in your AWS console:</p>
         <Padding tb={1}>
@@ -89,21 +91,30 @@ const LaunchStack = React.createClass({
   },
   render() {
     return (
-      <div>
-        <Padding tb={1}>
-          <h2>Opsee Cross-Account Access</h2>
-        </Padding>
-        <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
-
-        <Padding tb={2}>
-          {this.renderHowTo()}
-        </Padding>
-
-        <Padding tb={2}>
-          <strong>Our CloudFormation template</strong>
-          <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>. (We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.)</p>
-          {this.renderTemplate()}
-        </Padding>
+      <div className={style.transitionPanel}>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <Padding tb={1}>
+                <h2>Opsee Cross-Account Access</h2>
+              </Padding>
+              <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
+              <Padding tb={1}>
+                {this.renderHowTo()}
+              </Padding>
+              <Padding tb={1}>
+                <Padding tb={1}>
+                  <h3>Our CloudFormation template</h3>
+                </Padding>
+                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>. (We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.)</p>
+                {this.renderTemplate()}
+              </Padding>
+              <Padding t={1} b={2}>
+                <Button to="/start/launch-stack" color="primary" block>Got it</Button>
+              </Padding>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

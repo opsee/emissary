@@ -48,6 +48,7 @@ import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
 import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
 import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
+import OnboardReviewStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewStack';
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
 import OnboardReviewInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewInstance';
 import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchInstance';
@@ -112,6 +113,7 @@ const routes = (
 
     <Route path="/start" component={auth(Onboard)}>
       <Route path="/start/password" component={OnboardAccount} />
+      <Route path="/start/review-stack" component={OnboardReviewStack} />
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
       <Route path="/start/review-instance" component={OnboardReviewInstance} />
       <Route path="/start/launch-instance" component={OnboardLaunchInstance} />
