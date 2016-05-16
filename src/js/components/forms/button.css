@@ -187,9 +187,6 @@
   border-color: var(--colorText) !important;
 }
 
-.btnFlat.btnBlock, .btnFlat.btnPrimary.btnBlock, .btnFlat.btnSuccess.btnBlock, .btnFlat.btnWarning.btnBlock, .btnFlat.btnInfo.btnBlock, .btnFlat.btnDanger.btnBlock {
-  border-color: transparent;
-}
 .btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
   background: none;
   border-color: var(--colorText2);
@@ -199,9 +196,11 @@
   color: var(--colorPrimary);
 }
 .btnFlat.btnPrimary:hover {
-  background: var(--colorPrimary);
+  border-color: color(var(--colorPrimary) shade(40%));
+  background: color(var(--colorPrimary) shade(40%));
 }
 .btnFlat.btnPrimary:active {
+  border-color: color(var(--colorPrimary) shade(40%));
   background: color(var(--colorPrimary) shade(40%));
 }
 .btnFlat.btnSuccess {

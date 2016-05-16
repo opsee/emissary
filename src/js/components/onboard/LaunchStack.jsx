@@ -1,7 +1,6 @@
-/* eslint-disable */
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
-import {History, Link} from 'react-router';
+import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
@@ -10,9 +9,8 @@ import Checkmark from '../svgs/Checkmark';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {NewWindow} from '../icons';
-import {Highlight, ProgressBar, StatusHandler, Toolbar} from '../global';
+import {Highlight, StatusHandler} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
-import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
 import templates from '../../modules/awsTemplates';
 import {SetInterval} from '../../modules/mixins';
@@ -24,13 +22,19 @@ const LaunchStack = React.createClass({
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        onboardGetTemplates: PropTypes.object
+        onboardGetTemplates: PropTypes.object,
+        onboardMakeLaunchTemplate: PropTypes.object
       }),
       onboard: PropTypes.shape({
-        templates: PropTypes.array
+        templates: PropTypes.array,
+        role: PropTypes.shape({
+          region: PropTypes.string
+        })
       })
     }),
     actions: PropTypes.shape({
+      hasRole: PropTypes.func,
+      makeLaunchRoleUrlTemplate: PropTypes.func,
       getTemplates: PropTypes.func
     })
   },
@@ -55,29 +59,22 @@ const LaunchStack = React.createClass({
       this.props.actions.hasRole();
     }, 1000 * 5); // every 5 seconds
   },
-  componentWillReceiveProps(){
-    //
-    // if (this.hasRole() && !this.state.hasClicked) {
-    //   this.history.pushState(null, '/start/launch-instance');
-    // }
-  },
-  hasRole(){
+  getRole(){
     return !!this.props.redux.onboard.role.region;
   },
   getTemplateURL() {
     const urlTemplate = _.get(this.props.redux, 'onboard.regionLaunchURL');
     return urlTemplate ? _.replace(urlTemplate, 'region=${region}', '') : null;
   },
-  onOpenConsole(e) {
-    this.setState({ hasClicked: true })
-  },
-  toggleInstructions(shouldShow) {
-    this.setState({ showInstructions: shouldShow });
+  onOpenConsole() {
+    this.setState({ hasClicked: true });
   },
   renderHowTo(){
     return (
       <div>
-        <strong>How to install the CloudFormation Stack</strong>
+        <Padding tb={1}>
+          <strong>How to install the CloudFormation Stack</strong>
+        </Padding>
         <p>We enable cross-account access using a CloudFormation stack. To launch
         the stack in your AWS environment, do the following in your AWS console:</p>
         <ol>
@@ -110,27 +107,12 @@ const LaunchStack = React.createClass({
       </Padding>
     );
   },
-  renderLaunchButton(){
-    if (this.props.redux.asyncActions.onboardMakeLaunchTemplate.state === 'pending') {
-      return (
-        <Button onClick={this.onOpenConsole} color="success" disabled block chevron>Loading...</Button>
-      );
-    }
-
-    const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
-    return (
-      <div>
-        <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="success" block>{verb} AWS Console <NewWindow btn /></Button>
-        <p className="text-center"><Link to="/start/launch-instance"><small>DEBUG: click to skip</small></Link></p>
-      </div>
-    );
-  },
   renderLearnMore(){
     return (
       <div>
         <ReviewAccess />
         <Padding tb={1}>
-          <Button onClick={this.toggleInstructions.bind(null, false)} color="primary" block>Got it</Button>
+          <Button onClick={this.setState.bind(this, {showInstructions: false})} color="primary" block>Got it</Button>
         </Padding>
       </div>
     );
@@ -138,20 +120,18 @@ const LaunchStack = React.createClass({
   renderInstructions(){
     return (
       <div>
-        <Padding tb={4} className="text-center">
-          <Padding tb={2}>
+        <Padding tb={2} className="text-center">
+          <Padding b={3}>
             <StatusHandler status="pending" />
           </Padding>
+          <div style={{opacity: 0.75}}>
+            Waiting for cross-account role...
+          </div>
+          <div style={{opacity: 0.75}}>
+            <p><small>(Make sure to come back when it's done!)</small></p>
+          </div>
         </Padding>
-
-        <Padding tb={2}>
-          <h3 className="text-center">Waiting for cross-account role to finish...</h3>
-        </Padding>
-
-        <Padding tb={2}>
-          {this.renderHowTo()}
-        </Padding>
-
+        {this.renderHowTo()}
         {this.renderButtons()}
       </div>
     );
@@ -168,38 +148,45 @@ const LaunchStack = React.createClass({
       </div>
     );
   },
+  renderLaunchButton(){
+    if (this.props.redux.asyncActions.onboardMakeLaunchTemplate.state === 'pending') {
+      return (
+        <Button onClick={this.onOpenConsole} color="primary" disabled block chevron>Loading...</Button>
+      );
+    }
+
+    const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
+    return (
+      <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
+    );
+  },
   renderButtons(){
     return (
-      <Padding tb={1}>
-        <Padding b={1}>
-          <Button onClick={this.toggleInstructions.bind(null, true)} color="primary" block>Learn More</Button>
-        </Padding>
+      <Padding tb={2}>
         <Padding b={1}>
           {this.renderLaunchButton()}
         </Padding>
+        <Button onClick={this.setState.bind(this, {showInstructions: true})} color="primary" flat block>About Cross-Account Access</Button>
       </Padding>
     );
   },
   renderInner(){
+    if (this.getRole()) {
+      return this.renderDone();
+    }
     if (this.state.showInstructions) {
       return this.renderLearnMore();
     }
-
-    if (this.hasRole()) {
-      return this.renderDone();
-    }
-
-    if (this.state.hasClicked && !this.hasRole()) {
+    if (this.state.hasClicked && !this.getRole()) {
       return this.renderInstructions();
     }
-
     return (
       <div>
         <Padding a={4} className="text-center">
           <img src={crossAccountImg} />
         </Padding>
 
-        <Padding tb={2}>
+        <Padding b={2}>
           <h2>Set Up Cross-Account Access.</h2>
         </Padding>
 
@@ -216,7 +203,6 @@ const LaunchStack = React.createClass({
     );
   },
   render() {
-    console.log(`Has role? ${this.hasRole()}`);
     return (
       <div className={style.transitionPanel}>
         <Grid>
