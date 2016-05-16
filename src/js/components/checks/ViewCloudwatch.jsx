@@ -14,7 +14,7 @@ const ViewCloudwatch = React.createClass({
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
     notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (_.find(this.props.check.toJS().tags, () => 'complete')){
+    if (this.props.check.get('tags').find(() => 'complete')) {
       return (
         <Padding b={1}>
           <Heading level={3}>Notifications</Heading>
