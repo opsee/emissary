@@ -72,7 +72,7 @@ const LaunchInstance = React.createClass({
     if (this.state.showConfigure) {
       return (
         <div>
-          <ConfigureInstance onSave={this.onConfigure} />
+          <ConfigureInstance onSave={this.onConfigure} onDismiss={this.toggleConfigure.bind(null, false)} />
         </div>
       );
     }

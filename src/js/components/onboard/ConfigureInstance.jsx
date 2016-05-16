@@ -89,8 +89,11 @@ const ConfigureInstance = React.createClass({
         {this.renderSubnet()}
         {this.renderVPC()}
 
-        <Padding tb={2}>
+        <Padding t={2} b={1}>
           <Button onClick={this.onSave} color="success" disabled={!isDone} block>Save configuration</Button>
+        </Padding>
+        <Padding b={1}>
+          <Button onClick={this.props.onDismiss} block>Cancel</Button>
         </Padding>
       </div>
     );
