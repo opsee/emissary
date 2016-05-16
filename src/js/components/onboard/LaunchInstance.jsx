@@ -1,35 +1,41 @@
-/* eslint-disable */
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
-import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {plain as seed} from 'seedling';
 
 import {onboard as actions} from '../../actions';
-import {Heading} from '../type';
 import {Button} from '../forms';
-import {Expandable, Padding, Col, Grid, Row} from '../layout';
+import {Padding, Col, Grid, Row} from '../layout';
 import instanceImg from '../../../img/tut-ec2-instance.svg';
 import ReviewInstance from './ReviewInstance';
 import ConfigureInstance from './ConfigureInstance';
 import style from './onboard.css';
 
 const LaunchInstance = React.createClass({
+  propTypes: {
+    redux: PropTypes.shape({
+      onboard: PropTypes.shape({
+        region: PropTypes.string,
+        selectedVPC: PropTypes.string,
+        selectedSubnet: PropTypes.string
+      }),
+      asyncActions: PropTypes.shape({
+        onboardScanRegion: PropTypes.object
+      })
+    }),
+    actions: PropTypes.shape({
+      hasRole: PropTypes.func,
+      scanRegion: PropTypes.func
+    })
+  },
   componentWillMount(){
     this.props.actions.hasRole();
   },
   getInitialState(){
     return {
       showConfigure: false,
-      showInfo: false,
-      region: 'us-west-1',
-      subnet: 'some-cool-subnet',
-      vpc: 'some-cool-vpc'
+      showInfo: false
     };
-  },
-  componentWillMount(){
-    this.props.actions.hasRole();
   },
   componentWillReceiveProps(nextProps) {
     const region = nextProps.redux.onboard.role.region;
@@ -38,19 +44,10 @@ const LaunchInstance = React.createClass({
       this.props.actions.scanRegion(region);
     }
   },
-  toggleInfo(shouldShow) {
-    this.setState({ showInfo: shouldShow });
-  },
-  toggleConfigure(shouldShow) {
-    this.setState({ showConfigure: shouldShow });
-  },
   onConfigure(config){
     this.setState(_.assign({
       showConfigure: false
     }, config));
-  },
-  hasConfig() {
-    const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
   },
   renderConfig(){
     const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
@@ -64,7 +61,7 @@ const LaunchInstance = React.createClass({
     return (
       <Padding tb={2} className="text-center">
         <h3 style={{color: 'white', 'fontWeight': 300}}>{region} <span style={{opacity: 0.3}}>></span> {selectedVPC} <span style={{opacity: 0.3}}>></span> {selectedSubnet}</h3>
-        <p><small><a href="#" onClick={this.toggleConfigure.bind(this, true)}>(Change)</a></small></p>
+        <p><small><a href="#" onClick={this.setState.bind(this, {showConfigure: true})}>(Change)</a></small></p>
       </Padding>
     );
   },
@@ -72,7 +69,7 @@ const LaunchInstance = React.createClass({
     if (this.state.showConfigure) {
       return (
         <div>
-          <ConfigureInstance onSave={this.onConfigure} onDismiss={this.toggleConfigure.bind(null, false)} />
+          <ConfigureInstance onSave={this.onConfigure} onDismiss={this.setState.bind(null, {showConfigure: false})} />
         </div>
       );
     }
@@ -81,7 +78,7 @@ const LaunchInstance = React.createClass({
         <div>
           <ReviewInstance />
           <Padding tb={1}>
-            <Button onClick={this.toggleInfo.bind(this, false)} color="primary" block>Got it</Button>
+            <Button onClick={this.setState.bind(this, {showInfo: false})} color="primary" block>Got it</Button>
           </Padding>
         </div>
       );
@@ -92,25 +89,24 @@ const LaunchInstance = React.createClass({
         <Padding lr={4} tb={2} className="text-center">
           <img src={instanceImg} style={{maxHeight: '300px'}}/>
         </Padding>
-
         <Padding tb={2}>
           <h2>Install the Opsee EC2 instance.</h2>
         </Padding>
-
         <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
         <p>Here's our best guess on where we should install it, based on your environment:</p>
-
         {this.renderConfig()}
-
-        <Padding tb={1}>
-          <Padding b={1}>
-            <Button onClick={this.toggleInfo.bind(this, true)} color="primary" block>Learn More</Button>
-          </Padding>
-          <Padding b={1}>
-            <Button to="/start/install-example" color="success" block chevron>Ready, set, launch!</Button>
-          </Padding>
-        </Padding>
+        {this.renderButtons()}
       </div>
+    );
+  },
+  renderButtons(){
+    return (
+      <Padding tb={2}>
+        <Padding b={1}>
+          <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
+        </Padding>
+        <Button onClick={this.setState.bind(this, {showInfo: true})} color="primary" flat block>About the Opsee Instance</Button>
+      </Padding>
     );
   },
   render(){
@@ -126,7 +122,7 @@ const LaunchInstance = React.createClass({
       </div>
     );
   }
-})
+});
 
 const mapStateToProps = (state) => ({
   redux: state
