@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {History} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
@@ -16,7 +15,7 @@ import {NewWindow} from '../icons';
 import style from './onboard.css';
 
 const RegionSelect = React.createClass({
-  mixins: [History, SetInterval],
+  mixins: [SetInterval],
   propTypes: {
     actions: PropTypes.shape({
       hasRole: PropTypes.func,
@@ -37,6 +36,9 @@ const RegionSelect = React.createClass({
       })
     })
   },
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   componentWillMount(){
     if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
       this.props.actions.makeLaunchRoleUrlTemplate();
@@ -49,7 +51,7 @@ const RegionSelect = React.createClass({
   },
   componentWillReceiveProps(){
     if (this.props.redux.onboard.hasRole && this.state.isPolling) {
-      this.history.push('/start/add-instance');
+      this.context.router.push('/start/add-instance');
     }
   },
   getInitialState() {

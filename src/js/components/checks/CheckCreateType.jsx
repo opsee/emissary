@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {History} from 'react-router';
 
 import {Button} from '../forms';
 import {BastionRequirement, StatusHandler, Toolbar} from '../global';
@@ -14,7 +13,6 @@ import {checks as actions, user as userActions} from '../../actions';
 import {flag} from '../../modules';
 
 const CheckCreateType = React.createClass({
-  mixins: [History],
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
@@ -38,6 +36,9 @@ const CheckCreateType = React.createClass({
         })
       })
     })
+  },
+  contextTypes: {
+    router: PropTypes.object.isRequired
   },
   getLink(type = {}){
     const data = JSON.stringify({target: {type: type.id}});
@@ -100,7 +101,7 @@ const CheckCreateType = React.createClass({
     if (type.id === 'host'){
       path = `/check-create/request?data=${data}`;
     }
-    this.history.push(path);
+    this.context.router.push(path);
   },
   renderHelperText(){
     return (
