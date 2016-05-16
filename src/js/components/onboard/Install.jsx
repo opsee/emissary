@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import {plain as seed} from 'seedling';
 
 import Checkmark from '../svgs/Checkmark';
 import {Toolbar} from '../global';
@@ -169,21 +170,62 @@ const Install = React.createClass({
     const slack = !!flag('integrations-slack');
     const pagerduty = !!flag('integrations-pagerduty');
     if (!this.isComplete()){
-      if (slack && !pagerduty){
-        return (
-          <Padding>
-            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel.
+      return (
+        <Padding tb={2}>
+          <p>While you're waiting, you can set up notification channels for alerts.</p>
+          <Padding b={1}>
+            <Button color="primary" block>Connect to Slack</Button>
           </Padding>
-        );
-      } else if (slack && pagerduty){
-        return (
-          <Padding>
-            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel. You can also set up a connection to <PagerdutyConnect>PagerDuty</PagerdutyConnect>.
-          </Padding>
-        );
-      }
+          <Button color="primary" block>Connect to PagerDuty</Button>
+        </Padding>
+      );
     }
     return null;
+  },
+  renderSuccess(){
+    if (this.isComplete()) {
+      return (
+        <div>
+          <Padding b={4} className="text-center">
+            <Checkmark />
+            <h2>You're all done!</h2>
+            <p>The Opsee instance was successfully installed. Here's what Opsee found...</p>
+          </Padding>
+
+          <Grid fluid>
+            <Row>
+              <Col xs={4}>
+                <div className="text-center">
+                  <h3>120</h3>
+                  <div style={{opacity: 0.5}}><small>EC2 instances</small></div>
+                </div>
+              </Col>
+              <Col xs={4}>
+                <div className="text-center">
+                  <h3>89</h3>
+                  <div style={{opacity: 0.5}}><small>security groups</small></div>
+                </div>
+              </Col>
+              <Col xs={4}>
+                <div className="text-center">
+                  <h3>10</h3>
+                  <div style={{opacity: 0.5}}><small>load balancers</small></div>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+
+          <Padding tb={4} className="text-center">
+            <h2>420</h2>
+            <h3>health checks</h3>
+            <p>were generated for you! Nice.</p>
+          </Padding>
+          <div>
+            <Button to="/" color="success" block chevron>View checks</Button>
+          </div>
+        </div>
+      );
+    }
   },
   renderInner(){
     const self = this;
@@ -193,10 +235,11 @@ const Install = React.createClass({
           Our instance failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
         </Alert>
       );
+    } else if (this.isComplete()) {
+      return this.renderSuccess();
     } else if (!this.isInstallError()){
       return (
         <div>
-          {this.renderText()}
           {this.getBastionMessages().map((b, i) => {
             return (
               <Padding b={1} key={`bastion-installer-${i}`}>
@@ -204,8 +247,9 @@ const Install = React.createClass({
               </Padding>
             );
           })}
-          {this.renderBtn()}
+          {this.renderText()}
           {this.renderSlack()}
+          {this.renderBtn()}
         </div>
       );
     }

@@ -53,13 +53,6 @@ import OnboardReviewInstance from 'react-proxy?name=onboard!exports?exports.defa
 import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchInstance';
 import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
 
-// import OnboardPassword from 'react-proxy?name=onboard!exports?exports.default!../onboard/Password';
-// import OnboardRegionSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/RegionSelect';
-// import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
-// import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
-
-// import OnboardAddInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/AddInstance';
-
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
 
 import Help from 'react-proxy?name=help!exports?exports.default!../pages/Help';
