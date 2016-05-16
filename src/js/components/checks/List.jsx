@@ -127,7 +127,7 @@ const CheckList = React.createClass({
       <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
         <div className="flex-1 display-flex">
           <Padding r={1}>
-            <Button to="checks-notifications" query={{selected: JSON.stringify(_.map(selected.toJS(), 'id'))}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
+            <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
           </Padding>
           <Padding r={1}>
             <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>

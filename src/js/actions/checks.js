@@ -1,4 +1,4 @@
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
@@ -165,7 +165,7 @@ export function getChecks(redirect){
       }, {search: state().search}, () => {
         if (redirect){
           setTimeout(() => {
-            dispatch(pushState(null, '/'));
+            dispatch(push('/'));
           }, 30);
         }
       })
@@ -260,7 +260,7 @@ export function del(ids, redirect){
               resolve(res);
               if (redirect){
                 setTimeout(() => {
-                  dispatch(pushState(null, '/'));
+                  dispatch(push('/'));
                 }, 100);
               }
             }).catch(reject);
@@ -450,7 +450,7 @@ export function createOrEdit(raw){
         const id = _.chain(payload).get('data').thru(arr => arr || []).head().get('id').value();
         const redirect = id ? `/check/${id}` : '/';
         setTimeout(() => {
-          dispatch(pushState(null, redirect));
+          dispatch(push(redirect));
         }, 100);
       })
     });
@@ -467,7 +467,7 @@ export function create(data){
           resolve(res.body);
           analytics.trackEvent('Check', 'create', res.body)(dispatch, state);
           setTimeout(() => {
-            dispatch(pushState(null, '/'));
+            dispatch(push('/'));
           }, 100);
         }, reject);
       })
@@ -485,7 +485,7 @@ export function edit(data){
           resolve(res.body);
           analytics.trackEvent('Check', 'edit', res.body)(dispatch, state);
           setTimeout(() => {
-            dispatch(pushState(null, '/'));
+            dispatch(push('/'));
           }, 100);
         }, reject);
       })
@@ -516,7 +516,7 @@ export function multiEditNotifications(raw){
       }, null, () => {
         analytics.trackEvent('Check', 'multiedit notifications')(dispatch, state);
         setTimeout(() => {
-          dispatch(pushState(null, '/'));
+          dispatch(push('/'));
         }, 100);
       })
     });

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Link, History} from 'react-router';
+import {Link} from 'react-router';
 import _ from 'lodash';
 import Hammer from 'react-hammerjs';
 
@@ -11,7 +11,6 @@ import style from './button.css';
 const pressDuration = 1500;
 
 const Button = React.createClass({
-  mixins: [History],
   propTypes: {
     flat: PropTypes.bool,
     icon: PropTypes.bool,
@@ -24,7 +23,10 @@ const Button = React.createClass({
     text: PropTypes.string,
     className: PropTypes.string,
     target: PropTypes.string,
-    to: PropTypes.string,
+    to: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
+    ]),
     query: PropTypes.object,
     chevron: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -35,6 +37,9 @@ const Button = React.createClass({
     style: PropTypes.object,
     sm: PropTypes.bool,
     onPressUp: PropTypes.func
+  },
+  contextTypes: {
+    router: PropTypes.object.isRequired
   },
   getDefaultProps(){
     return {
@@ -114,7 +119,7 @@ const Button = React.createClass({
     if (this.props.target && this.props.target === '_blank'){
       e.preventDefault();
       e.stopPropagation();
-      window.open(this.history.createHref(this.props.to));
+      window.open(this.context.router.createHref(this.props.to));
     }
     this.handleClick();
   },

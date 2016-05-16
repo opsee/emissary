@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import _ from 'lodash';
 
 export function auth(Component, adminRequired){
@@ -8,7 +8,7 @@ export function auth(Component, adminRequired){
     propTypes: {
       redux: PropTypes.object.isRequired,
       location: PropTypes.object.isRequired,
-      pushState: PropTypes.func.isRequired
+      push: PropTypes.func.isRequired
     },
     componentWillMount() {
       this.runCheckAuth();
@@ -28,7 +28,7 @@ export function auth(Component, adminRequired){
       const {location} = this.props;
       const redirect = `${location.pathname}${location.search}`;
       if (!this.isAuthenticated()) {
-        this.props.pushState(null, `/login?redirect=${redirect}`);
+        this.props.push(`/login?redirect=${redirect}`);
       }
     },
     render() {
@@ -38,5 +38,5 @@ export function auth(Component, adminRequired){
       return null;
     }
   });
-  return connect(null, {pushState})(Authenticator);
+  return connect(null, {push})(Authenticator);
 }

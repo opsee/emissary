@@ -37,16 +37,16 @@ const SubnetSelect = React.createClass({
       user: PropTypes.object
     }),
     history: PropTypes.shape({
-      pushState: PropTypes.func,
-      replaceState: PropTypes.func
+      push: PropTypes.func,
+      replace: PropTypes.func
     }).isRequired
   },
   componentWillMount(){
     if (!this.props.redux.onboard.region) {
-      this.props.history.replaceState(null, '/start/choose-region');
+      this.props.history.replace('/start/choose-region');
     }
     if (!this.props.redux.onboard.selectedVPC) {
-      this.props.history.replaceState(null, '/start/choose-vpc');
+      this.props.history.replace('/start/choose-vpc');
     }
     if (!this.props.redux.onboard.subnetsForSelection.length) {
       this.props.actions.scanRegion(this.props.redux.onboard.region);
@@ -91,7 +91,7 @@ const SubnetSelect = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.history.pushState(null, '/start/install');
+    this.props.history.push('/start/install');
   },
   renderInner(){
     if (_.get(this.props.redux.asyncActions.onboardScanRegion, 'status') === 'pending') {
