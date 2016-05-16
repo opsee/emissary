@@ -76,10 +76,10 @@ const LaunchStack = React.createClass({
         <p>We enable cross-account access using a CloudFormation stack. To launch
         the stack in your AWS environment, do the following in your AWS console:</p>
         <ol>
-          <li>Click "next" on the "Select Template" screen. The S3 URl for the Opsee CloudFormation template will be prefilled for you.</li>
-          <li>Click "next" on the "Specify Details" page, changing the stack name if you wish.</li>
-          <li>Click "next" on the "Options" page.</li>
-          <li>Check the acknowledgement that IAM resources will be created, and click "create" on the "Review" page.</li>
+            <li>Click “Next" on the "Select Template" screen. The template URL will already be specified for you.</li>
+            <li>Click "Next" on the "Specify Details" page.</li>
+            <li>Click "Next" on the "Options" page.</li>
+            <li>Click the check box at the bottom of the “Review” page to acknowledge the notice about IAM privileges, and click “Create” to launch the stack.</li>
         </ol>
         <p>When it's done, return to this screen to finish installation. You can monitor the progress of the role creation in your AWS console.</p>
       </div>

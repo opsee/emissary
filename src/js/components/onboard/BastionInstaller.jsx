@@ -81,11 +81,11 @@ const BastionInstaller = React.createClass({
       break;
     case 'Reading':
       num = 1;
-      string = 'Reading CloudFormation template';
+      string = 'Reading CloudFormation template.';
       break;
     case 'AWS::EC2::SecurityGroup':
       num = 2;
-      string = 'Creating Security Group';
+      string = 'Creating Security Group.';
       break;
     case 'AWS::EC2::Instance':
       num = 3;
