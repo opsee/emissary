@@ -3,7 +3,6 @@ import React from 'react';
 import Checkmark from '../svgs/Checkmark';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import style from './onboard.css';
 
 export default React.createClass({
   render(){
