@@ -6,7 +6,10 @@ import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
 import Checkmark from '../svgs/Checkmark';
-import {onboard as actions} from '../../actions';
+import {
+  onboard as actions,
+  analytics as analyticsActions
+} from '../../actions';
 import {Button} from '../forms';
 import {NewWindow} from '../icons';
 import {Highlight, StatusHandler} from '../global';
@@ -35,7 +38,10 @@ const LaunchStack = React.createClass({
       hasRole: PropTypes.func,
       makeLaunchRoleUrlTemplate: PropTypes.func,
       getTemplates: PropTypes.func
-    })
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
+    }),
   },
   getInitialState(){
     return {
@@ -53,6 +59,11 @@ const LaunchStack = React.createClass({
     }
   },
   componentDidMount(){
+    this.props.analyticsActions.trackEvent('Onboard', 'launch-stack');
+    setTimeout(() => {
+      this.props.analyticsActions.trackEvent('Onboard', 'launch-stack-stuck');
+    }, 1000 * 7); // in 7 seconds let us know they've been here too long
+    
     this.setInterval(() => {
       this.props.actions.hasRole();
     }, 1000 * 5); // every 5 seconds
@@ -207,7 +218,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchStack);
