@@ -11,7 +11,7 @@ export default React.createClass({
         <Padding b={4} className="text-center">
           <Checkmark />
           <h2>You're all done!</h2>
-          <p>The Opsee instance was successfully installed. Here's what Opsee found...</p>
+          <p>The Opsee instance was successfully installed. Here's what we found...</p>
         </Padding>
 
         <Grid fluid>
