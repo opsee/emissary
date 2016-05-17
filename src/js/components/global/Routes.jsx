@@ -52,6 +52,7 @@ import OnboardReviewStack from 'react-proxy?name=onboard!exports?exports.default
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
 import OnboardReviewInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewInstance';
 import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchInstance';
+import OnboardConfigureInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ConfigureInstance';
 import OnboardNotifications from 'react-proxy?name=onboard!exports?exports.default!../onboard/Notifications';
 import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
 
@@ -118,6 +119,7 @@ const routes = (
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
       <Route path="/start/review-instance" component={OnboardReviewInstance} />
       <Route path="/start/launch-instance" component={OnboardLaunchInstance} />
+      <Route path="/start/configure-instance" component={OnboardConfigureInstance} />
       <Route path="/start/install" component={OnboardInstall} />
       <Route path="/start/install-example" component={OnboardInstall} example />
       <Route path="/start/notifications" component={OnboardNotifications} />

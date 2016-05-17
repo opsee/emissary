@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
@@ -59,7 +60,6 @@ const LaunchInstance = React.createClass({
     return (
       <Padding tb={2} className="text-center">
         <h3 style={{color: 'white', 'fontWeight': 300}}>{region} <span style={{opacity: 0.3}}>></span> {selectedVPC} <span style={{opacity: 0.3}}>></span> {selectedSubnet}</h3>
-        <p><small><a href="#" onClick={this.setState.bind(this, {showConfigure: true})}>(Change)</a></small></p>
       </Padding>
     );
   },
@@ -73,11 +73,12 @@ const LaunchInstance = React.createClass({
     }
     return (
       <div>
-        <Padding lr={4} tb={2} className="text-center">
-          <img src={instanceImg} style={{maxHeight: '300px'}}/>
-        </Padding>
         <Padding tb={2}>
-          <h2>Install the Opsee EC2 instance.</h2>
+          <div className={style.headerStep}>STEP 2 of 3</div>
+          <h2>Install the Opsee EC2 instance</h2>
+        </Padding>
+        <Padding a={4} className="text-center">
+          <img src={instanceImg} style={{maxHeight: '300px'}}/>
         </Padding>
         <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
         <p>Here's our best guess on where we should install it:</p>
@@ -90,9 +91,14 @@ const LaunchInstance = React.createClass({
     return (
       <Padding tb={2}>
         <Padding b={1}>
+          <Button to="/start/configure-instance" color="primary" flat block>Change location</Button>
+        </Padding>
+        <Padding b={1}>
           <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
         </Padding>
-        <Button to="/start/review-instance" color="primary" flat block>About the Opsee Instance</Button>
+        <Padding tb={1} className="text-center">
+          <p><small><Link to="review-instance">Learn more about the Opsee instance.</Link></small></p>
+        </Padding>
       </Padding>
     );
   },
