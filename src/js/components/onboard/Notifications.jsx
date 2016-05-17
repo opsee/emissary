@@ -1,20 +1,15 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import {onboard as actions} from '../../actions';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import NotificationSelection from '../checks/NotificationSelection';
 import devices from '../svgs/devices.svg';
 import style from './onboard.css';
 
 const Notifications = React.createClass({
-  propTypes: {
-
-  },
   render(){
     return (
       <div className={style.transitionPanel}>

@@ -3,7 +3,6 @@ import React from 'react';
 import Checkmark from '../svgs/Checkmark';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {plain as seed} from 'seedling';
 import style from './onboard.css';
 
 export default React.createClass({
@@ -82,11 +81,6 @@ export default React.createClass({
             </Col>
             <Col xs={2}/>
           </Row>
-
-
-        <Padding t={4} b={2} className="text-center">
-
-        </Padding>
 
         <p>From here, you can either configure your default notification channels or check out the checks that Opsee generated for you.</p>
 

@@ -25,6 +25,7 @@ const LaunchStack = React.createClass({
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         onboardGetTemplates: PropTypes.object,
+        onboardHasRole: PropTypes.object,
         onboardMakeLaunchTemplate: PropTypes.object
       }),
       onboard: PropTypes.shape({
@@ -169,7 +170,21 @@ const LaunchStack = React.createClass({
     );
   },
   renderInner(){
+    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
+    if (isFirstPoll) {
+      // TODO center this nicely
+      return (
+        <div>
+          <StatusHandler status="pending" />
+          <Padding tb={2}>
+            <p className="text-center">Checking your role...</p>
+          </Padding>
+          <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
+        </div>
+      );
+    }
     if (this.getRole()) {
+      // TODO center this nicely as well
       return this.renderDone();
     }
     if (this.state.hasClicked && !this.getRole()) {
@@ -177,12 +192,12 @@ const LaunchStack = React.createClass({
     }
     return (
       <div>
+        <Padding b={2}>
+          <small>STEP 1 of 3</small>
+          <h2>Set Up Cross-Account Access</h2>
+        </Padding>
         <Padding a={4} className="text-center">
           <img src={crossAccountImg} />
-        </Padding>
-
-        <Padding b={2}>
-          <h2>Set Up Cross-Account Access.</h2>
         </Padding>
 
         <p>Cross-account access is like giving a cat sitter the key to your house.
@@ -190,8 +205,7 @@ const LaunchStack = React.createClass({
         We need this capability to launch an EC2 instance to healthcheck your
         services and manage that instance throughout its lifecycle.</p>
 
-        <p>To set up cross-account access, you'll need to install Opsee's
-        CloudFormation Stack in your AWS console.</p>
+        <p>To set up cross-account access, you'll need to install Opsee's CloudFormation Stack in your AWS console.</p>
 
         {this.renderButtons()}
       </div>
