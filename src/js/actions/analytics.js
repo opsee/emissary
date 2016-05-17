@@ -51,6 +51,12 @@ export function trackPageView(path, title) {
       return Promise.resolve();
     }
 
+    // Tell intercom we're on a new page in the event that there are any messages
+    // that we need to show
+    if (window.Intercom) {
+      window.Intercom('update');
+    }
+
     return dispatch({
       type: ANALYTICS_PAGEVIEW,
       payload: request
@@ -163,6 +169,20 @@ export function initialize() {
       // multiple devices.)
       ga('create', config.googleAnalyticsID, user.id);
 
+      // Basic-ally, we are duplicating myst / intercom here, but we want to show
+      // the intercom messenger so we need this
+      if (window.Intercom && user.name && user.email) {
+        const createdAt = Math.floor((user.created_at || new Date().getTime()) / 1000);
+
+        window.Intercom('boot', {
+          app_id: 'mrw1z4dm',
+          name: user.name,
+          email: user.email,
+          created_at: createdAt,
+          user_hash: user.intercom_hmac
+        });
+      }
+
       // Sync the user with Myst/Intercom
       const update = makeUserObject(user);
       dispatch({
@@ -182,6 +202,10 @@ export function initialize() {
 
 export function shutdown() {
   return () => {
+    if (window.Intercom) {
+      window.Intercom('shutdown');
+    }
+
     // Revert to an unauthenticated visitor on logout.
     ga('create', config.googleAnalyticsID, 'auto');
   };
