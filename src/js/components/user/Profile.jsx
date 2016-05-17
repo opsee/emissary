@@ -11,10 +11,8 @@ import {Heading} from '../type';
 import {flag} from '../../modules';
 import {
   user as actions,
-  app as appActions,
-  integrations as integrationsActions
+  app as appActions
 } from '../../actions';
-import {SlackInfo, PagerdutyInfo} from '../integrations';
 
 const Profile = React.createClass({
   propTypes: {
@@ -29,45 +27,10 @@ const Profile = React.createClass({
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
-    }),
-    integrationsActions: PropTypes.shape({
-      getSlackInfo: PropTypes.func,
-      getSlackChannels: PropTypes.func,
-      getPagerdutyInfo: PropTypes.func
     })
-  },
-  componentWillMount() {
-    if (!this.props.location.query.slack && flag('integrations-slack')){
-      this.props.integrationsActions.getSlackInfo();
-    }
-    if (!this.props.location.query.pagerduty && flag('integrations-pagerduty')){
-      this.props.integrationsActions.getPagerdutyInfo();
-    }
   },
   handleLogout(){
     this.props.actions.logout();
-  },
-  renderSlackArea(){
-    if (flag('integrations-slack')){
-      return (
-        <tr>
-          <td><strong>Slack</strong></td>
-          <td><SlackInfo connect/></td>
-        </tr>
-      );
-    }
-    return null;
-  },
-  renderPagerdutyArea(){
-    if (flag('integrations-pagerduty')){
-      return (
-        <tr>
-          <td><strong>PagerDuty</strong></td>
-          <td><PagerdutyInfo/></td>
-        </tr>
-      );
-    }
-    return null;
   },
   render() {
     const user = this.props.redux.user.toJS();
@@ -82,8 +45,12 @@ const Profile = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={1}>
-                <Heading level={3}>Your Profile Information</Heading>
+                <Heading level={3}>Your Profile</Heading>
                 <Table>
+                  <tr>
+                    <td><strong>Team</strong></td>
+                    <td><Link to="/team">TEAM NAME</Link></td>
+                  </tr>
                   <tr>
                     <td><strong>Email</strong></td>
                     <td>{user.email}</td>
@@ -92,8 +59,6 @@ const Profile = React.createClass({
                     <td><strong>Password</strong></td>
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
-                  {this.renderSlackArea()}
-                  {this.renderPagerdutyArea()}
                 </Table>
               </Padding>
               <Padding t={3}>
@@ -111,8 +76,7 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch),
-  integrationsActions: bindActionCreators(integrationsActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);
