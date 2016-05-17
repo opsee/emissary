@@ -98,7 +98,7 @@ const LaunchStack = React.createClass({
               <Padding tb={1}>
                 <h2>Opsee Cross-Account Access</h2>
               </Padding>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metris in CloudWatch, and lets us manage your Opsee Bastion instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
+              <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metris in CloudWatch, and lets us manage your Opsee EC2 instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
               <Padding tb={1}>
                 {this.renderHowTo()}
               </Padding>

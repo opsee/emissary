@@ -70,12 +70,12 @@ const ReviewInstance = React.createClass({
               Both CloudFormation templates are available in <a href="/docs/permissions" target="_blank">our documentation</a>.</p>
               <Padding tb={1}>
                 <h4>Instance CloudFormation Template</h4>
-                <p>Used to install and manage our EC2 instance. Notably, we create a nested CloudFormation stack to manage security group changes (to allow network access to your instances from our Bastion) and an autoscaling group (to both manage deploying new code to the Bastion instance and ensure a Bastion is always running).</p>
+                <p>Used to install and manage our EC2 instance. Notably, we create a nested CloudFormation stack to manage security group changes (to allow network access to your instances from our EC2 instance) and an autoscaling group (to both manage deploying new code to the instance and ensure an instance is always running).</p>
                 {this.renderTemplateItem('cf')}
               </Padding>
               <Padding b={1}>
                 <h4>IAM Role</h4>
-                <p>Our IAM role in your AWS account allows us to manage the bastion on your behalf, enable network access to your EC2 instances from our bastion, and ensure the Bastion always has the latest information about your environment.</p>
+                <p>Our IAM role in your AWS account allows us to manage the bastion on your behalf, enable network access to your EC2 instances from our bastion, and ensure our instance always has the latest information about your environment.</p>
                 {this.renderTemplateItem('ingress')}
               </Padding>
               <p>If you'd like to know more, reach out to us any time on <a href="mailto:support@opsee.co">email</a>, <a href="https://opsee-support.slack.com" target="_blank">Slack</a>, or <a href="irc://irc.freenode.org/opsee" target="_blank">IRC</a>.</p>
