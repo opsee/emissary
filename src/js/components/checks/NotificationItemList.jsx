@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import {PagerdutyConnect} from '../integrations';
 import {storage} from '../../modules';
-import {Mail, Slack, PagerDuty} from '../icons';
+import {Cloud, Mail, PagerDuty, Slack} from '../icons';
 import {Alert, Padding} from '../layout';
 import {
   integrations as integrationsActions
@@ -77,6 +77,12 @@ const NotificationItemList = React.createClass({
               </Padding>
             : null}
           </div>
+        </Padding>
+      );
+    case 'webhook':
+      return (
+        <Padding key={`notif-${i}`} b={1}>
+          <Cloud inline/> {n.value}
         </Padding>
       );
     default:
