@@ -85,13 +85,16 @@ const OnboardAccount = React.createClass({
     }
     const disabled = this.isDisabled();
     return (
-      <Button type="submit" block color="success" chevron={chevron} disabled={disabled}>{text}</Button>
+      <Button type="submit" block color="primary" chevron={chevron} disabled={disabled}>{text}</Button>
     );
   },
   renderForm(){
     return (
       <div>
-        <p>Let's get started using Opsee. Enter your name and choose a password to continue.</p>
+        <Padding t={4} b={2} className="text-center">
+          <h2>Welcome to Opsee!</h2>
+        </Padding>
+        <p>Let's get started. Enter your name and choose a password to continue.</p>
         <form name="loginForm" onSubmit={this.handleSubmit}>
           <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
           <StatusHandler status={this.getStatus()}/>
