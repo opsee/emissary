@@ -162,6 +162,16 @@ const Install = React.createClass({
     }
     return <p>Checking installation status...</p>;
   },
+  renderNotifConnect(){
+    return (
+      <div>
+        <p>While you're waiting, you can choose your default notification channel:</p>
+        <Padding tb={1}>
+          <Button to="/start/notifications" color="primary" block chevron>Set up notifications</Button>
+        </Padding>
+      </div>
+    );
+  },
   renderInner(){
     const self = this;
     if (this.getBastionConnectionStatus() === 'failed'){
@@ -184,6 +194,7 @@ const Install = React.createClass({
           })}
           {this.renderText()}
           {this.renderBtn()}
+          {this.renderNotifConnect()}
         </div>
       );
     }

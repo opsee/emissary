@@ -84,3 +84,8 @@ p, li{
   border-top: solid 1px rgba(255, 255, 255, 0.25);
   margin: 1rem auto;
 }
+
+.laptop {
+  max-width: 200px;
+  opacity: 0.8;
+}

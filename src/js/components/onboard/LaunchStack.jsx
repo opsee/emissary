@@ -41,7 +41,7 @@ const LaunchStack = React.createClass({
     }),
     analyticsActions: PropTypes.shape({
       trackEvent: PropTypes.func
-    }),
+    })
   },
   getInitialState(){
     return {
@@ -63,7 +63,6 @@ const LaunchStack = React.createClass({
     setTimeout(() => {
       this.props.analyticsActions.trackEvent('Onboard', 'launch-stack-stuck');
     }, 1000 * 7); // in 7 seconds let us know they've been here too long
-    
     this.setInterval(() => {
       this.props.actions.hasRole();
     }, 1000 * 5); // every 5 seconds
