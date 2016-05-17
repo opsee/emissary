@@ -28,13 +28,9 @@ const LaunchInstance = React.createClass({
       scanRegion: PropTypes.func
     })
   },
+  // TODO roll these into one API call
   componentWillMount(){
     this.props.actions.hasRole();
-  },
-  getInitialState(){
-    return {
-      showConfigure: false
-    };
   },
   componentWillReceiveProps(nextProps) {
     const region = nextProps.redux.onboard.role.region;
@@ -42,6 +38,11 @@ const LaunchInstance = React.createClass({
     if (region && !hasScanned) {
       this.props.actions.scanRegion(region);
     }
+  },
+  getInitialState(){
+    return {
+      showConfigure: false
+    };
   },
   onConfigure(config){
     this.setState(_.assign({
