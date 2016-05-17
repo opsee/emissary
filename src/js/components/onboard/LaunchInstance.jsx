@@ -77,9 +77,9 @@ const LaunchInstance = React.createClass({
           <img src={instanceImg} style={{maxHeight: '300px'}}/>
         </Padding>
         <Padding tb={2}>
-          <h2>Install the Opsee Bastion EC2 instance.</h2>
+          <h2>Install the Opsee EC2 instance.</h2>
         </Padding>
-        <p>Lastly, we need to install the Opsee Bastion EC2 instance. It's responsible for running checks in your AWS environment.</p>
+        <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
         <p>Here's our best guess on where we should install it:</p>
         {this.renderConfig()}
         {this.renderButtons()}
