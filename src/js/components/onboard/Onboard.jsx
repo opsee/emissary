@@ -22,7 +22,8 @@ const routes = [
   // '/start/review-stack',
   '/start/launch-stack',
   // '/start/review-instance',
-  '/start/launch-instance'
+  '/start/launch-instance',
+  '/start/install-example'
 ];
 
 const slideLeft = {
@@ -89,11 +90,11 @@ const Onboard = React.createClass({
             <Close className={style.closeButton} />
           </Padding>
         </div>
-        <Padding t={1}>
-          {this.props.children}
-        </Padding>
         <Padding className={style.pips}>
           {this.renderPips()}
+        </Padding>
+        <Padding t={1}>
+          {this.props.children}
         </Padding>
       </div>
     );

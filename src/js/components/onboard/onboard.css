@@ -22,9 +22,7 @@ p, li{
 }
 
 .transitionPanel {
-  /*position: absolute;*/
   width: 100%;
-  padding-top: 4rem;
 }
 
 .closeWrapper {
@@ -51,8 +49,8 @@ p, li{
 }
 
 .check {
-  height: 20px !important;
-  width: 20px !important;
+  height: 40px !important;
+  width: 40px !important;
 }
 
 .pips {
@@ -60,6 +58,7 @@ p, li{
   /*position: fixed;*/
   /*bottom: 0;*/
   width: 100%;
+  padding-top: 2.5rem;
 }
 
 .pip {
@@ -73,16 +72,18 @@ p, li{
 }
 
 .successHeader {
-  font-weight: 500;
-  opacity: 0.75;
+  font-weight: 300;
+  opacity: 1;
   text-align: center;
   letter-spacing: 0.5px;
+  padding-top: 6rem;
+  font-family: var(--fontGotham);
 }
 
 .successDivider {
   width: 5vw;
   border-top: solid 1px rgba(255, 255, 255, 0.25);
-  margin: 1rem auto;
+  margin: 2rem auto;
 }
 
 .laptop {
