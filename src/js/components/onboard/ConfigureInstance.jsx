@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router';
 
 import {RadioSelect} from '../forms';
 import {onboard as actions} from '../../actions';
@@ -40,15 +41,6 @@ const ConfigureInstance = React.createClass({
       this.props.actions.scanRegion(region);
     }
   },
-  getInitialState(){
-    return {
-      region: 'us-west-1',
-      subnets: ['my-subnet-0', 'my-subnet-1'],
-      selectedSubnet: null,
-      vpcs: ['my-vpc-0', 'my-vpc-1', 'my-vpc-2'],
-      selectedVPC: null
-    };
-  },
   getRegions() {
     return _.map(regions, region => {
       return _.assign({
@@ -77,44 +69,8 @@ const ConfigureInstance = React.createClass({
       }, s);
     });
   },
-  onSave(){
-    return this.props.onSave({
-      region: this.state.region,
-      vpc: this.state.selectedVPC,
-      subnet: this.state.selectedSubnet
-    });
-  },
   handleSelect(){
 
-  },
-  renderButtons(vals, key){
-    return (
-      <div className="display-flex">
-        <div className="flex-1">
-          {_.map(vals, (val, i) => {
-            return (
-              <Button onClick={this.setState.bind(this, {[key]: val})} flat color="primary" key={i} style={{margin: '0.5rem'}}>{val}</Button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  },
-  renderChooseSubnet() {
-    return (
-      <div>
-        <div><strong>Choose a subnet:</strong></div>
-        {this.renderButtons(this.state.subnets, 'selectedSubnet')}
-      </div>
-    );
-  },
-  renderChosen(name, val){
-    return (
-      <Padding tb={2}>
-        <div><strong>{name}</strong></div>
-        <Button flat color="text" style={{margin: '0.5rem'}}>{val}</Button>
-      </Padding>
-    );
   },
   render(){
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
@@ -158,6 +114,9 @@ const ConfigureInstance = React.createClass({
 
               <Padding tb={2}>
                 <Button to="/start/launch-instance" color="primary" disabled={isScanPending || !isDone} block>Save configuration</Button>
+              </Padding>
+              <Padding tb={1} className="text-center">
+                <p><small><Link to="review-instance">Learn more about the Opsee instance.</Link></small></p>
               </Padding>
             </Col>
           </Row>
