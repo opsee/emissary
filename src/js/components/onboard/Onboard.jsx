@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { History } from 'react-router';
 
-import { Circle, Close } from '../icons';
+import { Circle } from '../icons';
 import { Padding } from '../layout';
 import { app as actions } from '../../actions';
 import style from './onboard.css';
@@ -72,11 +72,6 @@ const Onboard = React.createClass({
   render(){
     return (
       <div className={style.container}>
-        <div onClick={this.onClose}>
-          <Padding a={2} className={style.closeWrapper} >
-            <Close className={style.closeButton} />
-          </Padding>
-        </div>
         <Padding className={style.pips}>
           {this.renderPips()}
         </Padding>

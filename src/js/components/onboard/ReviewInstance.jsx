@@ -2,14 +2,18 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
+import {Link} from 'react-router';
 
+import { Close } from '../icons';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Highlight} from '../global';
 import style from './onboard.css';
+import {History} from 'react-router';
 
 const ReviewInstance = React.createClass({
+  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
@@ -59,6 +63,9 @@ const ReviewInstance = React.createClass({
   render(){
     return (
       <div className={style.transitionPanel}>
+        <Link to="/start/launch-instance" className={style.closeWrapper}>
+          <Close className={style.closeButton} />
+        </Link>
         <Grid>
           <Row>
             <Col xs={12}>

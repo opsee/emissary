@@ -4,7 +4,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {History} from 'react-router';
 import {plain as seed} from 'seedling';
+import {Link} from 'react-router';
 
+import { Close } from '../icons';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Highlight} from '../global';
@@ -86,6 +88,9 @@ const LaunchStack = React.createClass({
   render() {
     return (
       <div className={style.transitionPanel}>
+        <Link to="/start/launch-stack" className={style.closeWrapper}>
+          <Close className={style.closeButton} />
+        </Link>
         <Grid>
           <Row>
             <Col xs={12}>
