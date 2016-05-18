@@ -6,7 +6,6 @@ import _ from 'lodash';
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import UserInputs from './UserInputs.jsx';
 import {Close} from '../icons';
 import {user as actions} from '../../actions';
 
@@ -54,7 +53,6 @@ const ProfileEdit = React.createClass({
           <Row>
             <Col xs={12}>
               <form onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']}/>
                 <StatusHandler status={this.getStatus()}/>
                 <Padding t={2}>
                   <Button color="success" type="submit" block disabled={this.isDisabled()}>

@@ -7,6 +7,7 @@ import env from './env';
 import integrations from './integrations';
 import onboard from './onboard';
 import search from './search';
+import team from './team';
 import user from './user';
 
 export default combineReducers({
@@ -18,5 +19,6 @@ export default combineReducers({
   onboard,
   router,
   search,
+  team,
   user
 });

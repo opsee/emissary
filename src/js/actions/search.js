@@ -1,6 +1,6 @@
 import {push, replace} from 'redux-router';
 import _ from 'lodash';
-import {stringFromTokens} from '../modules';
+import {stringFromTokens} from '../modules/string';
 import tokenizer from 'search-text-tokenizer';
 
 import {

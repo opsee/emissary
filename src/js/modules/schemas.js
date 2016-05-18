@@ -20,6 +20,22 @@ export const User = Record({
   vpc: undefined
 });
 
+export const Member = Record({
+  name: undefined,
+  capabilities: new List(),
+  email: undefined,
+  status: undefined,
+  id: undefined
+});
+
+export const Team = Record({
+  name: undefined,
+  features: new List(),
+  plan: undefined,
+  members: new List(),
+  invoices: new List()
+});
+
 const baseEnvItem = {
   id: null,
   name: null,

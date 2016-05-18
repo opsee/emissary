@@ -8,7 +8,6 @@ import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Heading} from '../type';
-import {flag} from '../../modules';
 import {
   user as actions,
   app as appActions

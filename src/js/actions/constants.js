@@ -42,6 +42,8 @@ export const USER_PUT_DATA = 'USER_PUT_DATA';
 export const USER_SEND_RESET_EMAIL = 'USER_SEND_RESET_EMAIL';
 export const USER_SET_LOGIN_DATA = 'USER_SET_LOGIN_DATA';
 
+export const GET_TEAM = 'GET_TEAM';
+
 export const ENV_GET_ALL = 'ENV_GET_ALL';
 
 export const GET_GROUP_SECURITY = 'GET_GROUP_SECURITY';
