@@ -10,14 +10,6 @@ import { Padding } from '../layout';
 import { app as actions } from '../../actions';
 import style from './onboard.css';
 
-const routes = [
-  // '/start/review-stack',
-  '/start/launch-stack',
-  // '/start/review-instance',
-  '/start/launch-instance',
-  '/start/install-example'
-];
-
 const Onboard = React.createClass({
   mixins: [History],
   propTypes: {
@@ -31,6 +23,22 @@ const Onboard = React.createClass({
       confirmOpen: PropTypes.func
     }),
     children: PropTypes.node
+  },
+  componentWillMount(){
+    if (this.props.location.pathname === '/start/password') {
+      const routes = this.state.routes.slice(0);
+      routes.unshift('/start/password'); // FIXME
+      this.setState({ routes });
+    }
+  },
+  getInitialState(){
+    return {
+      routes: [
+        '/start/launch-stack',
+        '/start/launch-instance',
+        '/start/install-example'
+      ]
+    };
   },
   isInstalling(){
     const pathname = this.props.location.pathname;
@@ -50,12 +58,11 @@ const Onboard = React.createClass({
   },
   renderPips(){
     const route = this.props.location.pathname;
-    const activePip = routes.indexOf(route);
+    const activePip = this.state.routes.indexOf(route);
     if (activePip < 0) {
       return null;
     }
-    const totalPips = routes.length;
-    return _.times(totalPips, i => {
+    return _.times(this.state.routes.length, i => {
       const className = cx(style.pip, {[style.activePip]: i === activePip});
       return (
         <Circle key={i} className={className} />
