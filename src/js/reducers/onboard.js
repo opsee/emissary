@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
-import {yeller} from '../modules';
+import {regions, yeller} from '../modules';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
@@ -16,9 +16,8 @@ import {
 } from '../actions/constants';
 
 const initial = {
-  'access_key': config.access_key,
-  'secret_key': config.secret_key,
-  region: config.region,
+  regions,
+  region: null,
   selectedSubnet: null,
   selectedVPC: null,
 
@@ -55,8 +54,8 @@ export const statics = {
       vpc_id: state.selectedVPC,
       subnet_id: state.selectedSubnet,
       subnet_routing: subnet.routing,
-      access_key: state.access_key,
-      secret_key: state.secret_key
+      access_key: config.access_key,
+      secret_key: config.secret_key
     };
   }
 };

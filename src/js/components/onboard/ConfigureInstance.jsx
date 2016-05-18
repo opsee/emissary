@@ -8,7 +8,6 @@ import {RadioSelect} from '../forms';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Padding, Col, Grid, Row} from '../layout';
-import regions from '../../modules/regions';
 import style from './onboard.css';
 
 const ConfigureInstance = React.createClass({
@@ -18,6 +17,7 @@ const ConfigureInstance = React.createClass({
         selectedVPC: PropTypes.string,
         selectedSubnet: PropTypes.string,
         region: PropTypes.string,
+        regions: PropTypes.array,
         vpcsForSelection: PropTypes.array,
         subnetsForSelection: PropTypes.array
       }),
@@ -45,7 +45,7 @@ const ConfigureInstance = React.createClass({
     }
   },
   getRegions() {
-    return _.map(regions, region => {
+    return _.map(this.props.redux.onboard.regions, region => {
       return _.assign({
         label: `<strong>${region.id}</strong></br><small>${region.name}</small>`
       }, region);
