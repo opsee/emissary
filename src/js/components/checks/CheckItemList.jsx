@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import Immutable from 'immutable';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../layout';
@@ -67,9 +66,6 @@ const CheckItemList = React.createClass({
   getChecks(noFilter){
     let data = this.props.redux.checks.checks;
     data = data
-    .map(item => {
-      return Immutable.Map(item).set('pending', item.deleting);
-    })
     .sortBy(item => item.name)
     .sortBy(item => {
       return item.health === undefined ? 101 : item.health;
@@ -92,28 +88,31 @@ const CheckItemList = React.createClass({
     return data.slice(this.props.offset, this.props.limit);
   },
   renderTitle(){
-    let numbers = `(${this.getChecks(true).size})`;
-    if (this.getChecks().size < this.getChecks(true).size){
+    const checks = this.getChecks();
+    const total = this.props.redux.checks.checks.size;
+    let numbers = `(${total})`;
+    if (checks.size < total){
       if (!this.props.target && !this.props.selected){
-        numbers = `(${this.getChecks().size} of ${this.getChecks(true).size})`;
+        numbers = `(${checks.size} of ${total})`;
       } else {
-        numbers = `(${this.getChecks().size})`;
+        numbers = `(${checks.size})`;
       }
     }
-    if (!this.getChecks().size){
+    if (!checks.size){
       numbers = '';
     }
-    if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getChecks().size))){
+    if (this.props.title && (!this.props.noFallback || (this.props.noFallback && checks.size))){
       return <Heading level={3}>Checks {numbers}</Heading>;
     }
     return null;
   },
   render() {
-    if (this.getChecks().size){
+    const checks = this.getChecks();
+    if (checks.size){
       return (
         <div>
           {this.renderTitle()}
-          {this.getChecks().map(c => {
+          {checks.map(c => {
             return <CheckItem item={c} key={c.get('id')} selectable={this.props.selectable}/>;
           })}
         </div>

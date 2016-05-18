@@ -26,7 +26,7 @@ const CheckCreateInfo = React.createClass({
     renderAsInclude: PropTypes.bool,
     onSubmit: PropTypes.func,
     history: PropTypes.shape({
-      pushState: PropTypes.func
+      push: PropTypes.func
     }),
     analyticsActions: PropTypes.shape({
       trackEvent: PropTypes.func
@@ -44,7 +44,7 @@ const CheckCreateInfo = React.createClass({
   componentWillMount(){
     if (!this.props.check.assertions.length || !this.props.check.target.id){
       if (process.env.NODE_ENV !== 'debug' && !this.props.renderAsInclude){
-        this.props.history.pushState(null, '/check-create/target');
+        this.props.history.push('/check-create/target');
       }
     }
     //mostly for setting the name of the check at this point

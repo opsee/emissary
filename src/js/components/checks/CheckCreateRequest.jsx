@@ -45,7 +45,7 @@ const CheckCreateRequest = React.createClass({
   },
   componentWillMount(){
     if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
-      return this.props.history.pushState(null, '/check-create/target');
+      return this.props.history.push('/check-create/target');
     }
     return this.props.checkActions.testCheckReset();
   },
@@ -160,12 +160,12 @@ const CheckCreateRequest = React.createClass({
     e.preventDefault();
     if (!this.props.renderAsInclude){
       const data = JSON.stringify(this.props.check);
-      this.props.history.pushState(null, `/check-create/assertions?data=${data}`);
+      this.props.history.push(`/check-create/assertions?data=${data}`);
     }
   },
   handleTargetClick(){
     if (!this.props.renderAsInclude){
-      this.props.history.pushState(null, '/check-create/target');
+      this.props.history.push('/check-create/target');
     } else if (typeof this.props.handleTargetClick === 'function'){
       this.props.handleTargetClick();
     }
@@ -247,10 +247,9 @@ const CheckCreateRequest = React.createClass({
       }
       inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       return (
-        <Padding b={1}>
+        <Padding b={3}>
           <Heading level={3}>Your Target</Heading>
           {inner}
-          <hr/>
         </Padding>
       );
     }

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 // import _ from 'lodash';
 import Autosuggest from 'react-autosuggest';
-import {History} from 'react-router';
 
 const SearchBox = React.createClass({
-  mixins: [History],
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   getInitialState(){
     return {
       hidden: true
@@ -18,7 +19,7 @@ const SearchBox = React.createClass({
   //   cb(null, data);
   // },
   // handleSelect(choice){
-  //   this.history.pushState(null, choice);
+  //   this.context.router.push(choice);
   //   this.setState({hidden: true});
   // },
   render(){

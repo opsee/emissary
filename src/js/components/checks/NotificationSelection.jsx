@@ -2,9 +2,10 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import fuzzy from 'fuzzy';
 
 import {Button} from '../forms';
-import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Slack, PagerDuty} from '../icons';
+import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Search, Slack, PagerDuty} from '../icons';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import {PagerdutyConnect, SlackConnect} from '../integrations';
@@ -74,7 +75,8 @@ const NotificationSelection = React.createClass({
     return {
       type,
       value: schemaValue,
-      sending: false
+      sending: false,
+      search: undefined
     };
   },
   getNotifValueForDisplay(notif = {}){
@@ -86,6 +88,27 @@ const NotificationSelection = React.createClass({
   },
   getFinalNotifications(notifs = this.state.notifications){
     return notifs.map(n => _.pick(n, ['type', 'value']));
+  },
+  getSlackChannels(index){
+    let channels = this.props.redux.integrations.slackChannels.toJS();
+    if (this.state.notifications[index].search){
+      channels = _.chain(channels)
+      .map(channel => {
+        let score = 0;
+        const hits = fuzzy.filter(this.state.notifications[index].search, [channel.name]);
+        if (hits.length){
+          score = hits.map(el => el.score).reduce((total, n) => total + n) || 0;
+        }
+        return _.assign(channel, {
+          score
+        });
+      })
+      .filter('score')
+      .sortBy(c => -1 * c.score)
+      .map(c => _.omit(c, 'score'))
+      .value();
+    }
+    return channels;
   },
   isNotifComplete(notif){
     return _.chain(notif).pick(['type', 'value']).values().every().value();
@@ -141,6 +164,23 @@ const NotificationSelection = React.createClass({
       });
     });
     this.runChange(notifs);
+  },
+  handleSlackSearch(state){
+    this.setState(state);
+  },
+  handleShowAll(index, e){
+    e.preventDefault();
+    const notifications = this.state.notifications.map((n, i) => {
+      if (i === index){
+        return _.assign(n, {
+          showAllChannels: true
+        });
+      }
+      return n;
+    });
+    this.setState({
+      notifications
+    });
   },
   handleSubmit(e){
     e.preventDefault();
@@ -244,22 +284,51 @@ const NotificationSelection = React.createClass({
       </div>
     );
   },
+  renderChannels(index){
+    const channels = this.getSlackChannels(index);
+    const notif = this.state.notifications[index];
+    let data = channels;
+    const limit = 30;
+    const tooMany = channels.length > limit;
+    if (channels.length){
+      if (tooMany && !notif.showAllChannels){
+        data = _.take(channels, limit);
+      }
+      const buttons = data.map(c => {
+        return (
+          <Button flat onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem', textTransform: 'lowercase'}} key={`slack-channel-${c.id}-${index}`}>#{c.name}</Button>
+        );
+      });
+      const remaining = channels.length - data.length;
+      return (
+        <div>
+          {buttons}
+          {tooMany && !notif.showAllChannels && (
+            <div>
+              {remaining} channel{remaining > 1 && 's'} not shown. Use the search above or <a href="#" onClick={this.handleShowAll.bind(null, index)}>Show All</a>
+            </div>
+          )}
+        </div>
+      );
+    }
+    return <div>No channels match your search.</div>;
+  },
   renderChannelSelect(notif, index){
-    const channels = this.props.redux.integrations.slackChannels.toJS();
     return (
       <div>
         <Heading level={4}>Slack Channel</Heading>
-        <div className="display-flex">
-          <div className="flex-1">
-            {channels.map(c => {
-              return (
-                <Button flat onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem', textTransform: 'lowercase'}} key={`slack-channel-${c.id}`}>#{c.name}</Button>
-              );
-            })}
-            </div>
-            <div className="align-self-start">
-              {this.renderDeleteButton(index, {minHeight: '46px'})}
-            </div>
+        <div className="display-flex flex-wrap">
+          <Padding className="flex-1" r={1}>
+            <Input data={this.state} path={`notifications[${index}].search`} onChange={this.handleSlackSearch} placeholder="Search Slack channels">
+              <Search/>
+            </Input>
+          </Padding>
+          <div className="align-self-start">
+            {this.renderDeleteButton(index, {minHeight: '46px'})}
+          </div>
+          <Padding t={1} style={{width: '100%'}}>
+            {this.renderChannels(index)}
+          </Padding>
         </div>
       </div>
     );

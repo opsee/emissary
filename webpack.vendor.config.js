@@ -57,6 +57,7 @@ const config = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     definePlugin,
+    new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(en)$/),
     new webpack.DllPlugin({
       path: path.join(__dirname, 'dist/opseeVendorManifest.json'),
       name: 'opseeVendor'

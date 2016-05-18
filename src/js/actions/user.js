@@ -1,4 +1,4 @@
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
@@ -44,7 +44,7 @@ export function login(data) {
             //TODO fix this somehow
             setTimeout(() => {
               const string = state().router.location.query.redirect || '/';
-              dispatch(pushState(null, string));
+              dispatch(push(string));
             }, 100);
           }, reject);
         }, reject);
@@ -66,16 +66,13 @@ export function setPassword(data) {
         .then((res) => {
           resolve(res.body);
           analytics.updateUser(res.body.user)(dispatch, state);
-          // setTimeout(() => {
-          //   dispatch(pushState(null, '/start/launch-stack'));
-          // }, 100);
         }, reject);
       })
     });
   };
 }
 
-export function logout(query){
+export function logout(){
   return (dispatch, state) => {
     storage.remove('user');
     analytics.trackEvent('User', 'logout')(dispatch, state);
@@ -83,7 +80,7 @@ export function logout(query){
       type: USER_LOGOUT
     });
     setTimeout(() => {
-      dispatch(pushState(null, '/login', query));
+      dispatch(push('/login'));
     }, 30);
   };
 }
@@ -107,7 +104,7 @@ export function refresh() {
           const redirect = state().router.location.pathname;
           let string = redirect ? '/login' : `/login?redirect=${redirect}`;
           storage.remove('user');
-          dispatch(pushState(null, string));
+          dispatch(push(string));
           reject(err);
         });
       })
@@ -130,7 +127,7 @@ export function edit(data) {
           resolve(res.body);
           //TODO fix this somehow
           setTimeout(() => {
-            dispatch(pushState(null, '/profile'));
+            dispatch(push('/profile'));
           }, 100);
           const user = _.get(res, 'body.user');
           if (user){
