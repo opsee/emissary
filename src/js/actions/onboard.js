@@ -8,7 +8,7 @@ import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
   ONBOARD_SIGNUP_CREATE,
-  ONBOARD_VPC_SELECT,
+  ONBOARD_SET_VPC,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
   ONBOARD_MAKE_LAUNCH_TEMPLATE,
@@ -16,7 +16,7 @@ import {
   ONBOARD_SET_REGION,
   ONBOARD_GET_TEMPLATES,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT,
+  ONBOARD_SET_SUBNET,
   ONBOARD_SCAN_REGION,
   ONBOARD_HAS_ROLE
 } from './constants';
@@ -42,52 +42,6 @@ export function signupCreate(data) {
           let msg = _.get(err, 'response.body.message');
           const r = msg ? new Error(msg) : err;
           reject(r);
-        });
-      })
-    });
-  };
-}
-
-export function getTemplates(){
-  const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
-  return (dispatch) => {
-    dispatch({
-      type: ONBOARD_GET_TEMPLATES,
-      payload: new Promise((resolve, reject) => {
-        const r1 = request.get(`${base}/bastion-ingress-cf.template`);
-        const r2 = request.get(`${base}/bastion-cf.template`);
-        const r3 = request.get(`${base}/opsee-role-annotated.json`);
-        Promise.all([r1, r2, r3]).then(values => {
-          resolve(values);
-        }).catch(reject);
-      })
-    });
-  };
-}
-
-export function setRegion(region) {
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SET_REGION,
-      payload: {region}
-    });
-    analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
-    getTemplates()(dispatch, state);
-  };
-}
-
-export function makeLaunchRoleUrlTemplate() {
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
-      payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query:
-          `mutation Mutation {
-            makeLaunchRoleUrlTemplate
-          }`
         });
       })
     });
@@ -133,6 +87,54 @@ export function scanRegion(region) {
   };
 }
 
+export function getTemplates(){
+  const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
+  return (dispatch) => {
+    dispatch({
+      type: ONBOARD_GET_TEMPLATES,
+      payload: new Promise((resolve, reject) => {
+        const r1 = request.get(`${base}/bastion-ingress-cf.template`);
+        const r2 = request.get(`${base}/bastion-cf.template`);
+        const r3 = request.get(`${base}/opsee-role-annotated.json`);
+        Promise.all([r1, r2, r3]).then(values => {
+          resolve(values);
+        }).catch(reject);
+      })
+    });
+  };
+}
+
+export function setRegion(data) {
+  const region = _.get(data, 'region');
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_REGION,
+      payload: { region }
+    });
+    analytics.trackEvent('Onboard', 'region-select')(dispatch, state);
+    // Grab the updated VPCs/subnets for that region
+    scanRegion(region)(dispatch, state);
+  };
+}
+
+export function makeLaunchRoleUrlTemplate() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
+      payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({query:
+          `mutation Mutation {
+            makeLaunchRoleUrlTemplate
+          }`
+        });
+      })
+    });
+  };
+}
+
 export function hasRole() {
   return (dispatch, state) => {
     dispatch({
@@ -154,24 +156,26 @@ export function hasRole() {
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
 
-export function vpcSelect(payload){
+export function vpcSelect(data){
+  const selectedVPC = _.get(data, 'selectedVPC');
   return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_VPC_SELECT,
-      payload
+      type: ONBOARD_SET_VPC,
+      payload: selectedVPC
     });
     analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
-    setTimeout(() => {
-      dispatch(push('/start/choose-subnet'));
-    }, 100);
+    setTimeout(() => dispatch({
+      type: ONBOARD_SET_INSTALL_DATA
+    }), 50);
   };
 }
 
-export function subnetSelect(payload){
+export function subnetSelect(data){
+  const selectedSubnet = _.get(data, 'selectedSubnet');
   return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_SUBNET_SELECT,
-      payload
+      type: ONBOARD_SET_SUBNET,
+      payload: selectedSubnet
     });
     analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
     setTimeout(() => dispatch({

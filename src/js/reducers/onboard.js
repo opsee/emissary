@@ -5,9 +5,9 @@ import {yeller} from '../modules';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
-  ONBOARD_VPC_SELECT,
+  ONBOARD_SET_VPC,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT,
+  ONBOARD_SET_SUBNET,
   ONBOARD_INSTALL,
   ONBOARD_GET_TEMPLATES,
   ONBOARD_MAKE_LAUNCH_TEMPLATE,
@@ -21,6 +21,10 @@ const initial = {
   region: config.region,
   selectedSubnet: null,
   selectedVPC: null,
+
+  vpcs: {},
+  subnets: {},
+
   vpcsForSelection: [],
   subnetsForSelection: [],
   bastionLaunching: undefined,
@@ -34,35 +38,30 @@ const initial = {
   }
 };
 
-function getFinalInstallData(state){
-  const subnet = _.chain(state.subnetsForSelection)
-    .filter(s => {
-      return s.subnet_id === state.selectedSubnet;
-    })
-    .head().value() || {};
-
-  return {
-    instance_size: 't2.micro',
-    region: state.region,
-    vpc_id: state.selectedVPC,
-    subnet_id: state.selectedSubnet,
-    subnet_routing: subnet.routing,
-    access_key: state.access_key,
-    secret_key: state.secret_key
-  };
-}
-
-function getNameFromTags(vpcOrSubnet) {
-  const tags = _.get(vpcOrSubnet, 'tags', []);
-  return _.chain(tags).filter(t => _.get(t, 'Key') === 'Name').head().get('Value').value();
-}
+export const statics = {
+  getNameFromTags(vpcOrSubnet) {
+    const tags = _.get(vpcOrSubnet, 'tags', []);
+    return _.chain(tags).filter(t => _.get(t, 'Key') === 'Name').head().get('Value').value();
+  },
+  getFinalInstallData(state){
+    const subnet = _.chain(state.subnetsForSelection)
+      .filter(s => {
+        return s.subnet_id === state.selectedSubnet;
+      })
+      .head().value() || {};
+    return {
+      instance_size: 't2.micro',
+      region: state.region,
+      vpc_id: state.selectedVPC,
+      subnet_id: state.selectedSubnet,
+      subnet_routing: subnet.routing,
+      access_key: state.access_key,
+      secret_key: state.secret_key
+    };
+  }
+};
 
 export default handleActions({
-  [ONBOARD_SET_REGION]: {
-    next(state, action){
-      return _.assign({}, state, action.payload);
-    }
-  },
   [ONBOARD_GET_TEMPLATES]: {
     next(state, action){
       const templates = action.payload;
@@ -75,13 +74,20 @@ export default handleActions({
       return _.assign({}, state, action.payload);
     }
   },
-  [ONBOARD_VPC_SELECT]: {
+  [ONBOARD_SET_REGION]: {
+    next(state, action){
+      const region = action.payload;
+      console.log(region);
+      return _.assign({}, state, region);
+    }
+  },
+  [ONBOARD_SET_VPC]: {
     next(state, action){
       const selectedVPC = action.payload;
       return _.assign({}, state, {selectedVPC});
     }
   },
-  [ONBOARD_SUBNET_SELECT]: {
+  [ONBOARD_SET_SUBNET]: {
     next(state, action){
       const selectedSubnet = action.payload;
       return _.assign({}, state, {selectedSubnet});
@@ -89,7 +95,7 @@ export default handleActions({
   },
   [ONBOARD_SET_INSTALL_DATA]: {
     next(state){
-      const installData = getFinalInstallData(state);
+      const installData = statics.getFinalInstallData(state);
       return _.assign({}, state, {installData});
     }
   },
@@ -109,10 +115,10 @@ export default handleActions({
     next(state, action) {
       // Use the "Name" tag as name, if present
       const vpcsForSelection = _.chain(action.payload.data).get('vpcs').map(vpc => {
-        return _.assign({}, vpc, { name: getNameFromTags(vpc) });
+        return _.assign({}, vpc, { name: statics.getNameFromTags(vpc) });
       }).value();
       const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
-        return _.assign({}, subnet, { name: getNameFromTags(subnet) });
+        return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
       }).value();
       const newState = { vpcsForSelection, subnetsForSelection };
       if (!state.selectedVPC) {
