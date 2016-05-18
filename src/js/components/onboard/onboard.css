@@ -8,7 +8,7 @@
 
 p, li{
   color: #AAA;
-  line-height: 28px;
+  line-height: 26px;
 }
 
 h1, h2, h3 {
@@ -92,4 +92,15 @@ h1, h2, h3 {
 .laptop {
   max-width: 200px;
   opacity: 0.8;
+}
+
+.configKey {
+  font-size: 1.25rem;
+  color: var(--colorPrimary);
+  margin-bottom: 0.75rem;
+}
+
+.configSub {
+  font-size: 1.25rem;
+  opacity: 0.85;
 }

@@ -59,9 +59,7 @@ const ConfigureInstance = React.createClass({
     });
   },
   getSubnets() {
-    return _.filter(this.props.redux.onboard.subnetsForSelection, s => {
-      return s.vpc_id === this.props.redux.onboard.selectedVPC;
-    }).map(s => {
+    return _.map(this.props.redux.onboard.subnetsForSelection, s => {
       let labelName = s.name ? `<strong>${s.name}</strong> - ` : '';
       return _.assign({
         id: _.get(s, 'subnet_id'),

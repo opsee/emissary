@@ -58,7 +58,7 @@ const Onboard = React.createClass({
     return _.times(totalPips, i => {
       const className = cx(style.pip, {[style.activePip]: i === activePip});
       return (
-        <Circle className={className} />
+        <Circle key={i} className={className} />
       );
     });
   },

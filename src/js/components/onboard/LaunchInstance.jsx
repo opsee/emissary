@@ -8,7 +8,7 @@ import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Padding, Col, Grid, Row} from '../layout';
 import instanceImg from '../../../img/tut-ec2-instance.svg';
-import ConfigureInstance from './ConfigureInstance';
+import regions from '../../modules/regions';
 import style from './onboard.css';
 
 const LaunchInstance = React.createClass({
@@ -17,7 +17,9 @@ const LaunchInstance = React.createClass({
       onboard: PropTypes.shape({
         region: PropTypes.string,
         selectedVPC: PropTypes.string,
-        selectedSubnet: PropTypes.string
+        selectedSubnet: PropTypes.string,
+        vpcsForSelection: PropTypes.array,
+        subnetsForSelection: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
         onboardScanRegion: PropTypes.object
@@ -39,39 +41,72 @@ const LaunchInstance = React.createClass({
       this.props.actions.scanRegion(region);
     }
   },
-  getInitialState(){
-    return {
-      showConfigure: false
-    };
+  getConfig(){
+    // TODO switch VPCs/subnets to map so selectedVPC/Subnet can remain ID
+    const region = _.chain(regions).filter(r => {
+      return r.id === this.props.redux.onboard.region;
+    }).first().value() || {};
+    const vpc = _.chain(this.props.redux.onboard.vpcsForSelection).filter(s => {
+      return s.vpc_id === this.props.redux.onboard.selectedVPC;
+    }).first().value() || {};
+    const subnet  = _.chain(this.props.redux.onboard.subnetsForSelection).filter(s => {
+      return s.subnet_id === this.props.redux.onboard.selectedSubnet;
+    }).first().value() || {};
+    return { region, vpc, subnet };
   },
-  onConfigure(config){
-    this.setState(_.assign({
-      showConfigure: false
-    }, config));
-  },
+
   renderConfig(){
-    const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
+    const { region, vpc, subnet } = this.getConfig(); // FIXME do in reducer
     if (this.props.redux.asyncActions.onboardScanRegion.status === 'pending') {
       return (
         <Padding tb={2} className="text-center">
-          <span>Scanning your environment in {region}...</span>
+          <span>Scanning your environment in {this.props.redux.onboard.region}...</span>
         </Padding>
       );
     }
     return (
-      <Padding tb={2} className="text-center">
-        <h3 style={{color: 'white', 'fontWeight': 300}}>{region} <span style={{opacity: 0.3}}>></span> {selectedVPC} <span style={{opacity: 0.3}}>></span> {selectedSubnet}</h3>
+      <Padding tb={2}>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={4}>
+              <div className={style.configKey}>
+                Region
+              </div>
+              <div className={style.configMain}>
+                {_.get(region, 'id')}
+              </div>
+              <div className={style.configSub}>
+                {_.get(region, 'name')}
+              </div>
+            </Col>
+            <Col xs={12} sm={4}>
+              <div className={style.configKey}>
+                VPC
+              </div>
+              <div className={style.configMain}>
+                {_.get(vpc, 'vpc_id')}
+              </div>
+              <div className={style.configSub}>
+                {_.get(vpc, 'name')}
+              </div>
+            </Col>
+            <Col xs={12} sm={4}>
+              <div className={style.configKey}>
+                Subnet
+              </div>
+              <div className={style.configMain}>
+                {_.get(subnet, 'subnet_id')}
+              </div>
+              <div className={style.configSub}>
+                {_.get(subnet, 'name')}
+              </div>
+            </Col>
+          </Row>
+        </Grid>
       </Padding>
     );
   },
   renderInner(){
-    if (this.state.showConfigure) {
-      return (
-        <div>
-          <ConfigureInstance onSave={this.onConfigure} onDismiss={this.setState.bind(null, {showConfigure: false})} />
-        </div>
-      );
-    }
     return (
       <div>
         <Padding tb={2}>
