@@ -54,7 +54,6 @@ const LaunchStack = React.createClass({
     if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
       this.props.actions.makeLaunchRoleUrlTemplate();
     }
-
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
       this.props.actions.getTemplates();
@@ -68,6 +67,14 @@ const LaunchStack = React.createClass({
     this.setInterval(() => {
       this.props.actions.hasRole();
     }, 1000 * 5); // every 5 seconds
+  },
+  componentWillReceiveProps(nextProps){
+    // Only redirect after the *first* call to hasRole after the component has
+    // been mounted; otherwise, show the success message.
+    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
+    if (isFirstPoll && nextProps.redux.onboard.role.stack_id) {
+      this.history.pushState(null, '/start/launch-instance');
+    }
   },
   getRole(){
     return !!this.props.redux.onboard.role.region;
@@ -131,9 +138,10 @@ const LaunchStack = React.createClass({
     );
   },
   renderLaunchButton(){
-    if (this.props.redux.asyncActions.onboardMakeLaunchTemplate.state === 'pending') {
+    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
+    if (isFirstPoll) {
       return (
-        <Button onClick={this.onOpenConsole} color="primary" disabled block chevron>Loading...</Button>
+        <Button onClick={this.onOpenConsole} color="primary" disabled block>Loading...</Button>
       );
     }
 
@@ -153,19 +161,6 @@ const LaunchStack = React.createClass({
     );
   },
   renderInner(){
-    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
-    if (isFirstPoll) {
-      // TODO center this nicely
-      return (
-        <div>
-          <StatusHandler status="pending" />
-          <Padding tb={2}>
-            <p className="text-center">Checking your role...</p>
-          </Padding>
-          <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
-        </div>
-      );
-    }
     if (this.getRole()) {
       // TODO center this nicely as well
       return this.renderDone();
