@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, {PropTypes} from 'react';
+import React from 'react';
 import style from './checkmark.css';
 
 export default React.createClass({
@@ -11,4 +10,4 @@ export default React.createClass({
       </svg>
     );
   }
-})
+});

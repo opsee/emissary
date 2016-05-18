@@ -1,4 +1,3 @@
-/* eslint-disable */
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
@@ -10,7 +9,6 @@ import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Highlight} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
-import crossAccountImg from '../../../img/tut-cross-account.svg';
 import templates from '../../modules/awsTemplates';
 import style from './onboard.css';
 
@@ -44,11 +42,6 @@ const LaunchStack = React.createClass({
     }
     this.props.actions.hasRole();
   },
-  // componentWillReceiveProps(nextProps){
-  //   if (nextProps.redux.onboard.hasRole) {
-  //     this.history.pushState(null, '/start/launch-instance');
-  //   }
-  // },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
     if (data){

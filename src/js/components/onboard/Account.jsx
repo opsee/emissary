@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
@@ -6,7 +5,6 @@ import {bindActionCreators} from 'redux';
 import {History} from 'react-router';
 
 import {Checkmark} from '../icons';
-import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Button} from '../forms';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -16,7 +14,6 @@ import style from './onboard.css';
 
 const OnboardAccount = React.createClass({
   mixins: [History],
-
   propTypes: {
     location: PropTypes.object,
     actions: PropTypes.shape({
@@ -37,16 +34,9 @@ const OnboardAccount = React.createClass({
     const isDone = nextProps.redux.asyncActions.userSetPassword.status === 'success';
     if (wasPending && isDone) {
       setTimeout(() => {
-        this.history.pushState(null, '/start/launch-stack')
+        this.history.pushState(null, '/start/launch-stack');
       }, 500);
     }
-  },
-  doRedirect(){
-
-    setTimeout(() => {
-      console.log('redirecting');
-      this.history.pushState(null, '/start/launch-stack')
-    }, 500);
   },
   getInitialState(){
     return {

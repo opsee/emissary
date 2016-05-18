@@ -1,22 +1,14 @@
-/* eslint-disable */
 import _ from 'lodash';
 import cx from 'classnames';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { RouteTransition } from 'react-router-transition';
-import { spring } from 'react-motion';
 import { History } from 'react-router';
-import { OrderedMap } from 'immutable';
 
 import { Circle, Close } from '../icons';
 import { Padding } from '../layout';
 import { app as actions } from '../../actions';
 import style from './onboard.css';
-
-const fadeConfig = { stiffness: 200, damping: 22 };
-const popConfig = { stiffness: 360, damping: 25 };
-const slideConfig = { stiffness: 330, damping: 30 };
 
 const routes = [
   // '/start/review-stack',
@@ -26,31 +18,19 @@ const routes = [
   '/start/install-example'
 ];
 
-const slideLeft = {
-  atEnter: {
-    opacity: 0,
-    offset: 100
-  },
-  atLeave: {
-    opacity: spring(0, fadeConfig),
-    offset: spring(-100, slideConfig)
-  },
-  atActive: {
-    opacity: spring(1, slideConfig),
-    offset: spring(0, slideConfig)
-  },
-  mapStyles(styles) {
-    return {
-      opacity: styles.opacity,
-      transform: `translateX(${styles.offset}%)`
-    };
-  }
-};
-
 const Onboard = React.createClass({
   mixins: [History],
   propTypes: {
-
+    location: PropTypes.shape({
+      pathname: PropTypes.string
+    }),
+    history: PropTypes.shape({
+      pushState: PropTypes.func
+    }),
+    actions: PropTypes.shape({
+      confirmOpen: PropTypes.func
+    }),
+    children: PropTypes.node
   },
   isInstalling(){
     const pathname = this.props.location.pathname;
@@ -76,14 +56,14 @@ const Onboard = React.createClass({
     }
     const totalPips = routes.length;
     return _.times(totalPips, i => {
-      const className = cx(style.pip, {[style.activePip]: i == activePip});
+      const className = cx(style.pip, {[style.activePip]: i === activePip});
       return (
         <Circle className={className} />
       );
     });
   },
   render(){
-    return(
+    return (
       <div className={style.container}>
         <div onClick={this.onClose}>
           <Padding a={2} className={style.closeWrapper} >
