@@ -8,6 +8,7 @@ import {plain as seed} from 'seedling';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Highlight} from '../global';
+import Instructions from './LaunchStackInstructions';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import templates from '../../modules/awsTemplates';
 import style from './onboard.css';
@@ -94,7 +95,7 @@ const LaunchStack = React.createClass({
               <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metris in CloudWatch, and lets us manage your Opsee instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
               <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metris in CloudWatch, and lets us launch and manage the Opsee EC2 instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
               <Padding tb={1}>
-                {this.renderHowTo()}
+                <Instructions />
               </Padding>
               <Padding tb={1}>
                 <Padding tb={1}>
