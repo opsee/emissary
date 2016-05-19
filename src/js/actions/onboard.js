@@ -113,7 +113,7 @@ export function getTemplates(){
       payload: new Promise((resolve, reject) => {
         const r1 = request.get(`${base}/bastion-ingress-cf.template`);
         const r2 = request.get(`${base}/bastion-cf.template`);
-        const r3 = request.get(`${base}/opsee-role-annotated.json`);
+        const r3 = request.get(`${base}/opsee-role-stack.json`);
         Promise.all([r1, r2, r3]).then(values => {
           resolve(values);
         }).catch(reject);

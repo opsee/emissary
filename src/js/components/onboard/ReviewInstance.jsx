@@ -35,9 +35,10 @@ const ReviewInstance = React.createClass({
     }
   },
   renderTemplateItem(title){
+    // FIXME use import
     const arr = ['ingress', 'cf', 'role'];
     const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
-    const links = ['bastion-ingress-cf.template', 'bastion-cf.template', 'opsee-role.json'];
+    const links = ['bastion-ingress-cf.template', 'bastion-cf.template', 'opsee-role-stack.json'];
     const index = arr.indexOf(title);
     const data = this.props.redux.onboard.templates[index];
     if (data){
