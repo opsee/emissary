@@ -112,9 +112,9 @@ const routes = (
     <Redirect from="/start" to="/start/create" />
     <Route path="/start/create" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
+    <Route path="/start/password" component={OnboardAccount} />
 
     <Route path="/start" component={auth(Onboard)}>
-      <Route path="/start/password" component={OnboardAccount} />
       <Route path="/start/review-stack" component={OnboardReviewStack} />
       <Route path="/start/launch-stack" component={OnboardLaunchStack} />
       <Route path="/start/review-instance" component={OnboardReviewInstance} />
