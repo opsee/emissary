@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
+import {Close} from '../icons';
 import {RadioSelect} from '../forms';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
@@ -80,6 +81,9 @@ const ConfigureInstance = React.createClass({
     const isDone = region && selectedVPC && selectedSubnet;
     return (
       <div className={style.transitionPanel}>
+        <Link to="/start/launch-instance" className={style.closeWrapper}>
+          <Close className={style.closeButton} />
+        </Link>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -111,8 +115,11 @@ const ConfigureInstance = React.createClass({
                 {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.subnetSelect} data={_.pick(this.props.redux.onboard, 'selectedSubnet')} options={this.getSubnets()} path="selectedSubnet"/>}
               </Padding>
 
-              <Padding tb={2}>
+              <Padding t={2} b={1}>
                 <Button to="/start/launch-instance" color="primary" disabled={isScanPending || !isDone} block>Save configuration</Button>
+              </Padding>
+              <Padding b={1}>
+                <Button to="/start/launch-instance" color="primary" disabled={isScanPending || !isDone} flat block>Cancel</Button>
               </Padding>
               <Padding tb={1} className="text-center">
                 <p><small><Link to="review-instance">Learn more about the Opsee instance.</Link></small></p>

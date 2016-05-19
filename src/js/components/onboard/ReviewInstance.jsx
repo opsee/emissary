@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
 
-import { Close } from '../icons';
+import {Close} from '../icons';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
