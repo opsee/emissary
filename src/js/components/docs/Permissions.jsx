@@ -64,14 +64,14 @@ const Permissions = React.createClass({
           <Row>
             <Col xs={12}>
               <Padding b={2}>
-                <p>Have a look at the IAM roles and permissions Opsee requires for installation. We use 2 IAM roles and 1 CloudFormation template.</p>
-                <Heading level={2}>Instance IAM Role</Heading>
-                <p>Used by our EC2 instance once added to your environment. It needs read permissions for AWS services to run health checks, and we ask for additional permissions to EC2 (so you can perform actions like restarts within Opsee) and auto scale groups (so that we can keep a running instance at all times)</p>
+                <p>A complete installation of Opsee consists of 3 CloudFormation stacks, 1 stack for our cross-account IAM role, 1 stack for our EC2 instance, and 1 stack for security group ingress rules for our instance. The cross-account IAM role stack is the only one you'll need to install manually.</p>
+                <Heading level={2}>Template for Cross-Account Access</Heading>
+                <p>Used by our backend once added to your environment. It needs read permissions for AWS services to run health checks, and we ask for additional permissions to EC2 (so you can perform actions like restarts within Opsee) and auto scale groups (so that we can keep a running instance at all times)</p>
                 {this.renderTemplateItem('role')}
-                <Heading level={2}>Ingress IAM Role</Heading>
+                <Heading level={2}>Template for Security Group Ingress </Heading>
                 <p>Used to ensure communication betweeen your security groups and the Opsee security group within your chosen VPC.</p>
                 {this.renderTemplateItem('ingress')}
-                <Heading level={2}>CloudFormation Template</Heading>
+                <Heading level={2}>Template for EC2 Instance</Heading>
                 <p>Used to install our EC2 instance. Notably, we create both a security group and auto scale group (to set rules requiring at least one running Opsee instance at all times), and add our instance to both groups.</p>
                 {this.renderTemplateItem('cf')}
                 <p>If you have any questions, you can reach out to us any time on <Link target="_blank" to="https://app.opsee.com/help">email, Slack, or IRC</Link>.</p>

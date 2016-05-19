@@ -20,7 +20,7 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>How does the instance discover what is running in my AWS Environment?</Heading>
-                <p>Out instance uses AWS APIs to discover your Instances, Groups, Services, and other AWS environment data. With <a href="/docs/permissions">a few exceptions</a>, the instance has read-only access to these APIs.</p>
+                <p>Our instance communicates with our backend utilizing a cross-account IAM role to discover your Instances, Groups, Services, and other AWS environment data. With <a href="/docs/permissions">a few exceptions</a>, our backend has read-only access to these APIs.</p>
                 <hr/>
 
                 <Heading level={3}>Are there any constraints on the configuration of my AWS environment for the instance to work properly?</Heading>
@@ -33,7 +33,7 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>What kind of access and permissions does your instance have to my environment?</Heading>
-                <p>In addition to permissions for the instance itself, Opsee needs to ensure that our instance can communicate with the rest of your infrastructure. To ensure this, a process running on the instance will periodically examine the security groups in your AWS environment. If it finds groups our instance cannot communicate with, ingress rules will be created via the AWS API so that services within those groups can be monitored. All ingress rules are created, updated, and deleted via the modification of a special <a href="/docs/permissions">CloudFormation stack</a> that resides in the region which the instance was installed. You can <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">see all of the security groups</a> the has access to by examining the ingress stack&rsquo;s template body.</p>
+                <p>Opsee needs to ensure that our instance can communicate with the rest of your infrastructure. To ensure this, a process running on our backend will periodically examine the security groups in your AWS environment. If it finds groups our instance cannot communicate with, ingress rules will be created via the AWS API so that services within those groups can be monitored. All ingress rules are created, updated, and deleted via the modification of a special <a href="/docs/permissions">CloudFormation stack</a> that resides in the region which the instance was installed. You can <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">see all of the security groups</a> the has access to by examining the ingress stack&rsquo;s template body.</p>
                 <hr/>
 
                 <Heading level={3}>Does Opsee install any software on my systems?</Heading>
@@ -41,7 +41,7 @@ const Bastion = React.createClass({
                 <hr/>
 
                 <Heading level={3}>Tell me about the security measures Opsee has taken with the Instance</Heading>
-                <p>We&rsquo;re glad you asked! Our Instance is a t2.micro running an Opsee AMI within an Autoscaling Group.  The Autoscaling Group is defined by a <a href="/docs/permissions">CloudFormation template</a> and managed via a CloudFormation stack that resides in the region within which the instance was installed. The instance&rsquo;s credentials are updated every hour. Any credentials it needs to run health checks are stored on an encrypted EBS volume inside your network. The instance can even keep running if it can&rsquo;t connect to Opsee.</p>
+                <p>We&rsquo;re glad you asked! Our Instance is a t2.micro running an Opsee AMI within an Autoscaling Group.  The Autoscaling Group is defined by a <a href="/docs/permissions">CloudFormation template</a> and managed via a CloudFormation stack that resides in the region within which the instance was installed. The instance has no IAM permissions, so it cannot access any information about your AWS resources or take any action without our backend. Any credentials it needs to run health checks are stored on an encrypted EBS volume inside your network. The instance can even keep running if it can&rsquo;t connect to Opsee.</p>
                 <hr/>
 
                 <Heading level={3}>How does the instance handle VPCs?</Heading>
@@ -61,7 +61,7 @@ const Bastion = React.createClass({
                 <ul>
                   <li>To remove the Opsee instance, as well as its security group and auto scale group, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Look for the stack named <strong>opsee-stack-[id]</strong>. Select it from the list and choose Actions -> Delete Stack</li>
                   <li>To remove the Opsee ingress rules, allowing communication between our security group and the other groups in your VPC, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Look for the stack named <strong>opsee-stack-[id]-OpseeBastionIngressStack-[id]</strong>. Select it from the list and choose Actions -> Delete Stack</li>
-                  <li>To remove the IAM role used by our EC2 instance, go to your <a target="_blank" href="https://console.aws.amazon.com/iam/home#roles">IAM Roles List</a>. Find the role called <strong>opsee-role-[id]</strong>. Select it from the list and choose Role Actions -> Delete Role.</li>
+                  <li>To remove the IAM role used by our backend, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Find the stack called <strong>opsee-role-[id]</strong>. Select it from the list and choose Actions -> Delete Stack.</li>
                 </ul>
             </Col>
           </Row>

@@ -51,7 +51,7 @@ const AddInstance = React.createClass({
   renderTemplateItem(title){
     const arr = ['ingress', 'cf', 'role'];
     const base = 'https://s3.amazonaws.com/opsee-bastion-cf-us-east-1/beta';
-    const links = ['bastion-ingress-cf.template', 'bastion-cf.template', 'opsee-role.json'];
+    const links = ['bastion-ingress-cf.template', 'bastion-cf.template', 'opsee-role-stack.json'];
     const index = arr.indexOf(title);
     const data = this.props.redux.onboard.templates[index];
     if (data){
@@ -100,7 +100,7 @@ const AddInstance = React.createClass({
             <Col xs={12} sm={8}>
               <Heading level={3}>Our EC2 Instance</Heading>
               <p>The instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks,
-              and it inherits all of its permissions from the cross-account role you set up in the last step.
+              and it has no IAM permissions of its own.
               The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
               which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
               <p>If you'd like to know more, reach out to us any time on <a href="mailto:support@opsee.co">email</a>, <a href="https://opsee-support.slack.com" target="_blank">Slack</a>, or <a href="irc://irc.freenode.org/opsee" target="_blank">IRC</a>.</p>
