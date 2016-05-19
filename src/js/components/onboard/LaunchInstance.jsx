@@ -69,37 +69,43 @@ const LaunchInstance = React.createClass({
         <Grid>
           <Row>
             <Col xs={12} sm={4}>
-              <div className={style.configKey}>
-                Region
-              </div>
-              <div className={style.configMain}>
-                {_.get(region, 'id')}
-              </div>
-              <div className={style.configSub}>
-                {_.get(region, 'name')}
-              </div>
+              <Padding tb={1}>
+                <div className={style.configKey}>
+                  Region
+                </div>
+                <div className={style.configMain}>
+                  {_.get(region, 'id')}
+                </div>
+                <div className={style.configSub}>
+                  {_.get(region, 'name')}
+                </div>
+              </Padding>
             </Col>
             <Col xs={12} sm={4}>
-              <div className={style.configKey}>
-                VPC
-              </div>
-              <div className={style.configMain}>
-                {_.get(vpc, 'vpc_id')}
-              </div>
-              <div className={style.configSub}>
-                {_.get(vpc, 'name')}
-              </div>
+              <Padding tb={1}>
+                <div className={style.configKey}>
+                  VPC
+                </div>
+                <div className={style.configMain}>
+                  {_.get(vpc, 'vpc_id')}
+                </div>
+                <div className={style.configSub}>
+                  {_.get(vpc, 'name')}
+                </div>
+              </Padding>
             </Col>
             <Col xs={12} sm={4}>
-              <div className={style.configKey}>
-                Subnet
-              </div>
-              <div className={style.configMain}>
-                {_.get(subnet, 'subnet_id')}
-              </div>
-              <div className={style.configSub}>
-                {_.get(subnet, 'name')}
-              </div>
+              <Padding tb={1}>
+                <div className={style.configKey}>
+                  Subnet
+                </div>
+                <div className={style.configMain}>
+                  {_.get(subnet, 'subnet_id')}
+                </div>
+                <div className={style.configSub}>
+                  {_.get(subnet, 'name')}
+                </div>
+              </Padding>
             </Col>
           </Row>
         </Grid>
