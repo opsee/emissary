@@ -26,7 +26,7 @@ const LaunchStack = React.createClass({
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         onboardGetTemplates: PropTypes.object,
-        onboardHasRole: PropTypes.object,
+        onboardHasRole: PropTypes.object
       }),
       onboard: PropTypes.shape({
         templates: PropTypes.array,

@@ -24,35 +24,35 @@ import {
 function getRegion(state, region) {
   return graphPromise('region.scan', () => {
     return request
-      .post(`${config.services.compost}`)
-      .set('Authorization', state().user.get('auth'))
-      .send({query:
-        `mutation Mutation {
-          region(id: "${region}") {
-            scan {
-              subnets {
-                subnet_id
-                routing
-                instance_count
-                vpc_id
-                tags {
-                  Key
-                  Value
-                }
-              },
-              vpcs {
-                vpc_id,
-                instance_count
-                tags {
-                  Key
-                  Value
-                }
-              },
-            }
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({query:
+      `mutation Mutation {
+        region(id: "${region}") {
+          scan {
+            subnets {
+              subnet_id
+              routing
+              instance_count
+              vpc_id
+              tags {
+                Key
+                Value
+              }
+            },
+            vpcs {
+              vpc_id,
+              instance_count
+              tags {
+                Key
+                Value
+              }
+            },
           }
-        }`
-      });
+        }
+      }`
     });
+  });
 }
 
 function getRole(state) {
