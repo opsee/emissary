@@ -111,6 +111,8 @@ export function getTemplates(){
     dispatch({
       type: ONBOARD_GET_TEMPLATES,
       payload: new Promise((resolve, reject) => {
+        // FIXME use awsTemplates module and zip up results w/ keys
+        // then shove it into props in reducer
         const r1 = request.get(`${base}/bastion-ingress-cf.template`);
         const r2 = request.get(`${base}/bastion-cf.template`);
         const r3 = request.get(`${base}/opsee-role-stack.json`);

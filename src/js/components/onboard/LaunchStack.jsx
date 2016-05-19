@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
-import {History} from 'react-router';
+import {History, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
@@ -154,7 +154,9 @@ const LaunchStack = React.createClass({
         <Padding b={1}>
           {this.renderLaunchButton()}
         </Padding>
-        <Button to="/start/review-stack" color="primary" flat block>About Cross-Account Access</Button>
+        <Padding tb={1} className="text-center">
+          <p><small><Link to="/start/review-stack">Learn more about the cross-account role stack</Link></small></p>
+        </Padding>
       </Padding>
     );
   },

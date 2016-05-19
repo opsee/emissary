@@ -139,7 +139,7 @@ const LaunchInstance = React.createClass({
           <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
         </Padding>
         <Padding tb={1} className="text-center">
-          <p><small><Link to="review-instance">Learn more about the Opsee instance.</Link></small></p>
+          <p><small><Link to="/start/review-instance">Learn more about the Opsee instance</Link></small></p>
         </Padding>
       </Padding>
     );
