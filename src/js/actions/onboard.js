@@ -21,6 +21,54 @@ import {
   ONBOARD_HAS_ROLE
 } from './constants';
 
+function getRegion(state, region) {
+  return graphPromise('region.scan', () => {
+    return request
+      .post(`${config.services.compost}`)
+      .set('Authorization', state().user.get('auth'))
+      .send({query:
+        `mutation Mutation {
+          region(id: "${region}") {
+            scan {
+              subnets {
+                subnet_id
+                routing
+                instance_count
+                vpc_id
+                tags {
+                  Key
+                  Value
+                }
+              },
+              vpcs {
+                vpc_id,
+                instance_count
+                tags {
+                  Key
+                  Value
+                }
+              },
+            }
+          }
+        }`
+      });
+    });
+}
+
+function getRole(state) {
+  return graphPromise('role', () => {
+    return request
+    .post(`${config.services.compost}`)
+    .set('Authorization', state().user.get('auth'))
+    .send({query:
+      `{ role {
+          region
+          stack_id
+        }}`
+    });
+  });
+}
+
 export function signupCreate(data) {
   return (dispatch, state) => {
     dispatch({
@@ -52,37 +100,7 @@ export function scanRegion(region) {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SCAN_REGION,
-      payload: graphPromise('region.scan', () => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query:
-          `mutation Mutation {
-            region(id: "${region}") {
-              scan {
-                subnets {
-                  subnet_id
-                  routing
-                  instance_count
-                  vpc_id
-                  tags {
-                    Key
-                    Value
-                  }
-                },
-                vpcs {
-                  vpc_id,
-                  instance_count
-                  tags {
-                    Key
-                    Value
-                  }
-                },
-              }
-            }
-          }`
-        });
-      })
+      payload: getRegion(state, region)
     });
   };
 }
@@ -167,17 +185,7 @@ export function hasRole() {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_HAS_ROLE,
-      payload: graphPromise('role', () => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({query:
-          `{ role {
-              region
-              stack_id
-            }}`
-        });
-      })
+      payload: getRole(state)
     });
   };
 }
