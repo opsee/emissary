@@ -81,8 +81,10 @@ const ConfigureInstance = React.createClass({
   render(){
     console.log(this.props.redux.onboard.selectedRegion);
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
-    const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
-    const isDone = region && selectedVPC && selectedSubnet;
+    const {selectedRegion, selectedVPC, selectedSubnet} = this.props.redux.onboard;
+    const selectState = _.pick(this.props.redux.onboard, ['selectedRegion', 'selectedVPC', 'selectedSubnet']);
+    const isDone = selectedVPC && selectedSubnet;
+
     return (
       <div className={style.transitionPanel}>
         <Link to="/start/launch-instance" className={style.closeWrapper}>
@@ -102,21 +104,21 @@ const ConfigureInstance = React.createClass({
                   <h4>Choose a Region</h4>
                 </Padding>
 
-                <RadioSelect onChange={this.props.actions.setRegion} data={_.pick(this.props.redux.onboard, 'selectedRegion')} options={this.getRegions()} path="selectedRegion.id" />
+                <RadioSelect onChange={this.props.actions.setRegion} data={selectState} options={this.getRegions()} path="selectedRegion.id" />
               </Padding>
 
               <Padding tb={1}>
                 <Padding tb={1}>
                   <h4>Choose a VPC</h4>
                 </Padding>
-                {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.vpcSelect} data={_.pick(this.props.redux.onboard, 'selectedVPC')} options={this.getVPCs()} path="selectedVPC"/>}
+                {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.vpcSelect} data={selectState} options={this.getVPCs()} path="selectedVPC"/>}
               </Padding>
 
               <Padding tb={1}>
                 <Padding tb={1}>
                   <h4>Choose a Subnet</h4>
                 </Padding>
-                {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.subnetSelect} data={_.pick(this.props.redux.onboard, 'selectedSubnet')} options={this.getSubnets()} path="selectedSubnet"/>}
+                {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.subnetSelect} data={selectState} options={this.getSubnets()} path="selectedSubnet"/>}
               </Padding>
 
               <Padding t={2} b={1}>
