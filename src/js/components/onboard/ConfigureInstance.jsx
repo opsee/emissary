@@ -20,8 +20,6 @@ const ConfigureInstance = React.createClass({
         selectedSubnet: PropTypes.string,
         region: PropTypes.string,
         regions: PropTypes.array,
-        vpcsForSelection: PropTypes.array,
-        subnetsForSelection: PropTypes.array,
         installData: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
@@ -42,6 +40,9 @@ const ConfigureInstance = React.createClass({
       this.props.actions.initializeInstallation();
     }
   },
+  getSelectedRegion(){
+    return this.props.redux.onboard.selectedRegion || {};
+  },
   getRegions() {
     return _.map(this.props.redux.onboard.regions, region => {
       return _.assign({
@@ -50,7 +51,8 @@ const ConfigureInstance = React.createClass({
     });
   },
   getVPCs() {
-    return this.props.redux.onboard.vpcsForSelection.map(v => {
+    const { vpcs } = this.getSelectedRegion();
+    return _.map(vpcs, v => {
       let vpcID = _.get(v, 'vpc_id');
       let labelName = v.name ? `<strong>${v.name}</strong> - ` : '';
       return _.assign({}, v, {
@@ -60,8 +62,9 @@ const ConfigureInstance = React.createClass({
     });
   },
   getSubnets() {
+    const { subnets } = this.getSelectedRegion();
     const selectedVPC = this.props.redux.onboard.selectedVPC;
-    return _.chain(this.props.redux.onboard.subnetsForSelection).filter(s => {
+    return _.chain(subnets).filter(s => {
       return selectedVPC ? s.vpc_id === selectedVPC : true;
     }).map(s => {
       let labelName = s.name ? `<strong>${s.name}</strong> - ` : '';

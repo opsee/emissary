@@ -19,24 +19,22 @@ const initial = {
   regions,
   region: null,
 
-  selectedSubnet: null,
-  selectedVPC: null,
-  vpcsForSelection: [],
-  subnetsForSelection: [],
-  bastionLaunching: undefined,
-  installData: null,
-  finalInstallData: null, // TODO couple more (?) w/ installData
-  installing: false,
   templates: [],
   regionLaunchURL: null,
-
-  // THE CURRENTLY SELECTED REGION, INCLUDING VPCS and SUBNETS
-  selectedRegion: null,
 
   role: {
     stack_id: null,
     region: null
-  }
+  },
+
+  // THE CURRENTLY SELECTED REGION, INCLUDING VPCS and SUBNETS
+  selectedRegion: null,
+  selectedSubnet: null,
+  selectedVPC: null,
+
+  installData: null,
+  finalInstallData: null, // TODO couple more (?) w/ installData
+  installing: false,
 };
 
 export const statics = {
@@ -72,28 +70,29 @@ export default handleActions({
   },
   [ONBOARD_SCAN_REGION]: {
     next(state, action) {
+      const regionData = action.payload.data;
       // Use the "Name" tag as name, if present
-      const vpcsForSelection = _.chain(action.payload.data).get('vpcs').map(vpc => {
+      const vpcs = _.chain(regionData).get('vpcs').map(vpc => {
         return _.assign({}, vpc, { name: statics.getNameFromTags(vpc) });
       }).value();
-      const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
+      const subnets = _.chain(regionData).get('subnets').map(subnet => {
         return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
       }).value();
-      return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
+
+      const selectedRegion = _.assign({}, regionData, { vpcs, subnets });
+      return _.assign({}, state, { selectedRegion });
     },
     throw: yeller.reportAction
   },
   [ONBOARD_SET_REGION]: {
     next(state, action){
       const region = action.payload;
-      // TODO set best choice VPC and subnet as selected
       return _.assign({}, state, region);
     }
   },
   [ONBOARD_SET_VPC]: {
     next(state, action){
       const selectedVPC = action.payload;
-      // TODO set best subnet as selected
       return _.assign({}, state, {selectedVPC});
     }
   },
@@ -110,8 +109,8 @@ export default handleActions({
       // Store the complete region/vpc/subnet in the props, since selected
       // region/vpc/subnet can change
       const region = _.find(regions, {id: regionID });
-      const vpc = _.find(state.vpcsForSelection, {vpc_id: vpcID});
-      const subnet = _.find(state.subnetsForSelection, {subnet_id: subnetID});
+      const vpc = _.find(state.selectedRegion.vpcs, {vpc_id: vpcID});
+      const subnet = _.find(state.selectedRegion.subnets, {subnet_id: subnetID});
 
       const installData = { region, vpc, subnet };
       const finalInstallData = statics.getFinalInstallData(state, installData);

@@ -205,9 +205,6 @@ export function vpcSelect(data){
       payload: selectedVPC
     });
     analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
-    setTimeout(() => dispatch({
-      type: ONBOARD_SET_INSTALL_DATA
-    }), 50);
   };
 }
 
@@ -219,9 +216,6 @@ export function subnetSelect(data){
       payload: selectedSubnet
     });
     analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
-    setTimeout(() => dispatch({
-      type: ONBOARD_SET_INSTALL_DATA
-    }), 50);
   };
 }
 
