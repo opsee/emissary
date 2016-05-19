@@ -30,6 +30,7 @@ function getRegion(state, region) {
       `mutation Mutation {
         region(id: "${region}") {
           scan {
+            region
             subnets {
               subnet_id
               routing
@@ -93,6 +94,65 @@ export function signupCreate(data) {
         });
       })
     });
+  };
+}
+
+export function setDefaultInstallData(regionData) {
+  return (dispatch) => {
+    const { region, vpcs, subnets } = regionData;
+    const regionID = region;
+
+    // Set the default VPC to be the first in the priority list
+    const vpcID = _.chain(vpcs).first().get('vpc_id').value();
+
+    // Set the default subnet to be the first in the priority list
+    // for the default VPC
+    const subnetID = _.chain(subnets).filter(subnet => subnet.vpc_id === vpcID).first().get('subnet_id').value();
+
+    const data = { regionID, vpcID, subnetID };
+    dispatch({
+      type: ONBOARD_SET_INSTALL_DATA,
+      payload: { data }
+    });
+  };
+}
+
+export function updateInstallData() {
+  return (dispatch, state) => {
+    const regionID = state().onboard.region;
+    const vpcID = state().onboard.selectedVPC;
+    const subnetID = state().onboard.selectedSubnet;
+    const data = { regionID, vpcID, subnetID };
+
+    dispatch({
+      type: ONBOARD_SET_INSTALL_DATA,
+      payload: { data }
+    });
+  };
+}
+
+/*
+ * Grabs the region from the user's role stack, fetches the VPCs/subnets in
+ * that region, and persists Opsee's "best guess" VPC/subnet as the initial
+ * installation data.
+ */
+export function initializeInstallation(){
+  return (dispatch, state) => {
+    getRole(state)
+      .then(response => {
+        dispatch({
+          type: ONBOARD_HAS_ROLE,
+          payload: response
+        });
+        return getRegion(state, _.get(response, 'data.region'));
+      })
+      .then(response => {
+        dispatch({
+          type: ONBOARD_SCAN_REGION,
+          payload: response
+        });
+        setDefaultInstallData(response.data)(dispatch, state);
+      });
   };
 }
 
@@ -217,7 +277,7 @@ function launch(dispatch, state, resolve, reject){
     return reject(new Error('config.onboardInstallError'));
   }
 
-  const variables = state().onboard.installData;
+  const variables = state().onboard.finalInstallData;
   return graphPromise('region.rebootInstances', () => {
     return request
     .post(`${config.services.compost}`)
@@ -243,7 +303,7 @@ export function install(){
           return resolve();
         }
         //user has install data but has not launched
-        if (state().onboard.installData && !state().onboard.installing && !isBastionConnected(state)){
+        if (state().onboard.finalInstallData && !state().onboard.installing && !isBastionConnected(state)){
           return launch(dispatch, state, resolve, reject);
         }
         //we aren't sure at this point, so let's wait

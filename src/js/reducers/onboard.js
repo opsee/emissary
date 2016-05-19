@@ -18,19 +18,21 @@ import {
 const initial = {
   regions,
   region: null,
+
   selectedSubnet: null,
   selectedVPC: null,
-
-  vpcs: {},
-  subnets: {},
-
   vpcsForSelection: [],
   subnetsForSelection: [],
   bastionLaunching: undefined,
-  installData: undefined,
+  installData: null,
+  finalInstallData: null, // TODO couple more (?) w/ installData
   installing: false,
   templates: [],
   regionLaunchURL: null,
+
+  // THE CURRENTLY SELECTED REGION, INCLUDING VPCS and SUBNETS
+  selectedRegion: null,
+
   role: {
     stack_id: null,
     region: null
@@ -42,18 +44,13 @@ export const statics = {
     const tags = _.get(vpcOrSubnet, 'tags', []);
     return _.chain(tags).filter(t => _.get(t, 'Key') === 'Name').head().get('Value').value();
   },
-  getFinalInstallData(state){
-    const subnet = _.chain(state.subnetsForSelection)
-      .filter(s => {
-        return s.subnet_id === state.selectedSubnet;
-      })
-      .head().value() || {};
+  getFinalInstallData(state, installData){
     return {
       instance_size: 't2.micro',
-      region: state.region,
-      vpc_id: state.selectedVPC,
-      subnet_id: state.selectedSubnet,
-      subnet_routing: subnet.routing,
+      region: _.get(installData, 'region.id'),
+      vpc_id: _.get(installData, 'vpc.vpc_id'),
+      subnet_id: _.get(installData, 'subnet.subnet_id'),
+      subnet_routing: _.get(installData, 'subnet.routing'),
       access_key: config.access_key,
       secret_key: config.secret_key
     };
@@ -82,27 +79,21 @@ export default handleActions({
       const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
         return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
       }).value();
-      const newState = { vpcsForSelection, subnetsForSelection };
-      if (!state.selectedVPC) {
-        newState.selectedVPC = _.get(_.first(vpcsForSelection), 'vpc_id');
-      }
-      if (!state.selectedSubnet) {
-        newState.selectedSubnet = _.get(_.first(subnetsForSelection), 'subnet_id');
-      }
-      return _.assign({}, state, newState);
+      return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
     },
     throw: yeller.reportAction
   },
   [ONBOARD_SET_REGION]: {
     next(state, action){
       const region = action.payload;
-      console.log(region);
+      // TODO set best choice VPC and subnet as selected
       return _.assign({}, state, region);
     }
   },
   [ONBOARD_SET_VPC]: {
     next(state, action){
       const selectedVPC = action.payload;
+      // TODO set best subnet as selected
       return _.assign({}, state, {selectedVPC});
     }
   },
@@ -113,9 +104,18 @@ export default handleActions({
     }
   },
   [ONBOARD_SET_INSTALL_DATA]: {
-    next(state){
-      const installData = statics.getFinalInstallData(state);
-      return _.assign({}, state, {installData});
+    next(state, action) {
+      const { regionID, vpcID, subnetID } = action.payload.data;
+
+      // Store the complete region/vpc/subnet in the props, since selected
+      // region/vpc/subnet can change
+      const region = _.find(regions, {id: regionID });
+      const vpc = _.find(state.vpcsForSelection, {vpc_id: vpcID});
+      const subnet = _.find(state.subnetsForSelection, {subnet_id: subnetID});
+
+      const installData = { region, vpc, subnet };
+      const finalInstallData = statics.getFinalInstallData(state, installData);
+      return _.assign({}, state, { installData, finalInstallData });
     }
   },
   [ONBOARD_INSTALL]: {
@@ -134,6 +134,7 @@ export default handleActions({
     next(state, action) {
       const role = action.payload.data;
       const region = _.get(action.payload.data, 'region');
+      console.log('role', role);
       return _.assign({}, state, {role, region});
     },
     throw: yeller.reportAction

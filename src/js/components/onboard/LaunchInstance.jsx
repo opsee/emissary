@@ -8,7 +8,6 @@ import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Padding, Col, Grid, Row} from '../layout';
 import instanceImg from '../../../img/tut-ec2-instance.svg';
-import regions from '../../modules/regions';
 import style from './onboard.css';
 
 const LaunchInstance = React.createClass({
@@ -16,54 +15,36 @@ const LaunchInstance = React.createClass({
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
         region: PropTypes.string,
-        selectedVPC: PropTypes.string,
-        selectedSubnet: PropTypes.string,
-        vpcsForSelection: PropTypes.array,
-        subnetsForSelection: PropTypes.array
+        installData: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
         onboardScanRegion: PropTypes.object
       })
     }),
     actions: PropTypes.shape({
-      hasRole: PropTypes.func,
-      scanRegion: PropTypes.func
+      initializeInstallation: PropTypes.func
     })
   },
-  // TODO roll these into one API call
   componentWillMount(){
-    this.props.actions.hasRole();
-  },
-  componentWillReceiveProps(nextProps) {
-    const region = nextProps.redux.onboard.role.region;
-    const hasScanned = !!nextProps.redux.asyncActions.onboardScanRegion.status;
-    if (region && !hasScanned) {
-      this.props.actions.scanRegion(region);
+    if (!this.props.redux.onboard.installData) {
+      this.props.actions.initializeInstallation();
     }
   },
-  getConfig(){
-    // TODO switch VPCs/subnets to map so selectedVPC/Subnet can remain ID
-    const region = _.chain(regions).filter(r => {
-      return r.id === this.props.redux.onboard.region;
-    }).first().value() || {};
-    const vpc = _.chain(this.props.redux.onboard.vpcsForSelection).filter(s => {
-      return s.vpc_id === this.props.redux.onboard.selectedVPC;
-    }).first().value() || {};
-    const subnet  = _.chain(this.props.redux.onboard.subnetsForSelection).filter(s => {
-      return s.subnet_id === this.props.redux.onboard.selectedSubnet;
-    }).first().value() || {};
-    return { region, vpc, subnet };
+  getInstallData(){
+    return this.props.redux.onboard.installData || {};
   },
-
+  renderLoading(){
+    return (
+      <Padding tb={2} className="text-center">
+        <span>Scanning your environment...</span>
+      </Padding>
+    );
+  },
   renderConfig(){
-    const { region, vpc, subnet } = this.getConfig(); // FIXME do in reducer
-    if (this.props.redux.asyncActions.onboardScanRegion.status === 'pending') {
-      return (
-        <Padding tb={2} className="text-center">
-          <span>Scanning your environment in {this.props.redux.onboard.region}...</span>
-        </Padding>
-      );
+    if (!this.props.redux.onboard.installData) {
+      return this.renderLoading();
     }
+    const { region, vpc, subnet } = this.getInstallData();
     return (
       <Padding tb={2}>
         <Grid>
@@ -112,45 +93,36 @@ const LaunchInstance = React.createClass({
       </Padding>
     );
   },
-  renderInner(){
-    return (
-      <div>
-        <Padding tb={2}>
-          <div className={style.headerStep}>STEP 2 of 3</div>
-          <h2>Install the Opsee EC2 instance</h2>
-        </Padding>
-        <Padding a={4} className="text-center">
-          <img src={instanceImg} style={{maxHeight: '300px'}}/>
-        </Padding>
-        <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
-        <p>Here's our best guess on where we should install it:</p>
-        {this.renderConfig()}
-        {this.renderButtons()}
-      </div>
-    );
-  },
-  renderButtons(){
-    return (
-      <Padding tb={2}>
-        <Padding b={1}>
-          <Button to="/start/configure-instance" color="primary" flat block>Change location</Button>
-        </Padding>
-        <Padding b={1}>
-          <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
-        </Padding>
-        <Padding tb={1} className="text-center">
-          <p><small><Link to="/start/review-instance">Learn more about the Opsee instance</Link></small></p>
-        </Padding>
-      </Padding>
-    );
-  },
   render(){
     return (
       <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Padding tb={2}>
+                <div className={style.headerStep}>STEP 2 of 3</div>
+                <h2>Install the Opsee EC2 instance</h2>
+              </Padding>
+              <Padding a={4} className="text-center">
+                <img src={instanceImg} style={{maxHeight: '300px'}}/>
+              </Padding>
+
+              <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
+              <p>Here's where the location will be installed:</p>
+
+              {this.renderConfig()}
+
+              <Padding tb={2}>
+                <Padding b={1}>
+                  <Button to="/start/configure-instance" color="primary" flat block>Change location</Button>
+                </Padding>
+                <Padding b={1}>
+                  <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
+                </Padding>
+                <Padding tb={1} className="text-center">
+                  <p><small><Link to="/start/review-instance">Learn more about the Opsee instance</Link></small></p>
+                </Padding>
+              </Padding>
             </Col>
           </Row>
         </Grid>

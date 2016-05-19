@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router';
+import {Link, History} from 'react-router';
 
 import {Close} from '../icons';
 import {RadioSelect} from '../forms';
@@ -12,6 +12,7 @@ import {Padding, Col, Grid, Row} from '../layout';
 import style from './onboard.css';
 
 const ConfigureInstance = React.createClass({
+  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
@@ -20,29 +21,25 @@ const ConfigureInstance = React.createClass({
         region: PropTypes.string,
         regions: PropTypes.array,
         vpcsForSelection: PropTypes.array,
-        subnetsForSelection: PropTypes.array
+        subnetsForSelection: PropTypes.array,
+        installData: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
         onboardScanRegion: PropTypes.obj
       })
     }),
     actions: PropTypes.shape({
-      hasRole: PropTypes.func,
-      scanRegion: PropTypes.func,
+      initializeInstallation: PropTypes.func,
       setRegion: PropTypes.func,
       subnetSelect: PropTypes.func,
-      vpcSelect: PropTypes.func
+      vpcSelect: PropTypes.func,
+      updateInstallData: PropTypes.func
     })
   },
-  // TODO roll these into one API call
   componentWillMount(){
-    this.props.actions.hasRole();
-  },
-  componentWillReceiveProps(nextProps) {
-    const region = nextProps.redux.onboard.role.region;
-    const hasScanned = !!nextProps.redux.asyncActions.onboardScanRegion.status;
-    if (region && !hasScanned) {
-      this.props.actions.scanRegion(region);
+    const { installData } = this.props.redux.onboard; // TODO should this be a redirect
+    if (!installData) {
+      this.props.actions.initializeInstallation();
     }
   },
   getRegions() {
@@ -63,17 +60,20 @@ const ConfigureInstance = React.createClass({
     });
   },
   getSubnets() {
-    // FIXME do this in the reducer, since there's a bug where selected subnet
-    // doesn't update on vpc change
+    const selectedVPC = this.props.redux.onboard.selectedVPC;
     return _.chain(this.props.redux.onboard.subnetsForSelection).filter(s => {
-      return s.vpc_id === this.props.redux.onboard.selectedVPC;
+      return selectedVPC ? s.vpc_id === selectedVPC : true;
     }).map(s => {
       let labelName = s.name ? `<strong>${s.name}</strong> - ` : '';
       return _.assign({
         id: _.get(s, 'subnet_id'),
-        label: `${labelName}${_.get(s, 'subnet_id')}<br/><small>(${_.get(s, 'instance_count')} instances, ${_.get(s, 'routing')} routing)</small>`
+        label: `${labelName}${_.get(s, 'subnet_id')}<br/><small>(${_.get(s, 'instance_count')} instances, ${_.get(s, 'routing')} routing)</small><br/><small>${_.get(s, 'vpc_id')}</small>`
       }, s);
     }).value();
+  },
+  onSave() {
+    this.props.actions.updateInstallData();
+    this.history.pushState(null, '/start/launch-instance');
   },
   render(){
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
@@ -116,10 +116,10 @@ const ConfigureInstance = React.createClass({
               </Padding>
 
               <Padding t={2} b={1}>
-                <Button to="/start/launch-instance" color="primary" disabled={isScanPending || !isDone} block>Save configuration</Button>
+                <Button onClick={this.onSave} color="primary" disabled={isScanPending || !isDone} block>Save configuration</Button>
               </Padding>
               <Padding b={1}>
-                <Button to="/start/launch-instance" color="primary" disabled={isScanPending || !isDone} flat block>Cancel</Button>
+                <Button to="/start/launch-instance" color="primary" flat block>Cancel</Button>
               </Padding>
               <Padding tb={1} className="text-center">
                 <p><small><Link to="review-instance">Learn more about the Opsee instance.</Link></small></p>
