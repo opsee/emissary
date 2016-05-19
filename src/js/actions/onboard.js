@@ -163,17 +163,17 @@ export function subnetSelect(data){
   };
 }
 
-export function makeLaunchRoleUrlTemplate() {
+export function makeLaunchRoleUrl() {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_MAKE_LAUNCH_TEMPLATE,
-      payload: graphPromise('makeLaunchRoleUrlTemplate', () => {
+      payload: graphPromise('makeLaunchRoleUrl', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
         .send({query:
           `mutation Mutation {
-            makeLaunchRoleUrlTemplate
+            makeLaunchRoleUrl
           }`
         });
       })

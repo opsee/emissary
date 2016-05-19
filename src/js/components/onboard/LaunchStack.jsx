@@ -27,7 +27,6 @@ const LaunchStack = React.createClass({
       asyncActions: PropTypes.shape({
         onboardGetTemplates: PropTypes.object,
         onboardHasRole: PropTypes.object,
-        onboardMakeLaunchTemplate: PropTypes.object
       }),
       onboard: PropTypes.shape({
         templates: PropTypes.array,
@@ -38,7 +37,7 @@ const LaunchStack = React.createClass({
     }),
     actions: PropTypes.shape({
       hasRole: PropTypes.func,
-      makeLaunchRoleUrlTemplate: PropTypes.func,
+      makeLaunchRoleUrl: PropTypes.func,
       getTemplates: PropTypes.func
     }),
     analyticsActions: PropTypes.shape({
@@ -52,7 +51,7 @@ const LaunchStack = React.createClass({
   },
   componentWillMount() {
     if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
-      this.props.actions.makeLaunchRoleUrlTemplate();
+      this.props.actions.makeLaunchRoleUrl();
     }
     const item = this.props.redux.asyncActions.onboardGetTemplates;
     if (!item.status){
@@ -80,8 +79,7 @@ const LaunchStack = React.createClass({
     return !!this.props.redux.onboard.role.region;
   },
   getTemplateURL() {
-    const urlTemplate = _.get(this.props.redux, 'onboard.regionLaunchURL');
-    return urlTemplate ? _.replace(urlTemplate, 'region=${region}', '') : null;
+    return _.get(this.props.redux, 'onboard.regionLaunchURL');
   },
   onOpenConsole() {
     this.setState({ hasClicked: true });
