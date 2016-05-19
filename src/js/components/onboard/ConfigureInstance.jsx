@@ -79,6 +79,7 @@ const ConfigureInstance = React.createClass({
     this.history.pushState(null, '/start/launch-instance');
   },
   render(){
+    console.log(this.props.redux.onboard.selectedRegion);
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
     const {region, selectedVPC, selectedSubnet} = this.props.redux.onboard;
     const isDone = region && selectedVPC && selectedSubnet;
@@ -101,7 +102,7 @@ const ConfigureInstance = React.createClass({
                   <h4>Choose a Region</h4>
                 </Padding>
 
-                <RadioSelect onChange={this.props.actions.setRegion} data={_.pick(this.props.redux.onboard, 'region')} options={this.getRegions()} path="region" />
+                <RadioSelect onChange={this.props.actions.setRegion} data={_.pick(this.props.redux.onboard, 'selectedRegion')} options={this.getRegions()} path="selectedRegion.id" />
               </Padding>
 
               <Padding tb={1}>
