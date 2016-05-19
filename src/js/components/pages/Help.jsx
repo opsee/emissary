@@ -46,7 +46,6 @@ export default React.createClass({
                 <li><Link to="/docs/notifications">Notifications</Link></li>
                 <li><Link to="/docs/permissions">AWS Security &amp; Permissions</Link></li>
                 <li><Link to="/docs/bastion">The Opsee EC2 Instance</Link></li>
-                <li><Link to="/docs/IAM">IAM Profile for Instance Installation</Link></li>
               </ul>
               </Padding>
 
