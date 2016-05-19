@@ -17,8 +17,6 @@ import {
 
 const initial = {
   regions,
-  region: null,
-
   templates: [],
   regionLaunchURL: null,
 
@@ -71,6 +69,8 @@ export default handleActions({
   [ONBOARD_SCAN_REGION]: {
     next(state, action) {
       const regionData = action.payload.data;
+      const id = _.get(regionData, 'region');
+
       // Use the "Name" tag as name, if present
       const vpcs = _.chain(regionData).get('vpcs').map(vpc => {
         return _.assign({}, vpc, { name: statics.getNameFromTags(vpc) });
@@ -79,7 +79,7 @@ export default handleActions({
         return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
       }).value();
 
-      const selectedRegion = _.assign({}, regionData, { vpcs, subnets });
+      const selectedRegion = { id, vpcs, subnets };
       return _.assign({}, state, { selectedRegion });
     },
     throw: yeller.reportAction
@@ -132,9 +132,7 @@ export default handleActions({
   [ONBOARD_HAS_ROLE]: {
     next(state, action) {
       const role = action.payload.data;
-      const region = _.get(action.payload.data, 'region');
-      console.log('role', role);
-      return _.assign({}, state, {role, region});
+      return _.assign({}, state, {role});
     },
     throw: yeller.reportAction
   }
