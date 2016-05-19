@@ -117,6 +117,34 @@ export function setRegion(data) {
   };
 }
 
+export function vpcSelect(data){
+  const selectedVPC = _.get(data, 'selectedVPC');
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_VPC,
+      payload: selectedVPC
+    });
+    analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
+    setTimeout(() => dispatch({
+      type: ONBOARD_SET_INSTALL_DATA
+    }), 50);
+  };
+}
+
+export function subnetSelect(data){
+  const selectedSubnet = _.get(data, 'selectedSubnet');
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_SUBNET,
+      payload: selectedSubnet
+    });
+    analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
+    setTimeout(() => dispatch({
+      type: ONBOARD_SET_INSTALL_DATA
+    }), 50);
+  };
+}
+
 export function makeLaunchRoleUrlTemplate() {
   return (dispatch, state) => {
     dispatch({
@@ -155,34 +183,6 @@ export function hasRole() {
 }
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
-
-export function vpcSelect(data){
-  const selectedVPC = _.get(data, 'selectedVPC');
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SET_VPC,
-      payload: selectedVPC
-    });
-    analytics.trackEvent('Onboard', 'vpc-select')(dispatch, state);
-    setTimeout(() => dispatch({
-      type: ONBOARD_SET_INSTALL_DATA
-    }), 50);
-  };
-}
-
-export function subnetSelect(data){
-  const selectedSubnet = _.get(data, 'selectedSubnet');
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SET_SUBNET,
-      payload: selectedSubnet
-    });
-    analytics.trackEvent('Onboard', 'subnet-select')(dispatch, state);
-    setTimeout(() => dispatch({
-      type: ONBOARD_SET_INSTALL_DATA
-    }), 50);
-  };
-}
 
 function isBastionLaunching(state){
   return !!_.filter(state().app.socketMessages, {command: 'launch-bastion'}).length ||

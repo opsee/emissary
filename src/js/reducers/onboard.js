@@ -73,6 +73,26 @@ export default handleActions({
       return _.assign({}, state, action.payload);
     }
   },
+  [ONBOARD_SCAN_REGION]: {
+    next(state, action) {
+      // Use the "Name" tag as name, if present
+      const vpcsForSelection = _.chain(action.payload.data).get('vpcs').map(vpc => {
+        return _.assign({}, vpc, { name: statics.getNameFromTags(vpc) });
+      }).value();
+      const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
+        return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
+      }).value();
+      const newState = { vpcsForSelection, subnetsForSelection };
+      if (!state.selectedVPC) {
+        newState.selectedVPC = _.get(_.first(vpcsForSelection), 'vpc_id');
+      }
+      if (!state.selectedSubnet) {
+        newState.selectedSubnet = _.get(_.first(subnetsForSelection), 'subnet_id');
+      }
+      return _.assign({}, state, newState);
+    },
+    throw: yeller.reportAction
+  },
   [ONBOARD_SET_REGION]: {
     next(state, action){
       const region = action.payload;
@@ -107,26 +127,6 @@ export default handleActions({
     next(state, action){
       const regionLaunchURL = atob(_.get(action.payload, 'data'));
       return _.assign({}, state, {regionLaunchURL});
-    },
-    throw: yeller.reportAction
-  },
-  [ONBOARD_SCAN_REGION]: {
-    next(state, action) {
-      // Use the "Name" tag as name, if present
-      const vpcsForSelection = _.chain(action.payload.data).get('vpcs').map(vpc => {
-        return _.assign({}, vpc, { name: statics.getNameFromTags(vpc) });
-      }).value();
-      const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
-        return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
-      }).value();
-      const newState = { vpcsForSelection, subnetsForSelection };
-      if (!state.selectedVPC) {
-        newState.selectedVPC = _.get(_.first(vpcsForSelection), 'vpc_id');
-      }
-      if (!state.selectedSubnet) {
-        newState.selectedSubnet = _.get(_.first(subnetsForSelection), 'subnet_id');
-      }
-      return _.assign({}, state, newState);
     },
     throw: yeller.reportAction
   },
