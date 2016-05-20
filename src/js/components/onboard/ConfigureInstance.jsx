@@ -16,6 +16,7 @@ const ConfigureInstance = React.createClass({
   propTypes: {
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
+        selectedRegion: PropTypes.object,
         selectedVPC: PropTypes.string,
         selectedSubnet: PropTypes.string,
         region: PropTypes.string,
@@ -51,40 +52,24 @@ const ConfigureInstance = React.createClass({
     });
   },
   getVPCs() {
-    const { vpcs } = this.getSelectedRegion();
-    return _.map(vpcs, v => {
-      let vpcID = _.get(v, 'vpc_id');
-      let labelName = v.name ? `<strong>${v.name}</strong> - ` : '';
-      return _.assign({}, v, {
-        id: vpcID,
-        label: `${labelName}${vpcID}<br/><small>(${_.get(v, 'instance_count')} instances)</small>`
-      });
-    });
+    return _.get(this.getSelectedRegion(), 'vpcs', []);
   },
   getSubnets() {
-    const { subnets } = this.getSelectedRegion();
+    const subnets = _.get(this.getSelectedRegion(), 'subnets', []);
     const selectedVPC = this.props.redux.onboard.selectedVPC;
-    return _.chain(subnets).filter(s => {
+    return _.filter(subnets, s => {
       return selectedVPC ? s.vpc_id === selectedVPC : true;
-    }).map(s => {
-      let labelName = s.name ? `<strong>${s.name}</strong> - ` : '';
-      return _.assign({
-        id: _.get(s, 'subnet_id'),
-        label: `${labelName}${_.get(s, 'subnet_id')}<br/><small>(${_.get(s, 'instance_count')} instances, ${_.get(s, 'routing')} routing)</small><br/><small>${_.get(s, 'vpc_id')}</small>`
-      }, s);
-    }).value();
+    });
   },
   onSave() {
     this.props.actions.updateInstallData();
     this.history.pushState(null, '/start/launch-instance');
   },
   render(){
-    console.log(this.props.redux.onboard.selectedRegion);
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
-    const {selectedRegion, selectedVPC, selectedSubnet} = this.props.redux.onboard;
+    const {selectedVPC, selectedSubnet} = this.props.redux.onboard;
     const selectState = _.pick(this.props.redux.onboard, ['selectedRegion', 'selectedVPC', 'selectedSubnet']);
     const isDone = selectedVPC && selectedSubnet;
-
     return (
       <div className={style.transitionPanel}>
         <Link to="/start/launch-instance" className={style.closeWrapper}>

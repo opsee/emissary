@@ -32,7 +32,7 @@ const initial = {
 
   installData: null,
   finalInstallData: null, // TODO couple more (?) w/ installData
-  installing: false,
+  installing: false
 };
 
 export const statics = {
@@ -50,6 +50,24 @@ export const statics = {
       access_key: config.access_key,
       secret_key: config.secret_key
     };
+  },
+  formatVPCs(regionData) {
+    return _.chain(regionData).get('vpcs').map(vpc => {
+      let id = _.get(vpc, 'vpc_id');
+      let name = statics.getNameFromTags(vpc);
+      let labelName = vpc.name ? `<strong>${vpc.name}</strong> - ` : '';
+      let label = `${labelName}${id}<br/><small>(${_.get(vpc, 'instance_count')} instances)</small>`;
+      return _.assign({ id, name, label }, vpc);
+    }).value();
+  },
+  formatSubnets(regionData) {
+    return _.chain(regionData).get('subnets').map(subnet => {
+      let id = _.get(subnet, 'subnet_id');
+      let name = statics.getNameFromTags(subnet);
+      let labelName = subnet.name ? `<strong>${subnet.name}</strong> - ` : '';
+      let label = `${labelName}${id}<br/><small>(${_.get(subnet, 'instance_count')} instances, ${_.get(subnet, 'routing')} routing)</small><br/><small>${_.get(subnet, 'vpc_id')}</small>`;
+      return _.assign({ id, name, label }, subnet);
+    }).value();
   }
 };
 
@@ -72,12 +90,8 @@ export default handleActions({
       const id = _.get(regionData, 'region');
 
       // Use the "Name" tag as name, if present
-      const vpcs = _.chain(regionData).get('vpcs').map(vpc => {
-        return _.assign({}, vpc, { name: statics.getNameFromTags(vpc) });
-      }).value();
-      const subnets = _.chain(regionData).get('subnets').map(subnet => {
-        return _.assign({}, subnet, { name: statics.getNameFromTags(subnet) });
-      }).value();
+      const vpcs = statics.formatVPCs(regionData);
+      const subnets = statics.formatSubnets(regionData);
 
       const selectedRegion = { id, vpcs, subnets };
       return _.assign({}, state, { selectedRegion });
