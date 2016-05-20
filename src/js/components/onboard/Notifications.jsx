@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {History} from 'react-router';
@@ -13,6 +13,25 @@ import style from './onboard.css';
 
 const Notifications = React.createClass({
   mixins: [History],
+  propTypes: {
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        onboardGetDefaultNotif: PropTypes.object
+      })
+    }),
+    actions: PropTypes.shape({
+      getDefaultNotification: PropTypes.func,
+      setDefaultNotification: PropTypes.func
+    })
+  },
+  componentWillMount(){
+    this.props.actions.getDefaultNotification();
+  },
+  componentWillReceiveProps(nextProps){
+    if (nextProps.redux.onboard.defaultNotification) {
+      this.history.pushState(null, '/start/postinstall');
+    }
+  },
   getInitialState(){
     return {
       notification: null
@@ -23,11 +42,10 @@ const Notifications = React.createClass({
     this.setState({ notification });
   },
   onSave(){
-    console.log('TODO graphql');
-    console.log(this.state);
-    this.history.pushState(null, '/start/postinstall');
+    this.props.actions.setDefaultNotification(this.state.notification);
   },
   render(){
+    const isDisabled = this.props.redux.asyncActions.onboardGetDefaultNotif.status !== 'success';
     return (
       <div className={style.transitionPanel}>
         <Grid>
@@ -45,7 +63,7 @@ const Notifications = React.createClass({
               <Padding t={1}>
                 <NotificationSelection onChange={this.onChange} hideText />
               </Padding>
-              <Button onClick={this.onSave} color="primary" block>Save notification preferences</Button>
+              <Button onClick={this.onSave} disabled={isDisabled} color="primary" block>Save notification preferences</Button>
             </Col>
           </Row>
         </Grid>

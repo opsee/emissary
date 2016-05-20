@@ -18,7 +18,9 @@ import {
   ONBOARD_SET_INSTALL_DATA,
   ONBOARD_SET_SUBNET,
   ONBOARD_SCAN_REGION,
-  ONBOARD_HAS_ROLE
+  ONBOARD_HAS_ROLE,
+  ONBOARD_SET_DEFAULT_NOTIF,
+  ONBOARD_GET_DEFAULT_NOTIF
 } from './constants';
 
 function getRegion(state, region) {
@@ -244,6 +246,41 @@ export function hasRole() {
     dispatch({
       type: ONBOARD_HAS_ROLE,
       payload: getRole(state)
+    });
+  };
+}
+
+export function getDefaultNotification() {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_GET_DEFAULT_NOTIF,
+      payload: graphPromise('defaultNotif', () => {
+        return request
+          .set('Authorization', state().user.get('auth'))
+          .send({query:
+            `notifications(default: true) {
+              type
+              value
+            }`
+          });
+      })
+    });
+  };
+}
+
+export function setDefaultNotification(notification) {
+  return (dispatch, state) => {
+    dispatch({
+      type: ONBOARD_SET_DEFAULT_NOTIF,
+      payload: graphPromise('defaultNotif', () => {
+        return request
+          .set('Authorization', state().user.get('auth'))
+          .send({query:
+            `mutation defaultNotif {
+              notifications(default: ${JSON.stringify(notification)})
+            }`
+          });
+      })
     });
   };
 }

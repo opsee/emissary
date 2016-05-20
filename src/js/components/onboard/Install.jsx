@@ -8,7 +8,6 @@ import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
-import PostInstall from './PostInstall';
 import style from './onboard.css';
 
 const Install = React.createClass({

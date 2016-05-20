@@ -33,7 +33,6 @@ export default React.createClass({
             </Col>
           </Row>
 
-
           <Row>
             <Col xs={12}>
               <Padding t={4} b={1} className="text-center">
@@ -63,7 +62,6 @@ export default React.createClass({
               </Padding>
             </Col>
           </Row>
-
 
           <Row>
             <Col xs={12}>
