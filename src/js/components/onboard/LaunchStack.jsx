@@ -119,8 +119,7 @@ const LaunchStack = React.createClass({
           <Checkmark />
         </Padding>
         <Padding tb={2}>
-          <h3 className="text-center">Awesome!</h3>
-          <p className="text-center"><small>Cross-account access has been set up.</small></p>
+          <h3 className="text-center">Now we're role-in'!</h3>
         </Padding>
         <p>Your Opsee role stack was installed in {stackRegion}. You can manage it anytime from your AWS console.</p>
         <Padding tb={2}>

@@ -117,9 +117,6 @@ const ConfigureInstance = React.createClass({
               <Padding b={1}>
                 <Button to="/start/launch-instance" color="primary" flat block>Cancel</Button>
               </Padding>
-              <Padding tb={1} className="text-center">
-                <p><small><Link to="review-instance">Learn more about the Opsee instance.</Link></small></p>
-              </Padding>
             </Col>
           </Row>
         </Grid>
