@@ -36,7 +36,8 @@ const Onboard = React.createClass({
       routes: [
         '/start/launch-stack',
         '/start/launch-instance',
-        '/start/install-example'
+        '/start/install-example',
+        '/start/notifications'
       ]
     };
   },

@@ -125,16 +125,7 @@ const Install = React.createClass({
     return (_.every(stats) && stats.length) ||
     _.filter(socketMessages, {command: 'connect-bastion', state: 'complete'}).length;
   },
-  renderBtn(){
-    if (this.isComplete()){
-      return (
-        <Padding tb={3}>
-          <Button to="/check-create" color="primary" block chevron>
-            Create a Check
-          </Button>
-        </Padding>
-      );
-    }
+  renderError(){
     if (this.getBastionErrors().length){
       return (
         <Alert color="danger">
@@ -151,21 +142,17 @@ const Install = React.createClass({
           <p>We are now installing our instance in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
         </Padding>
       );
-    } else if (this.isComplete()){
-      return (
-        <p>You are all set. Create a check to get started.</p>
-      );
     } else if (this.isBastionConnecting()){
       return (
         <p>Your instance is currently attempting to connect. Hang on...</p>
       );
     }
-    return <p>Checking installation status...</p>;
+    return null;
   },
   renderNotifConnect(){
     return (
       <div>
-        <p>While you're waiting, you can choose your default notification channel:</p>
+        <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts.</p>
         <Padding tb={1}>
           <Button to="/start/notifications" color="primary" block chevron>Set up notifications</Button>
         </Padding>
@@ -180,8 +167,6 @@ const Install = React.createClass({
           Our instance failed to connect. Please contact support by visiting our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>
         </Alert>
       );
-    } else if (this.isComplete()) {
-      return <PostInstall />;
     } else if (!this.isInstallError()){
       return (
         <div>
@@ -193,7 +178,7 @@ const Install = React.createClass({
             );
           })}
           {this.renderText()}
-          {this.renderBtn()}
+          {this.renderError()}
           {this.renderNotifConnect()}
         </div>
       );
