@@ -61,15 +61,20 @@ const ConfigureInstance = React.createClass({
       return selectedVPC ? s.vpc_id === selectedVPC : true;
     });
   },
+  onRegionSelect(data) {
+    const regionID = _.get(data, 'id');
+    this.props.actions.setRegion(regionID);
+  },
   onSave() {
     this.props.actions.updateInstallData();
     this.history.pushState(null, '/start/launch-instance');
   },
   render(){
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
-    const {selectedVPC, selectedSubnet} = this.props.redux.onboard;
+    const {selectedRegion, selectedVPC, selectedSubnet} = this.props.redux.onboard;
     const selectState = _.pick(this.props.redux.onboard, ['selectedRegion', 'selectedVPC', 'selectedSubnet']);
     const isDone = selectedVPC && selectedSubnet;
+
     return (
       <div className={style.transitionPanel}>
         <Link to="/start/launch-instance" className={style.closeWrapper}>
@@ -89,7 +94,7 @@ const ConfigureInstance = React.createClass({
                   <h4>Choose a Region</h4>
                 </Padding>
 
-                <RadioSelect onChange={this.props.actions.setRegion} data={selectState} options={this.getRegions()} path="selectedRegion.id" />
+                <RadioSelect onChange={this.onRegionSelect} data={selectedRegion} options={this.getRegions()} path="id" />
               </Padding>
 
               <Padding tb={1}>

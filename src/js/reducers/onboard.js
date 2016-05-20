@@ -100,8 +100,9 @@ export default handleActions({
   },
   [ONBOARD_SET_REGION]: {
     next(state, action){
-      const region = action.payload;
-      return _.assign({}, state, region);
+      const id = _.get(action.payload, 'region');
+      const selectedRegion = { id };
+      return _.assign({}, state, { selectedRegion });
     }
   },
   [ONBOARD_SET_VPC]: {

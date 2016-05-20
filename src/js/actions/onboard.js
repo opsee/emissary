@@ -105,8 +105,7 @@ export function setDefaultInstallData(regionData) {
     // Set the default VPC to be the first in the priority list
     const vpcID = _.chain(vpcs).first().get('vpc_id').value();
 
-    // Set the default subnet to be the first in the priority list
-    // for the default VPC
+    // Set the default subnet to be the first in the priority list for the default VPC
     const subnetID = _.chain(subnets).filter(subnet => subnet.vpc_id === vpcID).first().get('subnet_id').value();
 
     const data = { regionID, vpcID, subnetID };
@@ -119,11 +118,12 @@ export function setDefaultInstallData(regionData) {
 
 export function updateInstallData() {
   return (dispatch, state) => {
-    const regionID = state().onboard.region;
-    const vpcID = state().onboard.selectedVPC;
-    const subnetID = state().onboard.selectedSubnet;
-    const data = { regionID, vpcID, subnetID };
+    const onboardState = state().onboard;
+    const regionID = _.get(onboardState, 'selectedRegion.id');
+    const vpcID = _.get(onboardState, 'selectedVPC');
+    const subnetID = _.get(onboardState, 'selectedSubnet');
 
+    const data = { regionID, vpcID, subnetID };
     dispatch({
       type: ONBOARD_SET_INSTALL_DATA,
       payload: { data }
@@ -184,8 +184,10 @@ export function getTemplates(){
   };
 }
 
-export function setRegion(data) {
-  const region = _.get(data, 'region');
+/**
+ * @params {string} region - the region ID (e.g., 'us-west-2')
+ */
+export function setRegion(region) {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SET_REGION,
