@@ -53,10 +53,6 @@ const LaunchStack = React.createClass({
     if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
       this.props.actions.makeLaunchRoleUrl();
     }
-    const item = this.props.redux.asyncActions.onboardGetTemplates;
-    if (!item.status){
-      this.props.actions.getTemplates();
-    }
   },
   componentDidMount(){
     this.props.analyticsActions.trackEvent('Onboard', 'launch-stack');
@@ -67,16 +63,8 @@ const LaunchStack = React.createClass({
       this.props.actions.hasRole();
     }, 1000 * 5); // every 5 seconds
   },
-  componentWillReceiveProps(nextProps){
-    // Only redirect after the *first* call to hasRole after the component has
-    // been mounted; otherwise, show the success message.
-    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
-    if (isFirstPoll && nextProps.redux.onboard.role.stack_id) {
-      this.history.pushState(null, '/start/launch-instance');
-    }
-  },
   getRole(){
-    return !!this.props.redux.onboard.role.region;
+    return _.get(this.props.redux.onboard, 'role.region');
   },
   getTemplateURL() {
     return _.get(this.props.redux, 'onboard.regionLaunchURL');
@@ -124,14 +112,20 @@ const LaunchStack = React.createClass({
     );
   },
   renderDone(){
+    const stackRegion = _.get(this.props.redux.onboard, 'role.region');
     return (
       <div>
-        <Checkmark />
+        <Padding t={2}>
+          <Checkmark />
+        </Padding>
         <Padding tb={2}>
           <h3 className="text-center">Awesome!</h3>
-          <p className="text-center">Cross-account access has been set up.</p>
+          <p className="text-center"><small>Cross-account access has been set up.</small></p>
         </Padding>
-        <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
+        <p>Your Opsee role stack was installed in {stackRegion}. You can manage it anytime from your AWS console.</p>
+        <Padding tb={2}>
+          <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
+        </Padding>
       </div>
     );
   },
@@ -142,7 +136,6 @@ const LaunchStack = React.createClass({
         <Button onClick={this.onOpenConsole} color="primary" disabled block>Loading...</Button>
       );
     }
-
     const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
     return (
       <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
@@ -161,11 +154,11 @@ const LaunchStack = React.createClass({
     );
   },
   renderInner(){
+    const role = this.getRole();
     if (this.getRole()) {
-      // TODO center this nicely as well
       return this.renderDone();
     }
-    if (this.state.hasClicked && !this.getRole()) {
+    if (this.state.hasClicked) {
       return this.renderInstructions();
     }
     return (
