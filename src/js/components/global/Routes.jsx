@@ -54,6 +54,7 @@ import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.defa
 import OnboardConfigureInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ConfigureInstance';
 import OnboardNotifications from 'react-proxy?name=onboard!exports?exports.default!../onboard/Notifications';
 import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
+import OnboardPostInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/PostInstall';
 
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
 
@@ -122,6 +123,7 @@ const routes = (
       <Route path="/start/install" component={OnboardInstall} />
       <Route path="/start/install-example" component={OnboardInstall} example />
       <Route path="/start/notifications" component={OnboardNotifications} />
+      <Route path="/start/postinstall" component={OnboardPostInstall} />
     </Route>
 
     <Route path="/system" component={auth(System)}/>

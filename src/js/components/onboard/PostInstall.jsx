@@ -8,8 +8,8 @@ import style from './onboard.css';
 export default React.createClass({
   render(){
     return (
-      <div>
-        <Grid fluid>
+      <div className={style.transitionPanel}>
+        <Grid>
           <Row>
             <Padding a={2} style={{margin: '0 auto'}}>
               <Checkmark />
@@ -25,7 +25,18 @@ export default React.createClass({
 
           <Row>
             <Col xs={12}>
-              <Padding b={1} className="text-center">
+              <Padding t={3} b={2} className="text-center">
+                <h2>420</h2>
+                <h3 style={{fontWeight: 300}}>health checks</h3>
+                <div style={{opacity: 0.5}}><small>were created for you!</small></div>
+              </Padding>
+            </Col>
+          </Row>
+
+
+          <Row>
+            <Col xs={12}>
+              <Padding t={4} b={1} className="text-center">
                 <h4 className={style.successHeader}>What Opsee found</h4>
                 <div className={style.successDivider} />
               </Padding>
@@ -34,63 +45,34 @@ export default React.createClass({
 
           <Row>
             <Col xs={4}>
-              <div className="text-center">
+              <Padding a={1} className="text-center">
                 <h3 style={{opacity: 0.85}}>120</h3>
                 <div style={{opacity: 0.5}}><small>EC2 instances</small></div>
-              </div>
+              </Padding>
             </Col>
             <Col xs={4}>
-              <div className="text-center">
+              <Padding a={1} className="text-center">
                 <h3 style={{opacity: 0.85}}>89</h3>
                 <div style={{opacity: 0.5}}><small>security groups</small></div>
-              </div>
+              </Padding>
             </Col>
             <Col xs={4}>
-              <div className="text-center">
+              <Padding a={1} className="text-center">
                 <h3 style={{opacity: 0.85}}>10</h3>
                 <div style={{opacity: 0.5}}><small>load balancers</small></div>
-              </div>
+              </Padding>
+            </Col>
+          </Row>
+
+
+          <Row>
+            <Col xs={12}>
+              <Padding t={4} b={2}>
+                <Button to="/" color="primary" block>Hooray!</Button>
+              </Padding>
             </Col>
           </Row>
         </Grid>
-
-        <Row>
-          <Col xs={12}>
-            <Padding t={3} b={1} className="text-center">
-              <h4 className={style.successHeader}>What Opsee created</h4>
-              <div className={style.successDivider} />
-            </Padding>
-          </Col>
-        </Row>
-
-          <Row>
-            <Col xs={2}/>
-            <Col xs={4}>
-              <Padding b={2} className="text-center">
-                <h2>420</h2>
-                <h3 style={{fontWeight: 300}}>health checks</h3>
-                <div style={{opacity: 0.5}}><small>were created</small></div>
-              </Padding>
-            </Col>
-            <Col xs={4}>
-              <Padding b={2} className="text-center">
-                <h2>95%</h2>
-                <h3 style={{fontWeight: 300}}>coverage</h3>
-                <div style={{opacity: 0.5}}><small>generated</small></div>
-              </Padding>
-            </Col>
-            <Col xs={2}/>
-          </Row>
-
-        <p>From here, you can either configure your default notification channels or check out the checks that Opsee generated for you.</p>
-
-        {/* TODO: don't show this if they've already set up notifs */}
-        <Padding tb={1}>
-          <Button to="/start/notifications" color="primary" block>Set up notifications</Button>
-        </Padding>
-        <Padding b={1}>
-          <Button to="/" color="primary" flat block chevron>View checks</Button>
-        </Padding>
       </div>
     );
   }

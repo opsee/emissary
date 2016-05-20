@@ -80,14 +80,13 @@ h1, h2, h3 {
   opacity: 1;
   text-align: center;
   letter-spacing: 0.5px;
-  padding-top: 6rem;
   font-family: var(--fontGotham);
 }
 
 .successDivider {
   width: 5vw;
   border-top: solid 1px rgba(255, 255, 255, 0.25);
-  margin: 2rem auto;
+  margin: 1.5rem auto;
 }
 
 .laptop {

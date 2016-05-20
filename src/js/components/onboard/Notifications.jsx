@@ -1,6 +1,8 @@
+import _ from 'lodash';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {History} from 'react-router';
 
 import {onboard as actions} from '../../actions';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -10,6 +12,21 @@ import devices from '../svgs/devices.svg';
 import style from './onboard.css';
 
 const Notifications = React.createClass({
+  mixins: [History],
+  getInitialState(){
+    return {
+      notification: null
+    };
+  },
+  onChange(notifications){
+    const notification = _.first(notifications);
+    this.setState({ notification });
+  },
+  onSave(){
+    console.log('TODO graphql');
+    console.log(this.state);
+    this.history.pushState(null, '/start/postinstall');
+  },
   render(){
     return (
       <div className={style.transitionPanel}>
@@ -26,9 +43,9 @@ const Notifications = React.createClass({
               configure this on a per-check basis.</p>
               <p>Choose one of the notification channels below to set it as your default:</p>
               <Padding t={1}>
-                <NotificationSelection hideText />
+                <NotificationSelection onChange={this.onChange} hideText />
               </Padding>
-              <Button to="/start/install-example" flat color="text" block>Back to installation</Button>
+              <Button onClick={this.onSave} color="primary" block>Save notification preferences</Button>
             </Col>
           </Row>
         </Grid>
