@@ -1,18 +1,19 @@
 import {push} from 'redux-router';
-import {createAction} from 'redux-actions';
 import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
 import * as analytics from './analytics';
 import {
-  GET_TEAM
+  TEAM_GET,
+  TEAM_MEMBER_INVITE,
+  TEAM_MEMBER_EDIT
 } from './constants';
 import storage from '../modules/storage';
 
 export function getTeam(data) {
   return (dispatch, state) => {
     dispatch({
-      type: GET_TEAM,
+      type: TEAM_GET,
       payload: new Promise((resolve, reject) => {
         resolve({
           name: 'Furconi',
@@ -53,9 +54,45 @@ export function getTeam(data) {
               email: 'greg@opsee.com',
               status: 'inactive',
               capabilities: []
+            },
+            {
+              name: undefined,
+              id: 'qrlfhlkhq3elk3255',
+              email: 'dan@opsee.com',
+              status: 'invited',
+              capabilities: []
             }
           ]
         });
+      })
+    });
+  };
+}
+
+export function memberInvite(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: TEAM_MEMBER_INVITE,
+      payload: new Promise((resolve, reject) => {
+        console.log(data);
+        resolve('ok');
+        setTimeout(() => {
+          dispatch(push('/team'));
+        }, 100);
+      })
+    });
+  };
+}
+
+export function memberEdit(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: TEAM_MEMBER_EDIT,
+      payload: new Promise((resolve, reject) => {
+        resolve('ok');
+        setTimeout(() => {
+          dispatch(push('/team'));
+        }, 100);
       })
     });
   };

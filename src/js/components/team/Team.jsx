@@ -8,7 +8,7 @@ import _ from 'lodash';
 import {Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Edit} from '../icons';
+import {Add, Edit} from '../icons';
 import {Color, Heading} from '../type';
 import {flag} from '../../modules';
 import {toSentenceSerial} from '../../modules/string';
@@ -70,29 +70,31 @@ const Profile = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <Padding b={1}>
-                  <Heading level={3}>Team Details</Heading>
-                  <Table>
+                <Heading level={3}>Team Details</Heading>
+                <Table>
+                  {window.location.href.match('localhost|staging') && (
                     <tr>
                       <td><strong>Subscription Plan</strong></td>
                       <td>{team.plan}</td>
                     </tr>
+                  )}
+                  {window.location.href.match('localhost|staging') && (
                     <tr>
                       <td><strong>Plan Features</strong></td>
                       <td>{toSentenceSerial(team.features)}</td>
                     </tr>
-                    {this.renderSlackArea()}
-                    {this.renderPagerdutyArea()}
-                  </Table>
-                </Padding>
-                <Padding t={1}>
+                  )}
+                  {this.renderSlackArea()}
+                  {this.renderPagerdutyArea()}
+                </Table>
+                <Padding t={3}>
                   <Heading level={3}>Team Members</Heading>
                   <Table>
                     {team.members.map(member => {
                       return (
                         <tr>
                           <td>
-                            <Link to={`/team/member/${member.id}`}>{member.name}</Link>
+                            <Link to={`/team/member/${member.id}`}>{member.name || member.email}</Link>
                           </td>
                           <td style={{textAlign: 'right'}}>
                             <Color c={_.get({active: 'success', invited: 'warning'}, member.status)}>{_.capitalize(member.status)}</Color>
@@ -101,22 +103,30 @@ const Profile = React.createClass({
                       );
                     })}
                   </Table>
+                  <Padding t={1}>
+                    <Button to="/team/member/invite" color="primary" flat><Add inline fill="primary"/>Invite New Team Member</Button>
+                  </Padding>
                 </Padding>
-                <Padding t={2}>
-                  <Heading level={3}>Billing History</Heading>
-                  <Table>
-                    {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
-                      return (
-                        <tr>
-                          <td>
-                            <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
-                            <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </Table>
-                </Padding>
+                {window.location.href.match('localhost|staging') && (
+                  <Padding t={3}>
+                    <Heading level={3}>Billing</Heading>
+                    <Padding b={1}>
+                      MasterCard ****4040 4/2041&nbsp;&nbsp;&nbsp;<Link to="/team/edit">Edit</Link>
+                    </Padding>
+                    <Table>
+                      {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
+                        return (
+                          <tr>
+                            <td>
+                              <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
+                              <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </Table>
+                  </Padding>
+                )}
               </Col>
             </Row>
           </Grid>

@@ -41,35 +41,13 @@ const TeamMember = React.createClass({
     })
     .value() || {};
   },
-  renderSlackArea(){
-    if (flag('integrations-slack')){
-      return (
-        <tr>
-          <td><strong>Slack</strong></td>
-          <td><SlackInfo connect/></td>
-        </tr>
-      );
-    }
-    return null;
-  },
-  renderPagerdutyArea(){
-    if (flag('integrations-pagerduty')){
-      return (
-        <tr>
-          <td><strong>PagerDuty</strong></td>
-          <td><PagerdutyInfo/></td>
-        </tr>
-      );
-    }
-    return null;
-  },
   render() {
     const member = this.getData();
     if (member.name){
       return (
          <div>
           <Toolbar title={`Team Member: ${member.name}`} pageTitle="Team Member">
-            <Button fab color="info" to="/team/edit" title={`Edit ${member.name}`}>
+            <Button fab color="info" to={`/team/member/${member.id}/edit`} title={`Edit ${member.name}`}>
               <Edit btn/>
             </Button>
           </Toolbar>

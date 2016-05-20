@@ -42,7 +42,10 @@ export const USER_PUT_DATA = 'USER_PUT_DATA';
 export const USER_SEND_RESET_EMAIL = 'USER_SEND_RESET_EMAIL';
 export const USER_SET_LOGIN_DATA = 'USER_SET_LOGIN_DATA';
 
-export const GET_TEAM = 'GET_TEAM';
+export const TEAM_GET = 'TEAM_GET';
+export const TEAM_EDIT = 'TEAM_EDIT';
+export const TEAM_MEMBER_INVITE = 'TEAM_MEMBER_INVITE';
+export const TEAM_MEMBER_EDIT = 'TEAM_MEMBER_EDIT';
 
 export const ENV_GET_ALL = 'ENV_GET_ALL';
 

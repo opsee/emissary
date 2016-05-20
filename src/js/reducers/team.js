@@ -7,13 +7,13 @@ import {Team, Member} from '../modules/schemas';
 import {yeller} from '../modules';
 import {List, Map} from 'immutable';
 import {
-  GET_TEAM
+  TEAM_GET
 } from '../actions/constants';
 
 const initial = new Team();
 
 export default handleActions({
-  [GET_TEAM]: {
+  [TEAM_GET]: {
     next(state, action){
       const {payload} = action;
       const team = _.assign({}, payload, {
