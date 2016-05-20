@@ -36,13 +36,11 @@ const NotificationSelection = React.createClass({
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object
       })
-    }),
-    hideText: PropTypes.bool
+    })
   },
   getDefaultProps() {
     return {
-      notifications: [],
-      hideText: false
+      notifications: []
     };
   },
   getInitialState() {
@@ -419,31 +417,21 @@ const NotificationSelection = React.createClass({
     );
   },
   renderNotifList(){
-    if (this.state.notifications.length){
-      return this.state.notifications.map((notif, index) => {
-        return (
-          <div key={`notif-${index}`}>
-            {this.renderNotif(notif, index)}
-            <hr/>
-          </div>
-        );
-      });
-    }
-    if (this.props.hideText) {
+    if (!this.state.notifications.length) {
       return null;
     }
-
-    return (
-      <div>
-        <p>Choose from the options below to set up your notifications.</p>
-        <hr/>
-      </div>
-    );
+    return this.state.notifications.map((notif, index) => {
+      return (
+        <div key={`notif-${index}`}>
+          {this.renderNotif(notif, index)}
+          <hr/>
+        </div>
+      );
+    });
   },
   render(){
     return (
       <Padding b={2}>
-        {this.props.hideText ? null : <Heading level={3}>Notifications</Heading>}
         {this.renderNotifList()}
         {this.renderNotifPickType()}
         <p><em className="small text-muted">Learn more about notification types and our webhook format in our <a target="_blank" href="/docs/notifications">notification docs</a>.</em></p>

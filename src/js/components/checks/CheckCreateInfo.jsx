@@ -8,6 +8,7 @@ import {Button} from '../forms';
 import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
+import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
@@ -102,11 +103,11 @@ const CheckCreateInfo = React.createClass({
   renderSubmitButton(){
     if (!this.props.renderAsInclude){
       return (
-        <Padding t={2}>
+        <div>
           <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
           <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
           <CheckDisabledReason check={this.props.check} areas={['info', 'notifications']}/>
-        </Padding>
+        </div>
       );
     }
     return null;
@@ -119,8 +120,16 @@ const CheckCreateInfo = React.createClass({
             <Input data={this.props.check} path="name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
           </form>
         </Padding>
-        <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
-        {this.renderSubmitButton()}
+
+        <Padding t={2} b={1}>
+          <Heading level={3}>Notifications</Heading>
+          <p>Choose from the options below to set up your notifications.</p>
+          <hr/>
+          <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
+        </Padding>
+        <Padding b={1}>
+          {this.renderSubmitButton()}
+        </Padding>
       </div>
     );
   },
