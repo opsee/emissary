@@ -93,13 +93,16 @@ export default handleActions({
   [ONBOARD_SET_VPC]: {
     next(state, action){
       const selectedVPC = action.payload;
-      return _.assign({}, state, {selectedVPC});
+      const selectedSubnet = null;
+      return _.assign({}, state, {selectedVPC, selectedSubnet});
     }
   },
   [ONBOARD_SET_SUBNET]: {
     next(state, action){
       const selectedSubnet = action.payload;
-      return _.assign({}, state, {selectedSubnet});
+      const subnet = _.find(state.selectedRegion.subnets, { subnet_id: selectedSubnet });
+      const selectedVPC = _.get(subnet, 'vpc_id');
+      return _.assign({}, state, {selectedVPC, selectedSubnet});
     }
   },
   [ONBOARD_SET_INSTALL_DATA]: {
