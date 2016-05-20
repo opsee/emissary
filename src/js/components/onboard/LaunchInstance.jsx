@@ -107,17 +107,15 @@ const LaunchInstance = React.createClass({
                 <img src={instanceImg} style={{maxHeight: '300px'}}/>
               </Padding>
 
-              <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment.</p>
-              <p>Here's where the location will be installed:</p>
-
+              <p>Lastly, we need to install the Opsee EC2 instance. It's responsible for running checks in your AWS environment. Here's where it'll be installed:</p>
               {this.renderConfig()}
 
               <Padding tb={2}>
                 <Padding b={1}>
-                  <Button to="/start/configure-instance" color="primary" flat block>Change location</Button>
+                  <Button to="/start/configure-instance" disabled={!this.props.redux.onboard.installData} color="primary" flat block>Change location</Button>
                 </Padding>
                 <Padding b={1}>
-                  <Button to="/start/install-example" color="primary" block chevron>Ready, Set, Install</Button>
+                  <Button to="/start/install-example" disabled={!this.props.redux.onboard.installData} color="primary" block chevron>Ready, Set, Install</Button>
                 </Padding>
                 <Padding tb={1} className="text-center">
                   <p><small><Link to="/start/review-instance">Learn more about the Opsee instance</Link></small></p>

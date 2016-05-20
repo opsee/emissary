@@ -102,7 +102,9 @@ export default handleActions({
     next(state, action){
       const id = _.get(action.payload, 'region');
       const selectedRegion = { id };
-      return _.assign({}, state, { selectedRegion });
+      const selectedVPC = null;
+      const selectedSubnet = null;
+      return _.assign({}, state, { selectedRegion, selectedVPC, selectedSubnet });
     }
   },
   [ONBOARD_SET_VPC]: {

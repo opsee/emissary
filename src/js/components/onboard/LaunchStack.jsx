@@ -154,7 +154,6 @@ const LaunchStack = React.createClass({
     );
   },
   renderInner(){
-    const role = this.getRole();
     if (this.getRole()) {
       return this.renderDone();
     }
