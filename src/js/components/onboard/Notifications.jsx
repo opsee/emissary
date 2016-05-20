@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -16,7 +15,8 @@ const Notifications = React.createClass({
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        onboardGetDefaultNotif: PropTypes.object
+        onboardGetDefaultNotif: PropTypes.object,
+        onboardSetDefaultNotif: PropTypes.object
       })
     }),
     actions: PropTypes.shape({
@@ -34,18 +34,18 @@ const Notifications = React.createClass({
   },
   getInitialState(){
     return {
-      notification: null
+      notifications: []
     };
   },
   onChange(notifications){
-    const notification = _.first(notifications);
-    this.setState({ notification });
+    this.setState({ notifications });
   },
   onSave(){
-    this.props.actions.setDefaultNotification(this.state.notification);
+    this.props.actions.setDefaultNotification(this.state.notifications);
   },
   render(){
-    const isDisabled = this.props.redux.asyncActions.onboardGetDefaultNotif.status !== 'success';
+    const isSavePending = this.props.redux.asyncActions.onboardSetDefaultNotif.status === 'pending';
+    const isDisabled = isSavePending || !this.state.notifications.length;
     return (
       <div className={style.transitionPanel}>
         <Grid>
@@ -59,11 +59,11 @@ const Notifications = React.createClass({
               </Padding>
               <p>When your health checks fail, Opsee will let you know. You can always
               configure this on a per-check basis.</p>
-              <p>Choose one of the notification channels below to set it as your default:</p>
+
               <Padding t={1}>
-                <NotificationSelection onChange={this.onChange} hideText />
+                <NotificationSelection onChange={this.onChange} exclusive />
               </Padding>
-              <Button onClick={this.onSave} disabled={isDisabled} color="primary" block>Save notification preferences</Button>
+              <Button onClick={this.onSave} disabled={isDisabled} color="primary" block>{isSavePending ? 'Saving' : 'Save'} notification preferences{isSavePending ? '...' : ''}</Button>
             </Col>
           </Row>
         </Grid>
