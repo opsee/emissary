@@ -40,7 +40,7 @@ const TeamMemberInvite = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.memberInvite(this.state);
+    this.props.actions.memberInvite(this.state, true);
   },
   render() {
     return (

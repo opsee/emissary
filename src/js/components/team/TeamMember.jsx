@@ -43,10 +43,10 @@ const TeamMember = React.createClass({
   },
   render() {
     const member = this.getData();
-    if (member.name){
+    if (member.email){
       return (
          <div>
-          <Toolbar title={`Team Member: ${member.name}`} pageTitle="Team Member">
+          <Toolbar title={`Team Member: ${member.name || member.email}`} pageTitle="Team Member">
             <Button fab color="info" to={`/team/member/${member.id}/edit`} title={`Edit ${member.name}`}>
               <Edit btn/>
             </Button>
@@ -63,10 +63,12 @@ const TeamMember = React.createClass({
                     <td>Email</td>
                     <td>{member.email}</td>
                   </tr>
-                  <tr>
-                    <td>Password</td>
-                    <td><Link to={`/team/member/${member.id}/edit`}>Change the password of {member.name}</Link></td>
-                  </tr>
+                  {
+                  // <tr>
+                  //   <td>Password</td>
+                  //   <td><Link to={`/team/member/${member.id}/edit`}>Change the password of {member.name}</Link></td>
+                  // </tr>
+                  }
                   {member.capabilities.length && (
                     <tr>
                       <td>Capabilities</td>
@@ -74,6 +76,9 @@ const TeamMember = React.createClass({
                     </tr>
                     ) || null}
                 </Table>
+                <Padding t={3}>
+                  <Link to="/team">View your Team</Link>
+                </Padding>
               </Col>
             </Row>
           </Grid>

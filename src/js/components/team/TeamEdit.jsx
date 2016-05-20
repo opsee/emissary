@@ -64,16 +64,15 @@ const TeamEdit = React.createClass({
     this.props.actions.edit(this.state.user);
   },
   renderCreditCard(){
+    if (this.props.redux.user){
+      return (
+        <Padding t={2}>
+          <Heading level={3}>Update Credit Card</Heading>
+          <CreditCard onChange={this.handleCreditCardChange}/>
+        </Padding>
+      )
+    }
     return null;
-    // if (this.props.redux.user){
-    //   return (
-    //     <Padding t={2}>
-    //       <Heading level={3}>Update Credit Card</Heading>
-    //       <CreditCard onChange={this.handleCreditCardChange}/>
-    //     </Padding>
-    //   )
-    // }
-    // return null;
   },
   render() {
     return (

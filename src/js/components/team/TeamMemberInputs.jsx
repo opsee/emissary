@@ -1,9 +1,15 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {Padding} from '../layout';
-import {Button, Input, RadioSelect} from '../forms';
+import {Button, Checkbox, Input, RadioSelect} from '../forms';
 import {Color, Heading} from '../type';
+import {Member} from '../../modules/schemas';
+import {
+  team as actions
+} from '../../actions';
 
 const TeamMemberInputs = React.createClass({
   propTypes: {
@@ -13,12 +19,17 @@ const TeamMemberInputs = React.createClass({
     name: PropTypes.string,
     status: PropTypes.string,
     email: PropTypes.string,
-    password: PropTypes.string
+    password: PropTypes.string,
+    redux: PropTypes.shape({
+      asyncActions: PropTypes.shape({
+        memberInvite: PropTypes.object
+      })
+    })
   },
   getDefaultProps(){
-    return {
-      inputs: ['status', 'capabilities', 'email', 'password']
-    };
+    return _.assign({
+      inputs: ['status', 'capabilities', 'email']
+    }, new Member().toJS());
   },
   getStatuses(){
     return [
@@ -31,6 +42,9 @@ const TeamMemberInputs = React.createClass({
         label: 'Inactive: Disable login and all user functions'
       }
     ];
+  },
+  runSendInvite(){
+    this.props.actions.memberInvite(this.props.email);
   },
   handleInputChange(data){
     this.props.onChange(_.assign({}, this.props, data));
@@ -55,11 +69,12 @@ const TeamMemberInputs = React.createClass({
           <Heading level={3}>Capabilities</Heading>
           <div className="display-flex flex-wrap">
             {data.map((c, i) => {
+              const selected = this.props.capabilities.indexOf(c) !== -1;
+              const id = `team-member-capabilitiy-${i}`;
               return (
-                <Padding r={1} b={1} key={`capabilitiy-${c}`}>
-                  <Button onClick={this.handleCapabilityClick.bind(null, c)} flat={this.props.capabilities.indexOf(c) === -1} color="primary">
-                    {titles[i]}
-                  </Button>
+                <Padding r={1} b={1} key={`capabilitiy-${c}`} className="display-flex flex-vertical-align">
+                  <Checkbox onChange={this.handleCapabilityClick.bind(null, c)} selected={selected} id={id} color="primary"/>
+                  <label htmlFor={id}><Color c={selected ? 'primary' : null}>{titles[i]}</Color></label>
                 </Padding>
               );
             })}
@@ -71,19 +86,30 @@ const TeamMemberInputs = React.createClass({
     return null;
   },
   renderStatus(){
-    if (this.props.inputs.indexOf('status') > -1){
-      if (this.props.status === 'invited'){
+    const {props} = this;
+    if (props.inputs.indexOf('status') > -1){
+      if (props.status === 'invited'){
+        const inviteStatus = props.redux.asyncActions.teamMemberInvite.status;
+        const pending = inviteStatus === 'pending';
+        const success = inviteStatus === 'success' && props.redux.asyncActions.teamMemberInvite.meta === props.email;
+        let text = 'Resend Invitation';
+        if (pending){
+          text = 'Sending...';
+        } else if (success){
+          text = 'Invitation Resent.';
+        }
         return (
-          <div>
+          <Padding b={1}>
             <Heading level={3}>Status</Heading>
-            <Padding b={1}>{this.props.name} has been invited to your team.</Padding>
-          </div>
+            <Padding b={1}>{props.name || props.email} has been invited to your team.</Padding>
+            <Button onClick={this.runSendInvite} flat color="default" disabled={pending || success}>{text}</Button>
+          </Padding>
         );
       }
       return (
         <div>
           <Heading level={3}>Status</Heading>
-          <RadioSelect onChange={this.handleInputChange} data={this.props} options={this.getStatuses()} path="status"/>
+          <RadioSelect onChange={this.handleInputChange} data={props} options={this.getStatuses()} path="status"/>
         </div>
       );
     }
@@ -109,4 +135,12 @@ const TeamMemberInputs = React.createClass({
   }
 });
 
-export default TeamMemberInputs;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TeamMemberInputs);

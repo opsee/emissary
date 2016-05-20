@@ -69,16 +69,21 @@ export function getTeam(data) {
   };
 }
 
-export function memberInvite(data) {
+export function memberInvite(data, redirect = false) {
   return (dispatch, state) => {
     dispatch({
       type: TEAM_MEMBER_INVITE,
+      meta: data,
       payload: new Promise((resolve, reject) => {
-        console.log(data);
-        resolve('ok');
         setTimeout(() => {
-          dispatch(push('/team'));
-        }, 100);
+          console.log(data);
+          resolve('ok');
+          if (redirect){
+            setTimeout(() => {
+              dispatch(push('/team'));
+            }, 100);
+          }
+        }, 3000);
       })
     });
   };

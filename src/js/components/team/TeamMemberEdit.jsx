@@ -10,6 +10,7 @@ import {Button, Input, RadioSelect} from '../forms';
 import {Close} from '../icons';
 import {Color, Heading} from '../type';
 import {flag} from '../../modules';
+import {Member} from '../../modules/schemas';
 import {toSentenceSerial} from '../../modules/string';
 import {
   team as actions
@@ -39,7 +40,7 @@ const TeamMemberEdit = React.createClass({
   componentWillReceiveProps(nextProps) {
     const nextMember = this.getData(nextProps);
     const member = this.getData();
-    if (nextMember.name !== member.name){
+    if (nextMember.email !== member.email){
       this.setState(nextMember);
     }
   },
@@ -50,7 +51,7 @@ const TeamMemberEdit = React.createClass({
     .find({
       id: this.props.params.id
     })
-    .value() || {};
+    .value() || new Member().toJS();
   },
   getStatuses(){
     return [
@@ -84,10 +85,10 @@ const TeamMemberEdit = React.createClass({
   },
   render() {
     const member = this.getData();
-    if (member.name){
+    if (member.email){
       return (
          <div>
-          <Toolbar title={`Edit Team Member: ${member.name}`} pageTitle="Team Member" bg="info" btnPosition="midRight">
+          <Toolbar title={`Edit Team Member: ${member.name || member.email}`} pageTitle="Team Member" bg="info" btnPosition="midRight">
             <Button to={`/team/member/${member.id}`} icon flat>
               <Close btn/>
             </Button>
