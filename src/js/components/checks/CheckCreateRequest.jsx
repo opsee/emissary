@@ -243,9 +243,10 @@ const CheckCreateRequest = React.createClass({
     if (type && target.id){
       let inner = null;
       if (type.match('^ecc$|^instance$|^rds$')){
-        inner = <InstanceItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
+        inner = <InstanceItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={target}/>;
+      } else {
+        inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={target}/>;
       }
-      inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={this.props.check.target}/>;
       return (
         <Padding b={3}>
           <Heading level={3}>Your Target</Heading>
