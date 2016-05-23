@@ -102,5 +102,6 @@ h1, h2, h3 {
 
 .configSub {
   font-size: 1.25rem;
-  opacity: 0.85;
+  opacity: 0.75;
+  line-height: 2rem;
 }

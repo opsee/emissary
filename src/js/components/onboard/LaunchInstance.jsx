@@ -40,53 +40,76 @@ const LaunchInstance = React.createClass({
       </Padding>
     );
   },
+  renderRegion(){
+    const {region} = this.getInstallData();
+    return (
+      <Padding tb={1}>
+        <div className={style.configKey}>
+          Region
+        </div>
+        <div className={style.configMain}>
+          {_.get(region, 'id')}
+        </div>
+        <div className={style.configSub}>
+          {_.get(region, 'name')}
+        </div>
+      </Padding>
+    );
+  },
+  renderVPC(){
+    const {vpc} = this.getInstallData();
+    return (
+      <Padding tb={1}>
+        <div className={style.configKey}>
+          VPC
+        </div>
+        <div className={style.configMain}>
+          {_.get(vpc, 'vpc_id')}
+        </div>
+        <div className={style.configSub}>
+          {_.get(vpc, 'name')}
+        </div>
+        <div className={style.configSub}>
+          {_.get(vpc, 'instance_count')} instances
+        </div>
+      </Padding>
+    );
+  },
+  renderSubnet(){
+    const {subnet} = this.getInstallData();
+    return (
+      <Padding tb={1}>
+        <div className={style.configKey}>
+          Subnet
+        </div>
+        <div className={style.configMain}>
+          {_.get(subnet, 'subnet_id')}
+        </div>
+        <div className={style.configSub}>
+          {_.get(subnet, 'name')}
+        </div>
+        <div className={style.configSub}>
+          {_.get(subnet, 'instance_count')} instances, {_.get(subnet, 'routing')} routing
+        </div>
+      </Padding>
+    );
+  },
   renderConfig(){
     if (!this.props.redux.onboard.installData) {
       return this.renderLoading();
     }
-    const { region, vpc, subnet } = this.getInstallData();
     return (
       <Padding tb={2}>
         <Grid>
           <Row>
             <Col xs={12} sm={4}>
-              <Padding tb={1}>
-                <div className={style.configKey}>
-                  Region
-                </div>
-                <div className={style.configMain}>
-                  {_.get(region, 'id')}
-                </div>
-                <div className={style.configSub}>
-                  {_.get(region, 'name')}
-                </div>
-              </Padding>
+              {this.renderRegion()}
             </Col>
             <Col xs={12} sm={4}>
-              <Padding tb={1}>
-                <div className={style.configKey}>
-                  VPC
-                </div>
-                <div className={style.configMain}>
-                  {_.get(vpc, 'vpc_id')}
-                </div>
-                <div className={style.configSub}>
-                  {_.get(vpc, 'name')}
-                </div>
-              </Padding>
+              {this.renderVPC()}
             </Col>
             <Col xs={12} sm={4}>
-              <Padding tb={1}>
-                <div className={style.configKey}>
-                  Subnet
-                </div>
-                <div className={style.configMain}>
-                  {_.get(subnet, 'subnet_id')}
-                </div>
-                <div className={style.configSub}>
-                  {_.get(subnet, 'name')}
-                </div>
-              </Padding>
+              {this.renderSubnet()}
             </Col>
           </Row>
         </Grid>
