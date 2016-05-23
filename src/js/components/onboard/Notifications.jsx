@@ -27,8 +27,8 @@ const Notifications = React.createClass({
     this.props.actions.getDefaultNotification();
   },
   componentWillReceiveProps(nextProps){
-    if (nextProps.redux.onboard.defaultNotification) {
-      this.history.pushState(null, '/start/postinstall');
+    if (nextProps.redux.onboard.defaultNotifs) {
+      this.history.pushState(null, '/start/install');
     }
   },
   getInitialState(){

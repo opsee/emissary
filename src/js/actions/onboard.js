@@ -254,7 +254,7 @@ export function getDefaultNotification() {
   return (dispatch, state) => {
     dispatch({
       type: ONBOARD_GET_DEFAULT_NOTIF,
-      payload: graphPromise('defaultNotif', () => {
+      payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
           .set('Authorization', state().user.get('auth'))
@@ -271,18 +271,20 @@ export function getDefaultNotification() {
 
 export function setDefaultNotification(notifications) {
   return (dispatch, state) => {
+    const variables = {notifications};
     dispatch({
       type: ONBOARD_SET_DEFAULT_NOTIF,
-      payload: graphPromise('defaultNotif', () => {
+      payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
           .set('Authorization', state().user.get('auth'))
-          .send({query:
-            `notifications(default: ${JSON.stringify(notifications)}) {
-              type
-              value
-              default
-            }`
+          .send({query: `
+            mutation Mutation($notifications: [Notification]) {
+              notifications(default: $notifications) {
+                type
+                value
+              }
+            }`, variables
           });
       })
     });
@@ -348,7 +350,6 @@ export function install(){
           if (isBastionLaunching(state) || isBastionConnected(state)){
             return resolve();
           }
-          dispatch(push('/start/choose-region'));
           return reject();
         }, 30000);
       })
