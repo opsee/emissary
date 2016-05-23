@@ -100,47 +100,42 @@ export function signupCreate(data) {
 }
 
 export function setDefaultInstallData(regionData) {
-  return (dispatch) => {
-    const { region, vpcs, subnets } = regionData;
-    const regionID = region;
-
-    // Set the default VPC to be the first in the priority list
-    const vpcID = _.chain(vpcs).head().get('vpc_id').value();
-
-    // Set the default subnet to be the first in the priority list for the default VPC
-    const subnetID = _.chain(subnets)
-    .filter(subnet => subnet.vpc_id === vpcID)
-    .head()
-    .get('subnet_id')
-    .value();
-
-    const data = { regionID, vpcID, subnetID };
-    dispatch({
-      type: ONBOARD_SET_INSTALL_DATA,
-      payload: { data }
-    });
-  };
+  const { region, vpcs, subnets } = regionData;
+  const regionID = region;
+  // Set the default VPC to be the first in the priority list
+  const vpcID = _.chain(vpcs).head().get('vpc_id').value();
+  // Set the default subnet to be the first in the priority list for the default VPC
+  const subnetID = _.chain(subnets)
+  .filter(subnet => subnet.vpc_id === vpcID)
+  .head()
+  .get('subnet_id')
+  .value();
+  return setInstallData({ regionID, vpcID, subnetID });
 }
 
 export function updateInstallData() {
-  return (dispatch, state) => {
-    const onboardState = state().onboard;
-    const regionID = _.get(onboardState, 'selectedRegion.id');
-    const vpcID = _.get(onboardState, 'selectedVPC');
-    const subnetID = _.get(onboardState, 'selectedSubnet');
+  const onboardState = state().onboard;
+  const regionID = _.get(onboardState, 'selectedRegion.id');
+  const vpcID = _.get(onboardState, 'selectedVPC');
+  const subnetID = _.get(onboardState, 'selectedSubnet');
+  return setInstallData({ regionID, vpcID, subnetID });
+}
 
-    const data = { regionID, vpcID, subnetID };
+export function setInstallData(data) {
+  return (dispatch, state) => {
     dispatch({
       type: ONBOARD_SET_INSTALL_DATA,
       payload: { data }
     });
+    analytics.trackEvent('Onboard', 'set-install-data')(dispatch, state);
   };
 }
 
 /*
  * Grabs the region from the user's role stack, fetches the VPCs/subnets in
  * that region, and persists Opsee's "best guess" VPC/subnet as the initial
- * installation data.
+ * installation data. Since this is a common action across several onboard
+ * components on mount, it's easier to roll it into one action.
  */
 export function initializeInstallation(){
   return (dispatch, state) => {
@@ -242,6 +237,7 @@ export function makeLaunchRoleUrl() {
         });
       })
     });
+    analytics.trackEvent('Onboard', 'make-launch-role-url')(dispatch, state);
   };
 }
 
@@ -294,6 +290,7 @@ export function setDefaultNotification(notifications) {
           });
       })
     });
+    analytics.trackEvent('Onboard', 'set-notifications')(dispatch, state);
   };
 }
 
