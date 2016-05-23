@@ -15,7 +15,9 @@ import {
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
   APP_SET_DROPDOWN_ID,
-  GET_STATUS_PAGE_INFO
+  GET_STATUS_PAGE_INFO,
+  INTERCOM_SHOW,
+  INTERCOM_HIDE
 } from '../actions/constants';
 
 const initial = {
@@ -36,7 +38,8 @@ const initial = {
     confirmText: '',
     onConfirm: null
   },
-  statusPageInfo: new Map()
+  statusPageInfo: new Map(),
+  intercomStatus: undefined
 };
 
 export default handleActions({
@@ -133,6 +136,18 @@ export default handleActions({
   [GET_STATUS_PAGE_INFO]: {
     next(state, action){
       return _.assign({}, state, {statusPageInfo: new Map(action.payload)});
+    }
+  },
+  [INTERCOM_SHOW]: {
+    next(state){
+      const intercomStatus = 'visible';
+      return _.assign({}, state, {intercomStatus});
+    }
+  },
+  [INTERCOM_HIDE]: {
+    next(state){
+      const intercomStatus = 'hidden';
+      return _.assign({}, state, {intercomStatus});
     }
   }
 }, initial);

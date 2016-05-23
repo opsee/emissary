@@ -84,6 +84,10 @@ const Opsee = React.createClass({
   shouldHideNav(){
     return !!(_.find(hideNavList, string => this.props.location.pathname.match(string)));
   },
+  shouldShowIntercom(){
+    const isStartRoute = _.some(['/start'].map(string => this.props.location.pathname.match(string)));
+    return (isStartRoute && this.props.redux.app.intercomStatus !== 'visible');
+  },
   renderSocketError(){
     return (
       <div>
@@ -129,6 +133,7 @@ const Opsee = React.createClass({
         <div className={this.getMeatClass()}>
           {this.renderInner()}
         </div>
+        <a id="Intercom" href="mailto:@incoming.intercom.io" className={style.intercom} style={{display: this.shouldShowIntercom() ? 'block' : 'none'}}/>
         <MessageModal/>
         <Confirm />
         <Analytics/>
