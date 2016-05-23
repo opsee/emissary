@@ -7,7 +7,6 @@ import {onboard as actions} from '../../actions';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import NotificationSelection from '../checks/NotificationSelection';
-import devices from '../svgs/devices.svg';
 import style from './onboard.css';
 
 const Notifications = React.createClass({
@@ -51,15 +50,14 @@ const Notifications = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding t={4} b={1} className="text-center">
-                <img src={devices} className={style.laptop} />
-              </Padding>
               <Padding tb={2}>
-                <h2>Where should we send your alerts?</h2>
+                <div className={style.headerStep}>STEP 3 of 3</div>
+                <h2>Set up default alerts</h2>
               </Padding>
-              <p>When your health checks fail, Opsee will let you know. You can always
-              configure this on a per-check basis.</p>
-
+              <p>When your health checks fail, Opsee will let you know. (You can always configure this on a per-check basis.)</p>
+              <Padding tb={1}>
+                <p>Where should we send your alerts by default?</p>
+              </Padding>
               <Padding t={1}>
                 <NotificationSelection onChange={this.onChange} exclusive />
               </Padding>

@@ -194,6 +194,10 @@ const Install = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              <Padding tb={2}>
+                <div className={style.headerStep}>STEP 2 of 3</div>
+                <h2>Installing the Opsee EC2 instance...</h2>
+              </Padding>
               {this.renderInner()}
             </Col>
           </Row>

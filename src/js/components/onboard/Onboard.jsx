@@ -24,22 +24,9 @@ const Onboard = React.createClass({
     }),
     children: PropTypes.node
   },
-  componentWillMount(){
-    if (this.props.location.pathname === '/start/password') {
-      const routes = this.state.routes.slice(0);
-      routes.unshift('/start/password'); // FIXME
-      this.setState({ routes });
-    }
-  },
   getInitialState(){
     return {
-      routes: [
-        '/start/launch-stack',
-        '/start/launch-instance',
-        '/start/install-example',
-        '/start/notifications',
-        '/start/postinstall'
-      ]
+      numPips: 4
     };
   },
   isInstalling(){
@@ -58,13 +45,29 @@ const Onboard = React.createClass({
       });
     }
   },
+  getActivePip(){
+    switch(this.props.location.pathname) {
+      case 'start/launch-stack':
+        return 0;
+      case '/start/launch-instance':
+      case '/start/install':
+      case '/start/install-example':
+        return 1;
+      case '/start/notifications':
+        return 2;
+      case '/start/postinstall':
+        return 3;
+      default:
+        return -1;
+    }
+  },
   renderPips(){
     const route = this.props.location.pathname;
-    const activePip = this.state.routes.indexOf(route);
+    const activePip = this.getActivePip();
     if (activePip < 0) {
       return null;
     }
-    return _.times(this.state.routes.length, i => {
+    return _.times(this.state.numPips, i => {
       const className = cx(style.pip, {[style.activePip]: i === activePip});
       return (
         <Circle key={i} className={className} />
