@@ -159,7 +159,11 @@ const Install = React.createClass({
         <p>Your instance is currently attempting to connect. Hang on...</p>
       );
     }
-    return null;
+    return (
+      <div>
+        Detecting installation status...
+      </div>
+    );
   },
   renderButton(){
     const { defaultNotifs } = this.props.redux.onboard;
