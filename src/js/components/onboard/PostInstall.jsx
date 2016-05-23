@@ -44,7 +44,7 @@ const PostInstall = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding tb={4} lr={2} style={{margin: '0 auto'}}>
+              <Padding t={4} b={1} lr={2} style={{margin: '0 auto'}}>
                 <Checkmark />
               </Padding>
               <div className="text-center">

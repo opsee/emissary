@@ -115,11 +115,11 @@ const LaunchStack = React.createClass({
     const stackRegion = _.get(this.props.redux.onboard, 'role.region');
     return (
       <div>
-        <Padding t={2}>
+        <Padding tb={4} lr={2} style={{margin: '0 auto'}}>
           <Checkmark />
         </Padding>
-        <Padding tb={2}>
-          <h3 className="text-center">Now we're role-in'!</h3>
+         <Padding b={2} className="text-center">
+          <h2>Now we're role-in!</h2>
         </Padding>
         <p>Your Opsee role stack was installed in {stackRegion}. You can manage it anytime from your AWS console.</p>
         <Padding tb={2}>
