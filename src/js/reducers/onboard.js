@@ -125,10 +125,9 @@ export default handleActions({
   },
   [ONBOARD_SET_INSTALL_DATA]: {
     next(state, action) {
-      const { regionID, vpcID, subnetID } = action.payload.data;
-
       // Store the complete region/vpc/subnet in the props, since selected
       // region/vpc/subnet can change
+      const { regionID, vpcID, subnetID } = action.payload.data;
       const region = _.find(regions, {id: regionID });
       const vpc = _.find(state.selectedRegion.vpcs, {vpc_id: vpcID});
       const subnet = _.find(state.selectedRegion.subnets, {subnet_id: subnetID});
