@@ -12,24 +12,25 @@ import {
   ONBOARD_GET_TEMPLATES,
   ONBOARD_MAKE_LAUNCH_TEMPLATE,
   ONBOARD_SCAN_REGION,
-  ONBOARD_HAS_ROLE
+  ONBOARD_HAS_ROLE,
+  ONBOARD_SET_DEFAULT_NOTIF,
+  ONBOARD_GET_DEFAULT_NOTIF
 } from '../actions/constants';
 
 const initial = {
   regions,
   templates: [],
   regionLaunchURL: null,
-
   role: {
     stack_id: null,
     region: null
   },
-
-  // THE CURRENTLY SELECTED REGION, INCLUDING VPCS and SUBNETS
+  defaultNotifs: null,
+  // The currently selected region on the /start/config-instance screen.
+  // The region contains all of its vpcs and subnets.
   selectedRegion: null,
   selectedSubnet: null,
   selectedVPC: null,
-
   installData: null,
   finalInstallData: null, // TODO couple more (?) w/ installData
   installing: false
@@ -153,6 +154,20 @@ export default handleActions({
     next(state, action) {
       const role = action.payload.data;
       return _.assign({}, state, {role});
+    },
+    throw: yeller.reportAction
+  },
+  [ONBOARD_SET_DEFAULT_NOTIF]: {
+    next(state, action) {
+      const defaultNotifs = action.payload.data;
+      return _.assign({}, state, {defaultNotifs});
+    },
+    throw: yeller.reportAction
+  },
+  [ONBOARD_GET_DEFAULT_NOTIF]: {
+    next(state, action) {
+      const defaultNotifs = action.payload.data;
+      return _.assign({}, state, {defaultNotifs});
     },
     throw: yeller.reportAction
   }
