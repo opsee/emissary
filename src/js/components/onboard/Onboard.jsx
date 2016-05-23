@@ -31,7 +31,7 @@ const Onboard = React.createClass({
   },
   getActivePip(){
     switch (this.props.location.pathname) {
-    case 'start/launch-stack':
+    case '/start/launch-stack':
       return 0;
     case '/start/launch-instance':
     case '/start/install':
