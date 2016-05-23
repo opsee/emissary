@@ -37,7 +37,8 @@ const Onboard = React.createClass({
         '/start/launch-stack',
         '/start/launch-instance',
         '/start/install-example',
-        '/start/notifications'
+        '/start/notifications',
+        '/start/postinstall'
       ]
     };
   },
