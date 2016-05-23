@@ -7,7 +7,9 @@ import {User} from '../modules/schemas';
 import {
   ANALYTICS_EVENT,
   ANALYTICS_PAGEVIEW,
-  ANALYTICS_USER_UPDATE
+  ANALYTICS_USER_UPDATE,
+  INTERCOM_SHOW,
+  INTERCOM_HIDE
 } from './constants';
 
 const ANALYTICS_API = config.services.analytics;
@@ -49,6 +51,12 @@ export function trackPageView(path, title) {
     // to update the 'last seen' time.
     if (!user || !user.id) {
       return Promise.resolve();
+    }
+
+    // Tell intercom we're on a new page in the event that there are any messages
+    // that we need to show
+    if (window.Intercom) {
+      window.Intercom('update');
     }
 
     return dispatch({
@@ -129,29 +137,29 @@ export function updateUser(updatedUser) {
 
 export function initialize() {
   return (dispatch, state) => {
-    const user = state().user || new User();
+    const user = (state().user || new User()).toJS();
     // ld needs to be loaded even if user is ghosting for features to work
     // there are no analytics in LD so it's nbd
     // FIXME Remove when Launch Darkly added to Myst
     if (window.ldclient){
       window.ldclient.identify({
-        firstName: user.get('name'),
-        key: (user.get('id') || '').toString(),
-        email: user.get('email'),
+        firstName: user.name,
+        key: (user.id || '').toString(),
+        email: user.email,
         custom: {
-          customer_id: user.get('customer_id'),
-          id: user.get('id'),
-          admin: !!user.get('admin')
+          customer_id: user.customer_id,
+          id: user.id,
+          admin: !!user.admin
         }
       });
     }
 
     //user is ghosting
-    if (user && user.toJS && user.get('ghosting')){
+    if (user && user.ghosting){
       return Promise.resolve();
     }
 
-    const isAuthenticated = user.get('token') && user.get('id');
+    const isAuthenticated = !!(user.token && user.id);
 
     // If the user is authenticated, we can initialize them with their identity
     // in both Myst (e.g., to update their 'last seen' date in Intercom)
@@ -162,6 +170,29 @@ export function initialize() {
       // as their visitor ID. (This allows us to track logged-in users across
       // multiple devices.)
       ga('create', config.googleAnalyticsID, user.id);
+
+      // Basic-ally, we are duplicating myst / intercom here, but we want to show
+      // the intercom messenger so we need this
+      if (window.Intercom && user.name && user.email) {
+        const createdAt = Math.floor((user.created_at || new Date().getTime()) / 1000);
+
+        window.Intercom('boot', {
+          app_id: 'mrw1z4dm',
+          name: user.name,
+          email: user.email,
+          created_at: createdAt,
+          user_hash: user.intercom_hmac,
+          widget: {
+            activator: '#Intercom'
+          }
+        });
+        window.Intercom('onShow', () => dispatch({
+          type: INTERCOM_SHOW
+        }));
+        window.Intercom('onHide', () => dispatch({
+          type: INTERCOM_HIDE
+        }));
+      }
 
       // Sync the user with Myst/Intercom
       const update = makeUserObject(user);
@@ -182,6 +213,10 @@ export function initialize() {
 
 export function shutdown() {
   return () => {
+    if (window.Intercom) {
+      window.Intercom('shutdown');
+    }
+
     // Revert to an unauthenticated visitor on logout.
     ga('create', config.googleAnalyticsID, 'auto');
   };

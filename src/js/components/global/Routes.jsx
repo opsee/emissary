@@ -43,16 +43,18 @@ import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
 
+import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
 import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
-import OnboardPassword from 'react-proxy?name=onboard!exports?exports.default!../onboard/Password';
-import OnboardRegionSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/RegionSelect';
-import OnboardVPCSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/VPCSelect';
-import OnboardSubnetSelect from 'react-proxy?name=onboard!exports?exports.default!../onboard/SubnetSelect';
-import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
-
+import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
+import OnboardReviewStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewStack';
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
-import OnboardAddInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/AddInstance';
+import OnboardReviewInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewInstance';
+import OnboardLaunchInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchInstance';
+import OnboardConfigureInstance from 'react-proxy?name=onboard!exports?exports.default!../onboard/ConfigureInstance';
+import OnboardNotifications from 'react-proxy?name=onboard!exports?exports.default!../onboard/Notifications';
+import OnboardInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/Install';
+import OnboardPostInstall from 'react-proxy?name=onboard!exports?exports.default!../onboard/PostInstall';
 
 import SearchAll from 'react-proxy?name=search!exports?exports.default!../search/All';
 
@@ -108,21 +110,22 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
-    <Redirect from="/start/tutorial" to="/start/launch-stack"/>
-    <Redirect from="/start/tutorial/1" to="/start/launch-stack"/>
-    <Redirect from="/start/tutorial/2" to="/start/launch-stack"/>
-    <Redirect from="/start/tutorial/3" to="/start/launch-stack"/>
-    <Route path="/start" component={OnboardCreate}/>
+    <Redirect from="/start" to="/start/create" />
+    <Route path="/start/create" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
-    <Route path="/start/password" component={OnboardPassword}/>
-    <Route path="/start/launch-stack" component={auth(OnboardLaunchStack)} />
-    <Route path="/start/choose-region" component={auth(OnboardRegionSelect)} />
-    <Route path="/start/add-instance" component={OnboardAddInstance} />
-    <Route path="/start/choose-vpc" component={auth(OnboardVPCSelect)}/>
-    <Route path="/start/choose-subnet" component={auth(OnboardSubnetSelect)}/>
-    <Route path="/start/install" component={auth(OnboardInstall)}/>
-    <Route path="/start/install-example" component={OnboardInstall} example onEnter={auth}/>
-    <Route path="/start/profile" component={auth(Help)}/>
+    <Route path="/start/password" component={OnboardAccount} />
+
+    <Route path="/start" component={auth(Onboard)}>
+      <Route path="/start/review-stack" component={OnboardReviewStack} />
+      <Route path="/start/launch-stack" component={OnboardLaunchStack} />
+      <Route path="/start/review-instance" component={OnboardReviewInstance} />
+      <Route path="/start/launch-instance" component={OnboardLaunchInstance} />
+      <Route path="/start/configure-instance" component={OnboardConfigureInstance} />
+      <Route path="/start/install" component={OnboardInstall} />
+      <Route path="/start/install-example" component={OnboardInstall} example />
+      <Route path="/start/notifications" component={OnboardNotifications} />
+      <Route path="/start/postinstall" component={OnboardPostInstall} />
+    </Route>
 
     <Route path="/system" component={auth(System)}/>
 

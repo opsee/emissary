@@ -1,18 +1,17 @@
 import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import {History, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Toolbar} from '../global';
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
-import {flag} from '../../modules';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
-import {PagerdutyConnect, SlackConnect} from '../integrations';
+import style from './onboard.css';
 
 const Install = React.createClass({
+  mixins: [History],
   propTypes: {
     path: PropTypes.string,
     location: PropTypes.object,
@@ -21,7 +20,8 @@ const Install = React.createClass({
       setCredentials: PropTypes.func,
       onboardExampleInstall: PropTypes.func,
       install: PropTypes.func.isRequired,
-      exampleInstall: PropTypes.func
+      exampleInstall: PropTypes.func,
+      getDefaultNotification: PropTypes.func
     }),
     redux: PropTypes.shape({
       app: PropTypes.shape({
@@ -30,15 +30,27 @@ const Install = React.createClass({
       env: PropTypes.shape({
         bastions: PropTypes.array
       }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
+      }),
       user: PropTypes.object,
       asyncActions: PropTypes.object
     }).isRequired
   },
   componentWillMount(){
+    this.props.actions.getDefaultNotification();
     if (this.props.location.pathname.match('install-example')){
-      return this.props.actions.exampleInstall();
+      this.props.actions.exampleInstall();
+    } else {
+      this.props.actions.install();
     }
-    return this.props.actions.install();
+  },
+  componentWillReceiveProps(){
+    if (this.isComplete()) {
+      setTimeout(() => {
+        this.history.pushState(null, '/start/postinstall');
+      }, 500);
+    }
   },
   getBastionMessages(){
     let msgs = _.chain(this.props.redux.app.socketMessages).filter({command: 'launch-bastion'}).filter(m => {
@@ -125,16 +137,7 @@ const Install = React.createClass({
     return (_.every(stats) && stats.length) ||
     _.filter(socketMessages, {command: 'connect-bastion', state: 'complete'}).length;
   },
-  renderBtn(){
-    if (this.isComplete()){
-      return (
-        <Padding tb={3}>
-          <Button to="/check-create" color="primary" block chevron>
-            Create a Check
-          </Button>
-        </Padding>
-      );
-    }
+  renderError(){
     if (this.getBastionErrors().length){
       return (
         <Alert color="danger">
@@ -151,36 +154,26 @@ const Install = React.createClass({
           <p>We are now installing our instance in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
         </Padding>
       );
-    } else if (this.isComplete()){
-      return (
-        <p>You are all set. Create a check to get started.</p>
-      );
     } else if (this.isBastionConnecting()){
       return (
         <p>Your instance is currently attempting to connect. Hang on...</p>
       );
     }
-    return <p>Checking installation status...</p>;
-  },
-  renderSlack(){
-    const slack = !!flag('integrations-slack');
-    const pagerduty = !!flag('integrations-pagerduty');
-    if (!this.isComplete()){
-      if (slack && !pagerduty){
-        return (
-          <Padding>
-            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel.
-          </Padding>
-        );
-      } else if (slack && pagerduty){
-        return (
-          <Padding>
-            While you&rsquo;re waiting, <SlackConnect/> to get notifications in your favorite channel. <br/>You can also set up a connection to <PagerdutyConnect>PagerDuty</PagerdutyConnect>.
-          </Padding>
-        );
-      }
-    }
     return null;
+  },
+  renderButton(){
+    const { defaultNotifs } = this.props.redux.onboard;
+    if (defaultNotifs) {
+      return null;
+    }
+    return (
+      <div>
+        <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts.</p>
+        <Padding tb={1}>
+          <Button to="/start/notifications" color="primary" block chevron>Set up notifications</Button>
+        </Padding>
+      </div>
+    );
   },
   renderInner(){
     const self = this;
@@ -193,16 +186,16 @@ const Install = React.createClass({
     } else if (!this.isInstallError()){
       return (
         <div>
-          {this.renderText()}
           {this.getBastionMessages().map((b, i) => {
             return (
-              <Padding b={1} key={`bastion-installer-${i}`}>
+              <Padding tb={2} key={`bastion-installer-${i}`}>
                 <BastionInstaller messages={b.messages} connected={self.isComplete()}/>
               </Padding>
             );
           })}
-          {this.renderBtn()}
-          {this.renderSlack()}
+          {this.renderText()}
+          {this.renderError()}
+          {this.renderButton()}
         </div>
       );
     }
@@ -214,11 +207,14 @@ const Install = React.createClass({
   },
   render() {
     return (
-       <div>
-        <Toolbar title="Instance Installation"/>
+       <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>
+              <Padding tb={2}>
+                <div className={style.headerStep}>STEP 2 of 3</div>
+                <h2>Installing the Opsee EC2 instance...</h2>
+              </Padding>
               {this.renderInner()}
             </Col>
           </Row>
@@ -228,8 +224,12 @@ const Install = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(Install);
+export default connect(mapStateToProps, mapDispatchToProps)(Install);

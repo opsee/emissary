@@ -1,37 +1,76 @@
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
+import {History, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
-import {onboard as actions} from '../../actions';
+import {
+  onboard as actions,
+  analytics as analyticsActions
+} from '../../actions';
 import {Button} from '../forms';
-import {Highlight, ProgressBar, Toolbar} from '../global';
+import {NewWindow} from '../icons';
+import {Highlight, StatusHandler} from '../global';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
-import {Heading} from '../type';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
+import Instructions from './LaunchStackInstructions';
 import templates from '../../modules/awsTemplates';
+import {SetInterval} from '../../modules/mixins';
+import Checkmark from './Checkmark';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
+  mixins: [History, SetInterval],
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        onboardGetTemplates: PropTypes.object
+        onboardGetTemplates: PropTypes.object,
+        onboardHasRole: PropTypes.object
       }),
       onboard: PropTypes.shape({
-        templates: PropTypes.array
+        templates: PropTypes.array,
+        role: PropTypes.shape({
+          region: PropTypes.string
+        })
       })
     }),
     actions: PropTypes.shape({
+      hasRole: PropTypes.func,
+      makeLaunchRoleUrl: PropTypes.func,
       getTemplates: PropTypes.func
+    }),
+    analyticsActions: PropTypes.shape({
+      trackEvent: PropTypes.func
     })
   },
+  getInitialState(){
+    return {
+      hasClicked: false
+    };
+  },
   componentWillMount() {
-    const item = this.props.redux.asyncActions.onboardGetTemplates;
-    if (!item.status){
-      this.props.actions.getTemplates();
+    if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
+      this.props.actions.makeLaunchRoleUrl();
     }
+  },
+  componentDidMount(){
+    this.props.analyticsActions.trackEvent('Onboard', 'launch-stack');
+    setTimeout(() => {
+      this.props.analyticsActions.trackEvent('Onboard', 'launch-stack-stuck');
+    }, 1000 * 7); // in 7 seconds let us know they've been here too long
+    this.setInterval(() => {
+      this.props.actions.hasRole();
+    }, 1000 * 5); // every 5 seconds
+  },
+  getRole(){
+    return _.get(this.props.redux.onboard, 'role.region');
+  },
+  getTemplateURL() {
+    return _.get(this.props.redux, 'onboard.regionLaunchURL');
+  },
+  onOpenConsole() {
+    this.setState({ hasClicked: true });
   },
   renderTemplate() {
     const data = this.props.redux.onboard.templates[2]; // FIXME
@@ -53,50 +92,101 @@ const LaunchStack = React.createClass({
       </Padding>
     );
   },
-  render() {
+  renderInstructions(){
     return (
       <div>
-        <Toolbar title="Step 1: Launch our stack" className={style.toolbar} />
+        <Padding tb={2} className="text-center">
+          <Padding b={3}>
+            <StatusHandler status="pending" />
+          </Padding>
+          <div style={{opacity: 0.75}}>
+            Waiting for cross-account role...
+          </div>
+          <div style={{opacity: 0.75}}>
+            <p><small>(Make sure to come back when it's done!)</small></p>
+          </div>
+        </Padding>
+        <Instructions />
+        {this.renderButtons()}
+      </div>
+    );
+  },
+  renderDone(){
+    const stackRegion = _.get(this.props.redux.onboard, 'role.region');
+    return (
+      <div>
+        <Padding tb={4} lr={2} style={{margin: '0 auto'}}>
+          <Checkmark />
+        </Padding>
+         <Padding b={2} className="text-center">
+          <h2>Now we're role-in!</h2>
+        </Padding>
+        <p>Your Opsee role stack was installed in {stackRegion}. You can manage it anytime from your AWS console.</p>
+        <Padding tb={2}>
+          <Button to="/start/launch-instance" color="success" chevron block>Continue</Button>
+        </Padding>
+      </div>
+    );
+  },
+  renderLaunchButton(){
+    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
+    if (isFirstPoll) {
+      return (
+        <Button onClick={this.onOpenConsole} color="primary" disabled block>Loading...</Button>
+      );
+    }
+    const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
+    return (
+      <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
+    );
+  },
+  renderButtons(){
+    return (
+      <Padding tb={2}>
+        <Padding b={1}>
+          {this.renderLaunchButton()}
+        </Padding>
+        <Padding tb={1} className="text-center">
+          <p><small><Link to="/start/review-stack">Learn more about the cross-account role stack</Link></small></p>
+        </Padding>
+      </Padding>
+    );
+  },
+  renderInner(){
+    if (this.getRole()) {
+      return this.renderDone();
+    }
+    if (this.state.hasClicked) {
+      return this.renderInstructions();
+    }
+    return (
+      <div>
         <Padding b={2}>
-          <ProgressBar percentage={15} color={seed.color.success} flat />
+          <small>STEP 1 of 3</small>
+          <h2>Set Up Cross-Account Access</h2>
+        </Padding>
+        <Padding a={4} className="text-center">
+          <img src={crossAccountImg} />
         </Padding>
 
+        <p>Cross-account access is like giving a cat sitter the key to your house.
+        Opsee will be able to take actions in your AWS environment on your behalf.
+        We need this capability to launch an EC2 instance to healthcheck your
+        services and manage that instance throughout its lifecycle.</p>
+
+        <p>To set up cross-account access, you'll need to install Opsee's CloudFormation Stack in your AWS console.</p>
+
+        {this.renderButtons()}
+      </div>
+    );
+  },
+  render() {
+    return (
+      <div className={style.transitionPanel}>
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding b={2}>
-                <p>Opsee uses two tools to monitor your environment: cross-account access and our EC2 instance. We'll start by adding cross-account access.</p>
-              </Padding>
-            </Col>
-          </Row>
-
-          <Row className="middle-xs">
-            <Col xs={12} sm={6} style={{textAlign: 'center'}}>
-              <Padding a={2}>
-                <img src={crossAccountImg} alt="Cross-account access between Opsee and your AWS environment" style={{width: '100%', maxWidth: '400px'}} />
-              </Padding>
-            </Col>
-            <Col xs={12} sm={6}>
-              <Heading level={3}>About cross-account access</Heading>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment and allows our instance to run health checks. You can view and control this access at any time in <a href="https://console.aws.amazon.com/iam/home" target="_blank">your IAM console</a>.</p>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <Padding tb={2}>
-                <Heading level={4}>Cross-account Access CloudFormation Template</Heading>
-                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also <a href="/docs/permissions" target="_blank">available in our docs</a>.</p>
-
-                {this.renderTemplate()}
-              </Padding>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <p>Next, you'll choose which region the CloudFormation stack will live in.</p>
-              <Button to="/start/choose-region" color="success" block chevron>Select a region</Button>
+              {this.renderInner()}
             </Col>
           </Row>
         </Grid>
@@ -105,8 +195,13 @@ const LaunchStack = React.createClass({
   }
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+const mapStateToProps = (state) => ({
+  redux: state
 });
 
-export default connect(null, mapDispatchToProps)(LaunchStack);
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+  analyticsActions: bindActionCreators(analyticsActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LaunchStack);

@@ -81,11 +81,11 @@ const BastionInstaller = React.createClass({
       break;
     case 'Reading':
       num = 1;
-      string = 'Reading CloudFormation template';
+      string = 'Reading CloudFormation template.';
       break;
     case 'AWS::EC2::SecurityGroup':
       num = 2;
-      string = 'Creating Security Group';
+      string = 'Creating Security Group.';
       break;
     case 'AWS::EC2::Instance':
       num = 3;
@@ -117,13 +117,13 @@ const BastionInstaller = React.createClass({
   },
   render() {
     return (
-      <Padding b={2}>
+      <div>
         <Heading level={2}>{this.id}</Heading>
+        <Padding b={2} className="text-center">
+          {this.getText().string}
+        </Padding>
         <ProgressBar percentage={this.getPercentComplete()} steps={6}/>
-        <div style={{textAlign: 'center'}}>
-        {this.getText().string}
-        </div>
-      </Padding>
+      </div>
     );
   }
 });
