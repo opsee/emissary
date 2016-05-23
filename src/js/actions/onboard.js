@@ -105,10 +105,14 @@ export function setDefaultInstallData(regionData) {
     const regionID = region;
 
     // Set the default VPC to be the first in the priority list
-    const vpcID = _.chain(vpcs).first().get('vpc_id').value();
+    const vpcID = _.chain(vpcs).head().get('vpc_id').value();
 
     // Set the default subnet to be the first in the priority list for the default VPC
-    const subnetID = _.chain(subnets).filter(subnet => subnet.vpc_id === vpcID).first().get('subnet_id').value();
+    const subnetID = _.chain(subnets)
+    .filter(subnet => subnet.vpc_id === vpcID)
+    .head()
+    .get('subnet_id')
+    .value();
 
     const data = { regionID, vpcID, subnetID };
     dispatch({
