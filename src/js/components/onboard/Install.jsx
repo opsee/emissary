@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import {History, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
@@ -11,6 +11,7 @@ import {onboard as actions} from '../../actions';
 import style from './onboard.css';
 
 const Install = React.createClass({
+  mixins: [History],
   propTypes: {
     path: PropTypes.string,
     location: PropTypes.object,
@@ -33,10 +34,18 @@ const Install = React.createClass({
     }).isRequired
   },
   componentWillMount(){
+    this.props.actions.getDefaultNotification();
     if (this.props.location.pathname.match('install-example')){
       this.props.actions.exampleInstall();
     } else {
       this.props.actions.install();
+    }
+  },
+  componentWillReceiveProps(){
+    if (this.isComplete()) {
+      setTimeout(() => {
+        this.history.pushState(null, '/start/postinstall');
+      }, 500);
     }
   },
   getBastionMessages(){
@@ -148,7 +157,12 @@ const Install = React.createClass({
     }
     return null;
   },
-  renderNotifConnect(){
+  renderButton(){
+    const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
+    const { defaultNotifs } = this.props.redux.onboard;
+    if (defaultNotifs) {
+      return null;
+    }
     return (
       <div>
         <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts.</p>
@@ -178,7 +192,7 @@ const Install = React.createClass({
           })}
           {this.renderText()}
           {this.renderError()}
-          {this.renderNotifConnect()}
+          {this.renderButton()}
         </div>
       );
     }

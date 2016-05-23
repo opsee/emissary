@@ -259,9 +259,11 @@ export function getDefaultNotification() {
           .post(`${config.services.compost}`)
           .set('Authorization', state().user.get('auth'))
           .send({query:
-            `notifications(default: true) {
-              type
-              value
+            `query defaultNotifs {
+              notifications(default: true) {
+                type
+                value
+              }
             }`
           });
       })

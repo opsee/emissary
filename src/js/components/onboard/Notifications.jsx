@@ -28,7 +28,7 @@ const Notifications = React.createClass({
   },
   componentWillReceiveProps(nextProps){
     if (nextProps.redux.onboard.defaultNotifs) {
-      this.history.pushState(null, '/start/install');
+      this.history.pushState(null, '/start/install-example');
     }
   },
   getInitialState(){
