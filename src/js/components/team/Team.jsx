@@ -94,7 +94,7 @@ const Profile = React.createClass({
                       return (
                         <tr>
                           <td>
-                            <Link to={`/team/member/${member.id}`}>{member.name || member.email}</Link>
+                            <Link to={`/team/member/${member.id}`}>{member.name || member.email}</Link><br/>{toSentenceSerial(member.capabilities.map(_.capitalize))}
                           </td>
                           <td style={{textAlign: 'right'}}>
                             <Color c={_.get({active: 'success', invited: 'warning'}, member.status)}>{_.capitalize(member.status)}</Color>
