@@ -20,7 +20,8 @@ const Install = React.createClass({
       setCredentials: PropTypes.func,
       onboardExampleInstall: PropTypes.func,
       install: PropTypes.func.isRequired,
-      exampleInstall: PropTypes.func
+      exampleInstall: PropTypes.func,
+      getDefaultNotification: PropTypes.func
     }),
     redux: PropTypes.shape({
       app: PropTypes.shape({
@@ -28,6 +29,9 @@ const Install = React.createClass({
       }),
       env: PropTypes.shape({
         bastions: PropTypes.array
+      }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
       }),
       user: PropTypes.object,
       asyncActions: PropTypes.object
@@ -158,7 +162,6 @@ const Install = React.createClass({
     return null;
   },
   renderButton(){
-    const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
     const { defaultNotifs } = this.props.redux.onboard;
     if (defaultNotifs) {
       return null;
