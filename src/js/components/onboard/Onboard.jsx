@@ -45,22 +45,6 @@ const Onboard = React.createClass({
       return -1;
     }
   },
-  isInstalling(){
-    const pathname = this.props.location.pathname;
-    return pathname === '/start/install' || pathname === '/start/install-example';
-  },
-  onClose(){
-    if (this.isInstalling()) {
-      this.history.pushState(null, '/');
-    } else {
-      this.props.actions.confirmOpen({
-        html: '<p>Are you sure you want to cancel installation? You can come back at any time.</p>',
-        confirmText: 'Yes, cancel',
-        color: 'danger',
-        onConfirm: this.props.history.pushState.bind(null, null, '/')
-      });
-    }
-  },
   renderPips(){
     const activePip = this.getActivePip();
     if (activePip < 0) {
