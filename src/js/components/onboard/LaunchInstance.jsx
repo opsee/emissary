@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -41,55 +40,55 @@ const LaunchInstance = React.createClass({
     );
   },
   renderRegion(){
-    const {region} = this.getInstallData();
+    const region = this.getInstallData().region || {};
     return (
       <Padding tb={1}>
         <div className={style.configKey}>
           Region
         </div>
         <div className={style.configMain}>
-          {_.get(region, 'id')}
+          {region.id}
         </div>
         <div className={style.configSub}>
-          {_.get(region, 'name')}
+          {region.name}
         </div>
       </Padding>
     );
   },
   renderVPC(){
-    const {vpc} = this.getInstallData();
+    const vpc = this.getInstallData().vpc || {};
     return (
       <Padding tb={1}>
         <div className={style.configKey}>
           VPC
         </div>
         <div className={style.configMain}>
-          {_.get(vpc, 'vpc_id')}
+          {vpc.vpc_id}
         </div>
         <div className={style.configSub}>
-          {_.get(vpc, 'name')}
+          {vpc.name}
         </div>
         <div className={style.configSub}>
-          {_.get(vpc, 'instance_count')} instances
+          {vpc.instance_count} instances
         </div>
       </Padding>
     );
   },
   renderSubnet(){
-    const {subnet} = this.getInstallData();
+    const subnet = this.getInstallData().subnet || {};
     return (
       <Padding tb={1}>
         <div className={style.configKey}>
           Subnet
         </div>
         <div className={style.configMain}>
-          {_.get(subnet, 'subnet_id')}
+          {subnet.subnet_id}
         </div>
         <div className={style.configSub}>
-          {_.get(subnet, 'name')}
+          {subnet.name}
         </div>
         <div className={style.configSub}>
-          {_.get(subnet, 'instance_count')} instances, {_.get(subnet, 'routing')} routing
+          {subnet.instance_count} instances, {subnet.routing} routing
         </div>
       </Padding>
     );
