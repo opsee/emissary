@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {checks as actions} from '../../actions';
-import Checkmark from '../svgs/Checkmark';
+import Checkmark from './Checkmark';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import style from './onboard.css';

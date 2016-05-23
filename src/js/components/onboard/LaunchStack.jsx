@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 
-import Checkmark from '../svgs/Checkmark';
 import {
   onboard as actions,
   analytics as analyticsActions
@@ -18,6 +17,7 @@ import crossAccountImg from '../../../img/tut-cross-account.svg';
 import Instructions from './LaunchStackInstructions';
 import templates from '../../modules/awsTemplates';
 import {SetInterval} from '../../modules/mixins';
+import Checkmark from './Checkmark';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({

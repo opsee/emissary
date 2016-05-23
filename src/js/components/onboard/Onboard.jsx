@@ -29,6 +29,22 @@ const Onboard = React.createClass({
       numPips: 4
     };
   },
+  getActivePip(){
+    switch (this.props.location.pathname) {
+    case 'start/launch-stack':
+      return 0;
+    case '/start/launch-instance':
+    case '/start/install':
+    case '/start/install-example':
+      return 1;
+    case '/start/notifications':
+      return 2;
+    case '/start/postinstall':
+      return 3;
+    default:
+      return -1;
+    }
+  },
   isInstalling(){
     const pathname = this.props.location.pathname;
     return pathname === '/start/install' || pathname === '/start/install-example';
@@ -45,24 +61,7 @@ const Onboard = React.createClass({
       });
     }
   },
-  getActivePip(){
-    switch(this.props.location.pathname) {
-      case 'start/launch-stack':
-        return 0;
-      case '/start/launch-instance':
-      case '/start/install':
-      case '/start/install-example':
-        return 1;
-      case '/start/notifications':
-        return 2;
-      case '/start/postinstall':
-        return 3;
-      default:
-        return -1;
-    }
-  },
   renderPips(){
-    const route = this.props.location.pathname;
     const activePip = this.getActivePip();
     if (activePip < 0) {
       return null;
