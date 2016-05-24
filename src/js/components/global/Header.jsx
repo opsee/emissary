@@ -27,9 +27,9 @@ const Header = React.createClass({
   renderLoginLink(){
     if (this.props.user.get('auth')){
       return (
-        <Link to="/profile" className={style.navbarLink} activeClassName="active">
+        <Link to="/team" className={style.navbarLink} activeClassName="active">
           <Person nav/>&nbsp;
-          <span className={`${style.navbarTitle}`}>Profile</span>
+          <span className={`${style.navbarTitle}`}>Team</span>
         </Link>
       );
     }

@@ -10,7 +10,7 @@ import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
 import {flag} from '../../modules';
-import {toSentenceSerial} from '../../modules/string';
+import {toSentenceSerial, capabilitySentence} from '../../modules/string';
 import {
   team as actions
 } from '../../actions';
@@ -56,11 +56,11 @@ const TeamMember = React.createClass({
               <Col xs={12}>
                 <Table>
                   <tr>
-                    <td>Status</td>
+                    <td><strong>Status</strong></td>
                     <td><Color c={_.get({active: 'success', invited: 'warning'}, member.status)}>{_.capitalize(member.status)}</Color></td>
                   </tr>
                   <tr>
-                    <td>Email</td>
+                    <td><strong>Email</strong></td>
                     <td>{member.email}</td>
                   </tr>
                   {
@@ -71,8 +71,8 @@ const TeamMember = React.createClass({
                   }
                   {member.capabilities.length && (
                     <tr>
-                      <td>Capabilities</td>
-                      <td>{toSentenceSerial(member.capabilities.map(_.capitalize))}</td>
+                      <td><strong>Capabilities</strong></td>
+                      <td>{capabilitySentence(member)}</td>
                     </tr>
                     ) || null}
                 </Table>

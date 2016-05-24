@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import toSentenceSerial from 'underscore.string/toSentenceSerial';
 
 function stringFromTokens(tokens = []) {
@@ -8,7 +9,26 @@ function stringFromTokens(tokens = []) {
   }).join(' ');
 }
 
+function capabilitySentence(member) {
+  const arr = member.capabilities.map(c => {
+    let str = c;
+    switch (str){
+    case 'editing':
+      str = 'Check Editing';
+      break;
+    case 'management':
+      str = 'User Management';
+      break;
+    default:
+      break;
+    }
+    return _.chain(str).split(' ').map(_.capitalize).join(' ').value();
+  });
+  return toSentenceSerial(arr);
+}
+
 export {
+  capabilitySentence,
   stringFromTokens,
   toSentenceSerial
 };

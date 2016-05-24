@@ -24,7 +24,10 @@ const TeamMemberInputs = React.createClass({
       asyncActions: PropTypes.shape({
         memberInvite: PropTypes.object
       })
-    })
+    }),
+    actions: PropTypes.shape({
+      memberInvite: PropTypes.func
+    }).isRequired
   },
   getDefaultProps(){
     return _.assign({

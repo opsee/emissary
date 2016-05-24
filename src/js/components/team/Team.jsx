@@ -8,12 +8,13 @@ import _ from 'lodash';
 import {Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Add, Edit} from '../icons';
+import {Add, Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
 import {flag} from '../../modules';
-import {toSentenceSerial} from '../../modules/string';
+import {toSentenceSerial, capabilitySentence} from '../../modules/string';
 import {
-  team as actions
+  team as actions,
+  user as userActions
 } from '../../actions';
 import {SlackInfo, PagerdutyInfo} from '../integrations';
 
@@ -59,59 +60,83 @@ const Profile = React.createClass({
   },
   render() {
     const team = this.getTeamData();
+    const user = this.props.redux.user.toJS();
     if (team.name){
       return (
          <div>
-          <Toolbar title={`Team ${team.name}`} pageTitle="Team">
-            <Button fab color="info" to="/team/edit" title="Edit Your Team">
-              <Edit btn/>
-            </Button>
-          </Toolbar>
+          <Toolbar title={`Team ${team.name}`} pageTitle="Team"/>
           <Grid>
             <Row>
               <Col xs={12}>
-                <Heading level={3}>Team Details</Heading>
+                <Heading level={3}>Your Profile</Heading>
                 <Table>
-                  {window.location.href.match('localhost|staging') && (
-                    <tr>
-                      <td><strong>Subscription Plan</strong></td>
-                      <td>{team.plan}</td>
-                    </tr>
-                  )}
-                  {window.location.href.match('localhost|staging') && (
-                    <tr>
-                      <td><strong>Plan Features</strong></td>
-                      <td>{toSentenceSerial(team.features)}</td>
-                    </tr>
-                  )}
-                  {this.renderSlackArea()}
-                  {this.renderPagerdutyArea()}
+                  <tr>
+                    <td><strong>Email</strong></td>
+                    <td><Link to="/profile/edit">{user.email}</Link></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Password</strong></td>
+                    <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                  </tr>
                 </Table>
+                <Padding t={2}>
+                  <Heading level={3}>Team Integrations</Heading>
+                  <Table>
+                    {this.renderSlackArea()}
+                    {this.renderPagerdutyArea()}
+                  </Table>
+                </Padding>
                 <Padding t={3}>
                   <Heading level={3}>Team Members</Heading>
                   <Table>
-                    {team.members.map(member => {
+                    {_.reject(team.members, m => m.email === user.email).map(member => {
                       return (
                         <tr>
                           <td>
-                            <Link to={`/team/member/${member.id}`}>{member.name || member.email}</Link><br/>{toSentenceSerial(member.capabilities.map(_.capitalize))}
+                            <Link to={`/team/member/${member.id}`}>
+                              <strong>{member.name || member.email}</strong>
+                            </Link>
+                            {member.status.match('invited|inactive') && ` (${member.status})`}
+                            <br/>
+                            <Color c="gray6"><em>{capabilitySentence(member)}</em></Color>
                           </td>
                           <td style={{textAlign: 'right'}}>
-                            <Color c={_.get({active: 'success', invited: 'warning'}, member.status)}>{_.capitalize(member.status)}</Color>
+                          <Link to={`/team/member/${member.id}/edit`} title={`Edit ${member.name || member.email}`}>Edit</Link>
                           </td>
                         </tr>
                       );
                     })}
                   </Table>
                   <Padding t={1}>
-                    <Button to="/team/member/invite" color="primary" flat><Add inline fill="primary"/>Invite New Team Member</Button>
+                    <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
                   </Padding>
+                </Padding>
+                <Padding t={3}>
+                  <Heading level={3}>Team Details</Heading>
+                  <Table>
+                    <tr>
+                      <td><strong>Name</strong></td>
+                      <td>{team.name}&nbsp;&nbsp;<Link to="/team/edit">Edit Team Name</Link></td>
+                    </tr>
+                    {window.location.href.match('localhost|staging') && (
+                      <tr>
+                        <td><strong>Subscription Plan</strong></td>
+                        <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
+                      </tr>
+                    )}
+                    {window.location.href.match('localhost|staging') && (
+                      <tr>
+                        <td><strong>Plan Features</strong></td>
+                        <td>{toSentenceSerial(team.features)}</td>
+                      </tr>
+                    )}
+                  </Table>
                 </Padding>
                 {window.location.href.match('localhost|staging') && (
                   <Padding t={3}>
-                    <Heading level={3}>Billing</Heading>
-                    <Padding b={1}>
-                      MasterCard ****4040 4/2041&nbsp;&nbsp;&nbsp;<Link to="/team/edit">Edit</Link>
+                    <Heading level={3}>Team Billing</Heading>
+                    <Padding b={1} l={1}>
+                      MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
                     </Padding>
                     <Table>
                       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
@@ -127,6 +152,11 @@ const Profile = React.createClass({
                     </Table>
                   </Padding>
                 )}
+                <Padding t={3}>
+                  <Button flat color="danger" onClick={this.props.userActions.logout}>
+                    <Logout inline fill="danger"/> Log Out
+                  </Button>
+                </Padding>
               </Col>
             </Row>
           </Grid>
@@ -138,7 +168,8 @@ const Profile = React.createClass({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
+  actions: bindActionCreators(actions, dispatch),
+  userActions: bindActionCreators(userActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

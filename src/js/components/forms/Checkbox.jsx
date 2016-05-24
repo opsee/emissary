@@ -11,7 +11,8 @@ const Radio = React.createClass({
   propTypes: {
     selected: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    color: PropTypes.string
+    color: PropTypes.string,
+    id: PropTypes.string
   },
   getDefaultProps() {
     return {
