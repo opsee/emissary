@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import React, {PropTypes} from 'react';
-import {History, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
+import {Link} from 'react-router';
 
 import {
   onboard as actions,
@@ -21,7 +21,7 @@ import Checkmark from './Checkmark';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
-  mixins: [History, SetInterval],
+  mixins: [SetInterval],
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({

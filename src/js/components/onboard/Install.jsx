@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {History, Link} from 'react-router';
+import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
@@ -11,7 +11,6 @@ import {onboard as actions} from '../../actions';
 import style from './onboard.css';
 
 const Install = React.createClass({
-  mixins: [History],
   propTypes: {
     path: PropTypes.string,
     location: PropTypes.object,
@@ -37,6 +36,9 @@ const Install = React.createClass({
       asyncActions: PropTypes.object
     }).isRequired
   },
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   componentWillMount(){
     this.props.actions.getDefaultNotification();
     if (this.props.location.pathname.match('install-example')){
@@ -48,7 +50,7 @@ const Install = React.createClass({
   componentWillReceiveProps(){
     if (this.isComplete()) {
       setTimeout(() => {
-        this.history.pushState(null, '/start/postinstall');
+        this.context.router.push('/start/postinstall');
       }, 500);
     }
   },

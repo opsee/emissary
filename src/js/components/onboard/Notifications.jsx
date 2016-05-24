@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {History} from 'react-router';
 
 import {onboard as actions} from '../../actions';
 import {Col, Grid, Padding, Row} from '../layout';
@@ -10,7 +9,6 @@ import NotificationSelection from '../checks/NotificationSelection';
 import style from './onboard.css';
 
 const Notifications = React.createClass({
-  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
@@ -23,12 +21,15 @@ const Notifications = React.createClass({
       setDefaultNotification: PropTypes.func
     })
   },
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   componentWillMount(){
     this.props.actions.getDefaultNotification();
   },
   componentWillReceiveProps(nextProps){
     if (nextProps.redux.onboard.defaultNotifs) {
-      this.history.pushState(null, '/start/install');
+      this.context.router.push('/start/install');
     }
   },
   getInitialState(){

@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {History} from 'react-router';
 import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
 
@@ -16,7 +15,6 @@ import templates from '../../modules/awsTemplates';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
-  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
