@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {History} from 'react-router';
 
 import {Checkmark} from '../icons';
 import UserInputs from '../user/UserInputs.jsx';
@@ -13,7 +12,6 @@ import {user as actions} from '../../actions';
 import style from './onboard.css';
 
 const OnboardAccount = React.createClass({
-  mixins: [History],
   propTypes: {
     location: PropTypes.object,
     actions: PropTypes.shape({
@@ -29,12 +27,15 @@ const OnboardAccount = React.createClass({
       })
     })
   },
+  contextTypes: {
+    router: PropTypes.object.isRequired
+  },
   componentWillReceiveProps(nextProps){
     const wasPending = this.getStatus() === 'pending';
     const isDone = nextProps.redux.asyncActions.userSetPassword.status === 'success';
     if (wasPending && isDone) {
       setTimeout(() => {
-        this.history.pushState(null, '/start/launch-stack');
+        this.context.router.push('/start/launch-stack');
       }, 500);
     }
   },

@@ -10,10 +10,8 @@ import {Button} from '../forms';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Highlight} from '../global';
 import style from './onboard.css';
-import {History} from 'react-router';
 
 const ReviewInstance = React.createClass({
-  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       onboard: PropTypes.shape({

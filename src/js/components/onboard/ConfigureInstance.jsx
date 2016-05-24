@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link, History} from 'react-router';
+import {Link} from 'react-router';
 
 import {Close} from '../icons';
 import {RadioSelect} from '../forms';
@@ -12,7 +12,6 @@ import {Padding, Col, Grid, Row} from '../layout';
 import style from './onboard.css';
 
 const ConfigureInstance = React.createClass({
-  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
@@ -34,6 +33,9 @@ const ConfigureInstance = React.createClass({
       vpcSelect: PropTypes.func,
       updateInstallData: PropTypes.func
     })
+  },
+  contextTypes: {
+    router: PropTypes.object.isRequired
   },
   componentWillMount(){
     const { installData } = this.props.redux.onboard; // TODO should this be a redirect
@@ -67,7 +69,7 @@ const ConfigureInstance = React.createClass({
   },
   onSave() {
     this.props.actions.updateInstallData();
-    this.history.pushState(null, '/start/launch-instance');
+    this.context.router.push('/start/launch-instance');
   },
   render(){
     const isScanPending = this.props.redux.asyncActions.onboardScanRegion.status === 'pending';
