@@ -41,6 +41,7 @@ const hideNavList = [
   '^\/team\/member\/invite',
   '^\/team\/member\/.*\/edit'
 ];
+const fullScreenList = ['^\/start'];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],
@@ -88,8 +89,15 @@ const Opsee = React.createClass({
   getMeatClass(){
     return this.shouldHideNav() ? style.meatUp : style.meat;
   },
+  shouldFullScreen() {
+    return !!(_.find(fullScreenList, string => this.props.location.pathname.match(string)));
+  },
   shouldHideNav(){
     return !!(_.find(hideNavList, string => this.props.location.pathname.match(string)));
+  },
+  shouldShowIntercom(){
+    const isStartRoute = _.some(['/start'].map(string => this.props.location.pathname.match(string)));
+    return (isStartRoute && this.props.redux.app.intercomStatus !== 'visible');
   },
   renderSocketError(){
     return (
@@ -125,16 +133,21 @@ const Opsee = React.createClass({
       <div>
         <DocumentTitle title="Opsee"/>
         <AppStatus/>
-        <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
-        <div id="header-search">
-          <SearchBar />
-        </div>
-        <Analytics/>
+        {this.shouldFullScreen() ? null :
+          <div>
+            <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
+            <div id="header-search">
+              <SearchBar />
+            </div>
+          </div>
+        }
         <div className={this.getMeatClass()}>
           {this.renderInner()}
         </div>
+        <a id="Intercom" href="mailto:@incoming.intercom.io" className={style.intercom} style={{display: this.shouldShowIntercom() ? 'block' : 'none'}}/>
         <MessageModal/>
         <Confirm />
+        <Analytics/>
       </div>
     );
   }

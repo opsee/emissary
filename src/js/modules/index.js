@@ -3,6 +3,7 @@ import flag from './flag';
 import getKeys from './getKeys';
 import itemsFilter from './itemsFilter';
 import mixins from './mixins';
+import regions from './regions';
 import request from './request';
 import storage from './storage';
 import stripe from './stripe';
@@ -15,6 +16,7 @@ export {
   getKeys,
   itemsFilter,
   mixins,
+  regions,
   request,
   storage,
   stripe,

@@ -8,6 +8,7 @@ import {is} from 'immutable';
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
+import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {checks as actions} from '../../actions';
 
@@ -88,10 +89,16 @@ const MultiEditNotifications = React.createClass({
         <StatusHandler status={this.props.redux.asyncActions.getChecksNotifications.status}>
           <BastionRequirement>
             <Alert>Here you can bulk-edit notifications for selected checks. All notifications for every selected check will be replaced with the data below.</Alert>
-            <Padding b={2} t={2}>
+            <Padding tb={2}>
               <CheckItemList title selected noFetch/>
             </Padding>
-            <NotificationSelection notifications={this.state.notifications} onChange={this.handleChange}/>
+
+            <Padding tb={2}>
+              <Heading level={3}>Notifications</Heading>
+              <p>Choose from the options below to set up your notifications.</p>
+              <hr/>
+              <NotificationSelection notifications={this.state.notifications} onChange={this.handleChange}/>
+            </Padding>
             <Button onClick={this.handleEdit} color="success" block disabled={this.isDisabled()}>Set All Notifications</Button>
           </BastionRequirement>
         </StatusHandler>

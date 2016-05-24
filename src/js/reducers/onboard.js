@@ -1,65 +1,78 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
-import {yeller} from '../modules';
+import {regions, yeller} from '../modules';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
-  ONBOARD_VPC_SELECT,
+  ONBOARD_SET_VPC,
   ONBOARD_SET_INSTALL_DATA,
-  ONBOARD_SUBNET_SELECT,
+  ONBOARD_SET_SUBNET,
   ONBOARD_INSTALL,
   ONBOARD_GET_TEMPLATES,
   ONBOARD_MAKE_LAUNCH_TEMPLATE,
   ONBOARD_SCAN_REGION,
-  ONBOARD_HAS_ROLE
+  ONBOARD_HAS_ROLE,
+  ONBOARD_SET_DEFAULT_NOTIF,
+  ONBOARD_GET_DEFAULT_NOTIF
 } from '../actions/constants';
 
 const initial = {
-  'access_key': config.access_key,
-  'secret_key': config.secret_key,
-  region: config.region,
-  selectedSubnet: null,
-  selectedVPC: null,
-  vpcsForSelection: [],
-  subnetsForSelection: [],
-  bastionLaunching: undefined,
-  installData: undefined,
-  installing: false,
+  regions,
   templates: [],
   regionLaunchURL: null,
-  hasRole: false
+  role: {
+    stack_id: null,
+    region: null
+  },
+  defaultNotifs: null,
+  // The currently selected region on the /start/config-instance screen.
+  // The region contains all of its vpcs and subnets.
+  selectedRegion: null,
+  selectedSubnet: null,
+  selectedVPC: null,
+  installData: null,
+  finalInstallData: null, // TODO couple more (?) w/ installData
+  installing: false
 };
 
-function getFinalInstallData(state){
-  const subnet = _.chain(state.subnetsForSelection)
-    .filter(s => {
-      return s.subnet_id === state.selectedSubnet;
-    })
-    .head().value() || {};
-
-  return {
-    instance_size: 't2.micro',
-    region: state.region,
-    vpc_id: state.selectedVPC,
-    subnet_id: state.selectedSubnet,
-    subnet_routing: subnet.routing,
-    access_key: state.access_key,
-    secret_key: state.secret_key
-  };
-}
-
-function getNameFromTags(vpcOrSubnet) {
-  const tags = _.get(vpcOrSubnet, 'tags', []);
-  return _.chain(tags).filter(t => _.get(t, 'Key') === 'Name').head().get('Value').value();
-}
+export const statics = {
+  getNameFromTags(vpcOrSubnet) {
+    const tags = _.get(vpcOrSubnet, 'tags', []);
+    return _.chain(tags).filter(t => _.get(t, 'Key') === 'Name').head().get('Value').value();
+  },
+  getFinalInstallData(state, installData){
+    return {
+      instance_size: 't2.micro',
+      region: _.get(installData, 'region.id'),
+      vpc_id: _.get(installData, 'vpc.vpc_id'),
+      subnet_id: _.get(installData, 'subnet.subnet_id'),
+      subnet_routing: _.get(installData, 'subnet.routing'),
+      access_key: config.access_key,
+      secret_key: config.secret_key
+    };
+  },
+  formatVPCs(regionData) {
+    return _.chain(regionData).get('vpcs').map(vpc => {
+      let id = _.get(vpc, 'vpc_id');
+      let name = statics.getNameFromTags(vpc);
+      let labelName = name ? `<strong>${name}</strong> - ` : '';
+      let label = `${labelName}${id}<br/><small>${_.get(vpc, 'instance_count')} instances</small>`;
+      return _.assign({ id, name, label }, vpc);
+    }).value();
+  },
+  formatSubnets(regionData) {
+    return _.chain(regionData).get('subnets').map(subnet => {
+      let id = _.get(subnet, 'subnet_id');
+      let name = statics.getNameFromTags(subnet);
+      let labelName = name ? `<strong>${name}</strong> - ` : '';
+      let label = `${labelName}${id}<br/><small>${_.get(subnet, 'instance_count')} instances, ${_.get(subnet, 'routing')} routing</small>`;
+      return _.assign({ id, name, label }, subnet);
+    }).value();
+  }
+};
 
 export default handleActions({
-  [ONBOARD_SET_REGION]: {
-    next(state, action){
-      return _.assign({}, state, action.payload);
-    }
-  },
   [ONBOARD_GET_TEMPLATES]: {
     next(state, action){
       const templates = action.payload;
@@ -72,22 +85,56 @@ export default handleActions({
       return _.assign({}, state, action.payload);
     }
   },
-  [ONBOARD_VPC_SELECT]: {
+  [ONBOARD_SCAN_REGION]: {
+    next(state, action) {
+      const regionData = action.payload.data;
+      const id = _.get(regionData, 'region');
+
+      // Use the "Name" tag as name, if present
+      const vpcs = statics.formatVPCs(regionData);
+      const subnets = statics.formatSubnets(regionData);
+
+      const selectedRegion = { id, vpcs, subnets };
+      return _.assign({}, state, { selectedRegion });
+    },
+    throw: yeller.reportAction
+  },
+  [ONBOARD_SET_REGION]: {
     next(state, action){
-      const selectedVPC = action.payload;
-      return _.assign({}, state, {selectedVPC});
+      const id = _.get(action.payload, 'region');
+      const selectedRegion = { id };
+      const selectedVPC = null;
+      const selectedSubnet = null;
+      return _.assign({}, state, { selectedRegion, selectedVPC, selectedSubnet });
     }
   },
-  [ONBOARD_SUBNET_SELECT]: {
+  [ONBOARD_SET_VPC]: {
+    next(state, action){
+      const selectedVPC = action.payload;
+      const selectedSubnet = null;
+      return _.assign({}, state, {selectedVPC, selectedSubnet});
+    }
+  },
+  [ONBOARD_SET_SUBNET]: {
     next(state, action){
       const selectedSubnet = action.payload;
-      return _.assign({}, state, {selectedSubnet});
+      const subnet = _.find(state.selectedRegion.subnets, { subnet_id: selectedSubnet });
+      const selectedVPC = _.get(subnet, 'vpc_id');
+      return _.assign({}, state, {selectedVPC, selectedSubnet});
     }
   },
   [ONBOARD_SET_INSTALL_DATA]: {
-    next(state){
-      const installData = getFinalInstallData(state);
-      return _.assign({}, state, {installData});
+    next(state, action) {
+      // Store the complete region/vpc/subnet in the props, since selected
+      // region/vpc/subnet can change
+      const { regionID, vpcID, subnetID } = action.payload.data;
+      const region = _.find(regions, {id: regionID });
+      const vpc = _.find(state.selectedRegion.vpcs, {vpc_id: vpcID});
+      const subnet = _.find(state.selectedRegion.subnets, {subnet_id: subnetID});
+
+      const installData = { region, vpc, subnet };
+      const finalInstallData = statics.getFinalInstallData(state, installData);
+      return _.assign({}, state, { installData, finalInstallData });
     }
   },
   [ONBOARD_INSTALL]: {
@@ -102,23 +149,24 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
-  [ONBOARD_SCAN_REGION]: {
+  [ONBOARD_HAS_ROLE]: {
     next(state, action) {
-      // Use the "Name" tag as name, if present
-      const vpcsForSelection = _.chain(action.payload.data).get('vpcs').map(vpc => {
-        return _.assign({}, vpc, { name: getNameFromTags(vpc) });
-      }).value();
-      const subnetsForSelection = _.chain(action.payload.data).get('subnets').map(subnet => {
-        return _.assign({}, subnet, { name: getNameFromTags(subnet) });
-      }).value();
-      return _.assign({}, state, { vpcsForSelection, subnetsForSelection });
+      const role = action.payload.data;
+      return _.assign({}, state, {role});
     },
     throw: yeller.reportAction
   },
-  [ONBOARD_HAS_ROLE]: {
+  [ONBOARD_SET_DEFAULT_NOTIF]: {
     next(state, action) {
-      const hasRole = action.payload.data;
-      return _.assign({}, state, {hasRole});
+      const defaultNotifs = action.payload.data;
+      return _.assign({}, state, {defaultNotifs});
+    },
+    throw: yeller.reportAction
+  },
+  [ONBOARD_GET_DEFAULT_NOTIF]: {
+    next(state, action) {
+      const defaultNotifs = action.payload.data;
+      return _.assign({}, state, {defaultNotifs});
     },
     throw: yeller.reportAction
   }

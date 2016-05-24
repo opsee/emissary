@@ -66,9 +66,6 @@ export function setPassword(data) {
         .then((res) => {
           resolve(res.body);
           analytics.updateUser(res.body.user)(dispatch, state);
-          setTimeout(() => {
-            dispatch(push('/start/launch-stack'));
-          }, 100);
         }, reject);
       })
     });
