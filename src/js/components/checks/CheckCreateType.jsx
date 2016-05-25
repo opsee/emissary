@@ -47,36 +47,42 @@ const CheckCreateType = React.createClass({
     }
     return `/check-create/target?data=${data}`;
   },
-  getTypes(){
+  getTargets(){
     const initial = [
       {
         id: 'elb',
         title: 'ELB',
+        types: ['http', 'cloudwatch'],
         size: () => this.props.redux.env.groups.elb.size
       },
       {
         id: 'security',
         title: 'Security Group',
+        types: ['http'],
         size: () => this.props.redux.env.groups.security.size
       },
       {
         id: 'asg',
         title: 'Auto Scaling Group',
+        types: ['http', 'cloudwatch'],
         size: () => this.props.redux.env.groups.asg.size
       },
       {
         id: 'ecc',
         title: 'EC2 Instance',
+        types: ['http', 'cloudwatch'],
         size: () => this.props.redux.env.instances.ecc.size
       },
       {
         id: 'rds',
         title: 'RDS Instance',
+        types: ['cloudwatch'],
         size: () => this.props.redux.env.instances.rds.size
       },
       {
         id: 'host',
         title: 'URL',
+        types: ['http'],
         size: () => ''
       }
     ];
@@ -122,14 +128,18 @@ const CheckCreateType = React.createClass({
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
         <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status}>
-          {this.getTypes().map(type => {
+          {this.getTargets().map(target => {
             return (
-              <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
-                <strong>{type.title}&nbsp;</strong>
-                <span style={{display: 'inline-block', textAlign: 'left'}}>
-                  {type.size()}
-                </span>
-              </Button>
+              <Padding b={2}>
+                <Heading level={3}>{target.title}&nbsp;{target.size()}</Heading>
+                {target.types.map(type => {
+                  return (
+                    <Button onClick={this.handleTypeSelect.bind(null, target)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`${target}-type-select-${type}`}>
+                      {type}
+                    </Button>
+                  );
+                })}
+              </Padding>
             );
           })}
         </StatusHandler>
