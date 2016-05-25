@@ -49,7 +49,9 @@ const Install = React.createClass({
     }
   },
   componentWillReceiveProps(){
-    if (this.isComplete()) {
+    // Only redirect if they already have notifications set up;
+    // otherwise, keep the prompt for the notifs step on screen.
+    if (this.isComplete() && _.size(this.getNotifications)) {
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
       }, 500);
@@ -103,6 +105,9 @@ const Install = React.createClass({
   getBastionConnectionStatus(){
     return _.chain(this.props.redux.app.socketMessages).filter({command: 'connect-bastion'}).last().get('state').value();
   },
+  getNotifications(){
+    return this.props.redux.onboard.defaultNotifs;
+  },
   isInstallError(){
     const status = this.props.redux.asyncActions.onboardInstall.status;
     return status && typeof status !== 'string';
@@ -150,8 +155,10 @@ const Install = React.createClass({
     }
     return null;
   },
-  renderText(){
-    if (this.isBastionLaunching() && !this.isComplete()){
+  renderStatusText(){
+    if (this.isComplete()) {
+      return null;
+    } else if (this.isBastionLaunching()){
       return (
         <Padding b={1}>
           <p>We are now installing our instance in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
@@ -165,7 +172,7 @@ const Install = React.createClass({
     return (
       <Padding tb={2} className="text-center">
         <Padding b={2}>
-          <StatusHandler status='pending' />
+          <StatusHandler status="pending" />
         </Padding>
         <p className={style.subtext}>Detecting installation status...</p>
         <p className={style.subtext}>(This can take a minute or two on slow connections.)</p>
@@ -174,9 +181,8 @@ const Install = React.createClass({
   },
   renderNotifPrompt(){
     const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
-    const { defaultNotifs } = this.props.redux.onboard;
-    const hasNotifs = defaultNotifs && defaultNotifs.length;
-    if (status !== 'success' || hasNotifs) {
+    const notifs = this.getNotifications();
+    if (status !== 'success' || notifs.length) {
       return null;
     }
     return (
@@ -206,7 +212,7 @@ const Install = React.createClass({
               </Padding>
             );
           })}
-          {this.renderText()}
+          {this.renderStatusText()}
           {this.renderError()}
           {this.renderNotifPrompt()}
         </div>

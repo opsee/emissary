@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -28,7 +29,7 @@ const Notifications = React.createClass({
     this.props.actions.getDefaultNotification();
   },
   componentWillReceiveProps(nextProps){
-    if (nextProps.redux.onboard.defaultNotifs) {
+    if (_.size(nextProps.redux.onboard.defaultNotifs)) {
       this.context.router.push('/start/install');
     }
   },
