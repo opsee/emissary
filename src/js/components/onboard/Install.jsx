@@ -49,9 +49,9 @@ const Install = React.createClass({
     }
   },
   componentWillReceiveProps(){
-    // Only redirect if they already have notifications set up;
+    // Only redirect if they've already completed (or skipped) notification set-up;
     // otherwise, keep the prompt for the notifs step on screen.
-    if (this.isComplete() && _.size(this.getNotifications)) {
+    if (this.isComplete() && !!this.getNotifications()) {
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
       }, 250);
@@ -182,7 +182,7 @@ const Install = React.createClass({
   renderNotifPrompt(){
     const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
     const notifs = this.getNotifications();
-    if (status !== 'success' || _.size(notifs)) {
+    if (status !== 'success' || !!notifs) {
       return null;
     }
     return (

@@ -29,7 +29,9 @@ const Notifications = React.createClass({
     this.props.actions.getDefaultNotification();
   },
   componentWillReceiveProps(nextProps){
-    if (_.size(nextProps.redux.onboard.defaultNotifs)) {
+    // A non-null value for default notifications means that the notifications
+    // step has either been completed or skipped (if the array is empty).
+    if (!!nextProps.redux.onboard.defaultNotifs) {
       this.context.router.push('/start/install');
     }
   },
