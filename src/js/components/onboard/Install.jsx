@@ -184,8 +184,7 @@ const Install = React.createClass({
     );
   },
   renderNotifPrompt(){
-    const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
-    const notifs = this.getNotifications();
+    const { status } = this.props.redux.asyncActions.onboardGetDefaultNotifs;
     if (status !== 'success' || this.isDoneNotifications()) {
       return null;
     }

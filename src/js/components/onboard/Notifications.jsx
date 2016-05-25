@@ -15,8 +15,11 @@ const Notifications = React.createClass({
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        onboardGetDefaultNotif: PropTypes.object,
-        onboardSetDefaultNotif: PropTypes.object
+        onboardGetDefaultNotifs: PropTypes.object,
+        onboardSetDefaultNotifs: PropTypes.object
+      }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
       })
     }),
     actions: PropTypes.shape({
@@ -38,7 +41,7 @@ const Notifications = React.createClass({
     if (nextProps.redux.onboard.defaultNotifs) {
       this.setState({ notifications: nextProps.redux.onboard.defaultNotifs });
     }
-    if (nextProps.redux.asyncActions.onboardSetDefaultNotif.status === 'success') {
+    if (nextProps.redux.asyncActions.onboardSetDefaultNotifs.status === 'success') {
       // Set a timer so success state can render
       setTimeout(() => {
         this.context.router.push('/start/install');
@@ -57,7 +60,7 @@ const Notifications = React.createClass({
     this.props.actions.setDefaultNotifications(this.state.notifications);
   },
   renderError(){
-    const {status} = this.props.redux.asyncActions.onboardSetDefaultNotif;
+    const {status} = this.props.redux.asyncActions.onboardSetDefaultNotifs;
     if (status === null || typeof status !== 'object') {
       return null;
     }
@@ -70,7 +73,7 @@ const Notifications = React.createClass({
     );
   },
   renderSaveButton(){
-    const {status} = this.props.redux.asyncActions.onboardSetDefaultNotif;
+    const {status} = this.props.redux.asyncActions.onboardSetDefaultNotifs;
     const isDisabled = status === 'pending' || status === 'success' || !_.size(this.state.notifications);
     let innerButton;
     if (status === 'success') {
@@ -101,7 +104,7 @@ const Notifications = React.createClass({
                 <p>Where should we send your alerts by default?</p>
               </Padding>
               <Padding t={1}>
-                <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs} />
+                <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs || []} />
               </Padding>
               {this.renderError()}
               {this.renderSaveButton()}
