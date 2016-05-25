@@ -54,7 +54,7 @@ const Install = React.createClass({
     if (this.isComplete() && _.size(this.getNotifications)) {
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
-      }, 500);
+      }, 250);
     }
   },
   getBastionMessages(){
