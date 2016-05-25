@@ -21,7 +21,7 @@ const Install = React.createClass({
       onboardExampleInstall: PropTypes.func,
       install: PropTypes.func.isRequired,
       exampleInstall: PropTypes.func,
-      getDefaultNotification: PropTypes.func
+      getDefaultNotifications: PropTypes.func
     }),
     redux: PropTypes.shape({
       app: PropTypes.shape({
@@ -42,7 +42,7 @@ const Install = React.createClass({
     router: PropTypes.object.isRequired
   },
   componentWillMount(){
-    this.props.actions.getDefaultNotification();
+    this.props.actions.getDefaultNotifications();
     if (this.props.location.pathname.match('install-example')){
       this.props.actions.exampleInstall();
     } else {

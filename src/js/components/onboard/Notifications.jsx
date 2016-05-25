@@ -20,8 +20,8 @@ const Notifications = React.createClass({
       })
     }),
     actions: PropTypes.shape({
-      getDefaultNotification: PropTypes.func,
-      setDefaultNotification: PropTypes.func,
+      getDefaultNotifications: PropTypes.func,
+      setDefaultNotifications: PropTypes.func,
       skipDefaultNotifications: PropTypes.func
     })
   },
@@ -29,7 +29,7 @@ const Notifications = React.createClass({
     router: PropTypes.object.isRequired
   },
   componentWillMount(){
-    this.props.actions.getDefaultNotification();
+    this.props.actions.getDefaultNotifications();
   },
   componentWillReceiveProps(nextProps){
     // Always use the *actual* notifs if there are any, but store in state to track
@@ -54,7 +54,7 @@ const Notifications = React.createClass({
     this.setState({ notifications });
   },
   onSave(){
-    this.props.actions.setDefaultNotification(this.state.notifications);
+    this.props.actions.setDefaultNotifications(this.state.notifications);
   },
   renderError(){
     const {status} = this.props.redux.asyncActions.onboardSetDefaultNotif;

@@ -19,8 +19,8 @@ import {
   ONBOARD_SET_SUBNET,
   ONBOARD_SCAN_REGION,
   ONBOARD_HAS_ROLE,
-  ONBOARD_SET_DEFAULT_NOTIF,
-  ONBOARD_GET_DEFAULT_NOTIF,
+  ONBOARD_SET_DEFAULT_NOTIFS,
+  ONBOARD_GET_DEFAULT_NOTIFS,
   ONBOARD_SKIP_DEFAULT_NOTIFS
 } from './constants';
 
@@ -255,10 +255,10 @@ export function hasRole() {
   };
 }
 
-export function getDefaultNotification() {
+export function getDefaultNotifications() {
   return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_GET_DEFAULT_NOTIF,
+      type: ONBOARD_GET_DEFAULT_NOTIFS,
       payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
@@ -276,14 +276,14 @@ export function getDefaultNotification() {
   };
 }
 
-export function setDefaultNotification(notifications) {
+export function setDefaultNotifications(notifications) {
   return (dispatch, state) => {
     const validNotifications = _.filter(notifications, n => n.type && n.value);
     const variables = {
       notifications: validNotifications
     };
     dispatch({
-      type: ONBOARD_SET_DEFAULT_NOTIF,
+      type: ONBOARD_SET_DEFAULT_NOTIFS,
       payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
