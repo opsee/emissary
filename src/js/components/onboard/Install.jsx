@@ -1,8 +1,8 @@
+import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
@@ -182,7 +182,7 @@ const Install = React.createClass({
   renderNotifPrompt(){
     const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
     const notifs = this.getNotifications();
-    if (status !== 'success' || notifs.length) {
+    if (status !== 'success' || _.size(notifs)) {
       return null;
     }
     return (
