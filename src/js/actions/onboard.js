@@ -277,7 +277,10 @@ export function getDefaultNotification() {
 
 export function setDefaultNotification(notifications) {
   return (dispatch, state) => {
-    const variables = {notifications};
+    const validNotifications = _.filter(notifications, n => n.type && n.value);
+    const variables = {
+      notifications: validNotifications
+    };
     dispatch({
       type: ONBOARD_SET_DEFAULT_NOTIF,
       payload: graphPromise('notifications', () => {
