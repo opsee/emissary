@@ -31,7 +31,8 @@ const Install = React.createClass({
         bastions: PropTypes.array
       }),
       onboard: PropTypes.shape({
-        defaultNotifs: PropTypes.array
+        defaultNotifs: PropTypes.array,
+        skippedDefaultNotifs: PropTypes.bool
       }),
       user: PropTypes.object,
       asyncActions: PropTypes.object
@@ -51,7 +52,7 @@ const Install = React.createClass({
   componentWillReceiveProps(){
     // Only redirect if they've already completed (or skipped) notification set-up;
     // otherwise, keep the prompt for the notifs step on screen.
-    if (this.isComplete() && !!this.getNotifications()) {
+    if (this.isComplete() && this.isDoneNotifications()) {
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
       }, 250);
@@ -107,6 +108,9 @@ const Install = React.createClass({
   },
   getNotifications(){
     return this.props.redux.onboard.defaultNotifs;
+  },
+  isDoneNotifications(){
+    return _.size(this.getNotifications()) || this.props.redux.onboard.skippedDefaultNotifs;
   },
   isInstallError(){
     const status = this.props.redux.asyncActions.onboardInstall.status;
@@ -182,7 +186,7 @@ const Install = React.createClass({
   renderNotifPrompt(){
     const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
     const notifs = this.getNotifications();
-    if (status !== 'success' || !!notifs) {
+    if (status !== 'success' || this.isDoneNotifications()) {
       return null;
     }
     return (

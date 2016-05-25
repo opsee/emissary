@@ -2,7 +2,9 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router';
 
+import {Checkmark} from '../icons';
 import {onboard as actions} from '../../actions';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
@@ -19,7 +21,8 @@ const Notifications = React.createClass({
     }),
     actions: PropTypes.shape({
       getDefaultNotification: PropTypes.func,
-      setDefaultNotification: PropTypes.func
+      setDefaultNotification: PropTypes.func,
+      skipDefaultNotifications: PropTypes.func
     })
   },
   contextTypes: {
@@ -29,10 +32,11 @@ const Notifications = React.createClass({
     this.props.actions.getDefaultNotification();
   },
   componentWillReceiveProps(nextProps){
-    // A non-null value for default notifications means that the notifications
-    // step has either been completed or skipped (if the array is empty).
-    if (!!nextProps.redux.onboard.defaultNotifs) {
-      this.context.router.push('/start/install');
+    if (nextProps.redux.asyncActions.onboardSetDefaultNotif.status === 'success') {
+      // Set a timer so success state can render
+      setTimeout(() => {
+        this.context.router.push('/start/install');
+      }, 500);
     }
   },
   getInitialState(){
@@ -46,9 +50,24 @@ const Notifications = React.createClass({
   onSave(){
     this.props.actions.setDefaultNotification(this.state.notifications);
   },
+  renderSaveButton(){
+    const {status} = this.props.redux.asyncActions.onboardSetDefaultNotif;
+    const isDisabled = status === 'pending' || status === 'success' || !this.state.notifications.length;
+    let innerButton;
+    if (status === 'success') {
+      innerButton = <Checkmark btn />;
+    } else if (status === 'pending') {
+      innerButton = 'Saving notification preferences...';
+    } else {
+      innerButton = 'Save notification preferences';
+    }
+    return (
+      <Padding b={1}>
+        <Button onClick={this.onSave} disabled={isDisabled} color="primary" block>{innerButton}</Button>
+      </Padding>
+    );
+  },
   render(){
-    const isSavePending = this.props.redux.asyncActions.onboardSetDefaultNotif.status === 'pending';
-    const isDisabled = isSavePending || !this.state.notifications.length;
     return (
       <div className={style.transitionPanel}>
         <Grid>
@@ -65,7 +84,8 @@ const Notifications = React.createClass({
               <Padding t={1}>
                 <NotificationSelection onChange={this.onChange} exclusive />
               </Padding>
-              <Button onClick={this.onSave} disabled={isDisabled} color="primary" block>{isSavePending ? 'Saving' : 'Save'} notification preferences{isSavePending ? '...' : ''}</Button>
+              {this.renderSaveButton()}
+              <p className="text-center"><small><Link to="/start/install" onClick={this.props.actions.skipDefaultNotifications}>Set up default notifications later</Link></small></p>
             </Col>
           </Row>
         </Grid>

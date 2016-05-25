@@ -20,7 +20,8 @@ import {
   ONBOARD_SCAN_REGION,
   ONBOARD_HAS_ROLE,
   ONBOARD_SET_DEFAULT_NOTIF,
-  ONBOARD_GET_DEFAULT_NOTIF
+  ONBOARD_GET_DEFAULT_NOTIF,
+  ONBOARD_SKIP_DEFAULT_NOTIFS
 } from './constants';
 
 function getRegion(state, region) {
@@ -300,6 +301,17 @@ export function setDefaultNotification(notifications) {
     analytics.trackEvent('Onboard', 'set-notifications')(dispatch, state);
   };
 }
+
+/*
+ * Track whether a user has skipped the default notification set-up step in onboarding.
+ * (An empty list of default notifications only implies that they don't have any,
+ * which is not the same as skipping the step.)
+ *
+ * The drawback of doing it this way is that this prop is ephemeral -- it will be
+ * lost if the user refreshes/opens in another tab/etc. unless we persist this
+ * in the db (which is overkill for an attribute like this.).
+ */
+export const skipDefaultNotifications = createAction(ONBOARD_SKIP_DEFAULT_NOTIFS);
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
 
