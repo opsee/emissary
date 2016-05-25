@@ -6,7 +6,7 @@ import {Link} from 'react-router';
 
 import {Checkmark} from '../icons';
 import {onboard as actions} from '../../actions';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import NotificationSelection from '../checks/NotificationSelection';
 import style from './onboard.css';
@@ -32,6 +32,12 @@ const Notifications = React.createClass({
     this.props.actions.getDefaultNotification();
   },
   componentWillReceiveProps(nextProps){
+    // Always use the *actual* notifs if there are any, but store in state to track
+    // any notifs that are added (in the NotificationSelection component)
+    // but not yet persisted
+    if (nextProps.redux.onboard.defaultNotifs) {
+      this.setState({ notifications: nextProps.redux.onboard.defaultNotifs });
+    }
     if (nextProps.redux.asyncActions.onboardSetDefaultNotif.status === 'success') {
       // Set a timer so success state can render
       setTimeout(() => {
@@ -50,9 +56,22 @@ const Notifications = React.createClass({
   onSave(){
     this.props.actions.setDefaultNotification(this.state.notifications);
   },
+  renderError(){
+    const {status} = this.props.redux.asyncActions.onboardSetDefaultNotif;
+    if (status === null || typeof status !== 'object') {
+      return null;
+    }
+    return (
+      <Padding b={2}>
+        <Alert color="danger">
+          Whoops, an error occurred when trying to save your notifications! A bug report has been filed for you. If you need to contact support, check out our <Link to="/help" style={{color: 'white', textDecoration: 'underline'}}>help page</Link>.
+        </Alert>
+      </Padding>
+    );
+  },
   renderSaveButton(){
     const {status} = this.props.redux.asyncActions.onboardSetDefaultNotif;
-    const isDisabled = status === 'pending' || status === 'success' || !this.state.notifications.length;
+    const isDisabled = status === 'pending' || status === 'success' || !_.size(this.state.notifications);
     let innerButton;
     if (status === 'success') {
       innerButton = <Checkmark btn />;
@@ -82,8 +101,9 @@ const Notifications = React.createClass({
                 <p>Where should we send your alerts by default?</p>
               </Padding>
               <Padding t={1}>
-                <NotificationSelection onChange={this.onChange} exclusive />
+                <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs} />
               </Padding>
+              {this.renderError()}
               {this.renderSaveButton()}
               <p className="text-center"><small><Link to="/start/install" onClick={this.props.actions.skipDefaultNotifications}>Set up default notifications later</Link></small></p>
             </Col>
