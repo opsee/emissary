@@ -8,6 +8,7 @@ import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
+import {StatusHandler} from '../global';
 import style from './onboard.css';
 
 const Install = React.createClass({
@@ -162,23 +163,29 @@ const Install = React.createClass({
       );
     }
     return (
-      <div>
-        Detecting installation status...
-      </div>
+      <Padding tb={2} className="text-center">
+        <Padding b={2}>
+          <StatusHandler status='pending' />
+        </Padding>
+        <p className={style.subtext}>Detecting installation status...</p>
+        <p className={style.subtext}>(This can take a minute or two on slow connections.)</p>
+      </Padding>
     );
   },
-  renderButton(){
+  renderNotifPrompt(){
+    const { status } = this.props.redux.asyncActions.onboardGetDefaultNotif;
     const { defaultNotifs } = this.props.redux.onboard;
-    if (defaultNotifs) {
+    const hasNotifs = defaultNotifs && defaultNotifs.length;
+    if (status !== 'success' || hasNotifs) {
       return null;
     }
     return (
-      <div>
-        <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts.</p>
-        <Padding tb={1}>
+      <Padding tb={2}>
+        <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts. The Opsee EC2 instance will continue its installation in the background.</p>
+        <Padding t={1}>
           <Button to="/start/notifications" color="primary" block chevron>Set up notifications</Button>
         </Padding>
-      </div>
+      </Padding>
     );
   },
   renderInner(){
@@ -201,7 +208,7 @@ const Install = React.createClass({
           })}
           {this.renderText()}
           {this.renderError()}
-          {this.renderButton()}
+          {this.renderNotifPrompt()}
         </div>
       );
     }

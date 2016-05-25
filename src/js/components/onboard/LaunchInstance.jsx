@@ -49,7 +49,7 @@ const LaunchInstance = React.createClass({
         <div className={style.configMain}>
           {region.id}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {region.name}
         </div>
       </Padding>
@@ -65,10 +65,10 @@ const LaunchInstance = React.createClass({
         <div className={style.configMain}>
           {vpc.vpc_id}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {vpc.name}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {vpc.instance_count} instances
         </div>
       </Padding>
@@ -84,10 +84,10 @@ const LaunchInstance = React.createClass({
         <div className={style.configMain}>
           {subnet.subnet_id}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {subnet.name}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {subnet.instance_count} instances, {subnet.routing} routing
         </div>
       </Padding>

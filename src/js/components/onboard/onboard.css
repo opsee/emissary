@@ -101,8 +101,9 @@ h1, h2, h3 {
   margin-bottom: 0.75rem;
 }
 
-.configSub {
-  font-size: 1.25rem;
+.subtext {
+  font-size: 1.5rem;
   opacity: 0.75;
-  line-height: 2rem;
+  line-height: 2.25rem;
+  margin: 0;
 }
