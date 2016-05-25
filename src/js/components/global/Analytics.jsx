@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import * as actions from '../../actions/analytics';
 
@@ -36,7 +35,7 @@ const Analytics = React.createClass({
     // wait for correct title
     const trackPageView = this.props.actions.trackPageView;
     setTimeout(function wait() {
-      trackPageView(_.get(location, 'pathname'), document.title);
+      trackPageView(location.pathname, document.title);
     }, 50);
   },
   render() {
