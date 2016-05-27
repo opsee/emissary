@@ -147,7 +147,7 @@ const LaunchStack = React.createClass({
           {this.renderLaunchButton()}
         </Padding>
         <Padding tb={1} className="text-center">
-          <p><small><Link to="/start/review-stack">Learn more about the IAM Role</Link></small></p>
+          <p><small><Link to="/start/review-stack">Learn more about our IAM Role</Link></small></p>
         </Padding>
       </Padding>
     );
@@ -169,14 +169,14 @@ const LaunchStack = React.createClass({
           <img src={crossAccountImg} />
         </Padding>
 
-        <p>By adding our IAM role, Opsee will be able to take <em>some</em> specific actions in your AWS environment on your behalf, such as:</p>
+        <p>By adding our IAM role, Opsee will be able to take <em>some</em> specific actions in your AWS environment on your behalf:</p>
         <ul>
           <li>Launching our EC2 instance and managing it throughout its lifecycle (eg software updates and reboots)</li>
-          <li>Health checkinging your services</li>
+          <li>Health checking your services</li>
           <li>Querying AWS APIs for information about your environment</li>
         </ul>
 
-        <p>To set up cross-account access, install our CloudFormation Stack. You can manage or remove this role at any time in your AWS Console.</p>
+        <p>This method is safe, secure, and certified by Amazon. To set up cross-account access, install our CloudFormation Stack. You control of the access, and can manage or remove the role at any time in your AWS Console.</p>
 
         {this.renderButtons()}
       </div>
