@@ -20,6 +20,9 @@ const Notifications = React.createClass({
       }),
       onboard: PropTypes.shape({
         defaultNotifs: PropTypes.array
+      }),
+      user: PropTypes.shape({
+        email: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
