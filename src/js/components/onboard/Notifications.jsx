@@ -110,7 +110,7 @@ const Notifications = React.createClass({
 
               <Padding t={2}>
                 <h3>Send notifications to:</h3>
-                <Padding t={1}>
+                <Padding t={2}>
                   <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs || []} />
                 </Padding>
               </Padding>
