@@ -1,13 +1,14 @@
+import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
+import {StatusHandler} from '../global';
 import style from './onboard.css';
 
 const Install = React.createClass({
@@ -20,7 +21,7 @@ const Install = React.createClass({
       onboardExampleInstall: PropTypes.func,
       install: PropTypes.func.isRequired,
       exampleInstall: PropTypes.func,
-      getDefaultNotification: PropTypes.func
+      getDefaultNotifications: PropTypes.func
     }),
     redux: PropTypes.shape({
       app: PropTypes.shape({
@@ -30,7 +31,8 @@ const Install = React.createClass({
         bastions: PropTypes.array
       }),
       onboard: PropTypes.shape({
-        defaultNotifs: PropTypes.array
+        defaultNotifs: PropTypes.array,
+        skippedDefaultNotifs: PropTypes.bool
       }),
       user: PropTypes.object,
       asyncActions: PropTypes.object
@@ -40,7 +42,7 @@ const Install = React.createClass({
     router: PropTypes.object.isRequired
   },
   componentWillMount(){
-    this.props.actions.getDefaultNotification();
+    this.props.actions.getDefaultNotifications();
     if (this.props.location.pathname.match('install-example')){
       this.props.actions.exampleInstall();
     } else {
@@ -48,10 +50,12 @@ const Install = React.createClass({
     }
   },
   componentWillReceiveProps(){
-    if (this.isComplete()) {
+    // Only redirect if they've already completed (or skipped) notification set-up;
+    // otherwise, keep the prompt for the notifs step on screen.
+    if (this.isComplete() && this.isDoneNotifications()) {
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
-      }, 500);
+      }, 250);
     }
   },
   getBastionMessages(){
@@ -102,6 +106,12 @@ const Install = React.createClass({
   getBastionConnectionStatus(){
     return _.chain(this.props.redux.app.socketMessages).filter({command: 'connect-bastion'}).last().get('state').value();
   },
+  getNotifications(){
+    return this.props.redux.onboard.defaultNotifs;
+  },
+  isDoneNotifications(){
+    return _.size(this.getNotifications()) || this.props.redux.onboard.skippedDefaultNotifs;
+  },
   isInstallError(){
     const status = this.props.redux.asyncActions.onboardInstall.status;
     return status && typeof status !== 'string';
@@ -149,8 +159,10 @@ const Install = React.createClass({
     }
     return null;
   },
-  renderText(){
-    if (this.isBastionLaunching() && !this.isComplete()){
+  renderStatusText(){
+    if (this.isComplete()) {
+      return null;
+    } else if (this.isBastionLaunching()){
       return (
         <Padding b={1}>
           <p>We are now installing our instance in your selected VPC. This takes at least 5 minutes, increasing with the size of your environment. You don't need to stay on this page, and we'll email you when installation is complete.</p>
@@ -162,23 +174,27 @@ const Install = React.createClass({
       );
     }
     return (
-      <div>
-        Detecting installation status...
-      </div>
+      <Padding tb={2} className="text-center">
+        <Padding b={2}>
+          <StatusHandler status="pending" />
+        </Padding>
+        <p className={style.subtext}>Detecting installation status...</p>
+        <p className={style.subtext}>(This can take a minute or two on slow connections.)</p>
+      </Padding>
     );
   },
-  renderButton(){
-    const { defaultNotifs } = this.props.redux.onboard;
-    if (defaultNotifs) {
+  renderNotifPrompt(){
+    const { status } = this.props.redux.asyncActions.onboardGetDefaultNotifs;
+    if (status !== 'success' || this.isDoneNotifications()) {
       return null;
     }
     return (
-      <div>
-        <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts.</p>
-        <Padding tb={1}>
+      <Padding tb={2}>
+        <p>The last thing we need to do is to set up your notification preferences, so we know where to send alerts. The Opsee EC2 instance will continue its installation in the background.</p>
+        <Padding t={1}>
           <Button to="/start/notifications" color="primary" block chevron>Set up notifications</Button>
         </Padding>
-      </div>
+      </Padding>
     );
   },
   renderInner(){
@@ -199,9 +215,9 @@ const Install = React.createClass({
               </Padding>
             );
           })}
-          {this.renderText()}
+          {this.renderStatusText()}
           {this.renderError()}
-          {this.renderButton()}
+          {this.renderNotifPrompt()}
         </div>
       );
     }

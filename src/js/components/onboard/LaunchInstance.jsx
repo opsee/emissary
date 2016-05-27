@@ -5,6 +5,7 @@ import {Link} from 'react-router';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
+import {StatusHandler} from '../global';
 import {Padding, Col, Grid, Row} from '../layout';
 import instanceImg from '../../../img/tut-ec2-instance.svg';
 import style from './onboard.css';
@@ -35,21 +36,24 @@ const LaunchInstance = React.createClass({
   renderLoading(){
     return (
       <Padding tb={2} className="text-center">
-        <span>Scanning your environment...</span>
+        <Padding b={2}>
+          <StatusHandler status="pending" />
+        </Padding>
+        <p className={style.subtext}>Scanning your environment...</p>
       </Padding>
     );
   },
   renderRegion(){
     const region = this.getInstallData().region || {};
     return (
-      <Padding tb={1}>
+      <Padding tb={2}>
         <div className={style.configKey}>
           Region
         </div>
         <div className={style.configMain}>
           {region.id}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {region.name}
         </div>
       </Padding>
@@ -58,17 +62,17 @@ const LaunchInstance = React.createClass({
   renderVPC(){
     const vpc = this.getInstallData().vpc || {};
     return (
-      <Padding tb={1}>
+      <Padding tb={2}>
         <div className={style.configKey}>
           VPC
         </div>
         <div className={style.configMain}>
           {vpc.vpc_id}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {vpc.name}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {vpc.instance_count} instances
         </div>
       </Padding>
@@ -77,17 +81,17 @@ const LaunchInstance = React.createClass({
   renderSubnet(){
     const subnet = this.getInstallData().subnet || {};
     return (
-      <Padding tb={1}>
+      <Padding tb={2}>
         <div className={style.configKey}>
           Subnet
         </div>
         <div className={style.configMain}>
           {subnet.subnet_id}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {subnet.name}
         </div>
-        <div className={style.configSub}>
+        <div className={style.subtext}>
           {subnet.instance_count} instances, {subnet.routing} routing
         </div>
       </Padding>
@@ -98,7 +102,8 @@ const LaunchInstance = React.createClass({
       return this.renderLoading();
     }
     return (
-      <Padding tb={2}>
+      <div>
+        <p>Here's where it'll be installed:</p>
         <Grid>
           <Row>
             <Col xs={12} sm={4}>
@@ -112,7 +117,7 @@ const LaunchInstance = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </Padding>
+      </div>
     );
   },
   render(){
@@ -129,7 +134,7 @@ const LaunchInstance = React.createClass({
                 <img src={instanceImg} style={{maxHeight: '300px'}}/>
               </Padding>
 
-              <p>Lastly, we need to install the Opsee EC2 instance. It&rsquo;s responsible for running checks in your AWS environment. Here's where it'll be installed:</p>
+              <p>Lastly, we need to install the Opsee EC2 instance. It&rsquo;s responsible for running checks in your AWS environment.</p>
               {this.renderConfig()}
 
               <Padding tb={2}>

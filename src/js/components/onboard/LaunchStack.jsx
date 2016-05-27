@@ -132,7 +132,7 @@ const LaunchStack = React.createClass({
     const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
     if (isFirstPoll) {
       return (
-        <Button onClick={this.onOpenConsole} color="primary" disabled block>Loading...</Button>
+        <Button onClick={this.onOpenConsole} color="primary" disabled block>Looking for Opsee stack...</Button>
       );
     }
     const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
