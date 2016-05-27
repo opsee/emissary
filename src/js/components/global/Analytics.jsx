@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import _ from 'lodash';
 
 import * as actions from '../../actions/analytics';
 
@@ -15,12 +14,11 @@ const Analytics = React.createClass({
     history: React.PropTypes.object.isRequired
   },
   componentDidMount() {
-    this.historyListener = this.context.history.listen((err, renderProps) => {
-      if (err || !renderProps) {
+    this.historyListener = this.context.history.listen(location => {
+      if (!location) {
         return;
       }
-
-      this.runPageview(renderProps);
+      this.runPageview(location);
     });
   },
   shouldComponentUpdate() {
@@ -33,17 +31,11 @@ const Analytics = React.createClass({
     this.historyListener();
     this.historyListener = null;
   },
-  runPageview(renderProps) {
-    const path = _.chain(renderProps.routes || []).last().get('path').value() || '/';
-    if (this.latestUrl === path) {
-      return;
-    }
-    this.latestUrl = path;
-
+  runPageview(location) {
     // wait for correct title
     const trackPageView = this.props.actions.trackPageView;
     setTimeout(function wait() {
-      trackPageView(path, document.title);
+      trackPageView(location.pathname, document.title);
     }, 50);
   },
   render() {

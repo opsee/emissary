@@ -10,6 +10,7 @@ export const User = Record({
   loginDate: null,
   admin: false,
   admin_id: 0,
+  created_at: null,
   intercom_hmac: null,
   auth: null,
   ghosting: false,
