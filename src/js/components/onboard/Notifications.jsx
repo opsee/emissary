@@ -53,6 +53,9 @@ const Notifications = React.createClass({
       notifications: []
     };
   },
+  getDefaultEmail(){
+    return _.get(this.props.redux.user, 'email');
+  },
   onChange(notifications){
     this.setState({ notifications });
   },
@@ -97,18 +100,20 @@ const Notifications = React.createClass({
             <Col xs={12}>
               <Padding tb={2}>
                 <div className={style.headerStep}>STEP 3 of 3</div>
-                <h2>Set up default alerts</h2>
+                <h2>Set up notifications</h2>
               </Padding>
-              <p>When your health checks fail, Opsee will let you know. (You can always configure this on a per-check basis.)</p>
-              <Padding tb={1}>
-                <p>Where should we send your alerts by default?</p>
-              </Padding>
-              <Padding t={1}>
-                <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs || []} />
+              <p>When your health checks fail, Opsee will let you know. By default, we'll send all notifications to your email address, <strong>{this.getDefaultEmail()}</strong>.</p>
+              <p>You can always override your default notification settings on a check-by-check basis. Your default notification settings can be changed any time from your profile.</p>
+
+              <Padding t={2}>
+                <h3>Send notifications to:</h3>
+                <Padding t={1}>
+                  <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs || []} />
+                </Padding>
               </Padding>
               {this.renderError()}
               {this.renderSaveButton()}
-              <p className="text-center"><small><Link to="/start/install" onClick={this.props.actions.skipDefaultNotifications}>Set up default notifications later</Link></small></p>
+              <p className="text-center"><small><Link to="/start/install" onClick={this.props.actions.skipDefaultNotifications}>Just use email for now</Link></small></p>
             </Col>
           </Row>
         </Grid>
