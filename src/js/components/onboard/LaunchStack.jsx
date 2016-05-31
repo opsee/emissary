@@ -140,6 +140,18 @@ const LaunchStack = React.createClass({
       <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
     );
   },
+  renderCLI(){
+    if (!this.props.redux.onboard) {
+      return this.renderLoading();
+    }
+    return (
+      <Highlight>
+        <Padding tb={1} lr={1}>
+          aws cloudformation create-stack --stack-name opsee-role-[customer id] --template-url https://s3.amazonaws.com/opsee-bastion-cf/roles/[customer id]/[role id].cloudformation.json --capabilities CAPABILITY_IAM
+        </Padding>
+      </Highlight>
+    );
+  },
   renderButtons(){
     return (
       <Padding tb={2}>
@@ -179,6 +191,11 @@ const LaunchStack = React.createClass({
         <p>This method is safe, secure, and certified by Amazon. To set up cross-account access, install our CloudFormation Stack. You control of the access, and can manage or remove the role at any time in your AWS Console.</p>
 
         {this.renderButtons()}
+
+        <Padding tb={1}>
+        <p>You can also install our instance via <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a>. Just run this command to add our IAM role:</p>
+        {this.renderCLI()}
+        </Padding>
       </div>
     );
   },
