@@ -32,8 +32,10 @@ const LaunchStack = React.createClass({
         templates: PropTypes.array,
         role: PropTypes.shape({
           region: PropTypes.string
-        })
-      })
+        }),
+        regionLaunchURL: PropTypes.string
+      }),
+      user: PropTypes.object
     }),
     actions: PropTypes.shape({
       hasRole: PropTypes.func,
@@ -50,7 +52,7 @@ const LaunchStack = React.createClass({
     };
   },
   componentWillMount() {
-    if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
+    if (!this.getConsoleURL()) { // TODO clear this between onboarding somehow
       this.props.actions.makeLaunchRoleUrl();
     }
   },
@@ -67,6 +69,16 @@ const LaunchStack = React.createClass({
     return _.get(this.props.redux.onboard, 'role.region');
   },
   getTemplateURL() {
+    const consoleURL = this.getConsoleURL();
+    if (!consoleURL) {
+      return null;
+    }
+    // FIXME update when makeLaunchRoleUrl returns templateURL instead of console URL
+    const matches = consoleURL.match(/templateURL=(\S+)/);
+    const encodedURL = matches[1];
+    return window.decodeURIComponent(encodedURL || '');
+  },
+  getConsoleURL(){
     return _.get(this.props.redux, 'onboard.regionLaunchURL');
   },
   onOpenConsole() {
@@ -108,6 +120,7 @@ const LaunchStack = React.createClass({
         </Padding>
         <Instructions />
         {this.renderButtons()}
+        {this.renderCLI()}
       </div>
     );
   },
@@ -129,15 +142,36 @@ const LaunchStack = React.createClass({
     );
   },
   renderLaunchButton(){
-    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
-    if (isFirstPoll) {
-      return (
-        <Button onClick={this.onOpenConsole} color="primary" disabled block>Looking for Opsee stack...</Button>
-      );
-    }
     const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
     return (
-      <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
+      <Button to={this.getConsoleURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
+    );
+  },
+  renderCLICommand(){
+    const templateURL = this.getTemplateURL();
+    if (!templateURL) {
+      return (
+        <Padding tb={1} className="text-center">
+          <p className={style.subtext}>generating template URL...</p>
+        </Padding>
+      );
+    }
+    const customerID = this.props.redux.user.get('customer_id');
+    return (
+      <div>
+        <Highlight>
+          <Padding a={1}>
+            aws cloudformation create-stack --stack-name opsee-role-{customerID} --template-url {templateURL} --capabilities CAPABILITY_IAM
+          </Padding>
+        </Highlight>
+      </div>
+    );
+  },
+  renderCLI(){
+    return (
+      <Padding tb={1}>
+        <p>To install the role stack using the command line, make sure you have <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a> set up, then run this command to add the role stack (<em>when we detect the installation we&rsquo;ll advance you to the next step automatically</em>):</p>        {this.renderCLICommand()}
+      </Padding>
     );
   },
   renderButtons(){
@@ -145,9 +179,6 @@ const LaunchStack = React.createClass({
       <Padding tb={2}>
         <Padding b={1}>
           {this.renderLaunchButton()}
-        </Padding>
-        <Padding tb={1} className="text-center">
-          <p><small><Link to="/start/review-stack">Learn more about our IAM Role</Link></small></p>
         </Padding>
       </Padding>
     );
@@ -169,16 +200,22 @@ const LaunchStack = React.createClass({
           <img src={crossAccountImg} />
         </Padding>
 
-        <p>By adding our IAM role, Opsee will be able to take <em>some</em> specific actions in your AWS environment on your behalf:</p>
+        <p>Setting up cross-account access will allow Opsee to take <em>some</em> specific actions in your AWS environment on your behalf:</p>
         <ul>
           <li>Launching our EC2 instance and managing it throughout its lifecycle (eg software updates and reboots)</li>
           <li>Health checking your services</li>
           <li>Querying AWS APIs for information about your environment</li>
         </ul>
 
-        <p>This method is safe, secure, and certified by Amazon. To set up cross-account access, install our CloudFormation Stack. You control of the access, and can manage or remove the role at any time in your AWS Console.</p>
+        <p>To set up cross-account access, install our CloudFormation Stack. This is done one of two ways: by launching it in your AWS console, or from the terminal using <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a>.</p>
+        <p>Both ways are safe, secure, and certified by Amazon. You can manage or remove the role at any time in your AWS console.</p>
 
         {this.renderButtons()}
+        {this.renderCLI()}
+
+        <Padding tb={1} className="text-center">
+          <p><small><Link to="/start/review-stack">Learn more about our IAM Role</Link></small></p>
+        </Padding>
       </div>
     );
   },
