@@ -52,7 +52,7 @@ const LaunchStack = React.createClass({
     };
   },
   componentWillMount() {
-    if (!this.getTemplateURL()) { // TODO clear this between onboarding somehow
+    if (!this.getConsoleURL()) { // TODO clear this between onboarding somehow
       this.props.actions.makeLaunchRoleUrl();
     }
   },
@@ -69,6 +69,16 @@ const LaunchStack = React.createClass({
     return _.get(this.props.redux.onboard, 'role.region');
   },
   getTemplateURL() {
+    const consoleURL = this.getConsoleURL();
+    if (!consoleURL) {
+      return null;
+    }
+    // FIXME update when makeLaunchRoleUrl returns templateURL instead of console URL
+    const matches = consoleURL.match(/templateURL=(\S+)/);
+    const encodedURL = matches[1];
+    return window.decodeURIComponent(encodedURL || '');
+  },
+  getConsoleURL(){
     return _.get(this.props.redux, 'onboard.regionLaunchURL');
   },
   onOpenConsole() {
@@ -110,6 +120,7 @@ const LaunchStack = React.createClass({
         </Padding>
         <Instructions />
         {this.renderButtons()}
+        {this.renderCLI()}
       </div>
     );
   },
@@ -131,38 +142,37 @@ const LaunchStack = React.createClass({
     );
   },
   renderLaunchButton(){
-    const isFirstPoll = this.props.redux.asyncActions.onboardHasRole.history.length < 1;
-    if (isFirstPoll) {
-      return (
-        <Button onClick={this.onOpenConsole} color="primary" disabled block>Looking for Opsee stack...</Button>
-      );
-    }
     const verb = this.state.hasClicked ? 'Relaunch' : 'Launch';
     return (
-      <Button to={this.getTemplateURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
+      <Button to={this.getConsoleURL()} target="_blank" onClick={this.onOpenConsole} color="primary" block>{verb} AWS Console <NewWindow btn /></Button>
     );
   },
-  renderCLI(){
-    if (!_.has(this.props.redux.onboard, 'regionLaunchURL')) {
-      return this.renderLoading();
+  renderCLICommand(){
+    const templateURL = this.getTemplateURL();
+    if (!templateURL) {
+      return (
+        <Padding tb={1} className="text-center">
+          <p className={style.subtext}>generating template URL...</p>
+        </Padding>
+      );
     }
-    const {regionLaunchURL} = this.props.redux.onboard;
     const customerID = this.props.redux.user.get('customer_id');
     return (
       <div>
-        <p>To install the role stack using the command line, make sure you have <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a> set-up, then run this command to add the role stack:</p>
-        {!!regionLaunchURL ?
-          <Highlight>
-            <Padding a={1}>
-              aws cloudformation create-stack --stack-name opsee-role-{customerID} --template-url {regionLaunchURL} --capabilities CAPABILITY_IAM
-            </Padding>
-          </Highlight>
-          :
-          <Padding tb={1} className="text-center">
-            <p className={style.subtext}>generating template URL...</p>
+        <Highlight>
+          <Padding a={1}>
+            aws cloudformation create-stack --stack-name opsee-role-{customerID} --template-url {templateURL} --capabilities CAPABILITY_IAM
           </Padding>
-        }
+        </Highlight>
       </div>
+    );
+  },
+  renderCLI(){
+    return (
+      <Padding tb={1}>
+        <p>To install the role stack using the command line, make sure you have <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a> set-up, then run this command to add the role stack:</p>
+        {this.renderCLICommand()}
+      </Padding>
     );
   },
   renderButtons(){
@@ -202,10 +212,7 @@ const LaunchStack = React.createClass({
         <p>Both ways are safe, secure, and certified by Amazon. You can manage or remove the role at any time in your AWS console.</p>
 
         {this.renderButtons()}
-
-        <Padding tb={1}>
-          {this.renderCLI()}
-        </Padding>
+        {this.renderCLI()}
 
         <Padding tb={1} className="text-center">
           <p><small><Link to="/start/review-stack">Learn more about our IAM Role</Link></small></p>
