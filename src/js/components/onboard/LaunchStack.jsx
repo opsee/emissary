@@ -144,10 +144,12 @@ const LaunchStack = React.createClass({
     if (!this.props.redux.onboard) {
       return this.renderLoading();
     }
+    const {regionLaunchURL} = this.props.redux.onboard;
+    const customerID = this.props.redux.user.get('customer_id');
     return (
       <Highlight>
         <Padding tb={1} lr={1}>
-          aws cloudformation create-stack --stack-name opsee-role-[customer id] --template-url https://s3.amazonaws.com/opsee-bastion-cf/roles/[customer id]/[role id].cloudformation.json --capabilities CAPABILITY_IAM
+          aws cloudformation create-stack --stack-name opsee-role-{customerID} --template-url {regionLaunchURL} --capabilities CAPABILITY_IAM
         </Padding>
       </Highlight>
     );
