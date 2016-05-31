@@ -170,8 +170,7 @@ const LaunchStack = React.createClass({
   renderCLI(){
     return (
       <Padding tb={1}>
-        <p>To install the role stack using the command line, make sure you have <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a> set-up, then run this command to add the role stack:</p>
-        {this.renderCLICommand()}
+        <p>To install the role stack using the command line, make sure you have <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a> set up, then run this command to add the role stack (<em>when we detect the installation we&rsquo;ll advance you to the next step automatically</em>):</p>        {this.renderCLICommand()}
       </Padding>
     );
   },
@@ -208,7 +207,7 @@ const LaunchStack = React.createClass({
           <li>Querying AWS APIs for information about your environment</li>
         </ul>
 
-        <p>To set up cross-account access, you'll install our CloudFormation Stack. This is done one of two ways: by launching it in your AWS console, or from your terminal using <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a>.</p>
+        <p>To set up cross-account access, install our CloudFormation Stack. This is done one of two ways: by launching it in your AWS console, or from the terminal using <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a>.</p>
         <p>Both ways are safe, secure, and certified by Amazon. You can manage or remove the role at any time in your AWS console.</p>
 
         {this.renderButtons()}
