@@ -32,8 +32,10 @@ const LaunchStack = React.createClass({
         templates: PropTypes.array,
         role: PropTypes.shape({
           region: PropTypes.string
-        })
-      })
+        }),
+        regionLaunchURL: PropTypes.string
+      }),
+      user: PropTypes.object
     }),
     actions: PropTypes.shape({
       hasRole: PropTypes.func,
@@ -141,17 +143,26 @@ const LaunchStack = React.createClass({
     );
   },
   renderCLI(){
-    if (!this.props.redux.onboard) {
+    if (!_.has(this.props.redux.onboard, 'regionLaunchURL')) {
       return this.renderLoading();
     }
     const {regionLaunchURL} = this.props.redux.onboard;
     const customerID = this.props.redux.user.get('customer_id');
     return (
-      <Highlight>
-        <Padding tb={1} lr={1}>
-          aws cloudformation create-stack --stack-name opsee-role-{customerID} --template-url {regionLaunchURL} --capabilities CAPABILITY_IAM
-        </Padding>
-      </Highlight>
+      <div>
+        <p>To install the role stack using the command line, make sure you have <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a> set-up, then run this command to add the role stack:</p>
+        {!!regionLaunchURL ?
+          <Highlight>
+            <Padding a={1}>
+              aws cloudformation create-stack --stack-name opsee-role-{customerID} --template-url {regionLaunchURL} --capabilities CAPABILITY_IAM
+            </Padding>
+          </Highlight>
+          :
+          <Padding tb={1} className="text-center">
+            <p className={style.subtext}>generating template URL...</p>
+          </Padding>
+        }
+      </div>
     );
   },
   renderButtons(){
@@ -159,9 +170,6 @@ const LaunchStack = React.createClass({
       <Padding tb={2}>
         <Padding b={1}>
           {this.renderLaunchButton()}
-        </Padding>
-        <Padding tb={1} className="text-center">
-          <p><small><Link to="/start/review-stack">Learn more about our IAM Role</Link></small></p>
         </Padding>
       </Padding>
     );
@@ -183,20 +191,24 @@ const LaunchStack = React.createClass({
           <img src={crossAccountImg} />
         </Padding>
 
-        <p>By adding our IAM role, Opsee will be able to take <em>some</em> specific actions in your AWS environment on your behalf:</p>
+        <p>Setting up cross-account access will allow Opsee to take <em>some</em> specific actions in your AWS environment on your behalf:</p>
         <ul>
           <li>Launching our EC2 instance and managing it throughout its lifecycle (eg software updates and reboots)</li>
           <li>Health checking your services</li>
           <li>Querying AWS APIs for information about your environment</li>
         </ul>
 
-        <p>This method is safe, secure, and certified by Amazon. To set up cross-account access, install our CloudFormation Stack. You control of the access, and can manage or remove the role at any time in your AWS Console.</p>
+        <p>To set up cross-account access, you'll install our CloudFormation Stack. This is done one of two ways: by launching it in your AWS console, or from your terminal using <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a>.</p>
+        <p>Both ways are safe, secure, and certified by Amazon. You can manage or remove the role at any time in your AWS console.</p>
 
         {this.renderButtons()}
 
         <Padding tb={1}>
-        <p>You can also install our instance via <a target="_blank" href="https://aws.amazon.com/cli/">the AWS CLI</a>. Just run this command to add our IAM role:</p>
-        {this.renderCLI()}
+          {this.renderCLI()}
+        </Padding>
+
+        <Padding tb={1} className="text-center">
+          <p><small><Link to="/start/review-stack">Learn more about our IAM Role</Link></small></p>
         </Padding>
       </div>
     );
