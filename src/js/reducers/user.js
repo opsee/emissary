@@ -1,7 +1,9 @@
-import storage from '../modules/storage';
 import _ from 'lodash';
+import cookie from 'cookie';
 import {handleActions} from 'redux-actions';
 import moment from 'moment';
+
+import storage from '../modules/storage';
 import config from '../modules/config';
 import {User} from '../modules/schemas';
 import {yeller} from '../modules';
@@ -17,6 +19,15 @@ import {
   USER_APPLY,
   USER_SET_LOGIN_DATA
 } from '../actions/constants';
+
+let initial = loadUser();
+
+function deleteTokenCookie() {
+  document.cookie = cookie.serialize('ferengi-token', '', {
+    domain: 'localhost', // explicitly set domain so it works on both ferengi/emissary
+    maxAge: 0
+  });
+}
 
 function getAuth(data){
   const date = data.loginDate;
@@ -36,10 +47,26 @@ function getAuth(data){
   return auth;
 }
 
-let initial = new User();
-const localUser = storage.get('user');
-if (localUser && getAuth(localUser)){
-  initial = new User(localUser);
+function loadUser() {
+  // When signing up from Ferengi, a temporary token is saved in a cookie.
+  // This allows the user to authenticate once, without needing a password.
+  const cookies = cookie.parse(document.cookie);
+  const token = _.get(cookies, 'ferengi-token');
+  if (token) {
+    // Once we've grabbed the token from the cookie, the full user object
+    // is fetched and persisted to localStorage (as with normal logins)
+    // and the cookie can be deleted.
+    deleteTokenCookie();
+    return new User({
+      token: token,
+      auth: `Bearer ${token}`
+    });
+  }
+  const localUser = storage.get('user');
+  if (localUser && getAuth(localUser)) {
+    return new User(localUser);
+  }
+  return new User();
 }
 
 function setUser(state, action){
