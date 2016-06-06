@@ -104,14 +104,13 @@ const CheckList = React.createClass({
     //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
     return (
       <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-        <p>You don&rsquo;t have any Checks yet. <Link to="/check-create" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
+        <Padding b={2}><h2>Welcome to Opsee! Let&rsquo;s get started.</h2></Padding>
+        <p>Thanks for signing up! Let&rsquo;s get your environment set up:</p>
 
-        <p>Try creating a check like this to start:</p>
         <ol>
-          <li>Target a Group or Instance running a <strong>HTTP service</strong></li>
-          <li>Make a request to the URL and port running that service (e.g. <strong>"/healthcheck"</strong> on <strong>Port 80</strong>)</li>
-          <li>Assert that the <strong>Status Code</strong> must come back <strong>Equal to 200</strong></li>
-          <li>Send <strong>notifications to your email</strong> when the Check fails</li>
+          <li><Link to="/check-create" title="Create New Check">Create your first health check</Link> for any public URL</li>
+          <li>Keep your team in the loop by setting up <a href="/profile">Slack and Pagerduty integration</a> on your Profile page</li>
+          <li>If you&rsquo;re hosted in AWS, <a href="/start/launch-stack">add our EC2 instance</a> to run checks inside your environment too</li>
         </ol>
       </StatusHandler>
     );
@@ -123,19 +122,21 @@ const CheckList = React.createClass({
     const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
     const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
     const isDisabled = isDeleting || size < 1;
-    return (
-      <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
-        <div className="flex-1 display-flex">
-          <Padding r={1}>
-            <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
-          </Padding>
-          <Padding r={1}>
-            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
-          </Padding>
-        </div>
-        <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
-      </Padding>
-    );
+    if (this.props.redux.checks.checks.size) {
+      return (
+        <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
+          <div className="flex-1 display-flex">
+            <Padding r={1}>
+              <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
+            </Padding>
+            <Padding r={1}>
+              <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
+            </Padding>
+          </div>
+          <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
+        </Padding>
+      );
+    }
   },
   render() {
     return (
