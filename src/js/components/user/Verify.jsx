@@ -28,15 +28,20 @@ const Verify = React.createClass({
     })
   },
   componentWillMount(){
-    const token = this.props.location.query.token;
-    if (!this.props.location.query.id || !token) {
+    const id = _.get(this.props.location.query, 'id');
+    const verificationToken = _.get(this.props.location.query, 'verification_token');
+    const authToken = _.get(this.props.location.query, 'token');
+
+    if (!id || !authToken || !verificationToken) {
       return this.props.history.replace('/login');
     }
+
     // Verify the email address right away, no click required
-    this.props.actions.verifyEmail();
+    this.props.actions.verifyEmail({ id, verificationToken, authToken });
+
     // Propagate the token so auth headers, etc. work
     const loginDate = new Date();
-    this.props.actions.userApply({ token, loginDate });
+    this.props.actions.userApply({ loginDate, token: authToken });
     return null;
   },
   getInitialState(){
@@ -66,7 +71,7 @@ const Verify = React.createClass({
   },
   onTriggerEmail(e) {
     e.preventDefault();
-    const { id } = this.props.location.query;
+    const id = _.get(this.props.location.query, 'id');
     this.props.actions.sendVerificationEmail({ id });
   },
   renderAlert(){

@@ -76,12 +76,14 @@ export function setPassword(data) {
 
 export function verifyEmail(data) {
   return (dispatch, state) => {
+    const params = { token: data.verificationToken };
     dispatch({
       type: USER_VERIFY_EMAIL,
       payload: new Promise((resolve, reject) => {
         return request
         .post(`${config.services.auth}/users/${data.id}/verify`)
         .set('Authorization', state().user.get('auth'))
+        .send(params)
         .then((res) => {
           resolve(res.body);
           // TODO analytics?
