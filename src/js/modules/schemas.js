@@ -18,7 +18,8 @@ export const User = Record({
   data: undefined,
   loginData: {},
   region: undefined,
-  vpc: undefined
+  vpc: undefined,
+  verified: null
 });
 
 const baseEnvItem = {
