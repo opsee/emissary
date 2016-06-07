@@ -88,12 +88,12 @@ export function verifyEmail(data) {
           // analytics.updateUser(res.body.user)(dispatch, state);
         }, reject);
       })
-    })
+    });
   };
 }
 
 export function sendVerificationEmail(data) {
-  return (dispatch, state) => {
+  return (dispatch) => {
     dispatch({
       type: USER_SEND_VERIFICATION_EMAIL,
       payload: new Promise((resolve, reject) => {
@@ -105,9 +105,8 @@ export function sendVerificationEmail(data) {
           // analytics.updateUser(res.body.user)(dispatch, state);
         }, reject);
       })
-    })
+    });
   };
-
 }
 
 export function logout(){
@@ -142,7 +141,7 @@ export function refresh() {
           const redirect = state().router.location.pathname;
           let string = redirect ? '/login' : `/login?redirect=${redirect}`;
           storage.remove('user');
-          // dispatch(push(string));
+          dispatch(push(string));
           reject(err);
         });
       })

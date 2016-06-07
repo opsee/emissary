@@ -32,10 +32,11 @@ const Verify = React.createClass({
     if (!this.props.location.query.id || !token) {
       return this.props.history.replace('/login');
     }
-
+    // Verify the email address right away, no click required
+    this.props.actions.verifyEmail();
+    // Propagate the token so auth headers, etc. work
     const loginDate = new Date();
     this.props.actions.userApply({ token, loginDate });
-    this.props.actions.verifyEmail();
     return null;
   },
   getInitialState(){
@@ -83,7 +84,7 @@ const Verify = React.createClass({
     return (
       <Padding tb={1}>
         <Alert color="danger">
-          <span>Uh oh, we're having some trouble{inner}. <a href="#" onClick={this.onTriggerEmail}>Click here</a> to resend the verification email.</span>
+          <span>Uh oh, we're having some trouble{inner}. <a href="#" onClick={this.onTriggerEmail}>Click here</a> if you need to resend the verification email.</span>
         </Alert>
       </Padding>
     );
