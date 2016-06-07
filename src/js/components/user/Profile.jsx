@@ -61,7 +61,7 @@ const Profile = React.createClass({
   },
   renderVerificationNag(){
     const user = this.getUser();
-    if (user.verifie) {
+    if (user.verified) {
       return null;
     }
     const { status } = this.props.redux.asyncActions.userSendVerificationEmail;
@@ -82,7 +82,7 @@ const Profile = React.createClass({
   },
   renderEmail(){
     const user = this.getUser();
-    if (user.verifie) {
+    if (user.verified) {
       return user.email;
     }
     return (
