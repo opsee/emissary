@@ -14,8 +14,10 @@ import {
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_SEND_RESET_EMAIL,
+  USER_SEND_VERIFICATION_EMAIL,
   USER_APPLY,
   USER_SET_LOGIN_DATA,
+  USER_VERIFY_EMAIL,
   ENV_GET_BASTIONS
 } from './constants';
 import storage from '../modules/storage';
@@ -72,6 +74,42 @@ export function setPassword(data) {
   };
 }
 
+export function verifyEmail(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: USER_VERIFY_EMAIL,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.services.auth}/users/${data.id}/verify`)
+        .set('Authorization', state().user.get('auth'))
+        .then((res) => {
+          resolve(res.body);
+          // TODO analytics?
+          // analytics.updateUser(res.body.user)(dispatch, state);
+        }, reject);
+      })
+    })
+  };
+}
+
+export function sendVerificationEmail(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: USER_SEND_VERIFICATION_EMAIL,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.services.auth}/users/${data.id}/resend-verification`)
+        .then((res) => {
+          resolve(res.body);
+          // TODO analytics?
+          // analytics.updateUser(res.body.user)(dispatch, state);
+        }, reject);
+      })
+    })
+  };
+
+}
+
 export function logout(){
   return (dispatch, state) => {
     storage.remove('user');
@@ -104,7 +142,7 @@ export function refresh() {
           const redirect = state().router.location.pathname;
           let string = redirect ? '/login' : `/login?redirect=${redirect}`;
           storage.remove('user');
-          dispatch(push(string));
+          // dispatch(push(string));
           reject(err);
         });
       })
