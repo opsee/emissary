@@ -17,7 +17,8 @@ import {
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_APPLY,
-  USER_SET_LOGIN_DATA
+  USER_SET_LOGIN_DATA,
+  USER_VERIFY_EMAIL
 } from '../actions/constants';
 
 let initial = loadUser();
@@ -142,5 +143,9 @@ export default handleActions({
     next(state, action){
       return new User(_.assign({}, state.toJS(), {loginData: action.payload}));
     }
+  },
+  [USER_VERIFY_EMAIL]: {
+    next: setUser,
+    throw: yeller.reportAction
   }
 }, initial);
