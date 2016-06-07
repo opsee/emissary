@@ -18,7 +18,8 @@ import {
   USER_PUT_DATA,
   USER_APPLY,
   USER_SET_LOGIN_DATA,
-  USER_VERIFY_EMAIL
+  USER_VERIFY_EMAIL,
+  USER_SIGNUP_CREATE
 } from '../actions/constants';
 
 let initial = loadUser();
@@ -91,6 +92,13 @@ function setUser(state, action){
 }
 
 export default handleActions({
+  [USER_SIGNUP_CREATE]: {
+    next(state, action) {
+      const data = _.assign({}, action.payload, {loginDate: new Date()});
+      return setUser(state, {payload: data});
+    },
+    throw: yeller.reportAction
+  },
   [USER_LOGIN]: {
     next: setUser
   },
