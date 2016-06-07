@@ -92,7 +92,7 @@ const Verify = React.createClass({
     if (status === 'pending') {
       statusMessage = 'Sending...';
     } else if (status === 'success') {
-      statusMessage = 'Sent!';
+      statusMessage = 'Verification email sent!';
     }
 
     return (

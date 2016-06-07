@@ -86,8 +86,7 @@ export function verifyEmail(data) {
         .send(params)
         .then((res) => {
           resolve(res.body);
-          // TODO analytics?
-          // analytics.updateUser(res.body.user)(dispatch, state);
+          analytics.trackEvent('User', 'email-verification');
         }, reject);
       })
     });
@@ -95,16 +94,16 @@ export function verifyEmail(data) {
 }
 
 export function sendVerificationEmail(data) {
-  return (dispatch) => {
+  return (dispatch, state) => {
     dispatch({
       type: USER_SEND_VERIFICATION_EMAIL,
       payload: new Promise((resolve, reject) => {
         return request
         .post(`${config.services.auth}/users/${data.id}/resend-verification`)
+        .set('Authorization', state().user.get('auth'))
         .then((res) => {
           resolve(res.body);
-          // TODO analytics?
-          // analytics.updateUser(res.body.user)(dispatch, state);
+          analytics.trackEvent('User', 'resend-verification-email');
         }, reject);
       })
     });
