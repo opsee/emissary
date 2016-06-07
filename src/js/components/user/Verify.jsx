@@ -36,12 +36,12 @@ const Verify = React.createClass({
       return this.props.history.replace('/login');
     }
 
-    // Verify the email address right away, no click required
-    this.props.actions.verifyEmail({ id, verificationToken, authToken });
-
     // Propagate the token so auth headers, etc. work
     const loginDate = new Date();
     this.props.actions.userApply({ loginDate, token: authToken });
+
+    // Verify the email address right away, no click required
+    this.props.actions.verifyEmail({ id, verificationToken, authToken });
     return null;
   },
   getInitialState(){
@@ -86,10 +86,22 @@ const Verify = React.createClass({
     } else if (hasEditError) {
       inner = ' setting your password';
     }
+
+    let status = this.props.redux.asyncActions.userSendVerificationEmail.status;
+    let statusMessage = null;
+    if (status === 'pending') {
+      statusMessage = 'Sending...';
+    } else if (status === 'success') {
+      statusMessage = 'Sent!';
+    }
+
     return (
       <Padding tb={1}>
         <Alert color="danger">
-          <span>Uh oh, we're having some trouble{inner}. <a href="#" onClick={this.onTriggerEmail}>Click here</a> if you need to resend the verification email.</span>
+          <div>Uh oh, we're having some trouble{inner}. <a href="#" onClick={this.onTriggerEmail}>Click here</a> if you need to resend the verification email.</div>
+          {statusMessage ?
+            <Padding t={1}>{statusMessage}</Padding>
+          : null }
         </Alert>
       </Padding>
     );
