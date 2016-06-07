@@ -152,7 +152,7 @@ export function refresh() {
 
 export const userApply = createAction(USER_APPLY);
 
-export function edit(data) {
+export function edit(data, redirect) {
   return (dispatch, state) => {
     dispatch({
       type: USER_EDIT,
@@ -163,13 +163,14 @@ export function edit(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
-          //TODO fix this somehow
-          setTimeout(() => {
-            dispatch(push('/profile'));
-          }, 100);
           const user = _.get(res, 'body.user');
           if (user){
             analytics.updateUser(user)(dispatch, state);
+          }
+          if (redirect) {
+            setTimeout(() => {
+              dispatch(push(redirect));
+            }, 100);
           }
         }, reject);
       })
