@@ -19,13 +19,17 @@ import {SlackInfo, PagerdutyInfo} from '../integrations';
 const Profile = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      logout: PropTypes.func
+      logout: PropTypes.func,
+      sendVerificationEmail: PropTypes.func
     }),
     appActions: PropTypes.shape({
       shutdown: PropTypes.func
     }),
     redux: PropTypes.shape({
-      user: PropTypes.object
+      user: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        userSendVerificationEmail: PropTypes.object
+      })
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
