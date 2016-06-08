@@ -26,6 +26,7 @@ const CheckCreateType = React.createClass({
         getGroupsSecurity: PropTypes.object
       }),
       env: PropTypes.shape({
+        activeBastion: PropTypes.object,
         groups: PropTypes.shape({
           security: PropTypes.object,
           elb: PropTypes.object,
@@ -43,7 +44,7 @@ const CheckCreateType = React.createClass({
   },
   getLink(type = {}){
     const data = JSON.stringify({target: {type: type.id}});
-    if (type.id === 'host'){
+    if (type.id === 'host' || type.id === 'external_host'){
       return `/check-create/request?data=${data}`;
     }
     return `/check-create/target?data=${data}`;
@@ -56,40 +57,41 @@ const CheckCreateType = React.createClass({
     return this.props.redux.asyncActions.getGroupsSecurity.status;
   },
   getTypes(){
+    // Allow legacy "host" type for folks that don't yet have the new type
+    const hostID = flag(`check-type-external_host`) ? 'external_host' : 'host;'
     let types = [{
-      id: 'host',
+      id: hostID,
       title: 'URL',
       size: () => ''
     }];
     if (!!this.props.redux.env.activeBastion) {
       types = _.concat(types, [{
-          id: 'elb',
-          title: 'ELB',
-          size: () => this.props.redux.env.groups.elb.size
-        },{
-          id: 'security',
-          title: 'Security Group',
-          size: () => this.props.redux.env.groups.security.size
-        },{
-          id: 'asg',
-          title: 'Auto Scaling Group',
-          size: () => this.props.redux.env.groups.asg.size
-        },{
-          id: 'ecc',
-          title: 'EC2 Instance',
-          size: () => this.props.redux.env.instances.ecc.size
-        },{
-          id: 'rds',
-          title: 'RDS Instance',
-          size: () => this.props.redux.env.instances.rds.size
-        }
-      ]);
+        id: 'elb',
+        title: 'ELB',
+        size: () => this.props.redux.env.groups.elb.size
+      }, {
+        id: 'security',
+        title: 'Security Group',
+        size: () => this.props.redux.env.groups.security.size
+      }, {
+        id: 'asg',
+        title: 'Auto Scaling Group',
+        size: () => this.props.redux.env.groups.asg.size
+      }, {
+        id: 'ecc',
+        title: 'EC2 Instance',
+        size: () => this.props.redux.env.instances.ecc.size
+      }, {
+        id: 'rds',
+        title: 'RDS Instance',
+        size: () => this.props.redux.env.instances.rds.size
+      }]);
     }
     return _.chain(types).filter(type => {
       return flag(`check-type-${type.id}`);
     })
     .filter(type => {
-      return type.size() > 0 || type.id === 'host';
+      return type.size() > 0 || type.id === 'host' || type.id === 'external_host';
     })
     .value();
   },
@@ -103,7 +105,7 @@ const CheckCreateType = React.createClass({
 
     const data = JSON.stringify({target: {type: type.id}});
     let path = `/check-create/target?data=${data}`;
-    if (type.id === 'host'){
+    if (type.id === 'host' || type.id === 'external_host'){
       path = `/check-create/request?data=${data}`;
     }
     this.context.router.push(path);
