@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router';
 
 import {Button} from '../forms';
 import {BastionRequirement, StatusHandler, Toolbar} from '../global';
@@ -47,40 +48,44 @@ const CheckCreateType = React.createClass({
     }
     return `/check-create/target?data=${data}`;
   },
+  getStatus(){
+    // Nothing to query if URL checks are the only available type
+    if (!this.props.redux.env.activeBastion) {
+      return 'success';
+    }
+    return this.props.redux.asyncActions.getGroupsSecurity.status;
+  },
   getTypes(){
-    const initial = [
-      {
-        id: 'elb',
-        title: 'ELB',
-        size: () => this.props.redux.env.groups.elb.size
-      },
-      {
-        id: 'security',
-        title: 'Security Group',
-        size: () => this.props.redux.env.groups.security.size
-      },
-      {
-        id: 'asg',
-        title: 'Auto Scaling Group',
-        size: () => this.props.redux.env.groups.asg.size
-      },
-      {
-        id: 'ecc',
-        title: 'EC2 Instance',
-        size: () => this.props.redux.env.instances.ecc.size
-      },
-      {
-        id: 'rds',
-        title: 'RDS Instance',
-        size: () => this.props.redux.env.instances.rds.size
-      },
-      {
-        id: 'host',
-        title: 'URL',
-        size: () => ''
-      }
-    ];
-    return _.chain(initial).filter(type => {
+    let types = [{
+      id: 'host',
+      title: 'URL',
+      size: () => ''
+    }];
+    if (!!this.props.redux.env.activeBastion) {
+      types = _.concat(types, [{
+          id: 'elb',
+          title: 'ELB',
+          size: () => this.props.redux.env.groups.elb.size
+        },{
+          id: 'security',
+          title: 'Security Group',
+          size: () => this.props.redux.env.groups.security.size
+        },{
+          id: 'asg',
+          title: 'Auto Scaling Group',
+          size: () => this.props.redux.env.groups.asg.size
+        },{
+          id: 'ecc',
+          title: 'EC2 Instance',
+          size: () => this.props.redux.env.instances.ecc.size
+        },{
+          id: 'rds',
+          title: 'RDS Instance',
+          size: () => this.props.redux.env.instances.rds.size
+        }
+      ]);
+    }
+    return _.chain(types).filter(type => {
       return flag(`check-type-${type.id}`);
     })
     .filter(type => {
@@ -103,6 +108,16 @@ const CheckCreateType = React.createClass({
     }
     this.context.router.push(path);
   },
+  renderBastionPrompt(){
+    if (!!this.props.redux.env.activeBastion) {
+      return null;
+    }
+    return (
+      <Padding t={3} b={2}>
+        <Link to="/start/launch-stack">Connect to AWS</Link> to set up health checks for ELBs, security groups, EC2 instances, RDS, and more.
+      </Padding>
+    );
+  },
   renderHelperText(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckTypeHelp">
@@ -121,7 +136,7 @@ const CheckCreateType = React.createClass({
         <Padding b={1}>
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
-        <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status}>
+        <StatusHandler status={this.getStatus()}>
           {this.getTypes().map(type => {
             return (
               <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
@@ -133,6 +148,7 @@ const CheckCreateType = React.createClass({
             );
           })}
         </StatusHandler>
+        {this.renderBastionPrompt()}
       </div>
     );
   },
