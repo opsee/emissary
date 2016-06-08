@@ -39,8 +39,8 @@ const NotificationItemList = React.createClass({
     window.addEventListener('storage', event => {
       if (typeof event === 'object' && event.key === 'shouldSyncPagerduty') {
         this.props.integrationsActions.getPagerdutyInfo();
+        storage.remove(event.key);
       }
-      storage.remove(event.key);
     });
   },
   getSlackChannelFromId(id){
