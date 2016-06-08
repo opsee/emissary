@@ -56,6 +56,7 @@ const EnvList = React.createClass({
             rds: PropTypes.object
           })
         }),
+        activeBastion: PropTypes.object,
         bastions: PropTypes.array,
         search: PropTypes.string
       })
@@ -91,9 +92,6 @@ const EnvList = React.createClass({
       }
       return (-1 * size) || 0;
     }).value();
-  },
-  hasBastion(){
-    return !!this.props.redux.env.activeBastion;
   },
   renderGroupsSecurity(){
     return (
@@ -138,7 +136,7 @@ const EnvList = React.createClass({
     );
   },
   renderFilterButtons(){
-    if (this.props.showFilterButtons){
+    if (!!this.props.redux.env.activeBastion && this.props.showFilterButtons){
       return <FilterButtons/>;
     }
     return null;

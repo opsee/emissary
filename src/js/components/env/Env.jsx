@@ -1,12 +1,14 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {State} from 'react-router';
+import {Link, State} from 'react-router';
 import _ from 'lodash';
 
 import {BastionRequirement, Toolbar} from '../global';
-import {Col, Grid, Row} from '../layout';
+import {Col, Grid, Row, Padding} from '../layout';
+import {Button} from '../forms';
 import EnvList from './EnvList.jsx';
+import instanceImg from '../../../img/tut-ec2-instance.svg';
 import {
   env as actions,
   checks as checkActions
@@ -27,7 +29,8 @@ const Env = React.createClass({
       asyncActions: PropTypes.object,
       env: PropTypes.shape({
         search: PropTypes.string,
-        bastions: PropTypes.array
+        bastions: PropTypes.array,
+        activeBastion: PropTypes.object
       })
     })
   },
@@ -37,8 +40,8 @@ const Env = React.createClass({
   getTitle(){
     const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};
     const region = bastion.region || 'Environment';
-    const vpcId = bastion.vpc_id || '';
-    return `${region} - ${vpcId}`;
+    const vpcId = bastion.vpc_id ? `- ${bastion.vpc_id}` : '';
+    return `${region} ${vpcId}`;
   },
   getIncludes(){
     const {pathname} = this.props.location;
@@ -54,6 +57,22 @@ const Env = React.createClass({
     }
     return include;
   },
+  renderAWSPrompt(){
+    if (!!this.props.redux.env.activeBastion) {
+      return null;
+    }
+    return (
+      <div>
+        <p>To run checks in AWS, add our EC2 instance. We'll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/instance">our AWS integration</Link>.</p>
+        <Padding tb={2}>
+          <Button to="/start/launch-stack" color="primary" block chevron>Add our instance</Button>
+        </Padding>
+        <Padding a={4} className="text-center">
+          <img src={instanceImg} style={{maxHeight: '300px'}}/>
+        </Padding>
+      </div>
+    );
+  },
   render() {
     return (
       <div>
@@ -64,6 +83,7 @@ const Env = React.createClass({
                 <BastionRequirement>
                   <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux} showFilterButtons/>
                 </BastionRequirement>
+                {this.renderAWSPrompt()}
               </Col>
             </Row>
           </Grid>
