@@ -338,6 +338,7 @@ const initial = {
       rds: new List()
     }
   },
+  activeBastion: null,
   bastions: [],
   awsActionHistory: [],
   region: undefined,
@@ -460,8 +461,16 @@ export default handleActions({
   },
   [ENV_GET_BASTIONS]: {
     next(state, action){
-      const bastion = _.chain(action.payload || []).filter('connected').last().value() || {};
-      return _.assign({}, state, {bastions: action.payload}, {region: bastion.region, vpc: bastion.vpc_id || false});
+      const bastions = action.payload;
+      const activeBastion = _.chain(bastions || []).filter('connected').last().value() || null;
+      const region = _.get(activeBastion, 'region');
+      const vpc = _.get(activeBastion, 'vpc_id', false);
+      return _.assign({}, state, {
+        bastions,
+        activeBastion,
+        region,
+        vpc
+      });
     },
     throw: yeller.reportAction
   },
