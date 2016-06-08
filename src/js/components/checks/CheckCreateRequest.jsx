@@ -44,7 +44,7 @@ const CheckCreateRequest = React.createClass({
     })
   },
   componentWillMount(){
-    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
+    if (!this.props.check.target.id && !this.isURLCheck()){
       return this.props.history.push('/check-create/target');
     }
     return this.props.checkActions.testCheckReset();
@@ -73,7 +73,7 @@ const CheckCreateRequest = React.createClass({
   getUrl(){
     const {check} = this.props;
     const spec = check.spec;
-    if (check.target.type === 'host' && check.target.id && spec.path){
+    if (this.isURLCheck() && check.target.id && spec.path){
       let port = '';
       if (spec.protocol === 'http' && spec.port !== 80){
         port = `:${spec.port}`;
@@ -89,6 +89,10 @@ const CheckCreateRequest = React.createClass({
   },
   isDisabled(){
     return !!validate.check(this.props.check, ['request']).length;
+  },
+  isURLCheck(){
+    const targetType = this.props.check.target.type;
+    return targetType === 'host' || targetType === 'external_host';
   },
   runChange(data){
     let check = data;
@@ -235,7 +239,7 @@ const CheckCreateRequest = React.createClass({
   renderTargetSelection(){
     const {target} = this.props.check;
     let {type} = target;
-    if (!type || type === 'host'){
+    if (!type || this.isURLCheck()){
       return null;
     }
     type = type === 'dbinstance' ? 'rds' : type;
@@ -263,7 +267,7 @@ const CheckCreateRequest = React.createClass({
     let text = (
       <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
     );
-    if (this.props.check.target.type === 'host'){
+    if (this.isURLCheck()){
       text = (
         <div>Next, enter a URL. This can be an internal or public-facing service.</div>
       );
@@ -330,7 +334,7 @@ const CheckCreateRequest = React.createClass({
     );
   },
   renderInputs(){
-    if (this.props.check.target.type === 'host'){
+    if (this.isURLCheck()){
       return this.renderUrlInputs();
     }
     return this.renderHttpInputs();
