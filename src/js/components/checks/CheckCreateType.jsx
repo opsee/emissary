@@ -58,7 +58,7 @@ const CheckCreateType = React.createClass({
   },
   getTypes(){
     // Allow legacy "host" type for folks that don't yet have the new type
-    const hostID = flag(`check-type-external_host`) ? 'external_host' : 'host;'
+    const hostID = flag('check-type-external_host') ? 'external_host' : 'host';
     let types = [{
       id: hostID,
       title: 'URL',
