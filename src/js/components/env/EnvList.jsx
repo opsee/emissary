@@ -69,7 +69,7 @@ const EnvList = React.createClass({
     };
   },
   getIncludes(){
-    const hasBastion = this.hasBastion();
+    const hasBastion = !!this.props.redux.env.activeBastion;
     let {include, redux} = this.props;
     return _.chain(include)
     .filter(i => {
