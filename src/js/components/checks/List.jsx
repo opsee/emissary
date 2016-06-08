@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 import cx from 'classnames';
 import _ from 'lodash';
 
-import {Toolbar, StatusHandler} from '../global';
+import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
@@ -151,10 +151,12 @@ const CheckList = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding t={2}>
-                {this.renderActionBar()}
-                {this.renderChecks()}
-              </Padding>
+              <BastionRequirement>
+                <Padding t={2}>
+                  {this.renderActionBar()}
+                  {this.renderChecks()}
+                </Padding>
+              </BastionRequirement>
             </Col>
           </Row>
         </Grid>

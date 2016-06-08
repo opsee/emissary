@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import {Alert} from '../layout';
 import config from '../../modules/config';
+import {flag} from '../../modules';
 
 const BastionRequirement = React.createClass({
   propTypes: {
@@ -21,7 +22,10 @@ const BastionRequirement = React.createClass({
         envGetBastions: PropTypes.object
       }),
       user: PropTypes.object
-    })
+    }),
+    // True if a bastion is absolutely required (e.g., for AWS-specific actions),
+    // false if it's alright to not have a bastion (e.g., for creating URL checks)
+    strict: PropTypes.bool
   },
   getInitialState() {
     return {
@@ -66,6 +70,12 @@ const BastionRequirement = React.createClass({
     })
     .value();
   },
+  isConnected(){
+    if (!this.props.strict && flag('emissary-allow-no-bastion')) {
+      return true;
+    }
+    return this.isBastionConnected() || config.skipBastionRequirement || !this.props.redux.user.get('id');
+  },
   renderReason(){
     const state = this.getBastionState();
     if (state === 'launching'){
@@ -102,7 +112,7 @@ const BastionRequirement = React.createClass({
     );
   },
   render() {
-    if (this.isBastionConnected() || config.skipBastionRequirement || !this.props.redux.user.get('id')){
+    if (this.isConnected()){
       return (
         <div>
           {this.props.children}
