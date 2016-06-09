@@ -52,7 +52,8 @@ const PasswordChange = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.edit(_.assign(this.state, this.props.location.query));
+    const data = _.assign(this.state, this.props.location.query);
+    this.props.actions.edit(data, '/profile');
   },
   render() {
     return (

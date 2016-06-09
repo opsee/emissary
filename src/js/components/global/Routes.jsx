@@ -42,6 +42,7 @@ import PasswordForgot from 'react-proxy?name=onboard!exports?exports.default!../
 import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../user/PasswordChange';
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
+import Verify from 'react-proxy?name=profile!exports?exports.default!../user/Verify';
 
 import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
@@ -131,6 +132,7 @@ const routes = (
 
     <Route path="/search" component={auth(SearchAll)}/>
 
+    <Route path="/verify" component={Verify}/>
     <Route path="/profile" component={auth(Profile)}/>
     <Route path="/profile/edit" component={auth(ProfileEdit)}/>
     <Route path="/login" component={Login}/>

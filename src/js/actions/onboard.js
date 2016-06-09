@@ -1,4 +1,3 @@
-import {push} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
@@ -7,7 +6,6 @@ import * as analytics from './analytics';
 import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
-  ONBOARD_SIGNUP_CREATE,
   ONBOARD_SET_VPC,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
@@ -71,33 +69,6 @@ function getRole(state) {
         }}`
     });
   });
-}
-
-export function signupCreate(data) {
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SIGNUP_CREATE,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .post(`${config.services.auth}/signups/new`)
-        .send(data)
-        .then((res) => {
-          const user = res.body;
-          analytics.trackEvent('Onboard', 'signup', data)(dispatch, state);
-          resolve(user);
-
-          //TODO remove timeout somehow
-          setTimeout(() => {
-            dispatch(push(`/start/thanks?referrer=${data.referrer}`));
-          }, 100);
-        }, err => {
-          let msg = _.get(err, 'response.body.message');
-          const r = msg ? new Error(msg) : err;
-          reject(r);
-        });
-      })
-    });
-  };
 }
 
 export function setInstallData(data) {

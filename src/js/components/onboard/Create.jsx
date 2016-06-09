@@ -8,7 +8,7 @@ import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {onboard as actions} from '../../actions';
+import {user as actions} from '../../actions';
 
 const OnboardCreate = React.createClass({
   propTypes: {
@@ -18,7 +18,7 @@ const OnboardCreate = React.createClass({
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        onboardSignupCreate: PropTypes.object
+        userSignupCreate: PropTypes.object
       })
     }),
     location: PropTypes.shape({
@@ -35,7 +35,7 @@ const OnboardCreate = React.createClass({
     return this.getStatus() === 'pending' ? 'Creating...' : 'Create Account';
   },
   getStatus(){
-    return this.props.redux.asyncActions.onboardSignupCreate.status;
+    return this.props.redux.asyncActions.userSignupCreate.status;
   },
   isDisabled(){
     const incomplete = !this.state.data.email;
@@ -49,7 +49,7 @@ const OnboardCreate = React.createClass({
     return this.props.actions.signupCreate(_.defaults(this.state.data, {
       name: 'default',
       referrer: this.props.location.query.referrer || ''
-    }));
+    }), '/start/launch-stack');
   },
   render() {
     return (
@@ -62,7 +62,7 @@ const OnboardCreate = React.createClass({
               <p>Try Opsee <strong>for free</strong> in our public beta!</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['email']} data={this.state.data} onChange={this.handleUserData}/>
+                  <UserInputs include={['name', 'email']} data={this.state.data} onChange={this.handleUserData}/>
                 </Padding>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
