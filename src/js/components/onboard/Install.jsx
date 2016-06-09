@@ -53,6 +53,8 @@ const Install = React.createClass({
     // Only redirect if they've already completed (or skipped) notification set-up;
     // otherwise, keep the prompt for the notifs step on screen.
     if (this.isComplete() && this.isDoneNotifications()) {
+      // Optimistically reload the bastions, setting the user's activeBastion
+      this.props.actions.getBastions();
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
       }, 250);
