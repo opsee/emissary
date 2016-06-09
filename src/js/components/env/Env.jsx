@@ -63,7 +63,7 @@ const Env = React.createClass({
     }
     return (
       <div>
-        <p>To run checks in AWS, add our EC2 instance. We'll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/instance">our AWS integration</Link>.</p>
+        <p>To run checks in AWS, add our EC2 instance. We'll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/bastion">our AWS integration</Link>.</p>
         <Padding tb={2}>
           <Button to="/start/launch-stack" color="primary" block chevron>Add our instance</Button>
         </Padding>
@@ -73,6 +73,16 @@ const Env = React.createClass({
       </div>
     );
   },
+  renderInner(){
+    if (!this.props.redux.env.activeBastion) {
+      return this.renderAWSPrompt();
+    }
+    return (
+      <BastionRequirement strict>
+        <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux} showFilterButtons/>
+      </BastionRequirement>
+    );
+  },
   render() {
     return (
       <div>
@@ -80,10 +90,7 @@ const Env = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <BastionRequirement>
-                  <EnvList include={this.getIncludes()} limit={this.getIncludes() && this.getIncludes().length === 1 ? 1000 : 8} redux={this.props.redux} showFilterButtons/>
-                </BastionRequirement>
-                {this.renderAWSPrompt()}
+                {this.renderInner()}
               </Col>
             </Row>
           </Grid>
