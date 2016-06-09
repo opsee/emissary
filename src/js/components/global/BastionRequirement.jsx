@@ -16,6 +16,7 @@ const BastionRequirement = React.createClass({
         socketMessages: PropTypes.array
       }),
       env: PropTypes.shape({
+        activeBastion: PropTypes.object,
         bastions: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
