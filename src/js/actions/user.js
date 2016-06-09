@@ -5,6 +5,7 @@ import request from '../modules/request';
 import _ from 'lodash';
 import * as analytics from './analytics';
 import {
+  USER_SIGNUP_CREATE,
   USER_LOGIN,
   USER_LOGOUT,
   USER_REFRESH,
@@ -14,11 +15,41 @@ import {
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_SEND_RESET_EMAIL,
+  USER_SEND_VERIFICATION_EMAIL,
   USER_APPLY,
   USER_SET_LOGIN_DATA,
+  USER_VERIFY_EMAIL,
   ENV_GET_BASTIONS
 } from './constants';
 import storage from '../modules/storage';
+
+export function signupCreate(data, redirect) {
+  return (dispatch, state) => {
+    const params = _.pick(data, ['name', 'referrer', 'email']);
+    dispatch({
+      type: USER_SIGNUP_CREATE,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.services.auth}/signups/activate`)
+        .send(params)
+        .then(res => {
+          const user = res.body;
+          analytics.trackEvent('Onboard', 'signup', data)(dispatch, state);
+          resolve(user);
+          if (redirect) {
+            setTimeout(() => { //TODO remove timeout somehow
+              dispatch(push(redirect));
+            }, 100);
+          }
+        }, err => {
+          let msg = _.get(err, 'response.body.message');
+          const r = msg ? new Error(msg) : err;
+          reject(r);
+        });
+      })
+    });
+  };
+}
 
 export function login(data) {
   return (dispatch, state) => {
@@ -72,6 +103,42 @@ export function setPassword(data) {
   };
 }
 
+export function verifyEmail(data) {
+  return (dispatch, state) => {
+    const params = { token: data.verificationToken };
+    dispatch({
+      type: USER_VERIFY_EMAIL,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.services.auth}/users/${data.id}/verify`)
+        .set('Authorization', state().user.get('auth'))
+        .send(params)
+        .then((res) => {
+          analytics.trackEvent('User', 'email-verification')(dispatch, state);
+          resolve(res.body);
+        }, reject);
+      })
+    });
+  };
+}
+
+export function sendVerificationEmail(data) {
+  return (dispatch, state) => {
+    dispatch({
+      type: USER_SEND_VERIFICATION_EMAIL,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .post(`${config.services.auth}/users/${data.id}/resend-verification`)
+        .set('Authorization', state().user.get('auth'))
+        .then((res) => {
+          analytics.trackEvent('User', 'resend-verification-email')(dispatch, state);
+          resolve(res.body);
+        }, reject);
+      })
+    });
+  };
+}
+
 export function logout(){
   return (dispatch, state) => {
     storage.remove('user');
@@ -114,7 +181,7 @@ export function refresh() {
 
 export const userApply = createAction(USER_APPLY);
 
-export function edit(data) {
+export function edit(data, redirect) {
   return (dispatch, state) => {
     dispatch({
       type: USER_EDIT,
@@ -125,13 +192,14 @@ export function edit(data) {
         .send(data)
         .then((res) => {
           resolve(res.body);
-          //TODO fix this somehow
-          setTimeout(() => {
-            dispatch(push('/profile'));
-          }, 100);
           const user = _.get(res, 'body.user');
           if (user){
             analytics.updateUser(user)(dispatch, state);
+          }
+          if (redirect) {
+            setTimeout(() => {
+              dispatch(push(redirect));
+            }, 100);
           }
         }, reject);
       })
