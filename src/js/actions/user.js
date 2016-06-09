@@ -114,8 +114,8 @@ export function verifyEmail(data) {
         .set('Authorization', state().user.get('auth'))
         .send(params)
         .then((res) => {
+          analytics.trackEvent('User', 'email-verification')(dispatch, state);
           resolve(res.body);
-          analytics.trackEvent('User', 'email-verification');
         }, reject);
       })
     });
@@ -131,8 +131,8 @@ export function sendVerificationEmail(data) {
         .post(`${config.services.auth}/users/${data.id}/resend-verification`)
         .set('Authorization', state().user.get('auth'))
         .then((res) => {
+          analytics.trackEvent('User', 'resend-verification-email')(dispatch, state);
           resolve(res.body);
-          analytics.trackEvent('User', 'resend-verification-email');
         }, reject);
       })
     });
