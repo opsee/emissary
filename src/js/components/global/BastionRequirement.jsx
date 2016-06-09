@@ -66,7 +66,7 @@ const BastionRequirement = React.createClass({
     return !!this.props.redux.env.activeBastion;
   },
   isConnected(){
-    if (!this.props.strict && flag('emissary-allow-no-bastion')) {
+    if (!this.props.strict && flag('check-type-external_host')) {
       return true;
     }
     return this.isBastionConnected() || config.skipBastionRequirement || !this.props.redux.user.get('id');
