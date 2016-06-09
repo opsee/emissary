@@ -63,12 +63,7 @@ const BastionRequirement = React.createClass({
     return 'pending';
   },
   isBastionConnected(){
-    return _.chain(this.props.redux.app.socketMessages)
-    .filter({command: 'bastions'})
-    .find(msg => {
-      return _.chain(msg).get('attributes.bastions').find('connected').value();
-    })
-    .value();
+    return !!this.props.redux.env.activeBastion;
   },
   isConnected(){
     if (!this.props.strict && flag('emissary-allow-no-bastion')) {
