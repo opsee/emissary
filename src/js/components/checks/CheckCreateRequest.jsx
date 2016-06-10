@@ -301,9 +301,16 @@ const CheckCreateRequest = React.createClass({
     );
   },
   renderUrlInputs(){
+    const {type} = this.props.check.target;
+    let heading = '';
+    if (type === 'host') {
+      heading = 'Internal ';
+    } else if (type === 'external_host') {
+      heading = 'External ';
+    }
     return (
       <Padding b={1}>
-        <Heading level={3}>Define Your HTTP Request</Heading>
+        <Heading level={3}>Define Your {heading}HTTP Request</Heading>
         {this.renderVerbInput()}
         <Padding b={1}>
           <Input data={this.state} path="url" onChange={this.handleUrlChange} label="URL*" placeholder="https://try.opsee.com or http://192.168.1.1:80"/>
