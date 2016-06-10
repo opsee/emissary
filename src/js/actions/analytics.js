@@ -60,10 +60,7 @@ export function trackPageView(path, title) {
     }
 
     return dispatch({
-      type: ANALYTICS_PAGEVIEW,
-      payload: request
-        .post(`${ANALYTICS_API}/pageview`)
-        .send({ path, name, user })
+      type: ANALYTICS_PAGEVIEW
     });
   };
 }
