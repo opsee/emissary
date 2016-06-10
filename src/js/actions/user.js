@@ -114,7 +114,7 @@ export function verifyEmail(data) {
         .set('Authorization', state().user.get('auth'))
         .send(params)
         .then((res) => {
-          analytics.trackEvent('User', 'email-verification')(dispatch, state);
+          analytics.trackEvent('User', 'verified-email', null, res.body.user)(dispatch, state);
           resolve(res.body);
         }, reject);
       })
