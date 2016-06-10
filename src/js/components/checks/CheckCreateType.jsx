@@ -42,6 +42,12 @@ const CheckCreateType = React.createClass({
   contextTypes: {
     router: PropTypes.object.isRequired
   },
+  componentWillMount(){
+    const hasActiveBastion = !!this.props.redux.env.activeBastion;
+    if (flag('check-type-external_host') && !hasActiveBastion) {
+      this.handleTypeSelect({id: 'external_host'});
+    }
+  },
   getLink(type = {}){
     const data = JSON.stringify({target: {type: type.id}});
     if (type.id === 'host' || type.id === 'external_host'){
@@ -57,15 +63,17 @@ const CheckCreateType = React.createClass({
     return this.props.redux.asyncActions.getGroupsSecurity.status;
   },
   getTypes(){
-    // Allow legacy "host" type for folks that don't yet have the new type
-    const hostID = flag('check-type-external_host') ? 'external_host' : 'host';
     let types = [{
-      id: hostID,
-      title: 'URL',
+      id: 'external_host',
+      title: 'URL (external)',
       size: () => ''
     }];
     if (!!this.props.redux.env.activeBastion) {
       types = _.concat(types, [{
+        id: 'host',
+        title: 'URL (internal)',
+        size: () => ''
+      }, {
         id: 'elb',
         title: 'ELB',
         size: () => this.props.redux.env.groups.elb.size
