@@ -264,12 +264,19 @@ const CheckCreateRequest = React.createClass({
     if (this.props.renderAsInclude){
       return null;
     }
-    let text = (
-      <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
-    );
-    if (this.isURLCheck()){
+    let text;
+    const targetType = this.props.check.target.type;
+    if (targetType === 'host'){
       text = (
         <div>Next, enter a URL. This can be an internal or public-facing service.</div>
+      );
+    } else if (targetType === 'external_host') {
+      text = (
+        <div>Next, enter a public-facing URL.</div>
+      );
+    } else {
+      text = (
+        <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
       );
     }
     return (
