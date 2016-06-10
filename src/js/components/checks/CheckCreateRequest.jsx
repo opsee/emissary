@@ -380,6 +380,7 @@ const CheckCreateRequest = React.createClass({
         <Padding b={1}>
           <CheckResponsePaginate check={this.getCheck()} showBoolArea={false}/>
         </Padding>
+        <p><em className="small text-muted">Learn more about creating health checks in our <a target="_blank" href="/docs/checks">health check docs</a>.</em></p>
         <Padding b={1}>
           {this.renderSubmitButton()}
         </Padding>

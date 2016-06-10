@@ -158,6 +158,7 @@ const CheckCreateType = React.createClass({
             );
           })}
         </StatusHandler>
+        <p><em className="small text-muted">Learn more about the different kinds of health checks in our <a target="_blank" href="/docs/checks">health check docs</a>.</em></p>
         {this.renderBastionPrompt()}
       </div>
     );
