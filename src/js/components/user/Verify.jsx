@@ -28,7 +28,7 @@ const Verify = React.createClass({
     })
   },
   componentWillMount(){
-    const id = _.get(this.props.location.query, 'id');
+    const id = _.parseInt(_.get(this.props.location.query, 'id'));
     const verificationToken = _.get(this.props.location.query, 'verification_token');
     const authToken = _.get(this.props.location.query, 'token');
 
@@ -38,7 +38,8 @@ const Verify = React.createClass({
 
     // Propagate the token so auth headers, etc. work
     const loginDate = new Date();
-    this.props.actions.userApply({ loginDate, token: authToken });
+    const user = { id };
+    this.props.actions.userApply({ user, loginDate, token: authToken });
 
     // Verify the email address right away, no click required
     this.props.actions.verifyEmail({ id, verificationToken, authToken });
