@@ -25,7 +25,7 @@ import {
 let initial = loadUser();
 
 function deleteTokenCookie() {
-  document.cookie = cookie.serialize('ferengi-token', '', {
+  document.cookie = cookie.serialize('ferengi', '', {
     domain: config.cookieDomain,
     maxAge: 0
   });
@@ -53,16 +53,16 @@ function loadUser() {
   // When signing up from Ferengi, a temporary token is saved in a cookie.
   // This allows the user to authenticate once, without needing a password.
   const cookies = cookie.parse(document.cookie);
-  const token = _.get(cookies, 'ferengi-token');
-  if (token) {
+  const ferengiCookie = _.get(cookies, 'ferengi');
+  if (ferengiCookie) {
+    const ferengiUser = JSON.parse(ferengiCookie);
+    const auth = `Bearer ${ferengiUser.token}`;
+    const user = _.assign({ auth }, ferengiUser);
     // Once we've grabbed the token from the cookie, the full user object
     // is fetched and persisted to localStorage (as with normal logins)
     // and the cookie can be deleted.
     deleteTokenCookie();
-    return new User({
-      token: token,
-      auth: `Bearer ${token}`
-    });
+    return new User(user);
   }
   const localUser = storage.get('user');
   if (localUser && getAuth(localUser)) {
