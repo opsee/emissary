@@ -26,7 +26,7 @@ let initial = loadUser();
 
 function deleteTokenCookie() {
   document.cookie = cookie.serialize('ferengi-token', '', {
-    domain: 'localhost', // explicitly set domain so it works on both ferengi/emissary
+    domain: config.cookieDomain,
     maxAge: 0
   });
 }
