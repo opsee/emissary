@@ -69,13 +69,9 @@ const Opsee = React.createClass({
     const hasAuth = !!this.props.redux.user.get('auth');
     const willHaveAuth = !!nextProps.redux.user.get('auth');
 
-    //user log out
-    if (hasAuth && !willHaveAuth) {
+    if (hasAuth && !willHaveAuth) { //user log out
       this.props.appActions.shutdown();
-    }
-
-    //user log in
-    else if (!hasAuth && willHaveAuth) {
+    } else if (!hasAuth && willHaveAuth) { //user log in
       this.props.appActions.initialize();
       this.props.checkActions.getChecks();
     }

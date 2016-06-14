@@ -22,6 +22,7 @@ const Verify = React.createClass({
     history: PropTypes.object.isRequired,
     actions: PropTypes.shape({
       userApply: PropTypes.func.isRequired,
+      refresh: PropTypes.func.isRequired,
       verifyEmail: PropTypes.func.isRequired,
       sendVerificationEmail: PropTypes.func.isRequired,
       edit: PropTypes.func.isRequired

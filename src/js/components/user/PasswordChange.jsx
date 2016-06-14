@@ -15,7 +15,8 @@ const PasswordChange = React.createClass({
     history: PropTypes.object.isRequired,
     actions: PropTypes.shape({
       edit: PropTypes.func.isRequired,
-      userApply: PropTypes.func.isRequired
+      userApply: PropTypes.func.isRequired,
+      refresh: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
@@ -33,10 +34,11 @@ const PasswordChange = React.createClass({
     if (!this.props.location.query.id || !token){
       return this.props.history.replace('/password-forgot');
     }
-    return this.props.actions.userApply({
+    this.props.actions.userApply({
       loginDate: new Date(),
       token
     });
+    return this.props.actions.refresh();
   },
   getStatus(){
     return this.props.redux.asyncActions.userEdit.status;
