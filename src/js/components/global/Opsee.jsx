@@ -66,12 +66,16 @@ const Opsee = React.createClass({
     yeller.configure(this.props.redux);
   },
   componentWillReceiveProps(nextProps) {
+    const hasAuth = !!this.props.redux.user.get('auth');
+    const willHaveAuth = !!nextProps.redux.user.get('auth');
+
     //user log out
-    if (!nextProps.redux.user.get('auth') && this.props.redux.user.get('auth')){
+    if (hasAuth && !willHaveAuth) {
       this.props.appActions.shutdown();
     }
+
     //user log in
-    if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
+    else if (!hasAuth && willHaveAuth) {
       this.props.appActions.initialize();
       this.props.checkActions.getChecks();
     }
