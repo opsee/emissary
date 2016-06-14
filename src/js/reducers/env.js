@@ -180,7 +180,8 @@ const statics = {
     newData = _.assign(newData, {
       name: newData.LoadBalancerName,
       checks: new List(newData.checks || []),
-      id: newData.LoadBalancerName
+      id: newData.LoadBalancerName,
+      ListenerDescriptions: new List(newData.ListenerDescriptions)
     });
     if (newData.checks.size && !newData.results.size){
       newData.state = 'initializing';

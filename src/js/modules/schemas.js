@@ -95,7 +95,8 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
-  Instances: new List()
+  Instances: new List(),
+  ListenerDescriptions: List()
 }));
 
 const Target = Record({
