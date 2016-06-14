@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import config from '../modules/config';
 import ga from '../modules/ga';
+import * as launchDarkly from '../modules/launchDarkly';
 import request from '../modules/request';
 import {User} from '../modules/schemas';
 import {
@@ -92,10 +93,7 @@ export function trackEvent(category, action = '', data = {}, userData = null) {
       return Promise.resolve();
     }
 
-    // FIXME remove when LaunchDarkly tracked in Myst
-    if (window.ldclient){
-      window.ldclient.track(`${category} - ${action}`, data);
-    }
+    launchDarkly.ldclient.track(`${category} - ${action}`, data);
 
     // Track the event in GA so we can get browser context (referrer, etc.)
     const stringData = typeof data === 'string' ? data : JSON.stringify(data);
@@ -132,24 +130,13 @@ export function updateUser(updatedUser) {
   };
 }
 
-export function initialize() {
+export function initialize(userData) {
   return (dispatch, state) => {
-    const user = (state().user || new User()).toJS();
+    const user = userData || (state().user || new User()).toJS();
+
     // ld needs to be loaded even if user is ghosting for features to work
     // there are no analytics in LD so it's nbd
-    // FIXME Remove when Launch Darkly added to Myst
-    if (window.ldclient){
-      window.ldclient.identify({
-        firstName: user.name,
-        key: (user.id || '').toString(),
-        email: user.email,
-        custom: {
-          customer_id: user.customer_id,
-          id: user.id,
-          admin: !!user.admin
-        }
-      });
-    }
+    launchDarkly.identify(user);
 
     //user is ghosting
     if (user && user.ghosting){
