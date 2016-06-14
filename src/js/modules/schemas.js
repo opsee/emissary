@@ -127,7 +127,7 @@ export const Check = Record({
   passing: undefined,
   total: undefined,
   spec: Map({
-    path: config.checkDefaultPath,
+    path: config.checkDefaultPath || '/',
     protocol: config.checkDefaultProtocol || 'http',
     port: config.checkDefaultPort || 80,
     verb: config.checkDefaultVerb || 'GET',
