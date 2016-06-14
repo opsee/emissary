@@ -29,7 +29,7 @@ const Verify = React.createClass({
     })
   },
   componentWillMount(){
-    const id = _.get(this.props.location.query, 'id');
+    const id = _.parseInt(_.get(this.props.location, 'query.id'));
     const verificationToken = _.get(this.props.location.query, 'verification_token');
     const authToken = _.get(this.props.location.query, 'token');
 
@@ -39,7 +39,8 @@ const Verify = React.createClass({
 
     // Apply the partially authenticated user locally
     const loginDate = new Date();
-    this.props.actions.userApply({ id, loginDate, token: authToken });
+    const user = { id, loginDate };
+    this.props.actions.userApply({ user, token: authToken });
 
     // Grab the rest of the user data
     this.props.actions.refresh();

@@ -103,8 +103,7 @@ export function shutdown(){
 export function initialize(){
   return (dispatch, state) => {
     analytics.initialize()(dispatch, state);
-    const isAuthenticated = !!state().user.get('token');
-    if (isAuthenticated){
+    if (state().user.get('token') && state().user.get('id')){
       setTimeout(() => {
         socketStart(dispatch, state);
       }, config.socketStartDelay || 0);
