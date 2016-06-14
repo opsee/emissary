@@ -7,7 +7,7 @@ import {plain as seed} from 'seedling';
 import cx from 'classnames';
 import {is} from 'immutable';
 
-import {Checkmark, NewWindow} from '../icons';
+import {Checkmark} from '../icons';
 import {Button} from '../forms';
 import style from '../global/listItem.css';
 import {Padding} from '../layout';
@@ -41,7 +41,6 @@ const ListItem = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     let arr = [];
-    arr.push(!_.isEqual(this.props.children, nextProps.children));
     arr.push(!is(this.props.item, nextProps.item));
     return _.some(arr);
   },
@@ -103,20 +102,6 @@ const ListItem = React.createClass({
       </Link>
     );
   },
-  renderMenuButton(){
-    const menu = _.find(this.props.children, {key: 'menu'});
-    if (!menu){
-      return null;
-    }
-    if (this.props.onClick){
-      return (
-        <Button icon flat to={this.props.link} target="_blank" title={`View this ${this.props.type} in a new window`}>
-          <NewWindow btn fill="textSecondary"/>
-        </Button>
-      );
-    }
-    return null;
-  },
   renderSelectButton(){
     const selected = this.props.item.get('selected');
     const fn = this.props.onSelect;
@@ -130,14 +115,10 @@ const ListItem = React.createClass({
     }
     return null;
   },
-  renderMenu(){
-    return _.find(this.props.children, {key: 'menu'}) || <div/>;
-  },
   render(){
     return (
       <div className={this.getClass()}>
         <Padding b={1} className="display-flex">
-          {this.renderMenu()}
           <Padding r={2} l={0.5}>
             {this.renderGraph()}
           </Padding>

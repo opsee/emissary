@@ -311,7 +311,7 @@ function formatCloudwatchCheck(data){
   return check;
 }
 
-function formatHttpCheck(data){
+function formatHttpCheck(data, forTestCheck){
   let check = _.cloneDeep(data);
   const spec = check.spec;
   if (check.target.type === 'security'){
@@ -335,6 +335,14 @@ function formatHttpCheck(data){
   .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id'])
   .mapKeys((value, key) => {
     return key === 'spec' ? 'http_check' : key;
+  })
+  .mapValues((value, key) => {
+    // toss away assertions because test-check doesn't need them and it will cause issues
+    // if assertions aren't fully formed
+    if (forTestCheck && key === 'assertions'){
+      return [];
+    }
+    return value;
   })
   .defaults({
     name: 'Http Check'
