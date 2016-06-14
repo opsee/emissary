@@ -1,21 +1,16 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Table, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
-import {Button, Input, RadioSelect} from '../forms';
+import {Button} from '../forms';
 import {Close} from '../icons';
-import {Color, Heading} from '../type';
-import {flag} from '../../modules';
 import {Member} from '../../modules/schemas';
-import {toSentenceSerial} from '../../modules/string';
 import {
   team as actions
 } from '../../actions';
-import {SlackInfo, PagerdutyInfo} from '../integrations';
 import TeamMemberInputs from './TeamMemberInputs';
 
 const TeamMemberEdit = React.createClass({

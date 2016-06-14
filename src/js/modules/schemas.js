@@ -10,6 +10,7 @@ export const User = Record({
   loginDate: null,
   admin: false,
   admin_id: 0,
+  created_at: null,
   intercom_hmac: null,
   auth: null,
   ghosting: false,
@@ -17,7 +18,8 @@ export const User = Record({
   data: undefined,
   loginData: {},
   region: undefined,
-  vpc: undefined
+  vpc: undefined,
+  verified: null
 });
 
 export const Member = Record({

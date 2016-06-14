@@ -1,5 +1,5 @@
 :global(#main) {
-  padding-bottom: 0;
+  /*padding-bottom: 0;*/
 }
 
 :global(.container) {
@@ -18,7 +18,8 @@ h1, h2, h3 {
 
 .container {
   background-color: #303030;
-  height: 100vh;
+  min-height: 100vh;
+  margin-bottom: -5rem;
 }
 
 .transitionContainer {
@@ -100,8 +101,9 @@ h1, h2, h3 {
   margin-bottom: 0.75rem;
 }
 
-.configSub {
+.subtext {
   font-size: 1.25rem;
   opacity: 0.75;
-  line-height: 2rem;
+  line-height: 2.25rem;
+  margin: 0;
 }

@@ -13,8 +13,9 @@ import {
   ONBOARD_MAKE_LAUNCH_TEMPLATE,
   ONBOARD_SCAN_REGION,
   ONBOARD_HAS_ROLE,
-  ONBOARD_SET_DEFAULT_NOTIF,
-  ONBOARD_GET_DEFAULT_NOTIF
+  ONBOARD_SET_DEFAULT_NOTIFS,
+  ONBOARD_GET_DEFAULT_NOTIFS,
+  ONBOARD_SKIP_DEFAULT_NOTIFS
 } from '../actions/constants';
 
 const initial = {
@@ -26,6 +27,7 @@ const initial = {
     region: null
   },
   defaultNotifs: null,
+  skippedDefaultNotifs: false,
   // The currently selected region on the /start/config-instance screen.
   // The region contains all of its vpcs and subnets.
   selectedRegion: null,
@@ -156,18 +158,23 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
-  [ONBOARD_SET_DEFAULT_NOTIF]: {
+  [ONBOARD_SET_DEFAULT_NOTIFS]: {
     next(state, action) {
       const defaultNotifs = action.payload.data;
       return _.assign({}, state, {defaultNotifs});
     },
     throw: yeller.reportAction
   },
-  [ONBOARD_GET_DEFAULT_NOTIF]: {
+  [ONBOARD_GET_DEFAULT_NOTIFS]: {
     next(state, action) {
       const defaultNotifs = action.payload.data;
       return _.assign({}, state, {defaultNotifs});
     },
     throw: yeller.reportAction
+  },
+  [ONBOARD_SKIP_DEFAULT_NOTIFS]: {
+    next(state) {
+      return _.assign({}, state, { skippedDefaultNotifs: true });
+    }
   }
 }, initial);

@@ -66,6 +66,7 @@ const Opsee = React.createClass({
   },
   componentWillMount(){
     this.props.appActions.initialize();
+    this.props.userActions.refresh();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
     this.props.appActions.getStatusPageInfo();
     this.setInterval(this.props.appActions.getStatusPageInfo, (1000 * 60 * 2));

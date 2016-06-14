@@ -7,7 +7,9 @@ import {Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
+import {flag} from '../../modules';
+
 import {
   user as actions,
   app as appActions
@@ -16,13 +18,17 @@ import {
 const Profile = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      logout: PropTypes.func
+      logout: PropTypes.func,
+      sendVerificationEmail: PropTypes.func
     }),
     appActions: PropTypes.shape({
       shutdown: PropTypes.func
     }),
     redux: PropTypes.shape({
-      user: PropTypes.object
+      user: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        userSendVerificationEmail: PropTypes.object
+      })
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -31,8 +37,49 @@ const Profile = React.createClass({
   handleLogout(){
     this.props.actions.logout();
   },
+  getUser() {
+    return this.props.redux.user.toJS();
+  },
+  handleLogout(){
+    this.props.actions.logout();
+  },
+  handleTriggerEmail(e){
+    e.preventDefault();
+    const user = this.getUser();
+    this.props.actions.sendVerificationEmail({ id: user.id });
+  },
+  renderVerificationNag(){
+    const user = this.getUser();
+    if (user.verified) {
+      return null;
+    }
+    const { status } = this.props.redux.asyncActions.userSendVerificationEmail;
+    switch (status) {
+    case 'pending':
+      return (
+        <Color c="gray500">Sending verification email...</Color>
+      );
+    case 'success':
+      return (
+        <Color c="success">Verification email sent!</Color>
+      );
+    default:
+      return (
+        <span><a href="#" onClick={this.handleTriggerEmail}>Resend verification email</a></span>
+      );
+    }
+  },
+  renderEmail(){
+    const user = this.getUser();
+    if (user.verified) {
+      return user.email;
+    }
+    return (
+      <span>{user.email} <span className="text-sm"><Color c="danger">Unverified</Color></span></span>
+    );
+  },
   render() {
-    const user = this.props.redux.user.toJS();
+    const user = this.getUser();
     return (
        <div>
         <Toolbar title={user.name} pageTitle="Profile">
@@ -52,7 +99,10 @@ const Profile = React.createClass({
                   </tr>
                   <tr>
                     <td><strong>Email</strong></td>
-                    <td>{user.email}</td>
+                    <td>
+                      <div>{this.renderEmail()}</div>
+                      <div>{this.renderVerificationNag()}</div>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>Password</strong></td>
