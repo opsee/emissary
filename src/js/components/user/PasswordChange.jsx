@@ -37,7 +37,7 @@ const PasswordChange = React.createClass({
     }
     const loginDate = new Date();
     const user = { id, loginDate };
-    this.props.actions.userApply({ user, token: authToken });
+    this.props.actions.userApply({ user, token });
     return this.props.actions.refresh();
   },
   getStatus(){
