@@ -36,9 +36,12 @@ const Verify = React.createClass({
       return this.props.history.replace('/login');
     }
 
-    // Propagate the token so auth headers, etc. work
+    // Apply the partially authenticated user locally
     const loginDate = new Date();
-    this.props.actions.userApply({ loginDate, token: authToken });
+    this.props.actions.userApply({ id, loginDate, token: authToken });
+
+    // Grab the rest of the user data
+    this.props.actions.refresh();
 
     // Verify the email address right away, no click required
     this.props.actions.verifyEmail({ id, verificationToken, authToken });

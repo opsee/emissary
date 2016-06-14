@@ -166,6 +166,8 @@ export function refresh() {
         .set('Authorization', state().user.get('auth'))
         .timeout(7000)
         .then((res) => {
+          // Re-initiailize the analytics user, in case we have updated user data
+          analytics.initialize(_.get(res.body, 'user'))(dispatch, state);
           resolve(res.body);
         }, (err) => {
           const redirect = state().router.location.pathname;
