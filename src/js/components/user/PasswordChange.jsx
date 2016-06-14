@@ -30,7 +30,7 @@ const PasswordChange = React.createClass({
     };
   },
   componentWillMount(){
-    const id = _.parseInt(_.get(this.props.location, 'query.id'));
+    const id = parseInt(_.get(this.props.location, 'query.id'), 10);
     const token = _.get(this.props.location, 'query.token');
     if (!id || !token){
       return this.props.history.replace('/password-forgot');

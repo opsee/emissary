@@ -29,7 +29,7 @@ const Verify = React.createClass({
     })
   },
   componentWillMount(){
-    const id = _.parseInt(_.get(this.props.location, 'query.id'));
+    const id = parseInt(_.get(this.props.location, 'query.id'), 10);
     const verificationToken = _.get(this.props.location.query, 'verification_token');
     const authToken = _.get(this.props.location.query, 'token');
 
