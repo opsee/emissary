@@ -22,13 +22,14 @@ const Verify = React.createClass({
     history: PropTypes.object.isRequired,
     actions: PropTypes.shape({
       userApply: PropTypes.func.isRequired,
+      refresh: PropTypes.func.isRequired,
       verifyEmail: PropTypes.func.isRequired,
       sendVerificationEmail: PropTypes.func.isRequired,
       edit: PropTypes.func.isRequired
     })
   },
   componentWillMount(){
-    const id = _.get(this.props.location.query, 'id');
+    const id = parseInt(_.get(this.props.location, 'query.id'), 10);
     const verificationToken = _.get(this.props.location.query, 'verification_token');
     const authToken = _.get(this.props.location.query, 'token');
 
@@ -36,9 +37,13 @@ const Verify = React.createClass({
       return this.props.history.replace('/login');
     }
 
-    // Propagate the token so auth headers, etc. work
+    // Apply the partially authenticated user locally
     const loginDate = new Date();
-    this.props.actions.userApply({ loginDate, token: authToken });
+    const user = { id, loginDate };
+    this.props.actions.userApply({ user, token: authToken });
+
+    // Grab the rest of the user data
+    this.props.actions.refresh();
 
     // Verify the email address right away, no click required
     this.props.actions.verifyEmail({ id, verificationToken, authToken });
