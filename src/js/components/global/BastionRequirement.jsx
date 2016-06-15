@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import {Alert} from '../layout';
 import config from '../../modules/config';
+import {flag} from '../../modules';
 
 const BastionRequirement = React.createClass({
   propTypes: {
@@ -15,13 +16,17 @@ const BastionRequirement = React.createClass({
         socketMessages: PropTypes.array
       }),
       env: PropTypes.shape({
+        activeBastion: PropTypes.object,
         bastions: PropTypes.array
       }),
       asyncActions: PropTypes.shape({
         envGetBastions: PropTypes.object
       }),
       user: PropTypes.object
-    })
+    }),
+    // True if a bastion is absolutely required (e.g., for AWS-specific actions),
+    // false if it's alright to not have a bastion (e.g., for creating URL checks)
+    strict: PropTypes.bool
   },
   getInitialState() {
     return {
@@ -59,12 +64,13 @@ const BastionRequirement = React.createClass({
     return 'pending';
   },
   isBastionConnected(){
-    return _.chain(this.props.redux.app.socketMessages)
-    .filter({command: 'bastions'})
-    .find(msg => {
-      return _.chain(msg).get('attributes.bastions').find('connected').value();
-    })
-    .value();
+    return !!this.props.redux.env.activeBastion;
+  },
+  isConnected(){
+    if (!this.props.strict && flag('check-type-external_host')) {
+      return true;
+    }
+    return this.isBastionConnected() || config.skipBastionRequirement || !this.props.redux.user.get('id');
   },
   renderReason(){
     const state = this.getBastionState();
@@ -102,7 +108,7 @@ const BastionRequirement = React.createClass({
     );
   },
   render() {
-    if (this.isBastionConnected() || config.skipBastionRequirement || !this.props.redux.user.get('id')){
+    if (this.isConnected()){
       return (
         <div>
           {this.props.children}

@@ -44,7 +44,7 @@ const CheckCreateRequest = React.createClass({
     })
   },
   componentWillMount(){
-    if (!this.props.check.target.id && this.props.check.target.type !== 'host'){
+    if (!this.props.check.target.id && !this.isURLCheck()){
       return this.props.history.push('/check-create/target');
     }
     return this.props.checkActions.testCheckReset();
@@ -73,7 +73,7 @@ const CheckCreateRequest = React.createClass({
   getUrl(){
     const {check} = this.props;
     const spec = check.spec;
-    if (check.target.type === 'host' && check.target.id && spec.path){
+    if (this.isURLCheck() && check.target.id && spec.path){
       let port = '';
       if (spec.protocol === 'http' && spec.port !== 80){
         port = `:${spec.port}`;
@@ -89,6 +89,10 @@ const CheckCreateRequest = React.createClass({
   },
   isDisabled(){
     return !!validate.check(this.props.check, ['request']).length;
+  },
+  isURLCheck(){
+    const targetType = this.props.check.target.type;
+    return targetType === 'host' || targetType === 'external_host';
   },
   runChange(data){
     let check = data;
@@ -235,7 +239,7 @@ const CheckCreateRequest = React.createClass({
   renderTargetSelection(){
     const {target} = this.props.check;
     let {type} = target;
-    if (!type || type === 'host'){
+    if (!type || this.isURLCheck()){
       return null;
     }
     type = type === 'dbinstance' ? 'rds' : type;
@@ -260,12 +264,19 @@ const CheckCreateRequest = React.createClass({
     if (this.props.renderAsInclude){
       return null;
     }
-    let text = (
-      <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
-    );
-    if (this.props.check.target.type === 'host'){
+    let text;
+    const targetType = this.props.check.target.type;
+    if (targetType === 'host'){
       text = (
         <div>Next, enter a URL. This can be an internal or public-facing service.</div>
+      );
+    } else if (targetType === 'external_host') {
+      text = (
+        <div>Next, enter a public-facing URL.</div>
+      );
+    } else {
+      text = (
+        <div>Next, specify the parameters of your request. A typical request might be a GET at route '/' on port 80.</div>
       );
     }
     return (
@@ -297,9 +308,16 @@ const CheckCreateRequest = React.createClass({
     );
   },
   renderUrlInputs(){
+    const {type} = this.props.check.target;
+    let heading = '';
+    if (type === 'host') {
+      heading = 'Internal ';
+    } else if (type === 'external_host') {
+      heading = 'External ';
+    }
     return (
       <Padding b={1}>
-        <Heading level={3}>Define Your HTTP Request</Heading>
+        <Heading level={3}>Define Your {heading}HTTP Request</Heading>
         {this.renderVerbInput()}
         <Padding b={1}>
           <Input data={this.state} path="url" onChange={this.handleUrlChange} label="URL*" placeholder="https://try.opsee.com or http://192.168.1.1:80"/>
@@ -330,7 +348,7 @@ const CheckCreateRequest = React.createClass({
     );
   },
   renderInputs(){
-    if (this.props.check.target.type === 'host'){
+    if (this.isURLCheck()){
       return this.renderUrlInputs();
     }
     return this.renderHttpInputs();
@@ -362,6 +380,7 @@ const CheckCreateRequest = React.createClass({
         <Padding b={1}>
           <CheckResponsePaginate check={this.getCheck()} showBoolArea={false}/>
         </Padding>
+        <p><em className="small text-muted">Learn more about creating health checks in our <a target="_blank" href="/docs/checks">health check docs</a>.</em></p>
         <Padding b={1}>
           {this.renderSubmitButton()}
         </Padding>

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {List} from 'immutable';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../layout';
@@ -8,6 +9,7 @@ import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 import {checks as actions} from '../../actions';
 import {Heading} from '../type';
+import {flag} from '../../modules';
 
 const CheckItemList = React.createClass({
   mixins: [SetInterval],
@@ -45,6 +47,9 @@ const CheckItemList = React.createClass({
       asyncActions: PropTypes.shape({
         getChecks: PropTypes.object,
         checksDelete: PropTypes.object
+      }),
+      env: PropTypes.shape({
+        activeBastion: PropTypes.object
       })
     })
   },
@@ -64,6 +69,13 @@ const CheckItemList = React.createClass({
     }
   },
   getChecks(noFilter){
+    // Don't bother filtering, etc. if a user is without a bastion.
+    // TODO - remove this once no-bastion mode is launched for real
+    const hasActiveBastion = !!this.props.redux.env.activeBastion;
+    if (!hasActiveBastion && !flag('check-type-external_host')) {
+      return new List();
+    }
+
     let data = this.props.redux.checks.checks;
     data = data
     .sortBy(item => item.name)
@@ -85,7 +97,13 @@ const CheckItemList = React.createClass({
     if (this.props.selected){
       data = data.filter(check => check.get('selected'));
     }
-    return data.slice(this.props.offset, this.props.limit);
+    return data
+    .filter(item => {
+      // Filter out everything except external checks if no bastion active
+      // AND no-bastion mode enabled (Otherwise, users should just see an "install your bastion" requirement.)
+      return hasActiveBastion || (flag('check-type-external_host') && item.target.type === 'external_host');
+    })
+    .slice(this.props.offset, this.props.limit);
   },
   renderTitle(){
     const checks = this.getChecks();
