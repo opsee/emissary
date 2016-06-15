@@ -2,6 +2,7 @@ export default {
   checkDefaultPath: '/markov/yield/200',
   checkDefaultPort: 8000,
   checkDefaultVerb: 'GET',
+  cookieDomain: 'localhost',
   defaultBastionRegion: 'us-west-1',
   showVpcScreen: true,
   skipBastionRequirement: false,

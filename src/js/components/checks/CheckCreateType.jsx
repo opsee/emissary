@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router';
 
 import {Button} from '../forms';
 import {BastionRequirement, StatusHandler, Toolbar} from '../global';
@@ -25,6 +26,7 @@ const CheckCreateType = React.createClass({
         getGroupsSecurity: PropTypes.object
       }),
       env: PropTypes.shape({
+        activeBastion: PropTypes.object,
         groups: PropTypes.shape({
           security: PropTypes.object,
           elb: PropTypes.object,
@@ -40,51 +42,64 @@ const CheckCreateType = React.createClass({
   contextTypes: {
     router: PropTypes.object.isRequired
   },
+  componentWillMount(){
+    const hasActiveBastion = !!this.props.redux.env.activeBastion;
+    if (flag('check-type-external_host') && !hasActiveBastion) {
+      this.handleTypeSelect({id: 'external_host'});
+    }
+  },
   getLink(type = {}){
     const data = JSON.stringify({target: {type: type.id}});
-    if (type.id === 'host'){
+    if (type.id === 'host' || type.id === 'external_host'){
       return `/check-create/request?data=${data}`;
     }
     return `/check-create/target?data=${data}`;
   },
+  getStatus(){
+    // Nothing to query if URL checks are the only available type
+    if (!this.props.redux.env.activeBastion) {
+      return 'success';
+    }
+    return this.props.redux.asyncActions.getGroupsSecurity.status;
+  },
   getTypes(){
-    const initial = [
-      {
+    let types = [{
+      id: 'external_host',
+      title: 'URL (external)',
+      size: () => ''
+    }];
+    if (!!this.props.redux.env.activeBastion) {
+      types = _.concat(types, [{
+        id: 'host',
+        title: 'URL (internal)',
+        size: () => ''
+      }, {
         id: 'elb',
         title: 'ELB',
         size: () => this.props.redux.env.groups.elb.size
-      },
-      {
+      }, {
         id: 'security',
         title: 'Security Group',
         size: () => this.props.redux.env.groups.security.size
-      },
-      {
+      }, {
         id: 'asg',
         title: 'Auto Scaling Group',
         size: () => this.props.redux.env.groups.asg.size
-      },
-      {
+      }, {
         id: 'ecc',
         title: 'EC2 Instance',
         size: () => this.props.redux.env.instances.ecc.size
-      },
-      {
+      }, {
         id: 'rds',
         title: 'RDS Instance',
         size: () => this.props.redux.env.instances.rds.size
-      },
-      {
-        id: 'host',
-        title: 'URL',
-        size: () => ''
-      }
-    ];
-    return _.chain(initial).filter(type => {
+      }]);
+    }
+    return _.chain(types).filter(type => {
       return flag(`check-type-${type.id}`);
     })
     .filter(type => {
-      return type.size() > 0 || type.id === 'host';
+      return type.size() > 0 || type.id === 'host' || type.id === 'external_host';
     })
     .value();
   },
@@ -98,10 +113,20 @@ const CheckCreateType = React.createClass({
 
     const data = JSON.stringify({target: {type: type.id}});
     let path = `/check-create/target?data=${data}`;
-    if (type.id === 'host'){
+    if (type.id === 'host' || type.id === 'external_host'){
       path = `/check-create/request?data=${data}`;
     }
     this.context.router.push(path);
+  },
+  renderBastionPrompt(){
+    if (!!this.props.redux.env.activeBastion) {
+      return null;
+    }
+    return (
+      <Padding t={3} b={2}>
+        <Link to="/start/launch-stack">Connect to AWS</Link> to set up health checks for ELBs, security groups, EC2 instances, RDS, and more.
+      </Padding>
+    );
   },
   renderHelperText(){
     return (
@@ -121,7 +146,7 @@ const CheckCreateType = React.createClass({
         <Padding b={1}>
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
-        <StatusHandler status={this.props.redux.asyncActions.getGroupsSecurity.status}>
+        <StatusHandler status={this.getStatus()}>
           {this.getTypes().map(type => {
             return (
               <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
@@ -133,6 +158,8 @@ const CheckCreateType = React.createClass({
             );
           })}
         </StatusHandler>
+        <p><em className="small text-muted">Learn more about the different kinds of health checks in our <a target="_blank" href="/docs/checks">health check docs</a>.</em></p>
+        {this.renderBastionPrompt()}
       </div>
     );
   },

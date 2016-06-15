@@ -33,7 +33,7 @@ const ViewHTTP = React.createClass({
   },
   renderTarget(){
     const target = _.get(this.props.check.toJS(), 'target') || {};
-    if (target && target.type === 'host'){
+    if (target && (target.type === 'host' || target.type === 'external_host')){
       return null;
     }
     let el;
@@ -52,6 +52,18 @@ const ViewHTTP = React.createClass({
       </Padding>
     );
   },
+  renderHeading(){
+    const targetType = _.get(this.props.check.toJS(), 'target.type');
+    let text = 'HTTP Request';
+    if (targetType === 'host') {
+      text = 'Internal HTTP Request';
+    } else if (targetType === 'external_host') {
+      text = 'External HTTP Request';
+    }
+    return (
+      <Heading level={3}>{text}</Heading>
+    );
+  },
   render(){
     const check = this.props.check.toJS();
     const spec = check.spec || {};
@@ -64,7 +76,7 @@ const ViewHTTP = React.createClass({
       <div>
         {this.renderTarget()}
         <Padding b={2}>
-          <Heading level={3}>HTTP Request</Heading>
+          {this.renderHeading()}
           <HTTPRequestItem spec={spec} target={target} />
         </Padding>
         <Padding b={1}>

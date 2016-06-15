@@ -180,7 +180,8 @@ const statics = {
     newData = _.assign(newData, {
       name: newData.LoadBalancerName,
       checks: new List(newData.checks || []),
-      id: newData.LoadBalancerName
+      id: newData.LoadBalancerName,
+      ListenerDescriptions: new List(newData.ListenerDescriptions)
     });
     if (newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
@@ -338,6 +339,7 @@ const initial = {
       rds: new List()
     }
   },
+  activeBastion: null,
   bastions: [],
   awsActionHistory: [],
   region: undefined,
@@ -460,8 +462,16 @@ export default handleActions({
   },
   [ENV_GET_BASTIONS]: {
     next(state, action){
-      const bastion = _.chain(action.payload || []).filter('connected').last().value() || {};
-      return _.assign({}, state, {bastions: action.payload}, {region: bastion.region, vpc: bastion.vpc_id || false});
+      const bastions = action.payload;
+      const activeBastion = _.chain(bastions || []).filter('connected').last().value() || null;
+      const region = _.get(activeBastion, 'region');
+      const vpc = _.get(activeBastion, 'vpc_id', false);
+      return _.assign({}, state, {
+        bastions,
+        activeBastion,
+        region,
+        vpc
+      });
     },
     throw: yeller.reportAction
   },
@@ -541,15 +551,19 @@ export default handleActions({
   [APP_SOCKET_MSG]: {
     next(state, action){
       if (_.get(action.payload, 'command') === 'bastions'){
-        const bastion = _.chain(action.payload)
+        const activeBastion = _.chain(action.payload)
         .get('attributes.bastions')
         .thru(arr => {
           return Array.isArray(arr) ? arr : [];
         })
         .find(msg => _.get(msg, 'connected'))
         .value() || {};
-        if (bastion && bastion.region){
-          return _.assign({}, state, {region: bastion.region, vpc: bastion.vpc_id || false});
+        if (activeBastion && activeBastion.region){
+          return _.assign({}, state, {
+            activeBastion,
+            region: activeBastion.region,
+            vpc: activeBastion.vpc_id || false
+          });
         }
       }
       return state;

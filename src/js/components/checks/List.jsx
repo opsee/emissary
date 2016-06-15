@@ -11,6 +11,7 @@ import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Heading} from '../type';
 import {checks as actions, user as userActions, app as appActions} from '../../actions';
 import listItem from '../global/listItem.css';
 
@@ -94,29 +95,31 @@ const CheckList = React.createClass({
     );
   },
   renderChecks(){
-    if (this.props.redux.checks.checks.size){
+    if (!this.props.redux.checks.checks.size) {
+      //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
       return (
-        <div>
-          <CheckItemList title selectable/>
-        </div>
+        <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
+          <Heading l={2}>Welcome to Opsee! Let&rsquo;s get started.</Heading>
+          <p>Thanks for signing up! Let&rsquo;s get your environment set up:</p>
+
+          <ol>
+            <li><Link to="/check-create" title="Create New Check">Create your first health check</Link> for any public URL</li>
+            <li>Keep your team in the loop by setting up <Link to="/profile">Slack and Pagerduty integration</Link> on your Profile page</li>
+            <li>If you&rsquo;re hosted in AWS, <Link to="/start/launch-stack">add our EC2 instance</Link> to run checks inside your environment too</li>
+          </ol>
+        </StatusHandler>
       );
     }
-    //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-        <p>You don&rsquo;t have any Checks yet. <Link to="/check-create" title="Create New Check">Create Your First Check</Link> to get started with Opsee.</p>
-
-        <p>Try creating a check like this to start:</p>
-        <ol>
-          <li>Target a Group or Instance running a <strong>HTTP service</strong></li>
-          <li>Make a request to the URL and port running that service (e.g. <strong>"/healthcheck"</strong> on <strong>Port 80</strong>)</li>
-          <li>Assert that the <strong>Status Code</strong> must come back <strong>Equal to 200</strong></li>
-          <li>Send <strong>notifications to your email</strong> when the Check fails</li>
-        </ol>
-      </StatusHandler>
+      <div>
+        <CheckItemList title selectable/>
+      </div>
     );
   },
   renderActionBar(){
+    if (!this.props.redux.checks.checks.size) {
+      return null;
+    }
     const selected = this.getSelectedChecks();
     const {size} = selected;
     const title = size > 0 ? 'Unselect All' : 'Select All';
