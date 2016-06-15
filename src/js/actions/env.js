@@ -195,6 +195,13 @@ export function getGroupElb(id) {
                     Instances {
                       InstanceId
                     }
+                    ListenerDescriptions {
+                      Listener {
+                        Protocol
+                        InstancePort
+                        LoadBalancerPort
+                      }
+                    }
                   }
                 }
               }

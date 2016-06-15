@@ -55,8 +55,8 @@ const GroupElb = React.createClass({
     });
     return `/check-create/request?data=${data}`;
   },
-  renderDescription(){
-    const desc = this.getGroup().get('Description');
+  renderDescription(group){
+    const desc = group.Description;
     if (desc && desc !== ''){
       return (
         <tr>
@@ -67,8 +67,29 @@ const GroupElb = React.createClass({
     }
     return <tr/>;
   },
-  renderInner(){
-    const group = this.getGroup();
+  renderListeners(group){
+    if (group.ListenerDescriptions.length){
+      return (
+        <tr>
+          <td><strong>Listeners</strong></td>
+          <td>
+            {group.ListenerDescriptions.map((item, index) => {
+              const l = item.Listener;
+              return (
+                <div style={{paddingTop: index !== 0 ? '1rem' : 0}}>
+                  Instance Port: {l.InstancePort}<br/>
+                  ELB Port: {l.LoadBalancerPort}<br/>
+                  Protocol: {l.Protocol}
+                </div>
+              );
+            })}
+          </td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderInner(group){
     if (group.name && group.CreatedTime){
       return (
         <div>
@@ -84,7 +105,8 @@ const GroupElb = React.createClass({
                 <td><strong>Created</strong></td>
                 <td><TimeAgo date={group.CreatedTime}/></td>
               </tr>
-              {this.renderDescription()}
+              {this.renderListeners(group)}
+              {this.renderDescription(group)}
             </Table>
           </Padding>
           <Padding b={2}>
@@ -100,13 +122,14 @@ const GroupElb = React.createClass({
     return <StatusHandler status={this.props.redux.asyncActions.getGroupElb.status}/>;
   },
   render() {
+    const group = this.getGroup().toJS();
     return (
       <div>
-        <Toolbar title={`ELB: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
+        <Toolbar title={`ELB: ${group.name || group.id || this.props.params.id}`} />
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              {this.renderInner(group)}
             </Col>
           </Row>
         </Grid>
