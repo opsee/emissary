@@ -105,6 +105,7 @@ if (query && query.selected){
 
 const initial = {
   checks: new List(selected),
+  single: new Check(),
   responses: new List(),
   responsesFormatted: [],
   selectedResponse: 0,
@@ -134,6 +135,7 @@ export default handleActions({
       const responsesFormatted = statics.getFormattedResponses(responses);
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {
+        single,
         checks,
         responses,
         responsesFormatted,
