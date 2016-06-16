@@ -9,7 +9,8 @@ const UserInputs = React.createClass({
     include: PropTypes.array.isRequired,
     data: PropTypes.object,
     onChange: PropTypes.func.isRequired,
-    required: PropTypes.array
+    required: PropTypes.array,
+    autoFocus: PropTypes.oneOf(['email', 'password', 'name'])
   },
   getDefaultProps() {
     return {
@@ -23,21 +24,21 @@ const UserInputs = React.createClass({
   },
   renderEmail(){
     return (
-      <Input data={this.props.data} path="email" placeholder="address@domain.com" autoCapitalize="off" autoCorrect="off" onChange={this.props.onChange} label={this.getLabel('email')}>
+      <Input data={this.props.data} path="email" placeholder="address@domain.com" autoCapitalize="off" autoCorrect="off" onChange={this.props.onChange} label={this.getLabel('email')} autoFocus={this.props.autoFocus === 'email'}>
         <Mail/>
       </Input>
     );
   },
   renderPassword(){
     return (
-      <Input data={this.props.data} type="password" path="password" placeholder="Password" onChange={this.props.onChange} label={this.getLabel('password')}>
+      <Input data={this.props.data} type="password" path="password" placeholder="Password" onChange={this.props.onChange} label={this.getLabel('password')} autoFocus={this.props.autoFocus === 'password'}>
         <Lock/>
       </Input>
     );
   },
   renderName(){
     return (
-      <Input data={this.props.data} path="name" placeholder="Your Name" onChange={this.props.onChange} label={this.getLabel('name')}>
+      <Input data={this.props.data} path="name" placeholder="Your Name" onChange={this.props.onChange} label={this.getLabel('name')} autoFocus={this.props.autoFocus === 'name'}>
         <Person/>
       </Input>
     );
