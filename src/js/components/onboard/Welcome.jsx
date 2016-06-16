@@ -69,7 +69,6 @@ const OnboardWelcome = React.createClass({
   },
   renderError() {
     const { status } = this.props.redux.asyncActions.userEdit;
-    console.log(status);
     if (status && typeof status !== 'string') {
       return (
         <Padding tb={1}>
