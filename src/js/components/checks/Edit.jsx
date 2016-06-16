@@ -41,7 +41,8 @@ const CheckEdit = React.createClass({
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        checks: PropTypes.object
+        checks: PropTypes.object,
+        single: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
         checkEdit: PropTypes.object,
@@ -62,10 +63,13 @@ const CheckEdit = React.createClass({
     this.props.envActions.getInstancesEcc();
     this.props.actions.testCheckReset();
   },
-  componentWillReceiveProps(nextProps) {
-    const data = nextProps.redux.checks.checks.find(g => {
-      return g.get('id') === this.props.params.id;
-    }) || new Check();
+  componentWillReceiveProps() {
+    let el = null;
+    const {single} = this.props.redux.checks;
+    if (single.get('id') === this.props.params.id){
+      el = single;
+    }
+    const data = el || new Check();
     const check = data.toJS();
     if (!this.state.check && _.find(check.tags, () => 'complete')){
       this.setState({
@@ -113,47 +117,47 @@ const CheckEdit = React.createClass({
     }
     return null;
   },
-  renderLink(){
-    return this.getCheck().id ?
+  renderLink(check){
+    return check.id ?
     (
-      <Button to={`/check/${this.getCheck().id}`} icon flat title="Return to Check">
+      <Button to={`/check/${check.id}`} icon flat title="Return to Check">
         <Close btn/>
       </Button>
     )
      : <div/>;
   },
-  renderRequest(){
-    if (!_.get(this.getCheck(), 'target.type').match('dbinstance|rds')){
+  renderRequest(check){
+    if (!_.get(check, 'target.type').match('dbinstance|rds')){
       return (
         <Padding tb={1}>
-          <CheckCreateRequest check={this.getCheck()} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
+          <CheckCreateRequest check={check} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
         </Padding>
       );
     }
     return null;
   },
-  renderAssertions(){
-    if (_.get(this.getCheck(), 'target.type').match('dbinstance|rds')){
-      return <AssertionsCloudwatch check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
+  renderAssertions(check){
+    if (_.get(check, 'target.type').match('dbinstance|rds')){
+      return <AssertionsCloudwatch check={check} onChange={this.setData} renderAsInclude/>;
     }
-    return <AssertionsHTTP check={this.getCheck()} onChange={this.setData} renderAsInclude/>;
+    return <AssertionsHTTP check={check} onChange={this.setData} renderAsInclude/>;
   },
-  renderInner(){
-    if (this.getCheck().id && _.find(this.getCheck().tags, () => 'complete')) {
+  renderInner(check){
+    if (check.id && _.find(check.tags, () => 'complete')) {
       return (
         <div>
           {this.renderEnv()}
-          {this.renderRequest()}
+          {this.renderRequest(check)}
           <Padding tb={1}>
-            {this.renderAssertions()}
+            {this.renderAssertions(check)}
           </Padding>
-          <CheckCreateInfo check={this.getCheck()} onChange={this.setData} renderAsInclude/>
+          <CheckCreateInfo check={check} onChange={this.setData} renderAsInclude/>
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
             Finish <Checkmark inline fill={seed.color.success}/>
           </Button>
-          <CheckDisabledReason check={this.getCheck()}/>
+          <CheckDisabledReason check={check}/>
           </Padding>
           <Padding t={4}>
             <Padding t={4}>
@@ -172,16 +176,17 @@ const CheckEdit = React.createClass({
     );
   },
   render() {
+    const check = this.getCheck();
     return (
       <div>
         <Toolbar btnPosition="midRight" title={`Edit ${this.getCheckTitle()}`} bg="info">
-          {this.renderLink()}
+          {this.renderLink(check)}
         </Toolbar>
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
-              <CheckDebug check={_.omit(this.getCheck(), 'results')}/>
+              {this.renderInner(check)}
+              <CheckDebug check={_.omit(check, 'results')}/>
             </Col>
           </Row>
         </Grid>

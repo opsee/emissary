@@ -26,6 +26,7 @@ export function promiseMiddleware({ dispatch }) {
       });
       return action.payload.then(
         result => {
+          dispatch(_.assign({}, action, {payload: result}));
           dispatch({
             type: aType,
             meta: action.meta,
@@ -35,7 +36,6 @@ export function promiseMiddleware({ dispatch }) {
               id
             }
           });
-          return dispatch(_.assign({}, action, {payload: result}));
         },
         error => {
           if (process.env.NODE_ENV !== 'production'){
