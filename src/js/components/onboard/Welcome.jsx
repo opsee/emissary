@@ -114,7 +114,7 @@ const OnboardWelcome = React.createClass({
               </Padding>
               <p>Good news &mdash; you just created your first health check! Let's take a minute to finish setting up your account.</p>
               <form onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.userData}/>
+                <UserInputs include={['email', 'name', 'password']}  autoFocus="name" onChange={this.handleUserData} data={this.state.userData}/>
                 <Padding tb={1}>
                   {this.renderSubmitButton()}
                 </Padding>
