@@ -2,13 +2,14 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router';
 
 import LogoColor from '../global/LogoColor';
 import {Heading} from '../type';
 import {Checkmark} from '../icons';
 import UserInputs from '../user/UserInputs.jsx';
 import {Button} from '../forms';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Grid, Col, Row, Padding, Alert} from '../layout';
 import {user as actions} from '../../actions';
 import style from './onboard.css';
 
@@ -66,6 +67,21 @@ const OnboardWelcome = React.createClass({
       this.props.actions.edit(data);
     }
   },
+  renderError() {
+    const { status } = this.props.redux.asyncActions.userEdit;
+    console.log(status);
+    if (status && typeof status !== 'string') {
+      return (
+        <Padding tb={1}>
+          <Alert color="danger">
+            Something went wrong when updating your account and we're looking into it.
+            Please try again, or <Link to="/help">get in touch</Link>.
+          </Alert>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderSubmitButton(){
     let text;
     let chevron = true;
@@ -103,6 +119,7 @@ const OnboardWelcome = React.createClass({
                   {this.renderSubmitButton()}
                 </Padding>
               </form>
+              {this.renderError()}
             </Col>
           </Row>
         </Grid>
