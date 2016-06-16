@@ -5,20 +5,21 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
-import {Heading} from '../type';
-import {Button, CreditCard, Input} from '../forms';
+import {Button, Input} from '../forms';
 import {Close} from '../icons';
 import {team as actions} from '../../actions';
 
 const TeamEdit = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      edit: PropTypes.func
+      edit: PropTypes.func.isRequired,
+      getTeam: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        userEdit: PropTypes.object
-      }),
+        userEdit: PropTypes.object.isRequired,
+        teamEdit: PropTypes.object.isRequired
+      }).isRequired,
       team: PropTypes.object
     })
   },
@@ -61,18 +62,19 @@ const TeamEdit = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.edit(this.state.user);
+    this.props.actions.edit(this.state);
   },
   renderCreditCard(){
-    if (this.props.redux.user){
-      return (
-        <Padding t={2}>
-          <Heading level={3}>Update Credit Card</Heading>
-          <CreditCard onChange={this.handleCreditCardChange}/>
-        </Padding>
-      )
-    }
     return null;
+    // if (this.props.redux.user){
+    //   return (
+    //     <Padding t={2}>
+    //       <Heading level={3}>Update Credit Card</Heading>
+    //       <CreditCard onChange={this.handleCreditCardChange}/>
+    //     </Padding>
+    //   )
+    // }
+    // return null;
   },
   render() {
     return (

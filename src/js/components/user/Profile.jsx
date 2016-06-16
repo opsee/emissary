@@ -8,11 +8,11 @@ import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
-import {flag} from '../../modules';
 
 import {
   user as actions,
-  app as appActions
+  app as appActions,
+  team as teamActions
 } from '../../actions';
 
 const Profile = React.createClass({
@@ -21,6 +21,9 @@ const Profile = React.createClass({
       logout: PropTypes.func,
       sendVerificationEmail: PropTypes.func
     }),
+    teamActions: PropTypes.shape({
+      getTeam: PropTypes.func.isRequired
+    }).isRequired,
     appActions: PropTypes.shape({
       shutdown: PropTypes.func
     }),
@@ -28,14 +31,15 @@ const Profile = React.createClass({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
         userSendVerificationEmail: PropTypes.object
-      })
+      }),
+      team: PropTypes.object.isRequired
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
     })
   },
-  handleLogout(){
-    this.props.actions.logout();
+  componentWillMount(){
+    this.props.teamActions.getTeam();
   },
   getUser() {
     return this.props.redux.user.toJS();
@@ -95,7 +99,7 @@ const Profile = React.createClass({
                 <Table>
                   <tr>
                     <td><strong>Team</strong></td>
-                    <td><Link to="/team">TEAM NAME</Link></td>
+                    <td><Link to="/team">{this.props.redux.team.get('name')}</Link></td>
                   </tr>
                   <tr>
                     <td><strong>Email</strong></td>
@@ -125,7 +129,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch),
+  teamActions: bindActionCreators(teamActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

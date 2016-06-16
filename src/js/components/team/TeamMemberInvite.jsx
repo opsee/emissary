@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Close} from '../icons';
@@ -54,8 +54,9 @@ const TeamMemberInvite = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <TeamMemberInputs onChange={this.handleInputChange} {...this.state} inputs={['capabilities', 'email']}/>
+                <TeamMemberInputs onChange={this.handleInputChange} perms={this.state.perms} email={this.state.email} inputs={['perms', 'email']}/>
               </Col>
+              <StatusHandler status={this.getStatus()}/>
               <Col xs={12}>
                 <Padding t={2}>
                   <Button color="success" block type="submit" disabled={!this.state.email || this.getStatus() === 'pending'}>Invite</Button>

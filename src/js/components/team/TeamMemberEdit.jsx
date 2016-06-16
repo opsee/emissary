@@ -16,7 +16,8 @@ import TeamMemberInputs from './TeamMemberInputs';
 const TeamMemberEdit = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getTeam: PropTypes.func
+      getTeam: PropTypes.func,
+      memberEdit: PropTypes.func
     }),
     redux: PropTypes.shape({
       team: PropTypes.object
@@ -42,7 +43,7 @@ const TeamMemberEdit = React.createClass({
   getData(props = this.props){
     const team = props.redux.team.toJS();
     return _.chain(team)
-    .get('members')
+    .get('users')
     .find({
       id: this.props.params.id
     })
@@ -64,19 +65,19 @@ const TeamMemberEdit = React.createClass({
     this.setState(state);
   },
   handleCapabilityClick(id){
-    let arr = _.clone(this.state.capabilities);
+    let arr = _.clone(this.state.perms);
     if (arr.indexOf(id) === -1){
       arr = arr.concat([id]);
     } else {
       arr = _.reject(arr, i => i === id);
     }
     this.setState({
-      capabilities: arr
+      perms: arr
     });
   },
   handleSubmit(e){
     e.preventDefault();
-    console.log(this.state);
+    this.props.actions.memberEdit(this.state);
   },
   render() {
     const member = this.getData();

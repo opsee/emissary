@@ -24,7 +24,7 @@ export const User = Record({
 
 export const Member = Record({
   name: undefined,
-  capabilities: new List(),
+  perms: new List(),
   email: undefined,
   status: undefined,
   id: undefined
@@ -34,7 +34,7 @@ export const Team = Record({
   name: undefined,
   features: new List(),
   plan: undefined,
-  members: new List(),
+  users: new List(),
   invoices: new List()
 });
 

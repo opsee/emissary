@@ -7,14 +7,12 @@ import _ from 'lodash';
 import {Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Edit, Logout} from '../icons';
-import {Color, Heading} from '../type';
-import {flag} from '../../modules';
-import {toSentenceSerial, capabilitySentence} from '../../modules/string';
+import {Edit} from '../icons';
+import {Color} from '../type';
+import {permsSentence} from '../../modules/string';
 import {
   team as actions
 } from '../../actions';
-import {SlackInfo, PagerdutyInfo} from '../integrations';
 
 const TeamMember = React.createClass({
   propTypes: {
@@ -22,7 +20,8 @@ const TeamMember = React.createClass({
       getTeam: PropTypes.func
     }),
     redux: PropTypes.shape({
-      team: PropTypes.object
+      team: PropTypes.object,
+      user: PropTypes.object
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -35,11 +34,26 @@ const TeamMember = React.createClass({
   getData(){
     const team = this.props.redux.team.toJS();
     return _.chain(team)
-    .get('members')
+    .get('users')
     .find({
       id: this.props.params.id
     })
     .value() || {};
+  },
+  renderToolbarButton(member){
+    const user = this.props.redux.user.toJS();
+    if (member.email === user.email){
+      return (
+        <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
+          <Edit btn/>
+        </Button>
+      );
+    }
+    return (
+      <Button fab color="info" to={`/team/member/${member.id}/edit`} title={`Edit ${member.name}`}>
+        <Edit btn/>
+      </Button>
+    );
   },
   render() {
     const member = this.getData();
@@ -47,9 +61,7 @@ const TeamMember = React.createClass({
       return (
          <div>
           <Toolbar title={`Team Member: ${member.name || member.email}`} pageTitle="Team Member">
-            <Button fab color="info" to={`/team/member/${member.id}/edit`} title={`Edit ${member.name}`}>
-              <Edit btn/>
-            </Button>
+            {this.renderToolbarButton(member)}
           </Toolbar>
           <Grid>
             <Row>
@@ -69,10 +81,10 @@ const TeamMember = React.createClass({
                   //   <td><Link to={`/team/member/${member.id}/edit`}>Change the password of {member.name}</Link></td>
                   // </tr>
                   }
-                  {member.capabilities.length && (
+                  {member.perms.length && (
                     <tr>
-                      <td><strong>Capabilities</strong></td>
-                      <td>{capabilitySentence(member)}</td>
+                      <td><strong>Permissions</strong></td>
+                      <td>{permsSentence(member)}</td>
                     </tr>
                     ) || null}
                 </Table>

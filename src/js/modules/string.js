@@ -9,8 +9,8 @@ function stringFromTokens(tokens = []) {
   }).join(' ');
 }
 
-function capabilitySentence(member) {
-  const arr = member.capabilities.map(c => {
+function permsSentence(member) {
+  const arr = member.perms.map(c => {
     let str = c;
     switch (str){
     case 'editing':
@@ -28,7 +28,7 @@ function capabilitySentence(member) {
 }
 
 export {
-  capabilitySentence,
+  permsSentence,
   stringFromTokens,
   toSentenceSerial
 };
