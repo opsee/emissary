@@ -1,4 +1,3 @@
-import {push} from 'redux-router';
 import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
@@ -7,7 +6,6 @@ import * as analytics from './analytics';
 import graphPromise from '../modules/graphPromise';
 import {
   APP_SOCKET_MSG,
-  ONBOARD_SIGNUP_CREATE,
   ONBOARD_SET_VPC,
   ONBOARD_INSTALL,
   ONBOARD_EXAMPLE_INSTALL,
@@ -19,8 +17,9 @@ import {
   ONBOARD_SET_SUBNET,
   ONBOARD_SCAN_REGION,
   ONBOARD_HAS_ROLE,
-  ONBOARD_SET_DEFAULT_NOTIF,
-  ONBOARD_GET_DEFAULT_NOTIF
+  ONBOARD_SET_DEFAULT_NOTIFS,
+  ONBOARD_GET_DEFAULT_NOTIFS,
+  ONBOARD_SKIP_DEFAULT_NOTIFS
 } from './constants';
 
 function getRegion(state, region) {
@@ -70,33 +69,6 @@ function getRole(state) {
         }}`
     });
   });
-}
-
-export function signupCreate(data) {
-  return (dispatch, state) => {
-    dispatch({
-      type: ONBOARD_SIGNUP_CREATE,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .post(`${config.services.auth}/signups/new`)
-        .send(data)
-        .then((res) => {
-          const user = res.body;
-          analytics.trackEvent('Onboard', 'signup', data)(dispatch, state);
-          resolve(user);
-
-          //TODO remove timeout somehow
-          setTimeout(() => {
-            dispatch(push(`/start/thanks?referrer=${data.referrer}`));
-          }, 100);
-        }, err => {
-          let msg = _.get(err, 'response.body.message');
-          const r = msg ? new Error(msg) : err;
-          reject(r);
-        });
-      })
-    });
-  };
 }
 
 export function setInstallData(data) {
@@ -254,10 +226,10 @@ export function hasRole() {
   };
 }
 
-export function getDefaultNotification() {
+export function getDefaultNotifications() {
   return (dispatch, state) => {
     dispatch({
-      type: ONBOARD_GET_DEFAULT_NOTIF,
+      type: ONBOARD_GET_DEFAULT_NOTIFS,
       payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
@@ -275,11 +247,14 @@ export function getDefaultNotification() {
   };
 }
 
-export function setDefaultNotification(notifications) {
+export function setDefaultNotifications(notifications) {
   return (dispatch, state) => {
-    const variables = {notifications};
+    const validNotifications = _.filter(notifications, n => n.type && n.value);
+    const variables = {
+      notifications: validNotifications
+    };
     dispatch({
-      type: ONBOARD_SET_DEFAULT_NOTIF,
+      type: ONBOARD_SET_DEFAULT_NOTIFS,
       payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
@@ -297,6 +272,17 @@ export function setDefaultNotification(notifications) {
     analytics.trackEvent('Onboard', 'set-notifications')(dispatch, state);
   };
 }
+
+/*
+ * Track whether a user has skipped the default notification set-up step in onboarding.
+ * (An empty list of default notifications only implies that they don't have any,
+ * which is not the same as skipping the step.)
+ *
+ * The drawback of doing it this way is that this prop is ephemeral -- it will be
+ * lost if the user refreshes/opens in another tab/etc. unless we persist this
+ * in the db (which is overkill for an attribute like this.).
+ */
+export const skipDefaultNotifications = createAction(ONBOARD_SKIP_DEFAULT_NOTIFS);
 
 export const setCredentials = createAction(ONBOARD_SET_CREDENTIALS);
 
@@ -367,33 +353,35 @@ export function install(){
 let exampleMessages;
 let exampleInstallFn;
 
-const msgs = require('../../files/bastion-install-messages-example.json');
-exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
-exampleInstallFn = () => {
-  return (dispatch) => {
-    return dispatch({
-      type: ONBOARD_EXAMPLE_INSTALL,
-      payload: new Promise(() => {
-        exampleMessages.forEach((payload, i) => {
+if (process.env.NODE_ENV !== 'production'){
+  const msgs = require('../../files/bastion-install-messages-example.json');
+  exampleMessages = _.filter(msgs, {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'});
+  exampleInstallFn = () => {
+    return (dispatch) => {
+      return dispatch({
+        type: ONBOARD_EXAMPLE_INSTALL,
+        payload: new Promise(() => {
+          exampleMessages.forEach((payload, i) => {
+            setTimeout(() => {
+              dispatch({
+                type: APP_SOCKET_MSG,
+                payload
+              });
+            }, i * 2000);
+          });
           setTimeout(() => {
             dispatch({
               type: APP_SOCKET_MSG,
-              payload
+              payload: {
+                command: 'connect-bastion',
+                state: 'complete'
+              }
             });
-          }, i * 2000);
-        });
-        setTimeout(() => {
-          dispatch({
-            type: APP_SOCKET_MSG,
-            payload: {
-              command: 'connect-bastion',
-              state: 'complete'
-            }
-          });
-        }, (exampleMessages.length + 5) * 400);
-      })
-    });
+          }, (exampleMessages.length + 5) * 400);
+        })
+      });
+    };
   };
-};
+}
 
 export const exampleInstall = exampleInstallFn;

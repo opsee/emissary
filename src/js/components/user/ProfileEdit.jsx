@@ -40,7 +40,7 @@ const ProfileEdit = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.edit(this.state.user);
+    this.props.actions.edit(this.state.user, '/profile');
   },
   render() {
     return (

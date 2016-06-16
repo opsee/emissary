@@ -10,10 +10,8 @@ import {Button} from '../forms';
 import {Expandable, Padding, Col, Grid, Row} from '../layout';
 import {Highlight} from '../global';
 import style from './onboard.css';
-import {History} from 'react-router';
 
 const ReviewInstance = React.createClass({
-  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       onboard: PropTypes.shape({
@@ -73,9 +71,7 @@ const ReviewInstance = React.createClass({
               <Padding tb={2}>
                 <h2>About the Opsee EC2 instance</h2>
               </Padding>
-              <p>The instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks,
-              and it has no IAM permissions of its own. The instance is controlled by both a CloudFormation template and an Ingress IAM Role,
-              which are both available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
+              <p>The Opsee EC2 instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks, and it has no IAM permissions of its own. The instance is launched via CloudFormation. There are two CloudFormation stacks associated with it. The first is "The Opsee Stack", and the second is the "listing of bastion security-group ingress rules." This second stack ensures that our instance can communicate with services you have running in your VPC. Both CloudFormation templates are available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
 
               <Padding tb={1}>
                 <h4>Instance CloudFormation Template</h4>
@@ -83,7 +79,7 @@ const ReviewInstance = React.createClass({
                 {this.renderTemplateItem('cf')}
               </Padding>
               <Padding b={1}>
-                <h4>IAM Role</h4>
+                <h4>Instance Ingress Stack</h4>
                 <p>Used to ensure communication between your security groups and the Opsee security group within your chosen VPC.</p>
                 {this.renderTemplateItem('ingress')}
               </Padding>

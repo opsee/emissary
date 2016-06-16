@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {History} from 'react-router';
 import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
 
@@ -16,7 +15,6 @@ import templates from '../../modules/awsTemplates';
 import style from './onboard.css';
 
 const LaunchStack = React.createClass({
-  mixins: [History],
   propTypes: {
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
@@ -97,8 +95,7 @@ const LaunchStack = React.createClass({
               <Padding tb={1}>
                 <h2>Opsee Cross-Account Access</h2>
               </Padding>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metris in CloudWatch, and lets us manage your Opsee instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metris in CloudWatch, and lets us launch and manage the Opsee EC2 instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
+              <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metrics in CloudWatch, and lets us manage your Opsee instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
               <Padding tb={1}>
                 <Instructions />
               </Padding>
@@ -106,7 +103,7 @@ const LaunchStack = React.createClass({
                 <Padding tb={1}>
                   <h3>Our CloudFormation template</h3>
                 </Padding>
-                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also available in <a href="/docs/permissions" target="_blank">our docs</a>. (We should add an annotated version of this like <a href="https://cloudnative.io/yeobot/cloudformation/" target="_blank">https://cloudnative.io/yeobot/cloudformation/</a>.)</p>
+                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also available in <a href="/docs/permissions" target="_blank">our docs</a>.</p>
                 {this.renderTemplate()}
               </Padding>
               <Padding t={1} b={2}>

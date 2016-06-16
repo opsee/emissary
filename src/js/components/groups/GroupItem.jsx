@@ -4,9 +4,8 @@ import Immutable, {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {ContextMenu, ListItem} from '../global';
-import {Add, ListCheckmark, ListClose, ListInstance} from '../icons';
-import {Button} from '../forms';
+import {ListItem} from '../global';
+import {ListCheckmark, ListClose, ListInstance} from '../icons';
 import {env as actions} from '../../actions';
 
 const GroupItem = React.createClass({
@@ -167,11 +166,6 @@ const GroupItem = React.createClass({
     if (this.getItem().get('name')){
       return (
         <ListItem type="group" link={this.getLink()} params={{id: this.getItem().get('id'), name: this.getItem().get('name')}} onClick={this.props.onClick} item={this.getItem()} menuTitle={`${this.getItem().get('name')} Actions`}>
-          <ContextMenu title={`${this.getItem().get('name')} Actions`} id={this.getItem().get('id')} key="menu">
-            <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
-              <Add inline fill="primary"/> Create Check
-            </Button>
-          </ContextMenu>
           <div key="line1">{this.getItem().get('name')}&nbsp;({this.getType()})</div>
           <div key="line2">{this.renderInfoText()}</div>
         </ListItem>

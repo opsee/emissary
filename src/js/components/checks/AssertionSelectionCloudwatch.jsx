@@ -9,6 +9,7 @@ import {env as actions} from '../../actions';
 import {Button} from '../forms';
 import {Add, Delete} from '../icons';
 import rdsMetrics from '../../modules/rdsMetrics';
+import eccMetrics from '../../modules/eccMetrics';
 import AssertionMetric from './AssertionMetric';
 
 const AssertionSelectionCloudwatch = React.createClass({
@@ -30,8 +31,16 @@ const AssertionSelectionCloudwatch = React.createClass({
     }).isRequired,
     onChange: PropTypes.func
   },
+  getMetrics(){
+    switch (this.props.check.target.type){
+      case 'ecc':
+        return eccMetrics;
+      default:
+        return rdsMetrics;      
+    }
+  },
   getMetricTitle(metricName){
-    return _.get(rdsMetrics, `${metricName}.title`);
+    return _.get(this.getMetrics(), `${metricName}.title`);
   },
   handleDeleteClick(index){
     const assertions = _.reject(this.props.check.assertions, (n, i) => i === index);
@@ -53,7 +62,7 @@ const AssertionSelectionCloudwatch = React.createClass({
     return this.props.onChange(assertions);
   },
   renderButtons() {
-    const buttons = _.keys(rdsMetrics).map(key => {
+    const buttons = _.keys(this.getMetrics()).map(key => {
       return (
         <Button color="primary" onClick={this.handleMetricClick.bind(null, key)} flat key={`cloudwatch-metric-button-${key}`} style={{margin: '0 1rem 1rem 0'}}>
           <Add inline fill="primary"/>&nbsp;{key}
@@ -69,7 +78,7 @@ const AssertionSelectionCloudwatch = React.createClass({
           return (
             <div>
               <Heading level={3} className="display-flex flex-1 flex-vertical-align">
-                <span className="flex-1">#{index + 1}&nbsp;{_.get(rdsMetrics, `${assertion.value}.title`)}</span>
+                <span className="flex-1">#{index + 1}&nbsp;{_.get(this.getMetrics(), `${assertion.value}.title`)}</span>
                 <Button flat color="danger" title={`Remove ${assertion.value} assertion`} onClick={this.handleDeleteClick.bind(null, index)} style={{padding: '0.2rem'}}>
                   <Delete inline fill="danger"/>
                 </Button>

@@ -56,6 +56,7 @@ const EnvList = React.createClass({
             rds: PropTypes.object
           })
         }),
+        activeBastion: PropTypes.object,
         bastions: PropTypes.array,
         search: PropTypes.string
       })
@@ -68,8 +69,12 @@ const EnvList = React.createClass({
     };
   },
   getIncludes(){
+    const hasBastion = !!this.props.redux.env.activeBastion;
     let {include, redux} = this.props;
-    include = _.sortBy(include, i => {
+    return _.chain(include)
+    .filter(i => {
+      return hasBastion || i === 'checks';
+    }).sortBy(include, i => {
       let size = _.get(redux.env, `${this.props.filter && 'filtered.' || ''}${i}.size`);
       if (i === 'checks'){
         const string = this.props.filter ? 'filtered' : 'checks';
@@ -86,8 +91,7 @@ const EnvList = React.createClass({
         }
       }
       return (-1 * size) || 0;
-    });
-    return include;
+    }).value();
   },
   renderGroupsSecurity(){
     return (
@@ -132,7 +136,7 @@ const EnvList = React.createClass({
     );
   },
   renderFilterButtons(){
-    if (this.props.showFilterButtons){
+    if (!!this.props.redux.env.activeBastion && this.props.showFilterButtons){
       return <FilterButtons/>;
     }
     return null;

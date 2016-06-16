@@ -55,6 +55,7 @@ const Opsee = React.createClass({
   },
   componentWillMount(){
     this.props.appActions.initialize();
+    this.props.userActions.refresh();
     this.setInterval(this.props.userActions.refresh, (1000 * 60 * 14));
     this.props.appActions.getStatusPageInfo();
     this.setInterval(this.props.appActions.getStatusPageInfo, (1000 * 60 * 2));
@@ -65,12 +66,12 @@ const Opsee = React.createClass({
     yeller.configure(this.props.redux);
   },
   componentWillReceiveProps(nextProps) {
-    //user log out
-    if (!nextProps.redux.user.get('auth') && this.props.redux.user.get('auth')){
+    const hasAuth = !!this.props.redux.user.get('auth');
+    const willHaveAuth = !!nextProps.redux.user.get('auth');
+
+    if (hasAuth && !willHaveAuth) { //user log out
       this.props.appActions.shutdown();
-    }
-    //user log in
-    if (nextProps.redux.user.get('auth') && !this.props.redux.user.get('auth')){
+    } else if (!hasAuth && willHaveAuth) { //user log in
       this.props.appActions.initialize();
       this.props.checkActions.getChecks();
     }

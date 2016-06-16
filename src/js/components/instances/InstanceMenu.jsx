@@ -96,13 +96,13 @@ const InstanceMenu = React.createClass({
     if (flag('instance-ecc-actions')) {
       return (
         <div>
-          <Button color="primary" text="left" block flat onClick={this.handleStartClick}>
+          <Button color="primary" text="left" block flat onClick={this.handleStartClick} style={{border: 0}}>
             <Play inline fill="primary"/> Start
           </Button>
-          <Button color="primary" text="left" block flat onClick={this.handleStopClick}>
+          <Button color="primary" text="left" block flat onClick={this.handleStopClick} style={{border: 0}}>
             <Stop inline fill="primary"/> Stop
           </Button>
-          <Button color="primary" text="left" block flat onClick={this.handleRebootClick}>
+          <Button color="primary" text="left" block flat onClick={this.handleRebootClick} style={{border: 0}}>
             <Refresh inline fill="primary"/> Reboot
           </Button>
         </div>
@@ -131,7 +131,7 @@ const InstanceMenu = React.createClass({
         <Padding lr={1} t={2}>
           <Heading level={3}>{item.get('name')} Actions</Heading>
         </Padding>
-        <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat>
+        <Button color="primary" text="left" to={this.getCreateCheckLink()} block flat style={{border: 0}}>
           <Add inline fill="primary"/> Create Check
         </Button>
         {this.renderActions()}
@@ -146,8 +146,8 @@ const InstanceMenu = React.createClass({
           <Heading level={3}>Start this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
-        <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
-        <Button color="primary" text="left" block flat disabled={asyncActions.awsStartInstances.status === 'pending'} onPressUp={this.runStartConfirm}>Yes</Button>
+        <Button color="danger" text="left" block flat onClick={this.runResetPageState} style={{border: 0}}>No</Button>
+        <Button color="primary" text="left" block flat disabled={asyncActions.awsStartInstances.status === 'pending'} onPressUp={this.runStartConfirm} style={{border: 0}}>Yes</Button>
         <Padding>
           <StatusHandler status={asyncActions.awsStartInstances.status}>
             {this.renderActionResult('start')}
@@ -164,8 +164,8 @@ const InstanceMenu = React.createClass({
           <Heading level={3}>Stop this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
-        <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
-        <Button color="primary" text="left" block flat onPressUp={this.runStopConfirm} disabled={asyncActions.awsStopInstances.status === 'pending'}>Yes</Button>
+        <Button color="danger" text="left" block flat onClick={this.runResetPageState} style={{border: 0}}>No</Button>
+        <Button color="primary" text="left" block flat onPressUp={this.runStopConfirm} disabled={asyncActions.awsStopInstances.status === 'pending'} style={{border: 0}}>Yes</Button>
         <Padding>
           <StatusHandler status={asyncActions.awsStopInstances.status}>
             {this.renderActionResult('stop')}
@@ -182,8 +182,8 @@ const InstanceMenu = React.createClass({
           <Heading level={3}>Reboot this Instance?</Heading>
           <div>Press and hold to confirm.</div>
         </Padding>
-        <Button color="danger" text="left" block flat onClick={this.runResetPageState}>No</Button>
-        <Button color="primary" text="left" block flat onPressUp={this.runRebootConfirm} disabled={asyncActions.awsRebootInstances.status === 'pending'}>Yes</Button>
+        <Button color="danger" text="left" block flat onClick={this.runResetPageState} style={{border: 0}}>No</Button>
+        <Button color="primary" text="left" block flat onPressUp={this.runRebootConfirm} disabled={asyncActions.awsRebootInstances.status === 'pending'} style={{border: 0}}>Yes</Button>
         <Padding>
           <StatusHandler status={asyncActions.awsRebootInstances.status}>
             {this.renderActionResult('reboot')}

@@ -37,31 +37,6 @@ const AssertionsCloudwatch = React.createClass({
     if (!this.props.check.target.type && process.env.NODE_ENV !== 'debug'){
       this.context.router.push('/check-create/target');
     }
-    //setup default assertions if we can
-    const check = _.cloneDeep(this.props.check);
-    if (!check.assertions.length && this.getResponse().code){
-      check.assertions = [
-        {
-          key: 'code',
-          operand: this.getResponse().code,
-          relationship: 'equal'
-        }
-      ];
-      this.runChange(check);
-    }
-  },
-  getInitialState() {
-    return {
-      hasSetAssertions: false
-    };
-  },
-  getResponse(){
-    const {checks} = this.props.redux;
-    const data = checks.responses.toJS()[checks.selectedResponse];
-    if (data && data.response){
-      return _.get(data, 'response');
-    }
-    return {};
   },
   getFinalData(data){
     let check = data || _.cloneDeep(this.props.check);

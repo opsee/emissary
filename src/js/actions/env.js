@@ -14,6 +14,7 @@ import {
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
   GET_METRIC_RDS,
+  GET_METRIC_ECC,
   ENV_GET_BASTIONS,
   ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
@@ -194,6 +195,13 @@ export function getGroupElb(id) {
                     CreatedTime
                     Instances {
                       InstanceId
+                    }
+                    ListenerDescriptions {
+                      Listener {
+                        Protocol
+                        InstancePort
+                        LoadBalancerPort
+                      }
                     }
                   }
                 }
@@ -470,6 +478,47 @@ export function getMetricRDS(id, metric){
                   ... on rdsDBInstance {
                     DBName
                     DBInstanceIdentifier
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getMetricECC(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_ECC,
+      payload: graphPromise('region.vpc.instances', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                instances(type: "ec2", id: "${id}"){
+                  ... on ec2Instance {
+                    InstanceId
+                    Tags {
+                      Key
+                      Value
+                    }
                     metrics{
                       ${metric} {
                         metrics{

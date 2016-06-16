@@ -5,7 +5,12 @@ function getKeys(obj){
     if (Array.isArray(obj)){
       return _.range(obj.length).map(num => `[${num}]`);
     }
-    return _.keys(obj).map(key => `.${key}`);
+    return _.keys(obj).map(key => {
+      if (typeof key === 'string' && key.match(/\./)){
+        return `['${key}']`;
+      }
+      return `.${key}`;
+    });
   }
   return [];
 }

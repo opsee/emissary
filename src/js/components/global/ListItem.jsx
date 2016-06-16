@@ -5,8 +5,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import cx from 'classnames';
+import {is} from 'immutable';
 
-import {Checkmark, NewWindow} from '../icons';
+import {Checkmark} from '../icons';
 import {Button} from '../forms';
 import style from '../global/listItem.css';
 import {Padding} from '../layout';
@@ -21,15 +22,11 @@ const ListItem = React.createClass({
     children: PropTypes.node,
     item: PropTypes.object,
     link: PropTypes.string,
-    linkInsteadOfMenu: PropTypes.bool,
-    menuTitle: PropTypes.string,
     onClick: PropTypes.func,
     params: PropTypes.object,
     title: PropTypes.string,
     type: PropTypes.string,
-    onClose: PropTypes.func,
     onSelect: PropTypes.func,
-    noMenu: PropTypes.bool,
     actions: PropTypes.shape({
       openContextMenu: PropTypes.func
     }),
@@ -39,9 +36,13 @@ const ListItem = React.createClass({
   },
   getDefaultProps(){
     return {
-      menuTitle: 'Actions',
       type: 'GroupItem'
     };
+  },
+  shouldComponentUpdate(nextProps) {
+    let arr = [];
+    arr.push(!is(this.props.item, nextProps.item));
+    return _.some(arr);
   },
   getClass(){
     const item = this.props.item.toJS();
@@ -53,6 +54,12 @@ const ListItem = React.createClass({
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
     this.props.analyticsActions.trackEvent(this.props.type, 'menu-open');
+  },
+  handleSelect(){
+    const fn = this.props.onSelect;
+    if (typeof fn === 'function'){
+      fn.call(null, this.props.item.toJS());
+    }
   },
   handleClick(e){
     if (typeof this.props.onClick === 'function'){
@@ -95,20 +102,6 @@ const ListItem = React.createClass({
       </Link>
     );
   },
-  renderMenuButton(){
-    const menu = _.find(this.props.children, {key: 'menu'});
-    if (!menu){
-      return null;
-    }
-    if (this.props.onClick){
-      return (
-        <Button icon flat to={this.props.link} target="_blank" title={`View this ${this.props.type} in a new window`}>
-          <NewWindow btn fill="textSecondary"/>
-        </Button>
-      );
-    }
-    return null;
-  },
   renderSelectButton(){
     const selected = this.props.item.get('selected');
     const fn = this.props.onSelect;
@@ -116,20 +109,16 @@ const ListItem = React.createClass({
       const icon = selected ? <Checkmark btn fill={seed.color.gray9}/> : null;
       return (
         <div className="display-flex align-items-center justify-content-center">
-          <Button icon flat secondary onClick={fn.bind(null, this.props.item.toJS())} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
+          <Button icon flat secondary onClick={this.handleSelect} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
         </div>
       );
     }
     return null;
   },
-  renderMenu(){
-    return _.find(this.props.children, {key: 'menu'}) || <div/>;
-  },
   render(){
     return (
       <div className={this.getClass()}>
         <Padding b={1} className="display-flex">
-          {this.renderMenu()}
           <Padding r={2} l={0.5}>
             {this.renderGraph()}
           </Padding>

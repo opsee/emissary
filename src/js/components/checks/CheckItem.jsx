@@ -3,9 +3,8 @@ import {is, Map, Record} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {ContextMenu, ListItem} from '../global';
-import {Edit, Delete, ListCheckmark, ListClose} from '../icons';
-import {Button} from '../forms';
+import {ListItem} from '../global';
+import {ListCheckmark, ListClose} from '../icons';
 import {checks as actions, app as appActions} from '../../actions';
 
 const CheckItem = React.createClass({
@@ -61,14 +60,6 @@ const CheckItem = React.createClass({
     if (this.props.item.get('name')){
       return (
         <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item} {...this.getSelectable()}>
-          <ContextMenu title={`${this.props.item.get('name')} Actions`} id={this.props.item.get('id')} key="menu">
-            <Button text="left" color="primary" block flat to={`/check/edit/${this.props.item.get('id')}`}>
-              <Edit inline fill="primary"/> Edit
-            </Button>
-            <Button text="left" color="danger" block flat onClick={this.handleDeleteClick}>
-              <Delete inline fill="danger"/> Delete
-            </Button>
-          </ContextMenu>
           <div key="line1">{this.props.item.get('name')}</div>
           <div key="line2">{this.getInfoText()}</div>
         </ListItem>

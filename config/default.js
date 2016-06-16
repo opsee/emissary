@@ -4,6 +4,7 @@ export default {
   checkDefaultPort: null,
   checkDefaultProtocol: 'http',
   checkDefaultVerb: 'GET',
+  cookieDomain: 'opsee.com',
   defaultBastionRegion: null,
   ghosting: false,
   googleAnalyticsID: 'UA-59205908-3',

@@ -10,6 +10,7 @@ export const User = Record({
   loginDate: null,
   admin: false,
   admin_id: 0,
+  created_at: null,
   intercom_hmac: null,
   auth: null,
   ghosting: false,
@@ -17,7 +18,8 @@ export const User = Record({
   data: undefined,
   loginData: {},
   region: undefined,
-  vpc: undefined
+  vpc: undefined,
+  verified: null
 });
 
 const baseEnvItem = {
@@ -51,7 +53,8 @@ export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
     GroupName: undefined,
     Tenancy: undefined
   }),
-  SecurityGroups: List()
+  SecurityGroups: List(),
+  metrics: Map()
 }));
 
 export const InstanceRds = Record(_.assign({}, baseEnvItem, {
@@ -93,7 +96,8 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
-  Instances: new List()
+  Instances: new List(),
+  ListenerDescriptions: List()
 }));
 
 const Target = Record({
@@ -124,8 +128,9 @@ export const Check = Record({
   results: List(),
   passing: undefined,
   total: undefined,
+  type: 'http',
   spec: Map({
-    path: config.checkDefaultPath,
+    path: config.checkDefaultPath || '/',
     protocol: config.checkDefaultProtocol || 'http',
     port: config.checkDefaultPort || 80,
     verb: config.checkDefaultVerb || 'GET',

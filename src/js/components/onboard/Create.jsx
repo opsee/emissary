@@ -8,7 +8,7 @@ import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {onboard as actions} from '../../actions';
+import {user as actions} from '../../actions';
 
 const OnboardCreate = React.createClass({
   propTypes: {
@@ -18,7 +18,7 @@ const OnboardCreate = React.createClass({
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        onboardSignupCreate: PropTypes.object
+        userSignupCreate: PropTypes.object
       })
     }),
     location: PropTypes.shape({
@@ -28,7 +28,6 @@ const OnboardCreate = React.createClass({
   getInitialState(){
     return {
       data: this.props.redux.user.get('loginData'),
-      tos: false,
       validationError: undefined
     };
   },
@@ -36,66 +35,46 @@ const OnboardCreate = React.createClass({
     return this.getStatus() === 'pending' ? 'Creating...' : 'Create Account';
   },
   getStatus(){
-    return this.props.redux.asyncActions.onboardSignupCreate.status;
+    return this.props.redux.asyncActions.userSignupCreate.status;
   },
   isDisabled(){
-    const incomplete = !this.state.data.email || !this.state.tos;
+    const incomplete = !this.state.data.email;
     return incomplete || this.getStatus() === 'pending';
   },
   handleUserData(data){
     return this.setState({data});
   },
-  handleInputChange(e){
-    if (e && e.target){
-      const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-      let state = {
-        [e.target.name]: value
-      };
-      if (e.target.name === 'tos' && value){
-        state.validationError = undefined;
-      }
-      this.setState(state);
-    }
-  },
   handleSubmit(e){
     e.preventDefault();
-    if (!this.state.tos){
-      return this.setState({
-        validationError: 'You must accept the Terms of Service below.'
-      });
-    }
     return this.props.actions.signupCreate(_.defaults(this.state.data, {
       name: 'default',
       referrer: this.props.location.query.referrer || ''
-    }));
+    }), '/start/launch-stack');
   },
   render() {
     return (
        <div>
-        <Toolbar title="Sign up for Our Private Beta"/>
+        <Toolbar title="Sign up for Our Public Beta"/>
         <Grid>
           <Row>
             <Col xs={12}>
               <Padding b={2}><LogoColor/></Padding>
-              <p>Try Opsee <strong>for free</strong> in our private beta!</p>
+              <p>Try Opsee <strong>for free</strong> in our public beta!</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['email']} data={this.state.data} onChange={this.handleUserData}/>
+                  <UserInputs include={['name', 'email']} data={this.state.data} onChange={this.handleUserData}/>
                 </Padding>
-                <div className="display-flex">
-                  <Padding r={1} b={1}>
-                    <input id="js-tos" name="tos" value={this.state.tos} type="checkbox" onChange={this.handleInputChange} required/>
-                  </Padding>
-                  <label className="label" htmlFor="js-tos">I accept the <Link to="/tos" target="_blank">Opsee Terms of Service</Link></label>
-                </div>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
                   <Button type="submit" color="success" block disabled={this.isDisabled()}>
                     {this.getButtonText()}
                   </Button>
+                  <Padding t={1}>
+                    <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee's <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
+                  </Padding>
                 </div>
-                <Padding t={4}>
-                  <div><Link to="/password-forgot">Forgot your password?</Link></div>
+
+                <Padding tb={1}>
                   <div>Already have an account? <Link to="/login">Log in</Link>.</div>
                 </Padding>
               </form>

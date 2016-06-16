@@ -14,6 +14,7 @@ import {env as actions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import MetricGraph from '../global/MetricGraph';
 import rdsMetrics from '../../modules/rdsMetrics';
+import eccMetrics from '../../modules/eccMetrics';
 import relationships from 'slate/src/relationships';
 import style from './assertionMetric.css';
 
@@ -21,7 +22,8 @@ const AssertionMetric = React.createClass({
   mixins: [SetInterval],
   propTypes: {
     actions: PropTypes.shape({
-      getMetricRDS: PropTypes.func
+      getMetricRDS: PropTypes.func,
+      getMetricECC: PropTypes.func
     }),
     assertion: PropTypes.shape({
       value: PropTypes.string,
@@ -41,7 +43,8 @@ const AssertionMetric = React.createClass({
     redux: PropTypes.shape({
       env: PropTypes.shape({
         instances: PropTypes.shape({
-          rds: PropTypes.object
+          rds: PropTypes.object,
+          ecc: PropTypes.object
         })
       })
     }).isRequired,
@@ -51,11 +54,11 @@ const AssertionMetric = React.createClass({
   componentWillMount(){
     if (!this.getData().length){
       setTimeout(() => {
-        this.props.actions.getMetricRDS(this.props.check.target.id, this.props.assertion.value);
+        this.runMetricRequest();
       }, 0);
     }
     this.setInterval(() => {
-      this.props.actions.getMetricRDS(this.props.check.target.id, this.props.assertion.value);
+      this.runMetricRequest();
     }, 1 * 1000 * 60);
   },
   componentWillReceiveProps(nextProps) {
@@ -87,6 +90,25 @@ const AssertionMetric = React.createClass({
       threshold: null
     };
   },
+  getMetrics(){
+    switch (this.props.check.target.type){
+      case 'ecc':
+        return eccMetrics;
+      default:
+        return rdsMetrics;      
+    }
+  },
+  runMetricRequest(){
+    let action = this.props.actions.getMetricRDS;
+    switch (this.props.check.target.type){
+      case 'ecc':
+        action = this.props.actions.getMetricECC;
+        break;
+      default:
+        break;
+    }
+    action.call(null, this.props.check.target.id, this.props.assertion.value);
+  },
   getInstance(props = this.props) {
     let type = props.check.target.type;
     type = type === 'dbinstance' ? 'rds' : type;
@@ -102,7 +124,7 @@ const AssertionMetric = React.createClass({
   },
   getMetricMeta() {
     // Populates the metric metadata (description, units, etc.)
-    const meta = _.get(rdsMetrics, this.props.assertion.value, {});
+    const meta = _.get(this.getMetrics(), this.props.assertion.value, {});
     return _.assign({}, meta, {
       name: this.props.assertion.value
     });

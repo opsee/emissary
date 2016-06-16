@@ -3,15 +3,13 @@ import cx from 'classnames';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { History } from 'react-router';
 
-import { Circle } from '../icons';
-import { Padding } from '../layout';
-import { app as actions } from '../../actions';
+import {Circle} from '../icons';
+import {Padding} from '../layout';
+import {app as actions} from '../../actions';
 import style from './onboard.css';
 
 const Onboard = React.createClass({
-  mixins: [History],
   propTypes: {
     location: PropTypes.shape({
       pathname: PropTypes.string
