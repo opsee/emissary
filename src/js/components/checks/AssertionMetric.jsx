@@ -91,11 +91,14 @@ const AssertionMetric = React.createClass({
     };
   },
   getMetrics(){
-    return _.pickBy(metrics, v => _.includes(v.types, this.props.check.target.type));
+    let type = this.props.check.target.type;
+    type = type === 'instance' ? 'ecc' : type;
+    return _.pickBy(metrics, v => _.includes(v.types, type));
   },
   getItem(props = this.props) {
     let type = props.check.target.type;
     type = type === 'dbinstance' ? 'rds' : type;
+    type = type === 'instance' ? 'ecc' : type;
     if (type.match('rds|ecc')){
       return props.redux.env.instances[type].find(i => {
         return i.get('id') === props.check.target.id;
@@ -183,6 +186,7 @@ const AssertionMetric = React.createClass({
     let action = this.props.actions.getMetricRDS;
     switch (this.props.check.target.type){
     case 'ecc':
+    case 'instance':
       action = this.props.actions.getMetricECC;
       break;
     case 'asg':
