@@ -271,7 +271,7 @@ export function putData(key, data, reset){
             index++;
           }
           user[key][index] = {
-            revision: config.revision,
+            revision: process.env.REVISION,
             data: data
           };
           if (reset){
