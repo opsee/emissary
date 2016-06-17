@@ -39,9 +39,11 @@ const CheckSingle = React.createClass({
     this.props.actions.getCheck(this.props.params.id);
   },
   getCheck(){
-    return this.props.redux.checks.checks.find(c => {
-      return c.get('id') === this.props.params.id;
-    }) || new Check({id: this.props.params.id});
+    const {single} = this.props.redux.checks;
+    if (single.get('id') === this.props.params.id){
+      return single;
+    }
+    return new Check({id: this.props.params.id});
   },
   runRemoveCheck(){
     this.props.appActions.confirmOpen({
