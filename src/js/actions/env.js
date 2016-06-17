@@ -15,6 +15,7 @@ import {
   GET_INSTANCES_RDS,
   GET_METRIC_RDS,
   GET_METRIC_ECC,
+  GET_METRIC_ASG,
   ENV_GET_BASTIONS,
   ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
@@ -392,49 +393,6 @@ export function getInstanceRds(id){
   };
 }
 
-/**
- * @param {string} id - the ID of the RDS instance (e.g., 'my-rds-instance')
- * @param {string} metric - the name of the metric (e.g., 'CPUUtilization')
- */
-
-export function getMetricRDS(id, metric){
-  return (dispatch, state) => {
-    dispatch({
-      type: GET_METRIC_RDS,
-      payload: graphPromise('region.vpc.instances', () => {
-        return request
-        .post(`${config.services.compost}`)
-        .set('Authorization', state().user.get('auth'))
-        .send({
-          query: `query Query($region: String!, $vpc: String!){
-            region(id: $region) {
-              vpc(id: $vpc) {
-                instances(type: "rds", id: "${id}"){
-                  ... on rdsDBInstance {
-                    DBName
-                    DBInstanceIdentifier
-                    metrics{
-                      ${metric} {
-                        metrics{
-                          name
-                          value
-                          unit
-                          timestamp
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }`,
-          variables: _.pick(state().env, ['region', 'vpc'])
-        });
-      }, {search: state().search})
-    });
-  };
-}
-
 export function getBastions(){
   return (dispatch, state) => {
     if (!state().user.get('auth')){
@@ -461,6 +419,11 @@ export function getBastions(){
     });
   };
 }
+
+/**
+ * @param {string} id - the ID of the RDS instance (e.g., 'my-rds-instance')
+ * @param {string} metric - the name of the metric (e.g., 'CPUUtilization')
+ */
 
 export function getMetricRDS(id, metric){
   return (dispatch, state) => {
@@ -515,6 +478,47 @@ export function getMetricECC(id, metric){
                 instances(type: "ec2", id: "${id}"){
                   ... on ec2Instance {
                     InstanceId
+                    Tags {
+                      Key
+                      Value
+                    }
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getMetricASG(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_ASG,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "autoscaling", id: "${id}"){
+                  ... on autoscalingGroup {
+                    AutoScalingGroupName
                     Tags {
                       Key
                       Value

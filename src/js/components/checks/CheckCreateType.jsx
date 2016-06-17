@@ -88,7 +88,7 @@ const CheckCreateType = React.createClass({
       }, {
         id: 'asg',
         title: 'Auto Scaling Group',
-        types: ['http', 'cloudwatch'],
+        types: ['http'],
         size: () => this.props.redux.env.groups.asg.size
       }, {
         id: 'ecc',

@@ -25,6 +25,7 @@ import {
   GET_INSTANCES_RDS,
   GET_METRIC_RDS,
   GET_METRIC_ECC,
+  GET_METRIC_ASG,
   ENV_SET_FILTERED,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -205,6 +206,17 @@ const statics = {
       name: _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || newData.AutoScalingGroupName
     });
     return new GroupAsg(newData);
+  },
+  getASGMetricsSuccess(state, groups){
+    const arr = state.groups.asg;
+    const data = groups[0];
+    const old = arr.find(item => {
+      return item.get('id') === data.AutoScalingGroupName;
+    }) || new GroupAsg();
+    const oldJS = old.toJS();
+    let metrics = _.assign((oldJS.metrics || {}), data.metrics);
+    const obj = _.assign(old.toJS(), data, {metrics});
+    return statics.getGroupsAsgSuccess(state, [obj]);
   },
   getInstanceEccSuccess(state, data = []){
     const arr = state.instances.ecc;
@@ -478,6 +490,15 @@ export default handleActions({
       const filtered = statics.getNewFiltered(ecc, state, action, 'instances.ecc');
       const instances = _.assign({}, state.instances, {ecc});
       return _.assign({}, state, { instances, filtered });
+    },
+    throw: yeller.reportAction
+  },
+  [GET_METRIC_ASG]: {
+    next(state, action) {
+      const asg = statics.getASGMetricsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(asg, state, action, 'groups.asg');
+      const groups = _.assign({}, state.groups, {asg});
+      return _.assign({}, state, { groups, filtered });
     },
     throw: yeller.reportAction
   },

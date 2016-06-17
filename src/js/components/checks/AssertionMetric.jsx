@@ -13,8 +13,7 @@ import {Color, Heading} from '../type';
 import {env as actions} from '../../actions';
 import {SetInterval} from '../../modules/mixins';
 import MetricGraph from '../global/MetricGraph';
-import rdsMetrics from '../../modules/rdsMetrics';
-import eccMetrics from '../../modules/eccMetrics';
+import metrics from '../../modules/metrics';
 import relationships from 'slate/src/relationships';
 import style from './assertionMetric.css';
 
@@ -23,7 +22,8 @@ const AssertionMetric = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
       getMetricRDS: PropTypes.func,
-      getMetricECC: PropTypes.func
+      getMetricECC: PropTypes.func,
+      getMetricASG: PropTypes.func
     }),
     assertion: PropTypes.shape({
       value: PropTypes.string,
@@ -66,8 +66,8 @@ const AssertionMetric = React.createClass({
     if (nextProps.assertion.value !== this.props.assertion.value) {
       this.setState({ threshold: null });
     }
-    const oldInstance = this.getInstance();
-    const newInstance = this.getInstance(nextProps);
+    const oldInstance = this.getItem();
+    const newInstance = this.getItem(nextProps);
     if (!is(oldInstance, newInstance)){
       if (!this.props.assertion.operand && this.getData(nextProps).length){
         //hey let's set a nice suggestion!
@@ -91,33 +91,22 @@ const AssertionMetric = React.createClass({
     };
   },
   getMetrics(){
-    switch (this.props.check.target.type){
-      case 'ecc':
-        return eccMetrics;
-      default:
-        return rdsMetrics;      
-    }
+    return _.pickBy(metrics, v => _.includes(v.types, this.props.check.target.type));
   },
-  runMetricRequest(){
-    let action = this.props.actions.getMetricRDS;
-    switch (this.props.check.target.type){
-      case 'ecc':
-        action = this.props.actions.getMetricECC;
-        break;
-      default:
-        break;
-    }
-    action.call(null, this.props.check.target.id, this.props.assertion.value);
-  },
-  getInstance(props = this.props) {
+  getItem(props = this.props) {
     let type = props.check.target.type;
     type = type === 'dbinstance' ? 'rds' : type;
-    return props.redux.env.instances[type].find(i => {
+    if (type.match('rds|ecc')){
+      return props.redux.env.instances[type].find(i => {
+        return i.get('id') === props.check.target.id;
+      }) || new Map();
+    }
+    return props.redux.env.groups[type].find(i => {
       return i.get('id') === props.check.target.id;
     }) || new Map();
   },
   getData(props = this.props){
-    return _.get(this.getInstance(props).toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
+    return _.get(this.getItem(props).toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
   },
   getCurrentDataPoint() {
     return _.last(this.getData());
@@ -189,6 +178,20 @@ const AssertionMetric = React.createClass({
   },
   onOperandChange(assertion) {
     return this.props.onChange(assertion);
+  },
+  runMetricRequest(){
+    let action = this.props.actions.getMetricRDS;
+    switch (this.props.check.target.type){
+    case 'ecc':
+      action = this.props.actions.getMetricECC;
+      break;
+    case 'asg':
+      action = this.props.actions.getMetricASG;
+      break;
+    default:
+      break;
+    }
+    action.call(null, this.props.check.target.id, this.props.assertion.value);
   },
   handleRelationshipButtonClick(relationship){
     return this.props.onChange(_.assign({}, this.props.assertion, {relationship}));

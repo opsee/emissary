@@ -8,8 +8,7 @@ import {Padding} from '../layout';
 import {env as actions} from '../../actions';
 import {Button} from '../forms';
 import {Add, Delete} from '../icons';
-import rdsMetrics from '../../modules/rdsMetrics';
-import eccMetrics from '../../modules/eccMetrics';
+import metrics from '../../modules/metrics';
 import AssertionMetric from './AssertionMetric';
 
 const AssertionSelectionCloudwatch = React.createClass({
@@ -32,12 +31,7 @@ const AssertionSelectionCloudwatch = React.createClass({
     onChange: PropTypes.func
   },
   getMetrics(){
-    switch (this.props.check.target.type){
-      case 'ecc':
-        return eccMetrics;
-      default:
-        return rdsMetrics;      
-    }
+    return _.pickBy(metrics, v => _.includes(v.types, this.props.check.target.type));
   },
   getMetricTitle(metricName){
     return _.get(this.getMetrics(), `${metricName}.title`);
