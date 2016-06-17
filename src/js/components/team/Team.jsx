@@ -61,6 +61,23 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderMemberLink(member){
+    const user = this.props.redux.user.toJS();
+    if (member.id){
+      return (
+        <span>
+          <Link to={user.email === member.email ? '/profile' : `/team/member/${member.id}`}>
+            <strong>{member.name || member.email}</strong>
+          </Link>&nbsp;
+        </span>
+      );
+    }
+    return (
+      <span>
+        <strong>{member.email}</strong>&nbsp;
+      </span>
+    );
+  },
   renderStatus(member){
     const user = this.props.redux.user.toJS();
     if (member.email === user.email){
@@ -73,7 +90,10 @@ const Profile = React.createClass({
     if (member.email === user.email){
       return <Link to="/profile/edit" title="Edit Your Profile">Edit Your Profile</Link>;
     }
-    return <Link to={`/team/member/${member.id}/edit`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
+    if (member.id){
+      return <Link to={`/team/member/${member.id}/edit`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
+    }
+    return null;
   },
   render() {
     const team = this.getTeamData();
@@ -81,7 +101,7 @@ const Profile = React.createClass({
     if (team.name){
       return (
          <div>
-          <Toolbar title={`Team ${team.name}`} pageTitle="Team"/>
+          <Toolbar title={team.name && `Team ${team.name}` || 'Your Team'} pageTitle="Team"/>
           <Grid>
             <Row>
               <Col xs={12}>
@@ -115,9 +135,7 @@ const Profile = React.createClass({
                       return (
                         <tr>
                           <td>
-                            <Link to={user.email === member.email ? '/profile' : `/team/member/${member.id}`}>
-                              <strong>{member.name || member.email}</strong>
-                            </Link>&nbsp;
+                            {this.renderMemberLink(member)}
                             {this.renderStatus(member)}
                             <br/>
                             <Color c="gray6"><em>{permsSentence(member)}</em></Color>
@@ -138,7 +156,7 @@ const Profile = React.createClass({
                   <Table>
                     <tr>
                       <td><strong>Name</strong></td>
-                      <td>{team.name}&nbsp;&nbsp;<Link to="/team/edit">Edit Team Name</Link></td>
+                      <td>{team.name || '(No Team name set)'}&nbsp;&nbsp;<Link to="/team/edit">Edit Team Name</Link></td>
                     </tr>
                     {
                       // window.location.href.match('localhost|staging') && (
