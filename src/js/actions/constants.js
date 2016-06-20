@@ -37,7 +37,6 @@ export const USER_LOGIN = 'USER_LOGIN';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_REFRESH = 'USER_REFRESH';
 export const USER_EDIT = 'USER_EDIT';
-export const USER_GET_CUSTOMER = 'USER_GET_CUSTOMER';
 export const USER_SET_PASSWORD = 'USER_SET_PASSWORD';
 export const USER_APPLY = 'USER_APPLY';
 export const USER_GET_DATA = 'USER_GET_DATA';
