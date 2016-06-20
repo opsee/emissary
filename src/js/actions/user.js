@@ -11,7 +11,6 @@ import {
   USER_REFRESH,
   USER_EDIT,
   USER_SET_PASSWORD,
-  USER_GET_CUSTOMER,
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_SEND_RESET_EMAIL,
@@ -203,31 +202,6 @@ export function edit(data, redirect) {
               dispatch(push(redirect));
             }, 100);
           }
-        }, reject);
-      })
-    });
-  };
-}
-
-export function getCustomer(){
-  return (dispatch, state) => {
-    dispatch({
-      type: USER_GET_CUSTOMER,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .get(`${config.services.api}/customer`)
-        .set('Authorization', state().user.get('auth'))
-        .then((res) => {
-          let body = _.get(res, 'body.body');
-          if (body){
-            try {
-              body = JSON.parse(body);
-              return resolve({customerId: body.customer.id});
-            } catch (err){
-              _.noop();
-            }
-          }
-          return reject(new Error('Could not parse JSON.'));
         }, reject);
       })
     });

@@ -12,7 +12,6 @@ import {user as actions, env as envActions} from '../../actions';
 const System = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getCustomer: PropTypes.func,
       getData: PropTypes.func
     }),
     envActions: PropTypes.shape({
@@ -34,7 +33,6 @@ const System = React.createClass({
     };
   },
   componentWillMount(){
-    this.props.actions.getCustomer();
     this.props.actions.getData();
     this.props.envActions.getBastions();
   },
