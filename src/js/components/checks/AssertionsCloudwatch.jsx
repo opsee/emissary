@@ -17,6 +17,7 @@ import {
 } from '../../actions';
 import {Heading} from '../type';
 import AssertionSelectionCloudwatch from './AssertionSelectionCloudwatch';
+import CheckTypeSwitcher from './CheckTypeSwitcher';
 
 const AssertionsCloudwatch = React.createClass({
   propTypes: {
@@ -65,22 +66,7 @@ const AssertionsCloudwatch = React.createClass({
     this.props.onChange(this.getFinalData(data));
   },
   runDismissHelperText(){
-    this.props.userActions.putData('hasDismissedCheckAssertionsHelp');
-  },
-  runChangeCheckType(){
-    let check = _.cloneDeep(this.props.check);
-    check.type = 'http';
-    check.spec = {
-      path: '/',
-      protocol: 'http',
-      port: '80',
-      verb: 'GET',
-      headers: []
-    };
-    check.assertions = [];
-    this.runChange(check);
-    const data = JSON.stringify(check);
-    this.props.history.push(`/check-create/request?data=${data}`);
+    this.props.userActions.putData('hasDismissedCheckAssertionsCloudwatchHelp');
   },
   handleSubmit(e){
     e.preventDefault();
@@ -150,12 +136,9 @@ const AssertionsCloudwatch = React.createClass({
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit} noValidate>
-        <Padding t={1}>
-          <Heading level={3}>Assertions</Heading>
-        </Padding>
+        <Heading level={3}>Assertions</Heading>
         Select the CloudWatch metrics that you&rsquo;d like to keep an eye on. You must select at least one CloudWatch metric to assert on.
         <Rule/>
-        {this.renderHTTPAlert()}
         <Padding t={1}>
           {this.renderAssertionSelection()}
         </Padding>
@@ -175,6 +158,7 @@ const AssertionsCloudwatch = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
+                {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
                 <Padding b={1}>
                   {this.renderHelperText()}
                 </Padding>

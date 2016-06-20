@@ -26,7 +26,8 @@ export const statics = {
     const newData = _.assign({}, data, result.getFormattedData(data, true), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
-      })
+      }),
+      type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
     return new Check(newData);
   },
