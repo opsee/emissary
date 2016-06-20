@@ -6,6 +6,7 @@ import {bindActionCreators} from 'redux';
 import {Check} from '../../modules/schemas';
 import CheckDebug from './CheckDebug';
 import config from '../../modules/config';
+import {flag} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -21,6 +22,18 @@ const CheckCreate = React.createClass({
     location: PropTypes.object,
     children: PropTypes.node,
     redux: PropTypes.shape({
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object,
+          elb: PropTypes.object,
+          asg: PropTypes.object
+        }),
+        instances: PropTypes.shape({
+          ecc: PropTypes.object,
+          rds: PropTypes.object
+        }),
+        activeBastion: PropTypes.object
+      }).isRequired,
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object,
         getGroupsSecurity: PropTypes.object,
@@ -79,6 +92,54 @@ const CheckCreate = React.createClass({
       filter: null
     };
   },
+  getCheckTypes(){
+    let types = [{
+      id: 'external_host',
+      title: 'Internal URL',
+      types: ['http'],
+      size: () => ''
+    }];
+    if (!!this.props.redux.env.activeBastion) {
+      types = _.concat(types, [{
+        id: 'host',
+        title: 'External URL',
+        types: ['http'],
+        size: () => ''
+      }, {
+        id: 'elb',
+        title: 'ELB',
+        types: ['http', 'cloudwatch'],
+        size: () => this.props.redux.env.groups.elb.size
+      }, {
+        id: 'security',
+        title: 'Security Group',
+        types: ['http'],
+        size: () => this.props.redux.env.groups.security.size
+      }, {
+        id: 'asg',
+        title: 'Auto Scaling Group',
+        types: ['http'],
+        size: () => this.props.redux.env.groups.asg.size
+      }, {
+        id: 'ecc',
+        title: 'EC2 Instance',
+        types: ['http', 'cloudwatch'],
+        size: () => this.props.redux.env.instances.ecc.size
+      }, {
+        id: 'rds',
+        title: 'RDS Instance',
+        types: ['cloudwatch'],
+        size: () => this.props.redux.env.instances.rds.size
+      }]);
+    }
+    return _.chain(types).filter(type => {
+      return flag(`check-type-${type.id}`);
+    })
+    .filter(type => {
+      return type.size() > 0 || type.id === 'host' || type.id === 'external_host';
+    })
+    .value();
+  },
   setStatus(obj){
     this.setState(_.extend(this.state.statuses, obj));
   },
@@ -102,7 +163,8 @@ const CheckCreate = React.createClass({
         {React.cloneElement(this.props.children, _.assign({
           onChange: this.setData,
           onSubmit: this.handleSubmit,
-          onFilterChange: this.handleFilterChange
+          onFilterChange: this.handleFilterChange,
+          types: this.getCheckTypes()
         }, this.state)
         )}
         <CheckDebug check={this.state.check}/>

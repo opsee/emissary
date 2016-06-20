@@ -12,18 +12,28 @@ import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
 import {Padding} from '../layout';
 import {Button} from '../forms';
-import {user as userActions} from '../../actions';
+import {
+  user as userActions,
+  app as appActions
+} from '../../actions';
 import {Heading} from '../type';
 import AssertionSelection from './AssertionSelection';
 
 const AssertionsHTTP = React.createClass({
   propTypes: {
     check: PropTypes.object,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    }).isRequired,
+    types: PropTypes.array.isRequired,
     onChange: PropTypes.func,
     renderAsInclude: PropTypes.bool,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         responses: PropTypes.object,
@@ -77,6 +87,15 @@ const AssertionsHTTP = React.createClass({
   isDisabled(){
     return !!validate.check(this.props.check, ['assertions']).length;
   },
+  runChangeCheckType(){
+    let check = _.cloneDeep(this.props.check);
+    check.type = 'cloudwatch';
+    check.spec = {metrics: []};
+    check.assertions = [];
+    this.runChange(check);
+    const data = JSON.stringify(check);
+    this.props.history.push(`/check-create/assertions-cloudwatch?data=${data}`);
+  },
   runChange(data = undefined){
     this.props.onChange(this.getFinalData(data));
   },
@@ -91,6 +110,19 @@ const AssertionsHTTP = React.createClass({
   handleAssertionsChange(assertions = []){
     const data = _.assign({}, this.props.check, {assertions});
     this.props.onChange(data);
+  },
+  handleCheckTypeChange(e){
+    e.preventDefault();
+    const length = this.props.check.assertions.length;
+    if (length){
+      return this.props.appActions.confirmOpen({
+        html: `<p>You currently have ${length} assertion${length > 1 ? 's' : ''}. These will be lost if you switch to a CloudWatch check.</p>`,
+        confirmText: 'Ok, no problem',
+        color: 'success',
+        onConfirm: this.runChangeCheckType
+      });
+    }
+    return this.runChangeCheckType();
   },
   renderHelperText(){
     return (
@@ -123,6 +155,18 @@ const AssertionsHTTP = React.createClass({
     }
     return null;
   },
+  renderCloudWatchAlert(){
+    const id = this.props.check.target.type;
+    const obj = _.find(this.props.types, {id});
+    if (obj && _.includes(obj.types, 'cloudwatch')){
+      return (
+        <Padding b={1}>
+          <Alert color="default">Want to use CloudWatch metrics instead? <a onClick={this.handleCheckTypeChange} href="#">Click here</a>.</Alert>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderInner() {
     return (
       <form ref="form" onSubmit={this.handleSubmit}>
@@ -130,6 +174,7 @@ const AssertionsHTTP = React.createClass({
           <Heading level={3}>Assertions</Heading>
         </Padding>
         <p>Define the conditions required for this check to pass. Your response and request are shown for context. You must have at least one assertion.</p>
+        {this.renderCloudWatchAlert()}
         {this.renderAssertionSelection()}
         {this.renderSubmitButton()}
       </form>
@@ -173,7 +218,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssertionsHTTP);

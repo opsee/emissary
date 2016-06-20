@@ -11,7 +11,10 @@ import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
 import {Padding, Rule} from '../layout';
 import {Button} from '../forms';
-import {user as userActions} from '../../actions';
+import {
+  user as userActions,
+  app as appActions
+} from '../../actions';
 import {Heading} from '../type';
 import AssertionSelectionCloudwatch from './AssertionSelectionCloudwatch';
 
@@ -19,10 +22,17 @@ const AssertionsCloudwatch = React.createClass({
   propTypes: {
     check: PropTypes.object,
     onChange: PropTypes.func,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    }).isRequired,
+    types: PropTypes.array.isRequired,
     renderAsInclude: PropTypes.bool,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         responses: PropTypes.object,
@@ -57,6 +67,21 @@ const AssertionsCloudwatch = React.createClass({
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckAssertionsHelp');
   },
+  runChangeCheckType(){
+    let check = _.cloneDeep(this.props.check);
+    check.type = 'http';
+    check.spec = {
+      path: '/',
+      protocol: 'http',
+      port: '80',
+      verb: 'GET',
+      headers: []
+    };
+    check.assertions = [];
+    this.runChange(check);
+    const data = JSON.stringify(check);
+    this.props.history.push(`/check-create/request?data=${data}`);
+  },
   handleSubmit(e){
     e.preventDefault();
     const data = JSON.stringify(this.props.check);
@@ -66,14 +91,39 @@ const AssertionsCloudwatch = React.createClass({
     const data = _.assign({}, this.props.check, {assertions});
     this.props.onChange(data);
   },
+  handleCheckTypeChange(e){
+    e.preventDefault();
+    const length = this.props.check.assertions.length;
+    if (length){
+      return this.props.appActions.confirmOpen({
+        html: `<p>You currently have ${length} assertion${length > 1 ? 's' : ''}. These will be lost if you switch to a HTTP check.</p>`,
+        confirmText: 'Ok, no problem',
+        color: 'success',
+        onConfirm: this.runChangeCheckType
+      });
+    }
+    return this.runChangeCheckType();
+  },
+  renderHTTPAlert(){
+    const id = this.props.check.target.type;
+    const obj = _.find(this.props.types, {id});
+    if (obj && _.includes(obj.types, 'http')){
+      return (
+        <Padding b={1}>
+          <Alert color="default">Want to use HTTP assertions instead? <a onClick={this.handleCheckTypeChange} href="#">Click here to define your request</a>.</Alert>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderHelperText(){
     return (
-        <UserDataRequirement hideIf="hasDismissedCheckAssertionsCloudwatchHelp">
-          <Alert color="success" onDismiss={this.runDismissHelperText}>
-            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'CPU Utilization less than 90%'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
-          </Alert>
-        </UserDataRequirement>
-      );
+      <UserDataRequirement hideIf="hasDismissedCheckAssertionsCloudwatchHelp">
+        <Alert color="success" onDismiss={this.runDismissHelperText}>
+          Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'CPU Utilization less than 90%'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
+        </Alert>
+      </UserDataRequirement>
+    );
   },
   renderSubmitButton(){
     if (!this.props.renderAsInclude){
@@ -105,6 +155,7 @@ const AssertionsCloudwatch = React.createClass({
         </Padding>
         Select the CloudWatch metrics that you&rsquo;d like to keep an eye on. You must select at least one CloudWatch metric to assert on.
         <Rule/>
+        {this.renderHTTPAlert()}
         <Padding t={1}>
           {this.renderAssertionSelection()}
         </Padding>
@@ -147,7 +198,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssertionsCloudwatch);

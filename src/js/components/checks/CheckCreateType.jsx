@@ -21,6 +21,7 @@ const CheckCreateType = React.createClass({
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    types: PropTypes.array.isRequired,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         getGroupsSecurity: PropTypes.object
@@ -63,57 +64,12 @@ const CheckCreateType = React.createClass({
     return this.props.redux.asyncActions.getGroupsSecurity.status;
   },
   getTargets(){
-    let types = [{
-      id: 'external_host',
-      title: 'URL (external)',
-      types: ['http'],
-      size: () => ''
-    }];
-    if (!!this.props.redux.env.activeBastion) {
-      types = _.concat(types, [{
-        id: 'host',
-        title: 'URL (internal)',
-        types: ['http'],
-        size: () => ''
-      }, {
-        id: 'elb',
-        title: 'ELB',
-        types: ['http', 'cloudwatch'],
-        size: () => this.props.redux.env.groups.elb.size
-      }, {
-        id: 'security',
-        title: 'Security Group',
-        types: ['http'],
-        size: () => this.props.redux.env.groups.security.size
-      }, {
-        id: 'asg',
-        title: 'Auto Scaling Group',
-        types: ['http'],
-        size: () => this.props.redux.env.groups.asg.size
-      }, {
-        id: 'ecc',
-        title: 'EC2 Instance',
-        types: ['http', 'cloudwatch'],
-        size: () => this.props.redux.env.instances.ecc.size
-      }, {
-        id: 'rds',
-        title: 'RDS Instance',
-        types: ['cloudwatch'],
-        size: () => this.props.redux.env.instances.rds.size
-      }]);
-    }
-    return _.chain(types).filter(type => {
-      return flag(`check-type-${type.id}`);
-    })
-    .filter(type => {
-      return type.size() > 0 || type.id === 'host' || type.id === 'external_host';
-    })
-    .value();
+    return this.props.types;
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
   },
-  handleTargetSelect(target, type){
+  handleTargetSelect(target, type = 'http'){
     let check = _.cloneDeep(this.props.check);
     check.type = type;
     check.target.type = target.id;
@@ -157,16 +113,9 @@ const CheckCreateType = React.createClass({
         <StatusHandler status={this.getStatus()}>
           {this.getTargets().map(target => {
             return (
-              <Padding b={2}>
-                <Heading level={3}>{target.title}&nbsp;{target.size()}</Heading>
-                {target.types.map(type => {
-                  return (
-                    <Button onClick={this.handleTargetSelect.bind(null, target, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`${target}-type-select-${type}`}>
-                      {type}
-                    </Button>
-                  );
-                })}
-              </Padding>
+              <Button onClick={this.handleTargetSelect.bind(null, target, target.types[0])} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`${target.id}-type-select`}>
+                {target.title}{target.size() && ` (${target.size()})`}
+              </Button>
             );
           })}
         </StatusHandler>

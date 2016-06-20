@@ -18,7 +18,8 @@ import {validate} from '../../modules';
 import {Input, RadioSelect} from '../forms';
 import {
   checks as checkActions,
-  user as userActions
+  user as userActions,
+  app as appActions
 } from '../../actions';
 
 const CheckCreateRequest = React.createClass({
@@ -30,9 +31,13 @@ const CheckCreateRequest = React.createClass({
     checkActions: PropTypes.shape({
       testCheckReset: PropTypes.func
     }),
+    types: PropTypes.array.isRequired,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
+    }).isRequired,
     //allows user to edit target in /check/edit mode
     handleTargetClick: PropTypes.func,
     history: PropTypes.object,
@@ -160,6 +165,15 @@ const CheckCreateRequest = React.createClass({
     }
     this.runChange(check);
   },
+  runChangeCheckType(){
+    let check = _.cloneDeep(this.props.check);
+    check.type = 'cloudwatch';
+    check.spec = {metrics: []};
+    check.assertions = [];
+    this.runChange(check);
+    const data = JSON.stringify(check);
+    this.props.history.push(`/check-create/assertions-cloudwatch?data=${data}`);
+  },
   handleSubmit(e){
     e.preventDefault();
     if (!this.props.renderAsInclude){
@@ -190,6 +204,19 @@ const CheckCreateRequest = React.createClass({
   handleUrlChange(state){
     this.setState(state);
     this.state.debouncedRunUrlChange(state);
+  },
+  handleCheckTypeChange(e){
+    e.preventDefault();
+    const length = this.props.check.assertions.length;
+    if (length){
+      return this.props.appActions.confirmOpen({
+        html: `<p>You currently have ${length} assertion${length > 1 ? 's' : ''}. These will be lost if you switch to a CloudWatch check.</p>`,
+        confirmText: 'Ok, no problem',
+        color: 'success',
+        onConfirm: this.runChangeCheckType
+      });
+    }
+    return this.runChangeCheckType();
   },
   renderHeaderForm(){
     return (
@@ -326,6 +353,18 @@ const CheckCreateRequest = React.createClass({
       </Padding>
     );
   },
+  renderCloudWatchAlert(){
+    const id = this.props.check.target.type;
+    const obj = _.find(this.props.types, {id});
+    if (obj && _.includes(obj.types, 'cloudwatch')){
+      return (
+        <Padding b={1}>
+          <Alert color="default">Want to use CloudWatch metrics instead? <a onClick={this.handleCheckTypeChange} href="#">Click here</a>.</Alert>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderHttpInputs(){
     const protocols = ['http', 'https', 'ws', 'wss'].map(id => {
       return {id};
@@ -333,6 +372,7 @@ const CheckCreateRequest = React.createClass({
     return (
       <Padding b={1}>
         <Heading level={3}>Define Your HTTP Request</Heading>
+        {this.renderCloudWatchAlert()}
         <Padding b={1}>
           <RadioSelect inline options={protocols} path="spec.protocol" data={this.props.check} onChange={this.runChange} label="Protocol*"/>
         </Padding>
@@ -418,7 +458,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   checkActions: bindActionCreators(checkActions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateRequest);
