@@ -189,7 +189,7 @@ const CheckCreateRequest = React.createClass({
   },
   handleTargetClick(){
     if (!this.props.renderAsInclude){
-      this.props.history.push('/check-create/target');
+      this.props.history.push(`/check-create/target?data=${JSON.stringify(this.props.check)}`);
     } else if (typeof this.props.handleTargetClick === 'function'){
       this.props.handleTargetClick();
     }
