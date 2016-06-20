@@ -77,31 +77,6 @@ const AssertionsCloudwatch = React.createClass({
     const data = _.assign({}, this.props.check, {assertions});
     this.props.onChange(data);
   },
-  handleCheckTypeChange(e){
-    e.preventDefault();
-    const length = this.props.check.assertions.length;
-    if (length){
-      return this.props.appActions.confirmOpen({
-        html: `<p>You currently have ${length} assertion${length > 1 ? 's' : ''}. These will be lost if you switch to a HTTP check.</p>`,
-        confirmText: 'Ok, no problem',
-        color: 'success',
-        onConfirm: this.runChangeCheckType
-      });
-    }
-    return this.runChangeCheckType();
-  },
-  renderHTTPAlert(){
-    const id = this.props.check.target.type;
-    const obj = _.find(this.props.types, {id});
-    if (obj && _.includes(obj.types, 'http')){
-      return (
-        <Padding b={1}>
-          <Alert color="default">Want to use HTTP assertions instead? <a onClick={this.handleCheckTypeChange} href="#">Click here to define your request</a>.</Alert>
-        </Padding>
-      );
-    }
-    return null;
-  },
   renderHelperText(){
     return (
       <UserDataRequirement hideIf="hasDismissedCheckAssertionsCloudwatchHelp">
