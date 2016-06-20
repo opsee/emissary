@@ -105,7 +105,7 @@ const CheckCreateTarget = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (2 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button icon flat to="/">
             <Close btn/>
           </Button>

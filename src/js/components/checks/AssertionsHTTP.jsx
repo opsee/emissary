@@ -149,7 +149,7 @@ const AssertionsHTTP = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (4 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>
