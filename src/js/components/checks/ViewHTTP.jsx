@@ -13,10 +13,15 @@ import HTTPRequestItem from './HTTPRequestItem';
 
 const ViewHTTP = React.createClass({
   propTypes: {
-    check: PropTypes.object
+    check: PropTypes.object,
+    redux: PropTypes.shape({
+      checks: PropTypes.shape({
+        responsesFormatted: PropTypes.array
+      })
+    })
   },
   getResponses(){
-    return _.get(this.props.check.get('results').get(0), 'responses') || new List();
+    return new List(this.props.redux.checks.responsesFormatted);
   },
   renderNotifications(){
     let notifs = this.props.check.get('notifications');

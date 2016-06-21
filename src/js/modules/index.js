@@ -1,4 +1,5 @@
 import config from './config';
+import bastions from './bastions';
 import flag from './flag';
 import getKeys from './getKeys';
 import itemsFilter from './itemsFilter';
@@ -13,6 +14,7 @@ import yeller from './yeller';
 
 export {
   config,
+  bastions,
   flag,
   getKeys,
   itemsFilter,

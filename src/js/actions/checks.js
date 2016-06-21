@@ -38,6 +38,7 @@ export function fetchChecks(state) {
           response_count
           state
           results {
+            bastion_id
             passing
             responses {
               passing
@@ -116,6 +117,7 @@ export function getCheck(id){
               }
               results {
                 passing
+                bastion_id
                 responses {
                   passing
                   reply {
@@ -223,6 +225,7 @@ export function getChecksNotifications(){
               }
               results {
                 passing
+                bastion_id
                 responses {
                   passing
                   target {
@@ -380,6 +383,9 @@ export function test(data){
             testCheck(check: $check) {
               responses {
                 error
+                target {
+                  id
+                }
                 reply {
                   ...on schemaHttpResponse {
                     code

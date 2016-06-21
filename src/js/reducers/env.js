@@ -52,7 +52,9 @@ const statics = {
 
     const results = _.chain(checks)
     .map(check => {
-      return _.get(check, 'results[0].responses') || [];
+      return _.chain(check).get('results').map(r => {
+        return r.responses.map(res => _.assign(res, {bastion_id: r.bastion_id}));
+      }).flatten().value() || [];
     })
     .flatten()
     .value();
@@ -66,13 +68,18 @@ const statics = {
     if (item.type.match('elb|security|asg')){
       foundResults = foundChecks.map(check => {
         return _.assign(check, {
-          passing: _.get(check, 'results[0].passing') || false
+          passing: _.chain(check).get('results').map(r => {
+            return r.responses.map(res => _.assign(res, {bastion_id: r.bastion_id}));
+          }).flatten().map('passing').every().value() || false
+          // passing: _.get(check, 'results[0].passing') || false
         });
       });
       //only use checks that have results for counting
       //otherwise we want to show initializing
       foundResults = _.filter(foundResults, check => {
-        return (_.get(check, 'results[0].responses') || []).length;
+        return (_.chain(check).get('results').map(r => {
+          return r.responses.map(res => _.assign(res, {bastion_id: r.bastion_id}));
+        }).flatten().value() || []).length;
       });
     }
 

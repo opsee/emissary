@@ -140,7 +140,9 @@ export default handleActions({
       } else {
         checks = state.checks.concat(new List([single]));
       }
-      let responses = _.get(single.get('results').get(0), 'responses');
+      let responses = new List(_.chain(single.toJS()).get('results').map(r => {
+        return r.responses.map(res => _.assign(res, {bastion_id: r.bastion_id}));
+      }).flatten().map(r => fromJS(r)).value());
       responses = responses && responses.toJS ? responses : new List();
       responses = responses.sortBy(r => {
         return r.passing;

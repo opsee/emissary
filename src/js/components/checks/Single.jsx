@@ -58,7 +58,7 @@ const CheckSingle = React.createClass({
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     } else if (check.get('tags').find(() => 'complete')){
-      return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
+      return type.match('rds|dbinstance') ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check} redux={this.props.redux}/>;
     }
     return null;
   },
