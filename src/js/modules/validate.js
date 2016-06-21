@@ -92,6 +92,12 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
   if (!obj.name){
     errors.push('info: A check must have a name.');
   }
+  if (!obj.min_failing_time || obj.min_failing_time < 1){
+    errors.push('info: A check must specify a positive integer minimum failing time.');
+  }
+  if (!obj.min_failing_count || obj.min_failing_count < 1){
+    errors.push('info: A check must specify a positive integer minimum failing count.');
+  }
 
   errors = errors.map(e => {
     const data = e.split(': ');

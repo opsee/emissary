@@ -23,10 +23,22 @@ import {
 
 export const statics = {
   checkFromJS(data, state){
+    let checkState = 'initializing';
+    switch (data.state){
+    case 'OK':
+      checkState = 'passing';
+      break;
+    case 'FAIL':
+      checkState = 'failing';
+      break;
+    default:
+      break;
+    }
     const newData = _.assign({}, data, result.getFormattedData(data, true), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
-      })
+      }),
+      state: checkState
     });
     return new Check(newData);
   },

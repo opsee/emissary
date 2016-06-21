@@ -35,6 +35,8 @@ export function fetchChecks(state) {
             id
             type
           }
+          response_count
+          state
           results {
             passing
             responses {
@@ -90,6 +92,10 @@ export function getCheck(id){
               }
               name
               last_run
+              min_failing_time
+              min_failing_count
+              response_count
+              state
               spec {
                 ... on schemaHttpCheck {
                   verb
@@ -297,7 +303,7 @@ function getNamespace(type){
 }
 
 function formatCloudwatchCheck(data){
-  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check', 'id']);
+  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check', 'id', 'min_failing_count', 'min_failing_time']);
   const namespace = getNamespace(check.target.type);
   const metrics = check.assertions.map(assertion => {
     return {
@@ -332,7 +338,8 @@ function formatHttpCheck(data, forTestCheck){
   check.spec = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
   return _.chain(check)
   .assign({assertions})
-  .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id'])
+  .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id', 'min_failing_count', 'min_failing_time'])
+  .omit(forTestCheck && ['min_failing_time', 'min_failing_count'] || [])
   .mapKeys((value, key) => {
     return key === 'spec' ? 'http_check' : key;
   })
@@ -344,6 +351,7 @@ function formatHttpCheck(data, forTestCheck){
     }
     return value;
   })
+  .pickBy(v => v)
   .defaults({
     name: 'Http Check'
   })
