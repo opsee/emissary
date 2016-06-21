@@ -23,11 +23,12 @@ import {
 
 export const statics = {
   checkFromJS(data, state){
-    let checkState = 'initializing';
+    let checkState = 'passing';
     switch (data.state){
-    case 'OK':
-      checkState = 'passing';
+    case 'INITIALIZING':
+      checkState = 'initializing';
       break;
+    case 'PASS_WAIT':
     case 'FAIL':
       checkState = 'failing';
       break;
