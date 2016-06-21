@@ -27,7 +27,10 @@ const Profile = React.createClass({
     }).isRequired,
     redux: PropTypes.shape({
       team: PropTypes.object.isRequired,
-      user: PropTypes.object.isRequired
+      user: PropTypes.object.isRequired,
+      asyncActions: PropTypes.shape({
+        teamGet: PropTypes.object
+      }).isRequired
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -35,6 +38,11 @@ const Profile = React.createClass({
   },
   componentWillMount() {
     this.props.actions.getTeam();
+  },
+  getInitialState() {
+    return {
+      start: {}
+    };
   },
   getTeamData(){
     return this.props.redux.team.toJS();
@@ -98,7 +106,7 @@ const Profile = React.createClass({
   render() {
     const team = this.getTeamData();
     const user = this.props.redux.user.toJS();
-    if (team.name){
+    if (this.props.redux.asyncActions.teamGet.history.length){
       return (
          <div>
           <Toolbar title={team.name && `Team ${team.name}` || 'Your Team'} pageTitle="Team"/>

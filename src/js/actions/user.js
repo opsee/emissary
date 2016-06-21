@@ -22,6 +22,7 @@ import {
   ENV_GET_BASTIONS
 } from './constants';
 import storage from '../modules/storage';
+import * as team from './team';
 
 export function signupCreate(data, redirect) {
   return (dispatch, state) => {
@@ -73,6 +74,9 @@ export function login(data) {
             });
             resolve(res.body);
             //TODO fix this somehow
+            setTimeout(() => {
+              team.getTeam()(dispatch, state);
+            }, 10);
             setTimeout(() => {
               const string = state().router.location.query.redirect || '/';
               dispatch(push(string));
@@ -142,6 +146,7 @@ export function sendVerificationEmail(data) {
 export function logout(){
   return (dispatch, state) => {
     storage.remove('user');
+    storage.remove('team');
     analytics.trackEvent('User', 'logout')(dispatch, state);
     dispatch({
       type: USER_LOGOUT

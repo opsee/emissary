@@ -45,6 +45,7 @@ import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../use
 
 import Team from 'react-proxy?name=team!exports?exports.default!../team/Team';
 import TeamEdit from 'react-proxy?name=team!exports?exports.default!../team/TeamEdit';
+import TeamCreate from 'react-proxy?name=team!exports?exports.default!../team/TeamCreate';
 import TeamMember from 'react-proxy?name=team!exports?exports.default!../team/TeamMember';
 import TeamMemberEdit from 'react-proxy?name=team!exports?exports.default!../team/TeamMemberEdit';
 import TeamMemberInvite from 'react-proxy?name=team!exports?exports.default!../team/TeamMemberInvite';
@@ -147,6 +148,7 @@ const routes = (
     <Route path="/profile/edit" component={auth(ProfileEdit)}/>
     <Route path="/team" component={auth(Team)}/>
     <Route path="/team/edit" component={auth(TeamEdit)}/>
+    <Route path="/team/create" component={auth(TeamCreate)}/>
     <Route path="/team/member/invite" component={auth(TeamMemberInvite)}/>
     <Route path="/team/member/:id" component={auth(TeamMember)}/>
     <Route path="/team/member/:id/edit" component={auth(TeamMemberEdit)}/>

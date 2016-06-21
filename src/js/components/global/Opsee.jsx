@@ -38,6 +38,7 @@ const hideNavList = [
   '^\/profile\/edit',
   '^\/password-forgot',
   '^\/team\/edit',
+  '^\/team\/create',
   '^\/team\/member\/invite',
   '^\/team\/member\/.*\/edit'
 ];

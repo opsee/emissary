@@ -82,6 +82,16 @@ const Profile = React.createClass({
       <span>{user.email} <span className="text-sm"><Color c="danger">Unverified</Color></span></span>
     );
   },
+  renderTeamInfo(){
+    const team = this.props.redux.team.toJS();
+    const name = team.name;
+    return (
+      <tr>
+        <td><strong>Team</strong></td>
+        <td><Link to={name && '/team' || '/team/create'}>{name || 'Invite Team Members'}</Link></td>
+      </tr>
+    );
+  },
   render() {
     const user = this.getUser();
     return (
@@ -97,10 +107,7 @@ const Profile = React.createClass({
               <Padding b={1}>
                 <Heading level={3}>Your Profile</Heading>
                 <Table>
-                  <tr>
-                    <td><strong>Team</strong></td>
-                    <td><Link to="/team">{this.props.redux.team.get('name')}</Link></td>
-                  </tr>
+                  {this.renderTeamInfo()}
                   <tr>
                     <td><strong>Email</strong></td>
                     <td>

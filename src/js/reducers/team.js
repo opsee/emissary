@@ -8,8 +8,9 @@ import {
   TEAM_MEMBER_INVITE,
   TEAM_EDIT
 } from '../actions/constants';
+import storage from '../modules/storage';
 
-const initial = new Team();
+const initial = new Team(storage.get('team') || {});
 
 const statics = {
   teamFromJS: (action) => {
@@ -29,7 +30,9 @@ const statics = {
 export default handleActions({
   [TEAM_GET]: {
     next(state, action){
-      return statics.teamFromJS(action);
+      const team = statics.teamFromJS(action);
+      storage.set('team', team.toJS());
+      return team;
     },
     throw: yeller.reportAction
   },
@@ -41,7 +44,9 @@ export default handleActions({
   },
   [TEAM_EDIT]: {
     next(state, action){
-      return statics.teamFromJS(action);
+      const team = statics.teamFromJS(action);
+      storage.set('team', team.toJS());
+      return team;
     },
     throw: yeller.reportAction
   }

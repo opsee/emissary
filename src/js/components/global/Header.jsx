@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {plain as seed} from 'seedling';
+import {connect} from 'react-redux';
 
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
@@ -10,7 +11,10 @@ import style from './header.css';
 const Header = React.createClass({
   propTypes: {
     user: PropTypes.object.isRequired,
-    hide: PropTypes.bool
+    hide: PropTypes.bool,
+    redux: PropTypes.shape({
+      team: PropTypes.object.isRequired
+    }).isRequired
   },
   getInitialState(){
     return {
@@ -26,10 +30,18 @@ const Header = React.createClass({
   },
   renderLoginLink(){
     if (this.props.user.get('auth')){
+      if (this.props.redux.team.get('name')){
+        return (
+          <Link to="/team" className={style.navbarLink} activeClassName="active">
+            <Person nav/>&nbsp;
+            <span className={`${style.navbarTitle}`}>Team</span>
+          </Link>
+        );
+      }
       return (
-        <Link to="/team" className={style.navbarLink} activeClassName="active">
+        <Link to="/profile" className={style.navbarLink} activeClassName="active">
           <Person nav/>&nbsp;
-          <span className={`${style.navbarTitle}`}>Team</span>
+          <span className={`${style.navbarTitle}`}>Profile</span>
         </Link>
       );
     }
@@ -85,4 +97,8 @@ const Header = React.createClass({
   }
 });
 
-export default Header;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+export default connect(mapStateToProps, null)(Header);
