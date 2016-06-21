@@ -65,13 +65,13 @@ const CheckCreateType = React.createClass({
   getTypes(){
     let types = [{
       id: 'external_host',
-      title: 'URL (external)',
+      title: 'Global URL',
       size: () => ''
     }];
     if (!!this.props.redux.env.activeBastion) {
       types = _.concat(types, [{
         id: 'host',
-        title: 'URL (internal)',
+        title: 'Internal URL',
         size: () => ''
       }, {
         id: 'elb',

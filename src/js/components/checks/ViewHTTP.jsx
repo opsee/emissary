@@ -63,7 +63,7 @@ const ViewHTTP = React.createClass({
     if (targetType === 'host') {
       text = 'Internal HTTP Request';
     } else if (targetType === 'external_host') {
-      text = 'External HTTP Request';
+      text = 'Global HTTP Request';
     }
     return (
       <Heading level={3}>{text}</Heading>
