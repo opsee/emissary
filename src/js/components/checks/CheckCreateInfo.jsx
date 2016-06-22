@@ -77,7 +77,16 @@ const CheckCreateInfo = React.createClass({
     if (this.state.advanced !== undefined){
       return this.state.advanced;
     }
-    return _.chain(arr).last().get('data').value();
+    let bools = [_.chain(arr).last().get('data').value()];
+    bools.push(this.props.check.min_failing_time !== 90);
+    bools.push(this.props.check.min_failing_count !== 1);
+    return _.some(bools);
+  },
+  shouldShowHideAdvancedOptions(){
+    let bools = [];
+    bools.push(this.props.check.min_failing_time === 90);
+    bools.push(this.props.check.min_failing_count === 1);
+    return _.some(bools);
   },
   isDisabled(){
     return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
@@ -138,6 +147,16 @@ const CheckCreateInfo = React.createClass({
     }
     return null;
   },
+  renderHideAdvancedOptionsButton(){
+    if (this.shouldShowHideAdvancedOptions()){
+      return (
+        <Padding t={1}>
+          <a href="#" onClick={this.handleAdvancedOptionsClick}>Hide Advanced Options</a>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderAdvancedInputs(){
     if (this.getAdvancedOptionsBool()){
       return (
@@ -150,9 +169,7 @@ const CheckCreateInfo = React.createClass({
               <Input data={this.props.check} path="min_failing_count" placeholder="1" label="Minimum Failing Count <br/>(Responses or DNS Entries)*" onChange={this.handleInputChange}/>
             </div>
           </div>
-          <Padding t={1}>
-            <a href="#" onClick={this.handleAdvancedOptionsClick}>Hide Advanced Options</a>
-          </Padding>
+          {this.renderHideAdvancedOptionsButton()}
         </div>
       );
     }
