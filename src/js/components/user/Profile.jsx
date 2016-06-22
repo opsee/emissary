@@ -29,6 +29,9 @@ const Profile = React.createClass({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
         userSendVerificationEmail: PropTypes.object
+      }),
+      env: PropTypes.object({
+        activeBastion: PropTypes.object
       })
     }).isRequired,
     location: PropTypes.shape({
@@ -89,6 +92,22 @@ const Profile = React.createClass({
       <span>{user.email} <span className="text-sm"><Color c="danger">Unverified</Color></span></span>
     );
   },
+  renderAWSArea(){
+    if (!!this.props.redux.env.activeBastion){
+      return (
+        <tr>
+          <td><strong>AWS Integration</strong></td>
+          <td><Link to="/system">Enabled</Link></td>
+        </tr>
+      );
+    }
+    return (
+      <tr>
+        <td><strong>AWS Integration</strong></td>
+        <td><Link to="/start/launch-stack">Add Our Instance</Link></td>
+      </tr>
+    );
+  },
   renderSlackArea(){
     if (flag('integrations-slack')){
       return (
@@ -137,6 +156,7 @@ const Profile = React.createClass({
                     <td><strong>Password</strong></td>
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
+                  {this.renderAWSArea()}
                   {this.renderSlackArea()}
                   {this.renderPagerdutyArea()}
                 </Table>
