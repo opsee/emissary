@@ -104,7 +104,6 @@ const CheckCreateInfo = React.createClass({
   handleAdvancedOptionsClick(e){
     e.preventDefault();
     const bool = this.getAdvancedOptionsBool();
-    console.log(!bool);
     this.setState({
       advanced: !bool
     });
