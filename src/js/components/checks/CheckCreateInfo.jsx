@@ -89,7 +89,7 @@ const CheckCreateInfo = React.createClass({
     let bools = [];
     bools.push(this.props.check.min_failing_time === 90);
     bools.push(this.props.check.min_failing_count === 1);
-    return _.some(bools);
+    return _.every(bools);
   },
   runChange(){
     this.props.onChange(this.getFinalData());
@@ -194,6 +194,7 @@ const CheckCreateInfo = React.createClass({
           <hr/>
           <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
           <Padding b={1}>
+            <Heading level={3}>Advanced Options</Heading>
             {this.renderAdvancedInputs()}
           </Padding>
         </Padding>

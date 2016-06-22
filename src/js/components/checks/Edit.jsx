@@ -155,7 +155,7 @@ const CheckEdit = React.createClass({
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-            Finish <Checkmark inline fill={seed.color.success}/>
+            {this.props.redux.asyncActions.checkEdit.status === 'pending' ? 'Saving...' : 'Finish'} <Checkmark inline fill={seed.color.success}/>
           </Button>
           <CheckDisabledReason check={check}/>
           </Padding>

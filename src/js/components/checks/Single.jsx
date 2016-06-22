@@ -67,8 +67,8 @@ const CheckSingle = React.createClass({
       return (
         <div>
           <Heading level={3}>Advanced Check Options</Heading>
-          Minimum Failing Time: {check.min_failing_time}<br/>
-          Minimum Failing Count: {check.min_failing_count}
+          <strong>Minimum Failing Time</strong>: {check.min_failing_time}s<br/>
+          <strong>Minimum Failing Count</strong>: {check.min_failing_count}
         </div>
       );
     }
@@ -95,13 +95,15 @@ const CheckSingle = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
-                <Padding b={3}>
+                <Padding b={1}>
                   {this.renderInner(check)}
                 </Padding>
                 {this.renderAdvancedOptions(check)}
-                <Button onClick={this.runRemoveCheck} flat color="danger">
-                  <Delete inline fill="danger"/> Delete Check
-                </Button>
+                <Padding t={3}>
+                  <Button onClick={this.runRemoveCheck} flat color="danger">
+                    <Delete inline fill="danger"/> Delete Check
+                  </Button>
+                </Padding>
               </BastionRequirement>
             </Col>
           </Row>
