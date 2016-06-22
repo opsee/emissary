@@ -58,10 +58,11 @@ const NotificationSelection = React.createClass({
       if (typeof event === 'object' && event.newValue === 'true') {
         if (event.key === 'shouldGetSlackChannels'){
           this.props.actions.getSlackChannels();
+          storage.remove(event.key);
         } else if (event.key === 'shouldSyncPagerduty') {
           this.props.actions.getPagerdutyInfo();
+          storage.remove(event.key);
         }
-        storage.remove(event.key);
       }
     });
   },

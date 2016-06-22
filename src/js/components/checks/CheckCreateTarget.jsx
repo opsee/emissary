@@ -113,7 +113,7 @@ const CheckCreateTarget = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
+              <BastionRequirement strict>
                 {this.renderInner()}
               </BastionRequirement>
             </Col>

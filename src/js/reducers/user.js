@@ -13,18 +13,19 @@ import {
   USER_REFRESH,
   USER_EDIT,
   USER_SET_PASSWORD,
-  USER_GET_CUSTOMER,
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_APPLY,
-  USER_SET_LOGIN_DATA
+  USER_SET_LOGIN_DATA,
+  USER_VERIFY_EMAIL,
+  USER_SIGNUP_CREATE
 } from '../actions/constants';
 
 let initial = loadUser();
 
 function deleteTokenCookie() {
-  document.cookie = cookie.serialize('ferengi-token', '', {
-    domain: 'localhost', // explicitly set domain so it works on both ferengi/emissary
+  document.cookie = cookie.serialize('ferengi', '', {
+    domain: config.cookieDomain,
     maxAge: 0
   });
 }
@@ -51,16 +52,16 @@ function loadUser() {
   // When signing up from Ferengi, a temporary token is saved in a cookie.
   // This allows the user to authenticate once, without needing a password.
   const cookies = cookie.parse(document.cookie);
-  const token = _.get(cookies, 'ferengi-token');
-  if (token) {
+  const ferengiCookie = _.get(cookies, 'ferengi');
+  if (ferengiCookie) {
+    const ferengiUser = JSON.parse(ferengiCookie);
+    const auth = `Bearer ${ferengiUser.token}`;
+    const user = _.assign({ auth }, ferengiUser);
     // Once we've grabbed the token from the cookie, the full user object
     // is fetched and persisted to localStorage (as with normal logins)
     // and the cookie can be deleted.
     deleteTokenCookie();
-    return new User({
-      token: token,
-      auth: `Bearer ${token}`
-    });
+    return new User(user);
   }
   const localUser = storage.get('user');
   if (localUser && getAuth(localUser)) {
@@ -90,6 +91,13 @@ function setUser(state, action){
 }
 
 export default handleActions({
+  [USER_SIGNUP_CREATE]: {
+    next(state, action) {
+      const data = _.assign({}, action.payload, {loginDate: new Date()});
+      return setUser(state, {payload: data});
+    },
+    throw: yeller.reportAction
+  },
   [USER_LOGIN]: {
     next: setUser
   },
@@ -115,12 +123,6 @@ export default handleActions({
       return new User();
     }
   },
-  [USER_GET_CUSTOMER]: {
-    next(state, action){
-      return new User(_.assign({}, state.toJS(), action.payload));
-    },
-    throw: yeller.reportAction
-  },
   [USER_GET_DATA]: {
     next(state, action){
       return new User(_.assign({}, state.toJS(), {data: action.payload}));
@@ -142,5 +144,9 @@ export default handleActions({
     next(state, action){
       return new User(_.assign({}, state.toJS(), {loginData: action.payload}));
     }
+  },
+  [USER_VERIFY_EMAIL]: {
+    next: setUser,
+    throw: yeller.reportAction
   }
 }, initial);

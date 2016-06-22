@@ -27,6 +27,11 @@ const UserDataRequirement = React.createClass({
     let selection = this.props.data[property];
     if (this.props.currentRevision && Array.isArray(selection)){
       selection = _.filter(selection, {revision: config.revision}).length;
+    } else if (Array.isArray(selection)){
+      selection = selection[0];
+    }
+    if (_.isObject(selection)){
+      selection = selection[_.keys(selection)[0]];
     }
     if (this.props.hideIf){
       return !(selection);

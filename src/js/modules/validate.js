@@ -37,7 +37,7 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
     ['protocol', 'A check must specifiy a protocol.']
   ];
 
-  if (type === 'host'){
+  if (type === 'host' || type === 'external_host'){
     const arr = requestErrors.map(err => {
       return !spec[err[0]];
     });

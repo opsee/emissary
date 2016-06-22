@@ -42,10 +42,12 @@ import PasswordForgot from 'react-proxy?name=onboard!exports?exports.default!../
 import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../user/PasswordChange';
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
+import Verify from 'react-proxy?name=profile!exports?exports.default!../user/Verify';
 
 import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
 import OnboardCreate from 'react-proxy?name=onboard!exports?exports.default!../onboard/Create';
 import OnboardThanks from 'react-proxy?name=onboard!exports?exports.default!../onboard/Thanks';
+import OnboardWelcome from 'react-proxy?name=onboard!exports?exports.default!../onboard/Welcome';
 import OnboardAccount from 'react-proxy?name=onboard!exports?exports.default!../onboard/Account';
 import OnboardReviewStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/ReviewStack';
 import OnboardLaunchStack from 'react-proxy?name=onboard!exports?exports.default!../onboard/LaunchStack';
@@ -110,6 +112,8 @@ const routes = (
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
+    <Route path="/welcome" component={auth(OnboardWelcome)} />
+
     <Redirect from="/start" to="/start/create" />
     <Route path="/start/create" component={OnboardCreate}/>
     <Route path="/start/thanks" component={OnboardThanks}/>
@@ -131,6 +135,7 @@ const routes = (
 
     <Route path="/search" component={auth(SearchAll)}/>
 
+    <Route path="/verify" component={Verify}/>
     <Route path="/profile" component={auth(Profile)}/>
     <Route path="/profile/edit" component={auth(ProfileEdit)}/>
     <Route path="/login" component={Login}/>

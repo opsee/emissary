@@ -62,10 +62,9 @@ const SearchAll = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <BastionRequirement>
-                  <FilterButtons/>
-                  <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
-                </BastionRequirement>
+                <FilterButtons/>
+                <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
+                <BastionRequirement strict/>
               </Col>
             </Row>
           </Grid>

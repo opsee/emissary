@@ -18,7 +18,8 @@ export const User = Record({
   data: undefined,
   loginData: {},
   region: undefined,
-  vpc: undefined
+  vpc: undefined,
+  verified: null
 });
 
 const baseEnvItem = {
@@ -94,7 +95,8 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   type: 'elb',
   Description: undefined,
   CreatedTime: undefined,
-  Instances: new List()
+  Instances: new List(),
+  ListenerDescriptions: List()
 }));
 
 const Target = Record({
@@ -126,7 +128,7 @@ export const Check = Record({
   passing: undefined,
   total: undefined,
   spec: Map({
-    path: config.checkDefaultPath,
+    path: config.checkDefaultPath || '/',
     protocol: config.checkDefaultProtocol || 'http',
     port: config.checkDefaultPort || 80,
     verb: config.checkDefaultVerb || 'GET',

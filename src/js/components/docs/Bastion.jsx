@@ -12,7 +12,7 @@ const Bastion = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement/>
+              <BastionRequirement strict />
               <p>Here are some frequently asked questions and answers about the Opsee EC2 Instance:</p>
 
                 <Heading level={3}>What type of instance is it? How much does it cost to run?</Heading>

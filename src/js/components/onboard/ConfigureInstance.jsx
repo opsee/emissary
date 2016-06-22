@@ -49,7 +49,7 @@ const ConfigureInstance = React.createClass({
   getRegions() {
     return _.map(this.props.redux.onboard.regions, region => {
       return _.assign({
-        label: `<strong>${region.id}</strong></br><small>${region.name}</small>`
+        label: `<strong>${region.id}</strong>&nbsp;&nbsp;(${region.name})`
       }, region);
     });
   },
