@@ -308,6 +308,7 @@ function formatCloudwatchCheck(data){
   });
   check.cloudwatch_check = {metrics};
   check.target.type = check.target.type === 'rds' ? 'dbinstance' : check.target.type;
+  check.target.type = check.target.type === 'ecc' ? 'instance' : check.target.type;
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   return check;
 }
