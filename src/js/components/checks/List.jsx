@@ -137,6 +137,7 @@ const CheckList = React.createClass({
         </Padding>
       );
     }
+    return null;
   },
   render() {
     return (
