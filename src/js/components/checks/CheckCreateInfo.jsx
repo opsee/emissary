@@ -82,14 +82,14 @@ const CheckCreateInfo = React.createClass({
     bools.push(this.props.check.min_failing_count !== 1);
     return _.some(bools);
   },
+  isDisabled(){
+    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
+  },
   shouldShowHideAdvancedOptions(){
     let bools = [];
     bools.push(this.props.check.min_failing_time === 90);
     bools.push(this.props.check.min_failing_count === 1);
     return _.some(bools);
-  },
-  isDisabled(){
-    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
   },
   runChange(){
     this.props.onChange(this.getFinalData());
