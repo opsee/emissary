@@ -53,8 +53,6 @@ const CheckSingle = React.createClass({
     });
   },
   renderInner(check){
-    const type = _.get(check.toJS(), 'target.type') || '';
-    //TODO change this later to be more open
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     } else if (check.get('tags').find(() => 'complete')){
