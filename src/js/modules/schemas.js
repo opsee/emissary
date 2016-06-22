@@ -53,7 +53,8 @@ export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
     GroupName: undefined,
     Tenancy: undefined
   }),
-  SecurityGroups: List()
+  SecurityGroups: List(),
+  metrics: Map()
 }));
 
 export const InstanceRds = Record(_.assign({}, baseEnvItem, {
@@ -88,7 +89,8 @@ export const GroupAsg = Record(_.assign({}, baseEnvItem, {
   MaxSize: undefined,
   DesiredCapacity: undefined,
   AvailabilityZones: undefined,
-  SuspendedProcesses: List()
+  SuspendedProcesses: List(),
+  metrics: Map()
 }));
 
 export const GroupElb = Record(_.assign({}, baseEnvItem, {
@@ -127,6 +129,7 @@ export const Check = Record({
   results: List(),
   passing: undefined,
   total: undefined,
+  type: 'http',
   spec: Map({
     path: config.checkDefaultPath || '/',
     protocol: config.checkDefaultProtocol || 'http',

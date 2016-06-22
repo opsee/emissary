@@ -1,5 +1,6 @@
 import config from './config';
 import flag from './flag';
+import getCheckTypes from './getCheckTypes';
 import getKeys from './getKeys';
 import itemsFilter from './itemsFilter';
 import mixins from './mixins';
@@ -14,6 +15,7 @@ import yeller from './yeller';
 export {
   config,
   flag,
+  getCheckTypes,
   getKeys,
   itemsFilter,
   mixins,

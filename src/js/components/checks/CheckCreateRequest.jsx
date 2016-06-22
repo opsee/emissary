@@ -16,9 +16,11 @@ import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Heading} from '../type';
 import {validate} from '../../modules';
 import {Input, RadioSelect} from '../forms';
+import CheckTypeSwitcher from './CheckTypeSwitcher';
 import {
   checks as checkActions,
-  user as userActions
+  user as userActions,
+  app as appActions
 } from '../../actions';
 
 const CheckCreateRequest = React.createClass({
@@ -30,9 +32,13 @@ const CheckCreateRequest = React.createClass({
     checkActions: PropTypes.shape({
       testCheckReset: PropTypes.func
     }),
+    types: PropTypes.array.isRequired,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
+    }).isRequired,
     //allows user to edit target in /check/edit mode
     handleTargetClick: PropTypes.func,
     history: PropTypes.object,
@@ -44,8 +50,22 @@ const CheckCreateRequest = React.createClass({
     })
   },
   componentWillMount(){
-    if (!this.props.check.target.id && !this.isURLCheck()){
+    const {check} = this.props;
+    if (!check.target.id && !this.isURLCheck()){
       return this.props.history.push('/check-create/target');
+    }
+    if (check.type === 'cloudwatch'){
+      let data = _.cloneDeep(check);
+      data.type = 'http';
+      data.assertions = [];
+      data.spec = _.defaults(data.spec, {
+        path: '/',
+        protocol: 'http',
+        port: '80',
+        verb: 'GET',
+        headers: []
+      });
+      this.runChange(data);
     }
     return this.props.checkActions.testCheckReset();
   },
@@ -169,7 +189,7 @@ const CheckCreateRequest = React.createClass({
   },
   handleTargetClick(){
     if (!this.props.renderAsInclude){
-      this.props.history.push('/check-create/target');
+      this.props.history.push(`/check-create/target?data=${JSON.stringify(this.props.check)}`);
     } else if (typeof this.props.handleTargetClick === 'function'){
       this.props.handleTargetClick();
     }
@@ -368,6 +388,7 @@ const CheckCreateRequest = React.createClass({
   renderInner(){
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
+        {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
         <Padding b={2}>
           {this.renderHelperText()}
         </Padding>
@@ -390,7 +411,7 @@ const CheckCreateRequest = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (3 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>
@@ -418,7 +439,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   checkActions: bindActionCreators(checkActions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateRequest);
