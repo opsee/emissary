@@ -99,7 +99,7 @@ const CheckList = React.createClass({
       //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
       return (
         <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-          <Padding b={2}><h2>Welcome to Opsee! Let&rsquo;s get started.</h2></Padding>
+          <Padding b={2}><Heading level={2}>Welcome to Opsee! Let&rsquo;s get started.</Heading></Padding>
           <p>Thanks for signing up! Let&rsquo;s get your environment set up:</p>
 
           <ol>
