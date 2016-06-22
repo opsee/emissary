@@ -14,6 +14,8 @@ import {
   GET_INSTANCE_RDS,
   GET_INSTANCES_RDS,
   GET_METRIC_RDS,
+  GET_METRIC_ECC,
+  GET_METRIC_ASG,
   ENV_GET_BASTIONS,
   ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
@@ -391,6 +393,33 @@ export function getInstanceRds(id){
   };
 }
 
+export function getBastions(){
+  return (dispatch, state) => {
+    if (!state().user.get('auth')){
+      return dispatch({
+        type: ENV_GET_BASTIONS,
+        payload: []
+      });
+      // return Promise.resolve([]);
+    }
+    return dispatch({
+      type: ENV_GET_BASTIONS,
+      payload: new Promise((resolve, reject) => {
+        return request
+        .get(`${config.services.api}/vpcs/bastions`)
+        .set('Authorization', state().user.get('auth'))
+        .then(res => {
+          const arr = _.get(res, 'body.bastions');
+          if (!arr && process.env.NODE_ENV !== 'production'){
+            console.error('No array from GET /bastions');
+          }
+          resolve(arr || []);
+        }, reject);
+      })
+    });
+  };
+}
+
 /**
  * @param {string} id - the ID of the RDS instance (e.g., 'my-rds-instance')
  * @param {string} metric - the name of the metric (e.g., 'CPUUtilization')
@@ -434,37 +463,10 @@ export function getMetricRDS(id, metric){
   };
 }
 
-export function getBastions(){
-  return (dispatch, state) => {
-    if (!state().user.get('auth')){
-      return dispatch({
-        type: ENV_GET_BASTIONS,
-        payload: []
-      });
-      // return Promise.resolve([]);
-    }
-    return dispatch({
-      type: ENV_GET_BASTIONS,
-      payload: new Promise((resolve, reject) => {
-        return request
-        .get(`${config.services.api}/vpcs/bastions`)
-        .set('Authorization', state().user.get('auth'))
-        .then(res => {
-          const arr = _.get(res, 'body.bastions');
-          if (!arr && process.env.NODE_ENV !== 'production'){
-            console.error('No array from GET /bastions');
-          }
-          resolve(arr || []);
-        }, reject);
-      })
-    });
-  };
-}
-
-export function getMetricRDS(id, metric){
+export function getMetricECC(id, metric){
   return (dispatch, state) => {
     dispatch({
-      type: GET_METRIC_RDS,
+      type: GET_METRIC_ECC,
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
@@ -473,10 +475,54 @@ export function getMetricRDS(id, metric){
           query: `query Query($region: String!, $vpc: String!){
             region(id: $region) {
               vpc(id: $vpc) {
-                instances(type: "rds", id: "${id}"){
-                  ... on rdsDBInstance {
-                    DBName
-                    DBInstanceIdentifier
+                instances(type: "ec2", id: "${id}"){
+                  ... on ec2Instance {
+                    InstanceId
+                    Tags {
+                      Key
+                      Value
+                    }
+                    metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getMetricASG(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_ASG,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "autoscaling", id: "${id}"){
+                  ... on autoscalingGroup {
+                    AutoScalingGroupName
+                    Tags {
+                      Key
+                      Value
+                    }
                     metrics{
                       ${metric} {
                         metrics{

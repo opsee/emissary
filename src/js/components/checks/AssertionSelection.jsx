@@ -15,7 +15,7 @@ import slate from 'slate';
 import {Input} from '../forms';
 import inputStyle from '../forms/input.css';
 
-const AssertionsSelection = React.createClass({
+const AssertionSelection = React.createClass({
   propTypes: {
     check: PropTypes.object,
     assertions: PropTypes.array,
@@ -542,4 +542,4 @@ const mapStateToProps = (state) => ({
   redux: state
 });
 
-export default connect(mapStateToProps)(AssertionsSelection);
+export default connect(mapStateToProps)(AssertionSelection);

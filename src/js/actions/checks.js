@@ -299,6 +299,7 @@ export function delSelected(){
 function getNamespace(type){
   switch (type){
   case 'instance':
+  case 'ecc':
     return 'AWS/EC2';
   default:
     return 'AWS/RDS';
@@ -316,6 +317,7 @@ function formatCloudwatchCheck(data){
   });
   check.cloudwatch_check = {metrics};
   check.target.type = check.target.type === 'rds' ? 'dbinstance' : check.target.type;
+  check.target.type = check.target.type === 'ecc' ? 'instance' : check.target.type;
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   return check;
 }
@@ -363,7 +365,7 @@ function formatHttpCheck(data, forTestCheck){
 
 function formatCheckData(check){
   //TODO switch this to be more flexible
-  if (check.target.type.match('rds|dbinstance')){
+  if (check.type === 'cloudwatch' || _.chain(check).get('assertions').head().get('key').value() === 'cloudwatch'){
     return formatCloudwatchCheck(check);
   }
   return formatHttpCheck(check);

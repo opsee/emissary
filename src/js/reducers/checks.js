@@ -39,7 +39,8 @@ export const statics = {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
       }),
-      state: checkState
+      state: checkState,
+      type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
     return new Check(newData);
   },
@@ -130,7 +131,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {tags: new List(['complete'])}), state);
+      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {tags: ['complete']}), state);
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -170,7 +171,7 @@ export default handleActions({
   [GET_CHECKS_NOTIFICATIONS]: {
     next(state, action){
       const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(_.assign(c, {tags: new List(['notifications'])}), state);
+        return statics.checkFromJS(_.assign(c, {tags: ['notifications']}), state);
       }));
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});

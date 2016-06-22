@@ -21,6 +21,7 @@ const CheckCreateType = React.createClass({
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    types: PropTypes.array.isRequired,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         getGroupsSecurity: PropTypes.object
@@ -45,7 +46,7 @@ const CheckCreateType = React.createClass({
   componentWillMount(){
     const hasActiveBastion = !!this.props.redux.env.activeBastion;
     if (flag('check-type-external_host') && !hasActiveBastion) {
-      this.handleTypeSelect({id: 'external_host'});
+      this.handleTargetSelect({id: 'external_host'});
     }
   },
   getLink(type = {}){
@@ -62,58 +63,21 @@ const CheckCreateType = React.createClass({
     }
     return this.props.redux.asyncActions.getGroupsSecurity.status;
   },
-  getTypes(){
-    let types = [{
-      id: 'external_host',
-      title: 'Global URL',
-      size: () => ''
-    }];
-    if (!!this.props.redux.env.activeBastion) {
-      types = _.concat(types, [{
-        id: 'host',
-        title: 'Internal URL',
-        size: () => ''
-      }, {
-        id: 'elb',
-        title: 'ELB',
-        size: () => this.props.redux.env.groups.elb.size
-      }, {
-        id: 'security',
-        title: 'Security Group',
-        size: () => this.props.redux.env.groups.security.size
-      }, {
-        id: 'asg',
-        title: 'Auto Scaling Group',
-        size: () => this.props.redux.env.groups.asg.size
-      }, {
-        id: 'ecc',
-        title: 'EC2 Instance',
-        size: () => this.props.redux.env.instances.ecc.size
-      }, {
-        id: 'rds',
-        title: 'RDS Instance',
-        size: () => this.props.redux.env.instances.rds.size
-      }]);
-    }
-    return _.chain(types).filter(type => {
-      return flag(`check-type-${type.id}`);
-    })
-    .filter(type => {
-      return type.size() > 0 || type.id === 'host' || type.id === 'external_host';
-    })
-    .value();
+  getTargets(){
+    return this.props.types;
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
   },
-  handleTypeSelect(type){
+  handleTargetSelect(target, type = 'http'){
     let check = _.cloneDeep(this.props.check);
-    check.target.type = type.id;
+    check.type = type;
+    check.target.type = target.id;
     this.props.onChange(check);
 
-    const data = JSON.stringify({target: {type: type.id}});
+    const data = JSON.stringify(check);
     let path = `/check-create/target?data=${data}`;
-    if (type.id === 'host' || type.id === 'external_host'){
+    if (target.id === 'host' || target.id === 'external_host'){
       path = `/check-create/request?data=${data}`;
     }
     this.context.router.push(path);
@@ -147,13 +111,10 @@ const CheckCreateType = React.createClass({
           <Heading level={3}>Choose a Target Type</Heading>
         </Padding>
         <StatusHandler status={this.getStatus()}>
-          {this.getTypes().map(type => {
+          {this.getTargets().map(target => {
             return (
-              <Button onClick={this.handleTypeSelect.bind(null, type)} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`type-select-${type.id}`}>
-                <strong>{type.title}&nbsp;</strong>
-                <span style={{display: 'inline-block', textAlign: 'left'}}>
-                  {type.size()}
-                </span>
+              <Button onClick={this.handleTargetSelect.bind(null, target, target.types[0])} style={{margin: '0 1rem 1rem 0'}} color="primary" flat key={`${target.id}-type-select`}>
+                {target.title}{target.size() && ` (${target.size()})`}
               </Button>
             );
           })}
@@ -166,7 +127,7 @@ const CheckCreateType = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (1 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button icon flat to="/">
             <Close btn/>
           </Button>
