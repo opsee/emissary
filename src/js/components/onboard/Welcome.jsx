@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import {plain as seed} from 'seedling';
 
 import LogoColor from '../global/LogoColor';
 import {Heading} from '../type';
@@ -103,7 +104,7 @@ const OnboardWelcome = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel}>
+      <div className={style.transitionPanel} style={{background: seed.color.background}}>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -112,7 +113,6 @@ const OnboardWelcome = React.createClass({
                 <Heading l={2}>Welcome to Opsee!</Heading>
               </Padding>
               <p>Thanks for signing up! We just need a little more info to set up your account, then you&rsquo;ll be ready to go.</p>
-              <form onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'name', 'password']}  autoFocus="name" onChange={this.handleUserData} data={this.state.userData}/>
                 <Padding tb={1}>
                   {this.renderSubmitButton()}

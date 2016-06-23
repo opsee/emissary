@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {plain as seed} from 'seedling';
+import {connect} from 'react-redux';
 
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
@@ -10,7 +11,12 @@ import style from './header.css';
 const Header = React.createClass({
   propTypes: {
     user: PropTypes.object.isRequired,
-    hide: PropTypes.bool
+    hide: PropTypes.bool,
+    redux: PropTypes.shape({
+      env: PropTypes.shape({
+        activeBastion: PropTypes.object
+      })
+    }).isRequired
   },
   getInitialState(){
     return {
@@ -40,6 +46,19 @@ const Header = React.createClass({
       </Link>
     );
   },
+  renderEnvironmentLink(){
+    if (!!this.props.redux.env.activeBastion) {
+      return (
+         <li>
+           <Link to="/env" className={style.navbarLink} activeClassName="active">
+             <Cloud nav/>&nbsp;
+             <span className={`${style.navbarTitle}`}>Environment</span>
+           </Link>
+         </li>
+      );
+    }
+    return null;
+  },
   renderNavItems(){
     return (
       <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
@@ -49,12 +68,7 @@ const Header = React.createClass({
            <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
-        <li>
-         <Link to="/env" className={style.navbarLink} activeClassName="active">
-           <Cloud nav/>&nbsp;
-           <span className={`${style.navbarTitle}`}>Environment</span>
-         </Link>
-       </li>
+       {this.renderEnvironmentLink()}
         <li>
          <Link to="/help" className={style.navbarLink} activeClassName="active">
            <Help nav/>&nbsp;
@@ -85,4 +99,8 @@ const Header = React.createClass({
   }
 });
 
-export default Header;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+export default connect(mapStateToProps)(Header);

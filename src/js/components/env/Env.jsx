@@ -63,7 +63,7 @@ const Env = React.createClass({
     }
     return (
       <div>
-        <p>To run checks in AWS, add our EC2 instance. We'll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/bastion">our AWS integration</Link>.</p>
+        <p>To run checks in AWS, add our EC2 instance. We&rsquo;ll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/bastion">our AWS integration</Link>.</p>
         <Padding tb={2}>
           <Button to="/start/launch-stack" color="primary" block chevron>Add our instance</Button>
         </Padding>

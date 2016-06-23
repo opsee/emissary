@@ -4,14 +4,14 @@ import _ from 'lodash';
 export default function(redux){
   let types = [{
     id: 'external_host',
-    title: 'Internal URL',
+    title: 'Global URL',
     types: ['http'],
     size: () => ''
   }];
   if (!!redux.env.activeBastion) {
     types = _.concat(types, [{
       id: 'host',
-      title: 'External URL',
+      title: 'Internal URL',
       types: ['http'],
       size: () => ''
     }, {
