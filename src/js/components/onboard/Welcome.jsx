@@ -112,13 +112,14 @@ const OnboardWelcome = React.createClass({
                 <LogoColor />
                 <Heading l={2}>Welcome to Opsee!</Heading>
               </Padding>
-              <p>Thanks for signing up! We just need a little more info to set up your account, then you&rsquo;ll be ready to go.</p>
+              <form onSubmit={this.handleSubmit}>
+                <p>Thanks for signing up! We just need a little more info to set up your account, then you&rsquo;ll be ready to go.</p>
                 <UserInputs include={['email', 'name', 'password']}  autoFocus="name" onChange={this.handleUserData} data={this.state.userData}/>
                 <Padding tb={1}>
                   {this.renderSubmitButton()}
                 </Padding>
+                {this.renderError()}
               </form>
-              {this.renderError()}
             </Col>
           </Row>
         </Grid>
