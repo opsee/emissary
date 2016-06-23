@@ -13,6 +13,7 @@ import {checks as actions} from '../../actions';
 import {ListCheckmark, ListClose} from '../icons';
 import {Color, Heading} from '../type';
 import CheckResponseSingle from './CheckResponseSingle';
+import {bastions} from '../../modules';
 
 const CheckResponsePaginate = React.createClass({
   propTypes: {
@@ -324,18 +325,20 @@ const CheckResponsePaginate = React.createClass({
     const arr = this.getFormattedResponses();
     const selected = arr[this.props.redux.checks.selectedResponse];
     const title = _.get(selected, 'target.address') || _.get(selected, 'target.id');
+    let region = bastions[selected.bastion_id] || null;
+    region = region ? ` - ${region}` : null;
     if (arr.length){
       const passing = _.get(selected, 'passing');
       if (!this.props.showBoolArea){
         return (
           <div>
-            <strong>{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+            <strong>{region}{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
           </div>
         );
       }
       return (
         <div>
-          <strong className={passing ? seed.color.success : seed.color.danger}>{title}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          <strong className={passing ? seed.color.success : seed.color.danger}>{title}{region}</strong> ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
         </div>
       );
     }

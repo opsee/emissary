@@ -75,9 +75,6 @@ const GroupItem = React.createClass({
     .map('id')
     .value() || [];
   },
-  getResults(){
-    return this.getItem().toJS().results;
-  },
   getItem(){
     if (_.get(this.props, 'target.type')){
       switch (this.props.target.type){

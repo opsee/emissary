@@ -10,7 +10,8 @@ import {getCheckTypes} from '../../modules';
 import {
   checks as actions,
   user as userActions,
-  env as envActions
+  env as envActions,
+  onboard as onboardActions
 } from '../../actions';
 
 const CheckCreate = React.createClass({
@@ -19,6 +20,9 @@ const CheckCreate = React.createClass({
       testCheckReset: PropTypes.func,
       createOrEdit: PropTypes.func
     }),
+    onboardActions: PropTypes.shape({
+      getDefaultNotifications: PropTypes.func.isRequired
+    }).isRequired,
     location: PropTypes.object,
     children: PropTypes.node,
     redux: PropTypes.shape({
@@ -54,7 +58,8 @@ const CheckCreate = React.createClass({
   },
   componentWillMount(){
     this.props.actions.testCheckReset();
-    if (!this.props.redux.asyncActions.getGroupsSecurity.history.length){
+    this.props.onboardActions.getDefaultNotifications();
+    if (!this.props.redux.asyncActions.getGroupsSecurity.history.length && !!this.props.redux.env.activeBastion){
       this.props.envActions.getGroupsSecurity();
       this.props.envActions.getGroupsAsg();
       this.props.envActions.getGroupsElb();
@@ -128,7 +133,8 @@ const CheckCreate = React.createClass({
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  envActions: bindActionCreators(envActions, dispatch)
+  envActions: bindActionCreators(envActions, dispatch),
+  onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckCreate);

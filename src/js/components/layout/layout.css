@@ -40,6 +40,10 @@
   align-items: center;
 }
 
+:global .align-items-flex-end {
+  align-items: flex-end;
+}
+
 :global .align-self-start {
   align-self: flex-start;
 }

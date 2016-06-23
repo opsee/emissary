@@ -11,7 +11,6 @@ import {Heading} from '../type';
 import ViewHTTP from './ViewHTTP';
 import ViewCloudwatch from './ViewCloudwatch';
 import {Check} from '../../modules/schemas';
-import NotificationItemList from './NotificationItemList';
 
 import {
   checks as actions,
@@ -53,34 +52,31 @@ const CheckSingle = React.createClass({
       onConfirm: this.props.actions.del.bind(null, [this.props.params.id], true)
     });
   },
-  renderNotifications(){
-    const check = this.getCheck();
-    let notifs = check.get('notifications');
-    notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (check.get('tags').find(() => 'complete')) {
-      return (
-        <Padding b={1}>
-          <Heading level={3}>Notifications</Heading>
-          <NotificationItemList notifications={notifs} />
-        </Padding>
-      );
-    }
-    return null;
-  },
-  renderInner(){
-    const check = this.getCheck();
+  renderInner(check){
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     } else if (check.get('tags').find(() => 'complete')){
       const isCloudwatch = _.chain(check.assertions).head().get('key').value() === 'cloudwatch';
-      return isCloudwatch ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check}/>;
+      return isCloudwatch ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check} redux={this.props.redux}/>;
     }
     return null;
   },
-  renderLink(){
-    if (this.getCheck() && this.getCheck().get('id')){
+  renderAdvancedOptions(check){
+    if (check.get('min_failing_time') !== 90 || check.get('min_failing_count') !== 1){
       return (
-        <Button to={`/check/edit/${this.props.params.id}`} color="info" fab title={`Edit ${this.getCheck().get('name')}`}>
+        <div>
+          <Heading level={3}>Advanced Check Options</Heading>
+          <strong>Minimum Failing Time</strong>: {check.min_failing_time}s<br/>
+          <strong>Minimum Failing Count</strong>: {check.min_failing_count}
+        </div>
+      );
+    }
+    return null;
+  },
+  renderLink(check){
+    if (check && check.get('id')){
+      return (
+        <Button to={`/check/edit/${this.props.params.id}`} color="info" fab title={`Edit ${check.get('name')}`}>
           <Edit btn/>
         </Button>
       );
@@ -88,21 +84,25 @@ const CheckSingle = React.createClass({
     return null;
   },
   render() {
+    const check = this.getCheck();
     return (
       <div>
-        <Toolbar title={this.getCheck().get('name') || 'Check'}>
-          {this.renderLink()}
+        <Toolbar title={check.get('name') || 'Check'}>
+          {this.renderLink(check)}
         </Toolbar>
         <Grid>
           <Row>
             <Col xs={12}>
               <BastionRequirement>
-                <Padding b={3}>
-                  {this.renderInner()}
+                <Padding b={1}>
+                  {this.renderInner(check)}
                 </Padding>
-                <Button onClick={this.runRemoveCheck} flat color="danger">
-                  <Delete inline fill="danger"/> Delete Check
-                </Button>
+                {this.renderAdvancedOptions(check)}
+                <Padding t={3}>
+                  <Button onClick={this.runRemoveCheck} flat color="danger">
+                    <Delete inline fill="danger"/> Delete Check
+                  </Button>
+                </Padding>
               </BastionRequirement>
             </Col>
           </Row>
