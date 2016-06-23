@@ -12,7 +12,7 @@ import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
-import {validate} from '../../modules';
+import {flag, validate} from '../../modules';
 import {Input} from '../forms';
 import {
   checks as actions,
@@ -157,6 +157,17 @@ const CheckCreateInfo = React.createClass({
     }
     return null;
   },
+  renderAdvancedOptions(){
+    if (flag('check-advanced-options')){
+      return (
+        <div>
+          <Heading level={3}>Advanced Options</Heading>
+          {this.renderAdvancedInputs()}
+        </div>
+      );
+    }
+    return null;
+  },
   renderAdvancedInputs(){
     if (this.getAdvancedOptionsBool()){
       return (
@@ -194,8 +205,7 @@ const CheckCreateInfo = React.createClass({
           <hr/>
           <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
           <Padding b={1}>
-            <Heading level={3}>Advanced Options</Heading>
-            {this.renderAdvancedInputs()}
+            {this.renderAdvancedOptions()}
           </Padding>
         </Padding>
         <Padding b={1}>
