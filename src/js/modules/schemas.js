@@ -101,6 +101,10 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   ListenerDescriptions: List()
 }));
 
+export const GroupEcs = Record(_.assign({}, baseEnvItem, {
+  type: 'ecs'
+}));
+
 const Target = Record({
   name: undefined,
   type: undefined,

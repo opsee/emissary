@@ -9,6 +9,8 @@ import {
   GET_GROUPS_ASG,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
+  GET_GROUP_ECS,
+  GET_GROUPS_ECS,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
@@ -239,6 +241,64 @@ export function getGroupsElb(){
               }
             }
           }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getGroupEcs(id){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUP_ECS,
+      payload: graphPromise('region.vpc', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "ecsService", id: "${id}"){
+                    ... on ecsService {
+                      ServiceName
+                      Status
+                      ServiceArn
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getGroupsEcs(){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUPS_ECS,
+      payload: graphPromise('region.vpc', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "ecsService"){
+                    ... on ecsService {
+                      ServiceName
+                      Status
+                      ServiceArn
+                    }
+                  }
+                }
+              }
+            }`,
           variables: _.pick(state().env, ['region', 'vpc'])
         });
       }, {search: state().search})

@@ -17,12 +17,14 @@ const GroupItem = React.createClass({
       security: PropTypes.object,
       elb: PropTypes.object,
       rds: PropTypes.object,
-      asg: PropTypes.object
+      asg: PropTypes.object,
+      ecs: PropTypes.object
     }),
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
       getGroupsSecurity: PropTypes.func,
-      getGroupsAsg: PropTypes.func
+      getGroupsAsg: PropTypes.func,
+      getGroupsEcs: PropTypes.func
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -45,6 +47,8 @@ const GroupItem = React.createClass({
         return this.props.actions.getGroupsElb();
       case 'asg':
         return this.props.actions.getGroupsAsg();
+      case 'ecs':
+        return this.props.actions.getGroupsEcs();
       default:
         return this.props.actions.getGroupsSecurity();
       }
@@ -88,6 +92,11 @@ const GroupItem = React.createClass({
           return group.get('id') === this.props.target.id;
         });
         return asg || new Map();
+      case 'ecs':
+        const ecs = this.props.groups.ecs.find(group => {
+          return group.get('id') === this.props.target.id;
+        });
+        return ecs || new Map();
       default:
         const sg = this.props.groups.security.find(group => {
           return group.get('id') === this.props.target.id;
@@ -112,6 +121,8 @@ const GroupItem = React.createClass({
       return 'ELB';
     case 'asg':
       return 'ASG';
+    case 'ecs':
+      return 'ECS Service';
     default:
       break;
     }

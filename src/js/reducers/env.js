@@ -8,7 +8,8 @@ import {
   InstanceRds,
   GroupSecurity,
   GroupElb,
-  GroupAsg
+  GroupAsg,
+  GroupEcs
 } from '../modules/schemas';
 import {
   ENV_GET_BASTIONS,
@@ -19,6 +20,8 @@ import {
   GET_GROUPS_ASG,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
+  GET_GROUP_ECS,
+  GET_GROUPS_ECS,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
@@ -184,6 +187,39 @@ const statics = {
       return statics.setResultMeta(group, checks, toMatch);
     });
   },
+  getGroupEcsSuccess(state, data = []){
+    const arr = state.groups.ecs;
+    const single = statics.groupEcsFromJS(state, _.head(data));
+    return statics.updateArray(arr, single);
+  },
+  getGroupsEcsSuccess(state, data = []){
+    let newData = _.chain(data)
+    .sortBy(d => {
+      return d.LoadBalancerName.toLowerCase();
+    }).value();
+
+    const ecs = fromJS(newData.map(g => {
+      return statics.groupEcsFromJS(state, g);
+    })) || new List();
+    let newState = _.assign({}, state, {groups: _.assign({}, state.groups, {ecs})});
+    return statics.getGroupEcsResults(newState, state.checks);
+  },
+  getGroupEcsResults(state, checks = state.checks){
+    return state.groups.ecs.map(group => {
+      let toMatch = [group.id];
+      // toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
+      return statics.setResultMeta(group, checks, toMatch);
+    });
+  },
+  groupSecurityFromJS(state, data = {}){
+    let newData = _.cloneDeep(data);
+    newData = _.assign(newData, {
+      id: newData.GroupId,
+      name: newData.GroupName,
+      checks: new List(newData.checks || [])
+    });
+    return new GroupSecurity(newData);
+  },
   groupElbFromJS(state, data = {}){
     let newData = _.assign({}, data);
     newData = _.assign(newData, {
@@ -197,15 +233,6 @@ const statics = {
     }
     return new GroupElb(newData);
   },
-  groupSecurityFromJS(state, data = {}){
-    let newData = _.cloneDeep(data);
-    newData = _.assign(newData, {
-      id: newData.GroupId,
-      name: newData.GroupName,
-      checks: new List(newData.checks || [])
-    });
-    return new GroupSecurity(newData);
-  },
   groupAsgFromJS(state, data = {}){
     let newData = _.cloneDeep(data);
     newData = _.assign(newData, {
@@ -213,6 +240,14 @@ const statics = {
       name: _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || newData.AutoScalingGroupName
     });
     return new GroupAsg(newData);
+  },
+  groupEcsFromJS(state, data = {}){
+    let newData = _.cloneDeep(data);
+    newData = _.assign(newData, {
+      id: newData.ServiceArn,
+      name: newData.ServiceName
+    });
+    return new GroupEcs(newData);
   },
   getASGMetricsSuccess(state, groups){
     const arr = state.groups.asg;
@@ -352,7 +387,8 @@ const initial = {
     security: new List(),
     rds: new List(),
     elb: new List(),
-    asg: new List()
+    asg: new List(),
+    ecs: new List()
   },
   instances: {
     ecc: new List(),
@@ -363,7 +399,8 @@ const initial = {
       security: new List(),
       rds: new List(),
       elb: new List(),
-      asg: new List()
+      asg: new List(),
+      ecs: new List()
     },
     instances: {
       ecc: new List(),
@@ -424,6 +461,26 @@ export default handleActions({
       const asg = statics.getGroupsAsgSuccess(state, action.payload.data);
       const filtered = statics.getNewFiltered(asg, state, action, 'groups.asg');
       const groups = _.assign({}, state.groups, {asg});
+      return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_GROUP_ECS]: {
+    next(state, action){
+      //TODO remove when there is only one in the array (backend err)
+      const arr = _.filter(action.payload.data || [], {ServiceArn: action.payload.id});
+      const ecs = statics.getGroupEcsSuccess(state, arr);
+      const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
+      const groups = _.assign({}, state.groups, {ecs});
+      return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_GROUPS_ECS]: {
+    next(state, action){
+      const ecs = statics.getGroupsEcsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
+      const groups = _.assign({}, state.groups, {ecs});
       return _.assign({}, state, {groups, filtered});
     },
     throw: yeller.reportAction

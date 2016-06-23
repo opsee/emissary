@@ -56,6 +56,8 @@ export const GET_GROUP_RDS = 'GET_GROUP_RDS';
 export const GET_GROUPS_RDS = 'GET_GROUPS_RDS';
 export const GET_GROUP_ELB = 'GET_GROUP_ELB';
 export const GET_GROUPS_ELB = 'GET_GROUPS_ELB';
+export const GET_GROUP_ECS = 'GET_GROUP_ECS';
+export const GET_GROUPS_ECS = 'GET_GROUPS_ECS';
 
 export const GET_INSTANCE_ECC = 'GET_INSTANCE_ECC';
 export const GET_INSTANCES_ECC = 'GET_INSTANCES_ECC';
