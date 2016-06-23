@@ -42,6 +42,7 @@ import PasswordForgot from 'react-proxy?name=onboard!exports?exports.default!../
 import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../user/PasswordChange';
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
+import Logout from 'react-proxy?name=Logout!exports?exports.default!../user/Logout';
 
 import Team from 'react-proxy?name=team!exports?exports.default!../team/Team';
 import TeamEdit from 'react-proxy?name=team!exports?exports.default!../team/TeamEdit';
@@ -146,6 +147,7 @@ const routes = (
     <Route path="/verify" component={Verify}/>
     <Route path="/profile" component={auth(Profile)}/>
     <Route path="/profile/edit" component={auth(ProfileEdit)}/>
+    <Route path="/logout" component={auth(Logout)}/>
     <Route path="/team" component={auth(Team)}/>
     <Route path="/team/edit" component={auth(TeamEdit)}/>
     <Route path="/team/create" component={auth(TeamCreate)}/>

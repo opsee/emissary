@@ -144,8 +144,8 @@ export function sendVerificationEmail(data) {
 
 export function logout(){
   return (dispatch, state) => {
-    storage.remove('user');
-    storage.remove('team');
+    ['user', 'team', 'shouldGetSlackChannels', 'shouldSyncPagerduty']
+    .map(str => storage.remove(str));
     analytics.trackEvent('User', 'logout')(dispatch, state);
     dispatch({
       type: USER_LOGOUT
