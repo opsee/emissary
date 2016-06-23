@@ -73,7 +73,7 @@ const OnboardWelcome = React.createClass({
       return (
         <Padding tb={1}>
           <Alert color="danger">
-            Something went wrong when updating your account and we're looking into it.
+            Something went wrong when updating your account and we&rsquo;re looking into it.
             Please try again, or <Link to="/help">get in touch</Link>.
           </Alert>
         </Padding>
@@ -94,7 +94,7 @@ const OnboardWelcome = React.createClass({
       color = 'success';
       text = <Checkmark btn />;
     } else {
-      text = 'Save';
+      text = 'Start using Opsee';
     }
     const disabled = this.isDisabled();
     return (
@@ -111,7 +111,7 @@ const OnboardWelcome = React.createClass({
                 <LogoColor />
                 <Heading l={2}>Welcome to Opsee!</Heading>
               </Padding>
-              <p>Good news &mdash; you just created your first health check! Let's take a minute to finish setting up your account.</p>
+              <p>Thanks for signing up! We just need a little more info to set up your account, then you&rsquo;ll be ready to go.</p>
               <form onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'name', 'password']}  autoFocus="name" onChange={this.handleUserData} data={this.state.userData}/>
                 <Padding tb={1}>

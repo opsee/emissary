@@ -18,7 +18,7 @@ const Checks = React.createClass({
               <Heading level={2}>Check Sources</Heading>
               <p>Checks can run from two sources in Opsee:</p>
               <ol>
-                <li><strong>External</strong>: our network of external check sites, which will run checks on public URLs and IPs. We run instances in 6 AWS regions (us-east-1, us-west-2, sa-east-1, ap-southeast-1, ap-northeast-1, eu-central-1) and run checks from all 6 regions</li>
+                <li><strong>Global</strong>: our network of global check sites, which will run checks on public URLs and IPs. We run instances in 6 AWS regions (us-east-1, us-west-2, sa-east-1, ap-southeast-1, ap-northeast-1, eu-central-1) and run checks from all 6 regions</li>
                 <li><strong>Internal (AWS)</strong>: If you add <a href="/docs/bastion">our instance</a> to your AWS environment, it will run checks on targets in your AWS environment</li>
               </ol>
 
@@ -26,7 +26,7 @@ const Checks = React.createClass({
               <p>The following entities are available health check targets:</p>
 
               <Heading level={3}>URL or IP Address</Heading>
-              <p>Any URL or IP reachable as an HTTP request from your check source. If public, it will run as an external check. In AWS, add our instance to check any internal URL or IP.</p>
+              <p>Any URL or IP reachable as an HTTP request from your check source. If public, it will run as a Global check. In AWS, add our instance to check any internal URL or IP.</p>
 
               <Heading level={3}>EC2 Instance</Heading>
               <p>A single EC2 Instance of any size. For HTTP checks, our EC2 instance will communicate with the target directly and make a request. Instances can also be targeted through the <a target="_blank" href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/ec2-metricscollected.html">CloudWatch API</a>, and all standard EC2 instance metrics are available in Opsee.</p>
