@@ -333,7 +333,7 @@ const CheckCreateRequest = React.createClass({
     if (type === 'host') {
       heading = 'Internal ';
     } else if (type === 'external_host') {
-      heading = 'External ';
+      heading = 'Global ';
     }
     return (
       <Padding b={1}>

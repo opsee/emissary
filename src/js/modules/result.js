@@ -6,7 +6,8 @@ const OuterResponse = Record({
   passing: undefined,
   response: undefined,
   target: undefined,
-  error: undefined
+  error: undefined,
+  bastion_id: undefined
 });
 
 const InnerResponse = Record({
@@ -20,10 +21,11 @@ const Result = Record({
   host: undefined,
   passing: undefined,
   responses: List(),
-  time: undefined
+  time: undefined,
+  bastion_id: undefined
 });
 
-function fromJS(data){
+function resultFromJS(data){
   let newData = {};
   let results = _.cloneDeep(data.results);
   if (results && results.length){
@@ -48,7 +50,7 @@ export default {
       passing: undefined,
       total: undefined,
       health: undefined,
-      results: fromJS(data) || new List()
+      results: resultFromJS(data) || new List()
     };
     if (obj.results && obj.results.size && obj.results.get(0)){
       let boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();

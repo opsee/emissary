@@ -23,10 +23,23 @@ import {
 
 export const statics = {
   checkFromJS(data, state){
+    let checkState = 'passing';
+    switch (data.state){
+    case 'INITIALIZING':
+      checkState = 'initializing';
+      break;
+    case 'PASS_WAIT':
+    case 'FAIL':
+      checkState = 'failing';
+      break;
+    default:
+      break;
+    }
     const newData = _.assign({}, data, result.getFormattedData(data, true), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
       }),
+      state: checkState,
       type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
     return new Check(newData);
@@ -128,7 +141,9 @@ export default handleActions({
       } else {
         checks = state.checks.concat(new List([single]));
       }
-      let responses = _.get(single.get('results').get(0), 'responses');
+      let responses = new List(_.chain(single.toJS()).get('results').map(r => {
+        return r.responses.map(res => _.assign(res, {bastion_id: r.bastion_id}));
+      }).flatten().map(r => fromJS(r)).value());
       responses = responses && responses.toJS ? responses : new List();
       responses = responses.sortBy(r => {
         return r.passing;
