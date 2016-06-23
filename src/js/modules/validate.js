@@ -26,7 +26,7 @@ function assertion(obj = {}){
 /*Returns an array of error objects with associated "areas" if any area fails*/
 function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'info']) {
   const spec = _.get(obj, 'spec') || {};
-  const type = _.get(obj, 'target.type');
+  const targetType = _.get(obj, 'target.type');
   let errors = [];
 
   //request area
@@ -37,14 +37,14 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
     ['protocol', 'A check must specifiy a protocol.']
   ];
 
-  if (type === 'host' || type === 'external_host'){
+  if (targetType === 'host' || targetType === 'external_host'){
     const arr = requestErrors.map(err => {
       return !spec[err[0]];
     });
     if (_.some(arr)){
       errors.push('request: A URL check must include a valid URL.');
     }
-  } else if (type && !type.match('rds|dbinstance')) {
+  } else if (obj.type === 'http') {
     requestErrors.forEach(err => {
       if (!spec[err[0]]){
         errors.push(`request: ${err[1]}`);
@@ -91,6 +91,12 @@ function check(obj = {}, areas = ['request', 'assertions', 'notifications', 'inf
   //info area
   if (!obj.name){
     errors.push('info: A check must have a name.');
+  }
+  if (!obj.min_failing_time || obj.min_failing_time < 1){
+    errors.push('info: A check must specify a positive integer minimum failing time.');
+  }
+  if (!obj.min_failing_count || obj.min_failing_count < 1){
+    errors.push('info: A check must specify a positive integer minimum failing count.');
   }
 
   errors = errors.map(e => {

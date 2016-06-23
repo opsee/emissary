@@ -3,11 +3,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
-import {Table, Toolbar} from '../global';
+import {StatusHandler, Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
+import {PagerdutyInfo, SlackInfo} from '../integrations';
+import {flag} from '../../modules';
 
 import {
   user as actions,
@@ -30,9 +32,13 @@ const Profile = React.createClass({
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        userSendVerificationEmail: PropTypes.object
+        userSendVerificationEmail: PropTypes.object,
+        teamGet: PropTypes.object
       }),
-      team: PropTypes.object.isRequired
+      team: PropTypes.object.isRequired,
+      env: PropTypes.object({
+        activeBastion: PropTypes.object
+      })
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -52,8 +58,7 @@ const Profile = React.createClass({
     const user = this.getUser();
     this.props.actions.sendVerificationEmail({ id: user.id });
   },
-  renderVerificationNag(){
-    const user = this.getUser();
+  renderVerificationNag(user){
     if (user.verified) {
       return null;
     }
@@ -73,8 +78,7 @@ const Profile = React.createClass({
       );
     }
   },
-  renderEmail(){
-    const user = this.getUser();
+  renderEmail(user){
     if (user.verified) {
       return user.email;
     }
@@ -92,10 +96,62 @@ const Profile = React.createClass({
       </tr>
     );
   },
+  renderAWSArea(){
+    if (!this.props.redux.team.get('name')){
+      if (!!this.props.redux.env.activeBastion){
+        return (
+          <tr>
+            <td><strong>AWS Integration</strong></td>
+            <td><Link to="/system">Enabled</Link></td>
+          </tr>
+        );
+      }
+      return (
+        <tr>
+          <td><strong>AWS Integration</strong></td>
+          <td><Link to="/start/launch-stack">Add Our Instance</Link></td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderSlackArea(){
+    if (flag('integrations-slack') && !this.props.redux.team.get('name')){
+      return (
+        <tr>
+          <td><strong>Slack</strong></td>
+          <td><SlackInfo connect/></td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderPagerdutyArea(){
+    if (flag('integrations-pagerduty') && !this.props.redux.team.get('name')){
+      return (
+        <tr>
+          <td><strong>PagerDuty</strong></td>
+          <td><PagerdutyInfo/></td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderIntegrations(){
+    if (this.props.redux.team.get('name')){
+      return (
+        <tr>
+          <td><strong>Integrations</strong></td>
+          <td><Link to="/team">See Team Integrations</Link></td>
+        </tr>
+      );
+    }
+    return null;
+  },
   render() {
     const user = this.getUser();
     return (
-       <div>
+      <StatusHandler status={this.props.redux.asyncActions.teamGet.status}>
         <Toolbar title={user.name} pageTitle="Profile">
           <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
             <Edit btn/>
@@ -111,14 +167,18 @@ const Profile = React.createClass({
                   <tr>
                     <td><strong>Email</strong></td>
                     <td>
-                      <div>{this.renderEmail()}</div>
-                      <div>{this.renderVerificationNag()}</div>
+                      <div>{this.renderEmail(user)}</div>
+                      <div>{this.renderVerificationNag(user)}</div>
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Password</strong></td>
                     <td><Link to="/profile/edit" >Change Your Password</Link></td>
                   </tr>
+                  {this.renderAWSArea()}
+                  {this.renderSlackArea()}
+                  {this.renderPagerdutyArea()}
+                  {this.renderIntegrations()}
                 </Table>
               </Padding>
               <Padding t={3}>
@@ -129,7 +189,7 @@ const Profile = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </StatusHandler>
     );
   }
 });

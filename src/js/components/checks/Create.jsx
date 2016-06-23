@@ -6,10 +6,12 @@ import {bindActionCreators} from 'redux';
 import {Check} from '../../modules/schemas';
 import CheckDebug from './CheckDebug';
 import config from '../../modules/config';
+import {getCheckTypes} from '../../modules';
 import {
   checks as actions,
   user as userActions,
-  env as envActions
+  env as envActions,
+  onboard as onboardActions
 } from '../../actions';
 
 const CheckCreate = React.createClass({
@@ -18,9 +20,24 @@ const CheckCreate = React.createClass({
       testCheckReset: PropTypes.func,
       createOrEdit: PropTypes.func
     }),
+    onboardActions: PropTypes.shape({
+      getDefaultNotifications: PropTypes.func.isRequired
+    }).isRequired,
     location: PropTypes.object,
     children: PropTypes.node,
     redux: PropTypes.shape({
+      env: PropTypes.shape({
+        groups: PropTypes.shape({
+          security: PropTypes.object,
+          elb: PropTypes.object,
+          asg: PropTypes.object
+        }),
+        instances: PropTypes.shape({
+          ecc: PropTypes.object,
+          rds: PropTypes.object
+        }),
+        activeBastion: PropTypes.object
+      }).isRequired,
       asyncActions: PropTypes.shape({
         checkCreate: PropTypes.object,
         getGroupsSecurity: PropTypes.object,
@@ -41,7 +58,8 @@ const CheckCreate = React.createClass({
   },
   componentWillMount(){
     this.props.actions.testCheckReset();
-    if (!this.props.redux.asyncActions.getGroupsSecurity.history.length){
+    this.props.onboardActions.getDefaultNotifications();
+    if (!this.props.redux.asyncActions.getGroupsSecurity.history.length && !!this.props.redux.env.activeBastion){
       this.props.envActions.getGroupsSecurity();
       this.props.envActions.getGroupsAsg();
       this.props.envActions.getGroupsElb();
@@ -102,7 +120,8 @@ const CheckCreate = React.createClass({
         {React.cloneElement(this.props.children, _.assign({
           onChange: this.setData,
           onSubmit: this.handleSubmit,
-          onFilterChange: this.handleFilterChange
+          onFilterChange: this.handleFilterChange,
+          types: getCheckTypes(this.props.redux)
         }, this.state)
         )}
         <CheckDebug check={this.state.check}/>
@@ -114,7 +133,8 @@ const CheckCreate = React.createClass({
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  envActions: bindActionCreators(envActions, dispatch)
+  envActions: bindActionCreators(envActions, dispatch),
+  onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckCreate);

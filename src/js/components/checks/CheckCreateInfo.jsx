@@ -12,7 +12,7 @@ import {Heading} from '../type';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
-import {validate} from '../../modules';
+import {flag, validate} from '../../modules';
 import {Input} from '../forms';
 import {
   checks as actions,
@@ -51,6 +51,11 @@ const CheckCreateInfo = React.createClass({
     //mostly for setting the name of the check at this point
     this.runChange();
   },
+  getInitialState() {
+    return {
+      advanced: undefined
+    };
+  },
   getGeneratedName(){
     const {target} = this.props.check;
     const prefix = target.type === 'rds' ? 'Cloudwatch' : 'Http';
@@ -67,8 +72,24 @@ const CheckCreateInfo = React.createClass({
     check.name = this.getGeneratedName();
     return check;
   },
+  getAdvancedOptionsBool(){
+    const arr = _.get(this.props.redux.user.get('data'), 'advancedCheckOptions') || [];
+    if (this.state.advanced !== undefined){
+      return this.state.advanced;
+    }
+    let bools = [_.chain(arr).last().get('data').value()];
+    bools.push(this.props.check.min_failing_time !== 90);
+    bools.push(this.props.check.min_failing_count !== 1);
+    return _.some(bools);
+  },
   isDisabled(){
     return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
+  },
+  shouldShowHideAdvancedOptions(){
+    let bools = [];
+    bools.push(this.props.check.min_failing_time === 90);
+    bools.push(this.props.check.min_failing_count === 1);
+    return _.every(bools);
   },
   runChange(){
     this.props.onChange(this.getFinalData());
@@ -81,7 +102,21 @@ const CheckCreateInfo = React.createClass({
     this.props.onChange(data);
   },
   handleInputChange(data){
-    this.props.onChange(data);
+    const time = _.toFinite(data.min_failing_time);
+    const failing = _.toFinite(data.min_failing_count);
+    const check = _.assign(data, {
+      min_failing_time: time || null,
+      min_failing_count: failing || null
+    });
+    this.props.onChange(check);
+  },
+  handleAdvancedOptionsClick(e){
+    e.preventDefault();
+    const bool = this.getAdvancedOptionsBool();
+    this.setState({
+      advanced: !bool
+    });
+    this.props.userActions.putData('advancedCheckOptions', !bool, bool);
   },
   handleSubmit(e) {
     if (e){
@@ -112,12 +147,55 @@ const CheckCreateInfo = React.createClass({
     }
     return null;
   },
+  renderHideAdvancedOptionsButton(){
+    if (this.shouldShowHideAdvancedOptions()){
+      return (
+        <Padding t={1}>
+          <a href="#" onClick={this.handleAdvancedOptionsClick}>Hide Advanced Options</a>
+        </Padding>
+      );
+    }
+    return null;
+  },
+  renderAdvancedOptions(){
+    if (flag('check-advanced-options')){
+      return (
+        <div>
+          <Heading level={3}>Advanced Options</Heading>
+          {this.renderAdvancedInputs()}
+        </div>
+      );
+    }
+    return null;
+  },
+  renderAdvancedInputs(){
+    if (this.getAdvancedOptionsBool()){
+      return (
+        <div>
+          <div className="display-flex align-items-flex-end">
+            <Padding r={1} className="flex-1">
+              <Input data={this.props.check} path="min_failing_time" placeholder="90" label="Minimum Failing Time (Seconds)*" onChange={this.handleInputChange}/>
+            </Padding>
+            <div className="flex-1">
+              <Input data={this.props.check} path="min_failing_count" placeholder="1" label="Minimum Failing Count <br/>(Responses or DNS Entries)*" onChange={this.handleInputChange}/>
+            </div>
+          </div>
+          {this.renderHideAdvancedOptionsButton()}
+        </div>
+      );
+    }
+    return (
+      <a href="#" onClick={this.handleAdvancedOptionsClick}>Show Advanced Check Options</a>
+    );
+  },
   renderInner() {
     return (
       <div>
         <Padding b={2}>
           <form name="checkCreateInfoForm">
-            <Input data={this.props.check} path="name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
+            <Padding b={2}>
+              <Input data={this.props.check} path="name" placeholder="My Critical Service Status 200 Check" label="Check Name*" onChange={this.handleInputChange}/>
+            </Padding>
           </form>
         </Padding>
 
@@ -126,6 +204,9 @@ const CheckCreateInfo = React.createClass({
           <p>Choose from the options below to set up your notifications.</p>
           <hr/>
           <NotificationSelection onChange={this.handleNotificationChange} notifications={this.props.check.notifications}/>
+          <Padding b={1}>
+            {this.renderAdvancedOptions()}
+          </Padding>
         </Padding>
         <Padding b={1}>
           {this.renderSubmitButton()}
@@ -136,7 +217,7 @@ const CheckCreateInfo = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (5 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>

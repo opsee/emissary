@@ -74,7 +74,7 @@ const CheckCreateTarget = React.createClass({
     check.target = _.pick(check.target, ['id', 'name', 'type']);
     this.props.onChange(check);
     const data = JSON.stringify(check);
-    if (this.props.check.target.type === 'rds'){
+    if (this.props.check.type === 'cloudwatch'){
       return this.context.router.push(`/check-create/assertions-cloudwatch?data=${data}`);
     }
     return this.context.router.push(`/check-create/request?data=${data}`);
@@ -105,7 +105,7 @@ const CheckCreateTarget = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (2 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button icon flat to="/">
             <Close btn/>
           </Button>

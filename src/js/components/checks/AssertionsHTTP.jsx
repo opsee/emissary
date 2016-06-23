@@ -12,18 +12,29 @@ import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
 import {Padding} from '../layout';
 import {Button} from '../forms';
-import {user as userActions} from '../../actions';
+import {
+  user as userActions,
+  app as appActions
+} from '../../actions';
 import {Heading} from '../type';
 import AssertionSelection from './AssertionSelection';
+import CheckTypeSwitcher from './CheckTypeSwitcher';
 
 const AssertionsHTTP = React.createClass({
   propTypes: {
     check: PropTypes.object,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    }),
+    types: PropTypes.array,
     onChange: PropTypes.func,
     renderAsInclude: PropTypes.bool,
     userActions: PropTypes.shape({
       putData: PropTypes.func
     }),
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         responses: PropTypes.object,
@@ -138,7 +149,7 @@ const AssertionsHTTP = React.createClass({
   renderAsPage(){
     return (
       <div>
-        <Toolbar btnPosition="midRight" title="Create Check (4 of 5)" bg="info">
+        <Toolbar btnPosition="midRight" title="Create a Check" bg="info">
           <Button to="/" icon flat>
             <Close btn/>
           </Button>
@@ -147,6 +158,7 @@ const AssertionsHTTP = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
+                {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
                 <Padding b={1}>
                   {this.renderHelperText()}
                 </Padding>
@@ -173,7 +185,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssertionsHTTP);

@@ -23,10 +23,24 @@ import {
 
 export const statics = {
   checkFromJS(data, state){
+    let checkState = 'passing';
+    switch (data.state){
+    case 'INITIALIZING':
+      checkState = 'initializing';
+      break;
+    case 'PASS_WAIT':
+    case 'FAIL':
+      checkState = 'failing';
+      break;
+    default:
+      break;
+    }
     const newData = _.assign({}, data, result.getFormattedData(data, true), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
-      })
+      }),
+      state: checkState,
+      type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
     return new Check(newData);
   },
@@ -117,7 +131,7 @@ const initial = {
 export default handleActions({
   [GET_CHECK]: {
     next(state, action){
-      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {tags: new List(['complete'])}), state);
+      const single = statics.checkFromJS(_.assign(_.find(action.payload.data, {id: action.payload.id}), {tags: ['complete']}), state);
       let checks;
       const index = state.checks.findIndex(item => {
         return item.get('id') === single.get('id');
@@ -127,7 +141,9 @@ export default handleActions({
       } else {
         checks = state.checks.concat(new List([single]));
       }
-      let responses = _.get(single.get('results').get(0), 'responses');
+      let responses = new List(_.chain(single.toJS()).get('results').map(r => {
+        return r.responses.map(res => _.assign(res, {bastion_id: r.bastion_id}));
+      }).flatten().map(r => fromJS(r)).value());
       responses = responses && responses.toJS ? responses : new List();
       responses = responses.sortBy(r => {
         return r.passing;
@@ -155,7 +171,7 @@ export default handleActions({
   [GET_CHECKS_NOTIFICATIONS]: {
     next(state, action){
       const checks = new List(action.payload.data.map(c => {
-        return statics.checkFromJS(_.assign(c, {tags: new List(['notifications'])}), state);
+        return statics.checkFromJS(_.assign(c, {tags: ['notifications']}), state);
       }));
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
       return _.assign({}, state, {checks, filtered});

@@ -99,13 +99,13 @@ const CheckList = React.createClass({
       //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
       return (
         <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-          <Heading l={2}>Welcome to Opsee! Let&rsquo;s get started.</Heading>
+          <Padding b={2}><Heading level={2}>Welcome to Opsee! Let&rsquo;s get started.</Heading></Padding>
           <p>Thanks for signing up! Let&rsquo;s get your environment set up:</p>
 
           <ol>
             <li><Link to="/check-create" title="Create New Check">Create your first health check</Link> for any public URL</li>
-            <li>Keep your team in the loop by setting up <Link to="/profile">Slack and Pagerduty integration</Link> on your Profile page</li>
-            <li>If you&rsquo;re hosted in AWS, <Link to="/start/launch-stack">add our EC2 instance</Link> to run checks inside your environment too</li>
+            <li>Keep your team in the loop by setting up <a href="/profile">Slack and Pagerduty integration</a> on your Profile page</li>
+            <li>If you&rsquo;re hosted in AWS, <a href="/start/launch-stack">add our EC2 instance</a> to run checks inside your environment too</li>
           </ol>
         </StatusHandler>
       );
@@ -126,19 +126,22 @@ const CheckList = React.createClass({
     const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
     const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
     const isDisabled = isDeleting || size < 1;
-    return (
-      <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
-        <div className="flex-1 display-flex">
-          <Padding r={1}>
-            <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
-          </Padding>
-          <Padding r={1}>
-            <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
-          </Padding>
-        </div>
-        <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
-      </Padding>
-    );
+    if (this.props.redux.checks.checks.size) {
+      return (
+        <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
+          <div className="flex-1 display-flex">
+            <Padding r={1}>
+              <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
+            </Padding>
+            <Padding r={1}>
+              <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
+            </Padding>
+          </div>
+          <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
+        </Padding>
+      );
+    }
+    return null;
   },
   render() {
     return (

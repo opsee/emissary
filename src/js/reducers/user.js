@@ -13,7 +13,6 @@ import {
   USER_REFRESH,
   USER_EDIT,
   USER_SET_PASSWORD,
-  USER_GET_CUSTOMER,
   USER_GET_DATA,
   USER_PUT_DATA,
   USER_APPLY,
@@ -123,12 +122,6 @@ export default handleActions({
       yeller.reportAction(state, action);
       return new User();
     }
-  },
-  [USER_GET_CUSTOMER]: {
-    next(state, action){
-      return new User(_.assign({}, state.toJS(), action.payload));
-    },
-    throw: yeller.reportAction
   },
   [USER_GET_DATA]: {
     next(state, action){

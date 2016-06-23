@@ -35,7 +35,10 @@ export function fetchChecks(state) {
             id
             type
           }
+          response_count
+          state
           results {
+            bastion_id
             passing
             responses {
               passing
@@ -90,6 +93,10 @@ export function getCheck(id){
               }
               name
               last_run
+              min_failing_time
+              min_failing_count
+              response_count
+              state
               spec {
                 ... on schemaHttpCheck {
                   verb
@@ -110,6 +117,7 @@ export function getCheck(id){
               }
               results {
                 passing
+                bastion_id
                 responses {
                   passing
                   reply {
@@ -217,6 +225,7 @@ export function getChecksNotifications(){
               }
               results {
                 passing
+                bastion_id
                 responses {
                   passing
                   target {
@@ -290,6 +299,7 @@ export function delSelected(){
 function getNamespace(type){
   switch (type){
   case 'instance':
+  case 'ecc':
     return 'AWS/EC2';
   default:
     return 'AWS/RDS';
@@ -297,7 +307,7 @@ function getNamespace(type){
 }
 
 function formatCloudwatchCheck(data){
-  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check', 'id']);
+  const check = _.pick(data, ['target', 'assertions', 'notifications', 'name', 'cloudwatch_check', 'id', 'min_failing_count', 'min_failing_time']);
   const namespace = getNamespace(check.target.type);
   const metrics = check.assertions.map(assertion => {
     return {
@@ -307,6 +317,7 @@ function formatCloudwatchCheck(data){
   });
   check.cloudwatch_check = {metrics};
   check.target.type = check.target.type === 'rds' ? 'dbinstance' : check.target.type;
+  check.target.type = check.target.type === 'ecc' ? 'instance' : check.target.type;
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   return check;
 }
@@ -332,7 +343,8 @@ function formatHttpCheck(data, forTestCheck){
   check.spec = _.pick(spec, ['headers', 'path', 'port', 'protocol', 'verb', 'body']);
   return _.chain(check)
   .assign({assertions})
-  .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id'])
+  .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id', 'min_failing_count', 'min_failing_time'])
+  .omit(forTestCheck && ['min_failing_time', 'min_failing_count'] || [])
   .mapKeys((value, key) => {
     return key === 'spec' ? 'http_check' : key;
   })
@@ -344,6 +356,7 @@ function formatHttpCheck(data, forTestCheck){
     }
     return value;
   })
+  .pickBy(v => v)
   .defaults({
     name: 'Http Check'
   })
@@ -352,7 +365,7 @@ function formatHttpCheck(data, forTestCheck){
 
 function formatCheckData(check){
   //TODO switch this to be more flexible
-  if (check.target.type.match('rds|dbinstance')){
+  if (check.type === 'cloudwatch' || _.chain(check).get('assertions').head().get('key').value() === 'cloudwatch'){
     return formatCloudwatchCheck(check);
   }
   return formatHttpCheck(check);
@@ -372,6 +385,9 @@ export function test(data){
             testCheck(check: $check) {
               responses {
                 error
+                target {
+                  id
+                }
                 reply {
                   ...on schemaHttpResponse {
                     code

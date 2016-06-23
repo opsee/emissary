@@ -16,7 +16,7 @@ import {Button} from '../forms';
 import {Heading} from '../type';
 import CheckDisabledReason from './CheckDisabledReason';
 import CheckDebug from './CheckDebug';
-import {validate} from '../../modules';
+import {getCheckTypes, validate} from '../../modules';
 import {
   checks as actions,
   env as envActions
@@ -127,17 +127,17 @@ const CheckEdit = React.createClass({
      : <div/>;
   },
   renderRequest(check){
-    if (!_.get(check, 'target.type').match('dbinstance|rds')){
+    if (check.type === 'http'){
       return (
         <Padding tb={1}>
-          <CheckCreateRequest check={check} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv}/>
+          <CheckCreateRequest check={check} onChange={this.setData} renderAsInclude handleTargetClick={this.setShowEnv} types={getCheckTypes(this.props.redux)}/>
         </Padding>
       );
     }
     return null;
   },
   renderAssertions(check){
-    if (_.get(check, 'target.type').match('dbinstance|rds')){
+    if (check.type === 'cloudwatch'){
       return <AssertionsCloudwatch check={check} onChange={this.setData} renderAsInclude/>;
     }
     return <AssertionsHTTP check={check} onChange={this.setData} renderAsInclude/>;
@@ -151,11 +151,11 @@ const CheckEdit = React.createClass({
           <Padding tb={1}>
             {this.renderAssertions(check)}
           </Padding>
-          <CheckCreateInfo check={check} onChange={this.setData} renderAsInclude/>
+          <CheckCreateInfo check={check} onChange={this.setData} renderAsInclude types={getCheckTypes(this.props.redux)}/>
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-            Finish <Checkmark inline fill={seed.color.success}/>
+            {this.props.redux.asyncActions.checkEdit.status === 'pending' ? 'Saving...' : 'Finish'} <Checkmark inline fill={seed.color.success}/>
           </Button>
           <CheckDisabledReason check={check}/>
           </Padding>

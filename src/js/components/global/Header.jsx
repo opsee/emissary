@@ -13,7 +13,10 @@ const Header = React.createClass({
     user: PropTypes.object.isRequired,
     hide: PropTypes.bool,
     redux: PropTypes.shape({
-      team: PropTypes.object.isRequired
+      team: PropTypes.object.isRequired,
+      env: PropTypes.shape({
+        activeBastion: PropTypes.object
+      })
     }).isRequired
   },
   getInitialState(){
@@ -52,6 +55,19 @@ const Header = React.createClass({
       </Link>
     );
   },
+  renderEnvironmentLink(){
+    if (!!this.props.redux.env.activeBastion) {
+      return (
+         <li>
+           <Link to="/env" className={style.navbarLink} activeClassName="active">
+             <Cloud nav/>&nbsp;
+             <span className={`${style.navbarTitle}`}>Environment</span>
+           </Link>
+         </li>
+      );
+    }
+    return null;
+  },
   renderNavItems(){
     return (
       <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
@@ -61,12 +77,7 @@ const Header = React.createClass({
            <span className={`${style.navbarTitle}`}>Checks</span>
          </Link>
        </li>
-        <li>
-         <Link to="/env" className={style.navbarLink} activeClassName="active">
-           <Cloud nav/>&nbsp;
-           <span className={`${style.navbarTitle}`}>Environment</span>
-         </Link>
-       </li>
+       {this.renderEnvironmentLink()}
         <li>
          <Link to="/help" className={style.navbarLink} activeClassName="active">
            <Help nav/>&nbsp;
@@ -101,4 +112,4 @@ const mapStateToProps = (state) => ({
   redux: state
 });
 
-export default connect(mapStateToProps, null)(Header);
+export default connect(mapStateToProps)(Header);

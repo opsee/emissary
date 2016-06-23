@@ -80,7 +80,7 @@ const AppStatus = React.createClass({
     return (
       <ul style={{margin: 0}}>
         {components.map(item => {
-          const date = new Date(Date.parse(item.created_at));
+          const date = new Date(Date.parse(item.updated_at));
           const status = _.chain((item.status || '')).split('_').map(_.capitalize).join(' ').value();
           return (
             <li key={item.id}>
