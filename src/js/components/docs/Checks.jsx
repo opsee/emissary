@@ -83,6 +83,13 @@ const Checks = React.createClass({
               <br/>
               <p>At least one assertion is required per check.</p>
 
+              <Heading level={2}>Advanced Options</Heading>
+              <p>We offer two advanced controls over check state:</p>
+              <ul>
+                <li><strong>Minimum Failing Time (seconds):</strong> the amount of time a check should be in failing state before sending a notification. The default value is 90 seconds. Checks will immediately display as failing in the app, this value only controls notifications.</li>
+                <li><strong>Minimum Failing Count (integer):</strong> If you target a check at a security group or ELB, for example, it may have multiple member instances that Opsee health checks for you. If you target a URL, we will automatically target all DNS entries for it. With the default value of 1, if any instance or DNS entry fails the check, the check as a whole also fails. You can increase this value if you want that threshold to be higher.</li>
+              </ul>
+
               <Heading level={2}>Notifications</Heading>
               <p><Link to="/docs/notifications">Learn more about notifications here</Link></p>
             </Col>
