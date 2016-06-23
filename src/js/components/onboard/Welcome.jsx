@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import {plain as seed} from 'seedling';
 
 import LogoColor from '../global/LogoColor';
 import {Heading} from '../type';
@@ -73,7 +74,7 @@ const OnboardWelcome = React.createClass({
       return (
         <Padding tb={1}>
           <Alert color="danger">
-            Something went wrong when updating your account and we're looking into it.
+            Something went wrong when updating your account and we&rsquo;re looking into it.
             Please try again, or <Link to="/help">get in touch</Link>.
           </Alert>
         </Padding>
@@ -103,7 +104,7 @@ const OnboardWelcome = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel}>
+      <div className={style.transitionPanel} style={{background: seed.color.background}}>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -111,7 +112,7 @@ const OnboardWelcome = React.createClass({
                 <LogoColor />
                 <Heading l={2}>Welcome to Opsee!</Heading>
               </Padding>
-              <p>Good news &mdash; you just created your first health check! Let's take a minute to finish setting up your account.</p>
+              <p>Good news &mdash; you just created your first health check! Let&rsquo;s take a minute to finish setting up your account.</p>
               <form onSubmit={this.handleSubmit}>
                 <UserInputs include={['email', 'name', 'password']}  autoFocus="name" onChange={this.handleUserData} data={this.state.userData}/>
                 <Padding tb={1}>
