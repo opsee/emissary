@@ -70,7 +70,7 @@ const statics = {
 
     //this seems wacky but,
     //we use checks instead of results for determining health for such things
-    if (item.type.match('elb|security|asg')){
+    if (item.type.match('elb|security|asg|ecs')){
       foundResults = foundChecks.map(check => {
         return _.assign(check, {
           passing: _.chain(check).get('results').map(r => {
@@ -195,7 +195,7 @@ const statics = {
   getGroupsEcsSuccess(state, data = []){
     let newData = _.chain(data)
     .sortBy(d => {
-      return d.LoadBalancerName.toLowerCase();
+      return (d.ServiceArn || '').toLowerCase();
     }).value();
 
     const ecs = fromJS(newData.map(g => {
@@ -242,10 +242,10 @@ const statics = {
     return new GroupAsg(newData);
   },
   groupEcsFromJS(state, data = {}){
-    let newData = _.cloneDeep(data);
-    newData = _.assign(newData, {
-      id: newData.ServiceArn,
-      name: newData.ServiceName
+    const clusterName = _.last((data.ClusterArn || '').split('/'));
+    const newData = _.assign({}, data, {
+      id: `${clusterName}/${data.ServiceName}`.replace(/\//g, '%2F'),
+      name: data.ServiceName
     });
     return new GroupEcs(newData);
   },
@@ -588,7 +588,8 @@ export default handleActions({
         groups: {
           security: itemsFilter(groups.security, action.payload, 'groups.security'),
           elb: itemsFilter(groups.elb, action.payload, 'groups.elb'),
-          asg: itemsFilter(groups.asg, action.payload, 'groups.asg')
+          asg: itemsFilter(groups.asg, action.payload, 'groups.asg'),
+          ecs: itemsFilter(groups.ecs, action.payload, 'groups.ecs')
         },
         instances: {
           ecc: itemsFilter(instances.ecc, action.payload, 'instances.ecc'),
@@ -605,12 +606,13 @@ export default handleActions({
       const security = statics.getGroupSecurityResults(state, checks);
       const elb = statics.getGroupElbResults(state, checks);
       const asg = statics.getGroupAsgResults(state, checks);
+      const ecs = statics.getGroupEcsResults(state, checks);
 
       const ecc = statics.getInstanceEccResults(state, checks);
       const rds = statics.getInstanceRdsResults(state, checks);
 
       return _.assign({}, state, {checks}, {
-        groups: {security, elb, asg},
+        groups: {security, elb, asg, ecs},
         instances: {ecc, rds}
       });
     }

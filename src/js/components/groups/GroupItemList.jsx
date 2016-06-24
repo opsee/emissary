@@ -85,7 +85,7 @@ const GroupItemList = React.createClass({
     }
   },
   getGroups(noFilter){
-    let data = this.props.groups || this.props.redux.env.groups[this.props.type];
+    let data = this.props.groups || this.props.redux.env.groups[this.props.type] || new List();
     data = data.sortBy(item => {
       return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
@@ -109,11 +109,7 @@ const GroupItemList = React.createClass({
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){
-    let string = '/env-groups-security';
-    if (this.props.type === 'elb'){
-      string = '/env-groups-elb';
-    }
-    return string;
+    return `/env-groups-${this.props.type}`;
   },
   getAction(){
     return `getGroups${_.capitalize(this.props.type)}`;

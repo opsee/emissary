@@ -5,6 +5,7 @@ import Opsee from '../global/Opsee';
 import Env from '../env/Env';
 import EnvGroupsSecurity from '../env/EnvGroupsSecurity';
 import EnvGroupsASG from '../env/EnvGroupsASG';
+import EnvGroupsECS from '../env/EnvGroupsECS';
 import EnvGroupsELB from '../env/EnvGroupsELB';
 import EnvInstancesEC2 from '../env/EnvInstancesEC2';
 import EnvInstancesRDS from '../env/EnvInstancesRDS';
@@ -32,6 +33,7 @@ import Slack from '../integrations/Slack';
 
 import GroupSecurity from '../groups/GroupSecurity';
 import GroupAsg from '../groups/GroupAsg';
+import GroupEcs from '../groups/GroupEcs';
 import GroupELB from '../groups/GroupElb';
 
 import InstanceEcc from '../instances/InstanceEcc';
@@ -79,6 +81,7 @@ const routes = (
     <Redirect from="/groups-elb" to="/env-groups-elb"/>
     <Route path="/env-groups-elb" component={auth(EnvGroupsELB)}/>
     <Route path="/env-groups-asg" component={auth(EnvGroupsASG)}/>
+    <Route path="/env-groups-ecs" component={auth(EnvGroupsECS)}/>
     <Redirect from="/instances-ecc" to="/env-instances-ec2"/>
     <Redirect from="/instances-ec2" to="/env-instances-ec2"/>
     <Route path="/env-instances-ecc" component={auth(EnvInstancesEC2)}/>
@@ -110,6 +113,7 @@ const routes = (
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>
+    <Route path="/group/ecs/:id" component={auth(GroupEcs)}/>
     <Route path="/group/elb/:id" component={auth(GroupELB)}/>
 
     <Route path="/welcome" component={auth(OnboardWelcome)} />

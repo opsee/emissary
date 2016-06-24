@@ -16,6 +16,7 @@ const EnvList = React.createClass({
       'groups.security',
       'groups.elb',
       'groups.asg',
+      'groups.ecs',
       'instances.ecc',
       'instances.rds',
       'checks'
@@ -40,7 +41,8 @@ const EnvList = React.createClass({
       env: PropTypes.shape({
         groups: PropTypes.shape({
           security: PropTypes.object,
-          elb: PropTypes.object
+          elb: PropTypes.object,
+          ecs: PropTypes.object
         }),
         instances: PropTypes.shape({
           ecc: PropTypes.object,
@@ -49,7 +51,8 @@ const EnvList = React.createClass({
         filtered: PropTypes.shape({
           groups: PropTypes.shape({
             security: PropTypes.object,
-            elb: PropTypes.object
+            elb: PropTypes.object,
+            ecs: PropTypes.object
           }),
           instances: PropTypes.shape({
             ecc: PropTypes.object,
@@ -64,7 +67,7 @@ const EnvList = React.createClass({
   },
   getDefaultProps(){
     return {
-      include: ['groups.elb', 'groups.security', 'groups.asg', 'instances.rds', 'instances.ecc', 'checks'],
+      include: ['groups.elb', 'groups.security', 'groups.asg', 'groups.ecs', 'instances.rds', 'instances.ecc', 'checks'],
       limit: 1000
     };
   },
@@ -88,6 +91,8 @@ const EnvList = React.createClass({
           size = 4000;
         } else if (i === 'groups.security'){
           size = 3000;
+        } else if (i === 'groups.ecs'){
+          size = 2000;
         }
       }
       return (-1 * size) || 0;
@@ -104,6 +109,13 @@ const EnvList = React.createClass({
     return (
       <Padding b={3} key="env-list-groups-asg">
         <GroupItemList filter={this.props.filter} type="asg" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="Autoscaling Groups" noFetch={this.props.noFetch}/>
+      </Padding>
+    );
+  },
+  renderGroupsEcs(){
+    return (
+      <Padding b={3} key="env-list-groups-ecs">
+        <GroupItemList filter={this.props.filter} type="ecs" onClick={this.props.onTargetSelect} noModal={this.props.noModal} limit={this.props.limit} title="EC2 Container Services (ECS)" noFetch={this.props.noFetch}/>
       </Padding>
     );
   },

@@ -249,10 +249,12 @@ export function getGroupsElb(){
 }
 
 export function getGroupEcs(id){
+  // const id = ident.replace('»', '\0');
+  //.replace(/\//g, '%2F');
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUP_ECS,
-      payload: graphPromise('region.vpc', () => {
+      payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
@@ -260,11 +262,42 @@ export function getGroupEcs(id){
           query: `query Query($region: String!, $vpc: String!){
               region(id: $region) {
                 vpc(id: $vpc) {
-                  groups(type: "ecsService", id: "${id}"){
+                  groups(type: "ecs_service", id: "${id}"){
                     ... on ecsService {
-                      ServiceName
+                      DesiredCount
                       Status
+                      Deployments {
+                        RunningCount
+                        Status
+                        TaskDefinition
+                        UpdatedAt
+                        CreatedAt
+                        DesiredCount
+                        Id
+                        PendingCount
+                      }
+                      RoleArn
                       ServiceArn
+                      ClusterArn
+                      Events {
+                        CreatedAt
+                        Id
+                        Message
+                      }
+                      LoadBalancers {
+                        ContainerName
+                        ContainerPort
+                        LoadBalancerName
+                      }
+                      CreatedAt
+                      PendingCount
+                      RunningCount
+                      TaskDefinition
+                      DeploymentConfiguration {
+                        MaximumPercent
+                        MinimumHealthyPercent
+                      }
+                      ServiceName
                     }
                   }
                 }
@@ -281,7 +314,7 @@ export function getGroupsEcs(){
   return (dispatch, state) => {
     dispatch({
       type: GET_GROUPS_ECS,
-      payload: graphPromise('region.vpc', () => {
+      payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
         .set('Authorization', state().user.get('auth'))
@@ -289,11 +322,12 @@ export function getGroupsEcs(){
           query: `query Query($region: String!, $vpc: String!){
               region(id: $region) {
                 vpc(id: $vpc) {
-                  groups(type: "ecsService"){
+                  groups(type: "ecs_service"){
                     ... on ecsService {
                       ServiceName
                       Status
-                      ServiceArn
+                      ServiceName
+                      ClusterArn
                     }
                   }
                 }

@@ -122,21 +122,23 @@ const GroupItem = React.createClass({
     case 'asg':
       return 'ASG';
     case 'ecs':
-      return 'ECS Service';
+      return 'ECS';
     default:
       break;
     }
     return 'SG';
   },
-  renderInstanceCount(){
-    const item = this.getItem().toJS();
-    const count = item.Instances.length;
-    return (
-      <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
-        <ListInstance inline fill="textSecondary"/>
-        {count}
-      </span>
-    );
+  renderInstanceCount(item){
+    if (item.Instances){
+      const count = (item.Instances || []).length;
+      return (
+        <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
+          <ListInstance inline fill="textSecondary"/>
+          {count}
+        </span>
+      );
+    }
+    return null;
   },
   renderInfoText(){
     const item = this.getItem().toJS();
@@ -155,7 +157,7 @@ const GroupItem = React.createClass({
               {failing}
             </span>
             &nbsp;&nbsp;
-            {this.renderInstanceCount()}
+            {this.renderInstanceCount(item)}
           </span>
         </span>
       );
@@ -166,7 +168,7 @@ const GroupItem = React.createClass({
       <span>
         <ListCheckmark inline fill="textSecondary"/>No checks
         &nbsp;
-        {this.renderInstanceCount()}
+        {this.renderInstanceCount(item)}
       </span>
     );
   },
