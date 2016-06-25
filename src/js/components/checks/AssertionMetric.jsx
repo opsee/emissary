@@ -91,7 +91,7 @@ const AssertionMetric = React.createClass({
     };
   },
   getMetrics(){
-    let type = this.props.check.target.type;
+    let {type} = this.props.check.target;
     type = type === 'instance' ? 'ecc' : type;
     type = type === 'dbinstance' ? 'rds' : type;
     return _.pickBy(metrics, v => _.includes(v.types, type));
