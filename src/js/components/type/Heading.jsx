@@ -3,6 +3,7 @@ import _ from 'lodash';
 import cx from 'classnames';
 
 import style from './heading.css';
+import {scheme} from '../../modules';
 import {Padding} from '../layout';
 
 const Hyphenate = React.createClass({
@@ -30,7 +31,7 @@ const Hyphenate = React.createClass({
   },
   render(){
     const string = `h${this.props.level}`;
-    const className = cx([this.props.className, style[string]]);
+    const className = cx([this.props.className, style[string], style[scheme()]]);
     const props = _.assign({}, this.props, {className});
     return (
       <Padding {...this.getPadding()} className={this.props.className}>

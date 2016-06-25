@@ -20,60 +20,63 @@
   fill:white;
 }
 
-.fillPrimary{
+.fillPrimary {
   fill:var(--colorPrimary);
 }
-.fillSuccess{
+.fillSuccess {
   fill:var(--colorSuccess);
 }
-.fillInfo{
+.fillInfo {
   fill:var(--colorInfo);
 }
-.fillWarning{
+.fillWarning {
   fill:var(--colorWarning);
 }
-.fillDanger{
+.fillDanger {
   fill:var(--colorDanger);
 }
-.fillError{
+.fillError {
   fill:var(--colorError);
 }
-.fillGray50{
+.fillGray50 {
   fill:var(--colorGray);
 }
-.fillGray100{
+.fillGray100 {
   fill:var(--colorGray1);
 }
-.fillGray200{
+.fillGray200 {
   fill:var(--colorGray2);
 }
-.fillGray300{
+.fillGray300 {
   fill:var(--colorGray3);
 }
-.fillGray400{
+.fillGray400 {
   fill:var(--colorGray4);
 }
-.fillGray500{
+.fillGray500 {
   fill:var(--colorGray5);
 }
-.fillGray600{
+.fillGray600 {
   fill:var(--colorGray6);
 }
-.fillGray700{
+.fillGray700 {
   fill:var(--colorGray7);
 }
-.fillGray800{
+.fillGray800 {
   fill:var(--colorGray8);
 }
-.fillGray900{
+.fillGray900 {
   fill:var(--colorGray9);
 }
-.fillText{
+.fillText {
   fill:var(--colorText);
 }
-.fillTextSecondary{
+.fillTextSecondary {
   fill:var(--colorText2);
 }
-.fillHeader{
+.fillTextSecondary.light {
+  fill: var(--lightColorText2);
+}
+.fillHeader {
   fill:var(--colorHeader);
 }

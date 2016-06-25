@@ -2,7 +2,9 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
+import cx from 'classnames';
 
+import {scheme} from '../../modules';
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Col, Grid, Row} from '../layout';
@@ -22,6 +24,12 @@ const Header = React.createClass({
     return {
       ghosting: false
     };
+  },
+  getHeaderClass(){
+    return cx({
+      [style.header]: true,
+      [style.headerHide]: this.props.hide
+    }, style[scheme()]);
   },
   getHeaderStyle(){
     let obj = {};
@@ -83,7 +91,7 @@ const Header = React.createClass({
   },
   render(){
     return (
-      <header id="header" className={this.props.hide ? style.headerHide : style.header} style={this.getHeaderStyle()}>
+      <header id="header" className={this.getHeaderClass()} style={this.getHeaderStyle()}>
         <nav className={style.navbar} role="navigation">
           <Grid>
             <Row>

@@ -10,6 +10,11 @@ body {
   color: var(--colorText);
 }
 
+:global body.light {
+  background: var(--lightColorBackground);
+  color: var(--lightColorText);
+}
+
 body ::selection {
   background: #90CAF9;
 }
@@ -212,6 +217,10 @@ html {
 
 :global .text-secondary {
   color: var(--colorText2);
+}
+
+:global body.light .text-secondary{
+  color: var(--lightColorText2);
 }
 
 :global .text-sm {

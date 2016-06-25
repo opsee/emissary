@@ -1,5 +1,6 @@
 import config from '../modules/config';
 import request from '../modules/request';
+import storage from '../modules/storage';
 import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
 import {
@@ -17,7 +18,8 @@ import {
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
   APP_SET_DROPDOWN_ID,
-  GET_STATUS_PAGE_INFO
+  GET_STATUS_PAGE_INFO,
+  APP_SET_SCHEME
 } from './constants';
 
 function socketStart(dispatch, state){
@@ -122,6 +124,20 @@ export function getStatusPageInfo() {
         .then(res => res.body)
     });
   };
+}
+
+function activateScheme(scheme = storage.get('scheme')){
+  document.querySelector('body').className = scheme;
+}
+
+export function setScheme(scheme){
+  return (dispatch, state) => {
+    storage.set('scheme', scheme);
+    activateScheme(scheme);
+    dispatch({
+      type: APP_SET_SCHEME
+    })
+  }
 }
 
 export const openContextMenu = createAction(APP_OPEN_CONTEXT_MENU);

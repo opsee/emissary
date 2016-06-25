@@ -8,7 +8,7 @@ import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
-import {flag} from '../../modules';
+import {flag, storage} from '../../modules';
 import {
   user as actions,
   app as appActions,
@@ -61,6 +61,9 @@ const Profile = React.createClass({
     e.preventDefault();
     const user = this.getUser();
     this.props.actions.sendVerificationEmail({ id: user.id });
+  },
+  handleSchemeClick(scheme){
+    this.props.appActions.setScheme(scheme);
   },
   renderVerificationNag(){
     const user = this.getUser();
@@ -130,6 +133,17 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderThemes(){
+    return (
+      <tr>
+        <td><strong>Color Scheme</strong></td>
+        <td>
+          <Button onClick={this.handleSchemeClick.bind(null, 'dark')}>Dark</Button>
+          <Button onClick={this.handleSchemeClick.bind(null, 'light')}>Light</Button>
+        </td>
+      </tr>
+    );
+  },
   render() {
     const user = this.getUser();
     return (
@@ -159,6 +173,7 @@ const Profile = React.createClass({
                   {this.renderAWSArea()}
                   {this.renderSlackArea()}
                   {this.renderPagerdutyArea()}
+                  {this.renderThemes()}
                 </Table>
               </Padding>
               <Padding t={3}>

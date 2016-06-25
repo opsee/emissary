@@ -124,7 +124,7 @@
     "redux-thunk": "^1.0.0",
     "scroll-behavior": "^0.7.0",
     "search-text-tokenizer": "2.0.1",
-    "seedling": "git+ssh://git@github.com/opsee/seedling.git#a9e188e30315ebfa5d14763af52638db4e09ef61",
+    "seedling": "git+ssh://git@github.com/opsee/seedling.git#95cd06925cbd855b26df0484e98a3f66db8af22d",
     "slate": "git+ssh://git@github.com/opsee/slate.git#2.4.8",
     "superagent": "^1.3.0",
     "superagent-promise": "^1.0.3"

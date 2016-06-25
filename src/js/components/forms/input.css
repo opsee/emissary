@@ -12,6 +12,10 @@
   padding: 0.5em 0;
 }
 
+.label.light {
+  color: var(--lightColorText2);
+}
+
 .iconLabel {
   display: block;
   bottom: 1rem;
@@ -38,6 +42,7 @@
   text-indent: 0.5em;
 }
 
+
 input[type="checkbox"]{
   background:none;
   width: auto;
@@ -52,4 +57,13 @@ input[type="checkbox"]{
 
 .input::placeholder {
   color: color(var(--colorText) lightness(50%));
+}
+
+.input.light, input.light, .input:focus{
+  background: white;
+  color: var(--lightColorText2);
+}
+
+.input.light::placeholder{ 
+  color: color(color(var(--lightColorText2)) lightness(80%));
 }

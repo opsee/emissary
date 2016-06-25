@@ -34,6 +34,10 @@
   background: var(--colorGray8);
 }
 
+.itemSelected.light {
+  background: var(--colorGray3);
+}
+
 .itemPending {
   opacity: 0.35;
 }
@@ -55,14 +59,28 @@
   cursor: pointer;
   text-decoration: none;
 }
+
+.link.light {
+  color: var(--lightColorText);
+}
+
 .link:active, .link:focus {
   background-color: var(--colorGray8);
   color: white;
   text-decoration: none;
 }
+
+.link.light:active, .link.light:focus {
+   color: var(--lightColorText); 
+}
+
 .link:hover {
   color: white;
   text-decoration: none;
+}
+
+.link.light:hover {
+  color: var(--lightColorText);
 }
 
 .selector {

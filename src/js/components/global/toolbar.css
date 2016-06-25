@@ -6,6 +6,9 @@
   transition: background-color var(--transitionEaseOut);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.26);
 }
+.outer.light {
+  background-color: var(--colorGray3);
+}
 
 .inner{
   padding-top: 1em;

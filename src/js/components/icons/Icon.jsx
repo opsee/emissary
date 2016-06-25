@@ -3,6 +3,7 @@ import style from './icon.css';
 import cx from 'classnames';
 import _ from 'lodash';
 
+import {scheme} from '../../modules';
 import BaseSVG from './BaseSVG.jsx';
 
 const Icon = React.createClass({
@@ -16,7 +17,7 @@ const Icon = React.createClass({
   },
   getColorClassFromProp(prop){
     const cased = _.startCase(this.props[prop]).split(' ').join('');
-    return style[`fill${cased}`];
+    return cx(style[`fill${cased}`], style[scheme()]);
   },
   getClass(){
     let arr = [];

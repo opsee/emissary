@@ -2,10 +2,12 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import cx from 'classnames';
 import DocumentTitle from 'react-document-title';
+import {plain as seed} from 'seedling';
+
 import {Col, Grid, Row} from '../layout';
 import style from './toolbar.css';
-import {plain as seed} from 'seedling';
 import {Heading, Hyphenate} from '../type';
+import {scheme} from '../../modules';
 
 const Toolbar = React.createClass({
   propTypes: {
@@ -35,7 +37,7 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={cx(style.outer, this.props.className)} style={this.getStyle()}>
+      <div className={cx(style.outer, this.props.className, style[scheme()])} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>

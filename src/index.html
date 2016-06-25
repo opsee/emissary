@@ -34,6 +34,14 @@
   </head>
   <body>
     <div id="main"></div>
+    <script>
+      var scheme = window.localStorage.getItem('scheme');
+      if (typeof scheme === 'string'){
+        scheme = JSON.parse(scheme);
+        var className = document.querySelector('body').className;
+        document.querySelector('body').className = (className && className + ' ' || '') + scheme;
+      }
+    </script>
     <script src="/vendor.bundle.js?v=<%=htmlWebpackPlugin.options.vendorHash%>"></script>
     <script src="/bundle.js?v=<%=htmlWebpackPlugin.options.revision%>"></script>
   </body>
