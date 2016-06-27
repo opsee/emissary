@@ -16,6 +16,9 @@
   -moz-hyphens: auto;
   hyphens: auto;
 }
+.checkResponse.light {
+  color: white;
+}
 .checkResponse:after {
   background-size: 100%;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
@@ -58,7 +61,7 @@
 
 .checkResponseButton {
   bottom: 1rem;
-  position: absolute;
+  position: absolute !important;
   right: 1rem;
   z-index: 2;
 }

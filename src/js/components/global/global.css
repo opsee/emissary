@@ -122,6 +122,10 @@ small {
   color: var(--colorText2);
 }
 
+:global .light .text-muted {
+  color: var(--colorGray6);
+}
+
 :global .text-center {
   text-align: center;
 }

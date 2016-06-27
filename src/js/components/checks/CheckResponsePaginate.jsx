@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
+import cx from 'classnames';
 import {plain as seed} from 'seedling';
 import TimeAgo from 'react-timeago';
 
@@ -19,6 +20,7 @@ const CheckResponsePaginate = React.createClass({
   propTypes: {
     check: PropTypes.object,
     responses: PropTypes.object,
+    scheme: PropTypes.string,
     actions: PropTypes.shape({
       test: PropTypes.func,
       selectResponse: PropTypes.func
@@ -89,7 +91,8 @@ const CheckResponsePaginate = React.createClass({
   },
   getResponseClass(){
     const shouldExpand = !this.props.allowCollapse || this.state.expanded;
-    return shouldExpand ? style.checkResponseExpanded : style.checkResponse;
+    const sch = style[this.props.scheme];
+    return shouldExpand ? cx(style.checkResponseExpanded, sch) : cx(style.checkResponse, sch);
   },
   getStatus(){
     return this.props.redux.asyncActions.checkTest.status;
@@ -157,13 +160,13 @@ const CheckResponsePaginate = React.createClass({
 
     if (this.state.expanded){
       return (
-        <Button color="info" onClick={this.handleToggle} className={style.checkResponseButton} title="Close Reponse">
+        <Button color="info" onClick={this.handleToggle} className={cx(style.checkResponseButton, style[this.props.scheme])} title="Close Reponse">
           <ChevronUp inline/>
         </Button>
       );
     }
     return (
-      <Button color="info" onClick={this.handleToggle} className={style.checkResponseButton} title="Open Response">
+      <Button color="info" onClick={this.handleToggle} className={cx(style.checkResponseButton, style[this.props.scheme])} title="Open Response">
         <ChevronDown inline/>
       </Button>
     );
@@ -171,7 +174,7 @@ const CheckResponsePaginate = React.createClass({
   renderWaitingResponse(){
     if (this.getStatus() === 'pending'){
       return (
-        <div className={style.checkResponseWaiting}>Sending request...</div>
+        <div className={cx(style.checkResponseWaiting, style[this.props.scheme])}>Sending request...</div>
       );
     } else if (this.getStatus() && typeof this.getStatus() !== 'string'){
       return (
@@ -181,7 +184,7 @@ const CheckResponsePaginate = React.createClass({
       return null;
     }
     return (
-      <div className={style.checkResponseWaiting}>
+      <div className={cx(style.checkResponseWaiting, style[this.props.scheme])}>
         <div>Your response will appear here</div>
       </div>
     );
@@ -207,7 +210,7 @@ const CheckResponsePaginate = React.createClass({
     }
     if (res.error){
       return (
-        <div className={style.checkResponseWaiting}>
+        <div className={cx(style.checkResponseWaiting, style[this.props.scheme])}>
           <Alert color="danger" className="flex-1">{res.error}</Alert>
         </div>
       );
@@ -232,7 +235,7 @@ const CheckResponsePaginate = React.createClass({
   },
   renderError(){
     return (
-      <div className={style.checkResponseWaiting}>
+      <div className={cx(style.checkResponseWaiting, style[this.props.scheme])}>
         <Alert color="danger" className="flex-1">{this.getFormattedResponses()[this.props.redux.checks.selectedResponse].error}</Alert>
       </div>
     );
@@ -366,7 +369,8 @@ const CheckResponsePaginate = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

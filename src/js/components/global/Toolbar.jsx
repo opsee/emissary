@@ -28,8 +28,17 @@ const Toolbar = React.createClass({
     let obj = {};
     if (this.props.bg){
       obj.background = seed.color[this.props.bg];
+      obj.color = 'white';
     }
     return obj;
+  },
+  getHeadingStyle(){
+    if (this.props.bg && this.props.scheme === 'light'){
+      return {
+        color: 'white'
+      };
+    }
+    return null;
   },
   renderTitle(){
     return (
@@ -43,7 +52,7 @@ const Toolbar = React.createClass({
         <Grid>
           <Row>
             <Col xs={12} className={style.inner}>
-              <Heading level={1} noPadding>
+              <Heading level={1} noPadding style={this.getHeadingStyle()}>
                 <Hyphenate>{this.props.title}</Hyphenate>
               </Heading>
                 <div className={this.getChildrenClass()}>
