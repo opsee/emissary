@@ -40,7 +40,8 @@ const hideNavList = [
   '^\/team\/edit',
   '^\/team\/create',
   '^\/team\/member\/invite',
-  '^\/team\/member\/.*\/edit'
+  '^\/team\/member\/.*\/edit',
+  '^\/welcome'
 ];
 const fullScreenList = ['^\/start'];
 
