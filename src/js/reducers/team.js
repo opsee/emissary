@@ -17,8 +17,9 @@ const statics = {
     const {data} = action.payload;
     const team = _.assign({}, data, {
       users: List(data.users.map(m => new Member(_.assign(m, {
-        perms: m.perms || [],
-        id: (m.id || '').toString()
+        perms: m.perms || {},
+        id: (m.id || '').toString(),
+        status: m.status || 'active'
       }))))
       // features: List(data.features),
       // invoices: List(data.invoices.map(i => new Map(i)))

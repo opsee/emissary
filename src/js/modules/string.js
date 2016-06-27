@@ -10,7 +10,7 @@ function stringFromTokens(tokens = []) {
 }
 
 function permsSentence(member) {
-  const arr = member.perms.map(c => {
+  const arr = _.chain(member).get('perms').pickBy(p => p).keys().map(c => {
     let str = c;
     switch (str){
     case 'editing':
@@ -23,7 +23,7 @@ function permsSentence(member) {
       break;
     }
     return _.chain(str).split(' ').map(_.capitalize).join(' ').value();
-  });
+  }).value();
   return toSentenceSerial(arr);
 }
 

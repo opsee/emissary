@@ -15,7 +15,7 @@ const TeamMemberInputs = React.createClass({
   propTypes: {
     onChange: PropTypes.func.isRequired,
     inputs: PropTypes.array,
-    perms: PropTypes.array,
+    perms: PropTypes.object,
     name: PropTypes.string,
     status: PropTypes.string,
     email: PropTypes.string,
@@ -55,14 +55,11 @@ const TeamMemberInputs = React.createClass({
     this.props.onChange(obj);
   },
   handleCapabilityClick(id){
-    let arr = _.clone(this.props.perms);
-    if (arr.indexOf(id) === -1){
-      arr = arr.concat([id]);
-    } else {
-      arr = _.reject(arr, i => i === id);
-    }
+    const perms = _.assign({}, this.props.perms, {
+      [id]: !this.props.perms[id]
+    });
     this.props.onChange(_.assign({}, this.props, {
-      perms: arr
+      perms
     }));
   },
   renderPerms(){
@@ -74,7 +71,7 @@ const TeamMemberInputs = React.createClass({
           <Heading level={3}>Perms</Heading>
           <div className="display-flex flex-wrap">
             {data.map((c, i) => {
-              const selected = this.props.perms.indexOf(c) !== -1;
+              const selected = !!this.props.perms[c];
               const id = `team-member-capabilitiy-${i}`;
               return (
                 <Padding r={1} b={1} key={`capabilitiy-${c}`} className="display-flex flex-vertical-align">

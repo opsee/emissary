@@ -29,7 +29,11 @@ export function getTeam(callback = () => {}){
                 name
                 id
                 email
-                perms
+                perms {
+                  admin
+                  edit
+                  billing
+                }
               }
             }
           }`
@@ -59,7 +63,11 @@ export function edit(data, redirect = '/team'){
                 name
                 id
                 email
-                perms
+                perms {
+                  admin
+                  edit
+                  billing
+                }
               }
             }
           }`,
@@ -95,7 +103,11 @@ function member(data, type, redirect = '/team'){
           query: `mutation ${type} ($user: User){
             user (user: $user){
               status
-              perms
+              perms {
+                admin
+                edit
+                billing
+              }
               id
               email
               name
