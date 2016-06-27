@@ -49,7 +49,7 @@ const OnboardCreate = React.createClass({
     return this.props.actions.signupCreate(_.defaults(this.state.data, {
       name: 'default',
       referrer: this.props.location.query.referrer || ''
-    }), '/start/launch-stack');
+    }), '/');
   },
   render() {
     return (
