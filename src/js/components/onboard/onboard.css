@@ -22,6 +22,10 @@ h1, h2, h3 {
   margin-bottom: -5rem;
 }
 
+.container.light {
+  background-color: var(--lightColorBackground);
+}
+
 .transitionContainer {
   position: relative;
 }
@@ -72,7 +76,16 @@ h1, h2, h3 {
   margin: 0 0.25rem;
 }
 
+.pip.light {
+  fill: var(--colorGray7);
+  opacity: .2;
+}
+
 .activePip {
+  opacity: 1;
+}
+
+.activePip.light {
   opacity: 1;
 }
 

@@ -3,11 +3,11 @@ import _ from 'lodash';
 import cx from 'classnames';
 import DocumentTitle from 'react-document-title';
 import {plain as seed} from 'seedling';
+import {connect} from 'react-redux';
 
 import {Col, Grid, Row} from '../layout';
 import style from './toolbar.css';
 import {Heading, Hyphenate} from '../type';
-import {scheme} from '../../modules';
 
 const Toolbar = React.createClass({
   propTypes: {
@@ -16,7 +16,8 @@ const Toolbar = React.createClass({
     bg: PropTypes.string,
     children: PropTypes.node,
     pageTitle: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    scheme: PropTypes.string
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
@@ -37,7 +38,7 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={cx(style.outer, this.props.className, style[scheme()])} style={this.getStyle()}>
+      <div className={cx(style.outer, this.props.className, style[this.props.scheme])} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>
@@ -56,4 +57,8 @@ const Toolbar = React.createClass({
   }
 });
 
-export default Toolbar;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Toolbar);

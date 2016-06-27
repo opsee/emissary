@@ -28,6 +28,10 @@
   background-color: var(--colorGray8);
 }
 
+.default.light {
+  background-color: var(--colorGray5);
+}
+
 .alert a, .alert a:hover, .alert a:active, .alert a:focus{
   color: white;
   text-decoration: underline;

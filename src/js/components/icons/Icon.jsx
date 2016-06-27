@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import style from './icon.css';
 import cx from 'classnames';
 import _ from 'lodash';
 
-import {scheme} from '../../modules';
 import BaseSVG from './BaseSVG.jsx';
 
 const Icon = React.createClass({
@@ -13,11 +13,12 @@ const Icon = React.createClass({
     fill: PropTypes.string,
     className: PropTypes.string,
     style: PropTypes.object,
-    title: PropTypes.string
+    title: PropTypes.string,
+    scheme: PropTypes.string
   },
   getColorClassFromProp(prop){
     const cased = _.startCase(this.props[prop]).split(' ').join('');
-    return cx(style[`fill${cased}`], style[scheme()]);
+    return cx(style[`fill${cased}`], style[this.props.scheme]);
   },
   getClass(){
     let arr = [];
@@ -45,4 +46,8 @@ const Icon = React.createClass({
   }
 });
 
-export default Icon;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Icon);

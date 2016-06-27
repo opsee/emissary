@@ -13,6 +13,9 @@
   line-height: 3em;
   vertical-align: bottom;
 }
+.table.light th {
+  color: var(--lightColorText2);
+}
 .table td {
   border-top: 1px solid var(--colorGray8);
   line-height: 2em;

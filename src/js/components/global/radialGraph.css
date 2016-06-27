@@ -93,6 +93,9 @@
   position: absolute;
   text-align: center;
 }
+.inner.light {
+  border-color: var(--lightColorBackground);
+}
 .innerFailing{
   composes: inner;
   background:var(--colorDanger);

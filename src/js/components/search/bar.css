@@ -25,7 +25,15 @@
   transition: background-color var(--transitionEaseOut);
 }
 
+.label.light {
+  background-color: white;
+}
+
 .labelFocused{
   composes: label;
   background:black !important;
+}
+
+.labelFocused.light {
+  background: white !important;
 }

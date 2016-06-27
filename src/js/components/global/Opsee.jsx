@@ -13,7 +13,6 @@ import {yeller} from '../../modules';
 
 import reset from './reset.css';
 import style from './global.css';
-import alert from './alert.css';
 import modal from './modal.css';
 import autosuggest from './autosuggest.css';
 import forms from '../forms/forms.css';
@@ -127,7 +126,7 @@ const Opsee = React.createClass({
           <div>
             <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
             <div id="header-search">
-              <SearchBar />
+              <SearchBar/>
             </div>
           </div>
         }

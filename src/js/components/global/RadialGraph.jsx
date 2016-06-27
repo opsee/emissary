@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import moment from 'moment';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import cx from 'classnames';
 
 import {SetInterval} from '../../modules/mixins';
 import style from './radialGraph.css';
@@ -11,7 +13,8 @@ const RadialGraph = React.createClass({
   mixins: [SetInterval],
   propTypes: {
     type: PropTypes.string,
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
+    scheme: PropTypes.string
   },
   getDefaultProps(){
     return {
@@ -42,7 +45,7 @@ const RadialGraph = React.createClass({
     return style[`base${_.startCase(this.getRadialState())}`];
   },
   getInnerClass(){
-    return style[`inner${_.startCase(this.getRadialState())}`];
+    return cx(style[`inner${_.startCase(this.getRadialState())}`], style[this.props.scheme]);
   },
   getSvgClass(){
     return style[`svg${_.startCase(this.getRadialState())}`];
@@ -153,4 +156,8 @@ const RadialGraph = React.createClass({
   }
 });
 
-export default RadialGraph;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(RadialGraph);

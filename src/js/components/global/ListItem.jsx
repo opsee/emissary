@@ -8,7 +8,6 @@ import cx from 'classnames';
 import {is} from 'immutable';
 
 import {Checkmark} from '../icons';
-import {scheme} from '../../modules';
 import {Button} from '../forms';
 import style from '../global/listItem.css';
 import {Padding} from '../layout';
@@ -33,7 +32,8 @@ const ListItem = React.createClass({
     }),
     analyticsActions: PropTypes.shape({
       trackEvent: PropTypes.func
-    })
+    }),
+    scheme: PropTypes.string
   },
   getDefaultProps(){
     return {
@@ -50,7 +50,7 @@ const ListItem = React.createClass({
     return cx(style.item, {
       [style.itemSelected]: item.selected,
       [style.itemPending]: item.deleting
-    }, style[item.state], style[scheme()]);
+    }, style[item.state], style[this.props.scheme]);
   },
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
@@ -76,13 +76,13 @@ const ListItem = React.createClass({
     );
     if (this.props.onClick){
       return (
-        <div className={cx(style.link, style[scheme()])} onClick={this.handleClick}>
+        <div className={cx(style.link, style[this.props.scheme])} onClick={this.handleClick}>
           {graph}
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx(style.link, style[scheme()])}>
+      <Link to={this.props.link} params={this.props.params} className={cx(style.link, style[this.props.scheme])}>
        {graph}
       </Link>
     );
@@ -90,14 +90,14 @@ const ListItem = React.createClass({
   renderInfo(){
     if (this.props.onClick){
       return (
-        <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[scheme()]])} onClick={this.handleClick}>
+        <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} onClick={this.handleClick}>
           <div>{_.find(this.props.children, {key: 'line1'})}</div>
           <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[scheme()]])} title={this.props.title}>
+      <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} title={this.props.title}>
         <div>{_.find(this.props.children, {key: 'line1'})}</div>
         <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
       </Link>
@@ -139,7 +139,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListItem);

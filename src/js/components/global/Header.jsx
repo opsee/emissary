@@ -4,7 +4,6 @@ import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import cx from 'classnames';
 
-import {scheme} from '../../modules';
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Col, Grid, Row} from '../layout';
@@ -18,7 +17,8 @@ const Header = React.createClass({
       env: PropTypes.shape({
         activeBastion: PropTypes.object
       })
-    }).isRequired
+    }).isRequired,
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {
@@ -29,7 +29,7 @@ const Header = React.createClass({
     return cx({
       [style.header]: true,
       [style.headerHide]: this.props.hide
-    }, style[scheme()]);
+    }, style[this.props.scheme]);
   },
   getHeaderStyle(){
     let obj = {};
@@ -108,7 +108,8 @@ const Header = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 export default connect(mapStateToProps)(Header);

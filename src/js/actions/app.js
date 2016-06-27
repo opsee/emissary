@@ -1,6 +1,5 @@
 import config from '../modules/config';
 import request from '../modules/request';
-import storage from '../modules/storage';
 import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
 import {
@@ -126,18 +125,13 @@ export function getStatusPageInfo() {
   };
 }
 
-function activateScheme(scheme = storage.get('scheme')){
-  document.querySelector('body').className = scheme;
-}
-
-export function setScheme(scheme){
-  return (dispatch, state) => {
-    storage.set('scheme', scheme);
-    activateScheme(scheme);
+export function setScheme(payload){
+  return (dispatch) => {
     dispatch({
-      type: APP_SET_SCHEME
-    })
-  }
+      type: APP_SET_SCHEME,
+      payload
+    });
+  };
 }
 
 export const openContextMenu = createAction(APP_OPEN_CONTEXT_MENU);

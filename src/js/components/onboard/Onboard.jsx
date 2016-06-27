@@ -20,7 +20,8 @@ const Onboard = React.createClass({
     actions: PropTypes.shape({
       confirmOpen: PropTypes.func
     }),
-    children: PropTypes.node
+    children: PropTypes.node,
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {
@@ -49,7 +50,7 @@ const Onboard = React.createClass({
       return null;
     }
     return _.times(this.state.numPips, i => {
-      const className = cx(style.pip, {[style.activePip]: i === activePip});
+      const className = cx(style.pip, {[style.activePip]: i === activePip}, style[this.props.scheme]);
       return (
         <Circle key={i} className={className} />
       );
@@ -57,8 +58,8 @@ const Onboard = React.createClass({
   },
   render(){
     return (
-      <div className={style.container}>
-        <Padding className={style.pips}>
+      <div className={cx(style.container, style[this.props.scheme])}>
+        <Padding className={cx(style.pips, style[this.props.scheme])}>
           {this.renderPips()}
         </Padding>
         <Padding t={1}>
@@ -69,8 +70,12 @@ const Onboard = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(Onboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Onboard);

@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import _ from 'lodash';
 import cx from 'classnames';
 
-import {scheme} from '../../modules';
 import style from './input.css';
 
 const Input = React.createClass({
@@ -20,7 +20,8 @@ const Input = React.createClass({
     textarea: PropTypes.bool,
     id: PropTypes.string,
     onFocus: PropTypes.func,
-    onBlur: PropTypes.func
+    onBlur: PropTypes.func,
+    scheme: PropTypes.string
   },
   getInitialState() {
     return {
@@ -34,7 +35,7 @@ const Input = React.createClass({
     const props = _.assign({}, this.props, {
       onChange: this.handleChange,
       value: this.getValue(),
-      className: cx(style.input, style[scheme()]),
+      className: cx(style.input, style[this.props.scheme]),
       id: this.state.id
     });
     return _.omit(props, ['data', 'children', 'label', 'path']);
@@ -51,7 +52,7 @@ const Input = React.createClass({
   },
   renderLabel(){
     if (this.props.label){
-      return <label className={cx(style.label, style[scheme()])} dangerouslySetInnerHTML={{__html: this.props.label}} htmlFor={this.state.id}/>;
+      return <label className={cx(style.label, style[this.props.scheme])} dangerouslySetInnerHTML={{__html: this.props.label}} htmlFor={this.state.id}/>;
     }
     return null;
   },
@@ -82,4 +83,8 @@ const Input = React.createClass({
   }
 });
 
-export default Input;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Input);

@@ -49,209 +49,200 @@
   background: var(--colorGray8);
 }
 
-.btnDefault {
-  composes: btn;
+.btn.default {
   color: white;
   background: var(--colorText2);
 }
-.btnDefault:hover {
+.btn.default.light {
+  color: var(--colorGray8);
+}
+.btn.default:hover {
   color: white;
   background: color(var(--colorText2) shade(20%));
 }
-.btnDefault:active {
+.btn.default:active {
   background: color(var(--colorText2) shade(40%));
 }
-.btnDefault[disabled], .btnDefault[disabled]:hover, .btnDefault[disabled]:focus, .btnDefault[disabled]:active {
+.btn.default[disabled], .btn.default[disabled]:hover, .btn.default[disabled]:focus, .btn.default[disabled]:active {
   background: var(--colorText2);
 }
+.btn.default.light[disabled], .btn.default.light[disabled]:hover, .btn.default.light[disabled]:focus, .btn.default.light[disabled]:active {
+  background: var(--colorGray8);
+}
 
-.btnPrimary {
-  composes: btn;
+.btn.primary {
   color: #fff;
   background: var(--colorPrimary);
 }
-.btnPrimary:hover {
+.btn.primary:hover {
   color: #fff;
   background: color(var(--colorPrimary) shade(20%));
 }
-.btnPrimary:active {
+.btn.primary:active {
   background: color(var(--colorPrimary) shade(40%));
 }
-.btnPrimary[disabled], .btnPrimary[disabled]:hover, .btnPrimary[disabled]:focus, .btnPrimary[disabled]:active {
+.btn.primary[disabled], .btn.primary[disabled]:hover, .btn.primary[disabled]:focus, .btn.primary[disabled]:active {
   background: var(--colorPrimary);
 }
 
-.btnSuccess {
-  composes: btn;
+.btn.success {
   color: #fff;
   background: var(--colorSuccess);
 }
-.btnSuccess:hover {
+.btn.success:hover {
   color: #fff;
   background: color(var(--colorSuccess) shade(20%));
 }
-.btnSuccess:active {
+.btn.success:active {
   background: color(var(--colorSuccess) shade(40%));
 }
-.btnSuccess[disabled], .btnSuccess[disabled]:hover, .btnSuccess[disabled]:focus, .btnSuccess[disabled]:active {
+.btn.success[disabled], .btn.success[disabled]:hover, .btn.success[disabled]:focus, .btn.success[disabled]:active {
   background: var(--colorSuccess);
 }
 
-.btnInfo {
-  composes: btn;
+.btn.info {
   color: #fff;
   background: var(--colorInfo);
 }
-.btnInfo:hover {
+.btn.info:hover {
   color: #fff;
   background: color(var(--colorInfo) shade(20%));
 }
-.btnInfo:active {
+.btn.info:active {
   background: color(var(--colorInfo) shade(40%));
 }
-.btnInfo[disabled], .btnInfo[disabled]:hover, .btnInfo[disabled]:focus, .btnInfo[disabled]:active {
+.btn.info[disabled], .btn.info[disabled]:hover, .btn.info[disabled]:focus, .btn.info[disabled]:active {
   background: var(--colorInfo);
 }
 
-.btnWarning {
-  composes: btn;
+.btn.warning {
   color: #fff;
   background: var(--colorWarning);
 }
-.btnWarning:hover {
+.btn.warning:hover {
   color: #fff;
   background: color(var(--colorWarning) shade(20%));
 }
-.btnWarning:active {
+.btn.warning:active {
   background: color(var(--colorWarning) shade(40%));
 }
-.btnWarning[disabled], .btnWarning[disabled]:hover, .btnWarning[disabled]:focus, .btnWarning[disabled]:active {
+.btn.warning[disabled], .btn.warning[disabled]:hover, .btn.warning[disabled]:focus, .btn.warning[disabled]:active {
   background: var(--colorWarning);
 }
 
-.btnDanger {
-  composes: btn;
+.btn.danger {
   color: #fff;
   background: var(--colorDanger);
 }
-.btnDanger:hover {
+.btn.danger:hover {
   color: #fff;
   background: color(var(--colorDanger) shade(20%));
 }
-.btnDanger:active {
+.btn.danger:active {
   background: color(var(--colorDanger) shade(40%));
 }
-.btnDanger[disabled], .btnDanger[disabled]:hover, .btnDanger[disabled]:focus, .btnDanger[disabled]:active {
+.btn.danger[disabled], .btn.danger[disabled]:hover, .btn.danger[disabled]:focus, .btn.danger[disabled]:active {
   background: var(--colorDanger);
 }
 
-.btnDark {
-  composes: btn;
+.btn.black {
   color: #fff;
   background: var(--colorGray9);
 }
-.btnDark:hover {
+.btn.black:hover {
   color: #fff;
   background: black;
 }
-.btnDark:active {
+.btn.black:active {
   color: #fff;
   background: var(--colorGray8);
 }
 
-.btnNoPad {
-  border-radius: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.btnFlat {
-  composes: btn;
+.btn.flat {
   background: transparent;
   border-color: var(--colorText);
   box-shadow: none;
   color: var(--colorText);
 }
-.btnFlat:focus {
+.btn.flat:focus {
   background-color: transparent;
 }
-.btnFlat:hover{
+.btn.flat:hover{
   background: var(--colorText2);
   border-color: transparent;
   color: white !important;
 }
-.btnFlat:active{
+.btn.flat:active{
   background: color(var(--colorText2) shade(40%));
 }
-.btnFlat[disabled]{
+.btn.flat[disabled]{
   border-color: var(--colorText) !important;
 }
 
-.btnFlat[disabled], .btnFlat.btnPrimary[disabled], .btnFlat.btnSuccess[disabled], .btnFlat.btnInfo[disabled], .btnFlat.btnDanger[disabled]{
+.btn.flat[disabled], .btn.flat.primary[disabled], .btn.flat.success[disabled], .btn.flat.info[disabled], .btn.flat.danger[disabled]{
   background: none;
   border-color: var(--colorText2);
 }
-.btnFlat.btnPrimary {
+.btn.flat.primary {
   border-color: var(--colorPrimary);
   color: var(--colorPrimary);
 }
-.btnFlat.btnPrimary:hover {
+.btn.flat.primary:hover {
   border-color: color(var(--colorPrimary) shade(40%));
   background: color(var(--colorPrimary) shade(40%));
 }
-.btnFlat.btnPrimary:active {
+.btn.flat.primary:active {
   border-color: color(var(--colorPrimary) shade(40%));
   background: color(var(--colorPrimary) shade(40%));
 }
-.btnFlat.btnSuccess {
+.btn.flat.success {
   border-color: var(--colorSuccess);
   color: var(--colorSuccess);
 }
-.btnFlat.btnSuccess:hover {
+.btn.flat.success:hover {
   background: var(--colorSuccess);
 }
-.btnFlat.btnSuccess:active {
+.btn.flat.success:active {
   background: color(var(--colorSuccess) shade(40%));
 }
-.btnFlat.btnWarning {
+.btn.flat.warning {
   border-color: var(--colorWarning);
   color: var(--colorWarning);
 }
-.btnFlat.btnWarning:hover {
+.btn.flat.warning:hover {
   background: var(--colorWarning);
 }
-.btnFlat.btnWarning:active {
+.btn.flat.warning:active {
   background: color(var(--colorWarning) shade(40%));
 }
-.btnFlat.btnDanger {
+.btn.flat.danger {
   border-color: var(--colorDanger);
   color: var(--colorDanger);
 }
-.btnFlat.btnDanger:hover {
+.btn.flat.danger:hover {
   background: var(--colorDanger);
 }
-.btnFlat.btnDanger:active {
+.btn.flat.danger:active {
   background: color(var(--colorDanger) shade(40%));
 }
-.btnFlat.btnInfo {
+.btn.flat.info {
   border-color: var(--colorInfo);
   color: var(--colorInfo);
 }
-.btnFlat.btnInfo:hover {
+.btn.flat.info:hover {
   background: var(--colorInfo);
 }
-.btnFlat.btnInfo:active {
+.btn.flat.info:active {
   background: color(var(--colorInfo) shade(40%));
 }
 
-.btnBlock {
+.btn.block {
   border-radius: 0;
   display: block;
   width: 100%;
 }
 
-.btnFab {
-  composes: btn;
+.btn.fab {
   box-shadow: var(--shadowBottomZ1);
   transition: transform var(--transitionEaseOut), background var(--transitionEaseOut);
   z-index: 20;
@@ -269,11 +260,11 @@
   background-size: 24px 24px;
   background-position: 50% 50%;
 }
-.btnFab:hover,.btnFab:active {
+.btn.fab:hover,.btn.fab:active {
   transform: scale(1.2) rotate(-90deg);
 }
 
-.btnIcon {
+.btn.icon {
   background: transparent;
   border: none;
   line-height: 40px;
@@ -287,15 +278,15 @@
   overflow: hidden;
   position: relative;
 }
-.btnIcon:hover, .btnIcon:active, .btnIcon:focus {
+.btn.icon:hover, .btn.icon:active, .btn.icon:focus {
   background: var(--colorGray8);
 }
 
-.btnSecondary {
+.btn.secondary {
   margin: 0 0.625em 0 0;
 }
 
-.btnDropdown{
+.btn.dropdown{
   text-transform: none;
   text-align:left;
   font-weight:100;
@@ -303,14 +294,14 @@
   box-shadow:none;
 }
 
-.btnLeft{
+.btn.left{
   text-align: left;
 }
-.btnRight{
+.btn.right{
   text-align:right;
 }
 
-.btnSm{
+.btn.sm{
   padding:.2em;
   line-height:1.2em;
 }
@@ -330,57 +321,27 @@
   transform: translateX(-102%);
 }
 
-.progressPressing {
+.progress.pressing {
   transition: 1500ms linear transform;
   transform: translateX(0);
 }
 
-.progressPrimary {
-  composes: progress;
+.progress.primary {
   background: color(var(--colorPrimary) shade(70%));
 }
 
-.progressPrimaryPressing {
-  composes: progressPrimary;
-  composes: progressPressing;
-}
-
-.progressSuccess {
-  composes: progress;
+.progress.success {
   background: color(var(--colorSuccess) shade(70%));
 }
 
-.progressSuccessPressing {
-  composes: progressSuccess;
-  composes: progressPressing;
-}
-
-.progressDanger {
-  composes: progress;
+.progress.danger {
   background: color(var(--colorDanger) shade(70%));
 }
 
-.progressDangerPressing {
-  composes: progressDanger;
-  composes: progressPressing;
-}
-
-.progressInfo {
-  composes: progress;
+.progress.info {
   background: color(var(--colorInfo) shade(70%));
 }
 
-.progressInfoPressing {
-  composes: progressInfo;
-  composes: progressPressing;
-}
-
-.progressWarning {
-  composes: progress;
+.progress.warning {
   background: color(var(--colorWarning) shade(70%));
-}
-
-.progressWarningPressing {
-  composes: progressWarning;
-  composes: progressPressing;
 }

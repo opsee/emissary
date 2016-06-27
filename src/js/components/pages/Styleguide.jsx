@@ -21,7 +21,8 @@ const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error',
 const Styleguide = React.createClass({
   propTypes: {
     appActions: PropTypes.shape({
-      modalMessageOpen: PropTypes.func
+      modalMessageOpen: PropTypes.func,
+      setScheme: PropTypes.func
     }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -99,6 +100,9 @@ const Styleguide = React.createClass({
   handleInputChange(state){
     this.setState(state);
   },
+  handleSchemeClick(scheme){
+    this.props.appActions.setScheme(scheme);
+  },
   handlePressUp(){
     /*eslint-disable no-alert*/
     alert('you pressed it.');
@@ -112,10 +116,14 @@ const Styleguide = React.createClass({
             <Add btn/>
           </Button>
         </Toolbar>
-
         <Grid>
           <Row>
             <Col xs={12}>
+              <Padding b={2}>
+                <Heading level={2}>Color Scheme</Heading>
+                <Button onClick={this.handleSchemeClick.bind(null, 'dark')} color="default">Dark</Button>
+                <Button onClick={this.handleSchemeClick.bind(null, 'light')}>Light</Button>
+              </Padding>
               <Padding b={1}>
                 <Heading level={3}>Fab button (at top right)</Heading>
                 <p>To be used as the primary action on application pages that have CRUD functionality. For example, in a list of health checks to add a new check, or on a profile page to edit the user profile. On screens like the tutorial with Next as the primary action, a Fab should not be used.</p>
@@ -316,9 +324,6 @@ const Styleguide = React.createClass({
                 </Padding>
               </Padding>
               <Padding b={2}>
-                <Padding className="pull-left">
-                  <Button flat noPad primary>NO PAD</Button>
-                </Padding>
                 <Padding className="pull-left">
                   <Button flat color="danger" onPressUp={this.handlePressUp}>Flat, Press and Hold</Button>
                 </Padding>

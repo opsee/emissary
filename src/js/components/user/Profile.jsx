@@ -8,7 +8,7 @@ import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
-import {flag, storage} from '../../modules';
+import {flag} from '../../modules';
 import {
   user as actions,
   app as appActions,
@@ -23,7 +23,8 @@ const Profile = React.createClass({
       sendVerificationEmail: PropTypes.func
     }),
     appActions: PropTypes.shape({
-      shutdown: PropTypes.func
+      shutdown: PropTypes.func,
+      setScheme: PropTypes.func
     }),
     redux: PropTypes.shape({
       user: PropTypes.object,
@@ -138,8 +139,10 @@ const Profile = React.createClass({
       <tr>
         <td><strong>Color Scheme</strong></td>
         <td>
-          <Button onClick={this.handleSchemeClick.bind(null, 'dark')}>Dark</Button>
-          <Button onClick={this.handleSchemeClick.bind(null, 'light')}>Light</Button>
+          <Padding inline r={1}>
+            <Button onClick={this.handleSchemeClick.bind(null, 'dark')} color="black">Dark</Button>
+          </Padding>
+          <Button onClick={this.handleSchemeClick.bind(null, 'light')} style={{color: '#333', border: '2px solid #666', background: 'rgba(200, 200, 200, 1)'}}>Light</Button>
         </td>
       </tr>
     );
