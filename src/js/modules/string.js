@@ -10,21 +10,22 @@ function stringFromTokens(tokens = []) {
 }
 
 function permsSentence(member) {
-  const arr = _.chain(member).get('perms').pickBy(p => p).keys().map(c => {
+  let arr = _.chain(member).get('perms').pickBy(p => p).keys().map(c => {
     let str = c;
     switch (str){
-    case 'editing':
-      str = 'Check Editing';
-      break;
-    case 'management':
-      str = 'User Management';
+    // case 'edit':
+    //   str = 'Check Editing';
+    //   break;
+    case 'admin':
+      str = 'Team Admin';
       break;
     default:
       break;
     }
     return _.chain(str).split(' ').map(_.capitalize).join(' ').value();
   }).value();
-  return toSentenceSerial(arr);
+  // arr.push('Check Management');
+  return toSentenceSerial(_.uniq(arr));
 }
 
 export {

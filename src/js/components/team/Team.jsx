@@ -69,6 +69,22 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderAWSArea(){
+    if (!!this.props.redux.env.activeBastion){
+      return (
+        <tr>
+          <td><strong>AWS Integration</strong></td>
+          <td><Link to="/system">Enabled</Link></td>
+        </tr>
+      );
+    }
+    return (
+      <tr>
+        <td><strong>AWS Integration</strong></td>
+        <td><Link to="/start/launch-stack">Add Our Instance</Link></td>
+      </tr>
+    );
+  },
   renderMemberLink(member){
     const user = this.props.redux.user.toJS();
     if (member.id){
@@ -82,7 +98,7 @@ const Profile = React.createClass({
     }
     return (
       <span>
-        <strong>{member.email}</strong>&nbsp;
+        <strong>{member.email} (invited)</strong>&nbsp;
       </span>
     );
   },
@@ -98,7 +114,9 @@ const Profile = React.createClass({
     if (member.email === user.email){
       return <Link to="/profile/edit" title="Edit Your Profile">Edit Your Profile</Link>;
     }
+    const REMOVEME = null;
     if (member.id){
+    // if (member.id && user.perms.admin){
       return <Link to={`/team/member/${member.id}/edit`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
     }
     return null;
@@ -127,6 +145,7 @@ const Profile = React.createClass({
                 <Padding t={2}>
                   <Heading level={3}>Team Integrations</Heading>
                   <Table>
+                    {this.renderAWSArea()}
                     {this.renderSlackArea()}
                     {this.renderPagerdutyArea()}
                   </Table>
@@ -137,6 +156,9 @@ const Profile = React.createClass({
                     {_.sortBy(team.users, member => {
                       if (member.email === user.email){
                         return 'aaaaa';
+                      }
+                      if (!member.name){
+                        return 'zzzz';
                       }
                       return member.email;
                     }).map(member => {
@@ -164,7 +186,11 @@ const Profile = React.createClass({
                   <Table>
                     <tr>
                       <td><strong>Name</strong></td>
-                      <td>{team.name || '(No Team name set)'}&nbsp;&nbsp;<Link to="/team/edit">Edit Team Name</Link></td>
+                      <td>{team.name || '(No Team name set)'}&nbsp;&nbsp;
+                      { user.perms.admin &&
+                        (<Link to="/team/edit">Edit Team Name</Link>)
+                      }
+                      </td>
                     </tr>
                     {
                       // window.location.href.match('localhost|staging') && (

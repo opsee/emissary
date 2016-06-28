@@ -19,7 +19,8 @@ export const User = Record({
   loginData: {},
   region: undefined,
   vpc: undefined,
-  verified: null
+  verified: null,
+  perms: new Map()
 });
 
 export const Member = Record({

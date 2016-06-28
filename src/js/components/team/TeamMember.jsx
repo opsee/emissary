@@ -49,11 +49,14 @@ const TeamMember = React.createClass({
         </Button>
       );
     }
-    return (
-      <Button fab color="info" to={`/team/member/${member.id}/edit`} title={`Edit ${member.name}`}>
-        <Edit btn/>
-      </Button>
-    );
+    if (user.perms.admin){
+      return (
+        <Button fab color="info" to={`/team/member/${member.id}/edit`} title={`Edit ${member.name}`}>
+          <Edit btn/>
+        </Button>
+      );
+    }
+    return null;
   },
   render() {
     const member = this.getData();
@@ -81,12 +84,10 @@ const TeamMember = React.createClass({
                   //   <td><Link to={`/team/member/${member.id}/edit`}>Change the password of {member.name}</Link></td>
                   // </tr>
                   }
-                  {member.perms.length && (
-                    <tr>
-                      <td><strong>Permissions</strong></td>
-                      <td>{permsSentence(member)}</td>
-                    </tr>
-                    ) || null}
+                  <tr>
+                    <td><strong>Permissions</strong></td>
+                    <td>{permsSentence(member)}</td>
+                  </tr>
                 </Table>
                 <Padding t={3}>
                   <Link to="/team">View your Team</Link>
