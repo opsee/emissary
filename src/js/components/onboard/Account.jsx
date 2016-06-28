@@ -35,7 +35,7 @@ const OnboardAccount = React.createClass({
     const isDone = nextProps.redux.asyncActions.userSetPassword.status === 'success';
     if (wasPending && isDone) {
       setTimeout(() => {
-        this.context.router.push('/start/launch-stack');
+        this.context.router.push('/');
       }, 500);
     }
   },
