@@ -45,7 +45,7 @@ const CheckEdit = React.createClass({
         single: PropTypes.object
       }),
       asyncActions: PropTypes.shape({
-        checkEdit: PropTypes.object,
+        checkCreateOrEdit: PropTypes.object,
         getCheck: PropTypes.object
       })
     })
@@ -153,9 +153,9 @@ const CheckEdit = React.createClass({
           </Padding>
           <CheckCreateInfo check={check} onChange={this.setData} renderAsInclude types={getCheckTypes(this.props.redux)}/>
           <Padding t={1}>
-          <StatusHandler status={this.props.redux.asyncActions.checkEdit.status}/>
+          <StatusHandler status={this.props.redux.asyncActions.checkCreateOrEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-            {this.props.redux.asyncActions.checkEdit.status === 'pending' ? 'Saving...' : 'Finish'} <Checkmark inline fill={seed.color.success}/>
+            {this.props.redux.asyncActions.checkCreateOrEdit.status === 'pending' ? 'Saving...' : 'Finish'} <Checkmark inline fill={seed.color.success}/>
           </Button>
           <CheckDisabledReason check={check}/>
           </Padding>
