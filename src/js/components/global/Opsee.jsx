@@ -30,7 +30,6 @@ import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
 const hideNavList = [
-  '^\/start',
   '^\/login',
   '^\/check-create',
   '^\/check\/edit',
