@@ -6,8 +6,6 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/user';
 import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Toolbar} from '../global';
-import {Button} from '../forms';
-import UserInputs from '../user/UserInputs.jsx';
 
 const Verify = React.createClass({
   propTypes: {
@@ -103,7 +101,7 @@ const Verify = React.createClass({
     return (
       <Padding tb={1}>
         <Alert color="danger">
-          <div>Uh oh, we're having some trouble{inner}. <a href="#" onClick={this.onTriggerEmail}>Click here</a> if you need to resend the verification email.</div>
+          <div>Uh oh, we&rsquo;re having some trouble{inner}. <a href="#" onClick={this.onTriggerEmail}>Click here</a> if you need to resend the verification email.</div>
           {statusMessage ?
             <Padding t={1}>{statusMessage}</Padding>
           : null }
@@ -114,21 +112,11 @@ const Verify = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Set a Password"/>
+        <Toolbar title="Verify Email"/>
         <Grid>
           <Row>
             <Col xs={12}>
-              <p>Welcome to Opsee! Thanks for verifying your email address.</p>
-              <p>To finish setting up your account, choose a password. (You'll use this to log in to Opsee, along with your email address.)</p>
-              <form onSubmit={this.onSubmit}>
-                <UserInputs include={['password']} onChange={this.onInputChange} data={this.state}/>
-                <Padding tb={1}>
-                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
-                    {this.getButtonText()}
-                  </Button>
-                </Padding>
-                {this.renderAlert()}
-              </form>
+              <p>Verifying...</p>
             </Col>
           </Row>
         </Grid>

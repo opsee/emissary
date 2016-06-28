@@ -115,6 +115,9 @@ export function verifyEmail(data) {
         .then((res) => {
           analytics.trackEvent('User', 'verified-email', null, res.body.user)(dispatch, state);
           resolve(res.body);
+          setTimeout(() => {
+            dispatch(push('/profile?verified=true'));
+          }, 40);
         }, reject);
       })
     });
