@@ -33,38 +33,12 @@ export function signupCreate(data, redirect) {
         .send(params)
         .then(res => {
           const user = res.body;
-          const fullUser = _.assign({}, user, user.user);
           analytics.trackEvent('Onboard', 'signup', data)(dispatch, state);
-          if (params.password){
-            request
-            .put(`${config.services.auth}/users/${fullUser.id}`)
-            .set('Authorization', `Bearer ${fullUser.token}`)
-            .send(
-              _.chain(fullUser)
-              .defaults({
-                invite: true
-              })
-              .assign({
-                password: data.password
-              })
-              .pick(['password', 'id', 'token', 'name'])
-              .value()
-            )
-            .then(() => {
-              resolve(user);
-              if (redirect) {
-                setTimeout(() => { //TODO remove timeout somehow
-                  dispatch(push(redirect));
-                }, 100);
-              }
-            }, reject);
-          } else {
-            resolve(user);
-            if (redirect) {
-              setTimeout(() => { //TODO remove timeout somehow
-                dispatch(push(redirect));
-              }, 100);
-            }
+          resolve(user);
+          if (redirect) {
+            setTimeout(() => { //TODO remove timeout somehow
+              dispatch(push(redirect));
+            }, 100);
           }
         }, err => {
           let msg = _.get(err, 'response.body.message');
