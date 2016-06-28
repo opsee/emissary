@@ -38,7 +38,7 @@ const CheckCreateInfo = React.createClass({
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        checkCreate: PropTypes.object
+        checkCreateOrEdit: PropTypes.object
       })
     })
   },
@@ -83,7 +83,7 @@ const CheckCreateInfo = React.createClass({
     return _.some(bools);
   },
   isDisabled(){
-    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
+    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreateOrEdit.status === 'pending';
   },
   shouldShowHideAdvancedOptions(){
     let bools = [];
@@ -139,7 +139,7 @@ const CheckCreateInfo = React.createClass({
     if (!this.props.renderAsInclude){
       return (
         <div>
-          <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
+          <StatusHandler status={this.props.redux.asyncActions.checkCreateOrEdit.status}/>
           <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
           <CheckDisabledReason check={this.props.check} areas={['info', 'notifications']}/>
         </div>
