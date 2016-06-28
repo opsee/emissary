@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
 import {StatusHandler, Table, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
@@ -144,6 +144,18 @@ const Profile = React.createClass({
           <td><strong>Integrations</strong></td>
           <td><Link to="/team">See Team Integrations</Link></td>
         </tr>
+        );
+    }
+    return null;
+  },
+  renderVerified(){
+    if (this.props.location.query.verified){
+      return (
+        <Padding b={2}>
+          <Alert color="success">
+            Your email has been successfully verified.
+          </Alert>
+        </Padding>
       );
     }
     return null;
@@ -160,6 +172,7 @@ const Profile = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
+              {this.renderVerified()}
               <Padding b={1}>
                 <Heading level={3}>Your Profile</Heading>
                 <Table>

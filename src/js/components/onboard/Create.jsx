@@ -62,7 +62,7 @@ const OnboardCreate = React.createClass({
               <p>Try Opsee <strong>for free</strong> in our public beta!</p>
               <form name="onboardForm" onSubmit={this.handleSubmit}>
                 <Padding b={1}>
-                  <UserInputs include={['name', 'email']} data={this.state.data} onChange={this.handleUserData}/>
+                  <UserInputs include={['email', 'name', 'password']} data={this.state.data} onChange={this.handleUserData}/>
                 </Padding>
                 <StatusHandler status={this.getStatus()}/>
                 <div className="form-group">
@@ -70,7 +70,7 @@ const OnboardCreate = React.createClass({
                     {this.getButtonText()}
                   </Button>
                   <Padding t={1}>
-                    <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee's <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
+                    <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee&rsquo;s <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
                   </Padding>
                 </div>
 

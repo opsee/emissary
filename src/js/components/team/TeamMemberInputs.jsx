@@ -64,7 +64,7 @@ const TeamMemberInputs = React.createClass({
   },
   renderPerms(){
     if (this.props.inputs.indexOf('perms') > -1){
-      const data = ['admin', 'billing', 'editing'];
+      const data = ['admin', 'billing', 'edit'];
       const titles = ['User Management', 'View and Edit Billing', 'Check Editing'];
       return (
         <Padding t={1} b={1}>

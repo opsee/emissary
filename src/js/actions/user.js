@@ -25,7 +25,7 @@ import * as team from './team';
 
 export function signupCreate(data, redirect) {
   return (dispatch, state) => {
-    const params = _.pick(data, ['name', 'referrer', 'email']);
+    const params = _.pick(data, ['name', 'referrer', 'email', 'password']);
     dispatch({
       type: USER_SIGNUP_CREATE,
       payload: new Promise((resolve, reject) => {
@@ -119,6 +119,9 @@ export function verifyEmail(data) {
         .then((res) => {
           analytics.trackEvent('User', 'verified-email', null, res.body.user)(dispatch, state);
           resolve(res.body);
+          setTimeout(() => {
+            dispatch(push('/profile?verified=true'));
+          }, 40);
         }, reject);
       })
     });
