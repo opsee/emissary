@@ -171,7 +171,7 @@ const CheckCreateRequest = React.createClass({
       const url = new window.URL(string);
       check.spec = _.assign(spec, {
         port: parseInt(url.port, 10) || (url.protocol === 'https:' ? 443 : 80),
-        path: url.pathname || '/',
+        path: (url.pathname || '/') + url.search + url.hash,
         protocol: (url.protocol || '').replace(':', '')
       });
       check.target.id = url.hostname;
@@ -183,13 +183,14 @@ const CheckCreateRequest = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     if (!this.props.renderAsInclude){
-      const data = JSON.stringify(this.props.check);
+      const data = window.encodeURIComponent(JSON.stringify(this.props.check));
       this.props.history.push(`/check-create/assertions?data=${data}`);
     }
   },
   handleTargetClick(){
     if (!this.props.renderAsInclude){
-      this.props.history.push(`/check-create/target?data=${JSON.stringify(this.props.check)}`);
+      const data = window.encodeURIComponent(JSON.stringify(this.props.check));
+      this.props.history.push(`/check-create/target?data=${data}`);
     } else if (typeof this.props.handleTargetClick === 'function'){
       this.props.handleTargetClick();
     }
