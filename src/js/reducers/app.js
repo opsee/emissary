@@ -155,9 +155,13 @@ export default handleActions({
   },
   [APP_SET_SCHEME]: {
     next(state, action){
-      const scheme = action.payload;
-      storage.set('scheme', scheme);
-      document.querySelector('body').className = scheme;
+      let scheme = action.payload;
+      scheme = scheme === 'dark' ? '' : scheme;
+      document.querySelector('body').className = scheme || '';
+      //don't recursively set the storage if we are firing the action from the eventlistener
+      if (!_.get(action, 'meta.listener')){
+        storage.set('scheme', scheme || '');
+      }
       return _.assign({}, state, {scheme});
     }
   }

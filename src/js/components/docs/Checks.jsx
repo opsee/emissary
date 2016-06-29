@@ -62,7 +62,7 @@ const Checks = React.createClass({
                 <li><strong>Metrics</strong> (all checks) - depending on the type of check being created, different metrics will be available</li>
               </ul>
               <p>A simple <em>response ok</em> assertion looks like this:</p>
-              <Highlight>
+              <Highlight style={{padding: '1rem'}}>
                 {JSON.stringify({key: 'code', relationship: 'equal', operand: '200'}, null, ' ')}
               </Highlight>
               <br/>
@@ -77,7 +77,7 @@ const Checks = React.createClass({
                 <li>If your response is valid json and an object is found, you can make any assertion against it.</li>
               </ul>
               <p>Now you can ensure that the first dog is older than 3:</p>
-              <Highlight>
+              <Highlight style={{padding: '1rem'}}>
                 {JSON.stringify({key: 'json', relationship: 'greaterThan', value: 'animals.dogs[0].age', operand: '3'}, null, ' ')}
               </Highlight>
               <br/>

@@ -101,6 +101,19 @@ export function shutdown(){
   };
 }
 
+export function setScheme(payload, listener = false){
+  //pass listener if you are using an event listener and want to avoid recursive loop
+  return (dispatch) => {
+    dispatch({
+      type: APP_SET_SCHEME,
+      payload,
+      meta: {
+        listener
+      }
+    });
+  };
+}
+
 export function initialize(){
   return (dispatch, state) => {
     analytics.initialize()(dispatch, state);
@@ -112,6 +125,11 @@ export function initialize(){
     dispatch({
       type: APP_INITIALIZE
     });
+    window.addEventListener('storage', event => {
+      if (typeof event === 'object' && event.key === 'scheme') {
+        setScheme(JSON.parse(event.newValue), true)(dispatch);
+      }
+    });
   };
 }
 
@@ -121,15 +139,6 @@ export function getStatusPageInfo() {
       type: GET_STATUS_PAGE_INFO,
       payload: request.get(`${config.services.statusPage}/summary.json`)
         .then(res => res.body)
-    });
-  };
-}
-
-export function setScheme(payload){
-  return (dispatch) => {
-    dispatch({
-      type: APP_SET_SCHEME,
-      payload
     });
   };
 }

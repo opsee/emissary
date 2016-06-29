@@ -3,7 +3,6 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {plain as seed} from 'seedling';
 import cx from 'classnames';
 import {is} from 'immutable';
 
@@ -107,7 +106,7 @@ const ListItem = React.createClass({
     const selected = this.props.item.get('selected');
     const fn = this.props.onSelect;
     if (fn && typeof fn === 'function'){
-      const icon = selected ? <Checkmark btn fill={seed.color.gray9}/> : null;
+      const icon = selected ? <Checkmark btn fill="textSecondary"/> : null;
       return (
         <div className="display-flex align-items-center justify-content-center">
           <Button icon flat secondary onClick={this.handleSelect} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>

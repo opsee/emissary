@@ -62,6 +62,7 @@ input[type="checkbox"]{
 .input.light, input.light, .input:focus{
   background: white;
   color: var(--lightColorText2);
+  outline: 1px solid var(--colorGray3);
 }
 
 .input.light::placeholder{ 

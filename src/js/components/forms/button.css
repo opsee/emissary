@@ -54,11 +54,16 @@
   background: var(--colorText2);
 }
 .btn.default.light {
-  color: var(--colorGray8);
+  background: var(--colorGray4);
+  color: var(--lightColorText2);
 }
 .btn.default:hover {
   color: white;
   background: color(var(--colorText2) shade(20%));
+}
+.btn.default.light:hover {
+  background: var(--colorGray5);
+  color: var(--lightColorText2); 
 }
 .btn.default:active {
   background: color(var(--colorText2) shade(40%));
@@ -67,7 +72,8 @@
   background: var(--colorText2);
 }
 .btn.default.light[disabled], .btn.default.light[disabled]:hover, .btn.default.light[disabled]:focus, .btn.default.light[disabled]:active {
-  background: var(--colorGray8);
+  color: var(--lightColorText2);
+  background: var(--colorGray4);
 }
 
 .btn.primary {
@@ -175,13 +181,22 @@
 .btn.flat:active{
   background: color(var(--colorText2) shade(40%));
 }
-.btn.flat[disabled]{
-  border-color: var(--colorText) !important;
-}
 
-.btn.flat[disabled], .btn.flat.primary[disabled], .btn.flat.success[disabled], .btn.flat.info[disabled], .btn.flat.danger[disabled]{
+.btn.flat[disabled]{
+  background: none !important;
+  border-color: var(--colorGray4);
+  color: var(--colorGray4);
+}
+.btn.flat.light[disabled]{
+  border-color: var(--lightColorText);
+  color: var(--lightColorText) !important;
+}
+.btn.flat.default.light{
   background: none;
-  border-color: var(--colorText2);
+  border-color: var(--lightColorText2);
+}
+.btn.flat.default.light:hover {
+  background: var(--lightColorText2);
 }
 .btn.flat.primary {
   border-color: var(--colorPrimary);

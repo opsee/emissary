@@ -34,10 +34,7 @@ const Icon = React.createClass({
   },
   getFill(){
     const colorClass = this.getColorClassFromProp('fill');
-    if (!colorClass){
-      return this.props.fill;
-    }
-    return false;
+    return !colorClass || this.props.fill || 'text';
   },
   render(){
     return (

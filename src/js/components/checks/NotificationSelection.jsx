@@ -185,7 +185,10 @@ const NotificationSelection = React.createClass({
     e.preventDefault();
     return false;
   },
-  renderNotifIcon(notif, props = {}){
+  renderNotifIcon(notif, initProps = {}){
+    const props = _.assign(initProps, {
+      fill: initProps.fill ? initProps.fill : 'text'
+    });
     const {type} = notif;
     let el = <Mail {...props}/>;
     if (type === 'slack_bot' || type === 'slack'){
@@ -442,7 +445,8 @@ const NotificationSelection = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

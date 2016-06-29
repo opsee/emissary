@@ -314,15 +314,24 @@ const Styleguide = React.createClass({
               <Padding b={2}>
                 {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
                   return (
-                    <Padding className="pull-left" key={`btn-flat-${i}`}>
+                    <Padding inline key={`btn-flat-${i}`}>
                       <Button flat color={i}>{i}</Button>
                     </Padding>
                   );
                 })}
-                <Padding t={1}>
-                  <Button flat color="success" disabled>Disabled</Button>
-                </Padding>
               </Padding>
+              <div>
+                <Padding t={1}>
+                  <Heading level={4}>Disabled</Heading>
+                  {['primary', 'success', 'warning', 'danger', 'info', 'default'].map(i => {
+                    return (
+                      <Padding inline key={`btn-disabled-flat-${i}`}>
+                        <Button flat color={i} disabled>{i}</Button>
+                      </Padding>
+                    );
+                  })}
+                </Padding>
+              </div>
               <Padding b={2}>
                 <Padding className="pull-left">
                   <Button flat color="danger" onPressUp={this.handlePressUp}>Flat, Press and Hold</Button>
