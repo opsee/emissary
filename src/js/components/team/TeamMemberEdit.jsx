@@ -81,11 +81,12 @@ const TeamMemberEdit = React.createClass({
   },
   render() {
     const member = this.getData();
+    const to = this.props.location.query.ref || `/team/member/${member.id}`;
     if (member.email){
       return (
          <div>
           <Toolbar title={`Edit Team Member: ${member.name || member.email}`} pageTitle="Team Member" bg="info" btnPosition="midRight">
-            <Button to={`/team/member/${member.id}`} icon flat>
+            <Button to={to} icon flat>
               <Close btn/>
             </Button>
           </Toolbar>

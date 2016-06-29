@@ -117,7 +117,7 @@ const Profile = React.createClass({
     const REMOVEME = null;
     if (member.id){
     // if (member.id && user.perms.admin){
-      return <Link to={`/team/member/${member.id}/edit`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
+      return <Link to={`/team/member/${member.id}/edit?ref=/team`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
     }
     return null;
   },

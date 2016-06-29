@@ -25,7 +25,9 @@ export const User = Record({
 
 export const Member = Record({
   name: undefined,
-  perms: new Map(),
+  perms: new Map({
+    edit: true
+  }),
   email: undefined,
   status: undefined,
   id: undefined
