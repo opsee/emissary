@@ -4,13 +4,19 @@ import {bindActionCreators} from 'redux';
 
 import {Col, Grid, Row} from '../layout';
 
-import {BastionRequirement, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import {search as actions} from '../../actions';
 import {EnvList} from '../env';
+import {CheckItemList} from '../checks';
 import FilterButtons from './FilterButtons';
 
 const SearchAll = React.createClass({
   propTypes: {
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        s: PropTypes.string
+      })
+    }),
     actions: PropTypes.shape({
       setTokens: PropTypes.func,
       setString: PropTypes.func
@@ -25,6 +31,7 @@ const SearchAll = React.createClass({
         filtered: PropTypes.object
       }),
       env: PropTypes.shape({
+        activeBastion: PropTypes.object,
         groups: PropTypes.shape({
           security: PropTypes.object,
           elb: PropTypes.object
