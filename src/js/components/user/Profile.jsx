@@ -50,6 +50,9 @@ const Profile = React.createClass({
   getUser() {
     return this.props.redux.user.toJS();
   },
+  isTeam(){
+    return this.props.redux.team.users.size > 1;
+  },
   handleLogout(){
     this.props.actions.logout();
   },
@@ -88,7 +91,7 @@ const Profile = React.createClass({
   },
   renderTeamInfo(){
     const team = this.props.redux.team.toJS();
-    const name = team.name;
+    const name = team.name && team.name !== 'default' && team.name;
     return (
       <tr>
         <td><strong>Team</strong></td>
@@ -97,7 +100,7 @@ const Profile = React.createClass({
     );
   },
   renderAWSArea(){
-    if (!this.props.redux.team.get('name')){
+    if (!this.isTeam()){
       if (!!this.props.redux.env.activeBastion){
         return (
           <tr>
@@ -116,7 +119,7 @@ const Profile = React.createClass({
     return null;
   },
   renderSlackArea(){
-    if (flag('integrations-slack') && !this.props.redux.team.get('name')){
+    if (flag('integrations-slack') && !this.isTeam()){
       return (
         <tr>
           <td><strong>Slack</strong></td>
@@ -127,7 +130,7 @@ const Profile = React.createClass({
     return null;
   },
   renderPagerdutyArea(){
-    if (flag('integrations-pagerduty') && !this.props.redux.team.get('name')){
+    if (flag('integrations-pagerduty') && !this.isTeam()){
       return (
         <tr>
           <td><strong>PagerDuty</strong></td>
@@ -138,7 +141,7 @@ const Profile = React.createClass({
     return null;
   },
   renderIntegrations(){
-    if (this.props.redux.team.get('name')){
+    if (this.isTeam()){
       return (
         <tr>
           <td><strong>Integrations</strong></td>

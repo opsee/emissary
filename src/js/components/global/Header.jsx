@@ -31,9 +31,12 @@ const Header = React.createClass({
     }
     return obj;
   },
+  shouldRenderTeam(){
+    return this.props.redux.team.users.size > 1;
+  },
   renderLoginLink(){
     if (this.props.user.get('auth')){
-      if (this.props.redux.team.get('name')){
+      if (this.shouldRenderTeam()){
         return (
           <Link to="/team" className={style.navbarLink} activeClassName="active">
             <Person nav/>&nbsp;
