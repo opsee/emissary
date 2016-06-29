@@ -30,7 +30,10 @@ const Profile = React.createClass({
       user: PropTypes.object.isRequired,
       asyncActions: PropTypes.shape({
         teamGet: PropTypes.object
-      }).isRequired
+      }).isRequired,
+      env: PropTypes.shape({
+        activeBastion: PropTypes.object
+      })
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -114,9 +117,7 @@ const Profile = React.createClass({
     if (member.email === user.email){
       return <Link to="/profile/edit" title="Edit Your Profile">Edit Your Profile</Link>;
     }
-    const REMOVEME = null;
-    if (member.id){
-    // if (member.id && user.perms.admin){
+    if (member.id && user.perms.admin){
       return <Link to={`/team/member/${member.id}/edit?ref=/team`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
     }
     return null;

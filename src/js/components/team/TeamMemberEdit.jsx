@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Close} from '../icons';
@@ -20,7 +20,10 @@ const TeamMemberEdit = React.createClass({
       memberEdit: PropTypes.func
     }),
     redux: PropTypes.shape({
-      team: PropTypes.object
+      team: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        teamMemberEdit: PropTypes.object
+      })
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -95,6 +98,7 @@ const TeamMemberEdit = React.createClass({
               <Row>
                 <Col xs={12}>
                   <TeamMemberInputs onChange={this.handleInputChange} {...this.state}/>
+                  <StatusHandler status={this.props.redux.asyncActions.teamMemberEdit.status}/>
                   <Padding t={2}>
                     <Button color="success" block type="submit">Update</Button>
                   </Padding>

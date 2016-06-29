@@ -52,12 +52,14 @@ const TeamMemberInputs = React.createClass({
   handleInputChange(data){
     let obj = _.assign({}, this.props, data);
     obj = _.pick(obj, ['email', 'perms', 'status']);
+    obj.perms.edit = !!obj.perms.admin || obj.perms.edit;
     this.props.onChange(obj);
   },
   handleCapabilityClick(id){
-    const perms = _.assign({}, this.props.perms, {
+    let perms = _.assign({}, this.props.perms, {
       [id]: !this.props.perms[id]
     });
+    perms.edit = !!perms.admin || perms.edit;
     this.props.onChange(_.assign({}, this.props, {
       perms
     }));
