@@ -46,13 +46,13 @@ const GroupElb = React.createClass({
     }) || new Map();
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getGroup().get('id'),
         type: 'elb',
         name: this.getGroup().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   renderDescription(group){

@@ -53,7 +53,7 @@ const InstanceMenu = React.createClass({
   },
   getCreateCheckLink(){
     const target = _.pick(this.props.item.toJS(), ['id', 'type', 'name']);
-    const data = JSON.stringify({target});
+    const data = window.encodeURIComponent(JSON.stringify({target}));
     return `/check-create/request?data=${data}`;
   },
   runStartConfirm(){

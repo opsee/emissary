@@ -71,13 +71,13 @@ const InstanceEcc = React.createClass({
     return initial.concat(this.getGroupsSecurity()).concat(this.getGroupsELB());
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getInstance().get('id'),
         type: 'ecc',
         name: this.getInstance().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   handleActionsClick(){

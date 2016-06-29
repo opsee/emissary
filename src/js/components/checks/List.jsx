@@ -76,7 +76,8 @@ const CheckList = React.createClass({
     });
     //strip notifs and assertions because they are added later in the process
     data = _.omit(data, ['notifications', 'assertions']);
-    return `/check-create/request?data=${JSON.stringify(data)}`;
+    data = window.encodeURIComponent(JSON.stringify(data));
+    return `/check-create/request?data=${data}`;
   },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');

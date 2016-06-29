@@ -70,7 +70,7 @@ const AssertionsCloudwatch = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    const data = JSON.stringify(this.props.check);
+    const data = window.encodeURIComponent(JSON.stringify(this.props.check));
     this.context.router.push(`/check-create/info?data=${data}`);
   },
   handleAssertionsChange(assertions = []){

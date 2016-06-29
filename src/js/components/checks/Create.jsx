@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {Check} from '../../modules/schemas';
 import CheckDebug from './CheckDebug';
 import config from '../../modules/config';
-import {getCheckTypes} from '../../modules';
+import {getCheckTypes, yeller} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -77,6 +77,11 @@ const CheckCreate = React.createClass({
         data = JSON.parse(data);
       } catch (err){
         data = {};
+        yeller.report(new Error('Check JSON in url for create flow is not valid.'), {
+          custom_data: {
+            string: this.props.location.query.data
+          }
+        });
       }
     }
     const initial = _.chain(data).defaults({
