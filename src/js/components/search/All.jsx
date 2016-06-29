@@ -4,13 +4,19 @@ import {bindActionCreators} from 'redux';
 
 import {Col, Grid, Row} from '../layout';
 
-import {BastionRequirement, Toolbar} from '../global';
+import {Toolbar} from '../global';
 import {search as actions} from '../../actions';
 import {EnvList} from '../env';
+import {CheckItemList} from '../checks';
 import FilterButtons from './FilterButtons';
 
 const SearchAll = React.createClass({
   propTypes: {
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        s: PropTypes.string
+      })
+    }),
     actions: PropTypes.shape({
       setTokens: PropTypes.func,
       setString: PropTypes.func
@@ -25,6 +31,7 @@ const SearchAll = React.createClass({
         filtered: PropTypes.object
       }),
       env: PropTypes.shape({
+        activeBastion: PropTypes.object,
         groups: PropTypes.shape({
           security: PropTypes.object,
           elb: PropTypes.object
@@ -55,16 +62,22 @@ const SearchAll = React.createClass({
   componentWillUnmount() {
     this.props.actions.setString('');
   },
+  renderList(){
+    if (!!this.props.redux.env.activeBastion){
+      return <CheckItemList limit={this.props.redux.search.string ? 1000 : 8} filter/>;
+    }
+    return <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>;
+  },
   render(){
+    const str = this.props.location.query.s;
     return (
       <div>
-        <Toolbar title="Search"/>
+        <Toolbar title={str && `Search: ${str}` || 'Search'}/>
           <Grid>
             <Row>
               <Col xs={12}>
                 <FilterButtons/>
-                <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
-                <BastionRequirement strict/>
+                {this.renderList()}
               </Col>
             </Row>
           </Grid>
