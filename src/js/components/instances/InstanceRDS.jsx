@@ -47,13 +47,13 @@ const InstanceRds = React.createClass({
     }) || new Map();
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getInstance().get('id'),
         type: 'rds',
         name: this.getInstance().get('name')
       }
-    });
+    }));
     return `/check-create/assertions-cloudwatch?data=${data}`;
   },
   getGroupIds(){

@@ -73,7 +73,7 @@ const CheckCreateTarget = React.createClass({
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
     this.props.onChange(check);
-    const data = JSON.stringify(check);
+    const data = window.encodeURIComponent(JSON.stringify(check));
     if (this.props.check.type === 'cloudwatch'){
       return this.context.router.push(`/check-create/assertions-cloudwatch?data=${data}`);
     }
