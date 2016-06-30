@@ -44,11 +44,42 @@ const Profile = React.createClass({
   },
   getInitialState() {
     return {
-      start: {}
+      start: {},
+      showInactive: false
     };
   },
   getTeamData(){
     return this.props.redux.team.toJS();
+  },
+  getMembers(team){
+    return _.chain(team)
+    .get('users')
+    .sortBy(user => {
+      let sorter = user.email;
+      if (user.email === user.email){
+        sorter = 'aaaaa';
+      }
+      if (!user.name){
+        sorter = 'zz';
+      }
+      if (user.status && user.status === 'inactive'){
+        sorter = 'zzzz';
+      }
+      return sorter;
+    })
+    .reject(user => {
+      if (!this.state.showInactive){
+        return user.status && user.status === 'inactive';
+      }
+      return null;
+    })
+    .value();
+  },
+  runShowAll(e){
+    e.preventDefault();
+    this.setState({
+      showInactive: true
+    });
   },
   renderSlackArea(){
     if (flag('integrations-slack')){
@@ -93,7 +124,7 @@ const Profile = React.createClass({
     if (member.id){
       return (
         <span>
-          <Link to={user.email === member.email ? '/profile' : `/team/member/${member.id}`}>
+          <Link to={user.email === member.email ? '/profile?ref=/team' : `/team/member/${member.id}`}>
             <strong>{member.name || member.email}</strong>
           </Link>&nbsp;
         </span>
@@ -105,6 +136,18 @@ const Profile = React.createClass({
       </span>
     );
   },
+  renderShowAllButton(team){
+    const members = this.getMembers(team);
+    const diff = (team.users.length - members.length);
+    if (diff > 0){
+      return (
+        <Padding b={1} l={1}>
+          <a href="#" onClick={this.runShowAll}>Show {diff} hidden team member{diff > 1 && 's'}</a>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderStatus(member){
     const user = this.props.redux.user.toJS();
     if (member.email === user.email){
@@ -115,7 +158,7 @@ const Profile = React.createClass({
   renderUserEditLink(member){
     const user = this.props.redux.user.toJS();
     if (member.email === user.email){
-      return <Link to="/profile/edit" title="Edit Your Profile">Edit Your Profile</Link>;
+      return <Link to="/profile/edit?ref=/team" title="Edit Your Profile">Edit Your Profile</Link>;
     }
     if (member.id && user.perms.admin){
       return <Link to={`/team/member/${member.id}/edit?ref=/team`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
@@ -154,15 +197,7 @@ const Profile = React.createClass({
                 <Padding t={3}>
                   <Heading level={3}>Team Members</Heading>
                   <Table>
-                    {_.sortBy(team.users, member => {
-                      if (member.email === user.email){
-                        return 'aaaaa';
-                      }
-                      if (!member.name){
-                        return 'zzzz';
-                      }
-                      return member.email;
-                    }).map(member => {
+                    {this.getMembers(team).map(member => {
                       return (
                         <tr>
                           <td>
@@ -178,6 +213,7 @@ const Profile = React.createClass({
                       );
                     })}
                   </Table>
+                  {this.renderShowAllButton(team)}
                   <Padding t={1}>
                     <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
                   </Padding>
