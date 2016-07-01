@@ -112,6 +112,9 @@
   z-index: 1;
   transition: background var(--transitionEaseOut), border-color var(--transitionEaseOut);
 }
+.light .selector:after {
+  border-color: var(--colorGray3);
+}
 
 .selector svg {
   height: 2rem;
@@ -125,20 +128,31 @@
 .selectorSelected:after{
   background: var(--colorGray5);
 }
+
 .selector:focus, .selector:active, .selector:hover, .selector:active:focus{
   background: none !important;
   outline: 0 !important;
 }
+
 .selector:focus:after, .selector:active:after, .selector:hover:after{
   background: var(--colorGray4);
   border-color: var(--colorPrimary);
 }
+.light .selector:focus:after,
+.light .selector:active:after,
+.light .selector:hover:after {
+  background: var(--colorGray2);
+  border-color: var(--colorGray4);
+}
+
 .selector:focus svg, .selector:active svg, .selector:hover svg{
   fill: var(--colorGray9) !important;
 }
+
 .selector.light:focus svg, .selector.light:active svg, .selector.light:hover svg{
   fill: var(--lightColorText2) !important;
 }
+
 .selectorInner {
   width: 1.5rem;
   position: relative;

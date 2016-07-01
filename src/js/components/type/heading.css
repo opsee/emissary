@@ -35,7 +35,8 @@ h1, h2, h3, h4, h5 {
 }
 
 .h3.light {
-  color: var(--lightColorText2);
+  color: var(--colorGray6);
+  font-weight: 500;
 }
 
 .h4 {

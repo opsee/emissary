@@ -137,7 +137,9 @@ const CheckList = React.createClass({
               <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
             </Padding>
           </div>
-          <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
+          <div className={listItem[this.props.scheme]}>
+            <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
+          </div>
         </Padding>
       );
     }
