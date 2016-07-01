@@ -24,16 +24,15 @@
   background-color: var(--colorGray9);
   transition: background-color var(--transitionEaseOut);
 }
-
 .label.light {
-  background-color: white;
+  background-color: #eff1f1;
+  border-bottom: solid 1px #E3E3E3;
 }
 
 .labelFocused{
   composes: label;
   background:black !important;
 }
-
 .labelFocused.light {
-  background: white !important;
+  background: #eff1f1 !important;
 }

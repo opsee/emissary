@@ -6,10 +6,11 @@
   user-select: none;
   z-index: 10;
   width:100%;
+  border-top: solid 1px #E3E3E3;
 }
 
 .header.light {
-  background: var(--lightColorHeader);
+  background: #FFF;
 }
 
 @media (min-width: 768px) {
@@ -64,30 +65,72 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.light .navbarLink {
+  color: #777;
+}
+
 .navbarLink svg {
   transition: fill var(--transitionEaseOut);
   fill: var(--colorText2);
 }
-.navbarLink:hover, .navbarLink:active, .navbarLink:focus {
+.light .navbarLink svg {
+  fill: #777;
+}
+
+.navbarLink:hover,
+.navbarLink:active,
+.navbarLink:focus {
   color: var(--colorText);
   background-color: transparent !important;
   text-decoration: none;
 }
-.navbarLink:hover svg, .navbarLink:active svg, .navbarLink:focus svg {
+.light .navbarLink:hover,
+.light .navbarLink:active,
+.light .navbarLink:focus {
+  color: #222;
+}
+
+.navbarLink:hover svg,
+.navbarLink:active svg,
+.navbarLink:focus svg {
   fill: var(--colorText);
 }
-.navbarLink:active, .navbarLink:global(.active) {
+.light .navbarLink:hover svg,
+.light .navbarLink:active svg,
+.light .navbarLink:focus svg {
+  fill: #222;
+}
+
+.navbarLink:active,
+.navbarLink:global(.active) {
   color: white;
 }
-.navbarLink:active svg, .navbarLink:global(.active) svg{
+.light .navbarLink:active,
+.light .navbarLink:global(.active) {
+  color: #222;
+}
+
+.navbarLink:active svg,
+.navbarLink:global(.active) svg{
   fill: white !important;
 }
+.light .navbarLink:active svg,
+.light .navbarLink:global(.active) svg {
+  fill: #222 !important;
+}
+
 @media (min-width: 768px) {
   .header{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
     bottom:auto;
     position: relative;
   }
+  .light.header {
+    box-shadow: none;
+    border-bottom: solid 1px #E3E3E3;
+    border-top: none;
+  }
+
   .navbarItem {
     width: auto;
   }

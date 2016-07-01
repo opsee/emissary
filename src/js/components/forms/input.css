@@ -60,11 +60,13 @@ input[type="checkbox"]{
 }
 
 .input.light, input.light, .input:focus{
-  background: white;
+  background: transparent;
   color: var(--lightColorText2);
   outline: 1px solid var(--colorGray3);
 }
 
-.input.light::placeholder{ 
+
+
+.input.light::placeholder{
   color: color(color(var(--lightColorText2)) lightness(80%));
 }
