@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
 import {Table, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
@@ -159,26 +159,30 @@ const Profile = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <Padding b={1}>
-                <Heading level={3}>Your Profile Information</Heading>
-                <Table>
-                  <tr>
-                    <td><strong>Email</strong></td>
-                    <td>
-                      <div>{this.renderEmail()}</div>
-                      <div>{this.renderVerificationNag()}</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Password</strong></td>
-                    <td><Link to="/profile/edit" >Change Your Password</Link></td>
-                  </tr>
-                  {this.renderAWSArea()}
-                  {this.renderSlackArea()}
-                  {this.renderPagerdutyArea()}
-                  {this.renderThemes()}
-                </Table>
-              </Padding>
+              <Panel>
+                <Padding a={2}>
+                  <Padding tb={1}>
+                    <Heading level={3}>Your Profile Information</Heading>
+                  </Padding>
+                  <Table>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>
+                        <div>{this.renderEmail()}</div>
+                        <div>{this.renderVerificationNag()}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Password</strong></td>
+                      <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                    </tr>
+                    {this.renderAWSArea()}
+                    {this.renderSlackArea()}
+                    {this.renderPagerdutyArea()}
+                    {this.renderThemes()}
+                  </Table>
+                </Padding>
+              </Panel>
               <Padding t={3}>
                 <Button flat color="danger" onClick={this.handleLogout}>
                   <Logout inline fill="danger"/> Log Out

@@ -6,6 +6,7 @@
 .table th, .table td {
   padding: 0.5em;
 }
+
 .table th {
   border-bottom: 2px solid var(--colorGray8);
   color: var(--colorText2);
@@ -16,9 +17,13 @@
 .table.light th {
   color: var(--lightColorText2);
 }
+
 .table td {
   border-top: 1px solid var(--colorGray8);
   line-height: 2em;
+}
+.table.light td {
+  border-color: #E8E8E8;
 }
 
 .tableBordered {
