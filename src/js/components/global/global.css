@@ -224,7 +224,10 @@ html {
 }
 
 :global body.light .text-secondary{
-  color: var(--lightColorText2);
+  color: var(--colorGray5);
+}
+:global body.light .text-secondary svg {
+  fill: var(--colorGray5);
 }
 
 :global .text-sm {

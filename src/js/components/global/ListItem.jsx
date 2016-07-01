@@ -91,14 +91,14 @@ const ListItem = React.createClass({
       return (
         <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} onClick={this.handleClick}>
           <div>{_.find(this.props.children, {key: 'line1'})}</div>
-          <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
+          <div className="text-secondary text-sm">{_.find(this.props.children, {key: 'line2'})}</div>
         </div>
       );
     }
     return (
       <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} title={this.props.title}>
         <div>{_.find(this.props.children, {key: 'line1'})}</div>
-        <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
+        <div className="text-secondary text-sm">{_.find(this.props.children, {key: 'line2'})}</div>
       </Link>
     );
   },
@@ -118,7 +118,7 @@ const ListItem = React.createClass({
   render(){
     return (
       <div className={this.getClass()}>
-        <Padding b={1} className="display-flex">
+        <div className="display-flex">
           <Padding r={2} l={0.5}>
             {this.renderGraph()}
           </Padding>
@@ -126,7 +126,7 @@ const ListItem = React.createClass({
             {this.renderInfo()}
           </Padding>
           {this.renderSelectButton()}
-        </Padding>
+        </div>
       </div>
     );
   }

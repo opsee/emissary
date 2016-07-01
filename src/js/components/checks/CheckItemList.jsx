@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {List} from 'immutable';
 
 import {StatusHandler} from '../global';
-import {Alert} from '../layout';
+import {Alert, Padding} from '../layout';
 import CheckItem from './CheckItem.jsx';
 import {SetInterval} from '../../modules/mixins';
 import {checks as actions} from '../../actions';
@@ -120,7 +120,11 @@ const CheckItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && checks.size))){
-      return <Heading level={3}>Checks {numbers}</Heading>;
+      return(
+        <Padding lr={2}>
+          <Heading level={3}>Checks {numbers}</Heading>
+        </Padding>
+      );
     }
     return null;
   },

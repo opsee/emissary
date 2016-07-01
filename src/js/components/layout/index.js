@@ -4,6 +4,7 @@ import Expandable from './Expandable';
 import Grid from 'react-bootstrap/lib/Grid';
 import Modal from 'react-bootstrap/lib/Modal';
 import Padding from './Padding';
+import Panel from './Panel';
 import Row from 'react-bootstrap/lib/Row';
 import Rule from './Rule';
 
@@ -14,6 +15,7 @@ export {
   Grid,
   Modal,
   Padding,
+  Panel,
   Row,
   Rule
 };

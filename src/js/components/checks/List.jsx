@@ -10,7 +10,7 @@ import {Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {checks as actions, user as userActions, app as appActions} from '../../actions';
 import listItem from '../global/listItem.css';
@@ -128,7 +128,7 @@ const CheckList = React.createClass({
     const isDisabled = isDeleting || size < 1;
     if (this.props.redux.checks.checks.size) {
       return (
-        <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
+        <Padding a={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
           <div className="flex-1 display-flex">
             <Padding r={1}>
               <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
@@ -146,20 +146,16 @@ const CheckList = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Checks">
-          <Button color="primary" fab to="/check-create" title="Create New Check">
-            <Add btn/>
-          </Button>
-        </Toolbar>
+        <Toolbar title="Checks" />
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                <Padding t={2}>
+              <Panel>
+                <BastionRequirement>
                   {this.renderActionBar()}
                   {this.renderChecks()}
-                </Padding>
-              </BastionRequirement>
+                </BastionRequirement>
+              </Panel>
             </Col>
           </Row>
         </Grid>
@@ -174,4 +170,8 @@ const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(CheckList);
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckList);
