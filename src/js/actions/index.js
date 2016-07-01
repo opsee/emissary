@@ -5,6 +5,7 @@ import * as env from './env';
 import * as integrations from './integrations';
 import * as onboard from './onboard';
 import * as search from './search';
+import * as team from './team';
 import * as user from './user';
 
 export {
@@ -15,5 +16,6 @@ export {
   integrations,
   onboard,
   search,
+  team,
   user
 };

@@ -24,6 +24,12 @@ const Input = React.createClass({
       id: this.props.id || `${this.props.path}-${_.uniqueId()}`
     };
   },
+  getDefaultProps() {
+    return {
+      autoComplete: 'new-password',
+      autoCorrect: 'off'
+    };
+  },
   getValue(){
     return _.get(this.props.data, this.props.path) || '';
   },

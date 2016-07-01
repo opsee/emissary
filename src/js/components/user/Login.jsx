@@ -31,7 +31,9 @@ const Login = React.createClass({
     const incomplete = !(this.state.data.email && this.state.data.password);
     return incomplete || this.props.redux.asyncActions.userLogin.status === 'pending';
   },
-  setUserData(data){
+  setUserData(d){
+    //just a nice little helper that strips whitespace
+    const data = _.mapValues(d, (value, key) => key === 'email' && _.trim(value) || value);
     this.setState({data});
     this.props.actions.setLoginData(data);
   },

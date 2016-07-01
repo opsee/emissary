@@ -54,6 +54,13 @@ const StatusHandler = React.createClass({
     if (string.match('^Parser is unable')){
       string = _.get(this.props, 'status.rawResponse');
     }
+    if (string.match('desc = ')){
+      let split = string.split('desc = ');
+      let last = _.last(split);
+      if (last && last.length){
+        string = last;
+      }
+    }
     return string || 'Something went wrong.';
   },
   isError(){

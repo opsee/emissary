@@ -5,52 +5,63 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
-import {Button} from '../forms';
-import UserInputs from './UserInputs.jsx';
+import {Button, Input} from '../forms';
 import {Close} from '../icons';
-import {user as actions} from '../../actions';
+import {team as actions} from '../../actions';
 
-const ProfileEdit = React.createClass({
+const TeamCreate = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      edit: PropTypes.func
+      edit: PropTypes.func.isRequired,
+      getTeam: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        userEdit: PropTypes.object
-      }),
-      user: PropTypes.object
-    }),
-    location: PropTypes.shape({
-      query: PropTypes.object.isRequired
-    }).isRequired
+        userEdit: PropTypes.object.isRequired,
+        teamEdit: PropTypes.object.isRequired
+      }).isRequired,
+      team: PropTypes.object
+    })
   },
   getInitialState() {
-    return {
-      user: this.props.redux.user.toJS()
-    };
+    return _.assign({}, this.props.redux.team.toJS(), {
+      ccToken: undefined
+    });
+  },
+  getData(props = this.props){
+    return props.redux.team.toJS();
   },
   getStatus(){
-    return this.props.redux.asyncActions.userEdit.status;
+    return this.props.redux.asyncActions.teamEdit.status;
   },
   isDisabled(){
-    return !(this.state.user.email && this.state.user.name) ||
+    return !(this.state.name) ||
     this.getStatus() === 'pending';
   },
   handleUserData(data){
     const user = _.assign({}, this.state.user, data);
     this.setState({user});
   },
+  handleInputChange(state){
+    this.setState(state);
+  },
+  handleCreditCardChange(ccToken){
+    this.setState({
+      ccToken
+    });
+  },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.edit(this.state.user, '/team');
+    this.props.actions.edit(this.state, '/team/member/invite');
+  },
+  renderCreditCard(){
+    return null;
   },
   render() {
-    const to = this.props.location.query.ref || '/profile';
     return (
        <div>
-        <Toolbar title="Edit Your Profile" bg="info" btnPosition="midRight">
-          <Button to={to} icon flat>
+        <Toolbar title="Create Your Team" bg="info" btnPosition="midRight">
+          <Button to="/profile" icon flat>
             <Close btn/>
           </Button>
         </Toolbar>
@@ -58,11 +69,12 @@ const ProfileEdit = React.createClass({
           <Row>
             <Col xs={12}>
               <form onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']}/>
                 <StatusHandler status={this.getStatus()}/>
+                <Input onChange={this.handleInputChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
+                {this.renderCreditCard()}
                 <Padding t={2}>
                   <Button color="success" type="submit" block disabled={this.isDisabled()}>
-                    {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
+                    {this.getStatus() === 'pending' ? 'Creating...' : 'Create'}
                   </Button>
                 </Padding>
               </form>
@@ -78,4 +90,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(ProfileEdit);
+export default connect(null, mapDispatchToProps)(TeamCreate);

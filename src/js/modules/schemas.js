@@ -19,7 +19,26 @@ export const User = Record({
   loginData: {},
   region: undefined,
   vpc: undefined,
-  verified: null
+  verified: null,
+  perms: new Map()
+});
+
+export const Member = Record({
+  name: undefined,
+  perms: new Map({
+    edit: true
+  }),
+  email: undefined,
+  status: undefined,
+  id: undefined
+});
+
+export const Team = Record({
+  name: undefined,
+  features: new List(),
+  plan: undefined,
+  users: new List(),
+  invoices: new List()
 });
 
 const baseEnvItem = {
