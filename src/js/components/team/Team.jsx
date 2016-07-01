@@ -243,12 +243,8 @@ const Profile = React.createClass({
                         <tr>
                           <td>
                             {this.renderMemberLink(member)}
-                            <br/>
-                            {
-                            // <Color c="gray6"><em>{permsSentence(member)}</em></Color>
-                            }
                           </td>
-                          <td style={{textAlign: 'right'}}>
+                          <td className="text-right">
                             {this.renderUserEditLink(member)}
                           </td>
                         </tr>
