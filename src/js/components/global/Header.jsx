@@ -32,7 +32,7 @@ const Header = React.createClass({
     return obj;
   },
   shouldRenderTeam(){
-    return this.props.redux.team.users.size > 1;
+    return this.props.redux.team.toJS().users.length > 1;
   },
   renderLoginLink(){
     if (this.props.user.get('auth')){

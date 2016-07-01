@@ -92,12 +92,15 @@ const Profile = React.createClass({
   renderTeamInfo(){
     const team = this.props.redux.team.toJS();
     const name = team.name && team.name !== 'default' && team.name;
-    return (
-      <tr>
-        <td><strong>Team</strong></td>
-        <td><Link to={name && '/team' || '/team/create'}>{name || 'Invite Team Members'}</Link></td>
-      </tr>
-    );
+    if (flag('team')){
+      return (
+        <tr>
+          <td><strong>Team</strong></td>
+          <td><Link to={name && '/team' || '/team/create'}>{name || 'Invite Team Members'}</Link></td>
+        </tr>
+      );
+    }
+    return null;
   },
   renderAWSArea(){
     if (!this.isTeam()){

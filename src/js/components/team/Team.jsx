@@ -86,7 +86,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td><SlackInfo connect/></td>
+          <td className="text-right"><SlackInfo connect/></td>
         </tr>
       );
     }
@@ -97,7 +97,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>PagerDuty</strong></td>
-          <td><PagerdutyInfo/></td>
+          <td className="text-right"><PagerdutyInfo/></td>
         </tr>
       );
     }
@@ -108,14 +108,14 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>AWS Integration</strong></td>
-          <td><Link to="/system">Enabled</Link></td>
+          <td className="text-right"><Link to="/system">Enabled</Link></td>
         </tr>
       );
     }
     return (
       <tr>
         <td><strong>AWS Integration</strong></td>
-        <td><Link to="/start/launch-stack">Add Our Instance</Link></td>
+        <td className="text-right"><Link to="/start/launch-stack">Add Our Instance</Link></td>
       </tr>
     );
   },
@@ -220,14 +220,14 @@ const Profile = React.createClass({
                 <Table>
                   <tr>
                     <td><strong>Email</strong></td>
-                    <td><Link to="/profile/edit">{user.email}</Link></td>
+                    <td className="text-right"><Link to="/profile/edit?ref=/team">{user.email}</Link></td>
                   </tr>
                   <tr>
                     <td><strong>Password</strong></td>
-                    <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                    <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
                   </tr>
                 </Table>
-                <Padding t={2}>
+                <Padding t={4}>
                   <Heading level={3}>Team Integrations</Heading>
                   <Table>
                     {this.renderAWSArea()}
@@ -235,7 +235,7 @@ const Profile = React.createClass({
                     {this.renderPagerdutyArea()}
                   </Table>
                 </Padding>
-                <Padding t={3}>
+                <Padding t={4}>
                   <Heading level={3}>Team Members</Heading>
                   <Table>
                     {this.getMembers(team).map(member => {
@@ -260,12 +260,12 @@ const Profile = React.createClass({
                     <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
                   </Padding>
                 </Padding>
-                <Padding t={3}>
+                <Padding t={4}>
                   <Heading level={3}>Team Details</Heading>
                   <Table>
                     <tr>
                       <td><strong>Name</strong></td>
-                      <td>{team.name || '(No Team name set)'}&nbsp;&nbsp;
+                      <td className="text-right">{team.name || '(No Team name set)'}&nbsp;&nbsp;
                       { user.perms.admin &&
                         (<Link to="/team/edit">Edit Team Name</Link>)
                       }

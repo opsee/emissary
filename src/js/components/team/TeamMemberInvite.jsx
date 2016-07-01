@@ -56,7 +56,9 @@ const TeamMemberInvite = React.createClass({
               <Col xs={12}>
                 <TeamMemberInputs onChange={this.handleInputChange} perms={this.state.perms} email={this.state.email} inputs={['perms', 'email']}/>
               </Col>
-              <StatusHandler status={this.getStatus()}/>
+              <Col xs={12}>
+                <StatusHandler status={this.getStatus()}/>
+              </Col>
               <Col xs={12}>
                 <Padding t={2}>
                   <Button color="success" block type="submit" disabled={!this.state.email || this.getStatus() === 'pending'}>Invite</Button>

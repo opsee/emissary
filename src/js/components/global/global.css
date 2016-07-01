@@ -121,6 +121,10 @@ small {
   text-align: center;
 }
 
+:global .text-right {
+  text-align: right;
+}
+
 :global .text-info {
   color: var(--colorInfo);
 }
