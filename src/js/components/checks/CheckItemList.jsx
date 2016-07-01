@@ -120,7 +120,7 @@ const CheckItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && checks.size))){
-      return(
+      return (
         <Padding lr={2}>
           <Heading level={3}>Checks {numbers}</Heading>
         </Padding>

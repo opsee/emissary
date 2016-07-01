@@ -150,21 +150,23 @@ const Profile = React.createClass({
   render() {
     const user = this.getUser();
     return (
-       <div>
-        <Toolbar title={user.name} pageTitle="Profile">
-          <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
-            <Edit btn/>
-          </Button>
-        </Toolbar>
+       <Padding tb={2}>
         <Grid>
           <Row>
             <Col xs={12}>
               <Panel>
                 <Padding a={2}>
-                  <Padding tb={1}>
-                    <Heading level={3}>Your Profile Information</Heading>
+                  <Padding b={1} className="row between-xs middle-xs">
+                    <Heading level={3} noPadding>Your Profile Information</Heading>
+                    <Button fab color="primary" to="/profile/edit" title="Edit Your Profile">
+                      <Edit btn/>
+                    </Button>
                   </Padding>
                   <Table>
+                    <tr>
+                      <td><strong>Name</strong></td>
+                      <td>{user.name}</td>
+                    </tr>
                     <tr>
                       <td><strong>Email</strong></td>
                       <td>
@@ -191,7 +193,7 @@ const Profile = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Padding>
     );
   }
 });

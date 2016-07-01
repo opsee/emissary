@@ -128,7 +128,7 @@ const CheckList = React.createClass({
     const isDisabled = isDeleting || size < 1;
     if (this.props.redux.checks.checks.size) {
       return (
-        <Padding a={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
+        <Padding a={2} className="display-flex">
           <div className="flex-1 display-flex">
             <Padding r={1}>
               <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
@@ -137,9 +137,14 @@ const CheckList = React.createClass({
               <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
             </Padding>
           </div>
-          <div className={listItem[this.props.scheme]}>
+
+          <Button color="primary" fab to="/check-create" title="Create New Check">
+            <Add btn/>
+          </Button>
+
+          {/*<div className={listItem[this.props.scheme]}>
             <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
-          </div>
+          </div>*/}
         </Padding>
       );
     }
@@ -147,8 +152,7 @@ const CheckList = React.createClass({
   },
   render() {
     return (
-      <div>
-        <Toolbar title="Checks" />
+      <Padding tb={2}>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -161,7 +165,7 @@ const CheckList = React.createClass({
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Padding>
     );
   }
 });

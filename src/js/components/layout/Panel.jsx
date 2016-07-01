@@ -4,12 +4,17 @@ import {connect} from 'react-redux';
 import style from './panel.css';
 
 const Panel = React.createClass({
+  propTypes: {
+    scheme: PropTypes.string,
+    className: PropTypes.string,
+    children: PropTypes.node
+  },
   render() {
     return (
       <div className={cx(style.panel, style[this.props.scheme], this.props.className)}>
         {this.props.children}
       </div>
-    )
+    );
   }
 });
 

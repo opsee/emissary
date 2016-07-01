@@ -12,7 +12,7 @@ import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import CheckDisabledReason from './CheckDisabledReason.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {validate} from '../../modules';
 import {Input, RadioSelect} from '../forms';
@@ -419,9 +419,15 @@ const CheckCreateRequest = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                {this.renderInner()}
-              </BastionRequirement>
+              <Padding tb={2}>
+                <Panel>
+                  <Padding a={2}>
+                    <BastionRequirement>
+                      {this.renderInner()}
+                    </BastionRequirement>
+                  </Padding>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>
