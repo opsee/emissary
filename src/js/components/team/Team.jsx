@@ -7,15 +7,15 @@ import _ from 'lodash';
 import {Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
-import {Add, Logout} from '../icons';
-import {Color, Heading} from '../type';
+import {Add, Docs, Edit, Logout, Key} from '../icons';
+import {Heading} from '../type';
 import {flag} from '../../modules';
-import {permsSentence} from '../../modules/string';
 import {
   team as actions,
   user as userActions
 } from '../../actions';
 import {SlackInfo, PagerdutyInfo} from '../integrations';
+import style from './team.css';
 
 const Profile = React.createClass({
   propTypes: {
@@ -119,6 +119,43 @@ const Profile = React.createClass({
       </tr>
     );
   },
+  renderPermsIcons(member){
+    const iconArr = _.chain(member)
+    .get('perms')
+    .pickBy(p => p)
+    .keys()
+    .map(key => {
+      switch (key){
+      case 'edit':
+        return (
+          <span title="Check Management">
+            <Edit fill="text" className={style.permsIcon}/>
+          </span>
+        );
+      case 'admin':
+        return (
+          <span title="Team Admin">
+            <Key fill="text" className={style.permsIcon}/>
+          </span>
+        );
+      case 'billing':
+        return (
+          <span title="Billing">
+            <Docs fill="text" className={style.permsIcon}/>
+          </span>
+        );
+      default:
+        return null;
+      }
+    })
+    .value();
+    if (member.status === 'inactive'){
+      return <span>&nbsp;(inactive)</span>;
+    }
+    return (
+      <span className={style.permsIconsWrap}>{iconArr.map(i => i)}</span>
+    );
+  },
   renderMemberLink(member){
     const user = this.props.redux.user.toJS();
     if (member.id){
@@ -126,13 +163,14 @@ const Profile = React.createClass({
         <span>
           <Link to={user.email === member.email ? '/profile?ref=/team' : `/team/member/${member.id}`}>
             <strong>{member.name || member.email}</strong>
-          </Link>&nbsp;
+          </Link>
+          {this.renderPermsIcons(member)}
         </span>
       );
     }
     return (
       <span>
-        <strong>{member.email} (invited)</strong>&nbsp;
+        <strong>{member.email}</strong>{this.renderPermsIcons(member)}
       </span>
     );
   },
@@ -162,6 +200,9 @@ const Profile = React.createClass({
     }
     if (member.id && user.perms.admin){
       return <Link to={`/team/member/${member.id}/edit?ref=/team`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
+    }
+    if (member.status === 'invited'){
+      return <span>{_.capitalize(member.status)}</span>;
     }
     return null;
   },
@@ -202,9 +243,10 @@ const Profile = React.createClass({
                         <tr>
                           <td>
                             {this.renderMemberLink(member)}
-                            {this.renderStatus(member)}
                             <br/>
-                            <Color c="gray6"><em>{permsSentence(member)}</em></Color>
+                            {
+                            // <Color c="gray6"><em>{permsSentence(member)}</em></Color>
+                            }
                           </td>
                           <td style={{textAlign: 'right'}}>
                             {this.renderUserEditLink(member)}
