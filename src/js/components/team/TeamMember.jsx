@@ -78,12 +78,6 @@ const TeamMember = React.createClass({
                     <td><strong>Email</strong></td>
                     <td>{member.email}</td>
                   </tr>
-                  {
-                  // <tr>
-                  //   <td>Password</td>
-                  //   <td><Link to={`/team/member/${member.id}/edit`}>Change the password of {member.name}</Link></td>
-                  // </tr>
-                  }
                   <tr>
                     <td><strong>Permissions</strong></td>
                     <td>{permsSentence(member)}</td>
