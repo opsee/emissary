@@ -179,7 +179,7 @@ const Profile = React.createClass({
     const diff = (team.users.length - members.length);
     if (diff > 0){
       return (
-        <Padding b={1} l={1}>
+        <Padding b={1} l={1} t={1}>
           <a href="#" onClick={this.runShowAll}>Show {diff} hidden team member{diff > 1 && 's'}</a>
         </Padding>
       );
