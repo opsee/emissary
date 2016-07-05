@@ -63,7 +63,7 @@
 }
 .btn.default.light:hover {
   background: var(--colorGray5);
-  color: var(--lightColorText2); 
+  color: var(--lightColorText2);
 }
 .btn.default:active {
   background: color(var(--colorText2) shade(40%));
@@ -275,6 +275,10 @@
   background-size: 24px 24px;
   background-position: 50% 50%;
 }
+.light.btn.fab {
+  box-shadow: none;
+}
+
 .btn.fab:hover,.btn.fab:active {
   transform: scale(1.2) rotate(-90deg);
 }
