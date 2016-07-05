@@ -26,7 +26,7 @@
 }
 .label.light {
   background-color: var(--colorGray3);
-  border-bottom: solid 1px #E3E3E3;
+  border-bottom: solid 1px (--lightColorBorder);
 }
 
 .labelFocused{
