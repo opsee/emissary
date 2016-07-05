@@ -94,14 +94,14 @@ const ListItem = React.createClass({
 
     if (this.props.onClick){
       return (
-        <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} onClick={this.handleClick}>
+        <div className={cx([style.link, style[this.props.scheme]])} onClick={this.handleClick}>
           <div>{line1}</div>
           {line2 ? <div className="text-secondary text-sm">{null}</div> : null}
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} title={this.props.title}>
+      <Link to={this.props.link} params={this.props.params} className={cx([style.link, style[this.props.scheme]])} title={this.props.title}>
         <div>{line1}</div>
         {line2 ? <div className="text-secondary text-sm">{line2}</div> : null}
       </Link>
@@ -123,7 +123,7 @@ const ListItem = React.createClass({
   render(){
     return (
       <div className={this.getClass()}>
-        <div className="display-flex">
+        <div className="display-flex middle-xs">
           <Padding r={2} l={0.5}>
             {this.renderGraph()}
           </Padding>

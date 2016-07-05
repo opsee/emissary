@@ -1,7 +1,7 @@
 .item {
   border-top: 1px solid var(--colorGray8);
   border-right: 0.3rem solid transparent;
-  padding: 1.5rem 0 1.5rem 1.5rem;
+  padding: 1rem 0 1rem 1rem;
   margin-bottom: 0;
   position: relative;
 }
@@ -102,8 +102,8 @@
   content: '';
   border: 1px solid var(--colorGray5);
   display: block;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   position: absolute;
   top: 0.7rem;
   left: 0.7rem;
