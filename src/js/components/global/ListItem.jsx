@@ -87,18 +87,23 @@ const ListItem = React.createClass({
     );
   },
   renderInfo(){
+    const children = Array.isArray(this.props.children) ? this.props.children : [this.props.children];
+    const line1 = _.find(children, {key: 'line1'});
+    const line2 = _.find(children, {key: 'line2'});
+    console.log(children, line1, line2);
+
     if (this.props.onClick){
       return (
         <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} onClick={this.handleClick}>
-          <div>{_.find(this.props.children, {key: 'line1'})}</div>
-          <div className="text-secondary text-sm">{_.find(this.props.children, {key: 'line2'})}</div>
+          <div>{line1}</div>
+          {line2 ? <div className="text-secondary text-sm">{null}</div> : null}
         </div>
       );
     }
     return (
       <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column', style[this.props.scheme]])} title={this.props.title}>
-        <div>{_.find(this.props.children, {key: 'line1'})}</div>
-        <div className="text-secondary text-sm">{_.find(this.props.children, {key: 'line2'})}</div>
+        <div>{line1}</div>
+        {line2 ? <div className="text-secondary text-sm">{line2}</div> : null}
       </Link>
     );
   },

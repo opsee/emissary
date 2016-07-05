@@ -39,7 +39,16 @@ const RadialGraph = React.createClass({
   },
   getHealth(){
     const item = this.getItem();
-    return item.total ? Math.floor((item.passing / item.total) * 100) : undefined;
+    switch (item.state) {
+      case 'passing':
+        return 'pass';
+      case 'initializing':
+        return 'init';
+      case 'failing':
+        return 'fail';
+      default:
+        return null;
+    }
   },
   getBaseClass(){
     return style[`base${_.startCase(this.getRadialState())}`];
@@ -79,22 +88,23 @@ const RadialGraph = React.createClass({
     return num > 0 ? num : 0;
   },
   getText(){
-    const millis = this.state.silenceRemaining;
-    if (!millis || millis < 0){
-      return typeof this.getHealth() === 'number' ? this.getHealth() : '';
-    }
-    const duration = moment.duration(millis);
-    let unit = 'h';
-    let time = duration.as(unit);
-    if (time < 1){
-      unit = 'm';
-      time = duration.as(unit);
-    }
-    if (time < 1){
-      unit = 's';
-      time = duration.as(unit);
-    }
-    return Math.ceil(time) + unit;
+    return this.getHealth();
+    // const millis = this.state.silenceRemaining;
+    // if (!millis || millis < 0){
+    //   return typeof this.getHealth() === 'number' ? this.getHealth() : '';
+    // }
+    // const duration = moment.duration(millis);
+    // let unit = 'h';
+    // let time = duration.as(unit);
+    // if (time < 1){
+    //   unit = 'm';
+    //   time = duration.as(unit);
+    // }
+    // if (time < 1){
+    //   unit = 's';
+    //   time = duration.as(unit);
+    // }
+    // return Math.ceil(time) + unit;
   },
   getPath(){
     const health = this.getHealth();
@@ -147,10 +157,7 @@ const RadialGraph = React.createClass({
     }
     return (
       <div className={this.getBaseClass()} title={this.getTitle()}>
-        <svg className={this.getSvgClass()}>
-          <path transform={this.getTranslate()} d={this.getPath()}/>
-        </svg>
-        <div className={this.getInnerClass()}>{this.getText()}</div>
+        {this.getText()}
     </div>
     );
   }

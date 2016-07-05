@@ -1,21 +1,23 @@
 :root{
-  --radialWidth:40px;
+  --radialHeight:20px;
+  --radialWidth: 48px;
 }
 
 .base{
   background:var(--colorDanger);
   color:var(--colorBackground);
-  border-radius:100%;
+  border-radius: 20px;
   font-weight:500;
   position: relative;
-  height:var(--radialWidth);
-  width:var(--radialWidth);
-  min-height:var(--radialWidth);
-  min-width:var(--radialWidth);
+  height: var(--radialHeight);
+  width: var(--radialWidth);
   margin:0;
-  font-family:var(--fontTungsten);
-  font-size:16px;
+  text-transform: uppercase;
+  font-size: 8px;
   overflow: hidden;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  color: white;
 }
 
 .basePassing{
@@ -46,8 +48,8 @@
 }
 
 .svg{
-  width:var(--radialWidth);
-  height:var(--radialWidth);
+  width:var(--radialHeight);
+  height:var(--radialHeight);
   overflow: hidden;
   fill:var(--colorDanger);
 }
@@ -83,13 +85,13 @@
   background:transparent;
   border-radius:100%;
   border:3px solid var(--colorBackground);
-  height:calc(var(--radialWidth) - 4);
-  width:calc(var(--radialWidth) - 4);
+  height:calc(var(--radialHeight) - 4);
+  width:calc(var(--radialHeight) - 4);
   left:50%;
   top:50%;
-  margin-top:calc(-1*(var(--radialWidth) - 4) / 2);
-  margin-left:calc(-1*(var(--radialWidth) - 4) / 2);
-  line-height:calc(var(--radialWidth) - 10);
+  margin-top:calc(-1*(var(--radialHeight) - 4) / 2);
+  margin-left:calc(-1*(var(--radialHeight) - 4) / 2);
+  line-height:calc(var(--radialHeight) - 10);
   position: absolute;
   text-align: center;
 }
