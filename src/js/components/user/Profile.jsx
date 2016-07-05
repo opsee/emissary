@@ -168,48 +168,51 @@ const Profile = React.createClass({
   },
   render() {
     const user = this.getUser();
-    return (
-      <StatusHandler status={this.props.redux.asyncActions.teamGet.status}>
-        <Toolbar title={user.name} pageTitle="Profile">
-          <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
-            <Edit btn/>
-          </Button>
-        </Toolbar>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              {this.renderVerified()}
-              <Padding b={1}>
-                <Heading level={3}>Your Profile</Heading>
-                <Table>
-                  {this.renderTeamInfo()}
-                  <tr>
-                    <td><strong>Email</strong></td>
-                    <td>
-                      <div>{this.renderEmail(user)}</div>
-                      <div>{this.renderVerificationNag(user)}</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Password</strong></td>
-                    <td><Link to="/profile/edit" >Change Your Password</Link></td>
-                  </tr>
-                  {this.renderAWSArea()}
-                  {this.renderSlackArea()}
-                  {this.renderPagerdutyArea()}
-                  {this.renderIntegrations()}
-                </Table>
-              </Padding>
-              <Padding t={3}>
-                <Button flat color="danger" onClick={this.handleLogout}>
-                  <Logout inline fill="danger"/> Log Out
-                </Button>
-              </Padding>
-            </Col>
-          </Row>
-        </Grid>
-      </StatusHandler>
-    );
+    if (this.props.redux.asyncActions.teamGet.history.length){
+      return (
+        <div>
+          <Toolbar title={user.name} pageTitle="Profile">
+            <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
+              <Edit btn/>
+            </Button>
+          </Toolbar>
+          <Grid>
+            <Row>
+              <Col xs={12}>
+                {this.renderVerified()}
+                <Padding b={1}>
+                  <Heading level={3}>Your Profile</Heading>
+                  <Table>
+                    {this.renderTeamInfo()}
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>
+                        <div>{this.renderEmail(user)}</div>
+                        <div>{this.renderVerificationNag(user)}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Password</strong></td>
+                      <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                    </tr>
+                    {this.renderAWSArea()}
+                    {this.renderSlackArea()}
+                    {this.renderPagerdutyArea()}
+                    {this.renderIntegrations()}
+                  </Table>
+                </Padding>
+                <Padding t={3}>
+                  <Button flat color="danger" onClick={this.handleLogout}>
+                    <Logout inline fill="danger"/> Log Out
+                  </Button>
+                </Padding>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      );
+    }
+    return <StatusHandler status={this.props.redux.asyncActions.teamGet.status}/>;
   }
 });
 
