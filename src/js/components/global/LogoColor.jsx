@@ -1,16 +1,26 @@
-import React from 'react';
-import img from '../../../img/logo-color-border-light.svg';
+import cx from 'classnames';
+import React, { PropTypes } from 'react';
+
+import logoBorderLight from '../../../img/logo-color-border-light.svg';
+import logoBorderDark from '../../../img/logo-color-border-dark.svg';
 import style from './logoColor.css';
 import {Padding} from '../layout';
 
 const LogoColor = React.createClass({
+  propTypes: {
+    borderColor: PropTypes.oneOf(['dark', 'light'])
+  },
+  getDefaultProps() {
+    return {
+      borderColor: 'light'
+    };
+  },
+  getImage() {
+    return this.props.borderColor === 'light' ? logoBorderLight : logoBorderDark;
+  },
   render() {
     return (
-      <Padding tb={1}>
-         <div style={{textAlign: 'center'}}>
-           <img src={img} alt="Opsee logo" className={style.logo}/>
-         </div>
-       </Padding>
+      <img src={this.getImage()} alt="Opsee logo" className={cx(style.logo, this.props.className)}/>
     );
   }
 });

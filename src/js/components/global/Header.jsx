@@ -4,6 +4,7 @@ import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import cx from 'classnames';
 
+import LogoColor from './LogoColor';
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Col, Grid, Row} from '../layout';
@@ -69,7 +70,7 @@ const Header = React.createClass({
   },
   renderNavItems(){
     return (
-      <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
+      <ul className={style.navList}>
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checks nav/>&nbsp;
@@ -89,19 +90,25 @@ const Header = React.createClass({
       </ul>
       );
   },
-  render(){
+  render() {
     return (
       <header id="header" className={this.getHeaderClass()} style={this.getHeaderStyle()}>
-        <nav className={style.navbar} role="navigation">
-          <Grid>
-            <Row>
-              <Col xs={12}>
-                {this.renderNavItems()}
-              </Col>
-            </Row>
-          </Grid>
-          </nav>
-        <SearchBox/>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <div className={style.inner}>
+                <div className={style.logoWrapper}>
+                  <LogoColor borderColor="dark" className={style.logo}/>
+                </div>
+
+                <nav className={style.navbar} role="navigation">
+                  {this.renderNavItems()}
+                </nav>
+                <SearchBox/>
+              </div>
+            </Col>
+          </Row>
+        </Grid>
       </header>
     );
   }

@@ -8,36 +8,51 @@
   width:100%;
   border-top: solid 1px var(--lightColorBorder);
 }
-
 .header.light {
   background: var(--lightColorHeader);
 }
 
-@media (min-width: 768px) {
-  .header{
-    z-index:1;
-  }
+.inner {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
 }
 
-@media (max-width: 768px){
-  .headerHide{
-    composes:header;
-    transform:translateY(105%);
-  }
+.logoWrapper {
+  display: none;
 }
+
+.logo {
+  height: 100%;
+  width: auto;
+  cursor: pointer;
+}
+
 .navbar{
   background: none;
   bottom: 0;
   margin: 0;
   width: 100%;
 }
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+
+  display: flex;
+  justify-content: space-around;
+}
+
 .navbarTitle {
   display: block;
   margin-top: 0.25em;
 }
+
 .navbar.navbar-sm {
   font-size: .8em;
 }
+
 .navbarIcon {
   transition: fill var(--transitionEaseOut);
   display: block;
@@ -46,14 +61,12 @@
   margin: 0 auto;
   width: 24px;
 }
-.navbarList {
-  margin: 0 0;
-  padding: 0 0;
-}
+
 .navbarItem {
   display: inline-block;
   width: 25%;
 }
+
 .navbarLink {
   transition: color var(--transitionEaseOut);
   color: var(--colorText2);
@@ -87,7 +100,7 @@
 .light .navbarLink:hover,
 .light .navbarLink:active,
 .light .navbarLink:focus {
-  color: #222;
+  color: var(--colorGray2);
 }
 
 .navbarLink:hover svg,
@@ -98,7 +111,7 @@
 .light .navbarLink:hover svg,
 .light .navbarLink:active svg,
 .light .navbarLink:focus svg {
-  fill: #222;
+  color: var(--colorGray2);
 }
 
 .navbarLink:active,
@@ -107,7 +120,7 @@
 }
 .light .navbarLink:active,
 .light .navbarLink:global(.active) {
-  color: #222;
+  color: var(--colorGray2);
 }
 
 .navbarLink:active svg,
@@ -116,14 +129,24 @@
 }
 .light .navbarLink:active svg,
 .light .navbarLink:global(.active) svg {
-  fill: #222 !important;
+  fill: var(--colorGray2) !important;
 }
 
+/* Small screens */
+@media (max-width: 768px){
+  .headerHide{
+    composes:header;
+    transform:translateY(105%);
+  }
+}
+
+/* Large screens */
 @media (min-width: 768px) {
   .header{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
     bottom:auto;
     position: relative;
+    z-index:1;
   }
   .light.header {
     box-shadow: none;
@@ -131,21 +154,39 @@
     border-top: none;
   }
 
+  .inner {
+    justify-content: space-between;
+  }
+
+  .navList {
+    justify-content: flex-end;
+  }
+
+  .logoWrapper {
+    display: block;
+    height: 5.5rem;
+    padding: 1rem 1rem 0.5rem 0;
+  }
+
   .navbarItem {
     width: auto;
   }
+
   .navbarIcon {
     display: inline-block;
     height: 18px;
     width: 18px;
     vertical-align: text-bottom;
   }
+
   .navbarTitle {
     display: inline;
   }
+
   .navbarLink {
-    font-size: 1em;
+    font-size: 0.85em;
     padding: 1em;
+    margin-left: 3rem;
     text-align: left;
   }
 }
