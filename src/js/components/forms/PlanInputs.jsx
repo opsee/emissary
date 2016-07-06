@@ -33,7 +33,7 @@ const PlanInputs = React.createClass({
         label = 'Free <br/> Limited to 1 Check per month, no advanced features';
         break;
       case 'beta':
-        label = 'Advanced (Limited-Time Beta Pricing) <br/> $5 per check, per month - all advanced features';
+        label = 'Advanced (Beta Pricing) <br/> $5 per check, per month - all advanced features';
         break;
       default:
         break;
