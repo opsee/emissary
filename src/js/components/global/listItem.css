@@ -130,12 +130,17 @@
   border-color: var(--colorGray4);
 }
 
-.selector:focus, .selector:active, .selector:hover, .selector:active:focus{
+.selector:focus,
+.selector:active,
+.selector:hover,
+.selector:active:focus{
   background: none !important;
   outline: 0 !important;
 }
 
-.selector:focus:after, .selector:active:after, .selector:hover:after{
+.selector:focus:after,
+.selector:active:after,
+.selector:hover:after{
   background: var(--colorGray4);
   border-color: var(--colorPrimary);
 }
@@ -146,11 +151,14 @@
   border-color: var(--colorGray4);
 }
 
-.selector:focus svg, .selector:active svg, .selector:hover svg{
+.selector:focus svg,
+.selector:active svg,
+.selector:hover svg{
   fill: var(--colorGray9) !important;
 }
-
-.selector.light:focus svg, .selector.light:active svg, .selector.light:hover svg{
+.selector.light:focus svg,
+.selector.light:active svg,
+.selector.light:hover svg{
   fill: var(--lightColorText2) !important;
 }
 
