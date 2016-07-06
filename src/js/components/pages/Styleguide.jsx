@@ -16,7 +16,7 @@ import {Heading} from '../type';
 import {env as envActions, checks as checkActions, app as appActions} from '../../actions';
 import {RadioSelect, Input} from '../forms';
 
-const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray50', 'gray100', 'gray200', 'gray300', 'gray400', 'gray500', 'gray600', 'gray700', 'gray800', 'gray900', 'text', 'textSecondary', 'header'];
+const opseeColors = ['primary', 'success', 'info', 'warning', 'danger', 'error', 'gray', 'gray1', 'gray2', 'gray3', 'gray4', 'gray5', 'gray6', 'gray7', 'gray8', 'gray9', 'text', 'textSecondary', 'header'];
 
 const Styleguide = React.createClass({
   propTypes: {
