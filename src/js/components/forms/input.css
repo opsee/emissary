@@ -30,6 +30,9 @@
   transition: fill var(--transitionEaseOut);
   fill: var(--colorText2);
 }
+.light.wrapper svg {
+  fill: var(--lightColorText2);
+}
 
 .input, input{
   box-shadow: none;

@@ -75,7 +75,7 @@ const Input = React.createClass({
   },
   render() {
     return (
-      <div className={style.wrapper}>
+      <div className={cx(style.wrapper, style[this.props.scheme])}>
         {this.renderLabel()}
         {this.renderItem()}
         {this.renderChildren()}
