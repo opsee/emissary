@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Toolbar} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {user as actions} from '../../actions';
 
@@ -47,15 +47,19 @@ const PasswordForgot = React.createClass({
       );
     }
     return (
-      <form name="loginForm" onSubmit={this.handleSubmit}>
-        <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
-        <Padding b={1}>
-          <UserInputs include={['email']} onChange={this.setUserData} data={this.state.data}/>
+      <Panel scheme={this.props.scheme}>
+        <Padding a={4}>
+          <form name="loginForm" onSubmit={this.handleSubmit}>
+            <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
+            <Padding b={1}>
+              <UserInputs include={['email']} onChange={this.setUserData} data={this.state.data}/>
+            </Padding>
+            <Button color="success" type="submit" block disabled={this.isDisabled()}>
+              {this.getButtonText()}
+            </Button>
+          </form>
         </Padding>
-        <Button color="success" type="submit" block disabled={this.isDisabled()}>
-          {this.getButtonText()}
-        </Button>
-      </form>
+      </Panel>
     );
   },
   render() {
