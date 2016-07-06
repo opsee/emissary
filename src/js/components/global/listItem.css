@@ -39,6 +39,7 @@
 }
 .itemSelected.light {
   background: var(--colorGray3);
+  border-top-color: var(--colorGray4);
 }
 
 .itemPending {
