@@ -90,8 +90,6 @@ const ListItem = React.createClass({
     const children = Array.isArray(this.props.children) ? this.props.children : [this.props.children];
     const line1 = _.find(children, {key: 'line1'});
     const line2 = _.find(children, {key: 'line2'});
-    console.log(children, line1, line2);
-
     if (this.props.onClick){
       return (
         <div className={cx([style.link, style[this.props.scheme]])} onClick={this.handleClick}>

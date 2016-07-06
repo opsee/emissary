@@ -18,7 +18,8 @@ const Login = React.createClass({
     actions: PropTypes.shape({
       login: PropTypes.func,
       setLoginData: PropTypes.func
-    }).isRequired
+    }).isRequired,
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {

@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
-import cx from 'classnames';
 import _ from 'lodash';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
@@ -13,7 +12,6 @@ import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {checks as actions, user as userActions, app as appActions} from '../../actions';
-import listItem from '../global/listItem.css';
 
 const CheckList = React.createClass({
   propTypes: {
@@ -122,8 +120,6 @@ const CheckList = React.createClass({
     }
     const selected = this.getSelectedChecks();
     const {size} = selected;
-    const title = size > 0 ? 'Unselect All' : 'Select All';
-    const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
     const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
     const isDisabled = isDeleting || size < 1;
     if (this.props.redux.checks.checks.size) {
@@ -141,10 +137,6 @@ const CheckList = React.createClass({
           <Button color="primary" fab to="/check-create" title="Create New Check">
             <Add btn/>
           </Button>
-
-          {/*<div className={listItem[this.props.scheme]}>
-            <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
-          </div>*/}
         </Padding>
       );
     }

@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import moment from 'moment';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import cx from 'classnames';
@@ -40,14 +39,14 @@ const RadialGraph = React.createClass({
   getHealth(){
     const item = this.getItem();
     switch (item.state) {
-      case 'passing':
-        return 'pass';
-      case 'initializing':
-        return 'init';
-      case 'failing':
-        return 'fail';
-      default:
-        return null;
+    case 'passing':
+      return 'pass';
+    case 'initializing':
+      return 'init';
+    case 'failing':
+      return 'fail';
+    default:
+      return null;
     }
   },
   getBaseClass(){

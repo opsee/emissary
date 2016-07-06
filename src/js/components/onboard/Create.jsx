@@ -24,7 +24,8 @@ const OnboardCreate = React.createClass({
     }),
     location: PropTypes.shape({
       query: PropTypes.object
-    }).isRequired
+    }).isRequired,
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {

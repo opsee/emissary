@@ -4,10 +4,10 @@ import React, { PropTypes } from 'react';
 import logoBorderLight from '../../../img/logo-color-border-light.svg';
 import logoBorderDark from '../../../img/logo-color-border-dark.svg';
 import style from './logoColor.css';
-import {Padding} from '../layout';
 
 const LogoColor = React.createClass({
   propTypes: {
+    className: PropTypes.string,
     borderColor: PropTypes.oneOf(['dark', 'light'])
   },
   getDefaultProps() {

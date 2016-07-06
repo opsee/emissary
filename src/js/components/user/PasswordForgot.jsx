@@ -17,7 +17,8 @@ const PasswordForgot = React.createClass({
       asyncActions: PropTypes.shape({
         userSendResetEmail: PropTypes.object
       })
-    })
+    }),
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {
