@@ -43,7 +43,8 @@ const ProfileEdit = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    this.props.actions.edit(this.state.user, '/team');
+    const {props} = this;
+    props.actions.edit(this.state.user, props.redux.team.toJS().users.length > 1 ? '/team' : '/profile');
   },
   render() {
     const to = this.props.location.query.ref || '/profile';
