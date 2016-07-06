@@ -55,7 +55,7 @@ const SearchBar = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-                <Input placeholder="Search" onChange={this.handleSearch} data={this.state} path="string" id="universal-search" onFocus={this.handleFocus} onBlur={this.handleFocus.bind(null, false)} style={{outline: 0}}>
+                <Input className={style.searchInput} placeholder="Search" onChange={this.handleSearch} data={this.state} path="string" id="universal-search" onFocus={this.handleFocus} onBlur={this.handleFocus.bind(null, false)}>
                   <Search className="icon"/>
                 </Input>
             </Col>

@@ -1,3 +1,10 @@
+input.searchInput {
+  outline: 0;
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--colorGray2) !important;
+}
+
 .form{
   position: relative;
 }

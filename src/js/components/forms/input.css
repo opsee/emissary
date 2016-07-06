@@ -41,7 +41,11 @@
   padding: 0.75em 0;
   text-indent: 0.5em;
 }
-
+.light.input, input.light {
+  background-color: white;
+  border: solid 1px var(--colorGray4);
+  color: var(--lightColorText);
+}
 
 input[type="checkbox"]{
   background:none;
@@ -54,18 +58,14 @@ input[type="checkbox"]{
   background-color: black;
   outline: none;
 }
+.light.input:focus {
+  background-color: white;
+  border-color: var(--lightColorText);
+}
 
 .input::placeholder {
   color: color(var(--colorText) lightness(50%));
 }
-
-.input.light, input.light, .input:focus{
-  background: transparent;
-  color: var(--lightColorText2);
-  outline: 1px solid var(--colorGray3);
-}
-
-
 
 .input.light::placeholder{
   color: color(color(var(--lightColorText2)) lightness(80%));

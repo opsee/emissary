@@ -7,6 +7,7 @@ import style from './input.css';
 
 const Input = React.createClass({
   propTypes: {
+    className: PropTypes.string, // for the input
     onChange: PropTypes.func.isRequired,
     /*
       providing a data object will allow the input field to reflect an
@@ -35,7 +36,7 @@ const Input = React.createClass({
     const props = _.assign({}, this.props, {
       onChange: this.handleChange,
       value: this.getValue(),
-      className: cx(style.input, style[this.props.scheme]),
+      className: cx(style.input, style[this.props.scheme], this.props.className),
       id: this.state.id
     });
     return _.omit(props, ['data', 'children', 'label', 'path']);
