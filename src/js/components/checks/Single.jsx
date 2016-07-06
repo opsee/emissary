@@ -84,7 +84,6 @@ const CheckSingle = React.createClass({
     return null;
   },
   render() {
-    console.log(this.props.scheme);
     const check = this.getCheck();
     return (
       <div>

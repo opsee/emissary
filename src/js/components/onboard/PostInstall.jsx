@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import {checks as actions} from '../../actions';
 import Checkmark from './Checkmark';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Padding} from '../layout';
 import {Button} from '../forms';
 import style from './onboard.css';
 

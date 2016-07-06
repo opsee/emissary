@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import BastionInstaller from './BastionInstaller.jsx';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Padding} from '../layout';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
 import {StatusHandler} from '../global';

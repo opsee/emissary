@@ -12,7 +12,7 @@ import {
 import {Button} from '../forms';
 import {NewWindow} from '../icons';
 import {Highlight, StatusHandler} from '../global';
-import {Expandable, Padding, Col, Grid, Row} from '../layout';
+import {Expandable, Padding} from '../layout';
 import crossAccountImg from '../../../img/tut-cross-account.svg';
 import Instructions from './LaunchStackInstructions';
 import templates from '../../modules/awsTemplates';

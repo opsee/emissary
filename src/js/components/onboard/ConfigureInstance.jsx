@@ -8,7 +8,7 @@ import {Close} from '../icons';
 import {RadioSelect} from '../forms';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
-import {Padding, Col, Grid, Row} from '../layout';
+import {Padding} from '../layout';
 import style from './onboard.css';
 
 const ConfigureInstance = React.createClass({
