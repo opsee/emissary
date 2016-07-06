@@ -38,16 +38,7 @@ const RadialGraph = React.createClass({
   },
   getHealth(){
     const item = this.getItem();
-    switch (item.state) {
-    case 'passing':
-      return 'pass';
-    case 'initializing':
-      return 'init';
-    case 'failing':
-      return 'fail';
-    default:
-      return null;
-    }
+    return item.total ? Math.floor((item.passing / item.total) * 100) : undefined;
   },
   getBaseClass(){
     return style[`base${_.startCase(this.getRadialState())}`];
@@ -87,23 +78,19 @@ const RadialGraph = React.createClass({
     return num > 0 ? num : 0;
   },
   getText(){
-    return this.getHealth();
-    // const millis = this.state.silenceRemaining;
-    // if (!millis || millis < 0){
-    //   return typeof this.getHealth() === 'number' ? this.getHealth() : '';
-    // }
-    // const duration = moment.duration(millis);
-    // let unit = 'h';
-    // let time = duration.as(unit);
-    // if (time < 1){
-    //   unit = 'm';
-    //   time = duration.as(unit);
-    // }
-    // if (time < 1){
-    //   unit = 's';
-    //   time = duration.as(unit);
-    // }
-    // return Math.ceil(time) + unit;
+    const item = this.getItem();
+    switch (item.state) {
+    case 'passing':
+      return 'pass';
+    case 'initializing':
+      return 'init';
+    case 'failing':
+      return 'fail';
+    case 'stopped':
+      return 'stop';
+    default:
+      return null;
+    }
   },
   getPath(){
     const health = this.getHealth();
