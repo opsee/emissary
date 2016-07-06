@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
-import {Button, Input} from '../forms';
+import {Button, PlanInputs, Input} from '../forms';
 import {Close} from '../icons';
 import {team as actions} from '../../actions';
 
@@ -25,7 +25,8 @@ const TeamEdit = React.createClass({
   },
   getInitialState() {
     return _.assign({}, this.props.redux.team.toJS(), {
-      ccToken: undefined
+      //planinputs valid
+      valid: false
     });
   },
   componentWillMount(){
@@ -45,36 +46,22 @@ const TeamEdit = React.createClass({
     return this.props.redux.asyncActions.teamEdit.status;
   },
   isDisabled(){
-    return !(this.state.name) ||
-    this.getStatus() === 'pending';
+    return _.some([
+      !(this.state.name),
+      this.getStatus() === 'pending',
+      !this.state.valid  
+    ]);
   },
   handleUserData(data){
     const user = _.assign({}, this.state.user, data);
     this.setState({user});
   },
-  handleInputChange(state){
+  handleChange(state){
     this.setState(state);
-  },
-  handleCreditCardChange(ccToken){
-    this.setState({
-      ccToken
-    });
   },
   handleSubmit(e){
     e.preventDefault();
     this.props.actions.edit(this.state);
-  },
-  renderCreditCard(){
-    return null;
-    // if (this.props.redux.user){
-    //   return (
-    //     <Padding t={2}>
-    //       <Heading level={3}>Update Credit Card</Heading>
-    //       <CreditCard onChange={this.handleCreditCardChange}/>
-    //     </Padding>
-    //   )
-    // }
-    // return null;
   },
   render() {
     return (
@@ -89,8 +76,8 @@ const TeamEdit = React.createClass({
             <Col xs={12}>
               <form onSubmit={this.handleSubmit}>
                 <StatusHandler status={this.getStatus()}/>
-                <Input onChange={this.handleInputChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
-                {this.renderCreditCard()}
+                <Input onChange={this.handleChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
+                <PlanInputs onChange={this.handleChange}/>
                 <Padding t={2}>
                   <Button color="success" type="submit" block disabled={this.isDisabled()}>
                     {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}

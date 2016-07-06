@@ -267,14 +267,10 @@ const Profile = React.createClass({
                       }
                       </td>
                     </tr>
-                    {
-                      // window.location.href.match('localhost|staging') && (
-                      //   <tr>
-                      //     <td><strong>Subscription Plan</strong></td>
-                      //     <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
-                      //   </tr>
-                      // )
-                    }
+                    <tr>
+                      <td><strong>Subscription Plan</strong></td>
+                      <td className="text-right">{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
+                    </tr>
                     {
                       // window.location.href.match('localhost|staging') && (
                       //   <tr>

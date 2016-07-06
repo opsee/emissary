@@ -10,7 +10,13 @@ const UserInputs = React.createClass({
     data: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     required: PropTypes.array,
-    autoFocus: PropTypes.oneOf(['email', 'password', 'name'])
+    autoFocus: PropTypes.oneOf(['email', 'password', 'name']),
+    //props to input
+    password: PropTypes.object,
+    //props to input
+    email: PropTypes.object,
+    //props to input
+    name: PropTypes.object,
   },
   getDefaultProps() {
     return {
@@ -30,8 +36,16 @@ const UserInputs = React.createClass({
     );
   },
   renderPassword(){
+    const props = _.assign({
+      data: this.props.data,
+      type: 'password',
+      path: 'password',
+      placeholder: 'Password',
+      label: this.getLabel('password'),
+      autoFocus: this.props.autoFocus === 'password'
+    }, this.props.password);
     return (
-      <Input data={this.props.data} type="password" path="password" placeholder="Password" onChange={this.props.onChange} label={this.getLabel('password')} autoFocus={this.props.autoFocus === 'password'}>
+      <Input onChange={this.props.onChange} {...props}>
         <Lock/>
       </Input>
     );

@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Row} from '../layout';
-import {Button} from '../forms';
+import {Button, PlanInputs} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Close} from '../icons';
 import {user as actions} from '../../actions';
@@ -27,15 +27,23 @@ const ProfileEdit = React.createClass({
   },
   getInitialState() {
     return {
-      user: this.props.redux.user.toJS()
+      user: this.props.redux.user.toJS(),
+      //planinputs is valid
+      valid: false
     };
   },
   getStatus(){
     return this.props.redux.asyncActions.userEdit.status;
   },
   isDisabled(){
-    return !(this.state.user.email && this.state.user.name) ||
-    this.getStatus() === 'pending';
+    return _.some([
+      !(this.state.user.email && this.state.user.name),
+      this.getStatus() === 'pending',
+      !this.state.valid
+    ]);
+  },
+  isTeam(){
+    return this.props.redux.team.users.size > 1;
   },
   handleUserData(data){
     const user = _.assign({}, this.state.user, data);
@@ -44,6 +52,19 @@ const ProfileEdit = React.createClass({
   handleSubmit(e){
     e.preventDefault();
     this.props.actions.edit(this.state.user, '/team');
+  },
+  handleChange(state){
+    this.setState(state);
+  },
+  renderCreditCard(){
+    if (!this.isTeam()){
+      return (
+        <Padding t={1}>
+          <PlanInputs onChange={this.handleChange}/>
+        </Padding>
+      );
+    }
+    return null;
   },
   render() {
     const to = this.props.location.query.ref || '/profile';
@@ -58,7 +79,8 @@ const ProfileEdit = React.createClass({
           <Row>
             <Col xs={12}>
               <form onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']}/>
+                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']} password={{label: 'New Password', placeholder: '****'}}/>
+                {this.renderCreditCard()}
                 <StatusHandler status={this.getStatus()}/>
                 <Padding t={2}>
                   <Button color="success" type="submit" block disabled={this.isDisabled()}>

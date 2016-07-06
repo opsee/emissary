@@ -102,6 +102,17 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderBilling(){
+    if (!this.isTeam()){
+      return (
+        <tr>
+          <td><strong>Billing</strong></td>
+          <td><Link to="/profile/edit">Master Card ****4555</Link></td>
+        </tr>
+      );
+    }
+    return null;
+  },
   renderAWSArea(){
     if (!this.isTeam()){
       if (!!this.props.redux.env.activeBastion){
@@ -195,6 +206,7 @@ const Profile = React.createClass({
                       <td><strong>Password</strong></td>
                       <td><Link to="/profile/edit" >Change Your Password</Link></td>
                     </tr>
+                    {this.renderBilling()}
                     {this.renderAWSArea()}
                     {this.renderSlackArea()}
                     {this.renderPagerdutyArea()}
