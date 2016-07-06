@@ -222,13 +222,7 @@ const LaunchStack = React.createClass({
   render() {
     return (
       <div className={style.transitionPanel}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              {this.renderInner()}
-            </Col>
-          </Row>
-        </Grid>
+        {this.renderInner()}
        </div>
     );
   }

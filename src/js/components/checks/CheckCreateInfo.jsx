@@ -9,7 +9,7 @@ import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Heading} from '../type';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
 import {flag, validate} from '../../modules';
@@ -225,12 +225,16 @@ const CheckCreateInfo = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                <Padding b={3}>
-                  {this.renderHelperText()}
-                </Padding>
-                {this.renderInner()}
-              </BastionRequirement>
+              <Padding t={2}>
+                <Panel>
+                  <BastionRequirement>
+                    <Padding b={3}>
+                      {this.renderHelperText()}
+                    </Padding>
+                    {this.renderInner()}
+                  </BastionRequirement>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

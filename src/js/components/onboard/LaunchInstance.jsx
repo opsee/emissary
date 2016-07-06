@@ -104,7 +104,7 @@ const LaunchInstance = React.createClass({
     return (
       <div>
         <p>Here's where it'll be installed:</p>
-        <Grid>
+        <Grid fluid>
           <Row>
             <Col xs={12} sm={4}>
               {this.renderRegion()}
@@ -123,34 +123,28 @@ const LaunchInstance = React.createClass({
   render(){
     return (
       <div className={style.transitionPanel}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Padding tb={2}>
-                <div className={style.headerStep}>STEP 2 of 3</div>
-                <h2>Install the Opsee EC2 instance</h2>
-              </Padding>
-              <Padding a={4} className="text-center">
-                <img src={instanceImg} style={{maxHeight: '300px'}}/>
-              </Padding>
+        <Padding tb={2}>
+          <div className={style.headerStep}>STEP 2 of 3</div>
+          <h2>Install the Opsee EC2 instance</h2>
+        </Padding>
+        <Padding a={4} className="text-center">
+          <img src={instanceImg} style={{maxHeight: '300px'}}/>
+        </Padding>
 
-              <p>Lastly, we need to install the Opsee EC2 instance. It&rsquo;s responsible for running checks in your AWS environment.</p>
-              {this.renderConfig()}
+        <p>Lastly, we need to install the Opsee EC2 instance. It&rsquo;s responsible for running checks in your AWS environment.</p>
+        {this.renderConfig()}
 
-              <Padding tb={2}>
-                <Padding b={1}>
-                  <Button to="/start/configure-instance" disabled={!this.props.redux.onboard.installData} color="primary" flat block>Change location</Button>
-                </Padding>
-                <Padding b={1}>
-                  <Button to="/start/install" disabled={!this.props.redux.onboard.installData} color="primary" block chevron>Ready, Set, Install</Button>
-                </Padding>
-                <Padding tb={1} className="text-center">
-                  <p><small><Link to="/start/review-instance">Learn more about the Opsee instance</Link></small></p>
-                </Padding>
-              </Padding>
-            </Col>
-          </Row>
-        </Grid>
+        <Padding tb={2}>
+          <Padding b={1}>
+            <Button to="/start/configure-instance" disabled={!this.props.redux.onboard.installData} color="primary" flat block>Change location</Button>
+          </Padding>
+          <Padding b={1}>
+            <Button to="/start/install" disabled={!this.props.redux.onboard.installData} color="primary" block chevron>Ready, Set, Install</Button>
+          </Padding>
+          <Padding tb={1} className="text-center">
+            <p><small><Link to="/start/review-instance">Learn more about the Opsee instance</Link></small></p>
+          </Padding>
+        </Padding>
       </div>
     );
   }

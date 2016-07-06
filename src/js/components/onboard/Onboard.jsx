@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Circle} from '../icons';
-import {Padding} from '../layout';
+import {Grid, Row, Col, Padding, Panel} from '../layout';
 import {app as actions} from '../../actions';
 import style from './onboard.css';
 
@@ -63,7 +63,15 @@ const Onboard = React.createClass({
           {this.renderPips()}
         </Padding>
         <Padding t={1}>
-          {this.props.children}
+          <Grid>
+            <Row>
+              <Col xs={12}>
+                <Panel>
+                  {this.props.children}
+                </Panel>
+              </Col>
+            </Row>
+          </Grid>
         </Padding>
       </div>
     );
