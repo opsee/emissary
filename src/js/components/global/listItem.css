@@ -37,7 +37,6 @@
   composes: item;
   background: var(--colorGray8);
 }
-
 .itemSelected.light {
   background: var(--colorGray3);
 }
@@ -115,16 +114,20 @@
 }
 
 .selector svg {
-  height: 2rem;
-  width: 2rem;
+  height: 1.5rem;
+  width: 1.5rem;
   position: relative;
   z-index: 2;
-  left: -.1rem;
-  top: .5rem;
+  left: -.25rem;
+  top: 0rem;
 }
 
 .selectorSelected:after{
   background: var(--colorGray5);
+}
+.light .selectorSelected:after {
+  background: var(--colorGray2);
+  border-color: var(--colorGray4);
 }
 
 .selector:focus, .selector:active, .selector:hover, .selector:active:focus{
