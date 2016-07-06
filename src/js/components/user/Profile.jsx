@@ -157,35 +157,33 @@ const Profile = React.createClass({
             <Row>
               <Col xs={12}>
                 <Panel>
-                  <Padding a={2}>
-                    <Padding b={1} className="row between-xs middle-xs">
-                      <Heading level={3} noPadding>Your Profile Information</Heading>
-                      <Button fab color="primary" to="/profile/edit" title="Edit Your Profile">
-                        <Edit btn/>
-                      </Button>
-                    </Padding>
-                    <Table>
-                      <tr>
-                        <td><strong>Name</strong></td>
-                        <td>{user.name}</td>
-                      </tr>
-                      <tr>
-                        <td><strong>Email</strong></td>
-                        <td>
-                          <div>{this.renderEmail()}</div>
-                          <div>{this.renderVerificationNag()}</div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>Password</strong></td>
-                        <td><Link to="/profile/edit" >Change Your Password</Link></td>
-                      </tr>
-                      {this.renderAWSArea()}
-                      {this.renderSlackArea()}
-                      {this.renderPagerdutyArea()}
-                      {this.renderThemes()}
-                    </Table>
+                  <Padding b={1} className="row between-xs middle-xs">
+                    <Heading level={3} noPadding>Your Profile Information</Heading>
+                    <Button fab color="primary" to="/profile/edit" title="Edit Your Profile">
+                      <Edit btn/>
+                    </Button>
                   </Padding>
+                  <Table>
+                    <tr>
+                      <td><strong>Name</strong></td>
+                      <td>{user.name}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>
+                        <div>{this.renderEmail()}</div>
+                        <div>{this.renderVerificationNag()}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Password</strong></td>
+                      <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                    </tr>
+                    {this.renderAWSArea()}
+                    {this.renderSlackArea()}
+                    {this.renderPagerdutyArea()}
+                    {this.renderThemes()}
+                  </Table>
                 </Panel>
                 <Padding t={3}>
                   <Button flat color="danger" onClick={this.handleLogout}>

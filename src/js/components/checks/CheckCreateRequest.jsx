@@ -421,11 +421,9 @@ const CheckCreateRequest = React.createClass({
             <Col xs={12}>
               <Padding tb={2}>
                 <Panel>
-                  <Padding a={2}>
-                    <BastionRequirement>
-                      {this.renderInner()}
-                    </BastionRequirement>
-                  </Padding>
+                  <BastionRequirement>
+                    {this.renderInner()}
+                  </BastionRequirement>
                 </Panel>
               </Padding>
             </Col>

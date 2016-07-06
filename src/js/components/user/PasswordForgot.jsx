@@ -49,17 +49,15 @@ const PasswordForgot = React.createClass({
     }
     return (
       <Panel scheme={this.props.scheme}>
-        <Padding a={4}>
-          <form name="loginForm" onSubmit={this.handleSubmit}>
-            <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
-            <Padding b={1}>
-              <UserInputs include={['email']} onChange={this.setUserData} data={this.state.data}/>
-            </Padding>
-            <Button color="success" type="submit" block disabled={this.isDisabled()}>
-              {this.getButtonText()}
-            </Button>
-          </form>
-        </Padding>
+        <form name="loginForm" onSubmit={this.handleSubmit}>
+          <p>Simply fill in your email and we&rsquo;ll message you with a shiny reset link.</p>
+          <Padding b={1}>
+            <UserInputs include={['email']} onChange={this.setUserData} data={this.state.data}/>
+          </Padding>
+          <Button color="success" type="submit" block disabled={this.isDisabled()}>
+            {this.getButtonText()}
+          </Button>
+        </form>
       </Panel>
     );
   },

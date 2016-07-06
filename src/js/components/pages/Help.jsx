@@ -40,32 +40,30 @@ export default React.createClass({
           <Row>
             <Col xs={12}>
               <Panel>
-                <Padding a={2}>
-                  <Padding b={3}>
-                    <Heading level={3}>Documentation</Heading>
-                    <ul>
-                      <li><Link to="/docs/checks">Checks</Link></li>
-                      <li><Link to="/docs/notifications">Notifications</Link></li>
-                      <li><Link to="/docs/permissions">AWS Security &amp; Permissions</Link></li>
-                      <li><Link to="/docs/bastion">The Opsee EC2 Instance</Link></li>
-                    </ul>
-                  </Padding>
-
-                  <Padding b={3}>
-                    <Heading level={3}>Support</Heading>
-                    <p>Get in touch with us any time with questions or feature requests:</p>
-                    <ul>
-                      <li><Mail fill="text" inline /> Email: <a href="mailto:support@opsee.com">support@opsee.com</a></li>
-                      <li><Chat fill="text" inline /> IRC: <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></li>
-                      <li><Slack fill="text" inline /> Slack: <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></li>
-                    </ul>
-                  </Padding>
-
-                  <Padding b={3}>
-                    <Link to="/system">View System Information</Link>
-                  </Padding>
-                  {this.renderAdminLinks()}
+                <Padding b={3}>
+                  <Heading level={3}>Documentation</Heading>
+                  <ul>
+                    <li><Link to="/docs/checks">Checks</Link></li>
+                    <li><Link to="/docs/notifications">Notifications</Link></li>
+                    <li><Link to="/docs/permissions">AWS Security &amp; Permissions</Link></li>
+                    <li><Link to="/docs/bastion">The Opsee EC2 Instance</Link></li>
+                  </ul>
                 </Padding>
+
+                <Padding b={3}>
+                  <Heading level={3}>Support</Heading>
+                  <p>Get in touch with us any time with questions or feature requests:</p>
+                  <ul>
+                    <li><Mail fill="text" inline /> Email: <a href="mailto:support@opsee.com">support@opsee.com</a></li>
+                    <li><Chat fill="text" inline /> IRC: <a href="irc://irc.freenode.org/opsee">#opsee on FreeNode</a></li>
+                    <li><Slack fill="text" inline /> Slack: <a href="https://opsee-support.slack.com">opsee-support.slack.com</a></li>
+                  </ul>
+                </Padding>
+
+                <Padding b={3}>
+                  <Link to="/system">View System Information</Link>
+                </Padding>
+                {this.renderAdminLinks()}
               </Panel>
             </Col>
           </Row>
