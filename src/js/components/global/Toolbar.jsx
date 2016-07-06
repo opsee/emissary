@@ -17,7 +17,13 @@ const Toolbar = React.createClass({
     children: PropTypes.node,
     pageTitle: PropTypes.string,
     className: PropTypes.string,
-    scheme: PropTypes.string
+    scheme: PropTypes.string,
+    hidden: PropTypes.bool
+  },
+  getClass() {
+    return cx(style.outer, this.props.className, style[this.props.scheme], {
+      [style.hidden]: this.props.hidden
+    });
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
@@ -47,7 +53,7 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={cx(style.outer, this.props.className, style[this.props.scheme])} style={this.getStyle()}>
+      <div className={this.getClass()} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>

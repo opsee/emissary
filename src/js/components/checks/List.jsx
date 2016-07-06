@@ -152,20 +152,23 @@ const CheckList = React.createClass({
   },
   render() {
     return (
-      <Padding tb={2}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Panel>
-                <BastionRequirement>
-                  {this.renderActionBar()}
-                  {this.renderChecks()}
-                </BastionRequirement>
-              </Panel>
-            </Col>
-          </Row>
-        </Grid>
-      </Padding>
+      <div>
+        <Toolbar title="Checks" hidden />
+        <Padding tb={2}>
+          <Grid>
+            <Row>
+              <Col xs={12}>
+                <Panel>
+                  <BastionRequirement>
+                    {this.renderActionBar()}
+                    {this.renderChecks()}
+                  </BastionRequirement>
+                </Panel>
+              </Col>
+            </Row>
+          </Grid>
+        </Padding>
+      </div>
     );
   }
 });
