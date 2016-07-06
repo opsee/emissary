@@ -3,16 +3,15 @@ import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {CheckItemList} from '../checks';
-import {InstanceItemList} from '../instances';
+import GroupItemList from './GroupItemList';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
-import {Heading} from '../type';
+import {Col, Grid, Padding, Row, Rule} from '../layout';
+import {Color, Heading} from '../type';
 import {env as actions} from '../../actions';
 import {flag} from '../../modules';
 
@@ -32,6 +31,11 @@ const GroupEcs = React.createClass({
       })
     })
   },
+  getInitialState() {
+    return {
+      showEvents: false
+    };
+  },
   componentWillMount(){
     this.getData();
   },
@@ -43,7 +47,7 @@ const GroupEcs = React.createClass({
   },
   getGroup(){
     return this.props.redux.env.groups.ecs.find(g => {
-      return g.get('id') === this.props.params.id;
+      return unescape(g.get('id')) === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
   getCreateLink(){
@@ -55,6 +59,12 @@ const GroupEcs = React.createClass({
       }
     });
     return `/check-create/request?data=${data}`;
+  },
+  handleEventsClick(e){
+    e.preventDefault();
+    this.setState({
+      showEvents: !this.state.showEvents
+    });
   },
   renderCreateCheckButton(){
     if (flag('check-type-ecs')){
@@ -68,32 +78,62 @@ const GroupEcs = React.createClass({
     }
     return null;
   },
+  renderEvents(group){
+    const num = this.state.showEvents ? group.Events.length : 3;
+    const arr = _.take(group.Events, num);
+    return (
+      <div>
+        {arr.map(event => {
+          return (
+            <div key={event.Id}>
+              <Color c="gray6">{new Date(event.CreatedAt).toString()}</Color><br/>{event.Message}
+              <Rule/>
+            </div>
+          );
+        })}
+      </div>
+    );
+  },
   renderInner(){
     const group = this.getGroup().toJS();
-    if (group.name && group.CreatedTime){
+    if (group.name && group.Status){
       return (
         <div>
           {this.renderCreateCheckButton()}
           <Padding b={2}>
-            <Heading level={3}>{group.id} Information</Heading>
+            <Heading level={3}>{group.ServiceName} Information</Heading>
+            {
+              // JSON.stringify(group)
+            }
             <Table>
-              {group.Status && (
-                <tr>
-                  <td><strong>Status</strong></td>
-                  <td>{group.Status}</td>
-                </tr>
-              )}
               <tr>
-                <td><strong>Created</strong></td>
-                <td><TimeAgo date={group.CreatedTime}/></td>
+                <td><strong>Status</strong></td>
+                <td>{group.Status}</td>
+              </tr>
+              <tr>
+                <td><strong>Desired Count</strong></td>
+                <td>{group.DesiredCount}</td>
+              </tr>
+              <tr>
+                <td><strong>Pending Count</strong></td>
+                <td>{group.PendingCount}</td>
+              </tr>
+              <tr>
+                <td><strong>Running Count</strong></td>
+                <td>{group.RunningCount}</td>
               </tr>
             </Table>
+          </Padding>
+          <Padding b={2}>
+            <Heading level={3}>Events</Heading>
+            {this.renderEvents(group)}
+            <a href="#" onClick={this.handleEventsClick}>{this.state.showEvents ? 'Hide Events' : `Show ${group.Events.length - 3} More Events`}</a>
           </Padding>
           <Padding b={2}>
             <CheckItemList type="groupEcs" target={this.props.params.id} redux={this.props.redux} title/>
           </Padding>
           <Padding b={2}>
-            <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} type="ecc" title/>
+            <GroupItemList ids={_.map(group.LoadBalancers, 'LoadBalancerName')} type="elb" title/>
           </Padding>
         </div>
       );
@@ -103,7 +143,7 @@ const GroupEcs = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title={`Auto Scaling Group: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
+        <Toolbar title={`EC2 Container Service: ${this.getGroup().get('name') || this.getGroup().get('id') || this.props.params.id}`} />
         <Grid>
           <Row>
             <Col xs={12}>

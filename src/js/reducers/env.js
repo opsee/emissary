@@ -105,6 +105,11 @@ const statics = {
     data = data.set('state', state);
     return data;
   },
+  ecsId(data = {}, toUnescape){
+    const clusterName = _.last((data.ClusterArn || '').split('/'));
+    const str = `${clusterName}/${data.ServiceName}`.replace(/\//g, '%2F');
+    return toUnescape ? unescape(str) : str;
+  },
   getGroupSecuritySuccess(state, data = []){
     const arr = state.groups.security;
     const single = statics.groupSecurityFromJS(state, _.head(data));
@@ -242,9 +247,8 @@ const statics = {
     return new GroupAsg(newData);
   },
   groupEcsFromJS(state, data = {}){
-    const clusterName = _.last((data.ClusterArn || '').split('/'));
     const newData = _.assign({}, data, {
-      id: `${clusterName}/${data.ServiceName}`.replace(/\//g, '%2F'),
+      id: statics.ecsId(data),
       name: data.ServiceName
     });
     return new GroupEcs(newData);
@@ -468,7 +472,12 @@ export default handleActions({
   [GET_GROUP_ECS]: {
     next(state, action){
       //TODO remove when there is only one in the array (backend err)
-      const arr = _.filter(action.payload.data || [], {ServiceArn: action.payload.id});
+      const dataArr = (action.payload.data || []).map(item => {
+        return _.assign(item, {
+          id: statics.ecsId(item, true)
+        });
+      });
+      const arr = _.filter(dataArr, {id: action.payload.id});
       const ecs = statics.getGroupEcsSuccess(state, arr);
       const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
       const groups = _.assign({}, state.groups, {ecs});

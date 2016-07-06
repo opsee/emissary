@@ -71,7 +71,7 @@ const Profile = React.createClass({
     switch (status) {
     case 'pending':
       return (
-        <Color c="gray500">Sending verification email...</Color>
+        <Color c="gray5">Sending verification email...</Color>
       );
     case 'success':
       return (

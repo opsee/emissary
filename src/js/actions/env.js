@@ -305,7 +305,7 @@ export function getGroupEcs(id){
             }`,
           variables: _.pick(state().env, ['region', 'vpc'])
         });
-      }, {search: state().search})
+      }, {search: state().search, id})
     });
   };
 }

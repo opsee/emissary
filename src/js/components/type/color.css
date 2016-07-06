@@ -26,42 +26,42 @@
   color:var(--colorText);
 }
 
-.gray50, .gray50:hover, .gray50:focus, .gray50:active{
+.gray, .gray:hover, .gray:focus, .gray:active{
   color:var(--colorGray);
 }
 
-.gray100, .gray100:hover, .gray100:focus, .gray100:active{
+.gray1, .gray1:hover, .gray1:focus, .gray1:active{
   color:var(--colorGray1);
 }
 
-.gray200, .gray200:hover, .gray200:focus, .gray200:active{
+.gray2, .gray2:hover, .gray2:focus, .gray2:active{
   color:var(--colorGray2);
 }
 
-.gray300, .gray300:hover, .gray300:focus, .gray300:active{
+.gray3, .gray3:hover, .gray3:focus, .gray3:active{
   color:var(--colorGray3);
 }
 
-.gray400, .gray400:hover, .gray400:focus, .gray400:active{
+.gray4, .gray4:hover, .gray4:focus, .gray4:active{
   color:var(--colorGray4);
 }
 
-.gray500, .gray500:hover, .gray500:focus, .gray500:active{
+.gray5, .gray5:hover, .gray5:focus, .gray5:active{
   color:var(--colorGray5);
 }
 
-.gray600, .gray600:hover, .gray600:focus, .gray600:active{
+.gray6, .gray6:hover, .gray6:focus, .gray6:active{
   color:var(--colorGray6);
 }
 
-.gray700, .gray700:hover, .gray700:focus, .gray700:active{
+.gray7, .gray7:hover, .gray7:focus, .gray7:active{
   color:var(--colorGray7);
 }
 
-.gray800, .gray800:hover, .gray800:focus, .gray800:active{
+.gray8, .gray8:hover, .gray8:focus, .gray8:active{
   color:var(--colorGray8);
 }
 
-.gray900, .gray900:hover, .gray900:focus, .gray900:active{
+.gray9, .gray9:hover, .gray9:focus, .gray9:active{
   color:var(--colorGray9);
 }

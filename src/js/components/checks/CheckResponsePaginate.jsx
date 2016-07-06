@@ -314,7 +314,7 @@ const CheckResponsePaginate = React.createClass({
     if (this.props.date instanceof Date){
       const s = this.props.date.toString();
       return (
-        <Color c="gray500">
+        <Color c="gray5">
           <small title="The date this event was processed.">{`- ${s}`}&nbsp;-&nbsp;<TimeAgo date={this.props.date}/></small>
         </Color>
       );

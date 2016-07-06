@@ -20,7 +20,7 @@ const GroupItemList = React.createClass({
     limit: PropTypes.number,
     ids: PropTypes.array,
     type: PropTypes.string,
-    title: PropTypes.string,
+    title: PropTypes.bool,
     instanceIds: PropTypes.array,
     //display nothing if no groups found
     noFallback: PropTypes.bool,
@@ -108,6 +108,20 @@ const GroupItemList = React.createClass({
     data = data || new List();
     return data.slice(this.props.offset, this.props.limit);
   },
+  getTitle(){
+    switch (this.props.type){
+    case 'elb':
+      return 'ELBs';
+    case 'ecs':
+      return 'EC2 Container Services (ECS)';
+    case 'asg':
+      return 'Autoscaling Groups';
+    case 'security':
+      return 'Security Groups';
+    default:
+      return this.props.type || '';
+    }
+  },
   getEnvLink(){
     return `/env-groups-${this.props.type}`;
   },
@@ -142,7 +156,7 @@ const GroupItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getGroups().size))){
-      return <Heading level={3}>{this.props.title} {numbers}</Heading>;
+      return <Heading level={3}>{this.getTitle()} {numbers}</Heading>;
     }
     return null;
   },
