@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Col, Grid, Row} from '../layout';
+import {Col, Grid, Row, Panel} from '../layout';
 
 import {BastionRequirement, Toolbar} from '../global';
 import {search as actions} from '../../actions';
@@ -62,9 +62,11 @@ const SearchAll = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <FilterButtons/>
-                <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
-                <BastionRequirement strict/>
+                <Panel>
+                  <FilterButtons/>
+                  <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>
+                  <BastionRequirement strict/>
+                </Panel>
               </Col>
             </Row>
           </Grid>

@@ -6,11 +6,6 @@
   max-width: 680px;
 }
 
-p, li{
-  color: #AAA;
-  line-height: 26px;
-}
-
 h1, h2, h3 {
   letter-spacing: 0.5px;
   font-weight: 500;
