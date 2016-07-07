@@ -56,6 +56,8 @@ const CheckCreateTarget = React.createClass({
       case 'rds':
       case 'RDS':
         return ['instances.rds'];
+      case 'ecs':
+        return ['groups.ecs'];
       default:
         break;
       }

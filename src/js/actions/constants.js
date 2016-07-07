@@ -67,6 +67,7 @@ export const GET_INSTANCES_RDS = 'GET_INSTANCES_RDS';
 export const GET_METRIC_RDS = 'GET_METRIC_RDS';
 export const GET_METRIC_ECC = 'GET_METRIC_ECC';
 export const GET_METRIC_ASG = 'GET_METRIC_ASG';
+export const GET_METRIC_ECS = 'GET_METRIC_ECS';
 
 export const ENV_GET_BASTIONS = 'ENV_GET_BASTIONS';
 export const ENV_SET_FILTERED = 'ENV_SET_FILTERED';

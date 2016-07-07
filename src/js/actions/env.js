@@ -18,6 +18,7 @@ import {
   GET_METRIC_RDS,
   GET_METRIC_ECC,
   GET_METRIC_ASG,
+  GET_METRIC_ECS,
   ENV_GET_BASTIONS,
   ENV_SELECT_TOGGLE,
   AWS_REBOOT_INSTANCES,
@@ -618,6 +619,46 @@ export function getMetricASG(id, metric){
                       Value
                     }
                     metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getMetricECS(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_ECS,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "autoscaling", id: "${id}"){
+                  ... on ecsService {
+                    RoleArn
+                    ServiceArn
+                    ClusterArn
+                    ServiceName
+                    metrics {
                       ${metric} {
                         metrics{
                           name

@@ -79,7 +79,7 @@ const GroupEcs = React.createClass({
     return null;
   },
   renderEvents(group){
-    const num = this.state.showEvents ? group.Events.length : 3;
+    const num = this.state.showEvents ? group.Events.length : 2;
     const arr = _.take(group.Events, num);
     return (
       <div>
@@ -96,6 +96,8 @@ const GroupEcs = React.createClass({
   },
   renderInner(){
     const group = this.getGroup().toJS();
+    const cluster = _.last((group.ClusterArn || '').split('/')) || '';
+    const taskDef = _.last((group.TaskDefinition || '').split('/')) || '';
     if (group.name && group.Status){
       return (
         <div>
@@ -106,6 +108,14 @@ const GroupEcs = React.createClass({
               // JSON.stringify(group)
             }
             <Table>
+              <tr>
+                <td><strong>Cluster</strong></td>
+                <td>{cluster}</td>
+              </tr>
+              <tr>
+                <td><strong>Task Definition</strong></td>
+                <td>{taskDef}</td>
+              </tr>
               <tr>
                 <td><strong>Status</strong></td>
                 <td>{group.Status}</td>
@@ -127,7 +137,7 @@ const GroupEcs = React.createClass({
           <Padding b={2}>
             <Heading level={3}>Events</Heading>
             {this.renderEvents(group)}
-            <a href="#" onClick={this.handleEventsClick}>{this.state.showEvents ? 'Hide Events' : `Show ${group.Events.length - 3} More Events`}</a>
+            <a href="#" onClick={this.handleEventsClick}>{this.state.showEvents ? 'Hide Events' : `Show ${group.Events.length - 2} More Events`}</a>
           </Padding>
           <Padding b={2}>
             <CheckItemList type="groupEcs" target={this.props.params.id} redux={this.props.redux} title/>

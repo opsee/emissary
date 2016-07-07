@@ -23,7 +23,8 @@ const AssertionMetric = React.createClass({
     actions: PropTypes.shape({
       getMetricRDS: PropTypes.func,
       getMetricECC: PropTypes.func,
-      getMetricASG: PropTypes.func
+      getMetricASG: PropTypes.func,
+      getMetricECS: PropTypes.func
     }),
     assertion: PropTypes.shape({
       value: PropTypes.string,
@@ -191,6 +192,9 @@ const AssertionMetric = React.createClass({
       break;
     case 'asg':
       action = this.props.actions.getMetricASG;
+      break;
+    case 'ecs':
+      action = this.props.actions.getMetricECS;
       break;
     default:
       break;
