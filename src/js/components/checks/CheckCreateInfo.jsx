@@ -58,7 +58,7 @@ const CheckCreateInfo = React.createClass({
   },
   getGeneratedName(){
     const {target} = this.props.check;
-    const prefix = target.type === 'rds' ? 'Cloudwatch' : 'Http';
+    const prefix = _.capitalize(this.props.check.type || 'http');
     if (this.props.check.name){
       return this.props.check.name;
     } else if (target.name || target.id){

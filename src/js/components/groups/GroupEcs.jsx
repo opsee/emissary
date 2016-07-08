@@ -52,13 +52,14 @@ const GroupEcs = React.createClass({
   },
   getCreateLink(){
     const data = JSON.stringify({
+      type: 'cloudwatch',
       target: {
         id: this.getGroup().get('id'),
         type: 'ecs',
         name: this.getGroup().get('name')
       }
     });
-    return `/check-create/request?data=${data}`;
+    return `/check-create/assertions-cloudwatch?data=${data}`;
   },
   handleEventsClick(e){
     e.preventDefault();

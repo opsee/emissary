@@ -38,7 +38,8 @@ const MetricGraph = React.createClass({
     }).isRequired,
     breakpoint: PropTypes.number,
     aspectRatio: PropTypes.number,
-    showTooltip: PropTypes.bool
+    showTooltip: PropTypes.bool,
+    status: PropTypes.string
   },
   componentDidMount() {
     this.onWindowResize();
@@ -160,11 +161,18 @@ const MetricGraph = React.createClass({
       <div className={style.placeholder}><Loader className={style.loader} timeout={0}/></div>
     );
   },
+  renderNoData() {
+    return (
+      <div className={style.placeholder}>
+        <div className={style.noData}>No Data Available</div>
+      </div>
+    );
+  },
   render() {
     const data = this.getData();
 
-    if (!data.length) {
-      return this.renderPlaceholder();
+    if (!data.length){
+      return this.props.status === 'success' ? this.renderNoData() : this.renderPlaceholder();
     }
 
     // d3 indentation conventions are kinda wacky, so...

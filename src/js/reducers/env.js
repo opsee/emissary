@@ -29,6 +29,7 @@ import {
   GET_METRIC_RDS,
   GET_METRIC_ECC,
   GET_METRIC_ASG,
+  GET_METRIC_ECS,
   ENV_SET_FILTERED,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -107,7 +108,7 @@ const statics = {
   },
   ecsId(data = {}, toUnescape){
     const clusterName = _.last((data.ClusterArn || '').split('/'));
-    const str = `${clusterName}/${data.ServiceName}`.replace(/\//g, '%2F');
+    const str = `${clusterName}/${data.ServiceName}`;
     return toUnescape ? unescape(str) : str;
   },
   getGroupSecuritySuccess(state, data = []){
@@ -198,7 +199,16 @@ const statics = {
     return statics.updateArray(arr, single);
   },
   getGroupsEcsSuccess(state, data = []){
-    let newData = _.chain(data)
+    const oldItems = state.groups.ecs.toJS();
+    let newData =
+    _.chain(data)
+    .map(newItem => _.assign(newItem, {id: statics.ecsId(newItem)}))
+    .map(newItem => {
+      //don't overwrite metrics with empty obj if we already have them
+      const oldItem = _.find(oldItems, item => item.id === newItem.id) || {};
+      const metrics = _.assign(oldItem.metrics, newItem.metrics);
+      return _.assign(oldItem, newItem, {metrics});
+    })
     .sortBy(d => {
       return (d.ServiceArn || '').toLowerCase();
     }).value();
@@ -264,6 +274,18 @@ const statics = {
     const obj = _.assign(old.toJS(), data, {metrics});
     return statics.getGroupsAsgSuccess(state, [obj]);
   },
+  getECSMetricsSuccess(state, groups){
+    const arr = state.groups.ecs;
+    let data = groups[0];
+    data.tags = ['metrics'];
+    const old = arr.find(item => {
+      return item.get('id') === statics.ecsId(data);
+    }) || new GroupEcs();
+    const oldJS = old.toJS();
+    let metrics = _.assign((oldJS.metrics || {}), data.metrics);
+    const obj = _.assign(old.toJS(), data, {metrics});
+    return statics.getGroupsEcsSuccess(state, [obj]);
+  },
   getInstanceEccSuccess(state, data = []){
     const arr = state.instances.ecc;
     const single = statics.instanceEccFromJS(state, _.head(data));
@@ -304,7 +326,15 @@ const statics = {
     return statics.updateArray(arr, single);
   },
   getInstancesRdsSuccess(state, data){
+    const oldItems = state.instances.rds.toJS();
     let newData = _.chain(data)
+    .map(newItem => _.assign(newItem, {id: newItem.DBInstanceIdentifier}))
+    .map(newItem => {
+      //don't overwrite metrics with empty obj if we already have them
+      const oldItem = _.find(oldItems, item => item.id === newItem.id) || {};
+      const metrics = _.assign(oldItem.metrics, newItem.metrics);
+      return _.assign(oldItem, newItem, {metrics});
+    })
     .map(d => statics.instanceRdsFromJS(state, d))
     .sortBy(i => {
       return i.name.toLowerCase();
@@ -327,8 +357,8 @@ const statics = {
       return item.get('id') === data.DBInstanceIdentifier;
     }) || new InstanceRds();
     const oldJS = old.toJS();
-    let metrics = _.assign((oldJS.metrics || {}), data.metrics);
-    const obj = _.assign(old.toJS(), data, {metrics});
+    let metrics = _.assign({}, (oldJS.metrics || {}), data.metrics);
+    const obj = _.assign({}, old.toJS(), data, {metrics});
     return statics.getInstancesRdsSuccess(state, [obj]);
   },
   getCreatedTime(time){
@@ -351,18 +381,6 @@ const statics = {
       data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
     data.meta = fromJS(data.meta);
-
-    //let's keep the metrics we grabbed from other places
-    const arr = state.instances.rds;
-    let old = arr.find(i => {
-      return i.get('id') === data.id;
-    });
-    old = old ? old.toJS() : null;
-    let metrics = {};
-    if (old && old.metrics && _.keys(old.metrics).length){
-      metrics = _.assign(old.metrics, data.metrics || {});
-    }
-    data = _.assign(data, {metrics});
 
     return new InstanceRds(data);
   },
@@ -571,6 +589,15 @@ export default handleActions({
       const asg = statics.getASGMetricsSuccess(state, action.payload.data);
       const filtered = statics.getNewFiltered(asg, state, action, 'groups.asg');
       const groups = _.assign({}, state.groups, {asg});
+      return _.assign({}, state, { groups, filtered });
+    },
+    throw: yeller.reportAction
+  },
+  [GET_METRIC_ECS]: {
+    next(state, action) {
+      const ecs = statics.getECSMetricsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
+      const groups = _.assign({}, state.groups, {ecs});
       return _.assign({}, state, { groups, filtered });
     },
     throw: yeller.reportAction

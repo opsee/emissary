@@ -102,6 +102,7 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
 }));
 
 export const GroupEcs = Record(_.assign({}, baseEnvItem, {
+  tags: List(),
   type: 'ecs',
   DesiredCount: undefined,
   DeploymentConfiguration: new Map(),
@@ -115,7 +116,8 @@ export const GroupEcs = Record(_.assign({}, baseEnvItem, {
   ServiceArn: undefined,
   ServiceName: undefined,
   Status: undefined,
-  TaskDefinition: undefined
+  TaskDefinition: undefined,
+  metrics: Map()
 }));
 
 const Target = Record({

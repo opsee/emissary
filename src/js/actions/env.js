@@ -652,7 +652,7 @@ export function getMetricECS(id, metric){
           query: `query Query($region: String!, $vpc: String!){
             region(id: $region) {
               vpc(id: $vpc) {
-                groups(type: "autoscaling", id: "${id}"){
+                groups(type: "ecs_service", id: "${id}"){
                   ... on ecsService {
                     RoleArn
                     ServiceArn

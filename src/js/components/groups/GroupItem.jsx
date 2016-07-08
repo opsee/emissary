@@ -108,7 +108,8 @@ const GroupItem = React.createClass({
   },
   getLink(){
     const type = this.getItem().get('type').toLowerCase();
-    return `/group/${type}/${this.getItem().get('id')}`;
+    const id = window.encodeURIComponent(this.getItem().get('id'));
+    return `/group/${type}/${id}`;
   },
   getCreateCheckLink(){
     const target = _.pick(this.getItem().toJS(), ['id', 'type', 'name']);
