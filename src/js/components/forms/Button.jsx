@@ -5,7 +5,6 @@ import Hammer from 'react-hammerjs';
 import {connect} from 'react-redux';
 
 import {ChevronRight} from '../icons';
-import {plain as seed} from 'seedling';
 import cx from 'classnames';
 import style from './button.css';
 
@@ -141,11 +140,7 @@ const Button = React.createClass({
   },
   renderChevron(){
     if (this.props.chevron){
-      let fill = seed.color.text;
-      if (this.props.disabled){
-        fill = seed.color.text2;
-      }
-      return <ChevronRight inline fill={fill}/>;
+      return <ChevronRight inline fill="white"/>;
     }
     return null;
   },

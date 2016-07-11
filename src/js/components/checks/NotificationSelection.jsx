@@ -298,7 +298,7 @@ const NotificationSelection = React.createClass({
       }
       const buttons = data.map(c => {
         return (
-          <Button flat onClick={this.runSetValue.bind(this, index, c.id)} color="text" style={{margin: '0 .5rem 1rem', textTransform: 'lowercase'}} key={`slack-channel-${c.id}-${index}`}>#{c.name}</Button>
+          <Button flat onClick={this.runSetValue.bind(this, index, c.id)} style={{margin: '0 .5rem 1rem', textTransform: 'lowercase'}} key={`slack-channel-${c.id}-${index}`}>#{c.name}</Button>
         );
       });
       const remaining = channels.length - data.length;

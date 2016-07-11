@@ -5,7 +5,7 @@
   margin-bottom: 0;
   position: relative;
 }
-.light.item {
+.item.light {
   border-top: solid 1px #E8E8E8;
   border-bottom: none;
 }
@@ -62,6 +62,7 @@
   color: var(--colorText);
   cursor: pointer;
   text-decoration: none;
+  width: 100%;
 }
 
 .link.light {
@@ -124,10 +125,10 @@
 }
 
 .selectorSelected:after{
-  background: var(--colorGray5);
+  /*background: var(--colorGray5);*/
 }
 .light .selectorSelected:after {
-  background: var(--colorGray2);
+  /*background: var(--colorGray2);*/
   border-color: var(--colorGray4);
 }
 

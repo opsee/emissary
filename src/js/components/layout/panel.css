@@ -1,5 +1,6 @@
 .panel.light {
-  background-color: #FFF;
+  background-color: #f7f7f7;
   border-radius: 2px;
   border: solid 1px var(--lightColorBorder);
+  border: solid 1px #afafaf;
 }

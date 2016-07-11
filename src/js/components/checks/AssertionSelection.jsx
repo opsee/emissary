@@ -270,7 +270,7 @@ const AssertionSelection = React.createClass({
             }
           }
           return (
-            <Button flat onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} color="text" style={{margin: '0 1rem 1rem 0'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
+            <Button flat onClick={this.runSetAssertionData.bind(null, assertionIndex, data)} style={{margin: '0 1rem 1rem 0'}} key={`assertion-${assertionIndex}-relationship-${rel.id}`}>{rel.name}</Button>
           );
         })}
       </Padding>
@@ -282,7 +282,7 @@ const AssertionSelection = React.createClass({
       const obj = _.find(relationships, {id: assertion.relationship}) || {};
       return (
         <Padding t={1}>
-          <Button flat color="text" onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
+          <Button flat onClick={this.runSetAssertionData.bind(null, assertionIndex, {relationship: null})}>{obj.name}</Button>
         </Padding>
       );
     }
@@ -362,7 +362,7 @@ const AssertionSelection = React.createClass({
         <Padding t={1}>
           {headerKeys.map(key => {
             return (
-              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: key})} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-header-key-${key}`}>{key}</Button>
+              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: key})} style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-header-key-${key}`}>{key}</Button>
             );
           })}
         </Padding>
@@ -407,7 +407,7 @@ const AssertionSelection = React.createClass({
         <Padding t={1}>
           {metrics.map(metric => {
             return (
-              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: metric.id})} color="text" style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-metric-key-${metric.id}`}>{metric.name}</Button>
+              <Button flat nocap onClick={this.runSetAssertionData.bind(null, assertionIndex, {value: metric.id})} style={{margin: '0 .5rem 1rem'}} key={`assertion-${assertionIndex}-metric-key-${metric.id}`}>{metric.name}</Button>
             );
           })}
         </Padding>

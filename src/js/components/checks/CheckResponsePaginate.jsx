@@ -161,13 +161,13 @@ const CheckResponsePaginate = React.createClass({
     if (this.state.expanded){
       return (
         <Button color="info" onClick={this.handleToggle} className={cx(style.checkResponseButton, style[this.props.scheme])} title="Close Reponse">
-          <ChevronUp inline/>
+          <ChevronUp inline fill="white"/>
         </Button>
       );
     }
     return (
       <Button color="info" onClick={this.handleToggle} className={cx(style.checkResponseButton, style[this.props.scheme])} title="Open Response">
-        <ChevronDown inline/>
+        <ChevronDown inline fill="white"/>
       </Button>
     );
   },

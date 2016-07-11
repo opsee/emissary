@@ -60,7 +60,7 @@ const Input = React.createClass({
   renderChildren(){
     if (this.props.children){
       return (
-        <label htmlFor={this.state.id} className={style.iconLabel}>
+        <label htmlFor={this.state.id} className={cx(style.iconLabel, style[this.props.scheme])}>
           {this.props.children}
         </label>
       );

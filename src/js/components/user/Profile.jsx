@@ -151,17 +151,18 @@ const Profile = React.createClass({
     const user = this.getUser();
     return (
       <div>
-        <Toolbar title={user.name} pageTitle="Profile" hidden />
-        <Padding tb={2}>
+        <Toolbar title={user.name} pageTitle="Profile">
+          <Button fab color="primary" to="/profile/edit" title="Edit Your Profile">
+            <Edit btn/>
+          </Button>
+        </Toolbar>
+        <Padding b={2}>
           <Grid>
             <Row>
               <Col xs={12}>
                 <Panel>
                   <Padding b={1} className="row between-xs middle-xs">
                     <Heading level={3} noPadding>Your Profile Information</Heading>
-                    <Button fab color="primary" to="/profile/edit" title="Edit Your Profile">
-                      <Edit btn/>
-                    </Button>
                   </Padding>
                   <Table>
                     <tr>

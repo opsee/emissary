@@ -300,12 +300,14 @@ const CheckCreateRequest = React.createClass({
       );
     }
     return (
-        <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
+      <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
+        <Padding b={2}>
           <Alert color="success" onDismiss={this.runDismissHelperText}>
             {text}
           </Alert>
-        </UserDataRequirement>
-      );
+        </Padding>
+      </UserDataRequirement>
+    );
   },
   renderBodyInput(){
     if (this.props.check.spec.verb !== 'GET'){
@@ -389,9 +391,7 @@ const CheckCreateRequest = React.createClass({
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
         {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
-        <Padding b={2}>
-          {this.renderHelperText()}
-        </Padding>
+        {this.renderHelperText()}
         {this.renderTargetSelection()}
         <Padding b={1}>
           {this.renderInputs()}

@@ -10,7 +10,7 @@ import AssertionsHTTP from './AssertionsHTTP';
 import AssertionsCloudwatch from './AssertionsCloudwatch';
 import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
 import {Heading} from '../type';
@@ -185,7 +185,11 @@ const CheckEdit = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner(check)}
+              <Padding t={1}>
+                <Panel>
+                  {this.renderInner(check)}
+                </Panel>
+              </Padding>
               <CheckDebug check={_.omit(check, 'results')}/>
             </Col>
           </Row>

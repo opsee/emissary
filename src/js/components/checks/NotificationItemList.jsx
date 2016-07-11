@@ -52,7 +52,7 @@ const NotificationItemList = React.createClass({
     case 'email':
       return (
         <Padding key={`notif-${i}`} b={1}>
-          <Mail inline/> {n.value}
+          <Mail inline fill="text"/> {n.value}
         </Padding>
       );
     case 'slack_bot':
@@ -60,7 +60,7 @@ const NotificationItemList = React.createClass({
       if (channel){
         return (
           <Padding key={`notif-${i}`} b={1}>
-            <Slack inline/> {_.get(channel, 'name')}
+            <Slack inline fill="text"/> {_.get(channel, 'name')}
           </Padding>
         );
       }
@@ -82,7 +82,7 @@ const NotificationItemList = React.createClass({
     case 'webhook':
       return (
         <Padding key={`notif-${i}`} b={1}>
-          <Cloud inline/> {n.value}
+          <Cloud inline fill="text"/> {n.value}
         </Padding>
       );
     default:

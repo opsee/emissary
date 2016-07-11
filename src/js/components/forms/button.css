@@ -170,13 +170,16 @@
   box-shadow: none;
   color: var(--colorText);
 }
+.btn.flat.light{
+  color: var(--lightColorText);
+}
 .btn.flat:focus {
   background-color: transparent;
 }
 .btn.flat:hover{
   background: var(--colorText2);
   border-color: transparent;
-  color: white !important;
+  color: white;
 }
 .btn.flat:active{
   background: color(var(--colorText2) shade(40%));
@@ -197,6 +200,7 @@
 }
 .btn.flat.default.light:hover {
   background: var(--lightColorText2);
+  color: white;
 }
 .btn.flat.primary {
   border-color: var(--colorPrimary);
@@ -205,6 +209,7 @@
 .btn.flat.primary:hover {
   border-color: color(var(--colorPrimary) shade(40%));
   background: color(var(--colorPrimary) shade(40%));
+  color: white;
 }
 .btn.flat.primary:active {
   border-color: color(var(--colorPrimary) shade(40%));
@@ -216,6 +221,7 @@
 }
 .btn.flat.success:hover {
   background: var(--colorSuccess);
+  color: white;
 }
 .btn.flat.success:active {
   background: color(var(--colorSuccess) shade(40%));
@@ -226,6 +232,7 @@
 }
 .btn.flat.warning:hover {
   background: var(--colorWarning);
+  color: white;
 }
 .btn.flat.warning:active {
   background: color(var(--colorWarning) shade(40%));
@@ -236,6 +243,7 @@
 }
 .btn.flat.danger:hover {
   background: var(--colorDanger);
+  color: white;
 }
 .btn.flat.danger:active {
   background: color(var(--colorDanger) shade(40%));
@@ -246,6 +254,7 @@
 }
 .btn.flat.info:hover {
   background: var(--colorInfo);
+  color: white;
 }
 .btn.flat.info:active {
   background: color(var(--colorInfo) shade(40%));

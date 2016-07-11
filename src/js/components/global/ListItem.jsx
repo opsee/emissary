@@ -42,6 +42,7 @@ const ListItem = React.createClass({
   shouldComponentUpdate(nextProps) {
     let arr = [];
     arr.push(!is(this.props.item, nextProps.item));
+    arr.push(nextProps.scheme !== this.props.scheme);
     return _.some(arr);
   },
   getClass(){

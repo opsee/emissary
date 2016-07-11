@@ -30,6 +30,9 @@ const Icon = React.createClass({
       }
     }
     arr.push(this.props.className);
+    if (!this.props.fill){
+      arr.push(style[this.props.scheme]);
+    }
     return cx(arr);
   },
   getFill(){

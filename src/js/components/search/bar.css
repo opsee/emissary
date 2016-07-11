@@ -5,6 +5,8 @@ input.searchInput {
   color: var(--colorGray2) !important;
 }
 
+input.light.
+
 .form{
   position: relative;
 }
@@ -42,4 +44,8 @@ input.searchInput {
 }
 .labelFocused.light {
   background: #121212 !important;
+}
+
+.mag.light {
+  fill: white !important;
 }

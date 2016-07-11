@@ -145,8 +145,8 @@ const CheckList = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Checks" hidden />
-        <Padding tb={2}>
+        <Toolbar title="Checks"/>
+        <Padding b={2}>
           <Grid>
             <Row>
               <Col xs={12}>

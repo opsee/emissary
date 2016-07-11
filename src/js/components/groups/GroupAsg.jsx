@@ -11,7 +11,7 @@ import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 import {flag} from '../../modules';
@@ -129,7 +129,9 @@ const GroupAsg = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>
