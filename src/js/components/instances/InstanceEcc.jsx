@@ -110,6 +110,10 @@ const InstanceEcc = React.createClass({
             <Heading level={3}>{this.props.params.id} Information</Heading>
             <Table>
               <tr>
+                <td><strong>Private IP Address</strong></td>
+                <td>{instance.PrivateIpAddress}</td>
+              </tr>
+              <tr>
                 <td><strong>Launched</strong></td>
                 <td>
                   <TimeAgo date={instance.LaunchTime}/>

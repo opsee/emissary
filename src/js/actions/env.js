@@ -49,6 +49,7 @@ export function getGroupSecurity(id){
                       SecurityGroups {
                         GroupId
                       }
+                      PrivateIpAddress
                     }
                   }
                 }
@@ -86,6 +87,7 @@ export function getGroupsSecurity(){
                       SecurityGroups {
                         GroupId
                       }
+                      PrivateIpAddress
                     }
                   }
                 }
@@ -267,6 +269,7 @@ export function getInstanceEcc(id){
                     LaunchTime
                     InstanceType
                     InstanceId
+                    PrivateIpAddress
                     SecurityGroups {
                       GroupId
                     }
@@ -301,6 +304,7 @@ export function getInstancesEcc(){
                       Value
                     }
                     InstanceId
+                    PrivateIpAddress
                     SecurityGroups {
                       GroupId
                     }

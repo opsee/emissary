@@ -73,7 +73,8 @@ export const InstanceEcc = Record(_.assign({}, baseEnvItem, {
     Tenancy: undefined
   }),
   SecurityGroups: List(),
-  metrics: Map()
+  metrics: Map(),
+  PrivateIpAddress: undefined
 }));
 
 export const InstanceRds = Record(_.assign({}, baseEnvItem, {
