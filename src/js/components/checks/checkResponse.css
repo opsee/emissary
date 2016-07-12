@@ -1,9 +1,8 @@
-.checkResponse {
+.item {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
   background: var(--colorGray9);
-  border: 2px solid var(--colorGray9);
   height: 13rem;
   max-height: 13rem;
   overflow: hidden;
@@ -15,8 +14,18 @@
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
+  border-left: 4px solid var(--colorGray9);
 }
-.checkResponse:after {
+
+.item.passing {
+  border-color: var(--colorSuccess);
+}
+
+.item.failing {
+  border-color: var(--colorDanger);
+}
+
+.item:after {
   background-size: 100%;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--colorGray9));
   bottom: 0;
@@ -29,34 +38,32 @@
   width: 100%;
 }
 
-.checkResponse pre {
+.item pre {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
-.checkResponseWaiting {
-  composes: checkResponse;
+.item.waiting {
   align-items: center;
   max-height:none;
   height:auto;
   min-height:13rem;
 }
-.checkResponseWaiting:after{
+.item.waiting:after{
   content:none;
   display:none;
 }
 
-.checkResponseExpanded {
-  composes: checkResponse;
+.item.expanded {
   align-items: flex-start;
   height: auto;
   max-height: none;
 }
-.checkResponseExpanded:after {
+.item.expanded:after {
   display: none;
 }
 
-.checkResponseButton {
+.button {
   bottom: 1rem;
   position: absolute;
   right: 1rem;

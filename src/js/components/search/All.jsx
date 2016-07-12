@@ -63,7 +63,7 @@ const SearchAll = React.createClass({
     this.props.actions.setString('');
   },
   renderList(){
-    if (!!this.props.redux.env.activeBastion){
+    if (!this.props.redux.env.activeBastion){
       return <CheckItemList limit={this.props.redux.search.string ? 1000 : 8} filter/>;
     }
     return <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>;
