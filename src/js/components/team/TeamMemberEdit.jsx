@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Close} from '../icons';
 import {Member} from '../../modules/schemas';
@@ -97,10 +97,14 @@ const TeamMemberEdit = React.createClass({
             <Grid>
               <Row>
                 <Col xs={12}>
-                  <TeamMemberInputs onChange={this.handleInputChange} {...this.state}/>
-                  <StatusHandler status={this.props.redux.asyncActions.teamMemberEdit.status}/>
-                  <Padding t={2}>
-                    <Button color="success" block type="submit">Update</Button>
+                  <Padding t={1}>
+                    <Panel>
+                      <TeamMemberInputs onChange={this.handleInputChange} {...this.state}/>
+                      <StatusHandler status={this.props.redux.asyncActions.teamMemberEdit.status}/>
+                      <Padding t={2}>
+                        <Button color="success" block type="submit">Update</Button>
+                      </Padding>
+                    </Panel>
                   </Padding>
                 </Col>
               </Row>
