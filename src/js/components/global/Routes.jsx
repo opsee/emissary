@@ -169,6 +169,7 @@ const routes = (
 
     <Route path="/integrations/slack" component={Slack}/>
 
+    <Redirect from="/terms-of-service" to="/tos"/>
     <Route path="/tos" component={TOS}/>
     <Route path="/privacy" component={Privacy}/>
 
