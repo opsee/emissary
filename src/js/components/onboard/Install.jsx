@@ -129,7 +129,7 @@ const Install = React.createClass({
     }
     return this.getDiscoveryStatus(props) === 'complete';
   },
-  isBastionConnected(props){
+  isBastionConnected(props = this.props){
     return this.getBastionConnectionStatus(props) === 'complete';
   },
   isComplete(props = this.props){
