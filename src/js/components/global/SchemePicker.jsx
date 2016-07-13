@@ -11,8 +11,8 @@ import {
 const SchemePicker = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      confirmOpen: PropTypes.func.isRequired
-    }).isRequired,
+      setScheme: PropTypes.func.isRequired
+    }).isRequired
   },
   handleSchemeClick(scheme){
     this.props.actions.setScheme(scheme);
@@ -25,7 +25,7 @@ const SchemePicker = React.createClass({
         </Padding>
         <Button onClick={this.handleSchemeClick.bind(null, 'light')} style={{color: '#333', border: '2px solid #666', background: 'rgba(200, 200, 200, 1)'}}>Light</Button>
       </div>
-    )
+    );
   }
 });
 

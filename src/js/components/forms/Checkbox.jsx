@@ -28,8 +28,8 @@ const Radio = React.createClass({
   },
   getClass(){
     return cx(
-      style.selector, 
-      this.props.selected && style.selectorSelected, 
+      style.selector,
+      this.props.selected && style.selectorSelected,
       style[this.props.color]
     );
   },
