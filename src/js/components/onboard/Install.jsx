@@ -49,23 +49,23 @@ const Install = React.createClass({
       this.props.actions.install();
     }
   },
-  componentWillReceiveProps(){
+  componentWillReceiveProps(nextProps){
     // Only redirect if they've already completed (or skipped) notification set-up;
     // otherwise, keep the prompt for the notifs step on screen.
-    if (this.isComplete() && this.isDoneNotifications()) {
+    if (this.isComplete(nextProps)) {
       setTimeout(() => {
         this.context.router.push('/start/postinstall');
       }, 250);
     }
   },
-  getBastionMessages(){
-    let msgs = _.chain(this.props.redux.app.socketMessages).filter({command: 'launch-bastion'}).filter(m => {
+  getBastionMessages(props = this.props){
+    let msgs = _.chain(props.redux.app.socketMessages).filter({command: 'launch-bastion'}).filter(m => {
       return m.attributes && m.attributes.ResourceType;
     }).value();
 
     let reject = {instance_id: '5tRx0JWEOQgGVdLoKj1W3Z'};
     if (process.env.NODE_ENV !== 'production'){
-      if (this.props.location.query.fail){
+      if (props.location.query.fail){
         reject = {instance_id: '1r6k6YRB3Uzh0Bk5vmZsFU'};
       }
     }
@@ -83,74 +83,74 @@ const Install = React.createClass({
       };
     }).value();
   },
-  getBastionStatuses(){
-    return _.chain(this.getBastionMessages()).map('messages').map(bastionMsgs => {
+  getBastionStatuses(props = this.props){
+    return _.chain(this.getBastionMessages(props)).map('messages').map(bastionMsgs => {
       return _.chain(bastionMsgs).filter({ResourceType: 'AWS::CloudFormation::Stack'}).filter(msg => {
         return msg.ResourceStatus === 'CREATE_COMPLETE' || msg.ResourceStatus === 'ROLLBACK_COMPLETE';
       }).map('ResourceStatus').head().value();
     }).value();
   },
-  getBastionErrors(){
-    const one = _.chain(this.props.redux.app.socketMessages)
+  getBastionErrors(props = this.props){
+    const one = _.chain(props.redux.app.socketMessages)
     .filter({command: 'launch-bastion'})
     .filter({state: 'failed'})
     .value();
     return _.filter(this.getBastionStatuses(), stat => stat === 'ROLLBACK_COMPLETE').concat(one);
   },
-  getBastionSuccesses(){
-    return _.filter(this.getBastionStatuses(), stat => stat === 'CREATE_COMPLETE');
+  getBastionSuccesses(props = this.props){
+    return _.filter(this.getBastionStatuses(props), stat => stat === 'CREATE_COMPLETE');
   },
-  getDiscoveryStatus(){
-    return _.chain(this.props.redux.app.socketMessages).filter({command: 'discovery'}).last().get('state').value();
+  getDiscoveryStatus(props = this.props){
+    return _.chain(props.redux.app.socketMessages).filter({command: 'discovery'}).last().get('state').value();
   },
-  getBastionConnectionStatus(){
-    return _.chain(this.props.redux.app.socketMessages).filter({command: 'connect-bastion'}).last().get('state').value();
+  getBastionConnectionStatus(props = this.props){
+    return _.chain(props.redux.app.socketMessages).filter({command: 'connect-bastion'}).last().get('state').value();
   },
-  getNotifications(){
-    return this.props.redux.onboard.defaultNotifs;
+  getNotifications(props = this.props){
+    return props.redux.onboard.defaultNotifs;
   },
-  isDoneNotifications(){
-    return _.size(this.getNotifications()) || this.props.redux.onboard.skippedDefaultNotifs;
+  isDoneNotifications(props = this.props){
+    return _.size(this.getNotifications(props)) || this.props.redux.onboard.skippedDefaultNotifs;
   },
-  isInstallError(){
-    const status = this.props.redux.asyncActions.onboardInstall.status;
+  isInstallError(props = this.props){
+    const status = props.redux.asyncActions.onboardInstall.status;
     return status && typeof status !== 'string';
   },
-  isBastionLaunching(){
-    return !!(_.filter(this.props.redux.app.socketMessages, {command: 'launch-bastion'}).length);
+  isBastionLaunching(props = this.props){
+    return !!(_.filter(props.redux.app.socketMessages, {command: 'launch-bastion'}).length);
   },
-  isBastionConnecting(){
-    const {socketMessages} = this.props.redux.app;
+  isBastionConnecting(props = this.props){
+    const {socketMessages} = props.redux.app;
     return !!(_.chain(socketMessages).filter({command: 'connect-bastion'}).last().get('state').value() === 'in-progress');
   },
-  isDiscoveryComplete(){
-    if (this.props.location.pathname.match('install-example')){
+  isDiscoveryComplete(props = this.props){
+    if (props.location.pathname.match('install-example')){
       return true;
     }
-    return this.getDiscoveryStatus() === 'complete';
+    return this.getDiscoveryStatus(props) === 'complete';
   },
-  isBastionConnected(){
-    return this.getBastionConnectionStatus() === 'complete';
+  isBastionConnected(props){
+    return this.getBastionConnectionStatus(props) === 'complete';
   },
-  isComplete(){
+  isComplete(props = this.props){
     //the bastion connection can be determined an alternate way that indicates discovery is fully complete:
-    const bool1 = _.chain(this.props.redux.app.socketMessages)
+    const bool1 = _.chain(props.redux.app.socketMessages)
     .filter({command: 'bastions'})
     .find(msg => {
       return _.chain(msg).get('attributes.bastions').find('connected').value();
     })
     .value();
-    const bool2 = this.isBastionConnected() && this.isDiscoveryComplete();
+    const bool2 = this.isBastionConnected(props) && this.isDiscoveryComplete(props);
     return !!(bool1 || bool2);
   },
-  areBastionsComplete(){
-    const stats = this.getBastionStatuses();
-    const {socketMessages} = this.props.redux.app;
+  areBastionsComplete(props = this.props){
+    const stats = this.getBastionStatuses(props);
+    const {socketMessages} = props.redux.app;
     return (_.every(stats) && stats.length) ||
     _.filter(socketMessages, {command: 'connect-bastion', state: 'complete'}).length;
   },
-  renderError(){
-    if (this.getBastionErrors().length){
+  renderError(props = this.props){
+    if (this.getBastionErrors(props).length){
       return (
         <Alert color="danger">
           We are aware of your failed instance install and we will contact you via email as soon as possible. Thank you!
@@ -161,7 +161,11 @@ const Install = React.createClass({
   },
   renderStatusText(){
     if (this.isComplete()) {
-      return null;
+      return (
+        <Padding b={1}>
+          Awesome! Your Opsee Instance is up and running.
+        </Padding>
+      );
     } else if (this.isBastionLaunching()){
       return (
         <Padding b={1}>
