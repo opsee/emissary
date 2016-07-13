@@ -128,7 +128,7 @@ const CheckResponsePaginate = React.createClass({
   getBody(){
     return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.body');
   },
-  getCurrentResponseTargetLink(target){
+  getCurrentResponseTargetLink(target = {}){
     const {type, id} = target;
     switch (type){
     case 'instance':
