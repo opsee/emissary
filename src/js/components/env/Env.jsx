@@ -37,7 +37,7 @@ const Env = React.createClass({
   },
   componentWillMount(){
     this.props.checkActions.getChecks();
-    this.props.actions.all();
+    // this.props.actions.all();
   },
   getTitle(){
     const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};

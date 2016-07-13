@@ -76,6 +76,7 @@ export function getGroupSecurity(id){
       payload: graphPromise('region.vpc', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUP_SECURITY})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -108,6 +109,7 @@ export function getGroupsSecurity(){
       payload: graphPromise('region.vpc', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUPS_SECURITY})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -140,6 +142,7 @@ export function getGroupAsg(id){
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUP_ASG})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -185,6 +188,7 @@ export function getGroupsAsg(){
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUPS_ASG})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -212,6 +216,7 @@ export function getGroupElb(id) {
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUP_ELB})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -250,6 +255,7 @@ export function getGroupsElb(){
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUPS_ELB})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -277,6 +283,7 @@ export function getInstanceEcc(id){
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_INSTANCE_ECC})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -314,6 +321,7 @@ export function getInstancesEcc(){
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_INSTANCES_ECC})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -341,6 +349,7 @@ export function getInstancesRds(){
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_INSTANCES_RDS})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -368,6 +377,7 @@ export function getInstanceRds(id){
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_INSTANCE_RDS})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -449,6 +459,7 @@ export function getMetricRDS(id, metric){
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_METRIC_RDS})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -486,6 +497,7 @@ export function getMetricECC(id, metric){
       payload: graphPromise('region.vpc.instances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_METRIC_ECC})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -523,6 +535,7 @@ export function getMetricASG(id, metric){
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_METRIC_ASG})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -596,6 +609,7 @@ export function rebootInstances(ids = []){
       payload: graphPromise('region.rebootInstances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: AWS_REBOOT_INSTANCES})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation reboot($region: String!, $ids: [String]!){
@@ -617,6 +631,7 @@ export function stopInstances(ids = []){
       payload: graphPromise('region.stopInstances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: AWS_STOP_INSTANCES})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation reboot($region: String!, $ids: [String]!){
@@ -638,6 +653,7 @@ export function startInstances(ids = []){
       payload: graphPromise('region.startInstances', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: AWS_START_INSTANCES})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation reboot($region: String!, $ids: [String]!){
