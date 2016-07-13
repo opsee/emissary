@@ -25,6 +25,7 @@ import {
 export function fetchChecks(state) {
   return request
     .post(`${config.services.compost}`)
+    .query({type: 'FETCH_CHECKS'})
     .set('Authorization', state().user.get('auth'))
     .send({
       query: `{
@@ -76,6 +77,7 @@ export function getCheck(id){
       payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_CHECK})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `{
@@ -188,6 +190,7 @@ export function getChecksNotifications(){
       payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_CHECKS_NOTIFICATIONS})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `{
@@ -256,6 +259,7 @@ export function del(ids, redirect){
         return new Promise((resolve, reject) => {
           request
           .post(`${config.services.compost}`)
+          .query({type: CHECKS_DELETE})
           .set('Authorization', state().user.get('auth'))
           .send({query:
             `mutation Mutation {
@@ -379,6 +383,7 @@ export function test(data){
       payload: graphPromise('testCheck.responses', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: CHECK_TEST})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation Test ($check: Check){
@@ -458,6 +463,7 @@ export function createOrEdit(raw){
       payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: CHECK_CREATE_OR_EDIT})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation Mutation ($checks: [Check]){
@@ -526,6 +532,7 @@ export function multiEditNotifications(raw){
       payload: graphPromise('checks', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: CHECK_MULTIEDIT})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation Mutation ($checks: [Check]){
