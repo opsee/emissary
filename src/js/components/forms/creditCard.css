@@ -1,0 +1,12 @@
+.form {
+  padding-left: 1rem;
+  border-left: .4rem solid var(--colorGray8);
+}
+
+.form.valid {
+  border-color: var(--colorSuccess);
+}
+
+.form.invalid {
+  border-color: var(--colorDanger);
+}

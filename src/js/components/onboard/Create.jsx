@@ -51,7 +51,7 @@ const OnboardCreate = React.createClass({
     return this.props.actions.signupCreate(_.defaults(this.state.data, {
       name: 'default',
       referrer: this.props.location.query.referrer || ''
-    }), '/start/launch-stack');
+    }), '/');
   },
   render() {
     return (
@@ -66,7 +66,6 @@ const OnboardCreate = React.createClass({
                     <LogoColor borderColor="dark" />
                     <Heading level={2}>Try Opsee for free in our public beta!</Heading>
                   </Padding>
-
                   <form name="onboardForm" onSubmit={this.handleSubmit} className="text-left">
                     <Padding b={1}>
                       <UserInputs include={['name', 'email']} data={this.state.data} onChange={this.handleUserData}/>
@@ -77,7 +76,7 @@ const OnboardCreate = React.createClass({
                         {this.getButtonText()}
                       </Button>
                       <Padding t={1}>
-                        <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee's <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
+                        <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee&rsquo;s <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
                       </Padding>
                     </div>
 

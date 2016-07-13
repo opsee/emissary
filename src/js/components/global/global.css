@@ -134,6 +134,10 @@ small {
   text-align: left;
 }
 
+:global .text-right {
+  text-align: right;
+}
+
 :global .text-info {
   color: var(--colorInfo);
 }

@@ -42,7 +42,7 @@ const CheckTypeSwitcher = React.createClass({
       check.assertions = [];
     }
     this.props.onChange(check);
-    const data = JSON.stringify(check);
+    const data = window.encodeURIComponent(JSON.stringify(check));
     let path = `/check-create/assertions-cloudwatch?data=${data}`;
     if (check.type === 'http'){
       path = `/check-create/request?data=${data}`;

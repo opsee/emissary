@@ -11,7 +11,12 @@ import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
-import {checks as actions, user as userActions, app as appActions} from '../../actions';
+import {
+  checks as actions,
+  user as userActions,
+  app as appActions
+} from '../../actions';
+import {Check} from '../../modules/schemas';
 
 const CheckList = React.createClass({
   propTypes: {
@@ -59,6 +64,19 @@ const CheckList = React.createClass({
       return check.get('selected');
     });
   },
+  getExtCheckUrl(){
+    let check = new Check().toJS();
+    let data = _.assign(check, {
+      type: 'http',
+      target: {
+        type: 'external_host'
+      }
+    });
+    //strip notifs and assertions because they are added later in the process
+    data = _.omit(data, ['notifications', 'assertions']);
+    data = window.encodeURIComponent(JSON.stringify(data));
+    return `/check-create/request?data=${data}`;
+  },
   runDismissHelperText(){
     this.props.userActions.putData('hasDismissedCheckTypeHelp');
   },
@@ -101,7 +119,7 @@ const CheckList = React.createClass({
           <p>Thanks for signing up! Let&rsquo;s get your environment set up:</p>
 
           <ol>
-            <li><Link to="/check-create" title="Create New Check">Create your first health check</Link> for any public URL</li>
+            <li><Link to={this.getExtCheckUrl()} title="Create New Check">Create your first health check</Link> for any public URL</li>
             <li>Keep your team in the loop by setting up <a href="/profile">Slack and Pagerduty integration</a> on your Profile page</li>
             <li>If you&rsquo;re hosted in AWS, <a href="/start/launch-stack">add our EC2 instance</a> to run checks inside your environment too</li>
           </ol>

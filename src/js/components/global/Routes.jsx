@@ -42,6 +42,15 @@ import PasswordForgot from 'react-proxy?name=onboard!exports?exports.default!../
 import PasswordChange from 'react-proxy?name=onboard!exports?exports.default!../user/PasswordChange';
 import Profile from 'react-proxy?name=profile!exports?exports.default!../user/Profile';
 import ProfileEdit from 'react-proxy?name=profile!exports?exports.default!../user/ProfileEdit';
+import Logout from 'react-proxy?name=Logout!exports?exports.default!../user/Logout';
+
+import Team from 'react-proxy?name=team!exports?exports.default!../team/Team';
+import TeamEdit from 'react-proxy?name=team!exports?exports.default!../team/TeamEdit';
+import TeamCreate from 'react-proxy?name=team!exports?exports.default!../team/TeamCreate';
+import TeamMember from 'react-proxy?name=team!exports?exports.default!../team/TeamMember';
+import TeamMemberEdit from 'react-proxy?name=team!exports?exports.default!../team/TeamMemberEdit';
+import TeamMemberInvite from 'react-proxy?name=team!exports?exports.default!../team/TeamMemberInvite';
+
 import Verify from 'react-proxy?name=profile!exports?exports.default!../user/Verify';
 
 import Onboard from 'react-proxy?name=onboard!exports?exports.default!../onboard/Onboard';
@@ -138,6 +147,13 @@ const routes = (
     <Route path="/verify" component={Verify}/>
     <Route path="/profile" component={auth(Profile)}/>
     <Route path="/profile/edit" component={auth(ProfileEdit)}/>
+    <Route path="/logout" component={auth(Logout)}/>
+    <Route path="/team" component={auth(Team)}/>
+    <Route path="/team/edit" component={auth(TeamEdit)}/>
+    <Route path="/team/create" component={auth(TeamCreate)}/>
+    <Route path="/team/member/invite" component={auth(TeamMemberInvite)}/>
+    <Route path="/team/member/:id" component={auth(TeamMember)}/>
+    <Route path="/team/member/:id/edit" component={auth(TeamMemberEdit)}/>
     <Route path="/login" component={Login}/>
     <Route path="/password-forgot" component={PasswordForgot}/>
     <Route path="/password-change" component={PasswordChange}/>
@@ -145,7 +161,8 @@ const routes = (
     <Route path="/help" component={Help}/>
 
     <Redirect from="/docs" to="/help"/>
-    <Route path="/docs/bastion" component={DocsBastion}/>
+    <Redirect from="/docs/bastion" to="/docs/instance"/>
+    <Route path="/docs/instance" component={DocsBastion}/>
     <Route path="/docs/checks" component={DocsChecks}/>
     <Route path="/docs/notifications" component={DocsNotifications}/>
     <Route path="/docs/permissions" component={DocsPermissions}/>

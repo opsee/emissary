@@ -1,0 +1,11 @@
+.permsIconsWrap {
+  top: .4rem;
+  position: relative;
+  opacity: .4;
+  margin-left: 1rem;
+}
+
+.permsIcon {
+  width: 2rem;
+  height: 2rem;
+}

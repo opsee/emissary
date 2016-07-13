@@ -6,7 +6,7 @@ import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add, Settings} from '../icons';
@@ -71,13 +71,13 @@ const InstanceEcc = React.createClass({
     return initial.concat(this.getGroupsSecurity()).concat(this.getGroupsELB());
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getInstance().get('id'),
         type: 'ecc',
         name: this.getInstance().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   handleActionsClick(){
@@ -109,6 +109,10 @@ const InstanceEcc = React.createClass({
           <Padding b={2}>
             <Heading level={3}>{this.props.params.id} Information</Heading>
             <Table>
+              <tr>
+                <td><strong>Private IP Address</strong></td>
+                <td>{instance.PrivateIpAddress}</td>
+              </tr>
               <tr>
                 <td><strong>Launched</strong></td>
                 <td>
@@ -148,7 +152,9 @@ const InstanceEcc = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

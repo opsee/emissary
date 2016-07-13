@@ -9,7 +9,7 @@ import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
@@ -44,13 +44,13 @@ const GroupSecurity = React.createClass({
     }) || new Map({id: this.props.params.id});
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getGroup().get('id'),
         type: 'security',
         name: this.getGroup().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   renderDescription(){
@@ -99,7 +99,9 @@ const GroupSecurity = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

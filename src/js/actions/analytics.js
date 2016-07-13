@@ -23,7 +23,7 @@ function makeUserObject(userData) {
   // Users taken from redux state are Immutable Records, but user updates
   // are objects -- cast 'em all to JavaScript
   const user = userData.toJS ? userData.toJS() : userData;
-  return _.pick(user, ['email', 'name', 'customer_id', 'id']);
+  return _.pick(user, ['email', 'name', 'customer_id', 'id', 'created_at']);
 }
 
 /**
@@ -165,6 +165,7 @@ export function initialize(userData) {
           name: user.name,
           email: user.email,
           created_at: createdAt,
+          signed_up_at: createdAt,
           user_hash: user.intercom_hmac,
           widget: {
             activator: '#Intercom'

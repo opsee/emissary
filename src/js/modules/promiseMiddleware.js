@@ -17,6 +17,7 @@ export function promiseMiddleware({ dispatch }) {
       const id = _.uniqueId();
       dispatch({
         type: aType,
+        meta: action.meta,
         payload: {
           status: 'pending',
           time: new Date(),
@@ -28,6 +29,7 @@ export function promiseMiddleware({ dispatch }) {
           dispatch(_.assign({}, action, {payload: result}));
           dispatch({
             type: aType,
+            meta: action.meta,
             payload: {
               time: new Date(),
               status: 'success',
@@ -43,6 +45,7 @@ export function promiseMiddleware({ dispatch }) {
           }
           dispatch({
             type: aType,
+            meta: action.meta,
             payload: {
               time: new Date(),
               status: error,

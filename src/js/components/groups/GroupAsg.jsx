@@ -47,13 +47,13 @@ const GroupAsg = React.createClass({
     }) || new Map({id: this.props.params.id});
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getGroup().get('id'),
         type: 'asg',
         name: this.getGroup().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   renderCreateCheckButton(){

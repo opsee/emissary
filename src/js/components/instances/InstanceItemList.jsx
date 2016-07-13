@@ -10,7 +10,7 @@ import {Link} from 'react-router';
 import {SetInterval} from '../../modules/mixins';
 import {StatusHandler} from '../global';
 import {env as actions} from '../../actions';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
 
 const InstanceItemList = React.createClass({
   mixins: [SetInterval],
@@ -32,6 +32,7 @@ const InstanceItemList = React.createClass({
       getInstancesEcc: PropTypes.func,
       getInstancesRds: PropTypes.func
     }),
+    scheme: PropTypes.string,
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       search: PropTypes.shape({
@@ -179,7 +180,7 @@ const InstanceItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getInstances().size))){
-      return <Heading level={3}>{this.getTitle()} Instances {numbers}</Heading>;
+      return <Heading level={3}><Link to={this.getEnvLink()}><Color c="textSecondary" scheme={this.props.scheme}>{this.getTitle()} Instances {numbers}</Color></Link></Heading>;
     }
     return null;
   },
@@ -214,7 +215,8 @@ const InstanceItemList = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

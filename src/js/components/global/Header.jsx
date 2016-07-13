@@ -15,6 +15,7 @@ const Header = React.createClass({
     user: PropTypes.object.isRequired,
     hide: PropTypes.bool,
     redux: PropTypes.shape({
+      team: PropTypes.object.isRequired,
       env: PropTypes.shape({
         activeBastion: PropTypes.object
       })
@@ -39,8 +40,19 @@ const Header = React.createClass({
     }
     return obj;
   },
+  shouldRenderTeam(){
+    return this.props.redux.team.toJS().users.length > 1;
+  },
   renderLoginLink(){
     if (this.props.user.get('auth')){
+      if (this.shouldRenderTeam()){
+        return (
+          <Link to="/team" className={style.navbarLink} activeClassName="active">
+            <Person nav/>&nbsp;
+            <span className={`${style.navbarTitle}`}>Team</span>
+          </Link>
+        );
+      }
       return (
         <Link to="/profile" className={style.navbarLink} activeClassName="active">
           <Person nav/>&nbsp;

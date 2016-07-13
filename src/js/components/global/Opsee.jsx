@@ -29,7 +29,19 @@ import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
 const fullScreenList = ['^\/start', '^\/login'];
-const hideNavList = ['^\/check-create', '^\/check\/edit', '^\/check\/.*\/event', '^\/profile\/edit', '^\/password-forgot', '^\/welcome'];
+
+const hideNavList = [
+  '^\/check-create',
+  '^\/check\/edit',
+  '^\/check\/.*\/event',
+  '^\/profile\/edit',
+  '^\/password-forgot',
+  '^\/team\/edit',
+  '^\/team\/create',
+  '^\/team\/member\/invite',
+  '^\/team\/member\/.*\/edit',
+  '^\/welcome'
+];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],

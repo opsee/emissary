@@ -180,7 +180,20 @@ export default handleActions({
   },
   [GET_CHECK_FROM_S3]: {
     next(state, action) {
-      const notification = fromJS(action.payload.data);
+      let {data} = action.payload;
+      if (_.get(data, 'responses[0].Reply.HttpResponse')){
+        data = _.chain(data)
+        .mapValues((value, key) => {
+          if (key === 'responses'){
+            return value.map(r => {
+              return {response: _.get(r, 'Reply.HttpResponse')};
+            });
+          }
+          return value;
+        })
+        .value();
+      }
+      const notification = fromJS(data);
       let responses = notification.get('responses');
       responses = responses && responses.toJS ? responses : new List();
       const responsesFormatted = statics.getFormattedResponses(responses);

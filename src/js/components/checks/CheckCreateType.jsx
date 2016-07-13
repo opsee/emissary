@@ -50,7 +50,7 @@ const CheckCreateType = React.createClass({
     }
   },
   getLink(type = {}){
-    const data = JSON.stringify({target: {type: type.id}});
+    const data = window.encodeURIComponent(JSON.stringify({target: {type: type.id}}));
     if (type.id === 'host' || type.id === 'external_host'){
       return `/check-create/request?data=${data}`;
     }
@@ -75,7 +75,7 @@ const CheckCreateType = React.createClass({
     check.target.type = target.id;
     this.props.onChange(check);
 
-    const data = JSON.stringify(check);
+    const data = window.encodeURIComponent(JSON.stringify(check));
     let path = `/check-create/target?data=${data}`;
     if (target.id === 'host' || target.id === 'external_host'){
       path = `/check-create/request?data=${data}`;

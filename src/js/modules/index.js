@@ -8,10 +8,10 @@ import mixins from './mixins';
 import regions from './regions';
 import request from './request';
 import scheme from './scheme';
-import stringFromTokens from './stringFromTokens';
+import string from './string';
 import storage from './storage';
+import stripe from './stripe';
 import validate from './validate';
-import variables from './variables';
 import yeller from './yeller';
 
 export {
@@ -25,9 +25,9 @@ export {
   regions,
   request,
   scheme,
-  stringFromTokens,
+  string,
   storage,
+  stripe,
   validate,
-  variables,
   yeller
 };
