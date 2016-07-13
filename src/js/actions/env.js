@@ -18,11 +18,56 @@ import {
   GET_METRIC_ASG,
   ENV_GET_BASTIONS,
   ENV_SELECT_TOGGLE,
+  ENV_GET_ALL,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
   AWS_STOP_INSTANCES
 } from './constants';
 import graphPromise from '../modules/graphPromise';
+
+const snippets = {
+  groups: {
+    security: {
+      short: `GroupId
+              GroupName
+              Description`
+    },
+    asg: {
+      short: `Tags {
+                Key
+                Value
+              }
+              LoadBalancerNames
+              AutoScalingGroupName
+              Instances {
+                InstanceId
+              }`
+    },
+    elb: {
+      short: `LoadBalancerName
+              Instances {
+                InstanceId
+              }`
+    }
+  },
+  instances: {
+    ecc: {
+      short: `Tags {
+                Key
+                Value
+              }
+              InstanceId
+              PrivateIpAddress
+              SecurityGroups {
+                GroupId
+              }`
+    },
+    rds: {
+      short: `DBName
+              DBInstanceIdentifier`
+    }
+  }
+};
 
 export function getGroupSecurity(id){
   return (dispatch, state) => {
@@ -38,18 +83,12 @@ export function getGroupSecurity(id){
                 vpc(id: $vpc) {
                   groups(type: "security", id: "${id}"){
                     ... on ec2SecurityGroup {
-                      GroupId
-                      GroupName
-                      Description
+                      ${snippets.groups.security.short}
                     }
                   }
                   instances(type: "ec2"){
                     ... on ec2Instance {
-                      InstanceId
-                      SecurityGroups {
-                        GroupId
-                      }
-                      PrivateIpAddress
+                      ${snippets.instances.ecc.short}
                     }
                   }
                 }
@@ -76,18 +115,12 @@ export function getGroupsSecurity(){
                 vpc(id: $vpc) {
                   groups(type: "security"){
                     ... on ec2SecurityGroup {
-                      GroupId
-                      GroupName
-                      Description
+                      ${snippets.groups.security.short}
                     }
                   }
                   instances(type: "ec2"){
                     ... on ec2Instance {
-                      InstanceId
-                      SecurityGroups {
-                        GroupId
-                      }
-                      PrivateIpAddress
+                      ${snippets.instances.ecc.short}
                     }
                   }
                 }
@@ -159,15 +192,7 @@ export function getGroupsAsg(){
                 vpc(id: $vpc) {
                   groups(type: "autoscaling"){
                     ... on autoscalingGroup {
-                      Tags {
-                        Key
-                        Value
-                      }
-                      LoadBalancerNames
-                      AutoScalingGroupName
-                      Instances {
-                        InstanceId
-                      }
+                      ${snippets.groups.asg.short}
                     }
                   }
                 }
@@ -232,10 +257,7 @@ export function getGroupsElb(){
               vpc(id: $vpc) {
                 groups(type: "elb"){
                   ... on elbLoadBalancerDescription {
-                    LoadBalancerName
-                    Instances {
-                      InstanceId
-                    }
+                    ${snippets.groups.elb.short}
                   }
                 }
               }
@@ -299,15 +321,7 @@ export function getInstancesEcc(){
               vpc(id: $vpc) {
                 instances(type: "ec2"){
                   ... on ec2Instance {
-                    Tags {
-                      Key
-                      Value
-                    }
-                    InstanceId
-                    PrivateIpAddress
-                    SecurityGroups {
-                      GroupId
-                    }
+                    ${snippets.instances.ecc.short}
                   }
                 }
               }
@@ -334,8 +348,7 @@ export function getInstancesRds(){
               vpc(id: $vpc) {
                 instances(type: "rds"){
                   ... on rdsDBInstance {
-                    DBName
-                    DBInstanceIdentifier
+                    ${snippets.instances.rds.short}
                   }
                 }
               }
@@ -443,8 +456,7 @@ export function getMetricRDS(id, metric){
               vpc(id: $vpc) {
                 instances(type: "rds", id: "${id}"){
                   ... on rdsDBInstance {
-                    DBName
-                    DBInstanceIdentifier
+                    ${snippets.instances.rds.short}
                     metrics{
                       ${metric} {
                         metrics{
@@ -481,11 +493,7 @@ export function getMetricECC(id, metric){
               vpc(id: $vpc) {
                 instances(type: "ec2", id: "${id}"){
                   ... on ec2Instance {
-                    InstanceId
-                    Tags {
-                      Key
-                      Value
-                    }
+                    ${snippets.instances.ecc.short}
                     metrics{
                       ${metric} {
                         metrics{
@@ -522,11 +530,7 @@ export function getMetricASG(id, metric){
               vpc(id: $vpc) {
                 groups(type: "autoscaling", id: "${id}"){
                   ... on autoscalingGroup {
-                    AutoScalingGroupName
-                    Tags {
-                      Key
-                      Value
-                    }
+                    ${snippets.groups.asg.short}
                     metrics{
                       ${metric} {
                         metrics{
@@ -542,6 +546,42 @@ export function getMetricASG(id, metric){
               }
             }
           }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function all(){
+  return (dispatch, state) => {
+    dispatch({
+      type: ENV_GET_ALL,
+      payload: graphPromise('region.vpc', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .query({type: ENV_GET_ALL})
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups {
+                    ... on ec2SecurityGroup {
+                      ${snippets.groups.security.short}
+                    }
+                    ... on autoscalingGroup {
+                      ${snippets.groups.asg.short}
+                    }
+                  }
+                  instances {
+                    ... on ec2Instance {
+                      ${snippets.instances.ecc.short}
+                    }
+                  }
+                }
+              }
+            }`,
           variables: _.pick(state().env, ['region', 'vpc'])
         });
       }, {search: state().search})
