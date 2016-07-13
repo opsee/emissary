@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Table, Toolbar} from '../global';
+import {SchemePicker, Table, Toolbar} from '../global';
 import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Add, Docs, Edit, Logout, Key} from '../icons';
@@ -226,6 +226,12 @@ const Profile = React.createClass({
                     <tr>
                       <td><strong>Password</strong></td>
                       <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Color Scheme</strong></td>
+                      <td className="text-right">
+                        <SchemePicker/>
+                      </td>
                     </tr>
                   </Table>
                   <Padding t={4}>

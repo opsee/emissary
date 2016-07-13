@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
-import {StatusHandler, Table, Toolbar} from '../global';
+import {SchemePicker, StatusHandler, Table, Toolbar} from '../global';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
@@ -13,7 +13,6 @@ import {flag} from '../../modules';
 
 import {
   user as actions,
-  app as appActions,
   team as teamActions
 } from '../../actions';
 
@@ -26,10 +25,6 @@ const Profile = React.createClass({
     teamActions: PropTypes.shape({
       getTeam: PropTypes.func.isRequired
     }).isRequired,
-    appActions: PropTypes.shape({
-      shutdown: PropTypes.func,
-      setScheme: PropTypes.func
-    }),
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
@@ -61,9 +56,6 @@ const Profile = React.createClass({
     e.preventDefault();
     const user = this.getUser();
     this.props.actions.sendVerificationEmail({ id: user.id });
-  },
-  handleSchemeClick(scheme){
-    this.props.appActions.setScheme(scheme);
   },
   renderVerificationNag(user){
     if (user.verified) {
@@ -152,10 +144,7 @@ const Profile = React.createClass({
       <tr>
         <td><strong>Color Scheme</strong></td>
         <td>
-          <Padding inline r={1}>
-            <Button onClick={this.handleSchemeClick.bind(null, 'dark')} color="black">Dark</Button>
-          </Padding>
-          <Button onClick={this.handleSchemeClick.bind(null, 'light')} style={{color: '#333', border: '2px solid #666', background: 'rgba(200, 200, 200, 1)'}}>Light</Button>
+          <SchemePicker/>
         </td>
       </tr>
     );
@@ -238,7 +227,6 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch),
   teamActions: bindActionCreators(teamActions, dispatch)
 });
 

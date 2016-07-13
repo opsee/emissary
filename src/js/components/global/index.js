@@ -18,6 +18,7 @@ import Opsee from './Opsee.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import RadialGraph from './RadialGraph.jsx';
 import Routes from './Routes.jsx';
+import SchemePicker from './SchemePicker';
 import SearchBox from './SearchBox.jsx';
 import StepCounter from './StepCounter.jsx';
 import Table from './Table.jsx';
@@ -43,6 +44,7 @@ export {
   ProgressBar,
   RadialGraph,
   Routes,
+  SchemePicker,
   SearchBox,
   StatusHandler,
   StepCounter,
