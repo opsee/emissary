@@ -54,7 +54,7 @@ const CheckResponsePaginate = React.createClass({
   getInitialState() {
     return {
       complete: false,
-      expanded: false,
+      expanded: !this.props.allowCollapse,
       activeItem: 0,
       debouncedTestAction: _.debounce(this.props.actions.test, 500)
     };
