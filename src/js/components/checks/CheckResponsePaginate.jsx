@@ -56,7 +56,7 @@ const CheckResponsePaginate = React.createClass({
   getInitialState() {
     return {
       complete: false,
-      expanded: false,
+      expanded: !this.props.allowCollapse,
       activeItem: 0,
       debouncedTestAction: _.debounce(this.props.actions.test, 500)
     };
@@ -131,7 +131,7 @@ const CheckResponsePaginate = React.createClass({
   getBody(){
     return _.get(this.getFormattedResponses()[this.props.redux.checks.selectedResponse], 'response.body');
   },
-  getCurrentResponseTargetLink(target){
+  getCurrentResponseTargetLink(target = {}){
     const {type, id} = target;
     switch (type){
     case 'instance':
