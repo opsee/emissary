@@ -16,6 +16,9 @@ if (process.env.NODE_ENV !== 'production'){
   if (process.env.NODE_ENV === 'debug'){
     window.Perf = require('react-addons-perf');
     window.Perf.start();
+    console.log('Perf started');
+    // const {whyDidYouUpdate} = require('why-did-you-update');
+    // whyDidYouUpdate(React);
   }
 }
 

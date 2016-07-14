@@ -121,26 +121,20 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   ListenerDescriptions: List()
 }));
 
-const Target = Record({
-  name: undefined,
-  type: undefined,
-  id: undefined
-});
-
 export const Check = Record({
-  tags: List(),
+  tags: new List(),
   selected: false,
   deleting: false,
   id: undefined,
   name: undefined,
-  target: Target({
+  target: new Map({
     name: config.checkDefaultTargetName,
     type: config.checkDefaultTargetType,
     id: config.checkDefaultTargetId
   }),
-  assertions: [],
-  notifications: List(),
-  instances: List(),
+  assertions: new List(),
+  notifications: new List(),
+  instances: new List(),
   health: undefined,
   state: 'initializing',
   min_failing_time: 90,
@@ -149,11 +143,11 @@ export const Check = Record({
   silenceDate: undefined,
   silenceDuration: undefined,
   interval: 30,
-  results: List(),
+  results: new List(),
   passing: undefined,
   total: undefined,
   type: 'http',
-  spec: Map({
+  spec: new Map({
     path: config.checkDefaultPath || '/',
     protocol: config.checkDefaultProtocol || 'http',
     port: config.checkDefaultPort || 80,
