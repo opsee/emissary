@@ -72,7 +72,7 @@ const GroupAsg = React.createClass({
     const group = this.getGroup().toJS();
     if (group.name && group.CreatedTime){
       return (
-        <div>
+        <Padding t={1}>
           {this.renderCreateCheckButton()}
           <Padding b={2}>
             <Heading level={3}>{group.id} Information</Heading>
@@ -117,7 +117,7 @@ const GroupAsg = React.createClass({
           <Padding b={2}>
             <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} type="ecc" title/>
           </Padding>
-        </div>
+        </Padding>
       );
     }
     return <StatusHandler status={this.props.redux.asyncActions.getGroupAsg.status}/>;

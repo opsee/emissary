@@ -23,7 +23,7 @@
   line-height: 2.7rem;
 }
 .table.light td {
-  border-color: #E8E8E8;
+  border-color: var(--colorGray3);
 }
 
 .table tr:first-child td {

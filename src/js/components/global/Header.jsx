@@ -110,7 +110,7 @@ const Header = React.createClass({
             <Col xs={12}>
               <div className={style.inner}>
                 <div className={style.logoWrapper}>
-                  <Link to="/"><LogoColor borderColor="dark" className={style.logo}/></Link>
+                  <Link to="/"><LogoColor borderColor="light" className={style.logo}/></Link>
                 </div>
 
                 <nav className={style.navbar} role="navigation">

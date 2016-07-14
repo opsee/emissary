@@ -6,7 +6,7 @@
   position: relative;
 }
 .item.light {
-  border-top: solid 1px #E8E8E8;
+  border-top: solid 1px var(--colorGray3);
   border-bottom: none;
 }
 
@@ -112,7 +112,7 @@
   transition: background var(--transitionEaseOut), border-color var(--transitionEaseOut);
 }
 .light .selector:after {
-  border-color: var(--colorGray3);
+  border-color: var(--colorGray4);
 }
 
 .selector svg {

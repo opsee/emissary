@@ -95,7 +95,7 @@ const CheckSingle = React.createClass({
             <Col xs={12}>
               <Panel>
                 <BastionRequirement>
-                  <Padding b={1}>
+                  <Padding tb={2}>
                     {this.renderInner(check)}
                   </Padding>
                   {this.renderAdvancedOptions(check)}

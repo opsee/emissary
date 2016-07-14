@@ -11,7 +11,7 @@ body {
 }
 
 :global body.light {
-  background: var(--lightColorBackground);
+  background: #eee;
   color: var(--lightColorText);
 }
 

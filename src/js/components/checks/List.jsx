@@ -142,7 +142,7 @@ const CheckList = React.createClass({
     const isDisabled = isDeleting || size < 1;
     if (this.props.redux.checks.checks.size) {
       return (
-        <Padding a={2} className="display-flex">
+        <Padding t={1} b={2} className="display-flex">
           <div className="flex-1 display-flex">
             <Padding r={1}>
               <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>

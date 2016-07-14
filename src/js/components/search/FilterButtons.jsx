@@ -66,7 +66,7 @@ const SearchFilterButtons = React.createClass({
   },
   render(){
     return (
-      <Padding b={2}>
+      <Padding t={1} b={2}>
         <Row>
           {this.renderFailingButton()}
           {this.renderPassingButton()}

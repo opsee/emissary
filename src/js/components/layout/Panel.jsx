@@ -15,7 +15,7 @@ const Panel = React.createClass({
   render() {
     return (
       <div className={cx(style.panel, style[this.props.scheme], this.props.className)}>
-        <Padding a={this.props.noPadding ? 0 : 2}>
+        <Padding tb={this.props.noPadding ? 0 : 2}>
           {this.props.children}
         </Padding>
       </div>

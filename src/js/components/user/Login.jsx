@@ -57,7 +57,7 @@ const Login = React.createClass({
               <Padding t={4} b={2}>
                 <Panel scheme={this.props.scheme}>
                   <Padding t={2} b={1} className="text-center">
-                    <LogoColor borderColor="dark" />
+                    <LogoColor borderColor="light" />
                     <Heading level={2}>Log In to Your Account</Heading>
                   </Padding>
                   <form onSubmit={this.handleSubmit} className="text-left">

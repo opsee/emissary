@@ -63,8 +63,8 @@ const GroupSecurity = React.createClass({
   renderInner(){
     if (this.getGroup().get('name')){
       return (
-        <div>
-          <Padding b={3}>
+        <Padding t={1}>
+          <Padding b={2}>
             <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
@@ -87,7 +87,7 @@ const GroupSecurity = React.createClass({
           <Padding b={2}>
             <InstanceItemList groupSecurity={this.props.params.id} type="rds" title noFallback/>
           </Padding>
-        </div>
+        </Padding>
       );
     }
     return <StatusHandler status={this.props.redux.asyncActions.getGroupSecurity.status}/>;
