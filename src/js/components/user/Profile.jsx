@@ -47,7 +47,7 @@ const Profile = React.createClass({
     return this.props.redux.user.toJS();
   },
   isTeam(){
-    return this.props.redux.team.users.size > 1;
+    return !!(this.props.redux.team.users.size > 1);
   },
   handleLogout(){
     this.props.actions.logout();
@@ -122,7 +122,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td><SlackInfo connect/></td>
+          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || null}/></td>
         </tr>
       );
     }
@@ -133,7 +133,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>PagerDuty</strong></td>
-          <td><PagerdutyInfo/></td>
+          <td><PagerdutyInfo redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || null}/></td>
         </tr>
       );
     }

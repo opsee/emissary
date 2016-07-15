@@ -86,7 +86,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td className="text-right"><SlackInfo connect/></td>
+          <td className="text-right"><SlackInfo connect redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
         </tr>
       );
     }
@@ -97,7 +97,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>PagerDuty</strong></td>
-          <td className="text-right"><PagerdutyInfo/></td>
+          <td className="text-right"><PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
         </tr>
       );
     }

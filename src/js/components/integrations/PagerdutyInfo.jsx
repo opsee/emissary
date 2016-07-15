@@ -28,7 +28,13 @@ const PagerdutyInfo = React.createClass({
         integrationsPagerdutyAccess: PropTypes.object,
         integrationsPagerdutyDisconnect: PropTypes.object
       })
-    }).isRequired
+    }).isRequired,
+    redirect: PropTypes.string
+  },
+  getDefaultProps() {
+    return {
+      redirect: `${window.location.origin}/profile?pagerduty=true`
+    };
   },
   componentWillMount(){
     if (this.props.query.pagerduty && !this.props.query.error){
@@ -78,7 +84,7 @@ const PagerdutyInfo = React.createClass({
       );
     }
     return (
-      <PagerdutyConnect redirect={`${window.location.origin}/profile?pagerduty=true`}/>
+      <PagerdutyConnect redirect={this.props.redirect}/>
     );
   }
 });
