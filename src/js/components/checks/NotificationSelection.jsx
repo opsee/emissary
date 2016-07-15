@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import fuzzy from 'fuzzy';
+import cx from 'classnames';
 
 import {Button} from '../forms';
 import {Add, Checkmark, ChevronRight, Cloud, Delete, Mail, Search, Slack, PagerDuty} from '../icons';
@@ -11,7 +12,6 @@ import {Heading} from '../type';
 import {PagerdutyConnect, SlackConnect} from '../integrations';
 import {flag, storage} from '../../modules';
 import style from './notificationSelection.css';
-import {plain as seed} from 'seedling';
 import {
   integrations as actions
 } from '../../actions';
@@ -27,6 +27,7 @@ const NotificationSelection = React.createClass({
     }),
     notifications: PropTypes.array,
     onChange: PropTypes.func.isRequired,
+    scheme: PropTypes.string,
     redux: PropTypes.shape({
       user: PropTypes.object,
       integrations: PropTypes.shape({
@@ -356,7 +357,7 @@ const NotificationSelection = React.createClass({
       <div className="display-flex flex-vertical-align">
         <div className="flex-1">
           <div className="display-flex">
-            <PagerDuty fill="white" className={style.buttonIconPagerDuty} />
+            <PagerDuty className={cx(style.buttonIconPagerDuty, style[this.props.scheme])} />
           </div>
         </div>
         {this.renderDeleteButton(index)}
@@ -403,7 +404,7 @@ const NotificationSelection = React.createClass({
                 disabled = true;
                 title = 'PagerDuty has already been added';
               }
-              innerButton = <span><PagerDuty fill={disabled ? 'white' : seed.color.primary} className={style.buttonIconPagerDuty} /></span>;
+              innerButton = <span><PagerDuty className={cx(style.buttonIconPagerDuty, style[this.props.scheme], disabled && style.buttonIconPagerDutyDidisabled, style.primary)} /></span>;
             } else {
               innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
             }
