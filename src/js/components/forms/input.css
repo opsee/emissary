@@ -45,7 +45,7 @@
 }
 .light.input, input.light {
   background-color: white;
-  border: solid 1px var(--colorGray4);
+  border: solid 1px var(--colorGray3);
   color: var(--lightColorText);
 }
 
@@ -62,7 +62,7 @@ input[type="checkbox"]{
 }
 .light.input:focus {
   background-color: white;
-  border-color: var(--lightColorText);
+  border-color: var(--colorGray4);
 }
 
 .input::placeholder {

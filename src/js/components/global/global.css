@@ -263,6 +263,9 @@ html {
 hr {
   border-color: var(--colorGray8);
 }
+:global body.light hr {
+  border-color: var(--colorGray3);
+}
 
 :global #main {
   padding-bottom: 5em;
