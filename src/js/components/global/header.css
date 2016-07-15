@@ -77,6 +77,8 @@
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 500;
+  letter-spacing: .4px;
 }
 .light .navbarLink {
   color: var(--colorGray5);

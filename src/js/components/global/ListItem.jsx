@@ -113,7 +113,7 @@ const ListItem = React.createClass({
       const icon = selected ? <Checkmark btn fill="textSecondary"/> : null;
       return (
         <div className="display-flex align-items-center justify-content-center">
-          <Button icon flat secondary onClick={this.handleSelect} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
+          <Button icon flat onClick={this.handleSelect} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
         </div>
       );
     }
@@ -126,7 +126,7 @@ const ListItem = React.createClass({
           <Padding r={2} l={0.5}>
             {this.renderGraph()}
           </Padding>
-          <Padding className="flex-1 display-flex" r={0.5}>
+          <Padding className="flex-1 display-flex align-items-center" r={0.5} style={{minHeight: '4rem'}}>
             {this.renderInfo()}
           </Padding>
           {this.renderSelectButton()}

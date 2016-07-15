@@ -32,10 +32,11 @@ const PagerdutyInfo = React.createClass({
   },
   componentWillMount(){
     if (this.props.query.pagerduty && !this.props.query.error){
-      this.props.actions.pagerdutyAccess(_.assign(this.props.query, {
+      return this.props.actions.pagerdutyAccess(_.assign(this.props.query, {
         enabled: true
       }));
     }
+    return this.props.actions.getPagerdutyInfo();
   },
   handleDisablePagerduty(){
     this.props.appActions.confirmOpen({

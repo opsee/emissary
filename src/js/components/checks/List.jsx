@@ -152,9 +152,11 @@ const CheckList = React.createClass({
             </Padding>
           </div>
 
-          <Button color="primary" fab to="/check-create" title="Create New Check">
-            <Add btn/>
-          </Button>
+          {
+          //   <Button color="primary" fab to="/check-create" title="Create New Check">
+          //   <Add btn/>
+          // </Button>
+          }
         </Padding>
       );
     }
@@ -163,7 +165,11 @@ const CheckList = React.createClass({
   render() {
     return (
       <div>
-        <Toolbar title="Checks"/>
+        <Toolbar title="Checks">
+          <Button to="/check-create" color="primary" fab title="Create New Check">
+            <Add btn/>
+          </Button>
+        </Toolbar>
         <Padding b={2}>
           <Grid>
             <Row>

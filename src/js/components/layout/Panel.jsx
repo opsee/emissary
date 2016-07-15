@@ -2,7 +2,6 @@ import cx from 'classnames';
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 
-import {Padding} from './';
 import style from './panel.css';
 
 const Panel = React.createClass({
@@ -14,10 +13,8 @@ const Panel = React.createClass({
   },
   render() {
     return (
-      <div className={cx(style.panel, style[this.props.scheme], this.props.className)}>
-        <Padding tb={this.props.noPadding ? 0 : 2}>
-          {this.props.children}
-        </Padding>
+      <div className={cx(style.panel, style[this.props.scheme], this.props.className, this.props.noPadding && style.noPadding)}>
+        {this.props.children}
       </div>
     );
   }

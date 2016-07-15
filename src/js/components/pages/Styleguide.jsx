@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {Alert, Col, Grid, Padding, Row} from '../layout';
-import {Loader, ProgressBar, Table, Toolbar} from '../global';
+import {Loader, ProgressBar, SchemePicker, Table, Toolbar} from '../global';
 
 import {Add, Key} from '../icons';
 
@@ -121,8 +121,7 @@ const Styleguide = React.createClass({
             <Col xs={12}>
               <Padding b={2}>
                 <Heading level={2}>Color Scheme</Heading>
-                <Button onClick={this.handleSchemeClick.bind(null, 'dark')} color="default">Dark</Button>
-                <Button onClick={this.handleSchemeClick.bind(null, 'light')}>Light</Button>
+                <SchemePicker/>
               </Padding>
               <Padding b={1}>
                 <Heading level={3}>Fab button (at top right)</Heading>

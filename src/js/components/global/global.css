@@ -44,7 +44,14 @@ body ::-moz-selection {
 a {
   color: var(--colorPrimary);
   text-decoration: none;
+  /*font-weight: 500;*/
 }
+
+:global .light a {
+  /*color: var(--colorInfo);*/
+}
+
+
 a:hover, a:focus {
   color: #0c80df;
   text-decoration: underline;

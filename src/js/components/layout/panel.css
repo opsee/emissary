@@ -1,3 +1,11 @@
+.panel {
+  padding: 2rem 0;
+}
+
+.panel.noPadding {
+  padding: 0;
+}
+
 /*.panel.light {
   background-color: #f7f7f7;
   border-radius: 2px;
