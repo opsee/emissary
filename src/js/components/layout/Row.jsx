@@ -1,19 +1,18 @@
 import React, {PropTypes} from 'react';
 import cx from 'classnames';
 
-const Grid = React.createClass({
+const Row = React.createClass({
   propTypes: {
-    fluid: PropTypes.bool,
     children: PropTypes.node,
     className: PropTypes.string
   },
   render(){
     return (
-      <div className={cx(this.props.fluid ? 'container-fluid' : 'container', this.props.className)}>
+      <div className={cx('row', this.props.className)}>
         {this.props.children}
       </div>
     );
   }
 });
 
-export default Grid;
+export default Row;

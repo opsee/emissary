@@ -41,7 +41,7 @@ export const statics = {
       }),
       state: checkState,
       target: new Map(data.target),
-      // assertions: new List(data.assertions),
+      assertions: new List(data.assertions),
       type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
     return new Check(newData);

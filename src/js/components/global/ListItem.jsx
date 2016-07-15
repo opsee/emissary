@@ -39,11 +39,6 @@ const ListItem = React.createClass({
       type: 'GroupItem'
     };
   },
-  getInitialState() {
-    return {
-      id: _.uniqueId()
-    };
-  },
   shouldComponentUpdate(nextProps) {
     let arr = [];
     arr.push(!is(this.props.item, nextProps.item));
