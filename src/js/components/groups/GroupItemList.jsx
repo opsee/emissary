@@ -110,6 +110,9 @@ const GroupItemList = React.createClass({
   },
   getEnvLink(){
     let string = '/env-groups-security';
+    if (this.props.type === 'asg'){
+      string = '/env-groups-asg';
+    }
     if (this.props.type === 'elb'){
       string = '/env-groups-elb';
     }
