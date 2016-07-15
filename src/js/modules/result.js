@@ -1,11 +1,11 @@
-import {List, Record} from 'immutable';
+import {List, Record, Map} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
 
 const OuterResponse = Record({
   passing: undefined,
   response: undefined,
-  target: undefined,
+  target: new Map(),
   error: undefined,
   bastion_id: undefined
 });
@@ -33,6 +33,7 @@ function resultFromJS(data){
       const responses = new List(result.responses.map(r => {
         let d = _.cloneDeep(r);
         d.response = new InnerResponse(r.reply);
+        d.target = new Map(r.target);
         return new OuterResponse(d);
       }));
       return new Result(_.assign({}, result, {responses}));

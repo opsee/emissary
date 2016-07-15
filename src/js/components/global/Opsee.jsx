@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {AppStatus, Analytics, Confirm, Header, MessageModal, Toolbar} from './';
+import {AppStatus, Analytics, Confirm, Header, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
 import {Alert, Col, Grid, Padding} from '../layout';
 /* eslint-disable no-unused-vars */
@@ -136,7 +136,7 @@ const Opsee = React.createClass({
         <AppStatus/>
         {this.shouldFullScreen() ? null :
           <div>
-            <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
+            <Header hide={this.shouldHideNav()}/>
             <div id="header-search">
               <SearchBar/>
             </div>
@@ -146,7 +146,6 @@ const Opsee = React.createClass({
           {this.renderInner()}
         </div>
         <a id="Intercom" href="mailto:@incoming.intercom.io" className={style.intercom} style={{display: this.shouldShowIntercom() ? 'block' : 'none'}}/>
-        <MessageModal/>
         <Confirm />
         <Analytics/>
       </div>

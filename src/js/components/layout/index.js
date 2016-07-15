@@ -1,11 +1,11 @@
 import Alert from './Alert';
-import Col from 'react-bootstrap/lib/Col';
+import Col from './Col';
 import Expandable from './Expandable';
-import Grid from 'react-bootstrap/lib/Grid';
+import Grid from './Grid';
 import Modal from 'react-bootstrap/lib/Modal';
 import Padding from './Padding';
 import Panel from './Panel';
-import Row from 'react-bootstrap/lib/Row';
+import Row from './Row';
 import Rule from './Rule';
 
 export {

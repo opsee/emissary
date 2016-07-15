@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {fromJS, List} from 'immutable';
+import {fromJS, List, Map} from 'immutable';
 import {parse} from 'query-string';
 import result from '../modules/result';
 import {handleActions} from 'redux-actions';
@@ -40,6 +40,8 @@ export const statics = {
         return (check.get('id') === data.id) && (check.get('selected'));
       }),
       state: checkState,
+      target: new Map(data.target),
+      assertions: new List(data.assertions),
       type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
     return new Check(newData);

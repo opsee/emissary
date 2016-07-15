@@ -20,7 +20,8 @@ const Env = React.createClass({
     location: PropTypes.object,
     actions: PropTypes.shape({
       envSetSearch: PropTypes.func,
-      getBastions: PropTypes.func
+      getBastions: PropTypes.func,
+      all: PropTypes.func
     }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -36,6 +37,7 @@ const Env = React.createClass({
   },
   componentWillMount(){
     this.props.checkActions.getChecks();
+    // this.props.actions.all();
   },
   getTitle(){
     const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};

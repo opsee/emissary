@@ -57,7 +57,7 @@ const GroupItemList = React.createClass({
       type: 'security',
       offset: 0,
       limit: 1000,
-      interval: 30000
+      interval: 10000
     };
   },
   componentWillMount(){

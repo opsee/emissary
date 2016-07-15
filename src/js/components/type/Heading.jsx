@@ -22,12 +22,12 @@ const Heading = React.createClass({
     };
   },
   getPadding(){
-    let padding = this.props.level < 4 ? 2 : 1;
+    let b = this.props.level < 4 ? 2 : 1;
     if (this.props.noPadding){
-      padding = 0;
+      b = 0;
     }
     return {
-      b: padding
+      b
     };
   },
   render(){
