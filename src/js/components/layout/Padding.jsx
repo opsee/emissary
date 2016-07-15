@@ -1,24 +1,25 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
 import style from './padding.css';
 import cx from 'classnames';
 
-const availProps = ['t', 'b', 'tb', 'l', 'r', 'lr', 'a'];
-let types = {
-  inline: PropTypes.bool,
-  className: PropTypes.string,
-  children: PropTypes.node,
-  style: PropTypes.object
-};
-availProps.forEach(string => {
-  types[string] = PropTypes.number;
-});
+const avail = ['t', 'b', 'tb', 'l', 'r', 'lr', 'a'];
 
 const Padding = React.createClass({
-  propTypes: types,
+  propTypes: _.assign({
+    inline: PropTypes.bool,
+    className: PropTypes.string,
+    children: PropTypes.node,
+    style: PropTypes.object
+  }, _.chain(avail)
+      .keyBy(a => a)
+      .mapValues(() => PropTypes.number)
+      .value()
+  ),
   getClass(){
     let arr = [];
     for (const prop in this.props){
-      if (availProps.indexOf(prop) > -1){
+      if (avail.indexOf(prop) > -1){
         let num = this.props[prop];
         if (num === 0.5){
           num = 'half';

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {fromJS, List} from 'immutable';
+import {fromJS, List, Map} from 'immutable';
 import {itemsFilter, yeller} from '../modules';
 // import exampleGroupsElb from '../examples/groupsElb';
 import {handleActions} from 'redux-actions';
@@ -47,7 +47,7 @@ const statics = {
     return arr.concat(new List([single]));
   },
   setResultMeta(item, checks, toMatch = []){
-    const foundChecks = _.filter(checks, r => {
+    let foundChecks = _.filter(checks, r => {
       return item.get('id') === r.target.id;
       // return toMatch.indexOf(r.target.id) > -1;
     });
@@ -88,8 +88,18 @@ const statics = {
     const total = foundResults.length;
     const passing =  _.filter(foundResults, (r) => r.passing).length;
 
-    let data = item.set('results', foundResults);
-    data = data.set('total', total);
+    if (foundResults && !foundResults.toJS){
+      foundResults = new List(foundResults);
+    }
+    if (foundChecks && !foundChecks.toJS){
+      foundChecks = new List(foundChecks);
+    }
+
+    foundChecks = foundChecks.map(c => c.id);
+
+    let data = item.set('total', total);
+    // item.set('results', foundResults);
+    // data = data.set('total', total);
     data = data.set('passing', passing);
     data = data.set('failing', total - passing);
     data = data.set('checks', foundChecks);
@@ -188,9 +198,10 @@ const statics = {
     let newData = _.assign({}, data);
     newData = _.assign(newData, {
       name: newData.LoadBalancerName,
-      checks: new List(newData.checks || []),
+      checks: new List((newData.checks || []).map(i => new Map(i))),
       id: newData.LoadBalancerName,
-      ListenerDescriptions: new List(newData.ListenerDescriptions)
+      ListenerDescriptions: new List((newData.ListenerDescriptions || []).map(i => new Map(i))),
+      Instances: new List((newData.Instances || []).map(i => new Map(i)))
     });
     if (newData.checks.size && !newData.results.size){
       newData.state = 'initializing';
@@ -202,7 +213,8 @@ const statics = {
     newData = _.assign(newData, {
       id: newData.GroupId,
       name: newData.GroupName,
-      checks: new List(newData.checks || [])
+      checks: new List(newData.checks || []),
+      Instances: new List((newData.Instances || []).map(i => new Map(i)))
     });
     return new GroupSecurity(newData);
   },
@@ -210,7 +222,8 @@ const statics = {
     let newData = _.cloneDeep(data);
     newData = _.assign(newData, {
       id: newData.AutoScalingGroupName,
-      name: _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || newData.AutoScalingGroupName
+      name: _.chain(newData.Tags).find({Key: 'Name'}).get('Value').value() || newData.AutoScalingGroupName,
+      Instances: new List((newData.Instances || []).map(i => new Map(i)))
     });
     return new GroupAsg(newData);
   },
