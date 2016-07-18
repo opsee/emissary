@@ -56,7 +56,7 @@ const CheckSingle = React.createClass({
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     } else if (check.get('tags').find(() => 'complete')){
-      const isCloudwatch = _.chain(check.assertions).head().get('key').value() === 'cloudwatch';
+      const isCloudwatch = _.chain(check.toJS()).get('assertions').head().get('key').value() === 'cloudwatch';
       return isCloudwatch ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check} redux={this.props.redux}/>;
     }
     return null;

@@ -25,7 +25,7 @@ const ViewCloudwatch = React.createClass({
     return null;
   },
   renderTarget(){
-    const target = this.props.check.get('target');
+    const target = this.props.check.toJS().target;
     return (
       <Padding b={1}>
         <Heading level={3}>Target</Heading>
