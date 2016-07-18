@@ -42,13 +42,13 @@ const Expandable = React.createClass({
     if (this.state.open){
       return (
         <Button color="info" onClick={this.handleToggle} className={style.button} title="Collapse">
-          <ChevronUp inline/>
+          <ChevronUp inline fill="white"/>
         </Button>
       );
     }
     return (
       <Button color="info" onClick={this.handleToggle} className={style.button} title="Expand">
-        <ChevronDown inline/>
+        <ChevronDown inline fill="white"/>
       </Button>
     );
   },

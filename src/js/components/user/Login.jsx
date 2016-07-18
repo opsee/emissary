@@ -6,7 +6,8 @@ import {Link} from 'react-router';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
+import {Heading} from '../type';
 import {Button} from '../forms';
 import {user as actions} from '../../actions';
 
@@ -17,7 +18,8 @@ const Login = React.createClass({
     actions: PropTypes.shape({
       login: PropTypes.func,
       setLoginData: PropTypes.func
-    }).isRequired
+    }).isRequired,
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {
@@ -48,24 +50,31 @@ const Login = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Login to Your Account"/>
+        <Toolbar title="Log In to Your Account" hidden />
         <Grid>
-          <Row>
-            <Col xs={12}>
-              <LogoColor/>
-              <form onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'password']} onChange={this.setUserData} data={this.state.data}/>
-                <StatusHandler status={this.props.redux.asyncActions.userLogin.status}/>
-                <Padding t={1}>
-                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
-                    {this.getButtonText()}
-                  </Button>
-                </Padding>
-                <Padding tb={2}>
-                  <p><Link to="/password-forgot">Forgot your password?</Link></p>
-                  <p>Need an account? <Link to="/start">Sign up!</Link></p>
-                </Padding>
-              </form>
+          <Row className="center-xs">
+            <Col xs={12} sm={8}>
+              <Padding t={4} b={2}>
+                <Panel scheme={this.props.scheme}>
+                  <Padding t={2} b={1} className="text-center">
+                    <LogoColor borderColor="light" />
+                    <Heading level={2}>Log In to Your Account</Heading>
+                  </Padding>
+                  <form onSubmit={this.handleSubmit} className="text-left">
+                    <UserInputs include={['email', 'password']} onChange={this.setUserData} data={this.state.data}/>
+                    <StatusHandler status={this.props.redux.asyncActions.userLogin.status}/>
+                    <Padding t={1}>
+                      <Button type="submit" color="success" block disabled={this.isDisabled()}>
+                        {this.getButtonText()}
+                      </Button>
+                    </Padding>
+                    <Padding tb={2} className="text-center">
+                      <p><Link to="/password-forgot">Forgot your password?</Link></p>
+                      <p>Need an account? <Link to="/start">Sign up!</Link></p>
+                    </Padding>
+                  </form>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

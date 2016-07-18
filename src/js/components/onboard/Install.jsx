@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import BastionInstaller from './BastionInstaller.jsx';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Padding} from '../layout';
 import {Button} from '../forms';
 import {onboard as actions} from '../../actions';
 import {StatusHandler} from '../global';
@@ -233,18 +233,12 @@ const Install = React.createClass({
   },
   render() {
     return (
-       <div className={style.transitionPanel}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Padding tb={2}>
-                <div className={style.headerStep}>STEP 2 of 3</div>
-                <h2>Installing the Opsee EC2 instance...</h2>
-              </Padding>
-              {this.renderInner()}
-            </Col>
-          </Row>
-        </Grid>
+      <div className={style.transitionPanel}>
+        <Padding tb={2}>
+          <div className={style.headerStep}>STEP 2 of 3</div>
+          <h2>Installing the Opsee EC2 instance...</h2>
+        </Padding>
+        {this.renderInner()}
       </div>
     );
   }

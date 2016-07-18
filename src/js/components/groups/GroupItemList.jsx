@@ -9,7 +9,7 @@ import {Alert, Padding} from '../layout';
 import {SetInterval} from '../../modules/mixins';
 import {Link} from 'react-router';
 import {StatusHandler} from '../global';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
 import {env as actions} from '../../actions';
 
 const GroupItemList = React.createClass({
@@ -35,6 +35,7 @@ const GroupItemList = React.createClass({
       getGroupsSecurity: PropTypes.func,
       getGroupsAsg: PropTypes.func
     }),
+    scheme: PropTypes.string,
     redux: PropTypes.shape({
       asyncActions: PropTypes.object,
       env: PropTypes.shape({
@@ -109,14 +110,14 @@ const GroupItemList = React.createClass({
     return data.slice(this.props.offset, this.props.limit);
   },
   getEnvLink(){
-    let string = '/env-groups-security';
-    if (this.props.type === 'asg'){
-      string = '/env-groups-asg';
+    switch (this.props.type){
+    case 'elb':
+      return '/env-groups-elb';
+    case 'asg':
+      return '/env-groups-asg';
+    default:
+      return '/env-groups-security';
     }
-    if (this.props.type === 'elb'){
-      string = '/env-groups-elb';
-    }
-    return string;
   },
   getAction(){
     return `getGroups${_.capitalize(this.props.type)}`;
@@ -149,7 +150,7 @@ const GroupItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getGroups().size))){
-      return <Heading level={3}>{this.props.title} {numbers}</Heading>;
+      return <Heading level={3}><Link to={this.getEnvLink()}><Color c="textSecondary" scheme={this.props.scheme}>{this.props.title} {numbers}</Color></Link></Heading>;
     }
     return null;
   },
@@ -184,7 +185,8 @@ const GroupItemList = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

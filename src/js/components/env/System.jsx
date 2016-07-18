@@ -5,7 +5,7 @@ import _ from 'lodash';
 import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Color, Heading} from '../type';
 import {user as actions, env as envActions} from '../../actions';
 
@@ -98,11 +98,13 @@ const System = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderCustomerInfo()}
-              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
-              <Padding t={2}>
-                {this.renderBastionsInfo()}
-              </Padding>
+              <Panel>
+                {this.renderCustomerInfo()}
+                <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
+                <Padding t={2}>
+                  {this.renderBastionsInfo()}
+                </Padding>
+              </Panel>
             </Col>
           </Row>
         </Grid>

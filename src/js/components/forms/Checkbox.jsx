@@ -26,12 +26,19 @@ const Radio = React.createClass({
       id: this.props.id || `checkmark-${_.uniqueId()}`
     };
   },
+  getClass(){
+    return cx(
+      style.selector,
+      this.props.selected && style.selectorSelected,
+      style[this.props.color]
+    );
+  },
   handleClick() {
     this.props.onChange(!this.props.selected);
   },
   render(){
     return (
-      <Button icon flat secondary onClick={this.handleClick} title="Select" className={cx(style.selector, this.props.selected && style.selectorSelected, style[this.props.color])}>
+      <Button icon flat secondary onClick={this.handleClick} title="Select" className={this.getClass()}>
         {this.props.selected ? <Checkmark btn fill={seed.color.gray9}/> : null}
         <input id={this.state.id} className="sr-only" onChange={this.handleClick}/>
       </Button>

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Col, Grid, Row} from '../layout';
+import {Col, Grid, Row, Panel} from '../layout';
 
 import {Toolbar} from '../global';
 import {search as actions} from '../../actions';
@@ -76,8 +76,10 @@ const SearchAll = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <FilterButtons/>
-                {this.renderList()}
+                <Panel>
+                  <FilterButtons/>
+                  {this.renderList()}
+                </Panel>
               </Col>
             </Row>
           </Grid>

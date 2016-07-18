@@ -2,9 +2,9 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import Hammer from 'react-hammerjs';
+import {connect} from 'react-redux';
 
 import {ChevronRight} from '../icons';
-import {plain as seed} from 'seedling';
 import cx from 'classnames';
 import style from './button.css';
 
@@ -16,7 +16,6 @@ const Button = React.createClass({
     icon: PropTypes.bool,
     block: PropTypes.bool,
     secondary: PropTypes.bool,
-    noPad: PropTypes.bool,
     fab: PropTypes.bool,
     color: PropTypes.string,
     type: PropTypes.string,
@@ -36,7 +35,8 @@ const Button = React.createClass({
     onClick: PropTypes.func,
     style: PropTypes.object,
     sm: PropTypes.bool,
-    onPressUp: PropTypes.func
+    onPressUp: PropTypes.func,
+    scheme: PropTypes.string
   },
   contextTypes: {
     router: PropTypes.object.isRequired
@@ -55,18 +55,20 @@ const Button = React.createClass({
   },
   getClass(){
     let arr = [];
+    arr.push(style.btn);
     for (const prop in this.props){
       if (this.props[prop]){
         const selector = prop.match('color|text') ? this.props[prop] : prop;
-        arr.push(style[`btn${ _.startCase(selector).split(' ').join('')}`]);
+        arr.push(style[`${ _.lowerCase(selector).split(' ').join('')}`]);
       }
     }
     arr.push(this.props.className);
+    arr.push(style[this.props.scheme]);
     return cx(arr);
   },
   getProgressClass(){
     const pressing = this.state.pressing ? 'Pressing' : '';
-    return style[`progress${ _.startCase(this.props.color)}${pressing}`];
+    return cx(style.progress, style[this.props.color], pressing && style.pressing);
   },
   getInnerClass(){
     return this.props.onPressUp ? style.inner : '';
@@ -138,11 +140,7 @@ const Button = React.createClass({
   },
   renderChevron(){
     if (this.props.chevron){
-      let fill = seed.color.text;
-      if (this.props.disabled){
-        fill = seed.color.text2;
-      }
-      return <ChevronRight inline fill={fill}/>;
+      return <ChevronRight inline fill="white"/>;
     }
     return null;
   },
@@ -185,4 +183,8 @@ const Button = React.createClass({
   }
 });
 
-export default Button;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Button);

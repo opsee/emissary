@@ -7,7 +7,7 @@ import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add} from '../icons';
@@ -157,7 +157,9 @@ const InstanceRds = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

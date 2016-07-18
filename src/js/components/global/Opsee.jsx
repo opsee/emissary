@@ -13,7 +13,6 @@ import {yeller} from '../../modules';
 
 import reset from './reset.css';
 import style from './global.css';
-import alert from './alert.css';
 import modal from './modal.css';
 import autosuggest from './autosuggest.css';
 import forms from '../forms/forms.css';
@@ -29,8 +28,9 @@ import {
 import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
+const fullScreenList = ['^\/start', '^\/login'];
+
 const hideNavList = [
-  '^\/login',
   '^\/check-create',
   '^\/check\/edit',
   '^\/check\/.*\/event',
@@ -42,7 +42,6 @@ const hideNavList = [
   '^\/team\/member\/.*\/edit',
   '^\/welcome'
 ];
-const fullScreenList = ['^\/start'];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],
@@ -139,7 +138,7 @@ const Opsee = React.createClass({
           <div>
             <Header hide={this.shouldHideNav()}/>
             <div id="header-search">
-              <SearchBar />
+              <SearchBar/>
             </div>
           </div>
         }

@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import cx from 'classnames';
 
 import {Padding} from '../layout';
 import Radio from './Radio';
@@ -13,7 +15,8 @@ const RadioSelect = React.createClass({
     data: PropTypes.object,
     path: PropTypes.string.isRequired,
     inline: PropTypes.bool,
-    label: PropTypes.string
+    label: PropTypes.string,
+    scheme: PropTypes.string
   },
   handleRadioChange(id){
     if (this.props.data){
@@ -27,7 +30,7 @@ const RadioSelect = React.createClass({
   },
   renderLabel(){
     if (this.props.label){
-      return <div className={inputStyle.label} dangerouslySetInnerHTML={{__html: this.props.label}}/>;
+      return <div className={cx(inputStyle.label, inputStyle[this.props.scheme])} dangerouslySetInnerHTML={{__html: this.props.label}}/>;
     }
     return null;
   },
@@ -49,4 +52,8 @@ const RadioSelect = React.createClass({
   }
 });
 
-export default RadioSelect;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(RadioSelect);

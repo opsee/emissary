@@ -3,7 +3,7 @@
   height: 4.5rem;
   border: 0;
   border-radius: 1px;
-  background: none;
+  background: none !important;
   position: relative;
   margin: 0;
 }
@@ -11,11 +11,11 @@
   content: '';
   border: 1px solid var(--colorGray5);
   display: block;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.4rem;
+  height: 2.4rem;
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 0.8rem;
+  left: 0.8rem;
   z-index: 1;
   transition: background var(--transitionEaseOut), border-color var(--transitionEaseOut);
 }

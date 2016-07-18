@@ -3,8 +3,10 @@ import {Link} from 'react-router';
 import {is} from 'immutable';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
+import cx from 'classnames';
 import _ from 'lodash';
 
+import LogoColor from './LogoColor';
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Col, Grid, Row} from '../layout';
@@ -15,6 +17,7 @@ const Header = React.createClass({
     user: PropTypes.object.isRequired,
     team: PropTypes.object.isRequired,
     hide: PropTypes.bool,
+    scheme: PropTypes.string,
     activeBastion: PropTypes.bool
   },
   getInitialState(){
@@ -23,11 +26,20 @@ const Header = React.createClass({
     };
   },
   shouldComponentUpdate(nextProps) {
-    let arr = [];
-    arr.push(!is(this.props.user, nextProps.user));
-    arr.push(!is(this.props.team, nextProps.team));
-    arr.push(this.props.activeBastion !== nextProps.activeBastion);
+    const arr = [
+      !is(this.props.user, nextProps.user),
+      !is(this.props.team, nextProps.team),
+      this.props.activeBastion !== nextProps.activeBastion,
+      this.props.hide !== nextProps.hide,
+      this.props.scheme !== nextProps.scheme
+    ];
     return _.some(arr);
+  },
+  getHeaderClass(){
+    return cx({
+      [style.header]: true,
+      [style.headerHide]: this.props.hide
+    }, style[this.props.scheme]);
   },
   getHeaderStyle(){
     let obj = {};
@@ -78,7 +90,7 @@ const Header = React.createClass({
   },
   renderNavItems(){
     return (
-      <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
+      <ul className={style.navList}>
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checks nav/>&nbsp;
@@ -98,25 +110,32 @@ const Header = React.createClass({
       </ul>
       );
   },
-  render(){
+  render() {
     return (
-      <header id="header" className={this.props.hide ? style.headerHide : style.header} style={this.getHeaderStyle()}>
-        <nav className={style.navbar} role="navigation">
-          <Grid>
-            <Row>
-              <Col xs={12}>
-                {this.renderNavItems()}
-              </Col>
-            </Row>
-          </Grid>
-          </nav>
-        <SearchBox/>
+      <header id="header" className={this.getHeaderClass()} style={this.getHeaderStyle()}>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <div className={style.inner}>
+                <div className={style.logoWrapper}>
+                  <Link to="/"><LogoColor borderColor="light" className={style.logo}/></Link>
+                </div>
+
+                <nav className={style.navbar} role="navigation">
+                  {this.renderNavItems()}
+                </nav>
+                <SearchBox/>
+              </div>
+            </Col>
+          </Row>
+        </Grid>
       </header>
     );
   }
 });
 
 const mapStateToProps = (state) => ({
+  scheme: state.app.scheme,
   team: state.team,
   user: state.user,
   activeBastion: !!state.env.activeBastion

@@ -23,6 +23,14 @@
   width: 100%;
 }
 
+.padding {
+  padding: 1rem;
+}
+
+.bg {
+  background: var(--colorGray9);
+}
+
 .open {
   composes: expandable;
   align-items: flex-start;

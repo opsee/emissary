@@ -161,13 +161,15 @@ const routes = (
     <Route path="/help" component={Help}/>
 
     <Redirect from="/docs" to="/help"/>
-    <Route path="/docs/bastion" component={DocsBastion}/>
+    <Redirect from="/docs/bastion" to="/docs/instance"/>
+    <Route path="/docs/instance" component={DocsBastion}/>
     <Route path="/docs/checks" component={DocsChecks}/>
     <Route path="/docs/notifications" component={DocsNotifications}/>
     <Route path="/docs/permissions" component={DocsPermissions}/>
 
     <Route path="/integrations/slack" component={Slack}/>
 
+    <Redirect from="/terms-of-service" to="/tos"/>
     <Route path="/tos" component={TOS}/>
     <Route path="/privacy" component={Privacy}/>
 

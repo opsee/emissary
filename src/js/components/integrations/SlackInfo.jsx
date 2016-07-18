@@ -8,10 +8,6 @@ import SlackConnect from './SlackConnect';
 import {Color} from '../type';
 import {Alert} from '../layout';
 
-/*eslint-disable camelcase*/
-const redirect_uri = `${window.location.origin}/profile?slack=true`;
-/*eslint-enable camelcase*/
-
 const SlackInfo = React.createClass({
   propTypes: {
     data: PropTypes.shape({
@@ -28,7 +24,13 @@ const SlackInfo = React.createClass({
       asyncActions: PropTypes.shape({
         integrationsSlackAccess: PropTypes.object
       })
-    }).isRequired
+    }).isRequired,
+    redirect: PropTypes.string
+  },
+  getDefaultProps() {
+    return {
+      redirect: `${window.location.origin}/profile?slack=true`
+    };
   },
   componentWillMount(){
     const {code} = this.props.query;
@@ -36,7 +38,7 @@ const SlackInfo = React.createClass({
       return this.props.actions.slackAccess({
         code,
         /*eslint-disable camelcase*/
-        redirect_uri
+        redirect_uri: this.props.redirect
         /*eslint-enable camelcase*/
       });
     }
@@ -63,7 +65,7 @@ const SlackInfo = React.createClass({
     }
     if (this.props.connect){
       return (
-        <SlackConnect redirect={redirect_uri}/>
+        <SlackConnect redirect={this.props.redirect}/>
       );
     }
     return null;

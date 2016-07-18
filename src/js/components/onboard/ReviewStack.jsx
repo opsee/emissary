@@ -10,7 +10,7 @@ import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
 import {Highlight} from '../global';
 import Instructions from './LaunchStackInstructions';
-import {Expandable, Padding, Col, Grid, Row} from '../layout';
+import {Expandable, Padding} from '../layout';
 import templates from '../../modules/awsTemplates';
 import style from './onboard.css';
 
@@ -73,13 +73,13 @@ const LaunchStack = React.createClass({
         the stack in your AWS environment, do the following in your AWS console:</p>
         <Padding tb={1}>
           <ol>
-            <li>Click “Next" on the "Select Template" screen. The template URL will already be specified for you.</li>
+            <li>Click "Next" on the "Select Template" screen. The template URL will already be specified for you.</li>
             <li>Click "Next" on the "Specify Details" page.</li>
             <li>Click "Next" on the "Options" page.</li>
             <li>Click the check box at the bottom of the “Review” page to acknowledge the notice about IAM privileges, and click “Create” to launch the stack.</li>
           </ol>
         </Padding>
-        <p>You can monitor the progress of the role creation in your AWS console. It can take a couple of minutes. When it's done, return to this screen to finish installation.</p>
+        <p>You can monitor the progress of the role creation in your AWS console. It can take a couple of minutes. When it&rsquo;s done, return to this screen to finish installation.</p>
       </div>
     );
   },
@@ -89,29 +89,23 @@ const LaunchStack = React.createClass({
         <Link to="/start/launch-stack" className={style.closeWrapper}>
           <Close className={style.closeButton} />
         </Link>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Padding tb={1}>
-                <h2>Opsee Cross-Account Access</h2>
-              </Padding>
-              <p>Our cross-account role lets Opsee continuously discover what's in your environment, lets us monitor metrics in CloudWatch, and lets us manage your Opsee instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
-              <Padding tb={1}>
-                <Instructions />
-              </Padding>
-              <Padding tb={1}>
-                <Padding tb={1}>
-                  <h3>Our CloudFormation template</h3>
-                </Padding>
-                <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It's also available in <a href="/docs/permissions" target="_blank">our docs</a>.</p>
-                {this.renderTemplate()}
-              </Padding>
-              <Padding t={1} b={2}>
-                <Button to="/start/launch-stack" color="primary" block>Got it</Button>
-              </Padding>
-            </Col>
-          </Row>
-        </Grid>
+        <Padding tb={1}>
+          <h2>Opsee Cross-Account Access</h2>
+        </Padding>
+        <p>Our cross-account role lets Opsee continuously discover what&rsquo;s in your environment, lets us monitor metrics in CloudWatch, and lets us manage your Opsee instance on your behalf. You can view and control this access at any time in your <a href="https://console.aws.amazon.com/iam/home" target="_blank">IAM console</a>.</p>
+        <Padding tb={1}>
+          <Instructions />
+        </Padding>
+        <Padding tb={1}>
+          <Padding tb={1}>
+            <h3>Our CloudFormation template</h3>
+          </Padding>
+          <p>We enable cross-account access using a CloudFormation template. You can review the template below, which sets all of the capabilities and permissions. It&rsquo;s also available in <a href="/docs/permissions" target="_blank">our docs</a>.</p>
+          {this.renderTemplate()}
+        </Padding>
+        <Padding t={1} b={2}>
+          <Button to="/start/launch-stack" color="primary" block>Got it</Button>
+        </Padding>
       </div>
     );
   }

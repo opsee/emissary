@@ -38,6 +38,10 @@
   width: 100%;
 }
 
+.item.light {
+  color: white;
+}
+
 .item pre {
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -65,7 +69,7 @@
 
 .button {
   bottom: 1rem;
-  position: absolute;
+  position: absolute !important;
   right: 1rem;
   z-index: 2;
 }
