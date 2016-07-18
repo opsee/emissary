@@ -1,0 +1,15 @@
+.panel {
+  padding: 2rem 0;
+}
+
+.panel.noPadding {
+  padding: 0;
+}
+
+/*.panel.light {
+  background-color: #f7f7f7;
+  border-radius: 2px;
+  border: solid 1px var(--lightColorBorder);
+  border: solid 1px #afafaf;
+}
+*/

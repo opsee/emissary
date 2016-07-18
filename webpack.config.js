@@ -58,7 +58,7 @@ var config = {
         browsers: 'last 1 version, > 10%',
         features: {
           customProperties: {
-            variables: seedling.flat
+            variables: _.assign({}, seedling.flat, seedling.flatLight)
           }
         }
       }),

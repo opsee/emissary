@@ -21,7 +21,8 @@ const Highlight = React.createClass({
     children: PropTypes.node,
     noBg: PropTypes.bool,
     wrap: PropTypes.bool,
-    style: PropTypes.object
+    style: PropTypes.object,
+    padding: PropTypes.bool
   },
   getDefaultProps() {
     return {
@@ -43,7 +44,8 @@ const Highlight = React.createClass({
   getClassName(){
     return cx(this.props.className, {
       'noBg': this.props.noBg,
-      'wrap': this.props.wrap
+      'wrap': this.props.wrap,
+      'padding': this.props.padding
     });
   },
   runHighlightCode() {

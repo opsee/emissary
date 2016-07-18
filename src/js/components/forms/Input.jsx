@@ -1,9 +1,13 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import _ from 'lodash';
+import cx from 'classnames';
+
 import style from './input.css';
 
 const Input = React.createClass({
   propTypes: {
+    className: PropTypes.string, // for the input
     onChange: PropTypes.func.isRequired,
     /*
       providing a data object will allow the input field to reflect an
@@ -17,7 +21,8 @@ const Input = React.createClass({
     textarea: PropTypes.bool,
     id: PropTypes.string,
     onFocus: PropTypes.func,
-    onBlur: PropTypes.func
+    onBlur: PropTypes.func,
+    scheme: PropTypes.string
   },
   getInitialState() {
     return {
@@ -37,7 +42,7 @@ const Input = React.createClass({
     const props = _.assign({}, this.props, {
       onChange: this.handleChange,
       value: this.getValue(),
-      className: style.input,
+      className: cx(style.input, style[this.props.scheme], this.props.className),
       id: this.state.id
     });
     return _.omit(props, ['data', 'children', 'label', 'path']);
@@ -54,14 +59,14 @@ const Input = React.createClass({
   },
   renderLabel(){
     if (this.props.label){
-      return <label className={style.label} dangerouslySetInnerHTML={{__html: this.props.label}} htmlFor={this.state.id}/>;
+      return <label className={cx(style.label, style[this.props.scheme])} dangerouslySetInnerHTML={{__html: this.props.label}} htmlFor={this.state.id}/>;
     }
     return null;
   },
   renderChildren(){
     if (this.props.children){
       return (
-        <label htmlFor={this.state.id} className={style.iconLabel}>
+        <label htmlFor={this.state.id} className={cx(style.iconLabel, style[this.props.scheme])}>
           {this.props.children}
         </label>
       );
@@ -76,7 +81,7 @@ const Input = React.createClass({
   },
   render() {
     return (
-      <div className={style.wrapper}>
+      <div className={cx(style.wrapper, style[this.props.scheme])}>
         {this.renderLabel()}
         {this.renderItem()}
         {this.renderChildren()}
@@ -85,4 +90,8 @@ const Input = React.createClass({
   }
 });
 
-export default Input;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Input);

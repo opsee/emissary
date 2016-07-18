@@ -6,11 +6,6 @@
   max-width: 680px;
 }
 
-p, li{
-  color: #AAA;
-  line-height: 26px;
-}
-
 h1, h2, h3 {
   letter-spacing: 0.5px;
   font-weight: 500;
@@ -20,6 +15,10 @@ h1, h2, h3 {
   background-color: #303030;
   min-height: 100vh;
   margin-bottom: -5rem;
+}
+
+.container.light {
+  background-color: var(--lightColorBackground);
 }
 
 .transitionContainer {
@@ -72,7 +71,16 @@ h1, h2, h3 {
   margin: 0 0.25rem;
 }
 
+.pip.light {
+  fill: var(--colorGray7);
+  opacity: .2;
+}
+
 .activePip {
+  opacity: 1;
+}
+
+.activePip.light {
   opacity: 1;
 }
 

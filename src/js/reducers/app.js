@@ -1,6 +1,7 @@
 // import storage from '../modules/storage';
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
+import {storage} from '../modules';
 import {Map} from 'immutable';
 import {
   APP_INITIALIZE,
@@ -14,6 +15,7 @@ import {
   APP_CLOSE_CONFIRM,
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
+  APP_SET_SCHEME,
   APP_SET_DROPDOWN_ID,
   GET_STATUS_PAGE_INFO,
   INTERCOM_SHOW,
@@ -39,7 +41,8 @@ const initial = {
     onConfirm: null
   },
   statusPageInfo: new Map(),
-  intercomStatus: undefined
+  intercomStatus: undefined,
+  scheme: storage.get('scheme')
 };
 
 export default handleActions({
@@ -148,6 +151,18 @@ export default handleActions({
     next(state){
       const intercomStatus = 'hidden';
       return _.assign({}, state, {intercomStatus});
+    }
+  },
+  [APP_SET_SCHEME]: {
+    next(state, action){
+      let scheme = action.payload;
+      scheme = scheme === 'dark' ? '' : scheme;
+      document.querySelector('body').className = scheme || '';
+      //don't recursively set the storage if we are firing the action from the eventlistener
+      if (!_.get(action, 'meta.listener')){
+        storage.set('scheme', scheme || '');
+      }
+      return _.assign({}, state, {scheme});
     }
   }
 }, initial);

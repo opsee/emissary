@@ -4,8 +4,8 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Table, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {SchemePicker, Table, Toolbar} from '../global';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Add, Docs, Edit, Logout, Key} from '../icons';
 import {Heading} from '../type';
@@ -86,7 +86,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td className="text-right"><SlackInfo connect/></td>
+          <td className="text-right"><SlackInfo connect redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
         </tr>
       );
     }
@@ -97,7 +97,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>PagerDuty</strong></td>
-          <td className="text-right"><PagerdutyInfo/></td>
+          <td className="text-right"><PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
         </tr>
       );
     }
@@ -216,102 +216,110 @@ const Profile = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <Heading level={3}>Your Profile</Heading>
-                <Table>
-                  <tr>
-                    <td><strong>Email</strong></td>
-                    <td className="text-right"><Link to="/profile/edit?ref=/team">{user.email}</Link></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Password</strong></td>
-                    <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
-                  </tr>
-                </Table>
-                <Padding t={4}>
-                  <Heading level={3}>Team Integrations</Heading>
-                  <Table>
-                    {this.renderAWSArea()}
-                    {this.renderSlackArea()}
-                    {this.renderPagerdutyArea()}
-                  </Table>
-                </Padding>
-                <Padding t={4}>
-                  <Heading level={3}>Team Members</Heading>
-                  <Table>
-                    {this.getMembers(team).map(member => {
-                      return (
-                        <tr>
-                          <td>
-                            {this.renderMemberLink(member)}
-                          </td>
-                          <td className="text-right">
-                            {this.renderUserEditLink(member)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </Table>
-                  {this.renderShowAllButton(team)}
-                  <Padding t={1}>
-                    <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
-                  </Padding>
-                </Padding>
-                <Padding t={4}>
-                  <Heading level={3}>Team Details</Heading>
+                <Panel>
+                  <Heading level={3}>Your Profile</Heading>
                   <Table>
                     <tr>
-                      <td><strong>Name</strong></td>
-                      <td className="text-right">{team.name || '(No Team name set)'}&nbsp;&nbsp;
-                      { user.perms.admin &&
-                        (<Link to="/team/edit">Edit Team Name</Link>)
-                      }
+                      <td><strong>Email</strong></td>
+                      <td className="text-right"><Link to="/profile/edit?ref=/team">{user.email}</Link></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Password</strong></td>
+                      <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Color Scheme</strong></td>
+                      <td className="text-right">
+                        <SchemePicker/>
                       </td>
                     </tr>
-                    {
-                      // window.location.href.match('localhost|staging') && (
-                      //   <tr>
-                      //     <td><strong>Subscription Plan</strong></td>
-                      //     <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
-                      //   </tr>
-                      // )
-                    }
-                    {
-                      // window.location.href.match('localhost|staging') && (
-                      //   <tr>
-                      //     <td><strong>Plan Features</strong></td>
-                      //     <td>{toSentenceSerial(team.features)}</td>
-                      //   </tr>
-                      // )
-                    }
                   </Table>
-                </Padding>
-                {
-                  // window.location.href.match('localhost|staging') && (
-                  //   <Padding t={3}>
-                  //     <Heading level={3}>Team Billing</Heading>
-                  //     <Padding b={1} l={1}>
-                  //       MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
-                  //     </Padding>
-                  //     <Table>
-                  //       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
-                  //         return (
-                  //           <tr>
-                  //             <td>
-                  //               <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
-                  //               <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
-                  //             </td>
-                  //           </tr>
-                  //         );
-                  //       })}
-                  //     </Table>
-                  //   </Padding>
-                  // )
-                }
-                <Padding t={3}>
-                  <Button flat color="danger" onClick={this.props.userActions.logout}>
-                    <Logout inline fill="danger"/> Log Out
-                  </Button>
-                </Padding>
+                  <Padding t={4}>
+                    <Heading level={3}>Team Integrations</Heading>
+                    <Table>
+                      {this.renderAWSArea()}
+                      {this.renderSlackArea()}
+                      {this.renderPagerdutyArea()}
+                    </Table>
+                  </Padding>
+                  <Padding t={4}>
+                    <Heading level={3}>Team Members</Heading>
+                    <Table>
+                      {this.getMembers(team).map(member => {
+                        return (
+                          <tr>
+                            <td>
+                              {this.renderMemberLink(member)}
+                            </td>
+                            <td className="text-right">
+                              {this.renderUserEditLink(member)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </Table>
+                    {this.renderShowAllButton(team)}
+                    <Padding t={1}>
+                      <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
+                    </Padding>
+                  </Padding>
+                  <Padding t={4}>
+                    <Heading level={3}>Team Details</Heading>
+                    <Table>
+                      <tr>
+                        <td><strong>Name</strong></td>
+                        <td className="text-right">{team.name || '(No Team name set)'}&nbsp;&nbsp;
+                        { user.perms.admin &&
+                          (<Link to="/team/edit">Edit Team Name</Link>)
+                        }
+                        </td>
+                      </tr>
+                      {
+                        // window.location.href.match('localhost|staging') && (
+                        //   <tr>
+                        //     <td><strong>Subscription Plan</strong></td>
+                        //     <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
+                        //   </tr>
+                        // )
+                      }
+                      {
+                        // window.location.href.match('localhost|staging') && (
+                        //   <tr>
+                        //     <td><strong>Plan Features</strong></td>
+                        //     <td>{toSentenceSerial(team.features)}</td>
+                        //   </tr>
+                        // )
+                      }
+                    </Table>
+                  </Padding>
+                  {
+                    // window.location.href.match('localhost|staging') && (
+                    //   <Padding t={3}>
+                    //     <Heading level={3}>Team Billing</Heading>
+                    //     <Padding b={1} l={1}>
+                    //       MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
+                    //     </Padding>
+                    //     <Table>
+                    //       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
+                    //         return (
+                    //           <tr>
+                    //             <td>
+                    //               <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
+                    //               <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
+                    //             </td>
+                    //           </tr>
+                    //         );
+                    //       })}
+                    //     </Table>
+                    //   </Padding>
+                    // )
+                  }
+                  <Padding t={3}>
+                    <Button flat color="danger" onClick={this.props.userActions.logout}>
+                      <Logout inline fill="danger"/> Log Out
+                    </Button>
+                  </Padding>
+                </Panel>
               </Col>
             </Row>
           </Grid>

@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Edit, Delete} from '../icons';
 import {Button} from '../forms';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import ViewHTTP from './ViewHTTP';
 import ViewCloudwatch from './ViewCloudwatch';
@@ -93,17 +93,19 @@ const CheckSingle = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                <Padding b={1}>
-                  {this.renderInner(check)}
-                </Padding>
-                {this.renderAdvancedOptions(check)}
-                <Padding t={3}>
-                  <Button onClick={this.runRemoveCheck} flat color="danger">
-                    <Delete inline fill="danger"/> Delete Check
-                  </Button>
-                </Padding>
-              </BastionRequirement>
+              <Panel>
+                <BastionRequirement>
+                  <Padding tb={2}>
+                    {this.renderInner(check)}
+                  </Padding>
+                  {this.renderAdvancedOptions(check)}
+                  <Padding t={3}>
+                    <Button onClick={this.runRemoveCheck} flat color="danger">
+                      <Delete inline fill="danger"/> Delete Check
+                    </Button>
+                  </Padding>
+                </BastionRequirement>
+              </Panel>
             </Col>
           </Row>
         </Grid>

@@ -7,6 +7,8 @@ import itemsFilter from './itemsFilter';
 import mixins from './mixins';
 import regions from './regions';
 import request from './request';
+import scheme from './scheme';
+import string from './string';
 import storage from './storage';
 import stripe from './stripe';
 import validate from './validate';
@@ -22,6 +24,8 @@ export {
   mixins,
   regions,
   request,
+  scheme,
+  string,
   storage,
   stripe,
   validate,

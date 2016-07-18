@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import style from './alert.css';
 import cx from 'classnames';
 
@@ -8,7 +9,8 @@ const Alert = React.createClass({
     onDismiss: PropTypes.func,
     children: PropTypes.node,
     className: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    scheme: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -20,7 +22,8 @@ const Alert = React.createClass({
       style.alert,
       style[this.props.color],
       'display-flex',
-      this.props.className
+      this.props.className,
+      style[this.props.scheme]
     ]);
   },
   renderDismissButton(){
@@ -41,4 +44,8 @@ const Alert = React.createClass({
   }
 });
 
-export default Alert;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Alert);

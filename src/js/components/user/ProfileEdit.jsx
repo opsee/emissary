@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import UserInputs from './UserInputs.jsx';
 import {Close} from '../icons';
@@ -58,15 +58,19 @@ const ProfileEdit = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <form onSubmit={this.handleSubmit}>
-                <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']}/>
-                <StatusHandler status={this.getStatus()}/>
-                <Padding t={2}>
-                  <Button color="success" type="submit" block disabled={this.isDisabled()}>
-                    {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
-                  </Button>
-                </Padding>
-              </form>
+              <Padding t={1}>
+                <Panel>
+                  <form onSubmit={this.handleSubmit}>
+                    <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']}/>
+                    <StatusHandler status={this.getStatus()}/>
+                    <Padding t={2}>
+                      <Button color="success" type="submit" block disabled={this.isDisabled()}>
+                        {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
+                      </Button>
+                    </Padding>
+                  </form>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

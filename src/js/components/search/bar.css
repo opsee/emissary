@@ -1,3 +1,12 @@
+input.searchInput {
+  outline: 0;
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--colorGray2) !important;
+}
+
+input.light.
+
 .form{
   position: relative;
 }
@@ -24,8 +33,19 @@
   background-color: var(--colorGray9);
   transition: background-color var(--transitionEaseOut);
 }
+.label.light {
+  background-color: var(--lightColorSubheader);
+  border-bottom: solid 1px var(--lightColorBorder);
+}
 
 .labelFocused{
   composes: label;
   background:black !important;
+}
+.labelFocused.light {
+  background: #121212 !important;
+}
+
+.mag.light {
+  fill: white !important;
 }

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Alert, Col, Grid, Row} from '../layout';
+import {Alert, Col, Grid, Panel, Row} from '../layout';
 import {integrations as actions} from '../../actions';
 
 const Slack = React.createClass({
@@ -42,7 +42,9 @@ const Slack = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

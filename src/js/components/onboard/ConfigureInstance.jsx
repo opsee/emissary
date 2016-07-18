@@ -8,7 +8,7 @@ import {Close} from '../icons';
 import {RadioSelect} from '../forms';
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
-import {Padding, Col, Grid, Row} from '../layout';
+import {Padding} from '../layout';
 import style from './onboard.css';
 
 const ConfigureInstance = React.createClass({
@@ -82,46 +82,42 @@ const ConfigureInstance = React.createClass({
         <Link to="/start/launch-instance" className={style.closeWrapper}>
           <Close className={style.closeButton} />
         </Link>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Padding tb={2}>
-                <h2>Configure Instance</h2>
-              </Padding>
+        <div>
+          <Padding tb={2}>
+            <h2>Configure Instance</h2>
+          </Padding>
 
-              <p>Choose where the Opsee instance should be installed in your AWS environment.</p>
+          <p>Choose where the Opsee instance should be installed in your AWS environment.</p>
 
-              <Padding tb={1}>
-                <Padding tb={1}>
-                  <h4>Choose a Region</h4>
-                </Padding>
+          <Padding tb={1}>
+            <Padding tb={1}>
+              <h4>Choose a Region</h4>
+            </Padding>
 
-                <RadioSelect onChange={this.onRegionSelect} data={selectedRegion} options={this.getRegions()} path="id" />
-              </Padding>
+            <RadioSelect onChange={this.onRegionSelect} data={selectedRegion} options={this.getRegions()} path="id" />
+          </Padding>
 
-              <Padding tb={1}>
-                <Padding tb={1}>
-                  <h4>Choose a VPC</h4>
-                </Padding>
-                {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.vpcSelect} data={selectState} options={this.getVPCs()} path="selectedVPC"/>}
-              </Padding>
+          <Padding tb={1}>
+            <Padding tb={1}>
+              <h4>Choose a VPC</h4>
+            </Padding>
+            {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.vpcSelect} data={selectState} options={this.getVPCs()} path="selectedVPC"/>}
+          </Padding>
 
-              <Padding tb={1}>
-                <Padding tb={1}>
-                  <h4>Choose a Subnet</h4>
-                </Padding>
-                {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.subnetSelect} data={selectState} options={this.getSubnets()} path="selectedSubnet"/>}
-              </Padding>
+          <Padding tb={1}>
+            <Padding tb={1}>
+              <h4>Choose a Subnet</h4>
+            </Padding>
+            {isScanPending ? 'loading...' : <RadioSelect onChange={this.props.actions.subnetSelect} data={selectState} options={this.getSubnets()} path="selectedSubnet"/>}
+          </Padding>
 
-              <Padding t={2} b={1}>
-                <Button onClick={this.onSave} color="primary" disabled={isScanPending || !isDone} block>Save configuration</Button>
-              </Padding>
-              <Padding b={1}>
-                <Button to="/start/launch-instance" color="primary" flat block>Cancel</Button>
-              </Padding>
-            </Col>
-          </Row>
-        </Grid>
+          <Padding t={2} b={1}>
+            <Button onClick={this.onSave} color="primary" disabled={isScanPending || !isDone} block>Save configuration</Button>
+          </Padding>
+          <Padding b={1}>
+            <Button to="/start/launch-instance" color="primary" flat block>Cancel</Button>
+          </Padding>
+        </div>
       </div>
     );
   }

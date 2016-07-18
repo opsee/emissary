@@ -11,6 +11,9 @@
   margin:0;
   padding: 0.5em 0;
 }
+.label.light {
+  color: var(--lightColorText2);
+}
 
 .iconLabel {
   display: block;
@@ -26,6 +29,9 @@
   transition: fill var(--transitionEaseOut);
   fill: var(--colorText2);
 }
+.light.wrapper svg {
+  fill: var(--lightColorText2);
+}
 
 .input, input{
   box-shadow: none;
@@ -36,6 +42,11 @@
   width: 100%;
   padding: 0.75em 0;
   text-indent: 0.5em;
+}
+.light.input, input.light {
+  background-color: white;
+  border: solid 1px var(--colorGray3);
+  color: var(--lightColorText);
 }
 
 input[type="checkbox"]{
@@ -49,7 +60,15 @@ input[type="checkbox"]{
   background-color: black;
   outline: none;
 }
+.light.input:focus, input.light:focus {
+  background-color: white;
+  border-color: var(--colorGray4);
+}
 
 .input::placeholder {
   color: color(var(--colorText) lightness(50%));
+}
+
+.input.light::placeholder{
+  color: color(color(var(--lightColorText2)) lightness(80%));
 }

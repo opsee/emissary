@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import cx from 'classnames';
+
 import TimeAgo from 'react-timeago';
 import {Link} from 'react-router';
 
@@ -20,6 +21,7 @@ const CheckResponsePaginate = React.createClass({
   propTypes: {
     check: PropTypes.object,
     responses: PropTypes.object,
+    scheme: PropTypes.string,
     actions: PropTypes.shape({
       test: PropTypes.func,
       selectResponse: PropTypes.func
@@ -102,6 +104,7 @@ const CheckResponsePaginate = React.createClass({
       style.item,
       this.state.expanded && style.expanded,
       style[this.getCheckStatus()],
+      style[this.props.scheme],
       (this.isWaiting() || waiting) && style.waiting
     );
   },
@@ -182,14 +185,14 @@ const CheckResponsePaginate = React.createClass({
 
     if (this.state.expanded){
       return (
-        <Button color="info" onClick={this.handleToggle} className={style.button} title="Close Reponse">
-          <ChevronUp inline/>
+        <Button color="info" onClick={this.handleToggle} className={cx(style.button, style[this.props.scheme])} title="Close Reponse">
+          <ChevronUp inline fill="white"/>
         </Button>
       );
     }
     return (
-      <Button color="info" onClick={this.handleToggle} className={style.button} title="Open Response">
-        <ChevronDown inline/>
+      <Button color="info" onClick={this.handleToggle} className={cx(style.button, style[this.props.scheme])} title="Open Response">
+        <ChevronDown inline fill="white"/>
       </Button>
     );
   },
@@ -341,7 +344,7 @@ const CheckResponsePaginate = React.createClass({
     if (this.props.date instanceof Date){
       const s = this.props.date.toString();
       return (
-        <Color c="gray500">
+        <Color c="gray5">
           <small title="The date this event was processed.">{`- ${s}`}&nbsp;-&nbsp;<TimeAgo date={this.props.date}/></small>
         </Color>
       );
@@ -392,7 +395,8 @@ const CheckResponsePaginate = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({
