@@ -29,6 +29,10 @@
   background: var(--colorDanger);
 }
 
+.item.warning:after {
+  background: var(--colorWarning);
+}
+
 .item.initializing:after {
   background: var(--colorPrimary);
 }
