@@ -1,10 +1,8 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
-import {is} from 'immutable';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import cx from 'classnames';
-import _ from 'lodash';
 
 import LogoColor from './LogoColor';
 import SearchBox from './SearchBox.jsx';
@@ -24,16 +22,6 @@ const Header = React.createClass({
     return {
       ghosting: false
     };
-  },
-  shouldComponentUpdate(nextProps) {
-    const arr = [
-      !is(this.props.user, nextProps.user),
-      !is(this.props.team, nextProps.team),
-      this.props.activeBastion !== nextProps.activeBastion,
-      this.props.hide !== nextProps.hide,
-      this.props.scheme !== nextProps.scheme
-    ];
-    return _.some(arr);
   },
   getHeaderClass(){
     return cx({

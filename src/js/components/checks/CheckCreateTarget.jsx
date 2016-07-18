@@ -8,7 +8,7 @@ import {BastionRequirement, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import {EnvList} from '../env';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {Check} from '../../modules/schemas';
 import {Bar as SearchBar} from '../search';
@@ -114,7 +114,9 @@ const CheckCreateTarget = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement strict>
-                {this.renderInner()}
+                <Panel>
+                  {this.renderInner()}
+                </Panel>
               </BastionRequirement>
             </Col>
           </Row>

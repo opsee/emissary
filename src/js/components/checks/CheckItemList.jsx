@@ -85,8 +85,7 @@ const CheckItemList = React.createClass({
       return new List();
     }
 
-    let data = this.props.redux.checks.checks;
-    data = data
+    let data = this.props.redux.checks.checks
     .sortBy(item => item.name)
     .sortBy(item => {
       return item.health === undefined ? 101 : item.health;
@@ -97,7 +96,7 @@ const CheckItemList = React.createClass({
     if (this.props.target){
       let tar = !Array.isArray(this.props.target) ? [this.props.target] : this.props.target;
       data = data.filter(c => {
-        return tar.indexOf(c.get('target').id) > -1;
+        return tar.indexOf(c.get('target').get('id')) > -1;
       });
     }
     if (this.props.filter){
