@@ -20,31 +20,23 @@
   color: white;
 }
 
-.basePassing{
-  composes: base;
+.base.passing{
   background:var(--colorSuccess);
 }
-.baseFailing{
-  composes: base;
-}
-.baseStopped{
-  composes: base;
-}
-.baseRestarting{
-  composes: base;
+.base.restarting{
   background:var(--colorInfo);
 }
-.baseRunning{
-  composes: base;
+.base.running{
   background:var(--colorGray6);
 }
-.baseSilenced{
-  composes: base;
+.base.silenced{
   background:var(--colorPrimary);
 }
-.baseInitializing{
-  composes: base;
+.base.initializing{
   background:var(--colorPrimary);
+}
+.base.warning {
+  background: var(--colorWarning);
 }
 
 .svg{

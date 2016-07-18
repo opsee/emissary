@@ -89,6 +89,16 @@ const CheckItemList = React.createClass({
     .sortBy(item => item.name)
     .sortBy(item => {
       return item.health === undefined ? 101 : item.health;
+    })
+    .sortBy(item => {
+      switch (item.state){
+      case 'failing':
+        return -1;
+      case 'warning':
+        return 0;
+      default:
+        return 1;
+      }
     });
     if (noFilter){
       return data;

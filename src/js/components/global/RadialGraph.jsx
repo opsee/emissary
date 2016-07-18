@@ -41,7 +41,7 @@ const RadialGraph = React.createClass({
     return item.total ? Math.floor((item.passing / item.total) * 100) : undefined;
   },
   getBaseClass(){
-    return style[`base${_.startCase(this.getRadialState())}`];
+    return cx(style.base, style[this.getRadialState()]);
   },
   getInnerClass(){
     return cx(style[`inner${_.startCase(this.getRadialState())}`], style[this.props.scheme]);
@@ -60,6 +60,8 @@ const RadialGraph = React.createClass({
       return this.state.silenceRemaining ?
       `This ${this.props.type} is running, but is ` :
       `This ${this.props.type} is failing with a health of ${this.getHealth()}%`;
+    case 'warning':
+      return `This ${this.props.type} is currently in a warning state.`;
     case 'running':
       return `This ${this.props.type} is currently unmonitored.`;
     case 'stopped':
@@ -86,6 +88,8 @@ const RadialGraph = React.createClass({
       return 'init';
     case 'failing':
       return 'fail';
+    case 'warning':
+      return 'warn';
     case 'stopped':
       return 'stop';
     default:
