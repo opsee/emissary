@@ -3,7 +3,6 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {plain as seed} from 'seedling';
 import cx from 'classnames';
 import {is} from 'immutable';
 
@@ -32,7 +31,8 @@ const ListItem = React.createClass({
     }),
     analyticsActions: PropTypes.shape({
       trackEvent: PropTypes.func
-    })
+    }),
+    scheme: PropTypes.string
   },
   getDefaultProps(){
     return {
@@ -42,6 +42,7 @@ const ListItem = React.createClass({
   shouldComponentUpdate(nextProps) {
     let arr = [];
     arr.push(!is(this.props.item, nextProps.item));
+    arr.push(nextProps.scheme !== this.props.scheme);
     return _.some(arr);
   },
   getClass(){
@@ -49,7 +50,7 @@ const ListItem = React.createClass({
     return cx(style.item, {
       [style.itemSelected]: item.selected,
       [style.itemPending]: item.deleting
-    }, style[item.state]);
+    }, style[item.state], style[this.props.scheme]);
   },
   runMenuOpen(){
     this.props.actions.openContextMenu(this.props.item.get('id'));
@@ -75,30 +76,33 @@ const ListItem = React.createClass({
     );
     if (this.props.onClick){
       return (
-        <div className={style.link} onClick={this.handleClick}>
+        <div className={cx(style.link, style[this.props.scheme])} onClick={this.handleClick}>
           {graph}
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={style.link}>
+      <Link to={this.props.link} params={this.props.params} className={cx(style.link, style[this.props.scheme])}>
        {graph}
       </Link>
     );
   },
   renderInfo(){
+    const children = Array.isArray(this.props.children) ? this.props.children : [this.props.children];
+    const line1 = _.find(children, {key: 'line1'});
+    const line2 = _.find(children, {key: 'line2'});
     if (this.props.onClick){
       return (
-        <div className={cx([style.link, 'display-flex', 'flex-1', 'flex-column'])} onClick={this.handleClick}>
-          <div>{_.find(this.props.children, {key: 'line1'})}</div>
-          <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
+        <div className={cx([style.link, style[this.props.scheme]])} onClick={this.handleClick}>
+          <div>{line1}</div>
+          {line2 ? <div className="text-secondary text-sm">{null}</div> : null}
         </div>
       );
     }
     return (
-      <Link to={this.props.link} params={this.props.params} className={cx([style.link, 'display-flex', 'flex-1', 'flex-column'])} title={this.props.title}>
-        <div>{_.find(this.props.children, {key: 'line1'})}</div>
-        <div className="text-secondary">{_.find(this.props.children, {key: 'line2'})}</div>
+      <Link to={this.props.link} params={this.props.params} className={cx([style.link, style[this.props.scheme]])} title={this.props.title}>
+        <div>{line1}</div>
+        {line2 ? <div className="text-secondary text-sm">{line2}</div> : null}
       </Link>
     );
   },
@@ -106,10 +110,10 @@ const ListItem = React.createClass({
     const selected = this.props.item.get('selected');
     const fn = this.props.onSelect;
     if (fn && typeof fn === 'function'){
-      const icon = selected ? <Checkmark btn fill={seed.color.gray9}/> : null;
+      const icon = selected ? <Checkmark btn fill="textSecondary"/> : null;
       return (
         <div className="display-flex align-items-center justify-content-center">
-          <Button icon flat secondary onClick={this.handleSelect} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
+          <Button icon flat onClick={this.handleSelect} title="Select" className={cx(style.selector, selected && style.selectorSelected)}>{icon}</Button>
         </div>
       );
     }
@@ -118,15 +122,15 @@ const ListItem = React.createClass({
   render(){
     return (
       <div className={this.getClass()}>
-        <Padding b={1} className="display-flex">
+        <div className="display-flex middle-xs">
           <Padding r={2} l={0.5}>
             {this.renderGraph()}
           </Padding>
-          <Padding className="flex-1 display-flex" r={0.5}>
+          <Padding className="flex-1 display-flex align-items-center" r={0.5} style={{minHeight: '4rem'}}>
             {this.renderInfo()}
           </Padding>
           {this.renderSelectButton()}
-        </Padding>
+        </div>
       </div>
     );
   }
@@ -138,7 +142,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListItem);

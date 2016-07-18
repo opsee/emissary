@@ -70,7 +70,7 @@ const AssertionsCloudwatch = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    const data = JSON.stringify(this.props.check);
+    const data = window.encodeURIComponent(JSON.stringify(this.props.check));
     this.context.router.push(`/check-create/info?data=${data}`);
   },
   handleAssertionsChange(assertions = []){
@@ -133,12 +133,14 @@ const AssertionsCloudwatch = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
-                {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
-                <Padding b={1}>
-                  {this.renderHelperText()}
-                </Padding>
-                <Padding tb={1}>
-                  {this.renderInner()}
+                <Padding t={1}>
+                  {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
+                  <Padding b={1}>
+                    {this.renderHelperText()}
+                  </Padding>
+                  <Padding tb={1}>
+                    {this.renderInner()}
+                  </Padding>
                 </Padding>
               </BastionRequirement>
             </Col>

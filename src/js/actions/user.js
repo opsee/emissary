@@ -21,10 +21,11 @@ import {
   ENV_GET_BASTIONS
 } from './constants';
 import storage from '../modules/storage';
+import * as team from './team';
 
 export function signupCreate(data, redirect) {
   return (dispatch, state) => {
-    const params = _.pick(data, ['name', 'referrer', 'email']);
+    const params = _.pick(data, ['name', 'referrer', 'email', 'password']);
     dispatch({
       type: USER_SIGNUP_CREATE,
       payload: new Promise((resolve, reject) => {
@@ -73,6 +74,9 @@ export function login(data) {
             resolve(res.body);
             //TODO fix this somehow
             setTimeout(() => {
+              team.getTeam()(dispatch, state);
+            }, 10);
+            setTimeout(() => {
               const string = state().router.location.query.redirect || '/';
               dispatch(push(string));
             }, 100);
@@ -115,6 +119,9 @@ export function verifyEmail(data) {
         .then((res) => {
           analytics.trackEvent('User', 'verified-email', null, res.body.user)(dispatch, state);
           resolve(res.body);
+          setTimeout(() => {
+            dispatch(push('/profile?verified=true'));
+          }, 40);
         }, reject);
       })
     });
@@ -140,7 +147,8 @@ export function sendVerificationEmail(data) {
 
 export function logout(){
   return (dispatch, state) => {
-    storage.remove('user');
+    ['user', 'team', 'shouldGetSlackChannels', 'shouldSyncPagerduty']
+    .map(str => storage.remove(str));
     analytics.trackEvent('User', 'logout')(dispatch, state);
     dispatch({
       type: USER_LOGOUT

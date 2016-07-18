@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {BastionRequirement, Toolbar} from '../global';
-import {Col, Grid, Row} from '../layout';
+import {Col, Grid, Panel, Row} from '../layout';
 import {Heading} from '../type';
 
 const Bastion = React.createClass({
@@ -12,8 +12,9 @@ const Bastion = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement strict />
-              <p>Here are some frequently asked questions and answers about the Opsee EC2 Instance:</p>
+              <Panel>
+                <BastionRequirement strict />
+                <p>Here are some frequently asked questions and answers about the Opsee EC2 Instance:</p>
 
                 <Heading level={3}>What type of instance is it? How much does it cost to run?</Heading>
                 <p>Our instance is a <a target="_blank" href="https://aws.amazon.com/ec2/pricing/">t2.micro instance and is free-tier eligible</a>. In the future we plan to offer larger sizes with greater processing capability, but we will keep you posted when that happens.</p>
@@ -63,6 +64,7 @@ const Bastion = React.createClass({
                   <li>To remove the Opsee ingress rules, allowing communication between our security group and the other groups in your VPC, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Look for the stack named <strong>opsee-stack-[id]-OpseeBastionIngressStack-[id]</strong>. Select it from the list and choose Actions -> Delete Stack</li>
                   <li>To remove the IAM role used by our backend, go to <a target="_blank" href="https://console.aws.amazon.com/cloudformation/home">your CloudFormation dashboard</a>. Find the stack called <strong>opsee-role-[id]</strong>. Select it from the list and choose Actions -> Delete Stack.</li>
                 </ul>
+              </Panel>
             </Col>
           </Row>
         </Grid>

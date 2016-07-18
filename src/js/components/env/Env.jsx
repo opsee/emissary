@@ -5,7 +5,7 @@ import {Link, State} from 'react-router';
 import _ from 'lodash';
 
 import {BastionRequirement, Toolbar} from '../global';
-import {Col, Grid, Row, Padding} from '../layout';
+import {Col, Grid, Row, Padding, Panel} from '../layout';
 import {Button} from '../forms';
 import EnvList from './EnvList.jsx';
 import instanceImg from '../../../img/tut-ec2-instance.svg';
@@ -20,7 +20,8 @@ const Env = React.createClass({
     location: PropTypes.object,
     actions: PropTypes.shape({
       envSetSearch: PropTypes.func,
-      getBastions: PropTypes.func
+      getBastions: PropTypes.func,
+      all: PropTypes.func
     }),
     checkActions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -36,6 +37,7 @@ const Env = React.createClass({
   },
   componentWillMount(){
     this.props.checkActions.getChecks();
+    // this.props.actions.all();
   },
   getTitle(){
     const bastion = _.chain(this.props.redux.env.bastions).filter('connected').last().value() || {};
@@ -65,7 +67,7 @@ const Env = React.createClass({
     }
     return (
       <div>
-        <p>To run checks in AWS, add our EC2 instance. We&rsquo;ll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/bastion">our AWS integration</Link>.</p>
+        <p>To run checks in AWS, add our EC2 instance. We&rsquo;ll automatically detect your infrastructure and services, and help you check everything in your environment. Learn more about <Link to="/docs/instance">our AWS integration</Link>.</p>
         <Padding tb={2}>
           <Button to="/start/launch-stack" color="primary" block chevron>Add our instance</Button>
         </Padding>
@@ -92,7 +94,9 @@ const Env = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                {this.renderInner()}
+                <Panel>
+                  {this.renderInner()}
+                </Panel>
               </Col>
             </Row>
           </Grid>

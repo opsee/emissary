@@ -2,9 +2,11 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import cx from 'classnames';
 import DocumentTitle from 'react-document-title';
+import {plain as seed} from 'seedling';
+import {connect} from 'react-redux';
+
 import {Col, Grid, Row} from '../layout';
 import style from './toolbar.css';
-import {plain as seed} from 'seedling';
 import {Heading, Hyphenate} from '../type';
 
 const Toolbar = React.createClass({
@@ -14,7 +16,14 @@ const Toolbar = React.createClass({
     bg: PropTypes.string,
     children: PropTypes.node,
     pageTitle: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    scheme: PropTypes.string,
+    hidden: PropTypes.bool
+  },
+  getClass() {
+    return cx(style.outer, this.props.className, style[this.props.scheme], {
+      [style.hidden]: this.props.hidden
+    });
   },
   getChildrenClass(){
     let key = this.props.btnPosition || 'default';
@@ -25,8 +34,17 @@ const Toolbar = React.createClass({
     let obj = {};
     if (this.props.bg){
       obj.background = seed.color[this.props.bg];
+      obj.color = 'white';
     }
     return obj;
+  },
+  getHeadingStyle(){
+    if (this.props.bg && this.props.scheme === 'light'){
+      return {
+        color: 'white'
+      };
+    }
+    return null;
   },
   renderTitle(){
     return (
@@ -35,12 +53,12 @@ const Toolbar = React.createClass({
   },
   render(){
     return (
-      <div className={cx(style.outer, this.props.className)} style={this.getStyle()}>
+      <div className={this.getClass()} style={this.getStyle()}>
         {this.renderTitle()}
         <Grid>
           <Row>
             <Col xs={12} className={style.inner}>
-              <Heading level={1} noPadding>
+              <Heading level={1} noPadding style={this.getHeadingStyle()}>
                 <Hyphenate>{this.props.title}</Hyphenate>
               </Heading>
                 <div className={this.getChildrenClass()}>
@@ -54,4 +72,8 @@ const Toolbar = React.createClass({
   }
 });
 
-export default Toolbar;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Toolbar);

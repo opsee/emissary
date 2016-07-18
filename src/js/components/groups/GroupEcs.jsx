@@ -158,7 +158,9 @@ const GroupEcs = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Padding t={1}>
+                {this.renderInner()}
+              </Padding>
             </Col>
           </Row>
         </Grid>

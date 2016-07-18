@@ -8,7 +8,7 @@ import {Button} from '../forms';
 import {BastionRequirement, StatusHandler, Toolbar} from '../global';
 import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {checks as actions, user as userActions} from '../../actions';
 import {flag} from '../../modules';
@@ -50,7 +50,7 @@ const CheckCreateType = React.createClass({
     }
   },
   getLink(type = {}){
-    const data = JSON.stringify({target: {type: type.id}});
+    const data = window.encodeURIComponent(JSON.stringify({target: {type: type.id}}));
     if (type.id === 'host' || type.id === 'external_host'){
       return `/check-create/request?data=${data}`;
     }
@@ -75,7 +75,7 @@ const CheckCreateType = React.createClass({
     check.target.type = target.id;
     this.props.onChange(check);
 
-    const data = JSON.stringify(check);
+    const data = window.encodeURIComponent(JSON.stringify(check));
     let path = `/check-create/target?data=${data}`;
     if (target.id === 'host' || target.id === 'external_host'){
       path = `/check-create/request?data=${data}`;
@@ -135,9 +135,13 @@ const CheckCreateType = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                {this.renderInner()}
-              </BastionRequirement>
+              <Padding t={1}>
+                <Panel>
+                  <BastionRequirement>
+                    {this.renderInner()}
+                  </BastionRequirement>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

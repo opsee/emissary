@@ -35,7 +35,9 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}><Circle fill={!this.isStateSelected('passing') ? 'success' : ''} inline/>&nbsp;Passing</Button>
+          <Button flat={!this.isStateSelected('passing')} color="success" onClick={this.runState.bind(null, 'passing')}>
+            <Circle fill={!this.isStateSelected('passing') ? 'success' : 'gray1'} inline/>&nbsp;Passing
+          </Button>
         </Padding>
       </Col>
     );
@@ -44,7 +46,9 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}><Circle fill={!this.isStateSelected('failing') ? 'danger' : ''} inline/>&nbsp;Failing</Button>
+          <Button flat={!this.isStateSelected('failing')} color="danger" onClick={this.runState.bind(null, 'failing')}>
+            <Circle fill={!this.isStateSelected('failing') ? 'danger' : 'gray1'} inline/>&nbsp;Failing
+          </Button>
         </Padding>
       </Col>
     );
@@ -53,14 +57,16 @@ const SearchFilterButtons = React.createClass({
     return (
       <Col className="col-xs">
         <Padding b={1}>
-          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}><Circle fill={!this.isStateSelected('unmonitored') ? 'text' : ''} inline/>&nbsp;Unmonitored</Button>
+          <Button flat={!this.isStateSelected('unmonitored')} onClick={this.runState.bind(null, 'unmonitored')}>
+            <Circle fill={!this.isStateSelected('unmonitored') ? 'text' : 'gray1'} inline/>&nbsp;Unmonitored
+          </Button>
         </Padding>
       </Col>
     );
   },
   render(){
     return (
-      <Padding b={2}>
+      <Padding t={1} b={2}>
         <Row>
           {this.renderFailingButton()}
           {this.renderPassingButton()}
@@ -72,7 +78,8 @@ const SearchFilterButtons = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

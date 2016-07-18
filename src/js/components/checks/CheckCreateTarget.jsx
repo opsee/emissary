@@ -75,7 +75,7 @@ const CheckCreateTarget = React.createClass({
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
     this.props.onChange(check);
-    const data = JSON.stringify(check);
+    const data = window.encodeURIComponent(JSON.stringify(check));
     if (this.props.check.type === 'cloudwatch'){
       return this.context.router.push(`/check-create/assertions-cloudwatch?data=${data}`);
     }
@@ -116,7 +116,9 @@ const CheckCreateTarget = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement strict>
-                {this.renderInner()}
+                <Padding t={1}>
+                  {this.renderInner()}
+                </Padding>
               </BastionRequirement>
             </Col>
           </Row>

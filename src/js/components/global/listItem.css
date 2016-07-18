@@ -1,9 +1,13 @@
 .item {
-  border-bottom: 1px solid var(--colorGray8);
+  border-top: 1px solid var(--colorGray8);
   border-right: 0.3rem solid transparent;
-  padding: 1rem 0 0 0;
-  margin-bottom: 0.4rem;
+  padding: 1rem 0 1rem 1rem;
+  margin-bottom: 0;
   position: relative;
+}
+.item.light {
+  border-top: solid 1px var(--colorGray3);
+  border-bottom: none;
 }
 
 .item:after {
@@ -33,6 +37,10 @@
   composes: item;
   background: var(--colorGray8);
 }
+.itemSelected.light {
+  background: var(--colorGray3);
+  border-top-color: var(--colorGray4);
+}
 
 .itemPending {
   opacity: 0.35;
@@ -54,23 +62,40 @@
   color: var(--colorText);
   cursor: pointer;
   text-decoration: none;
+  width: 100%;
 }
+
+.link.light {
+  color: var(--lightColorText);
+}
+
 .link:active, .link:focus {
   background-color: var(--colorGray8);
   color: white;
   text-decoration: none;
 }
+
+.link.light:active, .link.light:focus {
+   color: var(--lightColorText);
+   background-color: var(--colorGray3);
+}
+
 .link:hover {
   color: white;
   text-decoration: none;
+}
+
+.link.light:hover {
+  background-color: var(--colorGray2);
+  color: var(--lightColorText);
 }
 
 .selector {
   width: 4.5rem;
   height: 4.5rem;
   border: 0;
-  border-radius: 1px;
-  background: none;
+  border-radius: 1px !important;
+  background: none !important;
   position: relative;
   margin:0 .5rem 0 0;
 }
@@ -78,43 +103,82 @@
   content: '';
   border: 1px solid var(--colorGray5);
   display: block;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 0.7rem;
+  left: 0.7rem;
   z-index: 1;
   transition: background var(--transitionEaseOut), border-color var(--transitionEaseOut);
 }
+.light .selector:after {
+  border-color: var(--colorGray4);
+}
+
 .selector svg {
-  height: 2rem;
-  width: 2rem;
+  height: 1.5rem;
+  width: 1.5rem;
   position: relative;
   z-index: 2;
-  left: -.1rem;
-  top: .5rem;
+  left: -.25rem;
+  top: 0rem;
 }
 
 .selectorSelected:after{
-  background: var(--colorGray5);
+  /*background: var(--colorGray5);*/
 }
-.selector:focus, .selector:active, .selector:hover, .selector:active:focus{
-  background: none;
-  outline: 0;
+.light .selectorSelected:after {
+  /*background: var(--colorGray2);*/
+  border-color: var(--colorGray4);
 }
-.selector:focus:after, .selector:active:after, .selector:hover:after{
+
+.selector:focus,
+.selector:active,
+.selector:hover,
+.selector:active:focus{
+  background: none !important;
+  outline: 0 !important;
+}
+
+.selector:focus:after,
+.selector:active:after,
+.selector:hover:after{
   background: var(--colorGray4);
   border-color: var(--colorPrimary);
 }
-.selector:focus svg, .selector:active svg, .selector:hover svg{
+.light .selector:focus:after,
+.light .selector:active:after,
+.light .selector:hover:after {
+  background: var(--colorGray2);
+  border-color: var(--colorGray4);
+}
+
+.selector:focus svg,
+.selector:active svg,
+.selector:hover svg{
   fill: var(--colorGray9) !important;
 }
+.selector.light:focus svg,
+.selector.light:active svg,
+.selector.light:hover svg{
+  fill: var(--lightColorText2) !important;
+}
+
 .selectorInner {
-  width: 1.5rem;
+  width: 1.4rem;
   position: relative;
-  left: .75rem;
+  left: 1rem;
   height: 0.2rem;
   border-radius: 2px;
   background: var(--colorGray9);
   z-index: 2;
+  top: -0.3rem;;
+}
+.selectorInner.light {
+  background: var(--lightColorText2);
+}
+
+.light .infoText {
+  color: var(--colorGray3);
+  font-size: 1.2rem;
 }

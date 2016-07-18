@@ -46,13 +46,13 @@ const GroupElb = React.createClass({
     }) || new Map();
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getGroup().get('id'),
         type: 'elb',
         name: this.getGroup().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   renderDescription(group){
@@ -92,8 +92,8 @@ const GroupElb = React.createClass({
   renderInner(group){
     if (group.name && group.CreatedTime){
       return (
-        <div>
-          <Padding b={3}>
+        <Padding t={1}>
+          <Padding b={2}>
             <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
@@ -116,7 +116,7 @@ const GroupElb = React.createClass({
             <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} redux={this.props.redux} title/>
           </Padding>
 
-        </div>
+        </Padding>
       );
     }
     return <StatusHandler status={this.props.redux.asyncActions.getGroupElb.status}/>;

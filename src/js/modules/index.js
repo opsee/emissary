@@ -7,10 +7,11 @@ import itemsFilter from './itemsFilter';
 import mixins from './mixins';
 import regions from './regions';
 import request from './request';
-import stringFromTokens from './stringFromTokens';
+import scheme from './scheme';
+import string from './string';
 import storage from './storage';
+import stripe from './stripe';
 import validate from './validate';
-import variables from './variables';
 import yeller from './yeller';
 
 export {
@@ -23,9 +24,10 @@ export {
   mixins,
   regions,
   request,
-  stringFromTokens,
+  scheme,
+  string,
   storage,
+  stripe,
   validate,
-  variables,
   yeller
 };

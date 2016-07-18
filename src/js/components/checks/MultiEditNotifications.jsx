@@ -9,7 +9,7 @@ import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Heading} from '../type';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {checks as actions} from '../../actions';
 
 const MultiEditNotifications = React.createClass({
@@ -117,7 +117,9 @@ const MultiEditNotifications = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

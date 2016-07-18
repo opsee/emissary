@@ -9,7 +9,7 @@ import {Close} from '../icons';
 import {StatusHandler} from '../global';
 import {UserDataRequirement} from '../user';
 import {Heading} from '../type';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import NotificationSelection from './NotificationSelection';
 import CheckDisabledReason from './CheckDisabledReason';
 import {flag, validate} from '../../modules';
@@ -38,7 +38,7 @@ const CheckCreateInfo = React.createClass({
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
-        checkCreate: PropTypes.object
+        checkCreateOrEdit: PropTypes.object
       })
     })
   },
@@ -83,7 +83,7 @@ const CheckCreateInfo = React.createClass({
     return _.some(bools);
   },
   isDisabled(){
-    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreate.status === 'pending';
+    return !!validate.check(this.props.check).length || this.props.redux.asyncActions.checkCreateOrEdit.status === 'pending';
   },
   shouldShowHideAdvancedOptions(){
     let bools = [];
@@ -139,7 +139,7 @@ const CheckCreateInfo = React.createClass({
     if (!this.props.renderAsInclude){
       return (
         <div>
-          <StatusHandler status={this.props.redux.asyncActions.checkCreate.status}/>
+          <StatusHandler status={this.props.redux.asyncActions.checkCreateOrEdit.status}/>
           <Button color="success" block onClick={this.handleSubmit} disabled={this.isDisabled()} chevron>Finish</Button>
           <CheckDisabledReason check={this.props.check} areas={['info', 'notifications']}/>
         </div>
@@ -225,12 +225,16 @@ const CheckCreateInfo = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                <Padding b={3}>
-                  {this.renderHelperText()}
-                </Padding>
-                {this.renderInner()}
-              </BastionRequirement>
+              <Padding t={2}>
+                <Panel>
+                  <BastionRequirement>
+                    <Padding b={3}>
+                      {this.renderHelperText()}
+                    </Padding>
+                    {this.renderInner()}
+                  </BastionRequirement>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

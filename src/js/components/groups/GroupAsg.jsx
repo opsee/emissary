@@ -11,7 +11,7 @@ import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 import {flag} from '../../modules';
@@ -47,13 +47,13 @@ const GroupAsg = React.createClass({
     }) || new Map({id: this.props.params.id});
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getGroup().get('id'),
         type: 'asg',
         name: this.getGroup().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   renderCreateCheckButton(){
@@ -72,7 +72,7 @@ const GroupAsg = React.createClass({
     const group = this.getGroup().toJS();
     if (group.name && group.CreatedTime){
       return (
-        <div>
+        <Padding t={1}>
           {this.renderCreateCheckButton()}
           <Padding b={2}>
             <Heading level={3}>{group.id} Information</Heading>
@@ -117,7 +117,7 @@ const GroupAsg = React.createClass({
           <Padding b={2}>
             <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} type="ecc" title/>
           </Padding>
-        </div>
+        </Padding>
       );
     }
     return <StatusHandler status={this.props.redux.asyncActions.getGroupAsg.status}/>;
@@ -129,7 +129,9 @@ const GroupAsg = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

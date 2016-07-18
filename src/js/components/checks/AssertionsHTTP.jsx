@@ -10,7 +10,7 @@ import {UserDataRequirement} from '../user';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
-import {Padding} from '../layout';
+import {Padding, Panel} from '../layout';
 import {Button} from '../forms';
 import {
   user as userActions,
@@ -96,7 +96,7 @@ const AssertionsHTTP = React.createClass({
   },
   handleSubmit(e){
     e.preventDefault();
-    const data = JSON.stringify(this.props.check);
+    const data = window.encodeURIComponent(JSON.stringify(this.props.check));
     this.context.router.push(`/check-create/info?data=${data}`);
   },
   handleAssertionsChange(assertions = []){
@@ -157,18 +157,22 @@ const AssertionsHTTP = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
-                <Padding b={1}>
-                  {this.renderHelperText()}
-                </Padding>
-                <Padding b={1}>
-                  <CheckResponsePaginate check={this.props.check} showBoolArea={false}/>
-                </Padding>
-                <Padding tb={1}>
-                  {this.renderInner()}
-                </Padding>
-              </BastionRequirement>
+              <Padding t={2}>
+                <Panel>
+                  <BastionRequirement>
+                    {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
+                    <Padding b={1}>
+                      {this.renderHelperText()}
+                    </Padding>
+                    <Padding b={1}>
+                      <CheckResponsePaginate check={this.props.check} showBoolArea={false}/>
+                    </Padding>
+                    <Padding tb={1}>
+                      {this.renderInner()}
+                    </Padding>
+                  </BastionRequirement>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

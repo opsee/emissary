@@ -14,6 +14,10 @@
   background-image: linear-gradient(#dc2328, #dc2328 20%, #ea3c1c 20%, #ea3c1c 40%, #e6571b 40%, #e6571b 60%, #f17719 60%, #f17719 80%, #f9a513 80%, #f9a513 100%);
 }
 
+.loader.light {
+  border-color: var(--lightColorHeader);
+}
+
 @keyframes indicator {
   33% {
     transform: rotate(20deg);

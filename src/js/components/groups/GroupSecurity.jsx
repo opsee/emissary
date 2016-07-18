@@ -9,7 +9,7 @@ import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
@@ -44,13 +44,13 @@ const GroupSecurity = React.createClass({
     }) || new Map({id: this.props.params.id});
   },
   getCreateLink(){
-    const data = JSON.stringify({
+    const data = window.encodeURIComponent(JSON.stringify({
       target: {
         id: this.getGroup().get('id'),
         type: 'security',
         name: this.getGroup().get('name')
       }
-    });
+    }));
     return `/check-create/request?data=${data}`;
   },
   renderDescription(){
@@ -63,8 +63,8 @@ const GroupSecurity = React.createClass({
   renderInner(){
     if (this.getGroup().get('name')){
       return (
-        <div>
-          <Padding b={3}>
+        <Padding t={1}>
+          <Padding b={2}>
             <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
@@ -87,7 +87,7 @@ const GroupSecurity = React.createClass({
           <Padding b={2}>
             <InstanceItemList groupSecurity={this.props.params.id} type="rds" title noFallback/>
           </Padding>
-        </div>
+        </Padding>
       );
     }
     return <StatusHandler status={this.props.redux.asyncActions.getGroupSecurity.status}/>;
@@ -99,7 +99,9 @@ const GroupSecurity = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

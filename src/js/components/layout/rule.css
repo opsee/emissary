@@ -14,3 +14,7 @@
   height:1px;
   background: var(--colorGray8);
 }
+
+.rule.light:after {
+  background: var(--colorGray3);
+}

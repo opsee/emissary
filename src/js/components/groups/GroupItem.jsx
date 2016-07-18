@@ -113,7 +113,7 @@ const GroupItem = React.createClass({
   },
   getCreateCheckLink(){
     const target = _.pick(this.getItem().toJS(), ['id', 'type', 'name']);
-    const data = JSON.stringify({target});
+    const data = window.encodeURIComponent(JSON.stringify({target}));
     return `/check-create/request?data=${data}`;
   },
   getType(){

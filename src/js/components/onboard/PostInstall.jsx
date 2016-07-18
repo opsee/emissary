@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import {checks as actions} from '../../actions';
 import Checkmark from './Checkmark';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Padding} from '../layout';
 import {Button} from '../forms';
 import style from './onboard.css';
 
@@ -51,23 +51,17 @@ const PostInstall = React.createClass({
   render(){
     return (
       <div className={style.transitionPanel}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Padding t={4} b={1} lr={2} style={{margin: '0 auto'}}>
-                <Checkmark />
-              </Padding>
-              <div className="text-center">
-                <h2>You're all done!</h2>
-                <p>The Opsee instance was successfully installed.</p>
-              </div>
-              {this.renderCheckCount()}
-              <Padding t={2} b={2}>
-                <Button to="/" color="success" block chevron>Check them out</Button>
-              </Padding>
-            </Col>
-          </Row>
-        </Grid>
+        <Padding t={4} b={1} lr={2} style={{margin: '0 auto'}}>
+          <Checkmark />
+        </Padding>
+        <div className="text-center">
+          <h2>You're all done!</h2>
+          <p>The Opsee instance was successfully installed.</p>
+        </div>
+        {this.renderCheckCount()}
+        <Padding t={2} b={2}>
+          <Button to="/" color="success" block chevron>Check them out</Button>
+        </Padding>
       </div>
     );
   }
