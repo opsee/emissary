@@ -15,9 +15,6 @@ const Header = React.createClass({
     user: PropTypes.object.isRequired,
     team: PropTypes.object.isRequired,
     hide: PropTypes.bool,
-    env: PropTypes.shape({
-      activeBastion: PropTypes.object
-    }).isRequired,
     activeBastion: PropTypes.bool
   },
   getInitialState(){
