@@ -157,7 +157,7 @@ const Button = React.createClass({
   render(){
     if (this.props.to){
       return (
-        <Link {...this.props} className={this.getClass()} onClick={this.handleLinkClick} title={this.props.title}>
+        <Link {..._.pick(this.props, ['title', 'style', 'target', 'href', 'query', 'to', 'location'])} className={this.getClass()} onClick={this.handleLinkClick}>
           {this.renderInner()}
         </Link>
       );

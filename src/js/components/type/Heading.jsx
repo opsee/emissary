@@ -31,7 +31,8 @@ const Hyphenate = React.createClass({
   render(){
     const string = `h${this.props.level}`;
     const className = cx([this.props.className, style[string]]);
-    const props = _.assign({}, this.props, {className});
+    let props = _.assign({}, this.props, {className});
+    props = _.omit(props, ['level', 'noPadding', 'children']);
     return (
       <Padding {...this.getPadding()} className={this.props.className}>
         {
