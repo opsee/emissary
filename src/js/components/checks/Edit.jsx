@@ -38,6 +38,7 @@ const CheckEdit = React.createClass({
       getGroupsElb: PropTypes.func,
       getInstancesEcc: PropTypes.func
     }),
+    history: PropTypes.object.isRequired,
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         checks: PropTypes.object,
@@ -137,9 +138,9 @@ const CheckEdit = React.createClass({
   },
   renderAssertions(check){
     if (check.type === 'cloudwatch'){
-      return <AssertionsCloudwatch check={check} onChange={this.setData} renderAsInclude/>;
+      return <AssertionsCloudwatch check={check} onChange={this.setData} renderAsInclude history={this.props.history} types={getCheckTypes(this.props.redux)}/>;
     }
-    return <AssertionsHTTP check={check} onChange={this.setData} renderAsInclude/>;
+    return <AssertionsHTTP check={check} onChange={this.setData} renderAsInclude history={this.props.history} types={getCheckTypes(this.props.redux)}/>;
   },
   renderInner(check){
     if (check.id && _.find(check.tags, () => 'complete')) {

@@ -73,7 +73,7 @@ const AssertionSelectionCloudwatch = React.createClass({
       <div>
         {this.props.check.assertions.map((assertion, index) => {
           return (
-            <div>
+            <div key={`assertion-${index}`}>
               <Heading level={3} className="display-flex flex-1 flex-vertical-align">
                 <span className="flex-1">#{index + 1}&nbsp;{_.get(this.getMetrics(), `${assertion.value}.title`)}</span>
                 <Button flat color="danger" title={`Remove ${assertion.value} assertion`} onClick={this.handleDeleteClick.bind(null, index)} style={{padding: '0.2rem'}}>
