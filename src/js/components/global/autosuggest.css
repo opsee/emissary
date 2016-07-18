@@ -10,7 +10,11 @@
   border:2px solid var(--colorGray9);
 }
 
-:global .react-autosuggest__suggestion{
+:global .light .react-autosuggest__suggestions-container {
+  background: white;
+}
+
+:global .react-autosuggest__suggestion {
   padding: .7rem;
   margin: 0;
   cursor: pointer;

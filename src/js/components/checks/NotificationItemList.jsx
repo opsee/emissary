@@ -70,7 +70,7 @@ const NotificationItemList = React.createClass({
       return (
         <Padding key={`notif-${i}`} b={1}>
           <div>
-            <PagerDuty fill="white" style={{height: '1.3em', verticalAlign: 'bottom', opacity: isPagerDutyDisabled ? 0.5 : 1}} />
+            <PagerDuty fill="text" style={{height: '1.3em', verticalAlign: 'bottom', opacity: isPagerDutyDisabled ? 0.5 : 1}} />
             {this.props.redux.asyncActions.integrationsPagerdutyInfo.history.length && isPagerDutyDisabled ?
               <Padding t={1}>
                 <Alert color="warning">You are no longer connected to PagerDuty! <PagerdutyConnect /> to re-enable this notification.</Alert>

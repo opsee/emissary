@@ -36,6 +36,10 @@
   fill: var(--colorPrimary) !important;
 }
 
+.buttonIconPagerDuty.primary:hover {
+  fill: white !important;
+}
+
 .buttonIconPagerDuty.primary.disabled {
   fill: var(--colorText) !important;
 }

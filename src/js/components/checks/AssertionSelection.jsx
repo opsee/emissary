@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {plain as seed} from 'seedling';
 import Autosuggest from 'react-autosuggest';
+import cx from 'classnames';
 
 import {Button} from '../forms';
 import {Add, Delete} from '../icons';
@@ -22,6 +23,7 @@ const AssertionSelection = React.createClass({
     response: PropTypes.object,
     responseFormatted: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    scheme: PropTypes.string,
     redux: PropTypes.shape({
       user: PropTypes.object,
       checks: PropTypes.shape({
@@ -145,7 +147,7 @@ const AssertionSelection = React.createClass({
       }
       return (
         <div>
-          <Highlight wrap style={{width: '100%'}} noBg>
+          <Highlight wrap style={{width: '100%'}} padding>
             {meta.data}
           </Highlight>
           <Rule/>
@@ -156,8 +158,8 @@ const AssertionSelection = React.createClass({
     }
     return (
       <div>
-        <Expandable style={{width: '100%'}} noFade>
-          <Highlight wrap noBg>
+        <Expandable style={{width: '100%'}} noFade bg>
+          <Highlight wrap padding bg>
             {this.getResponseBody()}
           </Highlight>
         </Expandable>
@@ -472,8 +474,8 @@ const AssertionSelection = React.createClass({
           {this.getBodySnippet(assertion) || 'Select a header below'}
           <Padding t={0.5} b={1}>
             <div className="form-group">
-              <label className={inputStyle.label} htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
-              <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(assertionIndex), id: `json-path-${assertionIndex}`}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
+              <label className={cx(inputStyle.label, inputStyle[this.props.scheme])} htmlFor={`json-path-${assertionIndex}`}>JSON path (optional) <a target="_blank" href="/docs/checks#json">Learn More</a></label>
+              <Autosuggest suggestions={this.getFilteredJsonBodyKeys(assertionIndex)} inputProps={{onChange: this.handleJsonSuggestionSelect.bind(null, assertionIndex), value: assertion.value || '', placeholder: this.getJsonPlaceholder(assertionIndex), id: `json-path-${assertionIndex}`, className: cx(inputStyle[this.props.scheme])}} renderSuggestion={this.renderSuggestion} getSuggestionValue={(s) => s} style={{width: '100%'}} shouldRenderSuggestions={() => true}/>
             </div>
           </Padding>
           <div className="display-flex">
@@ -539,7 +541,8 @@ const AssertionSelection = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 export default connect(mapStateToProps)(AssertionSelection);

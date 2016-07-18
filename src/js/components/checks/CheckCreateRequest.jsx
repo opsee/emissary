@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -247,7 +246,7 @@ const CheckCreateRequest = React.createClass({
         })
         }
         <Button flat color="primary" onClick={this.runAddHeader}>
-          <Add fill={seed.color.primary} inline/> Add {!this.getHeaders().length ? 'A' : 'Another'} Header
+          <Add fill="primary" inline/> Add {!this.getHeaders().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     );

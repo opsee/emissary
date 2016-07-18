@@ -60,7 +60,7 @@ input[type="checkbox"]{
   background-color: black;
   outline: none;
 }
-.light.input:focus {
+.light.input:focus, input.light:focus {
   background-color: white;
   border-color: var(--colorGray4);
 }

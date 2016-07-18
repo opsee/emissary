@@ -404,14 +404,15 @@ const NotificationSelection = React.createClass({
                 disabled = true;
                 title = 'PagerDuty has already been added';
               }
-              innerButton = <span><PagerDuty className={cx(style.buttonIconPagerDuty, style[this.props.scheme], disabled && style.buttonIconPagerDutyDidisabled, style.primary)} /></span>;
+              //innerButton = <span><PagerDuty className={cx(style.buttonIconPagerDuty, style[this.props.scheme], disabled && style.buttonIconPagerDutyDidisabled, style.primary)} /></span>;
+              innerButton = <span><PagerDuty fill="primary"/></span>;
             } else {
               innerButton = <span>{_.capitalize(type)}&nbsp;{this.renderNotifIcon({type}, {inline: true, fill: 'primary'})}</span>;
             }
             return (
               <div title={title} style={{display: 'inline'}} key={`notif-pick-type-${type}`}>
                 <Button flat color="primary" onClick={this.runNewNotif.bind(null, typeCorrected)} className="flex-1" style={{margin: '0 1rem 1rem 0'}} key={`notif-button-${type}`} disabled={disabled} title={title}>
-                  <Add inline fill={disabled ? 'white' : 'primary'}/>&nbsp;{innerButton}
+                  <Add inline fill="primary"/>&nbsp;{innerButton}
                 </Button>
               </div>
             );

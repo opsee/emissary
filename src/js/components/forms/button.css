@@ -49,6 +49,14 @@
   background: var(--colorGray8);
 }
 
+.btn[disabled] svg {
+  fill: var(--colorText2) !important;
+}
+
+.btn[disabled].light svg {
+  fill: var(--lightColorText2) !important;
+}
+
 .btn.default {
   color: white;
   background: var(--colorText2);

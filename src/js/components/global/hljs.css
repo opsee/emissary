@@ -11,6 +11,9 @@
 :global .hljs.noBg{
   background:none;
 }
+:global .hljs.padding{
+  padding: 1rem;
+}
 :global .hljs.wrap{
   white-space: pre-line;
   word-break: break-word;

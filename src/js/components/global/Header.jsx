@@ -27,11 +27,11 @@ const Header = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     const arr = [
-      !is(this.props.user, nextProps.user)),
-      arr.push(!is(this.props.team, nextProps.team)),
-      arr.push(this.props.activeBastion !== nextProps.activeBastion),
-      arr.push(this.props.hide !== nextProps.hide),
-      arr.push(this.props.scheme !== nextProps.scheme)
+      !is(this.props.user, nextProps.user),
+      !is(this.props.team, nextProps.team),
+      this.props.activeBastion !== nextProps.activeBastion,
+      this.props.hide !== nextProps.hide,
+      this.props.scheme !== nextProps.scheme
     ];
     return _.some(arr);
   },
