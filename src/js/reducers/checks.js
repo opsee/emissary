@@ -28,9 +28,12 @@ export const statics = {
     case 'INITIALIZING':
       checkState = 'initializing';
       break;
-    case 'PASS_WAIT':
     case 'FAIL':
       checkState = 'failing';
+      break;
+    case 'FAIL_WAIT':
+    case 'PASS_WAIT':
+      checkState = 'warning';
       break;
     default:
       break;

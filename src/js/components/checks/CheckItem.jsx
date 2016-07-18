@@ -61,6 +61,7 @@ const CheckItem = React.createClass({
       return (
         <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item} {...this.getSelectable()}>
           <div key="line1">{this.props.item.get('name')}</div>
+          <div key="line2">{this.getInfoText()}</div>
         </ListItem>
       );
     }
