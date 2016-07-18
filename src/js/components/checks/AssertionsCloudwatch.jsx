@@ -9,7 +9,7 @@ import {Close} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckDisabledReason from './CheckDisabledReason';
 import {validate} from '../../modules';
-import {Padding, Rule} from '../layout';
+import {Padding, Panel, Rule} from '../layout';
 import {Button} from '../forms';
 import {
   user as userActions,
@@ -133,7 +133,7 @@ const AssertionsCloudwatch = React.createClass({
           <Row>
             <Col xs={12}>
               <BastionRequirement>
-                <Padding t={1}>
+                <Panel>
                   {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
                   <Padding b={1}>
                     {this.renderHelperText()}
@@ -141,7 +141,7 @@ const AssertionsCloudwatch = React.createClass({
                   <Padding tb={1}>
                     {this.renderInner()}
                   </Padding>
-                </Padding>
+                </Panel>
               </BastionRequirement>
             </Col>
           </Row>

@@ -11,6 +11,7 @@ import {
   GET_GROUPS_ELB,
   GET_GROUP_ECS,
   GET_GROUPS_ECS,
+  GET_TASK_DEFINITION,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
@@ -51,6 +52,14 @@ const snippets = {
               Instances {
                 InstanceId
               }`
+    },
+    ecs: {
+      short: `ServiceName
+              Status
+              ServiceName
+              ClusterArn
+              TaskDefinition
+              `
     }
   },
   instances: {
@@ -288,6 +297,7 @@ export function getGroupEcs(id){
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUP_ECS})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -348,6 +358,7 @@ export function getGroupsEcs(){
       payload: graphPromise('region.vpc.groups', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: GET_GROUPS_ECS})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `query Query($region: String!, $vpc: String!){
@@ -355,10 +366,7 @@ export function getGroupsEcs(){
                 vpc(id: $vpc) {
                   groups(type: "ecs_service"){
                     ... on ecsService {
-                      ServiceName
-                      Status
-                      ServiceName
-                      ClusterArn
+                      ${snippets.groups.ecs.short}
                     }
                   }
                 }
@@ -370,6 +378,37 @@ export function getGroupsEcs(){
     });
   };
 }
+
+export function getTaskDefinition(string = ''){
+  const id = _.last(string.split('/')) || '';
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_TASK_DEFINITION,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .query({type: GET_TASK_DEFINITION})
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!){
+              region(id: $region) {
+                task_definition(id: "${id}") {
+                  ContainerDefinitions {
+                    Name
+                    PortMappings {
+                      ContainerPort
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region'])
+        });
+      }, {search: state().search, id})
+    });
+  };
+}
+
 
 export function getInstanceEcc(id){
   return (dispatch, state) => {

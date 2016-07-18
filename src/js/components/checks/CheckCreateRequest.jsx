@@ -280,6 +280,9 @@ const CheckCreateRequest = React.createClass({
     }
     return null;
   },
+  renderTaskPicker(){
+    
+  },
   renderHelperText(){
     if (this.props.renderAsInclude){
       return null;

@@ -69,6 +69,12 @@ const CheckCreate = React.createClass({
       this.props.envActions.getInstancesRds();
     }
   },
+  componentDidMount(){
+    const check = this.state.check;
+    if (check && check.target.type === 'ecs'){
+      this.props.envActions.getTaskDefinition(check.target.id);
+    }
+  },
   getInitialState(){
     return this.getState();
   },

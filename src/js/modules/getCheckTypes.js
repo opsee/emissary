@@ -32,7 +32,7 @@ export default function(redux){
         {
           id: 'ecs',
           title: 'EC2 Container Services',
-          types: ['cloudwatch'],
+          types: ['cloudwatch', 'http'],
           size: () => redux.env.groups.ecs.size
         },
         {
