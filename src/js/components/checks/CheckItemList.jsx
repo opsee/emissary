@@ -109,7 +109,7 @@ const CheckItemList = React.createClass({
     .filter(item => {
       // Filter out everything except external checks if no bastion active
       // AND no-bastion mode enabled (Otherwise, users should just see an "install your bastion" requirement.)
-      return hasActiveBastion || (flag('check-type-external_host') && item.target.type === 'external_host');
+      return hasActiveBastion || (flag('check-type-external_host') && item.toJS().target.type === 'external_host');
     })
     .slice(this.props.offset, this.props.limit);
   },
