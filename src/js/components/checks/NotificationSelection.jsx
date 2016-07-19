@@ -347,9 +347,6 @@ const NotificationSelection = React.createClass({
             <div className="display-flex">
               {display && <span>{this.renderNotifIcon(notif)}&nbsp;{display}</span>}
               {!display && <span><strong>Slack integration inactive.</strong>&nbsp;<SlackConnect/></span>}
-              {
-                // this.renderNotifIcon(notif)}&nbsp;{this.getNotifValueForDisplay(notif)
-                }
             </div>
           </div>
           {this.renderDeleteButton(index)}
