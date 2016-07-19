@@ -188,7 +188,8 @@ const NotificationSelection = React.createClass({
   },
   renderNotifIcon(notif, initProps = {}){
     const props = _.assign(initProps, {
-      fill: initProps.fill ? initProps.fill : 'text'
+      fill: initProps.fill ? initProps.fill : 'text',
+      inline: true
     });
     const {type} = notif;
     let el = <Mail {...props}/>;
