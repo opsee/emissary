@@ -188,7 +188,8 @@ const NotificationSelection = React.createClass({
   },
   renderNotifIcon(notif, initProps = {}){
     const props = _.assign(initProps, {
-      fill: initProps.fill ? initProps.fill : 'text'
+      fill: initProps.fill ? initProps.fill : 'text',
+      inline: true
     });
     const {type} = notif;
     let el = <Mail {...props}/>;
@@ -337,13 +338,15 @@ const NotificationSelection = React.createClass({
     );
   },
   renderChosenChannel(notif, index){
+    const display = this.getNotifValueForDisplay(notif);
     return (
       <div>
         <Heading level={4}>Slack Channel</Heading>
         <div className="display-flex flex-vertical-align">
           <div className="flex-1">
             <div className="display-flex">
-              {this.renderNotifIcon(notif)}&nbsp;{this.getNotifValueForDisplay(notif)}
+              {display && <span>{this.renderNotifIcon(notif)}&nbsp;{display}</span>}
+              {!display && <span><strong>Slack integration inactive.</strong>&nbsp;<SlackConnect/></span>}
             </div>
           </div>
           {this.renderDeleteButton(index)}

@@ -122,7 +122,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || null}/></td>
+          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || undefined}/></td>
         </tr>
       );
     }
