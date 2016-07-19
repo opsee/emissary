@@ -16,6 +16,7 @@ const NotificationItemList = React.createClass({
     notifications: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.string.isRequired
     })).isRequired,
+    noError: PropTypes.bool,
     integrationsActions: PropTypes.shape({
       getSlackChannels: PropTypes.func,
       getPagerdutyInfo: PropTypes.func
@@ -99,6 +100,9 @@ const NotificationItemList = React.createClass({
           })}
         </div>
       );
+    }
+    if (this.props.noError){
+      return null;
     }
     return (
       <Alert color="warning">This check does not have any notifications. You will not be alerted if this check fails.</Alert>

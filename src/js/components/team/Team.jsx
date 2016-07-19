@@ -141,7 +141,7 @@ const Profile = React.createClass({
         <td colSpan={2}>
           <strong>Default Check Notifications</strong><br/>
           <Padding t={0.5}>
-            <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs}/>
+            <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
           </Padding>
         </td>
       </tr>

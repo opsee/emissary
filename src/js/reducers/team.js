@@ -13,7 +13,7 @@ import storage from '../modules/storage';
 const statics = {
   teamFromJS: (data = {}) => {
     const team = _.assign({}, data, {
-      users: new List(data.users.map(m => new Member(_.assign(m, {
+      users: new List((data.users || []).map(m => new Member(_.assign(m, {
         perms: m.perms || {},
         id: (m.id || '').toString(),
         status: m.status || 'active'
@@ -25,7 +25,7 @@ const statics = {
   }
 };
 
-const initial = new Team(statics.teamFromJS(storage.get('team')));
+const initial = new Team(statics.teamFromJS(storage.get('team') || {}));
 
 export default handleActions({
   [TEAM_GET]: {
