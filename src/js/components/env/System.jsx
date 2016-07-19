@@ -91,7 +91,7 @@ const System = React.createClass({
             </Padding>
             <Padding b={1}>
               <strong>API Token:</strong><br/>
-              <Input textarea data={this.props.redux.user.toJS()} path="token" readOnly/>
+              <Input textarea data={this.props.redux.user.toJS()} path="auth" readOnly/>
             </Padding>
           </div>
       );
