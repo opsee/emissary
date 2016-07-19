@@ -74,6 +74,10 @@ const CheckCreateTarget = React.createClass({
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
     check.target = _.pick(check.target, ['id', 'name', 'type']);
+    if (check.target.type === 'ecs'){
+      check.target.cluster = _.head((check.target.id || '').split('/'));
+      check.target.service = _.last((check.target.id || '').split('/'));
+    }
     this.props.onChange(check);
     const data = window.encodeURIComponent(JSON.stringify(check));
     if (this.props.check.type === 'cloudwatch'){

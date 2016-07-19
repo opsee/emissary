@@ -140,6 +140,12 @@ export const GroupEcs = Record(_.assign({}, baseEnvItem, {
   metrics: Map()
 }));
 
+export const TaskDefinition = Record({
+  ContainerDefinitions: new List(),
+  TaskDefinitionArn: undefined,
+  id: undefined
+});
+
 export const Check = Record({
   tags: new List(),
   selected: false,
@@ -149,7 +155,10 @@ export const Check = Record({
   target: new Map({
     name: config.checkDefaultTargetName,
     type: config.checkDefaultTargetType,
-    id: config.checkDefaultTargetId
+    id: config.checkDefaultTargetId,
+    cluster: undefined,
+    service: undefined,
+    container: undefined
   }),
   assertions: new List(),
   notifications: new List(),

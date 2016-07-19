@@ -9,7 +9,8 @@ import {
   GroupSecurity,
   GroupElb,
   GroupAsg,
-  GroupEcs
+  GroupEcs,
+  TaskDefinition
 } from '../modules/schemas';
 import {
   ENV_GET_BASTIONS,
@@ -22,6 +23,7 @@ import {
   GET_GROUPS_ELB,
   GET_GROUP_ECS,
   GET_GROUPS_ECS,
+  GET_TASK_DEFINITION,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
@@ -442,6 +444,7 @@ const initial = {
       rds: new List()
     }
   },
+  taskDefinitions: new List(),
   activeBastion: null,
   bastions: [],
   awsActionHistory: [],
@@ -522,6 +525,14 @@ export default handleActions({
       const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
       const groups = _.assign({}, state.groups, {ecs});
       return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_TASK_DEFINITION]: {
+    next(state, action){
+      const item = new TaskDefinition(fromJS(_.assign({}, action.payload.data, {id: action.payload.id})));
+      const taskDefinitions = statics.updateArray(state.taskDefinitions, item);
+      return _.assign({}, state, {taskDefinitions});
     },
     throw: yeller.reportAction
   },

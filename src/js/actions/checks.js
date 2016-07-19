@@ -328,12 +328,15 @@ function formatCloudwatchCheck(data){
 
 function formatHttpCheck(data, forTestCheck){
   let check = _.cloneDeep(data);
-  const spec = check.spec;
-  if (check.target.type === 'security'){
+  const {spec, target} = check;
+  if (target.type === 'security'){
     check.target.type = 'sg';
   }
-  if (check.target.type.match('^EC2$|^ecc$')){
+  if (target.type.match('^EC2$|^ecc$')){
     check.target.type = 'instance';
+  }
+  if (target.type === 'ecs'){
+    check.target.id = `${target.cluster}/${target.service}/${target.container}/${spec.port}`;
   }
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   const assertions = (check.assertions || []).map(a => {

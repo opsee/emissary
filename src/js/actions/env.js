@@ -384,7 +384,7 @@ export function getTaskDefinition(string = ''){
   return (dispatch, state) => {
     dispatch({
       type: GET_TASK_DEFINITION,
-      payload: graphPromise('region.vpc.groups', () => {
+      payload: graphPromise('region.task_definition', () => {
         return request
         .post(`${config.services.compost}`)
         .query({type: GET_TASK_DEFINITION})
@@ -393,6 +393,7 @@ export function getTaskDefinition(string = ''){
           query: `query Query($region: String!){
               region(id: $region) {
                 task_definition(id: "${id}") {
+                  TaskDefinitionArn
                   ContainerDefinitions {
                     Name
                     PortMappings {
