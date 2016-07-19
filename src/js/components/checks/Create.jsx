@@ -67,6 +67,16 @@ const CheckCreate = React.createClass({
       this.props.envActions.getInstancesRds();
     }
   },
+  componentWillReceiveProps(nextProps) {
+    const stat = 'redux.asyncActions.onboardGetDefaultNotifs.status';
+    if (_.get(this.props, stat) !== _.get(nextProps, stat) && _.get(nextProps, stat) === 'success'){
+      const nextNotifs = nextProps.redux.onboard.defaultNotifs;
+      const check = _.assign(this.state.check, {
+        notifications: nextNotifs
+      });
+      this.setState(check);
+    }
+  },
   getInitialState(){
     return this.getState();
   },
@@ -89,13 +99,7 @@ const CheckCreate = React.createClass({
         name: config.checkDefaultTargetName,
         type: config.checkDefaultTargetType,
         id: config.checkDefaultTargetId
-      },
-      notifications: [
-        {
-          type: 'email',
-          value: this.props.redux.user.get('email')
-        }
-      ]
+      }
     }).value();
     return {
       check: new Check(initial).toJS(),
@@ -135,6 +139,10 @@ const CheckCreate = React.createClass({
   }
 });
 
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
@@ -142,4 +150,4 @@ const mapDispatchToProps = (dispatch) => ({
   onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(CheckCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckCreate);

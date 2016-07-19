@@ -4,10 +4,12 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
+import {Heading} from '../type';
 import {Button, Input} from '../forms';
 import {Close} from '../icons';
 import {team as actions} from '../../actions';
+import NotificationSelection from '../checks/NotificationSelection';
 
 const TeamEdit = React.createClass({
   propTypes: {
@@ -18,14 +20,19 @@ const TeamEdit = React.createClass({
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         userEdit: PropTypes.object.isRequired,
-        teamEdit: PropTypes.object.isRequired
+        teamEdit: PropTypes.object.isRequired,
+        onboardGetDefaultNotifs: PropTypes.object.isRequired
       }).isRequired,
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
+      }),
       team: PropTypes.object
     })
   },
   getInitialState() {
     return _.assign({}, this.props.redux.team.toJS(), {
-      ccToken: undefined
+      ccToken: undefined,
+      notifications: []
     });
   },
   componentWillMount(){
@@ -60,9 +67,24 @@ const TeamEdit = React.createClass({
       ccToken
     });
   },
+  handleNotifChange(notifications){
+    if (notifications &&  notifications.length){
+      this.setState({
+        notifications
+      });
+    }
+  },
   handleSubmit(e){
     e.preventDefault();
     this.props.actions.edit(this.state);
+  },
+  renderNotificationSelection(){
+    if (this.props.redux.asyncActions.onboardGetDefaultNotifs.history.length && !this.isTeam()){
+      return (
+        <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs} />
+      );
+    }
+    return null;
   },
   renderCreditCard(){
     return null;
@@ -87,16 +109,22 @@ const TeamEdit = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <form onSubmit={this.handleSubmit}>
-                <StatusHandler status={this.getStatus()}/>
-                <Input onChange={this.handleInputChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
-                {this.renderCreditCard()}
-                <Padding t={2}>
-                  <Button color="success" type="submit" block disabled={this.isDisabled()}>
-                    {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
-                  </Button>
-                </Padding>
-              </form>
+              <Panel>
+                <form onSubmit={this.handleSubmit}>
+                  <StatusHandler status={this.getStatus()}/>
+                  <Input onChange={this.handleInputChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
+                  <Padding t={2}>
+                    <Heading level={3}>Team Default Notifications</Heading>
+                    <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />
+                  </Padding>
+                  {this.renderCreditCard()}
+                  <Padding t={2}>
+                    <Button color="success" type="submit" block disabled={this.isDisabled()}>
+                      {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
+                    </Button>
+                  </Padding>
+                </form>
+              </Panel>
             </Col>
           </Row>
         </Grid>
