@@ -4,6 +4,7 @@ import config from '../modules/config';
 import request from '../modules/request';
 import _ from 'lodash';
 import * as analytics from './analytics';
+import * as onboard from './onboard';
 import {
   USER_SIGNUP_CREATE,
   USER_LOGIN,
@@ -198,12 +199,15 @@ export function edit(data, redirect) {
         request
         .put(`${config.services.auth}/users/${data.id}`)
         .set('Authorization', state().user.get('auth'))
-        .send(data)
+        .send(_.omit(data, ['notifications']))
         .then((res) => {
           resolve(res.body);
           const user = _.get(res, 'body.user');
           if (user){
             analytics.updateUser(user)(dispatch, state);
+          }
+          if (data.notifications && data.notifications.length){
+            onboard.setDefaultNotifications(data.notifications)(dispatch, state);
           }
           if (redirect) {
             setTimeout(() => {

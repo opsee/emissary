@@ -233,6 +233,7 @@ export function getDefaultNotifications() {
       payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
+          .query({type: ONBOARD_GET_DEFAULT_NOTIFS})
           .set('Authorization', state().user.get('auth'))
           .send({query:
             `query defaultNotifs {
@@ -258,6 +259,7 @@ export function setDefaultNotifications(notifications) {
       payload: graphPromise('notifications', () => {
         return request
           .post(`${config.services.compost}`)
+          .query({type: ONBOARD_SET_DEFAULT_NOTIFS})
           .set('Authorization', state().user.get('auth'))
           .send({query: `
             mutation Mutation($notifications: [Notification]) {

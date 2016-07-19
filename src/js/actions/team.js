@@ -9,6 +9,7 @@ import {
   TEAM_EDIT
 } from './constants';
 import graphPromise from '../modules/graphPromise';
+import * as onboard from './onboard';
 
 export function getTeam(callback = () => {}){
   return (dispatch, state) => {
@@ -76,6 +77,9 @@ export function edit(data, redirect = '/team'){
           }
         });
       }, {search: state().search}, () => {
+        if (data.notifications && data.notifications.length){
+          onboard.setDefaultNotifications(data.notifications)(dispatch, state);
+        }
         setTimeout(() => {
           dispatch(push(redirect));
         }, 100);

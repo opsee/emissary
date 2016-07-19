@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {handleActions} from 'redux-actions';
 import config from '../modules/config';
-import {regions, yeller} from '../modules';
+import {regions, storage, yeller} from '../modules';
 import {
   ONBOARD_SET_REGION,
   ONBOARD_SET_CREDENTIALS,
@@ -15,7 +15,8 @@ import {
   ONBOARD_HAS_ROLE,
   ONBOARD_SET_DEFAULT_NOTIFS,
   ONBOARD_GET_DEFAULT_NOTIFS,
-  ONBOARD_SKIP_DEFAULT_NOTIFS
+  ONBOARD_SKIP_DEFAULT_NOTIFS,
+  USER_LOGIN
 } from '../actions/constants';
 
 const initial = {
@@ -26,7 +27,7 @@ const initial = {
     stack_id: null,
     region: null
   },
-  defaultNotifs: null,
+  defaultNotifs: [],
   skippedDefaultNotifs: false,
   // The currently selected region on the /start/config-instance screen.
   // The region contains all of its vpcs and subnets.
@@ -167,7 +168,11 @@ export default handleActions({
   },
   [ONBOARD_GET_DEFAULT_NOTIFS]: {
     next(state, action) {
-      const defaultNotifs = action.payload.data;
+      let defaultNotifs = action.payload.data;
+      if (!defaultNotifs || !defaultNotifs.length){
+        const value = _.get(storage.get('user'), 'email');
+        defaultNotifs = [{type: 'email', value}];
+      }
       return _.assign({}, state, {defaultNotifs});
     },
     throw: yeller.reportAction
@@ -175,6 +180,15 @@ export default handleActions({
   [ONBOARD_SKIP_DEFAULT_NOTIFS]: {
     next(state) {
       return _.assign({}, state, { skippedDefaultNotifs: true });
+    }
+  },
+  [USER_LOGIN]: {
+    next(state, action){
+      if (!state.defaultNotifs.length){
+        const defaultNotifs = [{type: 'email', value: _.get(action, 'payload.user.email')}];
+        return _.assign({}, state, {defaultNotifs});
+      }
+      return state;
     }
   }
 }, initial);
