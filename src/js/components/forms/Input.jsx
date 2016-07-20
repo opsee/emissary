@@ -45,7 +45,7 @@ const Input = React.createClass({
       className: cx(style.input, style[this.props.scheme], this.props.className),
       id: this.state.id
     });
-    return _.omit(props, ['data', 'children', 'label', 'path']);
+    return _.omit(props, ['data', 'children', 'label', 'path', 'scheme', 'dispatch']);
   },
   handleChange(event){
     if (this.props.data){

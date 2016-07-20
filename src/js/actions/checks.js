@@ -5,6 +5,7 @@ import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
 import _ from 'lodash';
 import graphPromise from '../modules/graphPromise';
+import moment from 'moment';
 import {
   GET_CHECK,
   GET_CHECK_FROM_S3,
@@ -71,6 +72,9 @@ export function getCheckFromURI(jsonURI) {
 }
 
 export function getCheck(id){
+  const start2 = moment().subtract({hours: 2}).valueOf();
+  const start6 = moment().subtract({hours: 6}).valueOf();
+  const end = Date.now().valueOf();
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECK,
@@ -157,6 +161,15 @@ export function getCheck(id){
                 relationship
                 operand
                 key
+              }
+              metrics (metric_name: "request_latency", start_time: ${start2}, end_time: ${end}, aggregation: {unit: "minutes", period: 1, type:max}){
+                value
+                timestamp
+              }
+              state_transitions(start_time: ${start6}, end_time: ${end}){
+                from
+                to
+                occurred_at
               }
             }
           }`

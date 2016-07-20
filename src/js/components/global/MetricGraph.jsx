@@ -38,7 +38,8 @@ const MetricGraph = React.createClass({
     }).isRequired,
     breakpoint: PropTypes.number,
     aspectRatio: PropTypes.number,
-    showTooltip: PropTypes.bool
+    showTooltip: PropTypes.bool,
+    threshold: PropTypes.bool
   },
   componentDidMount() {
     this.onWindowResize();
@@ -56,7 +57,11 @@ const MetricGraph = React.createClass({
       breakpoint: 700, // px
       data: [],
       metric: {},
-      showTooltip: true
+      showTooltip: true,
+      assertion: {
+        operand: 0
+      },
+      threshold: true
     };
   },
   getInitialState() {
@@ -88,19 +93,16 @@ const MetricGraph = React.createClass({
     case 'bytes':
       // TODO better byte rounding
       return this.getBytes(d);
-
     case 'bytes/second':
       return `${d} B/s`;
-
     case 'count/second':
       return `${d} /s`;
-
     case 'percent':
       return `${d} %`;
-
     case 'seconds':
       return `${d} s`;
-
+    case 'ms':
+      return `${d} ms`;
     default:
       return d;
     }
@@ -307,12 +309,14 @@ const MetricGraph = React.createClass({
         .attr('d', line);
 
     // Append the threshold line
-    graphGroup.append('line')
-      .attr('class', cx(style.thresholdLine, style[this.props.assertion.relationship || 'none']))
-      .attr('x1', 0)
-      .attr('x2', graphWidth)
-      .attr('y1', y(this.props.assertion.operand))
-      .attr('y2', y(this.props.assertion.operand));
+    if (this.props.threshold){
+      graphGroup.append('line')
+        .attr('class', cx(style.thresholdLine, style[this.props.assertion.relationship || 'none']))
+        .attr('x1', 0)
+        .attr('x2', graphWidth)
+        .attr('y1', y(this.props.assertion.operand))
+        .attr('y2', y(this.props.assertion.operand));
+    }
 
     // Append the current data point
     graphGroup.append('g')

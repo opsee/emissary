@@ -1,28 +1,29 @@
-import Analytics from './Analytics.jsx';
-import AppStatus from './AppStatus.jsx';
-import Authenticator from './Authenticator.jsx';
-import BastionRequirement from './BastionRequirement.jsx';
-import Confirm from './Confirm.jsx';
-import ContextMenu from './ContextMenu.jsx';
-import Header from './Header.jsx';
-import Highlight from './Highlight.jsx';
-import HTMLFile from './HTMLFile.jsx';
-import ListItem from './ListItem.jsx';
-import ListItemTest from './ListItemTest.jsx';
-import Loader from './Loader.jsx';
-import LogoColor from './LogoColor.jsx';
-import StatusHandler from './StatusHandler.jsx';
-import MessageModal from './MessageModal.jsx';
-import Modal from './Modal.jsx';
-import Opsee from './Opsee.jsx';
-import ProgressBar from './ProgressBar.jsx';
-import RadialGraph from './RadialGraph.jsx';
-import Routes from './Routes.jsx';
+import Analytics from './Analytics';
+import AppStatus from './AppStatus';
+import Authenticator from './Authenticator';
+import BastionRequirement from './BastionRequirement';
+import Confirm from './Confirm';
+import ContextMenu from './ContextMenu';
+import Header from './Header';
+import Highlight from './Highlight';
+import HTMLFile from './HTMLFile';
+import ListItem from './ListItem';
+import ListItemTest from './ListItemTest';
+import Loader from './Loader';
+import LogoColor from './LogoColor';
+import StatusHandler from './StatusHandler';
+import MetricGraph from './MetricGraph';
+import MessageModal from './MessageModal';
+import Modal from './Modal';
+import Opsee from './Opsee';
+import ProgressBar from './ProgressBar';
+import RadialGraph from './RadialGraph';
+import Routes from './Routes';
 import SchemePicker from './SchemePicker';
-import SearchBox from './SearchBox.jsx';
-import StepCounter from './StepCounter.jsx';
-import Table from './Table.jsx';
-import Toolbar from './Toolbar.jsx';
+import SearchBox from './SearchBox';
+import StepCounter from './StepCounter';
+import Table from './Table';
+import Toolbar from './Toolbar';
 
 export {
   Analytics,
@@ -38,6 +39,7 @@ export {
   ListItemTest,
   Loader,
   LogoColor,
+  MetricGraph,
   MessageModal,
   Modal,
   Opsee,
