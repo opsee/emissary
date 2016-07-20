@@ -124,7 +124,6 @@ const CheckCreateRequest = React.createClass({
     })
     .value();
     let ports = container && container.PortMappings || [];
-    ports = _.map(ports, 'ContainerPort');
     return ports;
   },
   getCheck(){
@@ -222,7 +221,8 @@ const CheckCreateRequest = React.createClass({
       check.target.container = container;
       const ports = this.getContainerPorts(props, check);
       if (!check.spec.port || check.spec.port === 80){
-        check.spec.port = _.head(ports);
+        check.spec.port = _.chain(ports).head().get('HostPort').value();
+        check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
       }
       this.runChange(check);
     }

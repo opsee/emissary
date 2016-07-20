@@ -398,6 +398,8 @@ export function getTaskDefinition(string = ''){
                     Name
                     PortMappings {
                       ContainerPort
+                      HostPort
+                      Protocol
                     }
                   }
                 }

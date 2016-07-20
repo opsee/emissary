@@ -158,7 +158,8 @@ export const Check = Record({
     id: config.checkDefaultTargetId,
     cluster: undefined,
     service: undefined,
-    container: undefined
+    container: undefined,
+    containerPort: undefined
   }),
   assertions: new List(),
   notifications: new List(),
