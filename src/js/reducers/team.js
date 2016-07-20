@@ -10,13 +10,10 @@ import {
 } from '../actions/constants';
 import storage from '../modules/storage';
 
-const initial = new Team(storage.get('team') || {});
-
 const statics = {
-  teamFromJS: (action) => {
-    const {data} = action.payload;
+  teamFromJS: (data = {}) => {
     const team = _.assign({}, data, {
-      users: List(data.users.map(m => new Member(_.assign(m, {
+      users: new List((data.users || []).map(m => new Member(_.assign(m, {
         perms: m.perms || {},
         id: (m.id || '').toString(),
         status: m.status || 'active'
@@ -28,10 +25,12 @@ const statics = {
   }
 };
 
+const initial = new Team(statics.teamFromJS(storage.get('team') || {}));
+
 export default handleActions({
   [TEAM_GET]: {
     next(state, action){
-      const team = statics.teamFromJS(action);
+      const team = statics.teamFromJS(action.payload.data);
       storage.set('team', team.toJS());
       return team;
     },
@@ -45,7 +44,7 @@ export default handleActions({
   },
   [TEAM_EDIT]: {
     next(state, action){
-      const team = statics.teamFromJS(action);
+      const team = statics.teamFromJS(action.payload.data);
       storage.set('team', team.toJS());
       return team;
     },

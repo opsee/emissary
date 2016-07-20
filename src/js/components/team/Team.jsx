@@ -12,9 +12,11 @@ import {Heading} from '../type';
 import {flag} from '../../modules';
 import {
   team as actions,
-  user as userActions
+  user as userActions,
+  onboard as onboardActions
 } from '../../actions';
 import {SlackInfo, PagerdutyInfo} from '../integrations';
+import {NotificationItemList} from '../checks';
 import style from './team.css';
 
 const Profile = React.createClass({
@@ -25,14 +27,21 @@ const Profile = React.createClass({
     userActions: PropTypes.shape({
       logout: PropTypes.func.isRequired
     }).isRequired,
+    onboardActions: PropTypes.shape({
+      getDefaultNotifications: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
       team: PropTypes.object.isRequired,
       user: PropTypes.object.isRequired,
       asyncActions: PropTypes.shape({
-        teamGet: PropTypes.object
+        teamGet: PropTypes.object,
+        onboardGetDefaultNotifs: PropTypes.object.isRequired
       }).isRequired,
       env: PropTypes.shape({
         activeBastion: PropTypes.object
+      }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
       })
     }).isRequired,
     location: PropTypes.shape({
@@ -41,6 +50,9 @@ const Profile = React.createClass({
   },
   componentWillMount() {
     this.props.actions.getTeam();
+    if (!this.props.redux.asyncActions.onboardGetDefaultNotifs.history.length){
+      this.props.onboardActions.getDefaultNotifications();
+    }
   },
   getInitialState() {
     return {
@@ -96,8 +108,12 @@ const Profile = React.createClass({
     if (flag('integrations-pagerduty')){
       return (
         <tr>
-          <td><strong>PagerDuty</strong></td>
-          <td className="text-right"><PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
+          <td colSpan={2}>
+            <div className="display-flex">
+              <strong className="flex-1">PagerDuty</strong>
+              <PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/>
+            </div>
+          </td>
         </tr>
       );
     }
@@ -116,6 +132,18 @@ const Profile = React.createClass({
       <tr>
         <td><strong>AWS Integration</strong></td>
         <td className="text-right"><Link to="/start/launch-stack">Add Our Instance</Link></td>
+      </tr>
+    );
+  },
+  renderDefaultNotifications(){
+    return (
+      <tr>
+        <td colSpan={2}>
+          <strong>Default Check Notifications</strong><br/>
+          <Padding t={0.5}>
+            <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
+          </Padding>
+        </td>
       </tr>
     );
   },
@@ -264,16 +292,17 @@ const Profile = React.createClass({
                     </Padding>
                   </Padding>
                   <Padding t={4}>
-                    <Heading level={3}>Team Details</Heading>
+                    <div className="display-flex">
+                      <Heading level={3} className="flex-1">Team Details</Heading>
+                      {user.perms.admin && <Link to="/team/edit">Edit Team</Link>}
+                    </div>
                     <Table>
                       <tr>
                         <td><strong>Name</strong></td>
-                        <td className="text-right">{team.name || '(No Team name set)'}&nbsp;&nbsp;
-                        { user.perms.admin &&
-                          (<Link to="/team/edit">Edit Team Name</Link>)
-                        }
+                        <td className="text-right">{team.name || '(No Team name set)'}
                         </td>
                       </tr>
+                      {this.renderDefaultNotifications()}
                       {
                         // window.location.href.match('localhost|staging') && (
                         //   <tr>
@@ -332,7 +361,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

@@ -10,10 +10,12 @@ import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
 import {PagerdutyInfo, SlackInfo} from '../integrations';
 import {flag} from '../../modules';
+import {NotificationItemList} from '../checks';
 
 import {
   user as actions,
-  team as teamActions
+  team as teamActions,
+  onboard as onboardActions
 } from '../../actions';
 
 const Profile = React.createClass({
@@ -22,6 +24,9 @@ const Profile = React.createClass({
       logout: PropTypes.func,
       sendVerificationEmail: PropTypes.func
     }),
+    onboardActions: PropTypes.shape({
+      getDefaultNotifications: PropTypes.func.isRequired
+    }).isRequired,
     teamActions: PropTypes.shape({
       getTeam: PropTypes.func.isRequired
     }).isRequired,
@@ -34,7 +39,10 @@ const Profile = React.createClass({
       team: PropTypes.object.isRequired,
       env: PropTypes.object({
         activeBastion: PropTypes.object
-      })
+      }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array.isRequired
+      }).isRequired
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -42,6 +50,7 @@ const Profile = React.createClass({
   },
   componentWillMount(){
     this.props.teamActions.getTeam();
+    this.props.onboardActions.getDefaultNotifications();
   },
   getUser() {
     return this.props.redux.user.toJS();
@@ -122,7 +131,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || null}/></td>
+          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || undefined}/></td>
         </tr>
       );
     }
@@ -172,6 +181,21 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderDefaultNotifications(){
+    if (!this.isTeam()){
+      return (
+        <tr>
+          <td colSpan={2}>
+            <strong>Default Check Notifications</strong><br/>
+            <Padding t={0.5}>
+              <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
+            </Padding>
+          </td>
+        </tr>
+      );
+    }
+    return null;
+  },
   render() {
     const user = this.getUser();
     if (this.props.redux.asyncActions.teamGet.history.length){
@@ -207,6 +231,7 @@ const Profile = React.createClass({
                       {this.renderPagerdutyArea()}
                       {this.renderThemes()}
                       {this.renderIntegrations()}
+                      {this.renderDefaultNotifications()}
                     </Table>
                   </Padding>
                 </Panel>
@@ -227,7 +252,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  teamActions: bindActionCreators(teamActions, dispatch)
+  teamActions: bindActionCreators(teamActions, dispatch),
+  onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);
