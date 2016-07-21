@@ -87,6 +87,13 @@ const Profile = React.createClass({
     })
     .value();
   },
+  getPlan(team){
+    let plan = team.subscription_plan;
+    if (plan === 'beta'){
+      plan = 'Team (beta)';
+    }
+    return _.capitalize(plan);
+  },
   runShowAll(e){
     e.preventDefault();
     this.setState({
@@ -284,7 +291,7 @@ const Profile = React.createClass({
                       <tr>
                         <td><strong>Subscription Plan</strong></td>
                         <td className="text-right">
-                          {_.capitalize(team.subscription_plan)}
+                          {this.getPlan(team)}
                         </td>
                       </tr>
                       {this.renderDefaultNotifications()}
