@@ -240,11 +240,13 @@ const CheckCreateRequest = React.createClass({
         check.spec.port = _.chain(ports).head().get('HostPort').value();
         check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
       }
-      this.setState({
-        hasSetContainer: true
-      });
-      setTimeout(() => this.runChange(check), 50);
-      console.log('change');
+      if (check.target.container){
+        this.setState({
+          hasSetContainer: true
+        });
+        setTimeout(() => this.runChange(check), 50);
+        console.log('change');
+      }
     }
   },
   handleSubmit(e){
