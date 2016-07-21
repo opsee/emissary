@@ -11,6 +11,7 @@ import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
 import HTTPRequestItem from './HTTPRequestItem';
 import {MetricGraph} from '../global';
+import StateGraph from './StateGraph';
 
 const ViewHTTP = React.createClass({
   propTypes: {
@@ -122,6 +123,7 @@ const ViewHTTP = React.createClass({
           <CheckResponsePaginate responses={this.getResponses()} date={d}/>
         </Padding>
         {this.renderRTT()}
+        <StateGraph transitions={this.props.check.state_transitions}/>
 
         {this.renderNotifications()}
       </div>
