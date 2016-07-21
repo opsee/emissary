@@ -320,8 +320,10 @@ function formatCloudwatchCheck(data){
     };
   });
   check.cloudwatch_check = {metrics};
-  check.target.type = check.target.type === 'rds' ? 'dbinstance' : check.target.type;
-  check.target.type = check.target.type === 'ecc' ? 'instance' : check.target.type;
+  const {type} = check.target;
+  check.target.type = type === 'rds' ? 'dbinstance' : type;
+  check.target.type = type === 'ecc' ? 'instance' : type;
+  check.target.type = type === 'ecs' ? 'ecs_service' : type;
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   return check;
 }
@@ -337,6 +339,7 @@ function formatHttpCheck(data, forTestCheck){
   }
   if (target.type === 'ecs'){
     check.target.id = `${target.cluster}/${target.service}/${target.container}/${target.containerPort}`;
+    check.target.type = 'ecs_service';
   }
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   const assertions = (check.assertions || []).map(a => {

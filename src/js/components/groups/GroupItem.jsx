@@ -62,6 +62,9 @@ const GroupItem = React.createClass({
     if (type === 'sg'){
       type = 'security';
     }
+    if (type === 'ecs_service'){
+      type = 'ecs';
+    }
     let arr = [];
     arr.push(!_.isEqual(target, nextProps.target));
     if (target && type){

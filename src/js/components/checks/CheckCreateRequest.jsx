@@ -212,6 +212,16 @@ const CheckCreateRequest = React.createClass({
     }
     this.runChange(check);
   },
+  setDataFromContainerName(name){
+    let check = _.cloneDeep(this.props.check);
+    check.target.container = name;
+    const ports = this.getContainerPorts(this.props, check);
+    if (!check.spec.port || check.spec.port === 80){
+      check.spec.port = _.chain(ports).head().get('HostPort').value();
+      check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
+    }
+    this.runChange(check);
+  },
   setInitialContainerOpts(props = this.props){
     const {target} = props.check;
     const {taskDefinitions} = props.redux.env;
@@ -327,6 +337,7 @@ const CheckCreateRequest = React.createClass({
     }
     type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'sg' ? 'security' : type;
+    type = type === 'ecs_service' ? 'ecs' : type;
     if (type && target.id){
       let inner = null;
       if (type.match('^ecc$|^instance$|^rds$')){
@@ -354,12 +365,12 @@ const CheckCreateRequest = React.createClass({
       if (item && item.id){
         return (
           <Padding b={2}>
-          <Heading level={3}>Containers</Heading>
+          <Heading level={3}>Container</Heading>
           {
             item.ContainerDefinitions.map(def => {
               const name = _.get(def, 'Name') || '';
               return (
-                <Button color="primary" flat={!(this.props.check.target.container === name)}>{name}</Button>
+                <Button color="primary" flat={!(this.props.check.target.container === name)} onClick={this.setDataFromContainerName.bind(null, name)}>{name}</Button>
               );
             })
           }
