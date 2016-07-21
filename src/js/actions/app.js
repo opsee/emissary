@@ -17,7 +17,8 @@ import {
   APP_MODAL_MESSAGE_OPEN,
   APP_MODAL_MESSAGE_CLOSE,
   APP_SET_DROPDOWN_ID,
-  GET_STATUS_PAGE_INFO
+  GET_STATUS_PAGE_INFO,
+  APP_SET_SCHEME
 } from './constants';
 
 function socketStart(dispatch, state){
@@ -100,6 +101,19 @@ export function shutdown(){
   };
 }
 
+export function setScheme(payload, listener = false){
+  //pass listener if you are using an event listener and want to avoid recursive loop
+  return (dispatch) => {
+    dispatch({
+      type: APP_SET_SCHEME,
+      payload,
+      meta: {
+        listener
+      }
+    });
+  };
+}
+
 export function initialize(){
   return (dispatch, state) => {
     analytics.initialize()(dispatch, state);
@@ -110,6 +124,11 @@ export function initialize(){
     }
     dispatch({
       type: APP_INITIALIZE
+    });
+    window.addEventListener('storage', event => {
+      if (typeof event === 'object' && event.key === 'scheme') {
+        setScheme(JSON.parse(event.newValue), true)(dispatch);
+      }
     });
   };
 }

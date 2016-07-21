@@ -1,24 +1,18 @@
 import React, {PropTypes} from 'react';
+import cx from 'classnames';
+import {connect} from 'react-redux';
+
 import style from './table.css';
 
 const Table = React.createClass({
   propTypes: {
     bordered: PropTypes.bool,
     striped: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
+    scheme: PropTypes.string
   },
   getTableClass(){
-    let c = {};
-    if (this.props.bordered && !this.props.striped) {
-      c = style.tableBordered;
-    } else if (this.props.striped && !this.props.bordered) {
-      c = style.tableStriped;
-    } else if (this.props.bordered && this.props.striped) {
-      c = style.tableBorderedStriped;
-    } else {
-      c = style.table;
-    }
-    return c;
+    return cx(style.table, style[this.props.scheme]);
   },
   render(){
     return (
@@ -31,4 +25,8 @@ const Table = React.createClass({
   }
 });
 
-export default Table;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(Table);

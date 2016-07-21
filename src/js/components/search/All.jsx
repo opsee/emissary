@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Col, Grid, Row} from '../layout';
+import {Col, Grid, Row, Panel} from '../layout';
 
 import {Toolbar} from '../global';
 import {search as actions} from '../../actions';
@@ -63,7 +63,7 @@ const SearchAll = React.createClass({
     this.props.actions.setString('');
   },
   renderList(){
-    if (!!this.props.redux.env.activeBastion){
+    if (!this.props.redux.env.activeBastion){
       return <CheckItemList limit={this.props.redux.search.string ? 1000 : 8} filter/>;
     }
     return <EnvList filter limit={this.props.redux.search.string ? 1000 : 8}/>;
@@ -76,8 +76,10 @@ const SearchAll = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <FilterButtons/>
-                {this.renderList()}
+                <Panel>
+                  <FilterButtons/>
+                  {this.renderList()}
+                </Panel>
               </Col>
             </Row>
           </Grid>

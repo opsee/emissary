@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 
 import {Table, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit} from '../icons';
 import {Color} from '../type';
@@ -69,23 +69,25 @@ const TeamMember = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <Table>
-                  <tr>
-                    <td><strong>Status</strong></td>
-                    <td><Color c={_.get({active: 'success', invited: 'warning'}, member.status)}>{_.capitalize(member.status)}</Color></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Email</strong></td>
-                    <td>{member.email}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Permissions</strong></td>
-                    <td>{permsSentence(member)}</td>
-                  </tr>
-                </Table>
-                <Padding t={3}>
-                  <Link to="/team">View your Team</Link>
-                </Padding>
+                <Panel>
+                  <Table>
+                    <tr>
+                      <td><strong>Status</strong></td>
+                      <td><Color c={_.get({active: 'success', invited: 'warning'}, member.status)}>{_.capitalize(member.status)}</Color></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>{member.email}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Permissions</strong></td>
+                      <td>{permsSentence(member)}</td>
+                    </tr>
+                  </Table>
+                  <Padding t={3}>
+                    <Link to="/team">View your Team</Link>
+                  </Padding>
+                </Panel>
               </Col>
             </Row>
           </Grid>

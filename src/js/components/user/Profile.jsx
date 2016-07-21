@@ -3,18 +3,19 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 
-import {StatusHandler, Table, Toolbar} from '../global';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {SchemePicker, StatusHandler, Table, Toolbar} from '../global';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Edit, Logout} from '../icons';
 import {Color, Heading} from '../type';
 import {PagerdutyInfo, SlackInfo} from '../integrations';
 import {flag} from '../../modules';
+import {NotificationItemList} from '../checks';
 
 import {
   user as actions,
-  app as appActions,
-  team as teamActions
+  team as teamActions,
+  onboard as onboardActions
 } from '../../actions';
 
 const Profile = React.createClass({
@@ -23,12 +24,12 @@ const Profile = React.createClass({
       logout: PropTypes.func,
       sendVerificationEmail: PropTypes.func
     }),
+    onboardActions: PropTypes.shape({
+      getDefaultNotifications: PropTypes.func.isRequired
+    }).isRequired,
     teamActions: PropTypes.shape({
       getTeam: PropTypes.func.isRequired
     }).isRequired,
-    appActions: PropTypes.shape({
-      shutdown: PropTypes.func
-    }),
     redux: PropTypes.shape({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
@@ -38,7 +39,10 @@ const Profile = React.createClass({
       team: PropTypes.object.isRequired,
       env: PropTypes.object({
         activeBastion: PropTypes.object
-      })
+      }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array.isRequired
+      }).isRequired
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.object
@@ -46,12 +50,13 @@ const Profile = React.createClass({
   },
   componentWillMount(){
     this.props.teamActions.getTeam();
+    this.props.onboardActions.getDefaultNotifications();
   },
   getUser() {
     return this.props.redux.user.toJS();
   },
   isTeam(){
-    return this.props.redux.team.users.size > 1;
+    return !!(this.props.redux.team.users.size > 1);
   },
   handleLogout(){
     this.props.actions.logout();
@@ -69,7 +74,7 @@ const Profile = React.createClass({
     switch (status) {
     case 'pending':
       return (
-        <Color c="gray500">Sending verification email...</Color>
+        <Color c="gray5">Sending verification email...</Color>
       );
     case 'success':
       return (
@@ -137,7 +142,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td><SlackInfo connect/></td>
+          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || undefined}/></td>
         </tr>
       );
     }
@@ -148,11 +153,21 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>PagerDuty</strong></td>
-          <td><PagerdutyInfo/></td>
+          <td><PagerdutyInfo redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || null}/></td>
         </tr>
       );
     }
     return null;
+  },
+  renderThemes(){
+    return (
+      <tr>
+        <td><strong>Color Scheme</strong></td>
+        <td>
+          <SchemePicker/>
+        </td>
+      </tr>
+    );
   },
   renderIntegrations(){
     if (this.isTeam()){
@@ -177,6 +192,21 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderDefaultNotifications(){
+    if (!this.isTeam()){
+      return (
+        <tr>
+          <td colSpan={2}>
+            <strong>Default Check Notifications</strong><br/>
+            <Padding t={0.5}>
+              <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
+            </Padding>
+          </td>
+        </tr>
+      );
+    }
+    return null;
+  },
   render() {
     const user = this.getUser();
     if (this.props.redux.asyncActions.teamGet.history.length){
@@ -190,39 +220,42 @@ const Profile = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                {this.renderVerified()}
-                <Padding b={1}>
-                  <Heading level={3}>Your Profile</Heading>
-                  <Table>
-                    {this.renderTeamInfo()}
-                    <tr>
-                      <td><strong>Email</strong></td>
-                      <td>
-                        <div>{this.renderEmail(user)}</div>
-                        <div>{this.renderVerificationNag(user)}</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><strong>Password</strong></td>
-                      <td><Link to="/profile/edit" >Change Your Password</Link></td>
-                    </tr>
-                    {this.renderBilling()}
-                    {this.renderAWSArea()}
-                    {this.renderSlackArea()}
-                    {this.renderPagerdutyArea()}
-                    {this.renderIntegrations()}
-                  </Table>
-                </Padding>
-                <Padding t={3}>
-                  <Button flat color="danger" onClick={this.handleLogout}>
-                    <Logout inline fill="danger"/> Log Out
-                  </Button>
-                </Padding>
+                <Panel>
+                  {this.renderVerified()}
+                  <Padding b={1}>
+                    <Heading level={3}>Your Profile</Heading>
+                    <Table>
+                      {this.renderTeamInfo()}
+                      <tr>
+                        <td><strong>Email</strong></td>
+                        <td>
+                          <div>{this.renderEmail(user)}</div>
+                          <div>{this.renderVerificationNag(user)}</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Password</strong></td>
+                        <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                      </tr>
+                      {this.renderBilling()}
+                      {this.renderAWSArea()}
+                      {this.renderSlackArea()}
+                      {this.renderPagerdutyArea()}
+                      {this.renderIntegrations()}
+                      {this.renderDefaultNotifications()}
+                    </Table>
+                  </Padding>
+                  <Padding t={3}>
+                    <Button flat color="danger" onClick={this.handleLogout}>
+                      <Logout inline fill="danger"/> Log Out
+                    </Button>
+                  </Padding>
+                </Panel>
               </Col>
             </Row>
           </Grid>
-        </div>
-      );
+      </div>
+    );
     }
     return <StatusHandler status={this.props.redux.asyncActions.teamGet.status}/>;
   }
@@ -230,8 +263,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch),
-  teamActions: bindActionCreators(teamActions, dispatch)
+  teamActions: bindActionCreators(teamActions, dispatch),
+  onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

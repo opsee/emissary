@@ -4,10 +4,12 @@ import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button, PlanInputs, Input} from '../forms';
+import {Heading} from '../type';
 import {Close} from '../icons';
 import {team as actions} from '../../actions';
+import NotificationSelection from '../checks/NotificationSelection';
 
 const TeamEdit = React.createClass({
   propTypes: {
@@ -18,15 +20,22 @@ const TeamEdit = React.createClass({
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
         userEdit: PropTypes.object.isRequired,
-        teamEdit: PropTypes.object.isRequired
+        teamEdit: PropTypes.object.isRequired,
+        onboardGetDefaultNotifs: PropTypes.object.isRequired
       }).isRequired,
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
+      }),
       team: PropTypes.object
     })
   },
   getInitialState() {
     return _.assign({}, this.props.redux.team.toJS(), {
       //planinputs valid
-      valid: false
+      valid: false,
+      stripeToken: undefined,
+      plan: undefined,
+      notifications: []
     });
   },
   componentWillMount(){
@@ -59,9 +68,41 @@ const TeamEdit = React.createClass({
   handleChange(state){
     this.setState(state);
   },
+  handleCreditCardChange(stripeToken){
+    this.setState({
+      stripeToken
+    });
+  },
+  handleNotifChange(notifications){
+    if (notifications &&  notifications.length){
+      this.setState({
+        notifications
+      });
+    }
+  },
   handleSubmit(e){
     e.preventDefault();
     this.props.actions.edit(this.state);
+  },
+  renderNotificationSelection(){
+    if (this.props.redux.asyncActions.onboardGetDefaultNotifs.history.length && !this.isTeam()){
+      return (
+        <NotificationSelection onChange={this.onChange} notifications={this.props.redux.onboard.defaultNotifs} />
+      );
+    }
+    return null;
+  },
+  renderCreditCard(){
+    return null;
+    // if (this.props.redux.user){
+    //   return (
+    //     <Padding t={2}>
+    //       <Heading level={3}>Update Credit Card</Heading>
+    //       <CreditCard onChange={this.handleCreditCardChange}/>
+    //     </Padding>
+    //   )
+    // }
+    // return null;
   },
   render() {
     return (
@@ -74,16 +115,26 @@ const TeamEdit = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <form onSubmit={this.handleSubmit}>
-                <StatusHandler status={this.getStatus()}/>
-                <Input onChange={this.handleChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
-                <PlanInputs onChange={this.handleChange}/>
-                <Padding t={2}>
-                  <Button color="success" type="submit" block disabled={this.isDisabled()}>
-                    {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
-                  </Button>
-                </Padding>
-              </form>
+              <Panel>
+                <form onSubmit={this.handleSubmit}>
+                  <Padding b={1}>
+                    <Input onChange={this.handleChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
+                  </Padding>
+                  <PlanInputs onChange={this.handleChange}/>
+                  <Padding t={2}>
+                      <Heading level={3}>Team Default Notifications</Heading>
+                      <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />
+                    </Padding>
+                  <Padding t={2}>
+                  {this.renderCreditCard()}
+                  <StatusHandler status={this.getStatus()}/>
+                    <Button color="success" type="submit" block disabled={this.isDisabled()}>
+                      {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
+                    </Button>
+                  </Padding>
+                  {JSON.stringify(this.state)}
+                </form>
+              </Panel>
             </Col>
           </Row>
         </Grid>

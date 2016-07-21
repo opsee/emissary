@@ -4,17 +4,19 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import _ from 'lodash';
 
-import {Table, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {SchemePicker, Table, Toolbar} from '../global';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {Add, Docs, Edit, Logout, Key} from '../icons';
 import {Heading} from '../type';
 import {flag} from '../../modules';
 import {
   team as actions,
-  user as userActions
+  user as userActions,
+  onboard as onboardActions
 } from '../../actions';
 import {SlackInfo, PagerdutyInfo} from '../integrations';
+import {NotificationItemList} from '../checks';
 import style from './team.css';
 
 const Profile = React.createClass({
@@ -25,14 +27,21 @@ const Profile = React.createClass({
     userActions: PropTypes.shape({
       logout: PropTypes.func.isRequired
     }).isRequired,
+    onboardActions: PropTypes.shape({
+      getDefaultNotifications: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
       team: PropTypes.object.isRequired,
       user: PropTypes.object.isRequired,
       asyncActions: PropTypes.shape({
-        teamGet: PropTypes.object
+        teamGet: PropTypes.object,
+        onboardGetDefaultNotifs: PropTypes.object.isRequired
       }).isRequired,
       env: PropTypes.shape({
         activeBastion: PropTypes.object
+      }),
+      onboard: PropTypes.shape({
+        defaultNotifs: PropTypes.array
       })
     }).isRequired,
     location: PropTypes.shape({
@@ -41,6 +50,9 @@ const Profile = React.createClass({
   },
   componentWillMount() {
     this.props.actions.getTeam();
+    if (!this.props.redux.asyncActions.onboardGetDefaultNotifs.history.length){
+      this.props.onboardActions.getDefaultNotifications();
+    }
   },
   getInitialState() {
     return {
@@ -86,7 +98,7 @@ const Profile = React.createClass({
       return (
         <tr>
           <td><strong>Slack</strong></td>
-          <td className="text-right"><SlackInfo connect/></td>
+          <td className="text-right"><SlackInfo connect redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
         </tr>
       );
     }
@@ -96,8 +108,12 @@ const Profile = React.createClass({
     if (flag('integrations-pagerduty')){
       return (
         <tr>
-          <td><strong>PagerDuty</strong></td>
-          <td className="text-right"><PagerdutyInfo/></td>
+          <td colSpan={2}>
+            <div className="display-flex">
+              <strong className="flex-1">PagerDuty</strong>
+              <PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/>
+            </div>
+          </td>
         </tr>
       );
     }
@@ -116,6 +132,18 @@ const Profile = React.createClass({
       <tr>
         <td><strong>AWS Integration</strong></td>
         <td className="text-right"><Link to="/start/launch-stack">Add Our Instance</Link></td>
+      </tr>
+    );
+  },
+  renderDefaultNotifications(){
+    return (
+      <tr>
+        <td colSpan={2}>
+          <strong>Default Check Notifications</strong><br/>
+          <Padding t={0.5}>
+            <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
+          </Padding>
+        </td>
       </tr>
     );
   },
@@ -216,60 +244,22 @@ const Profile = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <Heading level={3}>Your Profile</Heading>
-                <Table>
-                  <tr>
-                    <td><strong>Email</strong></td>
-                    <td className="text-right"><Link to="/profile/edit?ref=/team">{user.email}</Link></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Password</strong></td>
-                    <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
-                  </tr>
-                </Table>
-                <Padding t={4}>
-                  <Heading level={3}>Team Integrations</Heading>
-                  <Table>
-                    {this.renderAWSArea()}
-                    {this.renderSlackArea()}
-                    {this.renderPagerdutyArea()}
-                  </Table>
-                </Padding>
-                <Padding t={4}>
-                  <Heading level={3}>Team Members</Heading>
-                  <Table>
-                    {this.getMembers(team).map(member => {
-                      return (
-                        <tr>
-                          <td>
-                            {this.renderMemberLink(member)}
-                          </td>
-                          <td className="text-right">
-                            {this.renderUserEditLink(member)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </Table>
-                  {this.renderShowAllButton(team)}
-                  <Padding t={1}>
-                    <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
-                  </Padding>
-                </Padding>
-                <Padding t={4}>
-                  <Heading level={3}>Team Details</Heading>
+                <Panel>
+                  <Heading level={3}>Your Profile</Heading>
                   <Table>
                     <tr>
-                      <td><strong>Name</strong></td>
-                      <td className="text-right">{team.name || '(No Team name set)'}&nbsp;&nbsp;
-                      { user.perms.admin &&
-                        (<Link to="/team/edit">Edit Team Name</Link>)
-                      }
-                      </td>
+                      <td><strong>Email</strong></td>
+                      <td className="text-right"><Link to="/profile/edit?ref=/team">{user.email}</Link></td>
                     </tr>
                     <tr>
-                      <td><strong>Subscription Plan</strong></td>
-                      <td className="text-right">{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
+                      <td><strong>Password</strong></td>
+                      <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Color Scheme</strong></td>
+                      <td className="text-right">
+                        <SchemePicker/>
+                      </td>
                     </tr>
                     {
                       // window.location.href.match('localhost|staging') && (
@@ -280,34 +270,99 @@ const Profile = React.createClass({
                       // )
                     }
                   </Table>
-                </Padding>
-                {
-                  // window.location.href.match('localhost|staging') && (
-                  //   <Padding t={3}>
-                  //     <Heading level={3}>Team Billing</Heading>
-                  //     <Padding b={1} l={1}>
-                  //       MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
-                  //     </Padding>
-                  //     <Table>
-                  //       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
-                  //         return (
-                  //           <tr>
-                  //             <td>
-                  //               <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
-                  //               <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
-                  //             </td>
-                  //           </tr>
-                  //         );
-                  //       })}
-                  //     </Table>
-                  //   </Padding>
-                  // )
-                }
-                <Padding t={3}>
-                  <Button flat color="danger" onClick={this.props.userActions.logout}>
-                    <Logout inline fill="danger"/> Log Out
-                  </Button>
-                </Padding>
+                  <Padding t={4}>
+                    <div className="display-flex">
+                      <Heading level={3} className="flex-1">Team Details</Heading>
+                      {user.perms.admin && <Link to="/team/edit">Edit Team</Link>}
+                    </div>
+                    <Table>
+                      <tr>
+                        <td><strong>Name</strong></td>
+                        <td className="text-right">{team.name || '(No Team name set)'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Subscription Plan</strong></td>
+                        <td className="text-right">
+                          {_.capitalize(team.subscription_plan)}
+                        </td>
+                      </tr>
+                      {this.renderDefaultNotifications()}
+                      {
+                        // window.location.href.match('localhost|staging') && (
+                        //   <tr>
+                        //     <td><strong>Subscription Plan</strong></td>
+                        //     <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
+                        //   </tr>
+                        // )
+                      }
+                      {
+                        // window.location.href.match('localhost|staging') && (
+                        //   <tr>
+                        //     <td><strong>Plan Features</strong></td>
+                        //     <td>{toSentenceSerial(team.features)}</td>
+                        //   </tr>
+                        // )
+                      }
+                    </Table>
+                  </Padding>
+                  <Padding t={4}>
+                    <Heading level={3}>Team Integrations</Heading>
+                    <Table>
+                      {this.renderAWSArea()}
+                      {this.renderSlackArea()}
+                      {this.renderPagerdutyArea()}
+                    </Table>
+                  </Padding>
+                  <Padding t={4}>
+                    <Heading level={3}>Team Members</Heading>
+                    <Table>
+                      {this.getMembers(team).map(member => {
+                        return (
+                          <tr>
+                            <td>
+                              {this.renderMemberLink(member)}
+                            </td>
+                            <td className="text-right">
+                              {this.renderUserEditLink(member)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </Table>
+                    {this.renderShowAllButton(team)}
+                    <Padding t={1}>
+                      <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
+                    </Padding>
+                  </Padding>
+                  {
+                    // window.location.href.match('localhost|staging') && (
+                    //   <Padding t={3}>
+                    //     <Heading level={3}>Team Billing</Heading>
+                    //     <Padding b={1} l={1}>
+                    //       MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
+                    //     </Padding>
+                    //     <Table>
+                    //       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
+                    //         return (
+                    //           <tr>
+                    //             <td>
+                    //               <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
+                    //               <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
+                    //             </td>
+                    //           </tr>
+                    //         );
+                    //       })}
+                    //     </Table>
+                    //   </Padding>
+                    // )
+                  }
+                  <Padding t={3}>
+                    <Button flat color="danger" onClick={this.props.userActions.logout}>
+                      <Logout inline fill="danger"/> Log Out
+                    </Button>
+                  </Padding>
+                </Panel>
               </Col>
             </Row>
           </Grid>
@@ -320,7 +375,8 @@ const Profile = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  userActions: bindActionCreators(userActions, dispatch)
+  userActions: bindActionCreators(userActions, dispatch),
+  onboardActions: bindActionCreators(onboardActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(Profile);

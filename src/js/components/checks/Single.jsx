@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Edit, Delete} from '../icons';
 import {Button} from '../forms';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import ViewHTTP from './ViewHTTP';
 import ViewCloudwatch from './ViewCloudwatch';
@@ -56,7 +56,7 @@ const CheckSingle = React.createClass({
     if (this.props.redux.asyncActions.getCheck.status === 'pending'){
       return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     } else if (check.get('tags').find(() => 'complete')){
-      const isCloudwatch = _.chain(check.assertions).head().get('key').value() === 'cloudwatch';
+      const isCloudwatch = _.chain(check.toJS()).get('assertions').head().get('key').value() === 'cloudwatch';
       return isCloudwatch ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check} redux={this.props.redux}/>;
     }
     return null;
@@ -93,17 +93,19 @@ const CheckSingle = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                <Padding b={1}>
-                  {this.renderInner(check)}
-                </Padding>
-                {this.renderAdvancedOptions(check)}
-                <Padding t={3}>
-                  <Button onClick={this.runRemoveCheck} flat color="danger">
-                    <Delete inline fill="danger"/> Delete Check
-                  </Button>
-                </Padding>
-              </BastionRequirement>
+              <Panel>
+                <BastionRequirement>
+                  <Padding tb={2}>
+                    {this.renderInner(check)}
+                  </Padding>
+                  {this.renderAdvancedOptions(check)}
+                  <Padding t={3}>
+                    <Button onClick={this.runRemoveCheck} flat color="danger">
+                      <Delete inline fill="danger"/> Delete Check
+                    </Button>
+                  </Padding>
+                </BastionRequirement>
+              </Panel>
             </Col>
           </Row>
         </Grid>

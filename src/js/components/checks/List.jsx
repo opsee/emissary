@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
-import cx from 'classnames';
 import _ from 'lodash';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
@@ -10,7 +9,7 @@ import {Add} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {
   checks as actions,
@@ -18,7 +17,6 @@ import {
   app as appActions
 } from '../../actions';
 import {Check} from '../../modules/schemas';
-import listItem from '../global/listItem.css';
 
 const CheckList = React.createClass({
   propTypes: {
@@ -140,13 +138,11 @@ const CheckList = React.createClass({
     }
     const selected = this.getSelectedChecks();
     const {size} = selected;
-    const title = size > 0 ? 'Unselect All' : 'Select All';
-    const inner = size > 0 ? <div className={listItem.selectorInner}/> : null;
     const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
     const isDisabled = isDeleting || size < 1;
     if (this.props.redux.checks.checks.size) {
       return (
-        <Padding b={2} className="display-flex" style={{paddingRight: '0.8rem'}}>
+        <Padding t={1} b={2} className="display-flex">
           <div className="flex-1 display-flex">
             <Padding r={1}>
               <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
@@ -155,7 +151,12 @@ const CheckList = React.createClass({
               <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
             </Padding>
           </div>
-          <Button className={cx(listItem.selector, size > 0 && listItem.selectorSelected)} onClick={this.handleSelectorClick} title={title} style={{margin: 0}}>{inner}</Button>
+
+          {
+          //   <Button color="primary" fab to="/check-create" title="Create New Check">
+          //   <Add btn/>
+          // </Button>
+          }
         </Padding>
       );
     }
@@ -165,22 +166,24 @@ const CheckList = React.createClass({
     return (
       <div>
         <Toolbar title="Checks">
-          <Button color="primary" fab to="/check-create" title="Create New Check">
+          <Button to="/check-create" color="primary" fab title="Create New Check">
             <Add btn/>
           </Button>
         </Toolbar>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <BastionRequirement>
-                <Padding t={2}>
-                  {this.renderActionBar()}
-                  {this.renderChecks()}
-                </Padding>
-              </BastionRequirement>
-            </Col>
-          </Row>
-        </Grid>
+        <Padding b={2}>
+          <Grid>
+            <Row>
+              <Col xs={12}>
+                <Panel>
+                  <BastionRequirement>
+                    {this.renderActionBar()}
+                    {this.renderChecks()}
+                  </BastionRequirement>
+                </Panel>
+              </Col>
+            </Row>
+          </Grid>
+        </Padding>
       </div>
     );
   }
@@ -192,4 +195,8 @@ const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(CheckList);
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckList);

@@ -16,6 +16,7 @@ const NotificationItemList = React.createClass({
     notifications: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.string.isRequired
     })).isRequired,
+    noError: PropTypes.bool,
     integrationsActions: PropTypes.shape({
       getSlackChannels: PropTypes.func,
       getPagerdutyInfo: PropTypes.func
@@ -52,7 +53,7 @@ const NotificationItemList = React.createClass({
     case 'email':
       return (
         <Padding key={`notif-${i}`} b={1}>
-          <Mail inline/> {n.value}
+          <Mail inline fill="text"/> {n.value}
         </Padding>
       );
     case 'slack_bot':
@@ -60,7 +61,7 @@ const NotificationItemList = React.createClass({
       if (channel){
         return (
           <Padding key={`notif-${i}`} b={1}>
-            <Slack inline/> {_.get(channel, 'name')}
+            <Slack inline fill="text"/> {_.get(channel, 'name')}
           </Padding>
         );
       }
@@ -70,7 +71,7 @@ const NotificationItemList = React.createClass({
       return (
         <Padding key={`notif-${i}`} b={1}>
           <div>
-            <PagerDuty fill="white" style={{height: '1.3em', verticalAlign: 'bottom', opacity: isPagerDutyDisabled ? 0.5 : 1}} />
+            <PagerDuty fill="text" style={{height: '1.3em', verticalAlign: 'bottom', opacity: isPagerDutyDisabled ? 0.5 : 1}} />
             {this.props.redux.asyncActions.integrationsPagerdutyInfo.history.length && isPagerDutyDisabled ?
               <Padding t={1}>
                 <Alert color="warning">You are no longer connected to PagerDuty! <PagerdutyConnect /> to re-enable this notification.</Alert>
@@ -82,7 +83,7 @@ const NotificationItemList = React.createClass({
     case 'webhook':
       return (
         <Padding key={`notif-${i}`} b={1}>
-          <Cloud inline/> {n.value}
+          <Cloud inline fill="text"/> {n.value}
         </Padding>
       );
     default:
@@ -99,6 +100,9 @@ const NotificationItemList = React.createClass({
           })}
         </div>
       );
+    }
+    if (this.props.noError){
+      return null;
     }
     return (
       <Alert color="warning">This check does not have any notifications. You will not be alerted if this check fails.</Alert>

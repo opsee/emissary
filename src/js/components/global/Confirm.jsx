@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/app';
+import cx from 'classnames';
 
 import {Button} from '../forms';
 import {Close} from '../icons';
@@ -14,6 +15,7 @@ const Confirm = React.createClass({
     actions: PropTypes.shape({
       confirmClose: PropTypes.func
     }),
+    scheme: PropTypes.string,
     redux: PropTypes.shape({
       app: PropTypes.shape({
         confirmMessage: PropTypes.shape({
@@ -58,7 +60,7 @@ const Confirm = React.createClass({
       <div>
         <div className={style.curtain} />
 
-        <div ref="confirm" className={style.confirm}>
+        <div ref="confirm" className={cx(style.confirm, style[this.props.scheme])}>
           <div className={style.inner}>
             <div onClick={this.props.actions.confirmClose} className={style.closeButton}>
               <Padding a={2}>
@@ -82,7 +84,8 @@ const Confirm = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  redux: state,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

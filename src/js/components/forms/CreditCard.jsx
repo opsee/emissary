@@ -19,6 +19,7 @@ const CreditCard = React.createClass({
       exp_year: undefined,
       valid: undefined,
       response: undefined,
+      address_zip: undefined,
       attempts: 0,
       debouncedTokenizer: _.debounce(this.runCreateToken, 500)
     };
@@ -30,7 +31,7 @@ const CreditCard = React.createClass({
     stripe.card.createToken(data, cb);
   },
   handleChange(state){
-    const data = _.pick(state, ['number', 'cvc', 'exp_month', 'exp_year']);
+    const data = _.pick(state, ['number', 'cvc', 'exp_month', 'exp_year', 'address_zip']);
     if (_.every(data) || this.state.attempts > 0){
       this.state.debouncedTokenizer(data, (status, response) => {
         if (this.isMounted()){
@@ -39,7 +40,7 @@ const CreditCard = React.createClass({
             response,
             valid: status === 200
           }));
-          this.props.onChange(response && response.id);
+          this.props.onChange({stripeToken: response && response.id});
         }
       });
     }
@@ -65,7 +66,7 @@ const CreditCard = React.createClass({
         <Padding b={1}>
           <Input data={this.state} path="cvc" placeholder="999" label="CVC*" onChange={this.handleChange}/>
         </Padding>
-        <div className="display-flex">
+        <Padding className="display-flex" b={1}>
           <Padding r={1} className="flex-1">
             <Input data={this.state} path="exp_month" placeholder="10" label="Exp Month*" onChange={this.
           handleChange}/>
@@ -73,7 +74,8 @@ const CreditCard = React.createClass({
           <div className="flex-1">
             <Input data={this.state} path="exp_year" placeholder="2019" label="Exp Year*" onChange={this.handleChange}/>
           </div>
-        </div>
+        </Padding>
+        <Input data={this.state} path="address_zip" placeholder="94103" label="Zip Code*" onChange={this.handleChange}/>
         {this.renderAlert()}
       </div>
     );

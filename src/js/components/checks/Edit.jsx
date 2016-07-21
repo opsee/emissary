@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -10,7 +9,7 @@ import AssertionsHTTP from './AssertionsHTTP';
 import AssertionsCloudwatch from './AssertionsCloudwatch';
 import CheckCreateInfo from './CheckCreateInfo';
 import {Checkmark, Close, Delete} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {EnvList} from '../env';
 import {Button} from '../forms';
 import {Heading} from '../type';
@@ -39,6 +38,7 @@ const CheckEdit = React.createClass({
       getGroupsElb: PropTypes.func,
       getInstancesEcc: PropTypes.func
     }),
+    history: PropTypes.object.isRequired,
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         checks: PropTypes.object,
@@ -138,9 +138,9 @@ const CheckEdit = React.createClass({
   },
   renderAssertions(check){
     if (check.type === 'cloudwatch'){
-      return <AssertionsCloudwatch check={check} onChange={this.setData} renderAsInclude/>;
+      return <AssertionsCloudwatch check={check} onChange={this.setData} renderAsInclude history={this.props.history} types={getCheckTypes(this.props.redux)}/>;
     }
-    return <AssertionsHTTP check={check} onChange={this.setData} renderAsInclude/>;
+    return <AssertionsHTTP check={check} onChange={this.setData} renderAsInclude history={this.props.history} types={getCheckTypes(this.props.redux)}/>;
   },
   renderInner(check){
     if (check.id && _.find(check.tags, () => 'complete')) {
@@ -155,7 +155,7 @@ const CheckEdit = React.createClass({
           <Padding t={1}>
           <StatusHandler status={this.props.redux.asyncActions.checkCreateOrEdit.status}/>
           <Button color="success" block type="submit" onClick={this.handleSubmit} disabled={this.isDisabled()}>
-            {this.props.redux.asyncActions.checkCreateOrEdit.status === 'pending' ? 'Saving...' : 'Finish'} <Checkmark inline fill={seed.color.success}/>
+            {this.props.redux.asyncActions.checkCreateOrEdit.status === 'pending' ? 'Saving...' : 'Finish'} <Checkmark inline fill="white"/>
           </Button>
           <CheckDisabledReason check={check}/>
           </Padding>
@@ -185,7 +185,11 @@ const CheckEdit = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner(check)}
+              <Padding t={1}>
+                <Panel>
+                  {this.renderInner(check)}
+                </Panel>
+              </Padding>
               <CheckDebug check={_.omit(check, 'results')}/>
             </Col>
           </Row>

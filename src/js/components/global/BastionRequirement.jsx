@@ -89,7 +89,7 @@ const BastionRequirement = React.createClass({
     }
     return (
       <div>
-        Opsee requires <Link to="/docs/bastion" style={{color: 'white', textDecoration: 'underline'}}>our instance</Link> to be installed. To install one, just <Link to="/start/launch-stack" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
+        Opsee requires <Link to="/docs/instance" style={{color: 'white', textDecoration: 'underline'}}>our instance</Link> to be installed. To install one, just <Link to="/start/launch-stack" style={{color: 'white', textDecoration: 'underline'}}>click here.</Link>
       </div>
     );
   },

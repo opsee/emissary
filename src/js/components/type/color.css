@@ -1,67 +1,79 @@
-.primary, .primary:hover, .primary:focus, .primary:active{
+.primary, .primary:hover, .primary:focus, .primary:active, .primary:visited{
   color:var(--colorPrimary);
 }
 
-.success, .success:hover, .success:focus, .success:active{
+.success, .success:hover, .success:focus, .success:active, .success:visited{
   color:var(--colorSuccess);
 }
 
-.info, .info:hover, .info:focus, .info:active{
+.info, .info:hover, .info:focus, .info:active, .info:visited{
   color:var(--colorInfo);
 }
 
-.warning, .warning:hover, .warning:focus, .warning:active{
+.warning, .warning:hover, .warning:focus, .warning:active, .warning:visited{
   color:var(--colorWarning);
 }
 
-.danger, .danger:hover, .danger:focus, .danger:active{
+.danger, .danger:hover, .danger:focus, .danger:active, .danger:visited{
   color:var(--colorDanger);
 }
 
-.error, .error:hover, .error:focus, .error:active{
+.error, .error:hover, .error:focus, .error:active, .error:visited{
   color:var(--colorError);
 }
 
-.text, .text:hover, .text:focus, .text:active{
+.text, .text:hover, .text:focus, .text:active, .text:visited{
   color:var(--colorText);
 }
 
-.gray, .gray:hover, .gray:focus, .gray:active{
+.text.light, .text.light:hover, .text.light:focus, .text.light:active, .text.light:visited{
+  color:var(--lightColorText);
+}
+
+.textSecondary, .textSecondary:hover, .textSecondary:focus, .textSecondary:active, .textSecondary:visited{
+  color: var(--colorText2);
+}
+
+.textSecondary.light, .textSecondary.light:hover, .textSecondary.light:focus, .textSecondary.light:active, .textSecondary.light:visited{
+  color: var(--lightColorText2);
+}
+
+.gray, .gray:hover, .gray:focus, .gray:active, .gray:visited{
   color:var(--colorGray);
 }
 
-.gray1, .gray1:hover, .gray1:focus, .gray1:active{
+.gray1, .gray1:hover, .gray1:focus, .gray1:active, .gray1:visited{
   color:var(--colorGray1);
 }
 
-.gray2, .gray2:hover, .gray2:focus, .gray2:active{
+.gray2, .gray2:hover, .gray2:focus, .gray2:active, .gray2:visited{
   color:var(--colorGray2);
 }
 
-.gray3, .gray3:hover, .gray3:focus, .gray3:active{
+.gray3, .gray3:hover, .gray3:focus, .gray3:active, .gray3:visited{
   color:var(--colorGray3);
 }
 
-.gray4, .gray4:hover, .gray4:focus, .gray4:active{
+.gray4, .gray4:hover, .gray4:focus, .gray4:active, .gray4:visited{
   color:var(--colorGray4);
 }
 
-.gray5, .gray5:hover, .gray5:focus, .gray5:active{
+.gray5, .gray5:hover, .gray5:focus, .gray5:active, .gray5:visited{
   color:var(--colorGray5);
 }
 
-.gray6, .gray6:hover, .gray6:focus, .gray6:active{
+.gray6, .gray6:hover, .gray6:focus, .gray6:active, .gray6:visited{
   color:var(--colorGray6);
 }
 
-.gray7, .gray7:hover, .gray7:focus, .gray7:active{
+.gray7, .gray7:hover, .gray7:focus, .gray7:active, .gray7:visited{
   color:var(--colorGray7);
 }
 
-.gray8, .gray8:hover, .gray8:focus, .gray8:active{
+.gray8, .gray8:hover, .gray8:focus, .gray8:active, .gray8:visited{
   color:var(--colorGray8);
 }
 
-.gray9, .gray9:hover, .gray9:focus, .gray9:active{
+.gray9, .gray9:hover, .gray9:focus, .gray9:active, .gray9:visited{
   color:var(--colorGray9);
 }

@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 
 import config from '../../modules/config';
 import {SetInterval} from '../../modules/mixins';
-import {AppStatus, Analytics, Confirm, Header, MessageModal, Toolbar} from './';
+import {AppStatus, Analytics, Confirm, Header, Toolbar} from './';
 import DocumentTitle from 'react-document-title';
 import {Alert, Col, Grid, Padding} from '../layout';
 /* eslint-disable no-unused-vars */
@@ -13,7 +13,6 @@ import {yeller} from '../../modules';
 
 import reset from './reset.css';
 import style from './global.css';
-import alert from './alert.css';
 import modal from './modal.css';
 import autosuggest from './autosuggest.css';
 import forms from '../forms/forms.css';
@@ -29,8 +28,9 @@ import {
 import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
 
+const fullScreenList = ['^\/start', '^\/login'];
+
 const hideNavList = [
-  '^\/login',
   '^\/check-create',
   '^\/check\/edit',
   '^\/check\/.*\/event',
@@ -42,7 +42,6 @@ const hideNavList = [
   '^\/team\/member\/.*\/edit',
   '^\/welcome'
 ];
-const fullScreenList = ['^\/start'];
 
 const Opsee = React.createClass({
   mixins: [SetInterval],
@@ -137,9 +136,9 @@ const Opsee = React.createClass({
         <AppStatus/>
         {this.shouldFullScreen() ? null :
           <div>
-            <Header user={this.props.redux.user} hide={this.shouldHideNav()}/>
+            <Header hide={this.shouldHideNav()}/>
             <div id="header-search">
-              <SearchBar />
+              <SearchBar/>
             </div>
           </div>
         }
@@ -147,7 +146,6 @@ const Opsee = React.createClass({
           {this.renderInner()}
         </div>
         <a id="Intercom" href="mailto:@incoming.intercom.io" className={style.intercom} style={{display: this.shouldShowIntercom() ? 'block' : 'none'}}/>
-        <MessageModal/>
         <Confirm />
         <Analytics/>
       </div>

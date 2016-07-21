@@ -15,7 +15,35 @@
   margin-left: 1rem;
 }
 
-.buttonIconPagerDuty{
+.buttonIconPagerDuty {
   height: 1.3em;
   vertical-align: bottom;
+}
+
+.buttonIconPagerDuty{
+  fill: white;
+}
+
+.buttonIconPagerDuty.light{
+  fill: black;
+}
+
+.buttonIconPagerDuty.disabled {
+  fill: var(--colorText);
+}
+
+.buttonIconPagerDuty.primary {
+  fill: var(--colorPrimary) !important;
+}
+
+.buttonIconPagerDuty.primary:hover {
+  fill: white !important;
+}
+
+.buttonIconPagerDuty.primary.disabled {
+  fill: var(--colorText) !important;
+}
+
+.buttonIconPagerDuty.primary.disabled.light {
+  fill: var(--lightColorText) !important;
 }

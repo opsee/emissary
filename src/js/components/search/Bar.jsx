@@ -20,7 +20,8 @@ const SearchBar = React.createClass({
       pathname: PropTypes.string
     }),
     noRedirect: PropTypes.bool,
-    id: PropTypes.string
+    id: PropTypes.string,
+    scheme: PropTypes.string
   },
   getInitialState() {
     return {
@@ -50,13 +51,13 @@ const SearchBar = React.createClass({
   },
   render(){
     return (
-      <label htmlFor="universal-search" className={cx(style.label, {[style.labelFocused]: this.state.focused})}>
+      <label htmlFor="universal-search" className={cx(style.label, {[style.labelFocused]: this.state.focused}, style[this.props.scheme])}>
         <Grid>
           <Row>
             <Col xs={12}>
-                <Input placeholder="What are you looking for?" onChange={this.handleSearch} data={this.state} path="string" id="universal-search" onFocus={this.handleFocus} onBlur={this.handleFocus.bind(null, false)}>
-                  <Search className="icon"/>
-                </Input>
+              <Input className={style.searchInput} placeholder="Search" onChange={this.handleSearch} data={this.state} path="string" id="universal-search" onFocus={this.handleFocus} onBlur={this.handleFocus.bind(null, false)}>
+                <Search className={cx('icon', style.mag, style[this.props.scheme])} fill="white"/>
+              </Input>
             </Col>
           </Row>
         </Grid>
@@ -67,7 +68,8 @@ const SearchBar = React.createClass({
 
 const mapStateToProps = (state) => ({
   location: state.router.location,
-  string: state.search.string
+  string: state.search.string,
+  scheme: state.app.scheme
 });
 
 const mapDispatchToProps = (dispatch) => ({

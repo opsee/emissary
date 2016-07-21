@@ -11,7 +11,7 @@ import {InstanceItemList} from '../instances';
 import {SetInterval} from '../../modules/mixins';
 import {Button} from '../forms';
 import {Add} from '../icons';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {env as actions} from '../../actions';
 
@@ -93,7 +93,7 @@ const GroupElb = React.createClass({
     if (group.name && group.CreatedTime){
       return (
         <div>
-          <Padding b={3}>
+          <Padding b={2}>
             <Button color="primary" flat to={this.getCreateLink()} title="Create a New Check">
               <Add fill="primary" inline/> Create a Check
             </Button>
@@ -115,7 +115,6 @@ const GroupElb = React.createClass({
           <Padding b={2}>
             <InstanceItemList ids={_.map(group.Instances, 'InstanceId')} redux={this.props.redux} title/>
           </Padding>
-
         </div>
       );
     }
@@ -129,7 +128,9 @@ const GroupElb = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner(group)}
+              <Panel>
+                {this.renderInner(group)}
+              </Panel>
             </Col>
           </Row>
         </Grid>

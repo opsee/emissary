@@ -3,13 +3,21 @@
   top: 0.4rem;
   height: 20px;
   width: 20px;
+  fill: var(--colorText);
 }
+/*.btn.light {
+  fill: var(--lightColorText);
+}*/
 
 .inline{
   display: inline-block;
   height:1.3em;
   width:1.3em;
   vertical-align: text-bottom;
+  /*fill: var(--colorText);*/
+}
+.inline.light {
+  /*fill: var(--lightColorText); */
 }
 
 .nav{
@@ -20,60 +28,77 @@
   fill:white;
 }
 
-.fillPrimary{
+.fillPrimary {
   fill:var(--colorPrimary);
 }
-.fillSuccess{
+.fillSuccess {
   fill:var(--colorSuccess);
 }
-.fillInfo{
+.fillInfo {
   fill:var(--colorInfo);
 }
-.fillWarning{
+.fillWarning {
   fill:var(--colorWarning);
 }
-.fillDanger{
+.fillDanger {
   fill:var(--colorDanger);
 }
-.fillError{
+.fillError {
   fill:var(--colorError);
 }
-.fillGray50{
+.fillGray {
   fill:var(--colorGray);
 }
-.fillGray100{
+.fillGray1 {
   fill:var(--colorGray1);
 }
-.fillGray200{
+.fillGray2 {
   fill:var(--colorGray2);
 }
-.fillGray300{
+.fillGray3 {
   fill:var(--colorGray3);
 }
-.fillGray400{
+.fillGray4 {
   fill:var(--colorGray4);
 }
-.fillGray500{
+.fillGray5 {
   fill:var(--colorGray5);
 }
-.fillGray600{
+.fillGray6 {
   fill:var(--colorGray6);
 }
-.fillGray700{
+.fillGray7 {
   fill:var(--colorGray7);
 }
-.fillGray800{
+.fillGray8 {
   fill:var(--colorGray8);
 }
-.fillGray900{
+.fillGray9 {
   fill:var(--colorGray9);
 }
-.fillText{
+.fillText {
   fill:var(--colorText);
 }
-.fillTextSecondary{
+.fillText.light {
+  fill: var(--lightColorText);
+}
+.fillTextSecondary {
   fill:var(--colorText2);
 }
-.fillHeader{
+.fillTextSecondary.light {
+  fill: var(--lightColorText2);
+}
+.fillHeader {
   fill:var(--colorHeader);
+}
+.fillWhite {
+  fill: 'white';
+}
+
+.disabled {
+  fill: var(--colorText);
+}
+
+.disabled.light {
+  fill: var(--lightColorText);
 }

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import cx from 'classnames';
 
-import {stripe} from '../../modules';
+import {flag, stripe} from '../../modules';
 import Input from './Input';
 import CreditCard from './CreditCard';
 import RadioSelect from './RadioSelect';
@@ -15,7 +15,7 @@ const PlanInputs = React.createClass({
   },
   getInitialState() {
     return {
-      token: undefined,
+      stripeToken: undefined,
       plan: _.chain(this.getPlans()).find({id: 'free'}).get('id').value(),
       valid: false
     };
@@ -24,16 +24,24 @@ const PlanInputs = React.createClass({
     this.handleChange();
   },
   getPlans(){
-    return _.chain(['developer', 'free', 'beta', 'advanced'])
-    .reject(d => d.match('developer|advanced'))
+    return _.chain(['free', 'developer_monthly', 'team_monthly', 'beta'])
+    .filter(d => {
+      return flag(`team-plan-${d}`);
+    })
     .map(id => {
       let label = _.capitalize(id);
       switch (id){
       case 'free':
-        label = 'Free <br/> Limited to 1 Check per month, no advanced features';
+        label = '<strong>Free</strong> <br/> Limited to 1 Check per month, no advanced features';
         break;
       case 'beta':
-        label = 'Advanced (Beta Pricing) <br/> $5 per check, per month - all advanced features';
+        label = '<strong>Team (Beta Pricing)</strong> <br/> $5 per check, per month (for 6 months) - all advanced features';
+        break;
+      case 'developer_monthly':
+        label = '<strong>Developer</strong><br/> $5 per check, per month';
+        break;
+      case 'team_monthly':
+        label = '<strong>Team</strong><br/> $10 per check, per month - plus team, historical data, and more advanced features';
         break;
       default:
         break;
@@ -47,16 +55,16 @@ const PlanInputs = React.createClass({
   },
   handleChange(state = this.state){
     const validArr = [
-      (state.plan === 'free' || state.token)
+      (state.plan === 'free' || state.stripeToken)
     ]
     const valid = _.every(validArr);
     const data = _.assign(state, {valid});
     this.setState(data);
     this.props.onChange(data);
   },
-  handleCreditCardChange(token){
+  handleCreditCardChange(stripeToken){
     this.setState({
-      token
+      stripeToken
     });
   },
   renderCreditCard(){
@@ -72,7 +80,7 @@ const PlanInputs = React.createClass({
   render(){
     return (
       <div>
-        <RadioSelect options={this.getPlans()} path="plan" data={this.state} onChange={this.handleChange} label="Plan"/>
+        <RadioSelect options={this.getPlans()} path="plan" data={this.state} onChange={this.handleChange} label="Plan*"/>
         {this.renderCreditCard()}
       </div>
     );

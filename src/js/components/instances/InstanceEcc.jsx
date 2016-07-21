@@ -6,7 +6,7 @@ import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Table, Toolbar} from '../global';
 import {SetInterval} from '../../modules/mixins';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {Button} from '../forms';
 import {Add, Settings} from '../icons';
@@ -110,6 +110,10 @@ const InstanceEcc = React.createClass({
             <Heading level={3}>{this.props.params.id} Information</Heading>
             <Table>
               <tr>
+                <td><strong>Private IP Address</strong></td>
+                <td>{instance.PrivateIpAddress}</td>
+              </tr>
+              <tr>
                 <td><strong>Launched</strong></td>
                 <td>
                   <TimeAgo date={instance.LaunchTime}/>
@@ -148,7 +152,9 @@ const InstanceEcc = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderInner()}
+              </Panel>
             </Col>
           </Row>
         </Grid>

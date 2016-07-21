@@ -5,9 +5,10 @@ import _ from 'lodash';
 import TimeAgo from 'react-timeago';
 
 import {StatusHandler, Toolbar} from '../global';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Color, Heading} from '../type';
 import {user as actions, env as envActions} from '../../actions';
+import {Input} from '../forms';
 
 const System = React.createClass({
   propTypes: {
@@ -85,7 +86,13 @@ const System = React.createClass({
     if (this.props.redux.user.get('customer_id')){
       return (
           <div>
-            <strong>Customer ID:</strong>&nbsp;<span className="text-secondary">{this.props.redux.user.get('customer_id')}</span>
+            <Padding b={1}>
+              <strong>Customer ID:</strong><br/><span className="text-secondary">{this.props.redux.user.get('customer_id')}</span>
+            </Padding>
+            <Padding b={1}>
+              <strong>API Token:</strong><br/>
+              <Input textarea data={this.props.redux.user.toJS()} path="auth" readOnly/>
+            </Padding>
           </div>
       );
     }
@@ -98,11 +105,15 @@ const System = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              {this.renderCustomerInfo()}
-              <strong>App Revision:</strong>&nbsp;<span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
-              <Padding t={2}>
-                {this.renderBastionsInfo()}
-              </Padding>
+              <Panel>
+                <Padding b={1}>
+                  <strong>App Revision:</strong><br/><span className="text-secondary" style={{wordBreak: 'break-all'}}>{process.env.REVISION}</span>
+                </Padding>
+                {this.renderCustomerInfo()}
+                <Padding t={2}>
+                  {this.renderBastionsInfo()}
+                </Padding>
+              </Panel>
             </Col>
           </Row>
         </Grid>

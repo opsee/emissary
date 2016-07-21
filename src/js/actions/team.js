@@ -9,6 +9,7 @@ import {
   TEAM_EDIT
 } from './constants';
 import graphPromise from '../modules/graphPromise';
+import * as onboard from './onboard';
 
 export function getTeam(callback = () => {}){
   return (dispatch, state) => {
@@ -17,13 +18,16 @@ export function getTeam(callback = () => {}){
       payload: graphPromise('team', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: TEAM_GET})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `{
             team {
               name
               id
-              subscription
+              subscription_plan
+              subscription_status
+              subscription_quantity
               users {
                 status
                 name
@@ -51,6 +55,7 @@ export function edit(data, redirect = '/team'){
       payload: graphPromise('team', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: TEAM_EDIT})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation TEAM_EDIT ($team: Team){
@@ -76,6 +81,9 @@ export function edit(data, redirect = '/team'){
           }
         });
       }, {search: state().search}, () => {
+        if (data.notifications && data.notifications.length){
+          onboard.setDefaultNotifications(data.notifications)(dispatch, state);
+        }
         setTimeout(() => {
           dispatch(push(redirect));
         }, 100);
@@ -98,6 +106,7 @@ function member(data, type, redirect = '/team'){
       payload: graphPromise('user', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation ${type} ($user: User){

@@ -2,7 +2,9 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
+import cx from 'classnames';
 
+import LogoColor from './LogoColor';
 import SearchBox from './SearchBox.jsx';
 import {Person, Checks, Help, Cloud, Login} from '../icons';
 import {Col, Grid, Row} from '../layout';
@@ -11,18 +13,21 @@ import style from './header.css';
 const Header = React.createClass({
   propTypes: {
     user: PropTypes.object.isRequired,
+    team: PropTypes.object.isRequired,
     hide: PropTypes.bool,
-    redux: PropTypes.shape({
-      team: PropTypes.object.isRequired,
-      env: PropTypes.shape({
-        activeBastion: PropTypes.object
-      })
-    }).isRequired
+    scheme: PropTypes.string,
+    activeBastion: PropTypes.bool
   },
   getInitialState(){
     return {
       ghosting: false
     };
+  },
+  getHeaderClass(){
+    return cx({
+      [style.header]: true,
+      [style.headerHide]: this.props.hide
+    }, style[this.props.scheme]);
   },
   getHeaderStyle(){
     let obj = {};
@@ -32,7 +37,7 @@ const Header = React.createClass({
     return obj;
   },
   shouldRenderTeam(){
-    return this.props.redux.team.toJS().users.length > 1;
+    return this.props.team.toJS().users.length > 1;
   },
   renderLoginLink(){
     if (this.props.user.get('auth')){
@@ -59,7 +64,7 @@ const Header = React.createClass({
     );
   },
   renderEnvironmentLink(){
-    if (!!this.props.redux.env.activeBastion) {
+    if (!!this.props.activeBastion) {
       return (
          <li>
            <Link to="/env" className={style.navbarLink} activeClassName="active">
@@ -73,7 +78,7 @@ const Header = React.createClass({
   },
   renderNavItems(){
     return (
-      <ul className="list-unstyled display-flex justify-content-around" style={{margin: 0}}>
+      <ul className={style.navList}>
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checks nav/>&nbsp;
@@ -93,26 +98,35 @@ const Header = React.createClass({
       </ul>
       );
   },
-  render(){
+  render() {
     return (
-      <header id="header" className={this.props.hide ? style.headerHide : style.header} style={this.getHeaderStyle()}>
-        <nav className={style.navbar} role="navigation">
-          <Grid>
-            <Row>
-              <Col xs={12}>
-                {this.renderNavItems()}
-              </Col>
-            </Row>
-          </Grid>
-          </nav>
-        <SearchBox/>
+      <header id="header" className={this.getHeaderClass()} style={this.getHeaderStyle()}>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <div className={style.inner}>
+                <div className={style.logoWrapper}>
+                  <Link to="/"><LogoColor borderColor="light" className={style.logo}/></Link>
+                </div>
+
+                <nav className={style.navbar} role="navigation">
+                  {this.renderNavItems()}
+                </nav>
+                <SearchBox/>
+              </div>
+            </Col>
+          </Row>
+        </Grid>
       </header>
     );
   }
 });
 
 const mapStateToProps = (state) => ({
-  redux: state
+  scheme: state.app.scheme,
+  team: state.team,
+  user: state.user,
+  activeBastion: !!state.env.activeBastion
 });
 
 export default connect(mapStateToProps)(Header);

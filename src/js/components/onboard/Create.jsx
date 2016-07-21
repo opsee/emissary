@@ -6,8 +6,9 @@ import _ from 'lodash';
 
 import {Toolbar, LogoColor, StatusHandler} from '../global';
 import UserInputs from '../user/UserInputs.jsx';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
+import {Heading} from '../type';
 import {user as actions} from '../../actions';
 
 const OnboardCreate = React.createClass({
@@ -23,7 +24,8 @@ const OnboardCreate = React.createClass({
     }),
     location: PropTypes.shape({
       query: PropTypes.object
-    }).isRequired
+    }).isRequired,
+    scheme: PropTypes.string
   },
   getInitialState(){
     return {
@@ -54,30 +56,36 @@ const OnboardCreate = React.createClass({
   render() {
     return (
        <div>
-        <Toolbar title="Sign up for Our Public Beta"/>
+        <Toolbar title="Sign up for Our Public Beta" hidden />
         <Grid>
-          <Row>
-            <Col xs={12}>
-              <Padding b={2}><LogoColor/></Padding>
-              <p>Try Opsee <strong>for free</strong> in our public beta!</p>
-              <form name="onboardForm" onSubmit={this.handleSubmit}>
-                <Padding b={1}>
-                  <UserInputs include={['email', 'name', 'password']} data={this.state.data} onChange={this.handleUserData}/>
-                </Padding>
-                <StatusHandler status={this.getStatus()}/>
-                <div className="form-group">
-                  <Button type="submit" color="success" block disabled={this.isDisabled()}>
-                    {this.getButtonText()}
-                  </Button>
-                  <Padding t={1}>
-                    <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee&rsquo;s <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
+          <Row className="center-xs">
+            <Col xs={12} sm={8}>
+              <Padding t={4} b={2}>
+                <Panel scheme={this.props.scheme}>
+                  <Padding t={2} b={1} className="text-center">
+                    <LogoColor borderColor="dark" />
+                    <Heading level={2}>Try Opsee for free in our public beta!</Heading>
                   </Padding>
-                </div>
+                  <form name="onboardForm" onSubmit={this.handleSubmit} className="text-left">
+                    <Padding b={1}>
+                      <UserInputs include={['name', 'email']} data={this.state.data} onChange={this.handleUserData}/>
+                    </Padding>
+                    <StatusHandler status={this.getStatus()}/>
+                    <div className="form-group">
+                      <Button type="submit" color="success" block disabled={this.isDisabled()}>
+                        {this.getButtonText()}
+                      </Button>
+                      <Padding t={1}>
+                        <p className="text-sm text-secondary">By proceeding to create your Opsee account, you are agreeing to Opsee&rsquo;s <Link to="https://opsee.com/beta-tos" target="_blank">Terms of Service</Link> and <Link to="https://opsee.com/privacy" target="_blank">Privacy Policy</Link>.</p>
+                      </Padding>
+                    </div>
 
-                <Padding tb={1}>
-                  <div>Already have an account? <Link to="/login">Log in</Link>.</div>
-                </Padding>
-              </form>
+                    <Padding tb={1} className="text-center">
+                      <div>Already have an account? <Link to="/login">Log in</Link>.</div>
+                    </Padding>
+                  </form>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import {plain as seed} from 'seedling';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -12,7 +11,7 @@ import CheckResponsePaginate from './CheckResponsePaginate.jsx';
 import CheckDisabledReason from './CheckDisabledReason.jsx';
 import {GroupItem} from '../groups';
 import {InstanceItem} from '../instances';
-import {Alert, Col, Grid, Padding, Row} from '../layout';
+import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
 import {validate} from '../../modules';
 import {Input, RadioSelect} from '../forms';
@@ -247,7 +246,7 @@ const CheckCreateRequest = React.createClass({
         })
         }
         <Button flat color="primary" onClick={this.runAddHeader}>
-          <Add fill={seed.color.primary} inline/> Add {!this.getHeaders().length ? 'A' : 'Another'} Header
+          <Add fill="primary" inline/> Add {!this.getHeaders().length ? 'A' : 'Another'} Header
         </Button>
       </div>
     );
@@ -301,12 +300,14 @@ const CheckCreateRequest = React.createClass({
       );
     }
     return (
-        <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
+      <UserDataRequirement hideIf="hasDismissedCheckRequestHelp">
+        <Padding b={2}>
           <Alert color="success" onDismiss={this.runDismissHelperText}>
             {text}
           </Alert>
-        </UserDataRequirement>
-      );
+        </Padding>
+      </UserDataRequirement>
+    );
   },
   renderBodyInput(){
     if (this.props.check.spec.verb !== 'GET'){
@@ -390,9 +391,7 @@ const CheckCreateRequest = React.createClass({
     return (
       <form name="checkCreateRequestForm" ref="form" onSubmit={this.handleSubmit}>
         {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
-        <Padding b={2}>
-          {this.renderHelperText()}
-        </Padding>
+        {this.renderHelperText()}
         {this.renderTargetSelection()}
         <Padding b={1}>
           {this.renderInputs()}
@@ -420,9 +419,13 @@ const CheckCreateRequest = React.createClass({
         <Grid>
           <Row>
             <Col xs={12}>
-              <BastionRequirement>
-                {this.renderInner()}
-              </BastionRequirement>
+              <Padding tb={2}>
+                <Panel>
+                  <BastionRequirement>
+                    {this.renderInner()}
+                  </BastionRequirement>
+                </Panel>
+              </Padding>
             </Col>
           </Row>
         </Grid>

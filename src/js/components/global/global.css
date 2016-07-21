@@ -10,6 +10,11 @@ body {
   color: var(--colorText);
 }
 
+:global body.light {
+  background: #eee;
+  color: var(--lightColorText);
+}
+
 body ::selection {
   background: #90CAF9;
 }
@@ -39,7 +44,14 @@ body ::-moz-selection {
 a {
   color: var(--colorPrimary);
   text-decoration: none;
+  /*font-weight: 500;*/
 }
+
+:global .light a {
+  /*color: var(--colorInfo);*/
+}
+
+
 a:hover, a:focus {
   color: #0c80df;
   text-decoration: underline;
@@ -117,8 +129,16 @@ small {
   color: var(--colorText2);
 }
 
+:global .light .text-muted {
+  color: var(--colorGray6);
+}
+
 :global .text-center {
   text-align: center;
+}
+
+:global .text-left {
+  text-align: left;
 }
 
 :global .text-right {
@@ -218,6 +238,13 @@ html {
   color: var(--colorText2);
 }
 
+:global body.light .text-secondary{
+  color: var(--colorGray5);
+}
+:global body.light .text-secondary svg {
+  fill: var(--colorGray5);
+}
+
 :global .text-sm {
   font-size: 1.25rem;
   line-height: 2rem;
@@ -235,6 +262,9 @@ html {
 
 hr {
   border-color: var(--colorGray8);
+}
+:global body.light hr {
+  border-color: var(--colorGray3);
 }
 
 :global #main {
