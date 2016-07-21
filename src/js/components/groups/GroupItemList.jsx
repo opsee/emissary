@@ -129,6 +129,8 @@ const GroupItemList = React.createClass({
       return '/env-groups-elb';
     case 'asg':
       return '/env-groups-asg';
+    case 'ecs':
+      return '/env-groups-ecs';
     default:
       return '/env-groups-security';
     }

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Col, Grid, Row} from '../layout';
+import {Col, Grid, Panel, Row} from '../layout';
 import {Toolbar} from '../global';
 import EnvList from './EnvList.jsx';
 
@@ -15,7 +15,9 @@ const EnvGroupsECS = React.createClass({
           <Grid>
             <Row>
               <Col xs={12}>
-                <EnvList include={['groups.ecs']} limit={1000} redux={this.props.redux}/>
+                <Panel>
+                  <EnvList include={['groups.ecs']} limit={1000} redux={this.props.redux}/>
+                </Panel>
               </Col>
             </Row>
           </Grid>
