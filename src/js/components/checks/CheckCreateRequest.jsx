@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -19,7 +20,8 @@ import CheckTypeSwitcher from './CheckTypeSwitcher';
 import {
   checks as checkActions,
   user as userActions,
-  app as appActions
+  app as appActions,
+  env as envActions
 } from '../../actions';
 
 const CheckCreateRequest = React.createClass({
@@ -38,13 +40,17 @@ const CheckCreateRequest = React.createClass({
     appActions: PropTypes.shape({
       confirmOpen: PropTypes.func.isRequired
     }).isRequired,
+    envActions: PropTypes.shape({
+      getTaskDefinition: PropTypes.func.isRequired
+    }).isRequired,
     //allows user to edit target in /check/edit mode
     handleTargetClick: PropTypes.func,
     history: PropTypes.object,
     redux: PropTypes.shape({
       env: PropTypes.shape({
         instances: PropTypes.object,
-        groups: PropTypes.object
+        groups: PropTypes.object,
+        taskDefinitions: PropTypes.object
       })
     })
   },
@@ -66,7 +72,19 @@ const CheckCreateRequest = React.createClass({
       });
       this.runChange(data);
     }
+    if (check.target.type === 'ecs'){
+      this.props.envActions.getTaskDefinition(check.target.id);
+      if (!check.target.cluster){
+        check.target.cluster = _.chain(check).get('target.id').thru(a => (a || '').split('/')).head().value() || undefined;
+      }
+      if (!check.target.service){
+        check.target.service = _.chain(check).get('target.id').thru(a => (a || '').split('/')).last().value() || undefined;
+      }
+    }
     return this.props.checkActions.testCheckReset();
+  },
+  componentWillReceiveProps(nextProps) {
+    this.setInitialContainerOpts(nextProps);
   },
   getInitialState() {
     return {
@@ -102,6 +120,21 @@ const CheckCreateRequest = React.createClass({
       return `${spec.protocol}://${check.target.id}${port}${spec.path}`;
     }
     return undefined;
+  },
+  getContainerPorts(props = this.props, check = this.props.check){
+    let item = props.redux.env.taskDefinitions.find(t => {
+      const id = _.last((check.target.id || '').split('/'));
+      return t.get('id') === id;
+    }) || new Map();
+    item = item.toJS();
+    const container = _.chain(item)
+    .get('ContainerDefinitions')
+    .find({
+      Name: check.target.container
+    })
+    .value();
+    let ports = container && container.PortMappings || [];
+    return ports;
   },
   getCheck(){
     return _.cloneDeep(this.props.check);
@@ -179,6 +212,36 @@ const CheckCreateRequest = React.createClass({
     }
     this.runChange(check);
   },
+  setDataFromContainerName(name){
+    let check = _.cloneDeep(this.props.check);
+    check.target.container = name;
+    const ports = this.getContainerPorts(this.props, check);
+    if (!check.spec.port || check.spec.port === 80){
+      check.spec.port = _.chain(ports).head().get('HostPort').value();
+      check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
+    }
+    this.runChange(check);
+  },
+  setInitialContainerOpts(props = this.props){
+    const {target} = props.check;
+    const {taskDefinitions} = props.redux.env;
+    if (target.type === 'ecs' && !target.container && taskDefinitions.size){
+      const container = _.chain(taskDefinitions.toJS())
+      .find({
+        id: _.last((target.id || '').split('/'))
+      })
+      .get('ContainerDefinitions[0].Name')
+      .value();
+      let check = _.cloneDeep(props.check);
+      check.target.container = container;
+      const ports = this.getContainerPorts(props, check);
+      if (!check.spec.port || check.spec.port === 80){
+        check.spec.port = _.chain(ports).head().get('HostPort').value();
+        check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
+      }
+      this.runChange(check);
+    }
+  },
   handleSubmit(e){
     e.preventDefault();
     if (!this.props.renderAsInclude){
@@ -210,6 +273,16 @@ const CheckCreateRequest = React.createClass({
   handleUrlChange(state){
     this.setState(state);
     this.state.debouncedRunUrlChange(state);
+  },
+  handleSelectHostPort(port){
+    let check = _.cloneDeep(this.props.check);
+    check.spec.port = port;
+    this.runChange(check);
+  },
+  handleSelectContainerPort(port){
+    let check = _.cloneDeep(this.props.check);
+    check.target.containerPort = port;
+    this.runChange(check);
   },
   renderHeaderForm(){
     return (
@@ -264,6 +337,7 @@ const CheckCreateRequest = React.createClass({
     }
     type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'sg' ? 'security' : type;
+    type = type === 'ecs_service' ? 'ecs' : type;
     if (type && target.id){
       let inner = null;
       if (type.match('^ecc$|^instance$|^rds$')){
@@ -272,11 +346,37 @@ const CheckCreateRequest = React.createClass({
         inner = <GroupItem noBorder linkInsteadOfMenu onClick={this.handleTargetClick} title="Return to target selection" target={target}/>;
       }
       return (
-        <Padding b={3}>
+        <Padding b={2}>
           <Heading level={3}>Your Target</Heading>
           {inner}
         </Padding>
       );
+    }
+    return null;
+  },
+  renderContainerPicker(){
+    if (this.props.check.target.type === 'ecs'){
+      let item = this.props.redux.env.taskDefinitions.find(t => {
+        // const id = _.last((this.props.check.target.id || '').split('/'));
+        const id = this.props.check.target.service;
+        return t.get('id') === id;
+      }) || new Map();
+      item = item.toJS();
+      if (item && item.id){
+        return (
+          <Padding b={2}>
+          <Heading level={3}>Container</Heading>
+          {
+            item.ContainerDefinitions.map(def => {
+              const name = _.get(def, 'Name') || '';
+              return (
+                <Button color="primary" flat={!(this.props.check.target.container === name)} onClick={this.setDataFromContainerName.bind(null, name)}>{name}</Button>
+              );
+            })
+          }
+          </Padding>
+        );
+      }
     }
     return null;
   },
@@ -348,6 +448,44 @@ const CheckCreateRequest = React.createClass({
       </Padding>
     );
   },
+  renderPort(){
+    if (this.props.check.target.type !== 'ecs'){
+      return <Input data={this.props.check} path="spec.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>;
+    }
+    if (!this.props.check.target.container){
+      return <div>Choose a container to select a port</div>;
+    }
+    const ports = this.getContainerPorts();
+    if (!ports.length){
+      return <div>No container ports found</div>;
+    }
+    return (
+      <div>
+        <Padding b={1} t={1} className="display-flex">
+          <div className="flex-1">
+            <Heading level={3}>Host Port</Heading>
+            {
+              _.map(ports, 'HostPort').map(port => {
+                return (
+                  <Button color="primary" flat={!(this.props.check.spec.port === port)} onClick={this.handleSelectHostPort.bind(null, port)}>{port}</Button>
+                );
+              })
+            }
+          </div>
+          <div className="flex-1">
+            <Heading level={3}>Container Port</Heading>
+            {
+              _.map(ports, 'ContainerPort').map(port => {
+                return (
+                  <Button color="primary" flat={!(this.props.check.target.containerPort === port)} onClick={this.handleSelectContainerPort.bind(null, port)}>{port}</Button>
+                );
+              })
+            }
+          </div>
+        </Padding>
+      </div>
+    );
+  },
   renderHttpInputs(){
     const protocols = ['http', 'https', 'ws', 'wss'].map(id => {
       return {id};
@@ -363,7 +501,7 @@ const CheckCreateRequest = React.createClass({
           <Input data={this.props.check} path="spec.path" onChange={this.runChange} label="Path*" placeholder="/healthcheck"/>
         </Padding>
         <Padding b={1}>
-          <Input data={this.props.check} path="spec.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>
+          {this.renderPort()}
         </Padding>
         {this.renderBodyInput()}
       </Padding>
@@ -393,6 +531,7 @@ const CheckCreateRequest = React.createClass({
         {!this.props.renderAsInclude && <CheckTypeSwitcher check={this.props.check} history={this.props.history} types={this.props.types} onChange={this.runChange}/>}
         {this.renderHelperText()}
         {this.renderTargetSelection()}
+        {this.renderContainerPicker()}
         <Padding b={1}>
           {this.renderInputs()}
           {this.renderHeaderForm()}
@@ -444,7 +583,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   checkActions: bindActionCreators(checkActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
-  appActions: bindActionCreators(appActions, dispatch)
+  appActions: bindActionCreators(appActions, dispatch),
+  envActions: bindActionCreators(envActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckCreateRequest);

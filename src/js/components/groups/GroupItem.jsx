@@ -17,12 +17,14 @@ const GroupItem = React.createClass({
       security: PropTypes.object,
       elb: PropTypes.object,
       rds: PropTypes.object,
-      asg: PropTypes.object
+      asg: PropTypes.object,
+      ecs: PropTypes.object
     }),
     actions: PropTypes.shape({
       getGroupsElb: PropTypes.func,
       getGroupsSecurity: PropTypes.func,
-      getGroupsAsg: PropTypes.func
+      getGroupsAsg: PropTypes.func,
+      getGroupsEcs: PropTypes.func
     }),
     redux: PropTypes.shape({
       env: PropTypes.shape({
@@ -45,6 +47,9 @@ const GroupItem = React.createClass({
         return this.props.actions.getGroupsElb();
       case 'asg':
         return this.props.actions.getGroupsAsg();
+      case 'ecs':
+      case 'ecs_service':
+        return this.props.actions.getGroupsEcs();
       default:
         return this.props.actions.getGroupsSecurity();
       }
@@ -57,6 +62,9 @@ const GroupItem = React.createClass({
     let {type} = target;
     if (type === 'sg'){
       type = 'security';
+    }
+    if (type === 'ecs_service'){
+      type = 'ecs';
     }
     let arr = [];
     arr.push(!_.isEqual(target, nextProps.target));
@@ -88,6 +96,15 @@ const GroupItem = React.createClass({
           return group.get('id') === this.props.target.id;
         });
         return asg || new Map();
+      case 'ecs':
+      case 'ecs_service':
+        const ecs = this.props.groups.ecs.find(group => {
+          let arr = [group.get('id') === this.props.target.id];
+          const container = _.chain(this.props.target.id).thru(a => (a || '').split('/')).get(1).value();
+          arr.push(_.last((group.get('id') || '').split('/')) === container);
+          return _.some(arr);
+        });
+        return ecs || new Map();
       default:
         const sg = this.props.groups.security.find(group => {
           return group.get('id') === this.props.target.id;
@@ -99,7 +116,8 @@ const GroupItem = React.createClass({
   },
   getLink(){
     const type = this.getItem().get('type').toLowerCase();
-    return `/group/${type}/${this.getItem().get('id')}`;
+    const id = window.encodeURIComponent(this.getItem().get('id'));
+    return `/group/${type}/${id}`;
   },
   getCreateCheckLink(){
     const target = _.pick(this.getItem().toJS(), ['id', 'type', 'name']);
@@ -112,20 +130,24 @@ const GroupItem = React.createClass({
       return 'ELB';
     case 'asg':
       return 'ASG';
+    case 'ecs':
+      return 'ECS';
     default:
       break;
     }
     return 'SG';
   },
-  renderInstanceCount(){
-    const item = this.getItem().toJS();
-    const count = item.Instances.length;
-    return (
-      <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
-        <ListInstance inline fill="textSecondary"/>
-        {count}
-      </span>
-    );
+  renderInstanceCount(item){
+    if (item.Instances){
+      const count = (item.Instances || []).length;
+      return (
+        <span title={`${count} instance${count === 1 ? '' : 's'} in this group`}>
+          <ListInstance inline fill="textSecondary"/>
+          {count}
+        </span>
+      );
+    }
+    return null;
   },
   renderInfoText(){
     const item = this.getItem().toJS();
@@ -144,7 +166,7 @@ const GroupItem = React.createClass({
               {failing}
             </span>
             &nbsp;&nbsp;
-            {this.renderInstanceCount()}
+            {this.renderInstanceCount(item)}
           </span>
         </span>
       );
@@ -155,7 +177,7 @@ const GroupItem = React.createClass({
       <span>
         <ListCheckmark inline fill="textSecondary"/>No checks
         &nbsp;
-        {this.renderInstanceCount()}
+        {this.renderInstanceCount(item)}
       </span>
     );
   },

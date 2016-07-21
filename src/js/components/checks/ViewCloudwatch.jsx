@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
 import {InstanceItem} from '../instances';
+import {GroupItem} from '../groups';
 import {Padding} from '../layout';
 import {Heading} from '../type';
 import AssertionMetric from './AssertionMetric';
@@ -26,10 +27,14 @@ const ViewCloudwatch = React.createClass({
   },
   renderTarget(){
     const target = this.props.check.toJS().target;
+    let item = <InstanceItem target={target}/>;
+    if ((target.type || '').match('security|asg|ecs|ecs_service')){
+      item = <GroupItem target={target}/>;
+    }
     return (
       <Padding b={1}>
         <Heading level={3}>Target</Heading>
-        <InstanceItem target={target}/>
+        {item}
       </Padding>
     );
   },

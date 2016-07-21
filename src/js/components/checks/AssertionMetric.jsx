@@ -23,7 +23,8 @@ const AssertionMetric = React.createClass({
     actions: PropTypes.shape({
       getMetricRDS: PropTypes.func,
       getMetricECC: PropTypes.func,
-      getMetricASG: PropTypes.func
+      getMetricASG: PropTypes.func,
+      getMetricECS: PropTypes.func
     }),
     assertion: PropTypes.shape({
       value: PropTypes.string,
@@ -94,12 +95,14 @@ const AssertionMetric = React.createClass({
     let {type} = this.props.check.target;
     type = type === 'instance' ? 'ecc' : type;
     type = type === 'dbinstance' ? 'rds' : type;
+    type = type === 'ecs_service' ? 'ecs' : type;
     return _.pickBy(metrics, v => _.includes(v.types, type));
   },
   getItem(props = this.props) {
     let type = props.check.target.type;
     type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'instance' ? 'ecc' : type;
+    type = type === 'ecs_service' ? 'ecs' : type;
     if (type.match('rds|ecc')){
       return props.redux.env.instances[type].find(i => {
         return i.get('id') === props.check.target.id;
@@ -109,8 +112,12 @@ const AssertionMetric = React.createClass({
       return i.get('id') === props.check.target.id;
     }) || new Map();
   },
+  getAsyncStatus(props = this.props){
+    const hasKey = !!_.get(this.getItem(props).toJS(), ['metrics', props.assertion.value, 'metrics']);
+    return hasKey ? 'success' : 'pending';
+  },
   getData(props = this.props){
-    return _.get(this.getItem(props).toJS(), ['metrics', this.props.assertion.value, 'metrics']) || [];
+    return _.get(this.getItem(props).toJS(), ['metrics', props.assertion.value, 'metrics']) || [];
   },
   getCurrentDataPoint() {
     return _.last(this.getData());
@@ -192,6 +199,10 @@ const AssertionMetric = React.createClass({
       break;
     case 'asg':
       action = this.props.actions.getMetricASG;
+      break;
+    case 'ecs':
+    case 'ecs_service':
+      action = this.props.actions.getMetricECS;
       break;
     default:
       break;
@@ -275,7 +286,7 @@ const AssertionMetric = React.createClass({
           {this.renderTitle()}
           {this.renderDescription()}
           <div style={{overflow: 'hidden'}}>
-            <MetricGraph metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship}/>
+            <MetricGraph metric={meta} data={this.getData()} assertion={this.props.assertion} showTooltip={!!this.props.assertion.relationship} status={this.getAsyncStatus()}/>
           </div>
           <Padding t={2}>
             {this.renderCurrentDataPoint()}
