@@ -338,7 +338,6 @@ function formatHttpCheck(data, forTestCheck){
     check.target.type = 'instance';
   }
   if (target.type.match('ecs')){
-    debugger;
     check.target.id = `${target.cluster}/${target.service}/${target.container}/${target.containerPort}`;
     check.target.type = 'ecs_service';
   }
