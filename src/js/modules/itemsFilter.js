@@ -9,7 +9,7 @@ export default function(items = new List(), search = {string: '', tokens: []}){
     //do fuzzy searching first
     const stringQuery = _.chain(tokens).reject('tag').map('term').join(' ').value();
     const results = newItems.toJS().map(item => {
-      const fields = [item.name, item.id];
+      const fields = [item.name, item.id, item.type];
       const hits = fuzzy.filter(stringQuery, fields);
       return {
         score: _.chain(hits).map('score').reduce((total, n) => total + n).value() || 0,

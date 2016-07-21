@@ -336,7 +336,7 @@ function formatHttpCheck(data, forTestCheck){
     check.target.type = 'instance';
   }
   if (target.type === 'ecs'){
-    check.target.id = `${target.cluster}/${target.service}/${target.container}/${spec.port}`;
+    check.target.id = `${target.cluster}/${target.service}/${target.container}/${target.containerPort}`;
   }
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   const assertions = (check.assertions || []).map(a => {

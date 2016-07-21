@@ -40,13 +40,17 @@ const CheckCreateRequest = React.createClass({
     appActions: PropTypes.shape({
       confirmOpen: PropTypes.func.isRequired
     }).isRequired,
+    envActions: PropTypes.shape({
+      getTaskDefinition: PropTypes.func.isRequired
+    }).isRequired,
     //allows user to edit target in /check/edit mode
     handleTargetClick: PropTypes.func,
     history: PropTypes.object,
     redux: PropTypes.shape({
       env: PropTypes.shape({
         instances: PropTypes.object,
-        groups: PropTypes.object
+        groups: PropTypes.object,
+        taskDefinitions: PropTypes.object
       })
     })
   },
@@ -70,6 +74,12 @@ const CheckCreateRequest = React.createClass({
     }
     if (check.target.type === 'ecs'){
       this.props.envActions.getTaskDefinition(check.target.id);
+      if (!check.target.cluster){
+        check.target.cluster = _.chain(check).get('target.id').thru(a => (a || '').split('/')).head().value() || undefined;
+      }
+      if (!check.target.service){
+        check.target.service = _.chain(check).get('target.id').thru(a => (a || '').split('/')).last().value() || undefined;
+      }
     }
     return this.props.checkActions.testCheckReset();
   },
@@ -164,11 +174,6 @@ const CheckCreateRequest = React.createClass({
     if (spec.verb === 'GET'){
       check.spec = _.omit(spec, ['body']);
     }
-    if (check.target.type === 'ecs'){
-      if (check.target.container){
-
-      }
-    }
     return this.props.onChange(check);
   },
   runDismissHelperText(){
@@ -216,7 +221,7 @@ const CheckCreateRequest = React.createClass({
         id: _.last((target.id || '').split('/'))
       })
       .get('ContainerDefinitions[0].Name')
-      .value()
+      .value();
       let check = _.cloneDeep(props.check);
       check.target.container = container;
       const ports = this.getContainerPorts(props, check);
@@ -259,9 +264,14 @@ const CheckCreateRequest = React.createClass({
     this.setState(state);
     this.state.debouncedRunUrlChange(state);
   },
-  handleSelectPort(port){
+  handleSelectHostPort(port){
     let check = _.cloneDeep(this.props.check);
     check.spec.port = port;
+    this.runChange(check);
+  },
+  handleSelectContainerPort(port){
+    let check = _.cloneDeep(this.props.check);
+    check.target.containerPort = port;
     this.runChange(check);
   },
   renderHeaderForm(){
@@ -346,15 +356,11 @@ const CheckCreateRequest = React.createClass({
           <Padding b={2}>
           <Heading level={3}>Containers</Heading>
           {
-            // JSON.stringify(item)
-          }
-          {
-              item.ContainerDefinitions.map(def => {
-                const name = _.get(def, 'Name') || '';
-                return (
-                  <Button color="primary" flat={!(this.props.check.target.container === name)}>{name}</Button>
-                );
-              // return JSON.stringify(i);
+            item.ContainerDefinitions.map(def => {
+              const name = _.get(def, 'Name') || '';
+              return (
+                <Button color="primary" flat={!(this.props.check.target.container === name)}>{name}</Button>
+              );
             })
           }
           </Padding>
@@ -443,16 +449,30 @@ const CheckCreateRequest = React.createClass({
       return <div>No container ports found</div>;
     }
     return (
-      <Padding b={1} t={1}>
-      <Heading level={3}>Container Port</Heading>
-      {
-        ports.map(port => {
-          return (
-            <Button color="primary" flat={!(this.props.check.spec.port === port)} onClick={this.handleSelectPort.bind(null, port)}>{port}</Button>
-          );
-        })
-      }
-      </Padding>
+      <div>
+        <Padding b={1} t={1} className="display-flex">
+          <div className="flex-1">
+            <Heading level={3}>Host Port</Heading>
+            {
+              _.map(ports, 'HostPort').map(port => {
+                return (
+                  <Button color="primary" flat={!(this.props.check.spec.port === port)} onClick={this.handleSelectHostPort.bind(null, port)}>{port}</Button>
+                );
+              })
+            }
+          </div>
+          <div className="flex-1">
+            <Heading level={3}>Container Port</Heading>
+            {
+              _.map(ports, 'ContainerPort').map(port => {
+                return (
+                  <Button color="primary" flat={!(this.props.check.target.containerPort === port)} onClick={this.handleSelectContainerPort.bind(null, port)}>{port}</Button>
+                );
+              })
+            }
+          </div>
+        </Padding>
+      </div>
     );
   },
   renderHttpInputs(){

@@ -96,13 +96,16 @@ const CheckCreate = React.createClass({
         });
       }
     }
-    const initial = _.chain(data).defaults({
+    let initial = _.chain(data).defaults({
       target: {
         name: config.checkDefaultTargetName,
         type: config.checkDefaultTargetType,
         id: config.checkDefaultTargetId
       }
     }).value();
+    if (initial.target.type === 'ecs'){
+      initial.target.service = _.chain(data).get('target.id').thru(a => (a || '').split('/')).last().value() || undefined;
+    }
     return {
       check: new Check(initial).toJS(),
       filter: null

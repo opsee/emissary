@@ -102,7 +102,7 @@ const CheckCreateTarget = React.createClass({
         {this.renderHelperText()}
         <Padding b={2}>
           <Heading level={3}>Choose a Target for your Check</Heading>
-          <SearchBar noRedirect id="check-create-search"/>
+          <SearchBar noRedirect id="check-create-search" useScheme standalone/>
         </Padding>
         <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={this.getInclude()} noFetch filter/>
       </div>
