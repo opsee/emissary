@@ -99,7 +99,10 @@ const GroupItem = React.createClass({
       case 'ecs':
       case 'ecs_service':
         const ecs = this.props.groups.ecs.find(group => {
-          return group.get('id') === this.props.target.id;
+          let arr = [group.get('id') === this.props.target.id];
+          const container = _.chain(this.props.target.id).thru(a => (a || '').split('/')).get(1).value();
+          arr.push(_.last((group.get('id') || '').split('/')) === container);
+          return _.some(arr);
         });
         return ecs || new Map();
       default:
