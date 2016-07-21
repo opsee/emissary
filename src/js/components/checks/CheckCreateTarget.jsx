@@ -73,7 +73,7 @@ const CheckCreateTarget = React.createClass({
   handleTargetSelect(item){
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
-    check.target = _.pick(check.target, ['id', 'name', 'type']);
+    check.target = _.pick(check.target, ['id', 'name', 'type', 'TaskDefinition']);
     if (check.target.type === 'ecs'){
       check.target.cluster = _.head((check.target.id || '').split('/'));
       check.target.service = _.last((check.target.id || '').split('/'));

@@ -47,7 +47,7 @@ const GroupEcs = React.createClass({
   },
   getGroup(){
     return this.props.redux.env.groups.ecs.find(g => {
-      return unescape(g.get('id')) === this.props.params.id;
+      return unescape(g.get('id') || '') === this.props.params.id;
     }) || new Map({id: this.props.params.id});
   },
   getCreateLink(){

@@ -73,7 +73,7 @@ const CheckCreateRequest = React.createClass({
       this.runChange(data);
     }
     if (check.target.type === 'ecs'){
-      this.props.envActions.getTaskDefinition(check.target.id);
+      this.props.envActions.getTaskDefinition(check.target.TaskDefinition || check.target.id);
       if (!check.target.cluster){
         check.target.cluster = _.chain(check).get('target.id').thru(a => (a || '').split('/')).head().value() || undefined;
       }
@@ -90,7 +90,8 @@ const CheckCreateRequest = React.createClass({
     return {
       url: this.getUrl(),
       hasSetPort: this.props.renderAsInclude,
-      debouncedRunUrlChange: _.debounce(this.runUrlChange, 800)
+      debouncedRunUrlChange: _.debounce(this.runUrlChange, 800),
+      hasSetContainer: false
     };
   },
   getHeaders(fromSource){
@@ -123,8 +124,8 @@ const CheckCreateRequest = React.createClass({
   },
   getContainerPorts(props = this.props, check = this.props.check){
     let item = props.redux.env.taskDefinitions.find(t => {
-      const id = _.last((check.target.id || '').split('/'));
-      return t.get('id') === id;
+      // const id = _.last((check.target.id || '').split('/'));
+      return t.get('TaskDefinitionArn') === check.target.TaskDefinition;
     }) || new Map();
     item = item.toJS();
     const container = _.chain(item)
@@ -225,10 +226,10 @@ const CheckCreateRequest = React.createClass({
   setInitialContainerOpts(props = this.props){
     const {target} = props.check;
     const {taskDefinitions} = props.redux.env;
-    if (target.type === 'ecs' && !target.container && taskDefinitions.size){
+    if (target.type === 'ecs' && !target.containerPort && taskDefinitions.size && !this.state.hasSetContainer){
       const container = _.chain(taskDefinitions.toJS())
       .find({
-        id: _.last((target.id || '').split('/'))
+        TaskDefinitionArn: target.TaskDefinition
       })
       .get('ContainerDefinitions[0].Name')
       .value();
@@ -239,7 +240,11 @@ const CheckCreateRequest = React.createClass({
         check.spec.port = _.chain(ports).head().get('HostPort').value();
         check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
       }
-      this.runChange(check);
+      this.setState({
+        hasSetContainer: true
+      });
+      setTimeout(() => this.runChange(check), 50);
+      console.log('change');
     }
   },
   handleSubmit(e){
