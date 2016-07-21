@@ -33,8 +33,6 @@ const TeamEdit = React.createClass({
     return _.assign({}, this.props.redux.team.toJS(), {
       //planinputs valid
       valid: false,
-      stripeToken: undefined,
-      plan: undefined,
       notifications: []
     });
   },
@@ -44,7 +42,7 @@ const TeamEdit = React.createClass({
   componentWillReceiveProps(nextProps) {
     const nextTeam = this.getData(nextProps);
     const team = this.getData();
-    if (nextTeam.name !== team.name){
+    if (!_.isEqual(nextTeam, team)){
       this.setState(nextTeam);
     }
   },
@@ -120,7 +118,7 @@ const TeamEdit = React.createClass({
                   <Padding b={1}>
                     <Input onChange={this.handleChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
                   </Padding>
-                  <PlanInputs onChange={this.handleChange}/>
+                  <PlanInputs onChange={this.handleChange} selected={this.state.subscription_plan}/>
                   <Padding t={2}>
                       <Heading level={3}>Team Default Notifications</Heading>
                       <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />

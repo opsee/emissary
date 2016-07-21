@@ -36,7 +36,6 @@ export const Member = Record({
 export const Team = Record({
   name: undefined,
   features: new List(),
-  plan: 'advanced (beta)',
   users: new List(),
   invoices: new List(),
   subscription_plan: 'free',

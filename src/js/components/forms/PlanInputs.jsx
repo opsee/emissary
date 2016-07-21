@@ -7,21 +7,32 @@ import Input from './Input';
 import CreditCard from './CreditCard';
 import RadioSelect from './RadioSelect';
 import {Alert, Padding} from '../layout';
+import {Heading} from '../type';
+import {Button} from '../forms';
 import style from './creditCard.css';
 
 const PlanInputs = React.createClass({
   propTypes: {
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    selected: PropTypes.string
   },
   getInitialState() {
     return {
       stripeToken: undefined,
-      plan: _.chain(this.getPlans()).find({id: 'free'}).get('id').value(),
-      valid: false
+      subscription_plan: this.props.selected,
+      valid: false,
+      showCC: false
     };
   },
   componentDidMount(){
     this.handleChange();
+  },
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selected && this.state.subscription_plan !== nextProps.selected){
+      this.setState({
+        subscription_plan: nextProps.selected
+      });
+    }
   },
   getPlans(){
     return _.chain(['free', 'developer_monthly', 'team_monthly', 'beta'])
@@ -55,10 +66,11 @@ const PlanInputs = React.createClass({
   },
   handleChange(state = this.state){
     const validArr = [
-      (state.plan === 'free' || state.stripeToken)
+      (state.subscription_plan === 'free' || state.stripeToken)
     ]
     const valid = _.every(validArr);
     const data = _.assign(state, {valid});
+    console.log(data);
     this.setState(data);
     this.props.onChange(data);
   },
@@ -67,20 +79,34 @@ const PlanInputs = React.createClass({
       stripeToken
     });
   },
+  handleShowCC(){
+    this.setState({
+      showCC: true
+    });
+  },
   renderCreditCard(){
-    if (this.state.plan !== 'free'){
+    if (
+      (this.state.subscription_plan !== 'free' && this.state.subscription_status !== 'active') ||
+      this.state.showCC
+    ){
       return (
         <Padding t={1}>
           <CreditCard onChange={this.handleChange}/>
         </Padding>
       );
+    } else {
+      return (
+        <Padding t={1}>
+          <Button flat color="primary" onClick={this.handleShowCC}>Update Credit Card</Button>
+        </Padding>
+      )
     }
     return null;
   },
   render(){
     return (
       <div>
-        <RadioSelect options={this.getPlans()} path="plan" data={this.state} onChange={this.handleChange} label="Plan*"/>
+        <RadioSelect options={this.getPlans()} path="subscription_plan" data={this.state} onChange={this.handleChange} label="Plan*"/>
         {this.renderCreditCard()}
       </div>
     );
