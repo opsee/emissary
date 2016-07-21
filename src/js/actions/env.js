@@ -59,6 +59,9 @@ const snippets = {
               ServiceName
               ClusterArn
               TaskDefinition
+              Deployments {
+                TaskDefinition
+              }
               `
     }
   },

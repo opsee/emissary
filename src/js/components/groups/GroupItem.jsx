@@ -48,6 +48,7 @@ const GroupItem = React.createClass({
       case 'asg':
         return this.props.actions.getGroupsAsg();
       case 'ecs':
+      case 'ecs_service':
         return this.props.actions.getGroupsEcs();
       default:
         return this.props.actions.getGroupsSecurity();
@@ -96,6 +97,7 @@ const GroupItem = React.createClass({
         });
         return asg || new Map();
       case 'ecs':
+      case 'ecs_service':
         const ecs = this.props.groups.ecs.find(group => {
           return group.get('id') === this.props.target.id;
         });

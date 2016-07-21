@@ -28,7 +28,7 @@ const ViewCloudwatch = React.createClass({
   renderTarget(){
     const target = this.props.check.toJS().target;
     let item = <InstanceItem target={target}/>;
-    if ((target.type || '').match('security|asg|ecs')){
+    if ((target.type || '').match('security|asg|ecs|ecs_service')){
       item = <GroupItem target={target}/>;
     }
     return (

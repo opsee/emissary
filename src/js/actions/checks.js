@@ -337,7 +337,8 @@ function formatHttpCheck(data, forTestCheck){
   if (target.type.match('^EC2$|^ecc$')){
     check.target.type = 'instance';
   }
-  if (target.type === 'ecs'){
+  if (target.type.match('ecs')){
+    debugger;
     check.target.id = `${target.cluster}/${target.service}/${target.container}/${target.containerPort}`;
     check.target.type = 'ecs_service';
   }

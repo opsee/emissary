@@ -54,7 +54,12 @@ const statics = {
   },
   setResultMeta(item, checks, toMatch = []){
     let foundChecks = _.filter(checks, r => {
-      return item.get('id') === r.target.id;
+      let arr = [item.get('id') === r.target.id]
+      if (item && typeof item.type === 'string' && item.type.match('ecs')){
+        const container = _.chain(r.target.id).thru(a => (a || '').split('/')).get(1).value();
+        arr.push(_.last((item.id || '').split('/')) === container);
+      }
+      return _.some(arr);
       // return toMatch.indexOf(r.target.id) > -1;
     });
 

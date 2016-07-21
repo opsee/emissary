@@ -95,12 +95,14 @@ const AssertionMetric = React.createClass({
     let {type} = this.props.check.target;
     type = type === 'instance' ? 'ecc' : type;
     type = type === 'dbinstance' ? 'rds' : type;
+    type = type === 'ecs_service' ? 'ecs' : type;
     return _.pickBy(metrics, v => _.includes(v.types, type));
   },
   getItem(props = this.props) {
     let type = props.check.target.type;
     type = type === 'dbinstance' ? 'rds' : type;
     type = type === 'instance' ? 'ecc' : type;
+    type = type === 'ecs_service' ? 'ecs' : type;
     if (type.match('rds|ecc')){
       return props.redux.env.instances[type].find(i => {
         return i.get('id') === props.check.target.id;
@@ -199,6 +201,7 @@ const AssertionMetric = React.createClass({
       action = this.props.actions.getMetricASG;
       break;
     case 'ecs':
+    case 'ecs_service':
       action = this.props.actions.getMetricECS;
       break;
     default:
