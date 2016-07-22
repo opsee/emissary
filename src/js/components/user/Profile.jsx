@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import _ from 'lodash';
 
 import {SchemePicker, StatusHandler, Table, Toolbar} from '../global';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
@@ -55,6 +56,13 @@ const Profile = React.createClass({
   getUser() {
     return this.props.redux.user.toJS();
   },
+  getPlan(team){
+    let plan = team.subscription_plan;
+    if (plan === 'beta'){
+      plan = 'Team (beta)';
+    }
+    return _.capitalize(plan);
+  },
   isTeam(){
     return !!(this.props.redux.team.users.size > 1);
   },
@@ -100,15 +108,42 @@ const Profile = React.createClass({
     if (flag('team')){
       return (
         <tr>
-          <td><strong>Team</strong></td>
-          <td><Link to={name && '/team' || '/team/create'}>{name || 'Invite Team Members'}</Link></td>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Team</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Link to={name && '/team' || '/team/create'}>{name || 'Invite Team Members'}</Link>
+              </Col>
+            </Row>
+          </td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderPlan(team = this.props.redux.team.toJS()){
+    if (!this.isTeam()){
+      return (
+        <tr>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Subscription Plan</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Link to="/profile/edit">{this.getPlan(team)}</Link>
+              </Col>
+            </Row>
+          </td>
         </tr>
       );
     }
     return null;
   },
   renderBilling(){
-    if (!this.isTeam()){
+    if (!this.isTeam() && this.props.redux.team.get('subscription_status') === 'active'){
       return (
         <tr>
           <td><strong>Billing</strong></td>
@@ -123,15 +158,31 @@ const Profile = React.createClass({
       if (!!this.props.redux.env.activeBastion){
         return (
           <tr>
-            <td><strong>AWS Integration</strong></td>
-            <td><Link to="/system">Enabled</Link></td>
+            <td colSpan={2}>
+              <Row>
+                <Col xs={12} sm={4}>
+                  <strong>AWS Integration</strong><br/>
+                </Col>
+                <Col xs={12} sm={8}>
+                  <Link to="/system">Enabled</Link>
+                </Col>
+              </Row>
+            </td>
           </tr>
         );
       }
       return (
         <tr>
-          <td><strong>AWS Integration</strong></td>
-          <td><Link to="/start/launch-stack">Add Our Instance</Link></td>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>AWS Integration</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Link to="/start/launch-stack">Add Our Instance</Link>
+              </Col>
+            </Row>
+          </td>
         </tr>
       );
     }
@@ -141,8 +192,16 @@ const Profile = React.createClass({
     if (flag('integrations-slack') && !this.isTeam()){
       return (
         <tr>
-          <td><strong>Slack</strong></td>
-          <td><SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || undefined}/></td>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Slack</strong>
+              </Col>
+              <Col xs={12} sm={8}>
+                <SlackInfo connect redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || undefined}/>
+              </Col>
+            </Row>
+          </td>
         </tr>
       );
     }
@@ -152,8 +211,16 @@ const Profile = React.createClass({
     if (flag('integrations-pagerduty') && !this.isTeam()){
       return (
         <tr>
-          <td><strong>PagerDuty</strong></td>
-          <td><PagerdutyInfo redirect={this.isTeam() && `${window.location.origin}/team?slack=true` || null}/></td>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>PagerDuty</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <PagerdutyInfo redirect={this.isTeam() && `${window.location.origin}/team?pagerduty=true` || null}/>
+              </Col>
+            </Row>
+          </td>
         </tr>
       );
     }
@@ -197,10 +264,16 @@ const Profile = React.createClass({
       return (
         <tr>
           <td colSpan={2}>
-            <strong>Default Check Notifications</strong><br/>
-            <Padding t={0.5}>
-              <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
-            </Padding>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Default Check Notifications</strong>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Padding t={0.5}>
+                  <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
+                </Padding>
+              </Col>
+            </Row>
           </td>
         </tr>
       );
@@ -227,16 +300,31 @@ const Profile = React.createClass({
                     <Table>
                       {this.renderTeamInfo()}
                       <tr>
-                        <td><strong>Email</strong></td>
-                        <td>
-                          <div>{this.renderEmail(user)}</div>
-                          <div>{this.renderVerificationNag(user)}</div>
+                        <td colSpan={2}>
+                          <Row>
+                            <Col xs={12} sm={4}>
+                              <strong>Email</strong><br/>
+                            </Col>
+                            <Col xs={12} sm={8}>
+                              <div>{this.renderEmail(user)}</div>
+                              <div>{this.renderVerificationNag(user)}</div>
+                            </Col>
+                          </Row>
                         </td>
                       </tr>
                       <tr>
-                        <td><strong>Password</strong></td>
-                        <td><Link to="/profile/edit" >Change Your Password</Link></td>
+                        <td colSpan={2}>
+                          <Row>
+                            <Col xs={12} sm={4}>
+                              <strong>Password</strong><br/>
+                            </Col>
+                            <Col xs={12} sm={8}>
+                              <Link to="/profile/edit" >Change Your Password</Link>
+                            </Col>
+                          </Row>
+                        </td>
                       </tr>
+                      {this.renderPlan()}
                       {this.renderBilling()}
                       {this.renderAWSArea()}
                       {this.renderSlackArea()}

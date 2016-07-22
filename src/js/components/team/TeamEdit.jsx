@@ -56,7 +56,7 @@ const TeamEdit = React.createClass({
     return _.some([
       !(this.state.name),
       this.getStatus() === 'pending',
-      !this.state.valid  
+      !this.state.valid
     ]);
   },
   handleUserData(data){
@@ -130,7 +130,9 @@ const TeamEdit = React.createClass({
                       {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
                     </Button>
                   </Padding>
-                  {JSON.stringify(this.state)}
+                  {
+                    process.env.NODE_ENV === 'debug' && JSON.stringify(this.state)
+                  }
                 </form>
               </Panel>
             </Col>

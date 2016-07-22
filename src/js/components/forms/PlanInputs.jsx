@@ -1,15 +1,11 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
-import cx from 'classnames';
 
-import {flag, stripe} from '../../modules';
-import Input from './Input';
+import {flag} from '../../modules';
 import CreditCard from './CreditCard';
 import RadioSelect from './RadioSelect';
-import {Alert, Padding} from '../layout';
-import {Heading} from '../type';
+import {Padding} from '../layout';
 import {Button} from '../forms';
-import style from './creditCard.css';
 
 const PlanInputs = React.createClass({
   propTypes: {
@@ -67,10 +63,9 @@ const PlanInputs = React.createClass({
   handleChange(state = this.state){
     const validArr = [
       (state.subscription_plan === 'free' || state.stripeToken)
-    ]
+    ];
     const valid = _.every(validArr);
     const data = _.assign(state, {valid});
-    console.log(data);
     this.setState(data);
     this.props.onChange(data);
   },
@@ -85,23 +80,18 @@ const PlanInputs = React.createClass({
     });
   },
   renderCreditCard(){
-    if (
-      (this.state.subscription_plan !== 'free' && this.state.subscription_status !== 'active') ||
-      this.state.showCC
-    ){
-      return (
-        <Padding t={1}>
-          <CreditCard onChange={this.handleChange}/>
-        </Padding>
-      );
-    } else {
+    if (this.state.subscription_status === 'active'){
       return (
         <Padding t={1}>
           <Button flat color="primary" onClick={this.handleShowCC}>Update Credit Card</Button>
         </Padding>
-      )
+      );
     }
-    return null;
+    return (
+      <Padding t={1}>
+        <CreditCard onChange={this.handleChange}/>
+      </Padding>
+    );
   },
   render(){
     return (

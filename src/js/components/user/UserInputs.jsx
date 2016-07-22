@@ -16,7 +16,7 @@ const UserInputs = React.createClass({
     //props to input
     email: PropTypes.object,
     //props to input
-    name: PropTypes.object,
+    name: PropTypes.object
   },
   getDefaultProps() {
     return {

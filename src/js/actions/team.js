@@ -48,7 +48,10 @@ export function getTeam(callback = () => {}){
 }
 
 export function edit(data, redirect = '/team'){
-  const team = _.pick(data, ['name', 'plan', 'stripeToken']);
+  let team = _.pick(data, ['name', 'plan', 'stripeToken', 'subscription_plan']);
+  team = _.mapKeys(team, (value, key) => {
+    return key === 'subscription_plan' ? 'plan' : key;
+  });
   return (dispatch, state) => {
     dispatch({
       type: TEAM_EDIT,

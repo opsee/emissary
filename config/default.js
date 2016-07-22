@@ -18,7 +18,7 @@ export default {
     compost: 'https://api.opsee.com/graphql',
     statusPage: 'https://mdpjjlblknkm.statuspage.io/api/v2'
   },
-  stripeKey: 'pk_test_RhpC7lm8OPhml1RPcaEbOOHU',
+  stripeKey: 'pk_live_THUDm6L0tM8gNsTFr5QjGA9r',
   //display vpc screen despite only having 1 vpc in environment
   showVpcScreen: false,
   //allow viewing parts of the application that need a bastion to function properly
