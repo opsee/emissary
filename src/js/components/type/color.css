@@ -26,18 +26,6 @@
   color:var(--colorText);
 }
 
-.text.light, .text.light:hover, .text.light:focus, .text.light:active, .text.light:visited{
-  color:var(--lightColorText);
-}
-
-.textSecondary, .textSecondary:hover, .textSecondary:focus, .textSecondary:active, .textSecondary:visited{
-  color: var(--colorText2);
-}
-
-.textSecondary.light, .textSecondary.light:hover, .textSecondary.light:focus, .textSecondary.light:active, .textSecondary.light:visited{
-  color: var(--lightColorText2);
-}
-
 .gray, .gray:hover, .gray:focus, .gray:active, .gray:visited{
   color:var(--colorGray);
 }
@@ -76,4 +64,16 @@
 
 .gray9, .gray9:hover, .gray9:focus, .gray9:active, .gray9:visited{
   color:var(--colorGray9);
+}
+
+.text.light, .text.light:hover, .text.light:focus, .text.light:active, .text.light:visited{
+  color:var(--lightColorText);
+}
+
+.textSecondary, .textSecondary:hover, .textSecondary:focus, .textSecondary:active, .textSecondary:visited{
+  color: var(--colorText2);
+}
+
+.textSecondary.light, .textSecondary.light:hover, .textSecondary.light:focus, .textSecondary.light:active, .textSecondary.light:visited{
+  color: var(--lightColorText2);
 }

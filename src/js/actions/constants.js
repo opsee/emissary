@@ -62,6 +62,9 @@ export const GET_GROUP_RDS = 'GET_GROUP_RDS';
 export const GET_GROUPS_RDS = 'GET_GROUPS_RDS';
 export const GET_GROUP_ELB = 'GET_GROUP_ELB';
 export const GET_GROUPS_ELB = 'GET_GROUPS_ELB';
+export const GET_GROUP_ECS = 'GET_GROUP_ECS';
+export const GET_GROUPS_ECS = 'GET_GROUPS_ECS';
+export const GET_TASK_DEFINITION = 'GET_TASK_DEFINITION';
 
 export const GET_INSTANCE_ECC = 'GET_INSTANCE_ECC';
 export const GET_INSTANCES_ECC = 'GET_INSTANCES_ECC';
@@ -71,6 +74,7 @@ export const GET_INSTANCES_RDS = 'GET_INSTANCES_RDS';
 export const GET_METRIC_RDS = 'GET_METRIC_RDS';
 export const GET_METRIC_ECC = 'GET_METRIC_ECC';
 export const GET_METRIC_ASG = 'GET_METRIC_ASG';
+export const GET_METRIC_ECS = 'GET_METRIC_ECS';
 
 export const ENV_GET_BASTIONS = 'ENV_GET_BASTIONS';
 export const ENV_SET_FILTERED = 'ENV_SET_FILTERED';

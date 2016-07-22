@@ -151,3 +151,12 @@
   left: 50%;
   margin-left: -20px;
 }
+
+.noData {
+  position: absolute;
+  top: 50%;
+  margin-top: -.5rem;
+  text-align: center;
+  width: 100%;
+  font-weight: 900;
+}

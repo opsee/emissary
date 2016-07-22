@@ -47,7 +47,7 @@ const Env = React.createClass({
   },
   getIncludes(){
     const {pathname} = this.props.location;
-    let include = ['groups.elb', 'groups.security', 'groups.asg', 'instances.rds', 'instances.ecc'];
+    let include = ['groups.elb', 'groups.security', 'groups.asg', 'groups.ecs', 'instances.rds', 'instances.ecc'];
     if (pathname){
       if (pathname.match('groups-security')){
         include = ['groups.security'];
@@ -55,6 +55,8 @@ const Env = React.createClass({
         include = ['groups.elb'];
       } else if (pathname.match('instances-ec2')){
         include = ['instances.ecc'];
+      } else if (pathname.match('groups-ecs')){
+        include = ['groups.ecs'];
       }
     }
     return include;

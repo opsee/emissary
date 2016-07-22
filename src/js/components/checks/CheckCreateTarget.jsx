@@ -56,6 +56,8 @@ const CheckCreateTarget = React.createClass({
       case 'rds':
       case 'RDS':
         return ['instances.rds'];
+      case 'ecs':
+        return ['groups.ecs'];
       default:
         break;
       }
@@ -71,7 +73,11 @@ const CheckCreateTarget = React.createClass({
   handleTargetSelect(item){
     let check = this.props.check ? _.cloneDeep(this.props.check) : new Check().toJS();
     check.target = item.toJS ? item.toJS() : item;
-    check.target = _.pick(check.target, ['id', 'name', 'type']);
+    check.target = _.pick(check.target, ['id', 'name', 'type', 'TaskDefinition']);
+    if (check.target.type === 'ecs'){
+      check.target.cluster = _.head((check.target.id || '').split('/'));
+      check.target.service = _.last((check.target.id || '').split('/'));
+    }
     this.props.onChange(check);
     const data = window.encodeURIComponent(JSON.stringify(check));
     if (this.props.check.type === 'cloudwatch'){
@@ -96,7 +102,7 @@ const CheckCreateTarget = React.createClass({
         {this.renderHelperText()}
         <Padding b={2}>
           <Heading level={3}>Choose a Target for your Check</Heading>
-          <SearchBar noRedirect id="check-create-search"/>
+          <SearchBar noRedirect id="check-create-search" useScheme standalone/>
         </Padding>
         <EnvList onTargetSelect={this.handleTargetSelect} onFilterChange={this.props.onFilterChange} include={this.getInclude()} noFetch filter/>
       </div>

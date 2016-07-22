@@ -21,7 +21,14 @@ const SearchBar = React.createClass({
     }),
     noRedirect: PropTypes.bool,
     id: PropTypes.string,
-    scheme: PropTypes.string
+    scheme: PropTypes.string,
+    useScheme: PropTypes.bool,
+    standalone: PropTypes.bool
+  },
+  getDefaultProps() {
+    return {
+      useScheme: false
+    };
   },
   getInitialState() {
     return {
@@ -49,18 +56,31 @@ const SearchBar = React.createClass({
       focused: !!focused
     });
   },
+  renderInput(){
+    return (
+      <Input className={cx(style.searchInput, this.props.useScheme && style[this.props.scheme])} placeholder="Search" onChange={this.handleSearch} data={this.state} path="string" id="universal-search" onFocus={this.handleFocus} onBlur={this.handleFocus.bind(null, false)} scheme={this.props.useScheme && this.props.scheme || undefined}>
+        <Search className={cx('icon', style.mag, style[this.props.scheme])} fill="white"/>
+      </Input>
+    );
+  },
+  renderInner(){
+    if (this.props.standalone){
+      return this.renderInput();
+    }
+    return (
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            {this.renderInput()}
+          </Col>
+        </Row>
+      </Grid>
+    );
+  },
   render(){
     return (
       <label htmlFor="universal-search" className={cx(style.label, {[style.labelFocused]: this.state.focused}, style[this.props.scheme])}>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Input className={style.searchInput} placeholder="Search" onChange={this.handleSearch} data={this.state} path="string" id="universal-search" onFocus={this.handleFocus} onBlur={this.handleFocus.bind(null, false)}>
-                <Search className={cx('icon', style.mag, style[this.props.scheme])} fill="white"/>
-              </Input>
-            </Col>
-          </Row>
-        </Grid>
+        {this.renderInner()}
       </label>
     );
   }

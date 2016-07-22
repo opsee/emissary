@@ -20,7 +20,7 @@ const GroupItemList = React.createClass({
     limit: PropTypes.number,
     ids: PropTypes.array,
     type: PropTypes.string,
-    title: PropTypes.string,
+    title: PropTypes.bool,
     instanceIds: PropTypes.array,
     //display nothing if no groups found
     noFallback: PropTypes.bool,
@@ -86,7 +86,7 @@ const GroupItemList = React.createClass({
     }
   },
   getGroups(noFilter){
-    let data = this.props.groups || this.props.redux.env.groups[this.props.type];
+    let data = this.props.groups || this.props.redux.env.groups[this.props.type] || new List();
     data = data.sortBy(item => {
       return typeof item.get('health') === 'number' ? item.get('health') : 101;
     });
@@ -109,12 +109,28 @@ const GroupItemList = React.createClass({
     data = data || new List();
     return data.slice(this.props.offset, this.props.limit);
   },
+  getTitle(){
+    switch (this.props.type){
+    case 'elb':
+      return 'ELBs';
+    case 'ecs':
+      return 'EC2 Container Services (ECS)';
+    case 'asg':
+      return 'Autoscaling Groups';
+    case 'security':
+      return 'Security Groups';
+    default:
+      return this.props.type || '';
+    }
+  },
   getEnvLink(){
     switch (this.props.type){
     case 'elb':
       return '/env-groups-elb';
     case 'asg':
       return '/env-groups-asg';
+    case 'ecs':
+      return '/env-groups-ecs';
     default:
       return '/env-groups-security';
     }
@@ -150,7 +166,7 @@ const GroupItemList = React.createClass({
       numbers = '';
     }
     if (this.props.title && (!this.props.noFallback || (this.props.noFallback && this.getGroups().size))){
-      return <Heading level={3}><Link to={this.getEnvLink()}><Color c="textSecondary" scheme={this.props.scheme}>{this.props.title} {numbers}</Color></Link></Heading>;
+      return <Heading level={3}><Link to={this.getEnvLink()}><Color c="textSecondary" scheme={this.props.scheme}>{this.getTitle()} {numbers}</Color></Link></Heading>;
     }
     return null;
   },
