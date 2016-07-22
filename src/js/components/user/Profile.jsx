@@ -158,7 +158,6 @@ const Profile = React.createClass({
   },
   renderCostEstimate(){
     if (!this.isTeam()){
-      const user = this.props.redux.user.toJS();
       const team = this.props.redux.team.toJS();
       if (team.subscription_quantity){
         let unit = 5;

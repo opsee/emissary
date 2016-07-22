@@ -63,7 +63,10 @@ const Opsee = React.createClass({
     redux: PropTypes.object,
     envActions: PropTypes.shape({
       getBastions: PropTypes.func.isRequired
-    })
+    }),
+    teamActions: PropTypes.shape({
+      getTeam: PropTypes.func.isRequired
+    }).isRequired
   },
   componentWillMount(){
     this.props.appActions.initialize();
