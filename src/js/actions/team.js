@@ -28,6 +28,11 @@ export function getTeam(callback = () => {}){
               subscription_plan
               subscription_status
               subscription_quantity
+              next_invoice {
+                amount
+                date
+                paid
+              }
               users {
                 status
                 name

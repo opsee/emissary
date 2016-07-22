@@ -160,7 +160,7 @@ const Profile = React.createClass({
     if (!this.isTeam()){
       const user = this.props.redux.user.toJS();
       const team = this.props.redux.team.toJS();
-      if ((user.perms.admin || user.perms.billing) && team.subscription_quantity){
+      if (team.subscription_quantity){
         let unit = 5;
         if (team.subscription_plan === 'team_monthly'){
           unit = 10;
