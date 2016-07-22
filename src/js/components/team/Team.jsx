@@ -33,6 +33,9 @@ const Profile = React.createClass({
     redux: PropTypes.shape({
       team: PropTypes.object.isRequired,
       user: PropTypes.object.isRequired,
+      checks: PropTypes.shape({
+        checks: PropTypes.object
+      }).isRequired,
       asyncActions: PropTypes.shape({
         teamGet: PropTypes.object,
         onboardGetDefaultNotifs: PropTypes.object.isRequired

@@ -43,6 +43,9 @@ const Profile = React.createClass({
       }),
       onboard: PropTypes.shape({
         defaultNotifs: PropTypes.array.isRequired
+      }).isRequired,
+      checks: PropTypes.shape({
+        checks: PropTypes.object
       }).isRequired
     }).isRequired,
     location: PropTypes.shape({
