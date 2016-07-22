@@ -38,12 +38,24 @@ export const statics = {
     default:
       break;
     }
+    let target = data.target;
+    if (target.type.match('ecs')){
+      let stringArr = (target.id || '').split('/');
+      if (stringArr.length === 4){
+        target = _.assign(target, {
+          cluster: stringArr[0],
+          service: stringArr[1],
+          container: stringArr[2],
+          containerPort: _.parseInt(stringArr[3], 10)
+        });
+      }
+    }
     const newData = _.assign({}, data, result.getFormattedData(data, true), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
       }),
       state: checkState,
-      target: new Map(data.target),
+      target: new Map(target),
       assertions: new List(data.assertions),
       type: !!_.get(data, 'spec.metrics') ? 'cloudwatch' : 'http'
     });
