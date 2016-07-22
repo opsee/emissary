@@ -8,7 +8,9 @@ import {
   InstanceRds,
   GroupSecurity,
   GroupElb,
-  GroupAsg
+  GroupAsg,
+  GroupEcs,
+  TaskDefinition
 } from '../modules/schemas';
 import {
   ENV_GET_BASTIONS,
@@ -19,6 +21,9 @@ import {
   GET_GROUPS_ASG,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
+  GET_GROUP_ECS,
+  GET_GROUPS_ECS,
+  GET_TASK_DEFINITION,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
@@ -26,6 +31,7 @@ import {
   GET_METRIC_RDS,
   GET_METRIC_ECC,
   GET_METRIC_ASG,
+  GET_METRIC_ECS,
   ENV_SET_FILTERED,
   AWS_REBOOT_INSTANCES,
   AWS_START_INSTANCES,
@@ -48,7 +54,12 @@ const statics = {
   },
   setResultMeta(item, checks, toMatch = []){
     let foundChecks = _.filter(checks, r => {
-      return item.get('id') === r.target.id;
+      let arr = [item.get('id') === r.target.id];
+      if (item && typeof item.type === 'string' && item.type.match('ecs')){
+        const container = _.chain(r.target.id).thru(a => (a || '').split('/')).get(1).value();
+        arr.push(_.last((item.id || '').split('/')) === container);
+      }
+      return _.some(arr);
       // return toMatch.indexOf(r.target.id) > -1;
     });
 
@@ -67,7 +78,7 @@ const statics = {
 
     //this seems wacky but,
     //we use checks instead of results for determining health for such things
-    if (item.type.match('elb|security|asg')){
+    if (item.type.match('elb|security|asg|ecs')){
       foundResults = foundChecks.map(check => {
         return _.assign(check, {
           passing: _.chain(check).get('results').map(r => {
@@ -111,6 +122,11 @@ const statics = {
     }
     data = data.set('state', state);
     return data;
+  },
+  ecsId(data = {}, toUnescape){
+    const clusterName = _.last((data.ClusterArn || '').split('/'));
+    const str = `${clusterName}/${data.ServiceName}`;
+    return toUnescape ? unescape(str) : str;
   },
   getGroupSecuritySuccess(state, data = []){
     const arr = state.groups.security;
@@ -194,6 +210,49 @@ const statics = {
       return statics.setResultMeta(group, checks, toMatch);
     });
   },
+  getGroupEcsSuccess(state, data = []){
+    const arr = state.groups.ecs;
+    const single = statics.groupEcsFromJS(state, _.head(data));
+    return statics.updateArray(arr, single);
+  },
+  getGroupsEcsSuccess(state, data = []){
+    const oldItems = state.groups.ecs.toJS();
+    let newData =
+    _.chain(data)
+    .map(newItem => _.assign(newItem, {id: statics.ecsId(newItem)}))
+    .map(newItem => {
+      //don't overwrite metrics with empty obj if we already have them
+      const oldItem = _.find(oldItems, item => item.id === newItem.id) || {};
+      const metrics = _.assign(oldItem.metrics, newItem.metrics);
+      return _.assign(oldItem, newItem, {metrics});
+    })
+    .sortBy(d => {
+      return (d.ServiceArn || '').toLowerCase();
+    }).value();
+
+    const ecs = fromJS(newData.map(g => {
+      return statics.groupEcsFromJS(state, g);
+    })) || new List();
+    let newState = _.assign({}, state, {groups: _.assign({}, state.groups, {ecs})});
+    return statics.getGroupEcsResults(newState, state.checks);
+  },
+  getGroupEcsResults(state, checks = state.checks){
+    return state.groups.ecs.map(group => {
+      let toMatch = [group.id];
+      // toMatch = toMatch.concat(_.map(group.Instances, 'InstanceId'));
+      return statics.setResultMeta(group, checks, toMatch);
+    });
+  },
+  groupSecurityFromJS(state, data = {}){
+    let newData = _.cloneDeep(data);
+    newData = _.assign(newData, {
+      id: newData.GroupId,
+      name: newData.GroupName,
+      checks: new List(newData.checks || []),
+      Instances: new List((newData.Instances || []).map(i => new Map(i)))
+    });
+    return new GroupSecurity(newData);
+  },
   groupElbFromJS(state, data = {}){
     let newData = _.assign({}, data);
     newData = _.assign(newData, {
@@ -208,16 +267,6 @@ const statics = {
     }
     return new GroupElb(newData);
   },
-  groupSecurityFromJS(state, data = {}){
-    let newData = _.cloneDeep(data);
-    newData = _.assign(newData, {
-      id: newData.GroupId,
-      name: newData.GroupName,
-      checks: new List(newData.checks || []),
-      Instances: new List((newData.Instances || []).map(i => new Map(i)))
-    });
-    return new GroupSecurity(newData);
-  },
   groupAsgFromJS(state, data = {}){
     let newData = _.cloneDeep(data);
     newData = _.assign(newData, {
@@ -226,6 +275,13 @@ const statics = {
       Instances: new List((newData.Instances || []).map(i => new Map(i)))
     });
     return new GroupAsg(newData);
+  },
+  groupEcsFromJS(state, data = {}){
+    const newData = _.assign({}, data, {
+      id: statics.ecsId(data),
+      name: data.ServiceName
+    });
+    return new GroupEcs(newData);
   },
   getASGMetricsSuccess(state, groups){
     const arr = state.groups.asg;
@@ -237,6 +293,18 @@ const statics = {
     let metrics = _.assign((oldJS.metrics || {}), data.metrics);
     const obj = _.assign(old.toJS(), data, {metrics});
     return statics.getGroupsAsgSuccess(state, [obj]);
+  },
+  getECSMetricsSuccess(state, groups){
+    const arr = state.groups.ecs;
+    let data = groups[0];
+    data.tags = ['metrics'];
+    const old = arr.find(item => {
+      return item.get('id') === statics.ecsId(data);
+    }) || new GroupEcs();
+    const oldJS = old.toJS();
+    let metrics = _.assign((oldJS.metrics || {}), data.metrics);
+    const obj = _.assign(old.toJS(), data, {metrics});
+    return statics.getGroupsEcsSuccess(state, [obj]);
   },
   getInstanceEccSuccess(state, data = []){
     const arr = state.instances.ecc;
@@ -278,7 +346,15 @@ const statics = {
     return statics.updateArray(arr, single);
   },
   getInstancesRdsSuccess(state, data){
+    const oldItems = state.instances.rds.toJS();
     let newData = _.chain(data)
+    .map(newItem => _.assign(newItem, {id: newItem.DBInstanceIdentifier}))
+    .map(newItem => {
+      //don't overwrite metrics with empty obj if we already have them
+      const oldItem = _.find(oldItems, item => item.id === newItem.id) || {};
+      const metrics = _.assign(oldItem.metrics, newItem.metrics);
+      return _.assign(oldItem, newItem, {metrics});
+    })
     .map(d => statics.instanceRdsFromJS(state, d))
     .sortBy(i => {
       return i.name.toLowerCase();
@@ -301,8 +377,8 @@ const statics = {
       return item.get('id') === data.DBInstanceIdentifier;
     }) || new InstanceRds();
     const oldJS = old.toJS();
-    let metrics = _.assign((oldJS.metrics || {}), data.metrics);
-    const obj = _.assign(old.toJS(), data, {metrics});
+    let metrics = _.assign({}, (oldJS.metrics || {}), data.metrics);
+    const obj = _.assign({}, old.toJS(), data, {metrics});
     return statics.getInstancesRdsSuccess(state, [obj]);
   },
   getCreatedTime(time){
@@ -325,18 +401,6 @@ const statics = {
       data.VpcSecurityGroups = new List(data.VpcSecurityGroups.map(g => fromJS(g)));
     }
     data.meta = fromJS(data.meta);
-
-    //let's keep the metrics we grabbed from other places
-    const arr = state.instances.rds;
-    let old = arr.find(i => {
-      return i.get('id') === data.id;
-    });
-    old = old ? old.toJS() : null;
-    let metrics = {};
-    if (old && old.metrics && _.keys(old.metrics).length){
-      metrics = _.assign(old.metrics, data.metrics || {});
-    }
-    data = _.assign(data, {metrics});
 
     return new InstanceRds(data);
   },
@@ -365,7 +429,8 @@ const initial = {
     security: new List(),
     rds: new List(),
     elb: new List(),
-    asg: new List()
+    asg: new List(),
+    ecs: new List()
   },
   instances: {
     ecc: new List(),
@@ -376,13 +441,15 @@ const initial = {
       security: new List(),
       rds: new List(),
       elb: new List(),
-      asg: new List()
+      asg: new List(),
+      ecs: new List()
     },
     instances: {
       ecc: new List(),
       rds: new List()
     }
   },
+  taskDefinitions: new List(),
   activeBastion: null,
   bastions: [],
   awsActionHistory: [],
@@ -438,6 +505,39 @@ export default handleActions({
       const filtered = statics.getNewFiltered(asg, state, action, 'groups.asg');
       const groups = _.assign({}, state.groups, {asg});
       return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_GROUP_ECS]: {
+    next(state, action){
+      //TODO remove when there is only one in the array (backend err)
+      const dataArr = (action.payload.data || []).map(item => {
+        return _.assign(item, {
+          id: statics.ecsId(item, true)
+        });
+      });
+      const arr = _.filter(dataArr, {id: action.payload.id});
+      const ecs = statics.getGroupEcsSuccess(state, arr);
+      const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
+      const groups = _.assign({}, state.groups, {ecs});
+      return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_GROUPS_ECS]: {
+    next(state, action){
+      const ecs = statics.getGroupsEcsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
+      const groups = _.assign({}, state.groups, {ecs});
+      return _.assign({}, state, {groups, filtered});
+    },
+    throw: yeller.reportAction
+  },
+  [GET_TASK_DEFINITION]: {
+    next(state, action){
+      const item = new TaskDefinition(fromJS(_.assign({}, action.payload.data, {id: action.payload.id})));
+      const taskDefinitions = statics.updateArray(state.taskDefinitions, item);
+      return _.assign({}, state, {taskDefinitions});
     },
     throw: yeller.reportAction
   },
@@ -522,6 +622,15 @@ export default handleActions({
     },
     throw: yeller.reportAction
   },
+  [GET_METRIC_ECS]: {
+    next(state, action) {
+      const ecs = statics.getECSMetricsSuccess(state, action.payload.data);
+      const filtered = statics.getNewFiltered(ecs, state, action, 'groups.ecs');
+      const groups = _.assign({}, state.groups, {ecs});
+      return _.assign({}, state, { groups, filtered });
+    },
+    throw: yeller.reportAction
+  },
   [ENV_GET_BASTIONS]: {
     next(state, action){
       const bastions = action.payload;
@@ -544,7 +653,8 @@ export default handleActions({
         groups: {
           security: itemsFilter(groups.security, action.payload, 'groups.security'),
           elb: itemsFilter(groups.elb, action.payload, 'groups.elb'),
-          asg: itemsFilter(groups.asg, action.payload, 'groups.asg')
+          asg: itemsFilter(groups.asg, action.payload, 'groups.asg'),
+          ecs: itemsFilter(groups.ecs, action.payload, 'groups.ecs')
         },
         instances: {
           ecc: itemsFilter(instances.ecc, action.payload, 'instances.ecc'),
@@ -561,12 +671,13 @@ export default handleActions({
       const security = statics.getGroupSecurityResults(state, checks);
       const elb = statics.getGroupElbResults(state, checks);
       const asg = statics.getGroupAsgResults(state, checks);
+      const ecs = statics.getGroupEcsResults(state, checks);
 
       const ecc = statics.getInstanceEccResults(state, checks);
       const rds = statics.getInstanceRdsResults(state, checks);
 
       return _.assign({}, state, {checks}, {
-        groups: {security, elb, asg},
+        groups: {security, elb, asg, ecs},
         instances: {ecc, rds}
       });
     }

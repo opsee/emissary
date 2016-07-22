@@ -47,14 +47,15 @@ const CheckCreate = React.createClass({
     }).isRequired,
     userActions: PropTypes.shape({
       putData: PropTypes.func
-    }),
+    }).isRequired,
     envActions: PropTypes.shape({
       getGroupsSecurity: PropTypes.func,
       getGroupsElb: PropTypes.func,
       getGroupsAsg: PropTypes.func,
       getInstancesEcc: PropTypes.func,
-      getInstancesRds: PropTypes.func
-    })
+      getInstancesRds: PropTypes.func,
+      getGroupsEcs: PropTypes.func
+    }).isRequired
   },
   componentWillMount(){
     this.props.actions.testCheckReset();
@@ -62,6 +63,7 @@ const CheckCreate = React.createClass({
     if (!this.props.redux.asyncActions.getGroupsSecurity.history.length && !!this.props.redux.env.activeBastion){
       this.props.envActions.getGroupsSecurity();
       this.props.envActions.getGroupsAsg();
+      this.props.envActions.getGroupsEcs();
       this.props.envActions.getGroupsElb();
       this.props.envActions.getInstancesEcc();
       this.props.envActions.getInstancesRds();
@@ -94,13 +96,16 @@ const CheckCreate = React.createClass({
         });
       }
     }
-    const initial = _.chain(data).defaults({
+    let initial = _.chain(data).defaults({
       target: {
         name: config.checkDefaultTargetName,
         type: config.checkDefaultTargetType,
         id: config.checkDefaultTargetId
       }
     }).value();
+    if (initial.target.type === 'ecs'){
+      initial.target.service = _.chain(data).get('target.id').thru(a => (a || '').split('/')).last().value() || undefined;
+    }
     return {
       check: new Check(initial).toJS(),
       filter: null

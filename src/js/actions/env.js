@@ -9,6 +9,9 @@ import {
   GET_GROUPS_ASG,
   GET_GROUP_ELB,
   GET_GROUPS_ELB,
+  GET_GROUP_ECS,
+  GET_GROUPS_ECS,
+  GET_TASK_DEFINITION,
   GET_INSTANCE_ECC,
   GET_INSTANCES_ECC,
   GET_INSTANCE_RDS,
@@ -16,6 +19,7 @@ import {
   GET_METRIC_RDS,
   GET_METRIC_ECC,
   GET_METRIC_ASG,
+  GET_METRIC_ECS,
   ENV_GET_BASTIONS,
   ENV_SELECT_TOGGLE,
   ENV_GET_ALL,
@@ -48,6 +52,17 @@ const snippets = {
               Instances {
                 InstanceId
               }`
+    },
+    ecs: {
+      short: `ServiceName
+              Status
+              ServiceName
+              ClusterArn
+              TaskDefinition
+              Deployments {
+                TaskDefinition
+              }
+              `
     }
   },
   instances: {
@@ -275,6 +290,131 @@ export function getGroupsElb(){
     });
   };
 }
+
+export function getGroupEcs(id){
+  // const id = ident.replace('»', '\0');
+  //.replace(/\//g, '%2F');
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUP_ECS,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .query({type: GET_GROUP_ECS})
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "ecs_service", id: "${id}"){
+                    ... on ecsService {
+                      DesiredCount
+                      Status
+                      Deployments {
+                        RunningCount
+                        Status
+                        TaskDefinition
+                        UpdatedAt
+                        CreatedAt
+                        DesiredCount
+                        Id
+                        PendingCount
+                      }
+                      RoleArn
+                      ServiceArn
+                      ClusterArn
+                      Events {
+                        CreatedAt
+                        Id
+                        Message
+                      }
+                      LoadBalancers {
+                        ContainerName
+                        ContainerPort
+                        LoadBalancerName
+                      }
+                      CreatedAt
+                      PendingCount
+                      RunningCount
+                      TaskDefinition
+                      DeploymentConfiguration {
+                        MaximumPercent
+                        MinimumHealthyPercent
+                      }
+                      ServiceName
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search, id})
+    });
+  };
+}
+
+export function getGroupsEcs(){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_GROUPS_ECS,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .query({type: GET_GROUPS_ECS})
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+              region(id: $region) {
+                vpc(id: $vpc) {
+                  groups(type: "ecs_service"){
+                    ... on ecsService {
+                      ${snippets.groups.ecs.short}
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getTaskDefinition(string = ''){
+  const id = _.last(string.split('/')) || '';
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_TASK_DEFINITION,
+      payload: graphPromise('region.task_definition', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .query({type: GET_TASK_DEFINITION})
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!){
+              region(id: $region) {
+                task_definition(id: "${id}") {
+                  TaskDefinitionArn
+                  ContainerDefinitions {
+                    Name
+                    PortMappings {
+                      ContainerPort
+                      HostPort
+                      Protocol
+                    }
+                  }
+                }
+              }
+            }`,
+          variables: _.pick(state().env, ['region'])
+        });
+      }, {search: state().search, id})
+    });
+  };
+}
+
 
 export function getInstanceEcc(id){
   return (dispatch, state) => {
@@ -545,6 +685,47 @@ export function getMetricASG(id, metric){
                   ... on autoscalingGroup {
                     ${snippets.groups.asg.short}
                     metrics{
+                      ${metric} {
+                        metrics{
+                          name
+                          value
+                          unit
+                          timestamp
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+          variables: _.pick(state().env, ['region', 'vpc'])
+        });
+      }, {search: state().search})
+    });
+  };
+}
+
+export function getMetricECS(id, metric){
+  return (dispatch, state) => {
+    dispatch({
+      type: GET_METRIC_ECS,
+      payload: graphPromise('region.vpc.groups', () => {
+        return request
+        .post(`${config.services.compost}`)
+        .query({type: GET_METRIC_ECS})
+        .set('Authorization', state().user.get('auth'))
+        .send({
+          query: `query Query($region: String!, $vpc: String!){
+            region(id: $region) {
+              vpc(id: $vpc) {
+                groups(type: "ecs_service", id: "${id}"){
+                  ... on ecsService {
+                    RoleArn
+                    ServiceArn
+                    ClusterArn
+                    ServiceName
+                    metrics {
                       ${metric} {
                         metrics{
                           name

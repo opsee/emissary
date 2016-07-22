@@ -54,6 +54,13 @@ const StateGraph = React.createClass({
     }
   },
   renderInner(){
+    return (
+      <div>
+        {JSON.stringify(this.props.transitions)}
+      </div>
+    )
+  },
+  renderInnerDang(){
     const data = this.props.transitions || [];
     if (!data.length) {
       return null;

@@ -121,6 +121,31 @@ export const GroupElb = Record(_.assign({}, baseEnvItem, {
   ListenerDescriptions: List()
 }));
 
+export const GroupEcs = Record(_.assign({}, baseEnvItem, {
+  tags: List(),
+  type: 'ecs',
+  DesiredCount: undefined,
+  DeploymentConfiguration: new Map(),
+  Deployments: new List(),
+  ClusterArn: undefined,
+  Events: new List(),
+  LoadBalancers: new List(),
+  PendingCount: new List(),
+  RoleArn: undefined,
+  RunningCount: undefined,
+  ServiceArn: undefined,
+  ServiceName: undefined,
+  Status: undefined,
+  TaskDefinition: undefined,
+  metrics: Map()
+}));
+
+export const TaskDefinition = Record({
+  ContainerDefinitions: new List(),
+  TaskDefinitionArn: undefined,
+  id: undefined
+});
+
 export const Check = Record({
   tags: new List(),
   selected: false,
@@ -130,7 +155,11 @@ export const Check = Record({
   target: new Map({
     name: config.checkDefaultTargetName,
     type: config.checkDefaultTargetType,
-    id: config.checkDefaultTargetId
+    id: config.checkDefaultTargetId,
+    cluster: undefined,
+    service: undefined,
+    container: undefined,
+    containerPort: undefined
   }),
   assertions: new List(),
   notifications: new List(),

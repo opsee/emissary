@@ -165,6 +165,10 @@ export function getCheck(id){
               metrics (metric_name: "request_latency", start_time: ${start2}, end_time: ${end}, aggregation: {unit: "minutes", period: 1, type:max}){
                 value
                 timestamp
+                tags {
+                  name
+                  value
+                }
               }
               state_transitions(start_time: ${start6}, end_time: ${end}){
                 from
@@ -333,20 +337,26 @@ function formatCloudwatchCheck(data){
     };
   });
   check.cloudwatch_check = {metrics};
-  check.target.type = check.target.type === 'rds' ? 'dbinstance' : check.target.type;
-  check.target.type = check.target.type === 'ecc' ? 'instance' : check.target.type;
+  const {type} = check.target;
+  check.target.type = type === 'rds' ? 'dbinstance' : type;
+  check.target.type = type === 'ecc' ? 'instance' : type;
+  check.target.type = type === 'ecs' ? 'ecs_service' : type;
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   return check;
 }
 
 function formatHttpCheck(data, forTestCheck){
   let check = _.cloneDeep(data);
-  const spec = check.spec;
-  if (check.target.type === 'security'){
+  const {spec, target} = check;
+  if (target.type === 'security'){
     check.target.type = 'sg';
   }
-  if (check.target.type.match('^EC2$|^ecc$')){
+  if (target.type.match('^EC2$|^ecc$')){
     check.target.type = 'instance';
+  }
+  if (target.type.match('ecs')){
+    check.target.id = `${target.cluster}/${target.service}/${target.container}/${target.containerPort}`;
+    check.target.type = 'ecs_service';
   }
   check.target = _.pick(check.target, ['id', 'name', 'type']);
   const assertions = (check.assertions || []).map(a => {
