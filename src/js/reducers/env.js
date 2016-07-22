@@ -535,8 +535,15 @@ export default handleActions({
   },
   [GET_TASK_DEFINITION]: {
     next(state, action){
+      let {data} = action.payload;
+      if (process.env.NODE_ENV === 'debug'){
+        data.ContainerDefinitions.push({
+          Name: 'foo',
+          PortMappings: [{ContainerPort: 3030, HostPort: 9090}, {ContainerPort: 4040, HostPort: 5000}]
+        });
+      }
       const item = new TaskDefinition(fromJS(_.assign({}, action.payload.data, {id: action.payload.id})));
-      const taskDefinitions = statics.updateArray(state.taskDefinitions, item);
+      let taskDefinitions = statics.updateArray(state.taskDefinitions, item);
       return _.assign({}, state, {taskDefinitions});
     },
     throw: yeller.reportAction
