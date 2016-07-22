@@ -186,7 +186,7 @@ const Profile = React.createClass({
                 <strong>Monthly Cost Estimate</strong><br/>
               </Col>
               <Col xs={12} sm={8}>
-                {team.subscription_quantity} checks at ${unit} per check = ${(unit * team.subscription_quantity).toFixed(2)}
+                {this.props.redux.checks.checks.size} checks at ${unit} per check = ${(unit * this.props.redux.checks.checks.size).toFixed(2)}
               </Col>
             </Row>
           </td>

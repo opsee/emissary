@@ -153,6 +153,33 @@ const Profile = React.createClass({
     }
     return null;
   },
+  renderCostEstimate(){
+    if (!this.isTeam()){
+      const user = this.props.redux.user.toJS();
+      const team = this.props.redux.team.toJS();
+      if ((user.perms.admin || user.perms.billing) && team.subscription_quantity){
+        let unit = 5;
+        if (team.subscription_plan === 'team_monthly'){
+          unit = 10;
+        }
+        return (
+          <tr>
+            <td colSpan={2}>
+              <Row>
+                <Col xs={12} sm={4}>
+                  <strong>Monthly Cost Estimate</strong><br/>
+                </Col>
+                <Col xs={12} sm={8}>
+                  {this.props.redux.checks.checks.size} checks at ${unit} per check = ${(unit * this.props.redux.checks.checks.size).toFixed(2)}
+                </Col>
+              </Row>
+            </td>
+          </tr>
+        );
+      }
+    }
+    return null;
+  },
   renderAWSArea(){
     if (!this.isTeam()){
       if (!!this.props.redux.env.activeBastion){
@@ -326,6 +353,7 @@ const Profile = React.createClass({
                       </tr>
                       {this.renderPlan()}
                       {this.renderBilling()}
+                      {this.renderCostEstimate()}
                       {this.renderAWSArea()}
                       {this.renderSlackArea()}
                       {this.renderPagerdutyArea()}
