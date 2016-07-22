@@ -72,8 +72,12 @@ const CheckCreateRequest = React.createClass({
       });
       this.runChange(data);
     }
-    if (check.target.type === 'ecs'){
-      this.props.envActions.getTaskDefinition(check.target.TaskDefinition || check.target.id);
+    if (check.target.type.match('ecs')){
+      let tester = check.target.TaskDefinition || check.target.id;
+      if (this.props.renderAsInclude){
+        tester = _.chain(check.target.id || '').thru(a => a.split('/')).get(2).value();
+      }
+      this.props.envActions.getTaskDefinition(tester);
       if (!check.target.cluster){
         check.target.cluster = _.chain(check).get('target.id').thru(a => (a || '').split('/')).head().value() || undefined;
       }
@@ -125,7 +129,11 @@ const CheckCreateRequest = React.createClass({
   getContainerPorts(props = this.props, check = this.props.check){
     let item = props.redux.env.taskDefinitions.find(t => {
       // const id = _.last((check.target.id || '').split('/'));
-      return t.get('TaskDefinitionArn') === check.target.TaskDefinition;
+      const arr = [
+        t.get('TaskDefinitionArn') === check.target.TaskDefinition,
+        t.get('id') === _.chain(check.target.id || '').thru(a => a.split('/')).get(2).value()
+      ];
+      return _.some(arr);
     }) || new Map();
     item = item.toJS();
     const container = _.chain(item)
@@ -217,29 +225,29 @@ const CheckCreateRequest = React.createClass({
     let check = _.cloneDeep(this.props.check);
     check.target.container = name;
     const ports = this.getContainerPorts(this.props, check);
-    if (!check.spec.port || check.spec.port === 80){
-      check.spec.port = _.chain(ports).head().get('HostPort').value();
-      check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
-    }
+    check.spec.port = _.chain(ports).head().get('HostPort').value();
+    check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
     this.runChange(check);
   },
   setInitialContainerOpts(props = this.props){
     const {target} = props.check;
     const {taskDefinitions} = props.redux.env;
-    if (target.type === 'ecs' && !target.containerPort && taskDefinitions.size && !this.state.hasSetContainer){
+    if (target.type.match('ecs') && !target.containerPort && taskDefinitions.size && !this.state.hasSetContainer){
       const container = _.chain(taskDefinitions.toJS())
-      .find({
-        TaskDefinitionArn: target.TaskDefinition
-      })
+      .find(
+        target.TaskDefinition && {
+          TaskDefinitionArn: target.TaskDefinition
+        } || {
+          Name: _.chain(target.id || '').thru(a => a.split('/')).get(2).value()
+        }
+      )
       .get('ContainerDefinitions[0].Name')
       .value();
       let check = _.cloneDeep(props.check);
       check.target.container = container;
       const ports = this.getContainerPorts(props, check);
-      if (!check.spec.port || check.spec.port === 80){
-        check.spec.port = _.chain(ports).head().get('HostPort').value();
-        check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
-      }
+      check.spec.port = _.chain(ports).head().get('HostPort').value();
+      check.target.containerPort = _.chain(ports).head().get('ContainerPort').value();
       if (check.target.container){
         this.setState({
           hasSetContainer: true
@@ -362,11 +370,14 @@ const CheckCreateRequest = React.createClass({
     return null;
   },
   renderContainerPicker(){
-    if (this.props.check.target.type === 'ecs'){
+    if (this.props.check.target.type.match('ecs')){
       let item = this.props.redux.env.taskDefinitions.find(t => {
-        // const id = _.last((this.props.check.target.id || '').split('/'));
-        const id = this.props.check.target.service;
-        return t.get('id') === id;
+        const arr = [
+          t.get('TaskDefinitionArn') === this.props.check.target.TaskDefinition,
+          t.get('id') === this.props.check.target.container,
+          _.map(t.get('ContainerDefinitions').toJS(), 'Name').indexOf(this.props.check.target.container) > -1
+        ];
+        return _.some(arr);
       }) || new Map();
       item = item.toJS();
       if (item && item.id){
@@ -377,7 +388,9 @@ const CheckCreateRequest = React.createClass({
             item.ContainerDefinitions.map(def => {
               const name = _.get(def, 'Name') || '';
               return (
-                <Button color="primary" flat={!(this.props.check.target.container === name)} onClick={this.setDataFromContainerName.bind(null, name)}>{name}</Button>
+                <Padding inline r={1}>
+                  <Button color="primary" flat={!(this.props.check.target.container === name)} onClick={this.setDataFromContainerName.bind(null, name)}>{name}</Button>
+                </Padding>
               );
             })
           }
@@ -456,7 +469,7 @@ const CheckCreateRequest = React.createClass({
     );
   },
   renderPort(){
-    if (this.props.check.target.type !== 'ecs'){
+    if (!this.props.check.target.type.match('ecs')){
       return <Input data={this.props.check} path="spec.port" onChange={this.runChange} label="Port*" placeholder="e.g. 8080"/>;
     }
     if (!this.props.check.target.container){
@@ -474,7 +487,9 @@ const CheckCreateRequest = React.createClass({
             {
               _.map(ports, 'HostPort').map(port => {
                 return (
-                  <Button color="primary" flat={!(this.props.check.spec.port === port)} onClick={this.handleSelectHostPort.bind(null, port)}>{port}</Button>
+                  <Padding inline r={1}>
+                    <Button color="primary" flat={!(this.props.check.spec.port === port)} onClick={this.handleSelectHostPort.bind(null, port)}>{port}</Button>
+                  </Padding>
                 );
               })
             }
@@ -484,7 +499,9 @@ const CheckCreateRequest = React.createClass({
             {
               _.map(ports, 'ContainerPort').map(port => {
                 return (
-                  <Button color="primary" flat={!(this.props.check.target.containerPort === port)} onClick={this.handleSelectContainerPort.bind(null, port)}>{port}</Button>
+                  <Padding inline r={1}>
+                    <Button color="primary" flat={!(this.props.check.target.containerPort === port)} onClick={this.handleSelectContainerPort.bind(null, port)}>{port}</Button>
+                  </Padding>
                 );
               })
             }
