@@ -18,6 +18,7 @@ import {
 import {SlackInfo, PagerdutyInfo} from '../integrations';
 import {NotificationItemList} from '../checks';
 import style from './team.css';
+import PlanInfo from './PlanInfo';
 
 const Profile = React.createClass({
   propTypes: {
@@ -89,13 +90,6 @@ const Profile = React.createClass({
       return null;
     })
     .value();
-  },
-  getPlan(team){
-    let plan = team.subscription_plan;
-    if (plan === 'beta'){
-      plan = 'Team (beta)';
-    }
-    return _.capitalize(plan);
   },
   runShowAll(e){
     e.preventDefault();
@@ -172,6 +166,26 @@ const Profile = React.createClass({
         </td>
       </tr>
     );
+  },
+  renderCCDetails(team = this.props.redux.team.toJS()){
+    const cc = team.credit_card_info;
+    if (_.keys(cc).length){
+      return (
+        <tr>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Credit Card</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Link to="/team/edit">{cc.brand} ****{cc.last4} Exp {cc.exp_month}/{cc.exp_year}</Link>
+              </Col>
+            </Row>
+          </td>
+        </tr>
+      );
+    }
+    return null;
   },
   renderCostEstimate(){
     const user = this.props.redux.user.toJS();
@@ -383,19 +397,9 @@ const Profile = React.createClass({
                           </Row>
                         </td>
                       </tr>
-                      <tr>
-                        <td colSpan={2}>
-                          <Row>
-                            <Col xs={12} sm={4}>
-                              <strong>Subscription Plan</strong><br/>
-                            </Col>
-                            <Col xs={12} sm={8}>
-                              <Link to="/team/edit">{this.getPlan(team)}</Link>
-                            </Col>
-                          </Row>
-                        </td>
-                      </tr>
-                      {this.renderCostEstimate()}
+                    </Table>
+                    <PlanInfo base="team"/>
+                    <Table>
                       {this.renderDefaultNotifications()}
                       {
                         // window.location.href.match('localhost|staging') && (

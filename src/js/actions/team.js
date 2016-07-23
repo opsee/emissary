@@ -28,6 +28,14 @@ export function getTeam(callback = () => {}){
               subscription_plan
               subscription_status
               subscription_quantity
+              subscription_trial_start
+              subscription_trial_end
+              credit_card_info {
+                brand
+                exp_month
+                exp_year
+                last4
+              }
               next_invoice {
                 amount
                 date

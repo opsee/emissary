@@ -12,6 +12,7 @@ import {Color, Heading} from '../type';
 import {PagerdutyInfo, SlackInfo} from '../integrations';
 import {flag} from '../../modules';
 import {NotificationItemList} from '../checks';
+import PlanInfo from '../team/PlanInfo';
 
 import {
   user as actions,
@@ -266,15 +267,37 @@ const Profile = React.createClass({
     );
   },
   renderIntegrations(){
-    if (this.isTeam()){
+    if (!this.isTeam()){
       return (
-        <tr>
-          <td><strong>Integrations</strong></td>
-          <td><Link to="/team">See Team Integrations</Link></td>
-        </tr>
-        );
+        <Padding t={3}>
+          <Heading level={3}>Integrations</Heading>
+          <Table>
+            {this.renderAWSArea()}
+            {this.renderSlackArea()}
+            {this.renderPagerdutyArea()}
+          </Table>
+        </Padding>
+      );
     }
-    return null;
+    return (
+      <Padding t={3}>
+        <Heading level={3}>Integrations</Heading>
+        <Table>
+          <tr>
+            <td colSpan={2}>
+              <Row>
+                <Col xs={12} sm={4}>
+                  <strong>Integrations</strong><br/>
+                </Col>
+                <Col xs={12} sm={8}>
+                  <Link to="/team">See Team Integrations</Link>
+                </Col>
+              </Row>
+            </td>
+          </tr>
+        </Table>
+      </Padding>
+    );
   },
   renderVerified(){
     if (this.props.location.query.verified){
@@ -353,15 +376,14 @@ const Profile = React.createClass({
                           </Row>
                         </td>
                       </tr>
-                      {this.renderPlan()}
-                      {this.renderBilling()}
-                      {this.renderCostEstimate()}
-                      {this.renderAWSArea()}
-                      {this.renderSlackArea()}
-                      {this.renderPagerdutyArea()}
-                      {this.renderIntegrations()}
-                      {this.renderDefaultNotifications()}
                     </Table>
+                    <PlanInfo base="profile"/>
+                    {this.renderIntegrations()}
+                    <Padding t={3}>
+                      <Table>
+                        {this.renderDefaultNotifications()}
+                      </Table>
+                    </Padding>
                   </Padding>
                   <Padding t={3}>
                     <Button flat color="danger" onClick={this.handleLogout}>
