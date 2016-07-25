@@ -119,7 +119,7 @@ const TeamEdit = React.createClass({
                     <Input onChange={this.handleChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
                   </Padding>
                   <PlanInputs onChange={this.handleChange} selected={this.state.subscription_plan}/>
-                  <Padding t={2}>
+                  <Padding t={3}>
                       <Heading level={3}>Team Default Notifications</Heading>
                       <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />
                     </Padding>

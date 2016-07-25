@@ -95,7 +95,7 @@ const ProfileEdit = React.createClass({
   renderNotificationSelection(){
     if (this.props.redux.asyncActions.onboardGetDefaultNotifs.history.length && !this.isTeam()){
       return (
-        <Padding t={1}>
+        <Padding t={3}>
           <Heading level={3}>Default Notifications</Heading>
           <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />
         </Padding>

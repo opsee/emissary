@@ -6,6 +6,7 @@ import CreditCard from './CreditCard';
 import RadioSelect from './RadioSelect';
 import {Padding} from '../layout';
 import {Button} from '../forms';
+import {Heading} from '../type';
 
 const PlanInputs = React.createClass({
   propTypes: {
@@ -95,10 +96,11 @@ const PlanInputs = React.createClass({
   },
   render(){
     return (
-      <div>
+      <Padding t={1}>
+        <Heading level={3}>Plan and Billing</Heading>
         <RadioSelect options={this.getPlans()} path="subscription_plan" data={this.state} onChange={this.handleChange} label="Plan*"/>
         {this.renderCreditCard()}
-      </div>
+      </Padding>
     );
   }
 });
