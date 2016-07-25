@@ -21,7 +21,7 @@ const Result = Record({
   host: undefined,
   passing: undefined,
   responses: List(),
-  time: undefined,
+  timestamp: undefined,
   bastion_id: undefined
 });
 

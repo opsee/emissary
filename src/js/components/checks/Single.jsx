@@ -11,6 +11,7 @@ import {Heading} from '../type';
 import ViewHTTP from './ViewHTTP';
 import ViewCloudwatch from './ViewCloudwatch';
 import {Check} from '../../modules/schemas';
+import {SetInterval} from '../../modules/mixins';
 
 import {
   checks as actions,
@@ -18,6 +19,7 @@ import {
 } from '../../actions';
 
 const CheckSingle = React.createClass({
+  mixins: [SetInterval],
   propTypes: {
     params: PropTypes.object,
     actions: PropTypes.shape({
@@ -36,6 +38,9 @@ const CheckSingle = React.createClass({
   },
   componentWillMount(){
     this.props.actions.getCheck(this.props.params.id);
+    this.setInterval(() => {
+      this.props.actions.getCheck(this.props.params.id);
+    }, 60000);
   },
   getCheck(){
     const {single} = this.props.redux.checks;
@@ -53,11 +58,11 @@ const CheckSingle = React.createClass({
     });
   },
   renderInner(check){
-    if (this.props.redux.asyncActions.getCheck.status === 'pending'){
-      return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
-    } else if (check.get('tags').find(() => 'complete')){
+    if (check.get('tags').find(() => 'complete')){
       const isCloudwatch = _.chain(check.toJS()).get('assertions').head().get('key').value() === 'cloudwatch';
       return isCloudwatch ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check} redux={this.props.redux}/>;
+    } else if (this.props.redux.asyncActions.getCheck.status === 'pending'){
+      return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
     }
     return null;
   },
