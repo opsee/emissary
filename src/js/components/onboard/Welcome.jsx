@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
-import {plain as seed} from 'seedling';
+import cx from 'classnames';
 
 import LogoColor from '../global/LogoColor';
 import {Heading} from '../type';
@@ -20,6 +20,9 @@ const OnboardWelcome = React.createClass({
       user: PropTypes.object.isRequired,
       asyncActions: PropTypes.shape({
         userEdit: PropTypes.object
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
@@ -104,7 +107,7 @@ const OnboardWelcome = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel} style={{background: seed.color.background}}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Grid>
           <Row>
             <Col xs={12}>

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import {
   onboard as actions,
@@ -34,6 +35,9 @@ const LaunchStack = React.createClass({
           region: PropTypes.string
         }),
         regionLaunchURL: PropTypes.string
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       }),
       user: PropTypes.object
     }),
@@ -221,7 +225,7 @@ const LaunchStack = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         {this.renderInner()}
        </div>
     );
