@@ -366,14 +366,6 @@ const Profile = React.createClass({
                         </Row>
                       </td>
                     </tr>
-                    {
-                      // window.location.href.match('localhost|staging') && (
-                      //   <tr>
-                      //     <td><strong>Plan Features</strong></td>
-                      //     <td>{toSentenceSerial(team.features)}</td>
-                      //   </tr>
-                      // )
-                    }
                   </Table>
                   <Padding t={4}>
                     <Row>
@@ -401,22 +393,6 @@ const Profile = React.createClass({
                     <PlanInfo base="team"/>
                     <Table>
                       {this.renderDefaultNotifications()}
-                      {
-                        // window.location.href.match('localhost|staging') && (
-                        //   <tr>
-                        //     <td><strong>Subscription Plan</strong></td>
-                        //     <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
-                        //   </tr>
-                        // )
-                      }
-                      {
-                        // window.location.href.match('localhost|staging') && (
-                        //   <tr>
-                        //     <td><strong>Plan Features</strong></td>
-                        //     <td>{toSentenceSerial(team.features)}</td>
-                        //   </tr>
-                        // )
-                      }
                     </Table>
                   </Padding>
                   <Padding t={4}>
@@ -448,28 +424,6 @@ const Profile = React.createClass({
                       <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
                     </Padding>
                   </Padding>
-                  {
-                    // window.location.href.match('localhost|staging') && (
-                    //   <Padding t={3}>
-                    //     <Heading level={3}>Team Billing</Heading>
-                    //     <Padding b={1} l={1}>
-                    //       MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
-                    //     </Padding>
-                    //     <Table>
-                    //       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
-                    //         return (
-                    //           <tr>
-                    //             <td>
-                    //               <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
-                    //               <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
-                    //             </td>
-                    //           </tr>
-                    //         );
-                    //       })}
-                    //     </Table>
-                    //   </Padding>
-                    // )
-                  }
                   <Padding t={3}>
                     <Button flat color="danger" onClick={this.props.userActions.logout}>
                       <Logout inline fill="danger"/> Log Out
