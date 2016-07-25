@@ -10,6 +10,8 @@ import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
 import HTTPRequestItem from './HTTPRequestItem';
+// import {MetricGraph} from '../global';
+import StateGraph from './StateGraph';
 
 const ViewHTTP = React.createClass({
   propTypes: {
@@ -22,6 +24,22 @@ const ViewHTTP = React.createClass({
   },
   getResponses(){
     return new List(this.props.redux.checks.responsesFormatted);
+  },
+  getRTTData(){
+    return _.map(this.props.check.metrics || [], m => {
+      return _.assign(m, {
+        name: 'request_latency'
+      });
+    });
+  },
+  getRTTAssertion(){
+    return _.chain(this.props.check.toJS())
+    .get('assertions')
+    .find({
+      key: 'metric',
+      value: 'request_latency'
+    })
+    .value() || undefined;
   },
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
@@ -69,6 +87,20 @@ const ViewHTTP = React.createClass({
       <Heading level={3}>{text}</Heading>
     );
   },
+  renderRTT(){
+    return null;
+    // const assertion = this.getRTTAssertion();
+    // const data = this.getRTTData();
+    // if (data && data.length){
+    //   return (
+    //     <Padding b={2}>
+    //       <Heading level={3}>Round-Trip Time</Heading>
+    //       <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
+    //     </Padding>
+    //   );
+    // }
+    // return null;
+  },
   render(){
     const check = this.props.check.toJS();
     const spec = check.spec || {};
@@ -84,6 +116,9 @@ const ViewHTTP = React.createClass({
           {this.renderHeading()}
           <HTTPRequestItem spec={spec} target={target} />
         </Padding>
+        <Padding b={2}>
+          <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
+        </Padding>
         <Padding b={1}>
           <Heading level={3}>Assertions</Heading>
           {_.find(check.tags, () => 'complete') && <AssertionItemList assertions={check.assertions}/>}
@@ -91,6 +126,7 @@ const ViewHTTP = React.createClass({
         <Padding b={2}>
           <CheckResponsePaginate responses={this.getResponses()} date={d}/>
         </Padding>
+        {this.renderRTT()}
 
         {this.renderNotifications()}
       </div>

@@ -1,0 +1,69 @@
+.wrapper {
+  display: flex;
+  border-top: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.wrapper:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  width: calc(100% - 2px);
+  height: 2px;
+  left: 1px;
+  bottom: 0;
+  z-index: 2;
+  background: var(--colorText);
+}
+
+.wrapper.light:after {
+  background: var(--lightColorText); 
+}
+
+.item {
+  height: 16px;
+  background: var(--colorSuccess);
+  margin: 0 1px;
+}
+
+.item.fail {
+  background: var(--colorDanger);
+}
+
+.item.warn, .item.fail_wait, .item.pass_wait {
+  background: var(--colorWarning);
+}
+
+.yaxis {
+  display: flex;
+}
+
+.tick {
+  padding-top: 1rem;
+  position: relative;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.tick:after {
+  content: '';
+  display:block;
+  position: absolute;
+  top: 0;
+  left: 1px;
+  width: 2px;
+  height: 4px;
+  background: var(--colorText);
+}
+
+.tick.light:after {
+  background: var(--lightColorText);
+}
+
+@media (min-width: 700px) {
+  .tick {
+    font-size: 1.3rem;
+  }
+}

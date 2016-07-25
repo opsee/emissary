@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import _ from 'lodash';
 
 const BaseSVG = React.createClass({
   propTypes: {
@@ -27,7 +28,7 @@ const BaseSVG = React.createClass({
   },
   render() {
     return (
-      <svg xmlns="http://www.w3.org/svg/2000" {...this.state}>
+      <svg {..._.omit(this.state, ['path'])}>
         {this.props.children ? this.props.children : <path d={this.state.path} />}
       </svg>
     );

@@ -34,7 +34,7 @@ const Heading = React.createClass({
     const string = `h${this.props.level}`;
     const className = cx([this.props.className, style[string], style[this.props.scheme]]);
     let props = _.assign({}, this.props, {className});
-    props = _.omit(props, ['level', 'noPadding', 'children']);
+    props = _.omit(props, ['level', 'noPadding', 'children', 'scheme', 'dispatch']);
     return (
       <Padding {...this.getPadding()} className={this.props.className}>
         {

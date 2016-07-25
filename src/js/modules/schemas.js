@@ -184,7 +184,9 @@ export const Check = Record({
     body: undefined,
     headers: new List(),
     metrics: new List()
-  })
+  }),
+  metrics: new List(),
+  state_transitions: new List()
 });
 
 export const CheckEvent = Record({
