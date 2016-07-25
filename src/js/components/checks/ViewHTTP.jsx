@@ -123,7 +123,10 @@ const ViewHTTP = React.createClass({
           <CheckResponsePaginate responses={this.getResponses()} date={d}/>
         </Padding>
         {this.renderRTT()}
-        <StateGraph transitions={this.props.check.state_transitions}/>
+        <Padding b={2}>
+          <Heading level={3}>Check State History</Heading>
+          <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
+        </Padding>
 
         {this.renderNotifications()}
       </div>

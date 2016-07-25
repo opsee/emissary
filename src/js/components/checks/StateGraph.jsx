@@ -14,11 +14,14 @@ d3.gantt = gantt;
 
 const StateGraph = React.createClass({
   propTypes: {
-    transitions: PropTypes.array.isRequired
+    transitions: PropTypes.array.isRequired,
+    current: PropTypes.string.isRequired,
+    tickNumber: PropTypes.number
   },
   getDefaultProps() {
     return {
-      transitions: []
+      transitions: [],
+      tickNumber: 6
     };
   },
   getInitialState() {
@@ -31,12 +34,70 @@ const StateGraph = React.createClass({
     this.onWindowResize();
     window.addEventListener('resize', this.state.debouncedWindowResize);
   },
-  getData(){
-    return _.map(this.props.transitions, t => {
-      return _.assign(t, {
-        time: new Date(t.occurred_at)
-      })
+  // getData(){
+  //   return _.map(this.props.transitions, t => {
+  //     return _.assign(t, {
+  //       time: new Date(t.occurred_at)
+  //     })
+  //   })
+  // },
+  getCoercedState(state){
+    switch(state){
+    case 'failing':
+      return 'FAIL';
+    case 'warning':
+      return 'WARN'
+    default:
+      return 'OK';
+    }
+  },
+  getData(filter){
+    const start = moment().subtract({hours: 6}).valueOf();
+    const end = Date.now();
+    const diff = end - start;
+    let {current} = this.props;
+    current = this.getCoercedState(current);
+    const first = _.head(this.props.transitions) || {to: current, from: current}
+    const computedFirst = {to: first.from, from: first.from, occurred_at: start}
+    const last = _.last(this.props.transitions) || {to: current, from: current}
+    const computedLast = {to: last.to, from: last.to, occurred_at: end}
+    let data = [computedFirst].concat(this.props.transitions).concat([computedLast]);
+    data = _.chain(data)
+    .sortBy(d => d.occurred_at)
+    .map(d => _.mapValues(d, (value, key) => {
+      if (key.match('^to$|^from$')){
+        return (value || '').toLowerCase();
+      }
+      return value;
+    }))
+    .value();
+    data = _.chain(data).map((d, i) => {
+      const next = data[i + 1] || computedLast;
+      let percent = (next.occurred_at - d.occurred_at) / diff;
+      percent = parseFloat((percent * 100).toFixed(2));
+      return _.assign(d, {percent});
     })
+    .reject(d => filter && !d.percent)
+    .value();
+    return data;
+  },
+  getTicks(){
+    const data = this.getData();
+    const start = _.head(data).occurred_at;
+    const end = _.last(data).occurred_at;
+    const diff = end - start;
+    const divisor = this.props.tickNumber;
+    const unit = diff / divisor;
+    return _.chain(_.rangeRight(divisor))
+    .map(num => {
+      const time = end - ((num + 1) * unit);
+      const z = 'h';
+      const tick = moment().diff(moment(time), z);
+      return `-${tick}${z}`;
+      const minAgo = now.diff(moment(timestamp), 'minutes');
+      return moment(end - ((num + 1) * unit)).fromNow();
+    })
+    .value();
   },
   getMargin() {
     return {
@@ -45,6 +106,24 @@ const StateGraph = React.createClass({
       bottom: 50,
       left: 50
     };
+  },
+  getItemTitle(d){
+    let status = d.to;
+    switch (status){
+    case 'ok':
+      status = 'passing';
+      break;
+    case 'fail':
+      status = 'failing';
+      break;
+    case 'fail_wait':
+    case 'pass_wait':
+      status = 'warning';
+      break;
+    default:
+      break;
+    }
+    return `Check was ${status}`;
   },
   onWindowResize() {
     if (this.isMounted()){
@@ -56,7 +135,24 @@ const StateGraph = React.createClass({
   renderInner(){
     return (
       <div>
-        {JSON.stringify(this.props.transitions)}
+        <div className={cx(style.wrapper, style[scheme])}>
+          {
+            this.getData(true).map(d => {
+              return (
+                <div className={cx(style.item, style[d.to])} style={{width: `calc(${d.percent}% - 2px)`}} title={this.getItemTitle(d)}/>
+              );
+            })
+          }
+        </div>
+        <div className={style.yaxis}>
+          {this.getTicks().map(t => {
+            return (
+              <div style={{width: `${100 / this.props.tickNumber}%`}} className={cx(style.tick, style[scheme])}>
+                {t}
+              </div>
+            )
+          })}
+        </div>
       </div>
     )
   },

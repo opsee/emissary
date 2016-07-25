@@ -7,6 +7,7 @@ import {Padding} from '../layout';
 import {Heading} from '../type';
 import AssertionMetric from './AssertionMetric';
 import NotificationItemList from './NotificationItemList';
+import StateGraph from './StateGraph';
 
 const ViewCloudwatch = React.createClass({
   propTypes: {
@@ -57,6 +58,10 @@ const ViewCloudwatch = React.createClass({
                 </Padding>
               );
             })}
+          </Padding>
+          <Padding b={2}>
+            <Heading level={3}>Check State History</Heading>
+            <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
           </Padding>
 
           {this.renderNotifications()}
