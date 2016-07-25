@@ -18,6 +18,7 @@ import {
 import {SlackInfo, PagerdutyInfo} from '../integrations';
 import {NotificationItemList} from '../checks';
 import style from './team.css';
+import PlanInfo from './PlanInfo';
 
 const Profile = React.createClass({
   propTypes: {
@@ -33,6 +34,9 @@ const Profile = React.createClass({
     redux: PropTypes.shape({
       team: PropTypes.object.isRequired,
       user: PropTypes.object.isRequired,
+      checks: PropTypes.shape({
+        checks: PropTypes.object
+      }).isRequired,
       asyncActions: PropTypes.shape({
         teamGet: PropTypes.object,
         onboardGetDefaultNotifs: PropTypes.object.isRequired
@@ -97,8 +101,16 @@ const Profile = React.createClass({
     if (flag('integrations-slack')){
       return (
         <tr>
-          <td><strong>Slack</strong></td>
-          <td className="text-right"><SlackInfo connect redirect={`${window.location.origin}/team?pagerduty=true`}/></td>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Slack</strong>
+              </Col>
+              <Col xs={12} sm={8}>
+                <SlackInfo connect redirect={`${window.location.origin}/team?slack=true`}/>
+              </Col>
+            </Row>
+          </td>
         </tr>
       );
     }
@@ -109,10 +121,14 @@ const Profile = React.createClass({
       return (
         <tr>
           <td colSpan={2}>
-            <div className="display-flex">
-              <strong className="flex-1">PagerDuty</strong>
-              <PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/>
-            </div>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>PagerDuty</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <PagerdutyInfo redirect={`${window.location.origin}/team?pagerduty=true`}/>
+              </Col>
+            </Row>
           </td>
         </tr>
       );
@@ -123,26 +139,93 @@ const Profile = React.createClass({
     if (!!this.props.redux.env.activeBastion){
       return (
         <tr>
-          <td><strong>AWS Integration</strong></td>
-          <td className="text-right"><Link to="/system">Enabled</Link></td>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>AWS Integration</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Link to="/system">Enabled</Link>
+              </Col>
+            </Row>
+          </td>
         </tr>
       );
     }
     return (
       <tr>
-        <td><strong>AWS Integration</strong></td>
-        <td className="text-right"><Link to="/start/launch-stack">Add Our Instance</Link></td>
+        <td colSpan={2}>
+          <Row>
+            <Col xs={12} sm={4}>
+              <strong>AWS Integration</strong><br/>
+            </Col>
+            <Col xs={12} sm={8}>
+              <Link to="/start/launch-stack">Add Our Instance</Link>
+            </Col>
+          </Row>
+        </td>
       </tr>
     );
+  },
+  renderCCDetails(team = this.props.redux.team.toJS()){
+    const cc = team.credit_card_info;
+    if (_.keys(cc).length){
+      return (
+        <tr>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Credit Card</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                <Link to="/team/edit">{cc.brand} ****{cc.last4} Exp {cc.exp_month}/{cc.exp_year}</Link>
+              </Col>
+            </Row>
+          </td>
+        </tr>
+      );
+    }
+    return null;
+  },
+  renderCostEstimate(){
+    const user = this.props.redux.user.toJS();
+    const team = this.props.redux.team.toJS();
+    if ((user.perms.admin || user.perms.billing) && team.subscription_quantity){
+      let unit = 5;
+      if (team.subscription_plan === 'team_monthly'){
+        unit = 10;
+      }
+      return (
+        <tr>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Monthly Cost Estimate</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                {this.props.redux.checks.checks.size} checks at ${unit} per check = ${(unit * this.props.redux.checks.checks.size).toFixed(2)}
+              </Col>
+            </Row>
+          </td>
+        </tr>
+      );
+    }
+    return null;
   },
   renderDefaultNotifications(){
     return (
       <tr>
         <td colSpan={2}>
-          <strong>Default Check Notifications</strong><br/>
-          <Padding t={0.5}>
-            <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
-          </Padding>
+          <Row>
+            <Col xs={12} sm={4}>
+              <strong>Default Check Notifications</strong>
+            </Col>
+            <Col xs={12} sm={8}>
+              <Padding t={0.5}>
+                <NotificationItemList notifications={this.props.redux.onboard.defaultNotifs} noError/>
+              </Padding>
+            </Col>
+          </Row>
         </td>
       </tr>
     );
@@ -248,20 +331,70 @@ const Profile = React.createClass({
                   <Heading level={3}>Your Profile</Heading>
                   <Table>
                     <tr>
-                      <td><strong>Email</strong></td>
-                      <td className="text-right"><Link to="/profile/edit?ref=/team">{user.email}</Link></td>
+                      <td colSpan={2}>
+                        <Row>
+                          <Col xs={12} sm={4}>
+                            <strong>Email</strong><br/>
+                          </Col>
+                          <Col xs={12} sm={8}>
+                            <Link to="/profile/edit?ref=/team">{user.email}</Link>
+                          </Col>
+                        </Row>
+                      </td>
                     </tr>
                     <tr>
-                      <td><strong>Password</strong></td>
-                      <td className="text-right"><Link to="/profile/edit?ref=/team" >Change Your Password</Link></td>
+                      <td colSpan={2}>
+                        <Row>
+                          <Col xs={12} sm={4}>
+                            <strong>Password</strong><br/>
+                          </Col>
+                          <Col xs={12} sm={8}>
+                            <Link to="/profile/edit?ref=/team" >Change Your Password</Link>
+                          </Col>
+                        </Row>
+                      </td>
                     </tr>
                     <tr>
-                      <td><strong>Color Scheme</strong></td>
-                      <td className="text-right">
-                        <SchemePicker/>
+                      <td colSpan={2}>
+                        <Row>
+                          <Col xs={12} sm={4}>
+                            <strong>Color Scheme</strong><br/>
+                          </Col>
+                          <Col xs={12} sm={8}>
+                            <SchemePicker/>
+                          </Col>
+                        </Row>
                       </td>
                     </tr>
                   </Table>
+                  <Padding t={4}>
+                    <Row>
+                      <Col xs={6} sm={4}>
+                        <Heading level={3}>Team Details</Heading>
+                      </Col>
+                      <Col xs={6} sm={8}>
+                        {user.perms.admin && <Link to="/team/edit">Edit Team</Link>}
+                      </Col>
+                    </Row>
+                    <Table>
+                      <tr>
+                        <td colSpan={2}>
+                          <Row>
+                            <Col xs={12} sm={4}>
+                              <strong>Name</strong><br/>
+                            </Col>
+                            <Col xs={12} sm={8}>
+                              <Link to="/team/edit">{team.name || '(No Team name set)'}</Link>
+                            </Col>
+                          </Row>
+                        </td>
+                      </tr>
+                    </Table>
+                    <PlanInfo base="team"/>
+                    <Table>
+                      {this.renderDefaultNotifications()}
+                    </Table>
+                  </Padding>
                   <Padding t={4}>
                     <Heading level={3}>Team Integrations</Heading>
                     <Table>
@@ -291,58 +424,6 @@ const Profile = React.createClass({
                       <Button to="/team/member/invite" color="success" flat><Add inline fill="success"/>Invite New Team Member</Button>
                     </Padding>
                   </Padding>
-                  <Padding t={4}>
-                    <div className="display-flex">
-                      <Heading level={3} className="flex-1">Team Details</Heading>
-                      {user.perms.admin && <Link to="/team/edit">Edit Team</Link>}
-                    </div>
-                    <Table>
-                      <tr>
-                        <td><strong>Name</strong></td>
-                        <td className="text-right">{team.name || '(No Team name set)'}
-                        </td>
-                      </tr>
-                      {this.renderDefaultNotifications()}
-                      {
-                        // window.location.href.match('localhost|staging') && (
-                        //   <tr>
-                        //     <td><strong>Subscription Plan</strong></td>
-                        //     <td>{team.plan}&nbsp;&nbsp;<Link to="/team/edit">Change Plan</Link></td>
-                        //   </tr>
-                        // )
-                      }
-                      {
-                        // window.location.href.match('localhost|staging') && (
-                        //   <tr>
-                        //     <td><strong>Plan Features</strong></td>
-                        //     <td>{toSentenceSerial(team.features)}</td>
-                        //   </tr>
-                        // )
-                      }
-                    </Table>
-                  </Padding>
-                  {
-                    // window.location.href.match('localhost|staging') && (
-                    //   <Padding t={3}>
-                    //     <Heading level={3}>Team Billing</Heading>
-                    //     <Padding b={1} l={1}>
-                    //       MasterCard ****4040 4/2041&nbsp;&nbsp;<Link to="/team/edit">Edit Billing Information</Link>
-                    //     </Padding>
-                    //     <Table>
-                    //       {_.sortBy(team.invoices, i => -1 * i.date).map(invoice => {
-                    //         return (
-                    //           <tr>
-                    //             <td>
-                    //               <strong>${invoice.amount.toFixed(2)}</strong> on {new Date(invoice.date).toDateString()}<br/>
-                    //               <Color c="gray5"><small><TimeAgo date={invoice.date}/></small></Color>
-                    //             </td>
-                    //           </tr>
-                    //         );
-                    //       })}
-                    //     </Table>
-                    //   </Padding>
-                    // )
-                  }
                   <Padding t={3}>
                     <Button flat color="danger" onClick={this.props.userActions.logout}>
                       <Logout inline fill="danger"/> Log Out

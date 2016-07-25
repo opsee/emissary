@@ -36,9 +36,15 @@ export const Member = Record({
 export const Team = Record({
   name: undefined,
   features: new List(),
-  plan: undefined,
   users: new List(),
-  invoices: new List()
+  invoices: new List(),
+  subscription_plan: 'free',
+  subscription_status: undefined,
+  subscription_quantity: undefined,
+  subscription_trial_start: undefined,
+  subscription_trial_end: undefined,
+  credit_card_info: new Map(),
+  next_invoice: new Map()
 });
 
 const baseEnvItem = {

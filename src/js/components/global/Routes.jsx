@@ -52,6 +52,7 @@ import TeamCreate from 'react-proxy?name=team!exports?exports.default!../team/Te
 import TeamMember from 'react-proxy?name=team!exports?exports.default!../team/TeamMember';
 import TeamMemberEdit from 'react-proxy?name=team!exports?exports.default!../team/TeamMemberEdit';
 import TeamMemberInvite from 'react-proxy?name=team!exports?exports.default!../team/TeamMemberInvite';
+import Billing from 'react-proxy?name=team!exports?exports.default!../team/Billing';
 
 import Verify from 'react-proxy?name=profile!exports?exports.default!../user/Verify';
 
@@ -158,6 +159,7 @@ const routes = (
     <Route path="/team/member/invite" component={auth(TeamMemberInvite)}/>
     <Route path="/team/member/:id" component={auth(TeamMember)}/>
     <Route path="/team/member/:id/edit" component={auth(TeamMemberEdit)}/>
+    <Route path="/billing" component={auth(Billing)}/>
     <Route path="/login" component={Login}/>
     <Route path="/password-forgot" component={PasswordForgot}/>
     <Route path="/password-change" component={PasswordChange}/>

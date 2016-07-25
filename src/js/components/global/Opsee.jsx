@@ -23,7 +23,8 @@ import {
   app as appActions,
   user as userActions,
   env as envActions,
-  checks as checkActions
+  checks as checkActions,
+  team as teamActions
 } from '../../actions';
 import {Bar as SearchBar} from '../search';
 /* eslint-enable no-unused-vars */
@@ -62,7 +63,10 @@ const Opsee = React.createClass({
     redux: PropTypes.object,
     envActions: PropTypes.shape({
       getBastions: PropTypes.func.isRequired
-    })
+    }),
+    teamActions: PropTypes.shape({
+      getTeam: PropTypes.func.isRequired
+    }).isRequired
   },
   componentWillMount(){
     this.props.appActions.initialize();
@@ -73,6 +77,7 @@ const Opsee = React.createClass({
     this.props.envActions.getBastions();
     if (this.props.redux.user.get('auth')){
       this.props.checkActions.getChecks();
+      this.props.teamActions.getTeam();
     }
     yeller.configure(this.props.redux);
   },
@@ -161,7 +166,8 @@ const mapDispatchToProps = (dispatch) => ({
   appActions: bindActionCreators(appActions, dispatch),
   userActions: bindActionCreators(userActions, dispatch),
   envActions: bindActionCreators(envActions, dispatch),
-  checkActions: bindActionCreators(checkActions, dispatch)
+  checkActions: bindActionCreators(checkActions, dispatch),
+  teamActions: bindActionCreators(teamActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Opsee);

@@ -18,13 +18,29 @@ export function getTeam(callback = () => {}){
       payload: graphPromise('team', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: TEAM_GET})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `{
             team {
               name
               id
-              subscription
+              subscription_plan
+              subscription_status
+              subscription_quantity
+              subscription_trial_start
+              subscription_trial_end
+              credit_card_info {
+                brand
+                exp_month
+                exp_year
+                last4
+              }
+              next_invoice {
+                amount
+                date
+                paid
+              }
               users {
                 status
                 name
@@ -45,13 +61,17 @@ export function getTeam(callback = () => {}){
 }
 
 export function edit(data, redirect = '/team'){
-  const team = _.pick(data, ['name', 'plan', 'stripeToken']);
+  let team = _.pick(data, ['name', 'plan', 'stripeToken', 'subscription_plan']);
+  team = _.mapKeys(team, (value, key) => {
+    return key === 'subscription_plan' ? 'plan' : key;
+  });
   return (dispatch, state) => {
     dispatch({
       type: TEAM_EDIT,
       payload: graphPromise('team', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type: TEAM_EDIT})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation TEAM_EDIT ($team: Team){
@@ -81,7 +101,7 @@ export function edit(data, redirect = '/team'){
           onboard.setDefaultNotifications(data.notifications)(dispatch, state);
         }
         setTimeout(() => {
-          dispatch(push(redirect));
+          redirect && dispatch(push(redirect));
         }, 100);
       })
     });
@@ -102,6 +122,7 @@ function member(data, type, redirect = '/team'){
       payload: graphPromise('user', () => {
         return request
         .post(`${config.services.compost}`)
+        .query({type})
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `mutation ${type} ($user: User){

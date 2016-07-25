@@ -5,8 +5,8 @@ import _ from 'lodash';
 
 import {StatusHandler, Toolbar} from '../global';
 import {Col, Grid, Padding, Panel, Row} from '../layout';
+import {Button, PlanInputs, Input} from '../forms';
 import {Heading} from '../type';
-import {Button, Input} from '../forms';
 import {Close} from '../icons';
 import {team as actions} from '../../actions';
 import NotificationSelection from '../checks/NotificationSelection';
@@ -31,7 +31,8 @@ const TeamEdit = React.createClass({
   },
   getInitialState() {
     return _.assign({}, this.props.redux.team.toJS(), {
-      ccToken: undefined,
+      //planinputs valid
+      valid: false,
       notifications: []
     });
   },
@@ -41,7 +42,7 @@ const TeamEdit = React.createClass({
   componentWillReceiveProps(nextProps) {
     const nextTeam = this.getData(nextProps);
     const team = this.getData();
-    if (nextTeam.name !== team.name){
+    if (!_.isEqual(nextTeam, team)){
       this.setState(nextTeam);
     }
   },
@@ -52,19 +53,22 @@ const TeamEdit = React.createClass({
     return this.props.redux.asyncActions.teamEdit.status;
   },
   isDisabled(){
-    return !(this.state.name) ||
-    this.getStatus() === 'pending';
+    return _.some([
+      !(this.state.name),
+      this.getStatus() === 'pending',
+      !this.state.valid
+    ]);
   },
   handleUserData(data){
     const user = _.assign({}, this.state.user, data);
     this.setState({user});
   },
-  handleInputChange(state){
+  handleChange(state){
     this.setState(state);
   },
-  handleCreditCardChange(ccToken){
+  handleCreditCardChange(stripeToken){
     this.setState({
-      ccToken
+      stripeToken
     });
   },
   handleNotifChange(notifications){
@@ -111,18 +115,24 @@ const TeamEdit = React.createClass({
             <Col xs={12}>
               <Panel>
                 <form onSubmit={this.handleSubmit}>
-                  <StatusHandler status={this.getStatus()}/>
-                  <Input onChange={this.handleInputChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
-                  <Padding t={2}>
-                    <Heading level={3}>Team Default Notifications</Heading>
-                    <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />
+                  <Padding b={1}>
+                    <Input onChange={this.handleChange} data={this.state} path="name" placeholder="Team Name" label="Team Name*"/>
                   </Padding>
-                  {this.renderCreditCard()}
+                  <PlanInputs onChange={this.handleChange} selected={this.state.subscription_plan}/>
+                  <Padding t={3}>
+                      <Heading level={3}>Team Default Notifications</Heading>
+                      <NotificationSelection onChange={this.handleNotifChange} notifications={this.props.redux.onboard.defaultNotifs} />
+                    </Padding>
                   <Padding t={2}>
+                  {this.renderCreditCard()}
+                  <StatusHandler status={this.getStatus()}/>
                     <Button color="success" type="submit" block disabled={this.isDisabled()}>
                       {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
                     </Button>
                   </Padding>
+                  {
+                    process.env.NODE_ENV === 'debug' && JSON.stringify(this.state)
+                  }
                 </form>
               </Panel>
             </Col>

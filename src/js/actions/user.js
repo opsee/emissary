@@ -209,6 +209,9 @@ export function edit(data, redirect) {
           if (data.notifications && data.notifications.length){
             onboard.setDefaultNotifications(data.notifications)(dispatch, state);
           }
+          if (data.subscription_plan){
+            team.edit(data, null)(dispatch, state);
+          }
           if (redirect) {
             setTimeout(() => {
               dispatch(push(redirect));
