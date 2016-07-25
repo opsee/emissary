@@ -30,8 +30,9 @@ const ProfileEdit = React.createClass({
     }).isRequired,
     redux: PropTypes.shape({
       asyncActions: PropTypes.shape({
-        userEdit: PropTypes.object,
-        onboardGetDefaultNotifs: PropTypes.object.isRequired
+        userEdit: PropTypes.object.isRequired,
+        onboardGetDefaultNotifs: PropTypes.object.isRequired,
+        teamEdit: PropTypes.object.isRequired
       }).isRequired,
       user: PropTypes.object,
       team: PropTypes.object,
@@ -48,46 +49,48 @@ const ProfileEdit = React.createClass({
     this.props.teamActions.getTeam();
   },
   getInitialState() {
-    return {
-      user: this.props.redux.user.toJS(),
+    return _.assign({
       //planinputs is valid
       valid: false,
       subscription_plan: undefined
-    };
+    }, this.props.redux.user.toJS());
   },
   componentWillReceiveProps(nextProps) {
     if (!is(nextProps.redux.team, this.props.redux.team)){
       this.setState(nextProps.redux.team.toJS());
     }
   },
-  getStatus(){
-    return this.props.redux.asyncActions.userEdit.status;
+  getStatus(str = 'user'){
+    switch (str){
+    case 'team':
+      return this.props.redux.asyncActions.teamEdit.status;
+    default:
+      return this.props.redux.asyncActions.userEdit.status;
+    }
   },
   isTeam(){
     return !!(this.props.redux.team.users.size > 1);
   },
   isDisabled(){
     return _.some([
-      !(this.state.user.email && this.state.user.name),
+      !(this.state.email && this.state.name),
       this.getStatus() === 'pending',
       !this.state.valid
     ]);
   },
   handleNotifChange(notifications){
     if (notifications &&  notifications.length){
-      this.setState({
-        user: _.assign(this.state.user, {notifications})
-      });
+      this.setState(_.assign(this.state, {notifications}));
     }
   },
   handleUserData(data){
-    const user = _.assign({}, this.state.user, data);
-    this.setState({user});
+    const state = _.assign({}, this.state, data);
+    this.setState(state);
   },
   handleSubmit(e){
     e.preventDefault();
     const {props} = this;
-    props.actions.edit(this.state.user, props.redux.team.toJS().users.length > 1 ? '/team' : '/profile');
+    props.actions.edit(this.state, props.redux.team.toJS().users.length > 1 ? '/team' : '/profile');
   },
   handleChange(state){
     this.setState(state);
@@ -127,15 +130,19 @@ const ProfileEdit = React.createClass({
             <Col xs={12}>
               <Panel>
                 <form onSubmit={this.handleSubmit}>
-                  <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state.user} required={['email', 'name']} password={{label: 'New Password', placeholder: '****'}}/>
+                  <UserInputs include={['email', 'name', 'password']} onChange={this.handleUserData} data={this.state} required={['email', 'name']} password={{label: 'New Password', placeholder: '****'}}/>
                   {this.renderPlanInputs()}
                   {this.renderNotificationSelection()}
                   <StatusHandler status={this.getStatus()}/>
+                  <StatusHandler status={this.getStatus('team')}/>
                   <Padding t={2}>
                     <Button color="success" type="submit" block disabled={this.isDisabled()}>
                       {this.getStatus() === 'pending' ? 'Updating...' : 'Update'}
                     </Button>
                   </Padding>
+                  {
+                    process.env.NODE_ENV === 'debug' && JSON.stringify(this.state)
+                  }
                 </form>
               </Panel>
             </Col>

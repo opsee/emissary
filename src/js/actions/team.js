@@ -101,7 +101,7 @@ export function edit(data, redirect = '/team'){
           onboard.setDefaultNotifications(data.notifications)(dispatch, state);
         }
         setTimeout(() => {
-          dispatch(push(redirect));
+          redirect && dispatch(push(redirect));
         }, 100);
       })
     });

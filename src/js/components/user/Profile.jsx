@@ -337,7 +337,7 @@ const Profile = React.createClass({
     if (this.props.redux.asyncActions.teamGet.history.length){
       return (
         <div>
-          <Toolbar title={user.name} pageTitle="Profile">
+          <Toolbar title={user.name || 'Your Profile'} pageTitle="Profile">
             <Button fab color="info" to="/profile/edit" title="Edit Your Profile">
               <Edit btn/>
             </Button>
