@@ -105,7 +105,7 @@ const ViewHTTP = React.createClass({
     const check = this.props.check.toJS();
     const spec = check.spec || {};
     const target = check.target || {};
-    const d = _.chain(check.results).head().get('timestamp').thru(d => typeof d === 'number' ? new Date(d) : new Date()).value();
+    const d = _.chain(check.results).head().get('timestamp').thru(t => typeof t === 'number' ? new Date(t) : new Date()).value();
     return (
       <div>
         {this.renderTarget()}
