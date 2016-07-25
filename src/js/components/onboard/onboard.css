@@ -18,7 +18,7 @@ h1, h2, h3 {
 }
 
 .container.light {
-  background-color: var(--lightColorBackground);
+  background-color: #eee;
 }
 
 .transitionContainer {
@@ -27,6 +27,11 @@ h1, h2, h3 {
 
 .transitionPanel {
   width: 100%;
+  background: #303030;
+}
+
+.transitionPanel.light {
+ background: #eee; 
 }
 
 .closeWrapper {

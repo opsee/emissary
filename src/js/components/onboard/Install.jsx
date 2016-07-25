@@ -3,6 +3,7 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import cx from 'classnames';
 
 import BastionInstaller from './BastionInstaller.jsx';
 import {Alert, Padding} from '../layout';
@@ -25,7 +26,8 @@ const Install = React.createClass({
     }),
     redux: PropTypes.shape({
       app: PropTypes.shape({
-        socketMessages: PropTypes.array
+        socketMessages: PropTypes.array,
+        scheme: PropTypes.string
       }),
       env: PropTypes.shape({
         bastions: PropTypes.array
@@ -233,7 +235,7 @@ const Install = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Padding tb={2}>
           <div className={style.headerStep}>STEP 2 of 3</div>
           <h2>Installing the Opsee EC2 instance...</h2>

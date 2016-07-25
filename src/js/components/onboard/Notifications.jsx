@@ -3,6 +3,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import {Checkmark} from '../icons';
 import {onboard as actions} from '../../actions';
@@ -23,6 +24,9 @@ const Notifications = React.createClass({
       }),
       user: PropTypes.shape({
         email: PropTypes.string
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
@@ -97,7 +101,7 @@ const Notifications = React.createClass({
   },
   render(){
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Grid>
           <Row>
             <Col xs={12}>
@@ -105,7 +109,7 @@ const Notifications = React.createClass({
                 <div className={style.headerStep}>STEP 3 of 3</div>
                 <h2>Set up notifications</h2>
               </Padding>
-              <p>When your health checks fail, Opsee will let you know. By default, we'll send all notifications to your email address, <strong>{this.getDefaultEmail()}</strong>.</p>
+              <p>When your health checks fail, Opsee will let you know. By default, we&rsquo;ll send all notifications to your email address, <strong>{this.getDefaultEmail()}</strong>.</p>
               <p>You can always override your default notification settings on a check-by-check basis. Your default notification settings can be changed any time from your profile.</p>
 
               <Padding t={2}>

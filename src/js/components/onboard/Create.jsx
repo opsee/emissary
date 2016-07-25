@@ -68,7 +68,7 @@ const OnboardCreate = React.createClass({
                   </Padding>
                   <form name="onboardForm" onSubmit={this.handleSubmit} className="text-left">
                     <Padding b={1}>
-                      <UserInputs include={['name', 'email']} data={this.state.data} onChange={this.handleUserData}/>
+                      <UserInputs include={['name', 'email', 'password']} data={this.state.data} onChange={this.handleUserData}/>
                     </Padding>
                     <StatusHandler status={this.getStatus()}/>
                     <div className="form-group">

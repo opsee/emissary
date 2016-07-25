@@ -3,6 +3,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import {Close} from '../icons';
 import {RadioSelect} from '../forms';
@@ -21,6 +22,9 @@ const ConfigureInstance = React.createClass({
         region: PropTypes.string,
         regions: PropTypes.array,
         installData: PropTypes.object
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       }),
       asyncActions: PropTypes.shape({
         onboardScanRegion: PropTypes.obj
@@ -78,7 +82,7 @@ const ConfigureInstance = React.createClass({
     const isDone = selectedVPC && selectedSubnet;
 
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Link to="/start/launch-instance" className={style.closeWrapper}>
           <Close className={style.closeButton} />
         </Link>

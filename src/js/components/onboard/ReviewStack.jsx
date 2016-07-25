@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import { Close } from '../icons';
 import {onboard as actions} from '../../actions';
@@ -24,6 +25,9 @@ const LaunchStack = React.createClass({
       onboard: PropTypes.shape({
         hasRole: PropTypes.bool,
         templates: PropTypes.array
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
@@ -85,7 +89,7 @@ const LaunchStack = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Link to="/start/launch-stack" className={style.closeWrapper}>
           <Close className={style.closeButton} />
         </Link>

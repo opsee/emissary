@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import cx from 'classnames';
 
 import {Checkmark} from '../icons';
 import UserInputs from '../user/UserInputs.jsx';
@@ -24,6 +25,9 @@ const OnboardAccount = React.createClass({
       user: PropTypes.object,
       asyncActions: PropTypes.shape({
         userSetPassword: PropTypes.object
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       })
     })
   },
@@ -85,7 +89,7 @@ const OnboardAccount = React.createClass({
         <Padding t={4} b={2} className="text-center">
           <h2>Welcome to Opsee!</h2>
         </Padding>
-        <p>Let's get started. Enter your name and choose a password to continue.</p>
+        <p>Let&rsquo;s get started. Enter your name and choose a password to continue.</p>
         <form name="loginForm" onSubmit={this.handleSubmit}>
           <UserInputs include={['name', 'password']} onChange={this.handleUserData} data={this.state}/>
           <StatusHandler status={this.getStatus()}/>
@@ -98,7 +102,7 @@ const OnboardAccount = React.createClass({
   },
   render() {
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Grid>
           <Row>
             <Col xs={12}>

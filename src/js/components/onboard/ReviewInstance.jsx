@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {plain as seed} from 'seedling';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import {Close} from '../icons';
 import {onboard as actions} from '../../actions';
@@ -19,6 +20,9 @@ const ReviewInstance = React.createClass({
       }),
       asyncActions: PropTypes.shape({
         onboardGetTemplates: PropTypes.object
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
@@ -61,7 +65,7 @@ const ReviewInstance = React.createClass({
   },
   render(){
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Link to="/start/launch-instance" className={style.closeWrapper}>
           <Close className={style.closeButton} />
         </Link>
@@ -71,7 +75,7 @@ const ReviewInstance = React.createClass({
               <Padding tb={2}>
                 <h2>About the Opsee EC2 instance</h2>
               </Padding>
-              <p>The Opsee EC2 instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It's responsible for running checks, and it has no IAM permissions of its own. The instance is launched via CloudFormation. There are two CloudFormation stacks associated with it. The first is "The Opsee Stack", and the second is the "listing of bastion security-group ingress rules." This second stack ensures that our instance can communicate with services you have running in your VPC. Both CloudFormation templates are available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
+              <p>The Opsee EC2 instance is <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">a t2.micro and is free-tier eligible</a>. It&rsquo;s responsible for running checks, and it has no IAM permissions of its own. The instance is launched via CloudFormation. There are two CloudFormation stacks associated with it. The first is "The Opsee Stack", and the second is the "listing of bastion security-group ingress rules." This second stack ensures that our instance can communicate with services you have running in your VPC. Both CloudFormation templates are available <a href="/docs/permissions" target="_blank">in our documentation</a>.</p>
 
               <Padding tb={1}>
                 <h4>Instance CloudFormation Template</h4>
@@ -83,7 +87,7 @@ const ReviewInstance = React.createClass({
                 <p>Used to ensure communication between your security groups and the Opsee security group within your chosen VPC.</p>
                 {this.renderTemplateItem('ingress')}
               </Padding>
-              <p>If you'd like to know more, reach out to us any time on <a href="mailto:support@opsee.co">email</a>, <a href="https://opsee-support.slack.com" target="_blank">Slack</a>, or <a href="irc://irc.freenode.org/opsee" target="_blank">IRC</a>.</p>
+              <p>If you&rsquo;d like to know more, reach out to us any time on <a href="mailto:support@opsee.co">email</a>, <a href="https://opsee-support.slack.com" target="_blank">Slack</a>, or <a href="irc://irc.freenode.org/opsee" target="_blank">IRC</a>.</p>
               <Padding tb={2}>
                 <Button to="/start/launch-instance" color="primary" block>Got it</Button>
               </Padding>

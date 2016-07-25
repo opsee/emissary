@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
+import cx from 'classnames';
 
 import {onboard as actions} from '../../actions';
 import {Button} from '../forms';
@@ -19,6 +20,9 @@ const LaunchInstance = React.createClass({
       }),
       asyncActions: PropTypes.shape({
         onboardScanRegion: PropTypes.object
+      }),
+      app: PropTypes.shape({
+        scheme: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
@@ -122,7 +126,7 @@ const LaunchInstance = React.createClass({
   },
   render(){
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Padding tb={2}>
           <div className={style.headerStep}>STEP 2 of 3</div>
           <h2>Install the Opsee EC2 instance</h2>

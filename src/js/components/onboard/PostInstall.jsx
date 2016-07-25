@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import cx from 'classnames';
 
 import {checks as actions} from '../../actions';
 import Checkmark from './Checkmark';
@@ -12,7 +13,10 @@ import style from './onboard.css';
 const PostInstall = React.createClass({
   propTypes: {
     redux: PropTypes.shape({
-      checks: PropTypes.object
+      checks: PropTypes.object,
+      app: PropTypes.shape({
+        scheme: PropTypes.string
+      })
     }),
     actions: PropTypes.shape({
       getChecks: PropTypes.func
@@ -50,12 +54,12 @@ const PostInstall = React.createClass({
   },
   render(){
     return (
-      <div className={style.transitionPanel}>
+      <div className={cx(style.transitionPanel, style[this.props.redux.app.scheme])}>
         <Padding t={4} b={1} lr={2} style={{margin: '0 auto'}}>
           <Checkmark />
         </Padding>
         <div className="text-center">
-          <h2>You're all done!</h2>
+          <h2>You&rsquo;re all done!</h2>
           <p>The Opsee instance was successfully installed.</p>
         </div>
         {this.renderCheckCount()}
