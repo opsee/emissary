@@ -70,6 +70,7 @@ const CheckResponsePaginate = React.createClass({
       const data = this.getArrayFromData(nextProps.check);
       if (!_.isEqual(old, data)){
         this.runTestCheck(nextProps);
+        this.props.actions.selectResponse(0);
       }
     }
   },
