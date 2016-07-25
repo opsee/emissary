@@ -1,22 +1,28 @@
 import React, {PropTypes} from 'react';
-import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
+
 import style from './stateGraph.css';
+import {Color, Heading} from '../type';
+import {Padding} from '../layout';
 
 const StateGraph = React.createClass({
   propTypes: {
     transitions: PropTypes.array.isRequired,
     current: PropTypes.string.isRequired,
     tickNumber: PropTypes.number,
+    period: PropTypes.number,
+    unit: PropTypes.string,
     scheme: PropTypes.string
   },
   getDefaultProps() {
     return {
       transitions: [],
-      tickNumber: 6
+      tickNumber: 6,
+      period: 6,
+      unit: 'hours'
     };
   },
   getCoercedState(state){
@@ -30,7 +36,7 @@ const StateGraph = React.createClass({
     }
   },
   getData(filter){
-    const start = moment().subtract({hours: 6}).valueOf();
+    const start = moment().subtract({[this.props.unit]: this.props.period}).valueOf();
     const end = Date.now();
     const diff = end - start;
     let {current} = this.props;
@@ -69,9 +75,9 @@ const StateGraph = React.createClass({
     return _.chain(_.rangeRight(divisor))
     .map(num => {
       const time = end - ((num + 1) * unit);
-      const z = 'h';
+      const z = this.props.unit;
       const tick = moment().diff(moment(time), z);
-      return `-${tick}${z}`;
+      return `-${tick}${z.charAt(0)}`;
     })
     .value();
   },
@@ -93,16 +99,24 @@ const StateGraph = React.createClass({
     }
     return `Check was ${status}`;
   },
-  onWindowResize() {
-    if (this.isMounted()){
-      const elem = ReactDOM.findDOMNode(this);
-      const width = _.clamp(elem.parentNode.offsetWidth, 0, Infinity);
-      this.setState({ width });
-    }
+  getStats(){
+    const data = this.getData();
+    return {
+      passing: _.chain(data).filter({to: 'ok'}).map('percent').sum().value(),
+      failing: _.chain(data).filter({to: 'fail'}).map('percent').sum().value(),
+      warning: _.chain(data).filter(a => a.to.match('wait|warning')).map('percent').sum().value()
+    };
   },
   render(){
+    const stats = this.getStats();
     return (
       <div>
+        <Heading level={3}>Activity - Last {this.props.period} {this.props.unit}</Heading>
+        <Padding b={1}>
+          <Color c="success"><strong>Passing:&nbsp;</strong></Color>{stats.passing}%&nbsp;&nbsp;
+          <Color c="danger"><strong>Failing:&nbsp;</strong></Color>{stats.failing}%&nbsp;&nbsp;
+          <Color c="warning"><strong>Warning:&nbsp;</strong></Color>{stats.warning}%
+        </Padding>
         <div className={cx(style.wrapper, style[this.props.scheme])}>
           {
             this.getData(true).map(d => {

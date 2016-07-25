@@ -49,6 +49,9 @@ const ViewCloudwatch = React.createClass({
       return (
         <div>
           {this.renderTarget()}
+          <Padding b={2}>
+            <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
+          </Padding>
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>
             {_.find(check.tags, () => 'complete') && check.assertions.map((assertion, i) => {
@@ -58,10 +61,6 @@ const ViewCloudwatch = React.createClass({
                 </Padding>
               );
             })}
-          </Padding>
-          <Padding b={2}>
-            <Heading level={3}>Check State History</Heading>
-            <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
           </Padding>
 
           {this.renderNotifications()}

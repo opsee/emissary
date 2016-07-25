@@ -23,7 +23,7 @@
 }
 
 .item {
-  height: 20px;
+  height: 16px;
   background: var(--colorSuccess);
   margin: 0 1px;
 }

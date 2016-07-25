@@ -115,6 +115,9 @@ const ViewHTTP = React.createClass({
           {this.renderHeading()}
           <HTTPRequestItem spec={spec} target={target} />
         </Padding>
+        <Padding b={2}>
+          <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
+        </Padding>
         <Padding b={1}>
           <Heading level={3}>Assertions</Heading>
           {_.find(check.tags, () => 'complete') && <AssertionItemList assertions={check.assertions}/>}
@@ -123,10 +126,6 @@ const ViewHTTP = React.createClass({
           <CheckResponsePaginate responses={this.getResponses()} date={d}/>
         </Padding>
         {this.renderRTT()}
-        <Padding b={2}>
-          <Heading level={3}>Check State History</Heading>
-          <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
-        </Padding>
 
         {this.renderNotifications()}
       </div>
