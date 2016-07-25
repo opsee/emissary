@@ -42,6 +42,7 @@ export function fetchChecks(state) {
           results {
             bastion_id
             passing
+            timestamp
             responses {
               passing
               target {
@@ -124,6 +125,7 @@ export function getCheck(id){
               results {
                 passing
                 bastion_id
+                timestamp
                 responses {
                   passing
                   reply {
@@ -246,6 +248,7 @@ export function getChecksNotifications(){
               results {
                 passing
                 bastion_id
+                timestamp
                 responses {
                   passing
                   target {
