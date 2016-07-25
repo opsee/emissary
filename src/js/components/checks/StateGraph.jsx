@@ -112,10 +112,16 @@ const StateGraph = React.createClass({
     return (
       <div>
         <Heading level={3}>Activity - Last {this.props.period} {this.props.unit}</Heading>
-        <Padding b={1}>
-          <Color c="success"><strong>Passing:&nbsp;</strong></Color>{stats.passing}%&nbsp;&nbsp;
-          <Color c="danger"><strong>Failing:&nbsp;</strong></Color>{stats.failing}%&nbsp;&nbsp;
-          <Color c="warning"><strong>Warning:&nbsp;</strong></Color>{stats.warning}%
+        <Padding b={1} className={cx(style.stats, 'display-flex', 'flex-wrap')}>
+          <div>
+            <Color c="success"><strong>Passing:&nbsp;</strong></Color>{stats.passing}%&nbsp;&nbsp;
+          </div>
+          <div>
+            <Color c="danger"><strong>Failing:&nbsp;</strong></Color>{stats.failing}%&nbsp;&nbsp;
+          </div>
+          <div>
+            <Color c="warning"><strong>Warning:&nbsp;</strong></Color>{stats.warning}%
+          </div>
         </Padding>
         <div className={cx(style.wrapper, style[this.props.scheme])}>
           {

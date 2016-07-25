@@ -47,12 +47,6 @@
   font-weight: 500;
 }
 
-@media (min-width: 700px) {
-  .tick {
-    font-size: 1.3rem;
-  }
-}
-
 .tick:after {
   content: '';
   display:block;
@@ -66,4 +60,10 @@
 
 .tick.light:after {
   background: var(--lightColorText);
+}
+
+@media (min-width: 700px) {
+  .tick {
+    font-size: 1.3rem;
+  }
 }

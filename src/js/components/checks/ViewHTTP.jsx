@@ -10,7 +10,7 @@ import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
 import HTTPRequestItem from './HTTPRequestItem';
-import {MetricGraph} from '../global';
+// import {MetricGraph} from '../global';
 import StateGraph from './StateGraph';
 
 const ViewHTTP = React.createClass({
@@ -88,17 +88,18 @@ const ViewHTTP = React.createClass({
     );
   },
   renderRTT(){
-    const assertion = this.getRTTAssertion();
-    const data = this.getRTTData();
-    if (data && data.length){
-      return (
-        <Padding b={2}>
-          <Heading level={3}>Round-Trip Time</Heading>
-          <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
-        </Padding>
-      );
-    }
     return null;
+    // const assertion = this.getRTTAssertion();
+    // const data = this.getRTTData();
+    // if (data && data.length){
+    //   return (
+    //     <Padding b={2}>
+    //       <Heading level={3}>Round-Trip Time</Heading>
+    //       <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
+    //     </Padding>
+    //   );
+    // }
+    // return null;
   },
   render(){
     const check = this.props.check.toJS();
