@@ -198,12 +198,22 @@ export default handleActions({
   [GET_CHECK_FROM_S3]: {
     next(state, action) {
       let {data} = action.payload;
-      if (_.get(data, 'responses[0].Reply.HttpResponse')){
+      const hasResponses = _.chain(data)
+      .get('responses')
+      .map('Reply')
+      .map('HttpResponse')
+      .some()
+      .value();
+      if (hasResponses){
         data = _.chain(data)
         .mapValues((value, key) => {
           if (key === 'responses'){
             return value.map(r => {
-              return {response: _.get(r, 'Reply.HttpResponse'), target: r.target};
+              const http = _.get(r, 'Reply.HttpResponse');
+              if (http){
+                return {response: http, target: r.target, passing: !!r.passing};
+              }
+              return {error: _.get(r, 'error')};
             });
           }
           return value;
