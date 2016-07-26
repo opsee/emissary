@@ -116,7 +116,7 @@ const statics = {
     data = data.set('checks', foundChecks);
     const health = total ? Math.floor((passing / total) * 100) : undefined;
     data = data.set('health', health);
-    let state = total ? ((passing && 'passing') || 'failing') : 'running';
+    let state = total ? ((passing && passing === total && 'passing') || 'failing') : 'running';
     if (state === 'running' && foundChecks.length){
       state = 'initializing';
     }

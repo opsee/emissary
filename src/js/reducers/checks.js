@@ -203,7 +203,7 @@ export default handleActions({
         .mapValues((value, key) => {
           if (key === 'responses'){
             return value.map(r => {
-              return {response: _.get(r, 'Reply.HttpResponse')};
+              return {response: _.get(r, 'Reply.HttpResponse'), target: r.target};
             });
           }
           return value;
