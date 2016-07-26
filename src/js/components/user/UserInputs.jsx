@@ -55,7 +55,6 @@ const UserInputs = React.createClass({
       type: this.state.showPass ? 'text' : 'password',
       path: 'password',
       placeholder: 'Password',
-      // label: '<span className="display-flex"><span className="flex-1">Password*</span><span>',
       autoFocus: this.props.autoFocus === 'password'
     }, this.props.password);
     return (
