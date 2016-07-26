@@ -57,7 +57,7 @@ const CheckSingle = React.createClass({
       onConfirm: this.props.actions.del.bind(null, [this.props.params.id], true)
     });
   },
-  renderInner(check){
+  renderView(check){
     if (check.get('tags').find(() => 'complete')){
       const isCloudwatch = _.chain(check.toJS()).get('assertions').head().get('key').value() === 'cloudwatch';
       return isCloudwatch ? <ViewCloudwatch check={check}/> : <ViewHTTP check={check} redux={this.props.redux}/>;
@@ -88,6 +88,25 @@ const CheckSingle = React.createClass({
     }
     return null;
   },
+  renderInner(check){
+    const {status} = this.props.redux.asyncActions.getCheck;
+    if (status && typeof status !== 'string'){
+      return <StatusHandler status={status}/>;
+    }
+    return (
+      <div>
+        <Padding tb={2}>
+          {this.renderView(check)}
+        </Padding>
+        {this.renderAdvancedOptions(check)}
+        <Padding t={3}>
+          <Button onClick={this.runRemoveCheck} flat color="danger">
+            <Delete inline fill="danger"/> Delete Check
+          </Button>
+        </Padding>
+      </div>
+    );
+  },
   render() {
     const check = this.getCheck();
     return (
@@ -100,15 +119,7 @@ const CheckSingle = React.createClass({
             <Col xs={12}>
               <Panel>
                 <BastionRequirement>
-                  <Padding tb={2}>
-                    {this.renderInner(check)}
-                  </Padding>
-                  {this.renderAdvancedOptions(check)}
-                  <Padding t={3}>
-                    <Button onClick={this.runRemoveCheck} flat color="danger">
-                      <Delete inline fill="danger"/> Delete Check
-                    </Button>
-                  </Padding>
+                  {this.renderInner(check)}
                 </BastionRequirement>
               </Panel>
             </Col>
