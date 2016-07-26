@@ -211,7 +211,7 @@ export default handleActions({
             return value.map(r => {
               const http = _.get(r, 'Reply.HttpResponse');
               if (http){
-                return {response: http, target: r.target};
+                return {response: http, target: r.target, passing: !!r.passing};
               }
               return {error: _.get(r, 'error')};
             });
