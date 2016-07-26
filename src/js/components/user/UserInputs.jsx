@@ -56,12 +56,12 @@ const UserInputs = React.createClass({
       path: 'password',
       placeholder: 'Password',
       autoFocus: this.props.autoFocus === 'password'
-    }, this.props.password);
+    });
     return (
       <div>
         <label>
           <div className={cx(inputStyle.label, 'display-flex')}>
-            <span className="flex-1">Password*</span>
+            <span className="flex-1">{_.get(this, 'props.password.label') || 'Password*'}</span>
             <a href="#" onClick={this.handlePassToggle}>{this.state.showPass ? 'Hide' : 'Show'}</a>
           </div>
           <Input onChange={this.props.onChange} {...props}>
