@@ -75,7 +75,7 @@ const ProfileEdit = React.createClass({
     return _.some([
       !(this.state.email && this.state.name),
       this.getStatus() === 'pending',
-      !this.state.valid
+      (!this.isTeam() && !this.state.valid)
     ]);
   },
   handleNotifChange(notifications){

@@ -36,6 +36,11 @@ export function getTeam(callback = () => {}){
                 exp_year
                 last4
               }
+              invoices {
+                date
+                amount
+                paid
+              }
               next_invoice {
                 amount
                 date
