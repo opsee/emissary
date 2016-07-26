@@ -2,6 +2,7 @@ import config from '../modules/config';
 import request from '../modules/request';
 import {createAction} from 'redux-actions';
 import * as analytics from './analytics';
+import * as user from './user';
 import {
   APP_INITIALIZE,
   APP_SHUTDOWN,
@@ -101,9 +102,12 @@ export function shutdown(){
   };
 }
 
-export function setScheme(payload, listener = false){
+export function setScheme(payload, listener = false, putData = true){
   //pass listener if you are using an event listener and want to avoid recursive loop
-  return (dispatch) => {
+  return (dispatch, state) => {
+    if (putData){
+      user.putData('scheme', payload)(dispatch, state);
+    }
     dispatch({
       type: APP_SET_SCHEME,
       payload,
