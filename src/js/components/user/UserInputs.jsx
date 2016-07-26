@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import cx from 'classnames';
+import {connect} from 'react-redux';
 
 import {Mail, Person, Lock} from '../icons';
 import {Padding} from '../layout';
@@ -19,7 +20,8 @@ const UserInputs = React.createClass({
     //props to input
     email: PropTypes.object,
     //props to input
-    name: PropTypes.object
+    name: PropTypes.object,
+    scheme: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -60,7 +62,7 @@ const UserInputs = React.createClass({
     return (
       <div>
         <label>
-          <div className={cx(inputStyle.label, 'display-flex')}>
+          <div className={cx(inputStyle.label, 'display-flex', inputStyle[this.props.scheme])}>
             <span className="flex-1">{_.get(this, 'props.password.label') || 'Password*'}</span>
             <a href="#" onClick={this.handlePassToggle}>{this.state.showPass ? 'Hide' : 'Show'}</a>
           </div>
@@ -93,4 +95,8 @@ const UserInputs = React.createClass({
   }
 });
 
-export default UserInputs;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(UserInputs);

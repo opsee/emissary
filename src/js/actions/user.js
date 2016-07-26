@@ -23,6 +23,7 @@ import {
 } from './constants';
 import storage from '../modules/storage';
 import * as team from './team';
+import * as app from './app';
 
 export function signupCreate(data, redirect) {
   return (dispatch, state) => {
@@ -80,6 +81,9 @@ export function login(data) {
             setTimeout(() => {
               const string = state().router.location.query.redirect || '/';
               dispatch(push(string));
+              /*eslint-disable no-use-before-define*/
+              getData()(dispatch, state);
+              /*eslint-enable no-use-before-define*/
             }, 100);
           }, reject);
         }, reject);
@@ -231,7 +235,13 @@ export function getData(){
         request
         .get(`${config.services.auth}/users/${state().user.get('id')}/data`)
         .set('Authorization', state().user.get('auth'))
-        .then(res => resolve(res.body), reject);
+        .then(res => {
+          resolve(res.body);
+          const scheme = _.chain(res.body).get('scheme').thru(a => Array.isArray(a) ? a : []).last().get('data').value();
+          if (scheme){
+            app.setScheme(scheme, false, false)(dispatch, state);
+          }
+        }, reject);
       })
     });
   };
@@ -256,7 +266,7 @@ export function putData(key, data, reset){
             user[key] = [];
           }
           let record = user[key][index];
-          if (record && record.revision !== config.revision){
+          if (record && record.revision !== process.env.REVISION){
             index++;
           }
           user[key][index] = {
