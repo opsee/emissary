@@ -14,6 +14,11 @@ const PlanInfo = React.createClass({
     checks: PropTypes.object.isRequired,
     base: PropTypes.string
   },
+  getInitialState() {
+    return {
+      showInvoices: false
+    };
+  },
   getPlan(team){
     let plan = team.subscription_plan;
     if (plan === 'beta'){
@@ -37,6 +42,12 @@ const PlanInfo = React.createClass({
   isBilling(){
     const user = this.props.user.toJS();
     return !!(user.perms.admin || user.perms.billing);
+  },
+  handleInvoicesClick(e){
+    e.preventDefault();
+    this.setState({
+      showInvoices: true
+    });
   },
   renderSubscriptionPlan(team = this.props.team.toJS(), base){
     if (this.isBilling()){
@@ -99,6 +110,34 @@ const PlanInfo = React.createClass({
     }
     return null;
   },
+  renderInvoices(team = this.props.team.toJS()){
+    let invoices = _.reject(team.invoices, i => !i.amount);
+    const cut = this.state.showInvoices ? Infinity : 3;
+    const rest = invoices.length - cut;
+    invoices = _.take(invoices, cut);
+    if (this.isBilling() && invoices.length){
+      return (
+        <tr>
+          <td colSpan={2}>
+            <Row>
+              <Col xs={12} sm={4}>
+                <strong>Invoices</strong><br/>
+              </Col>
+              <Col xs={12} sm={8}>
+                {invoices.map(i => {
+                  return (
+                    <div>${(i.amount / 100).toFixed(2)} billed <TimeAgo date={i.date * 1000}/></div>
+                  );
+                })}
+                {!this.state.showInvoices && rest > 0 && <a href="#" onClick={this.handleInvoicesClick}>Show {rest} more</a>}
+              </Col>
+            </Row>
+          </td>
+        </tr>
+      );
+    }
+    return null;
+  },
   renderCostEstimate(team = this.props.team.toJS()){
     const inv = team.next_invoice;
     if (this.isBilling() && _.keys(inv).length){
@@ -129,6 +168,7 @@ const PlanInfo = React.createClass({
           {this.renderSubscriptionPlan(team, base)}
           {this.renderTrial(team)}
           {this.renderCCDetails(team, base)}
+          {this.renderInvoices(team)}
           {this.renderCostEstimate(team)}
         </Table>
       );
