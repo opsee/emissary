@@ -81,7 +81,9 @@ export function login(data) {
             setTimeout(() => {
               const string = state().router.location.query.redirect || '/';
               dispatch(push(string));
+              /*eslint-disable no-use-before-define*/
               getData()(dispatch, state);
+              /*eslint-enable no-use-before-define*/
             }, 100);
           }, reject);
         }, reject);
@@ -239,7 +241,7 @@ export function getData(){
           if (scheme){
             app.setScheme(scheme, false, false)(dispatch, state);
           }
-        }, reject)
+        }, reject);
       })
     });
   };
