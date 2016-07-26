@@ -376,6 +376,18 @@ const Profile = React.createClass({
                           </Row>
                         </td>
                       </tr>
+                      <tr>
+                        <td colSpan={2}>
+                          <Row>
+                            <Col xs={12} sm={4}>
+                              <strong>Color Scheme</strong>
+                            </Col>
+                            <Col xs={12} sm={8}>
+                              <SchemePicker/>
+                            </Col>
+                          </Row>
+                        </td>
+                      </tr>
                     </Table>
                     <PlanInfo base="profile"/>
                     {this.renderIntegrations()}

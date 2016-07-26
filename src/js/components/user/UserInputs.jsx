@@ -1,8 +1,11 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import cx from 'classnames';
+
 import {Mail, Person, Lock} from '../icons';
 import {Padding} from '../layout';
 import {Input} from '../forms';
+import inputStyle from '../forms/input.css';
 
 const UserInputs = React.createClass({
   propTypes: {
@@ -23,10 +26,21 @@ const UserInputs = React.createClass({
       required: ['email', 'password', 'name']
     };
   },
+  getInitialState() {
+    return {
+      showPass: false
+    };
+  },
   getLabel(type){
     const found = this.props.required.indexOf(type) > -1;
     const suffix = found ? '*' : '';
     return _.capitalize(type) + suffix;
+  },
+  handlePassToggle(e){
+    e.preventDefault();
+    this.setState({
+      showPass: !this.state.showPass
+    });
   },
   renderEmail(){
     return (
@@ -38,16 +52,24 @@ const UserInputs = React.createClass({
   renderPassword(){
     const props = _.assign({
       data: this.props.data,
-      type: 'password',
+      type: this.state.showPass ? 'text' : 'password',
       path: 'password',
       placeholder: 'Password',
-      label: this.getLabel('password'),
+      // label: '<span className="display-flex"><span className="flex-1">Password*</span><span>',
       autoFocus: this.props.autoFocus === 'password'
     }, this.props.password);
     return (
-      <Input onChange={this.props.onChange} {...props}>
-        <Lock/>
-      </Input>
+      <div>
+        <label>
+          <div className={cx(inputStyle.label, 'display-flex')}>
+            <span className="flex-1">Password*</span>
+            <a href="#" onClick={this.handlePassToggle}>{this.state.showPass ? 'Hide' : 'Show'}</a>
+          </div>
+          <Input onChange={this.props.onChange} {...props}>
+            <Lock/>
+          </Input>
+        </label>
+      </div>
     );
   },
   renderName(){
