@@ -42,7 +42,7 @@ const initial = {
   },
   statusPageInfo: new Map(),
   intercomStatus: undefined,
-  scheme: storage.get('scheme')
+  scheme: storage.get('scheme') || 'light'
 };
 
 export default handleActions({
@@ -156,7 +156,6 @@ export default handleActions({
   [APP_SET_SCHEME]: {
     next(state, action){
       let scheme = action.payload;
-      scheme = scheme === 'dark' ? '' : scheme;
       document.querySelector('body').className = scheme || '';
       //don't recursively set the storage if we are firing the action from the eventlistener
       if (!_.get(action, 'meta.listener')){
