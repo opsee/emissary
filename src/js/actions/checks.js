@@ -164,7 +164,7 @@ export function getCheck(id){
                 operand
                 key
               }
-              metrics (metric_name: "request_latency", start_time: ${start2}, end_time: ${end}, aggregation: {unit: "minutes", period: 60, type:avg}){
+              metrics (metric_name: "request_latency", start_time: ${start2}, end_time: ${end}, aggregation: {unit: "minutes", period: 20, type:max}){
                 value
                 timestamp
                 tags {
@@ -374,6 +374,12 @@ function formatHttpCheck(data, forTestCheck){
   return _.chain(check)
   .assign({assertions})
   .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id', 'min_failing_count', 'min_failing_time'])
+  .mapValues((value, key) => {
+    if (key === 'notifications'){
+      return _.reject(value, n => (!n.value || !n.type));
+    }
+    return value;
+  })
   .omit(forTestCheck && ['min_failing_time', 'min_failing_count'] || [])
   .mapKeys((value, key) => {
     return key === 'spec' ? 'http_check' : key;

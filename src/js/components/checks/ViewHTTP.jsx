@@ -11,9 +11,9 @@ import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
 import HTTPRequestItem from './HTTPRequestItem';
 import StateGraph from './StateGraph';
-// import {MetricGraph} from '../global';
-// import {regions} from '../../modules';
-// import {Button} from '../forms';
+import {MetricGraph} from '../global';
+import {flag, regions} from '../../modules';
+import {Button} from '../forms';
 
 const ViewHTTP = React.createClass({
   propTypes: {
@@ -26,16 +26,16 @@ const ViewHTTP = React.createClass({
   },
   getInitialState() {
     return {
-      rttRegion: 'us-west-1'
+      rttRegion: 'us-west-2'
     };
   },
   getResponses(){
     return new List(this.props.redux.checks.responsesFormatted);
   },
   getRTTData(){
-    return _.chain(this.props.check.metrics)
-    .filter(m => _.find(m.tags, {value: this.state.rttRegion}))
-    .map(this.props.check.metrics || [], m => {
+    return _.chain(this.props.check.metrics || [])
+    .filter(m => !!_.find(m.tags, t => t.value === this.state.rttRegion))
+    .map(m => {
       return _.assign(m, {
         name: 'request_latency'
       });
@@ -103,25 +103,33 @@ const ViewHTTP = React.createClass({
     );
   },
   renderRTT(){
+    if (flag('graph-rtt')){
+      const assertion = this.getRTTAssertion();
+      const data = this.getRTTData();
+      if (data && data.length){
+        return (
+          <Padding b={2}>
+            <Heading level={3}>Round-Trip Time (max) - Last 2 Hours</Heading>
+            <Padding b={1} className="display-flex flex-wrap">
+              {_.chain(regions)
+                .filter({external: true})
+                .reverse()
+                .map(r => {
+                  return (
+                    <Padding r={1} b={1}>
+                      <Button color="primary" flat={r.id !== this.state.rttRegion} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
+                    </Padding>
+                  );
+                })
+                .value()
+              }
+            </Padding>
+            <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
+          </Padding>
+        );
+      }
+    }
     return null;
-    // const assertion = this.getRTTAssertion();
-    // const data = this.getRTTData();
-    // if (data && data.length){
-    //   return (
-    //     <Padding b={2}>
-    //       <Heading level={3}>Round-Trip Time</Heading>
-    //       {regions.map(r => {
-    //         return (
-    //           <Padding inline r={1}>
-    //           <Button color="primary" flat={r.id !== this.state.rttRegion} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
-    //           </Padding>
-    //         )
-    //       })}
-    //       <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
-    //     </Padding>
-    //   );
-    // }
-    // return null;
   },
   render(){
     const check = this.props.check.toJS();
