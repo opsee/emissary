@@ -1,7 +1,8 @@
 export default [
   {
     id: 'ap-northeast-1',
-    name: 'Tokyo'
+    name: 'Tokyo',
+    external: true
   },
   {
     id: 'ap-northeast-2',
@@ -9,7 +10,8 @@ export default [
   },
   {
     id: 'ap-southeast-1',
-    name: 'Singapore'
+    name: 'Singapore',
+    external: true
   },
   {
     id: 'ap-southeast-2',
@@ -17,7 +19,8 @@ export default [
   },
   {
     id: 'eu-central-1',
-    name: 'Frankfurt'
+    name: 'Frankfurt',
+    external: true
   },
   {
     id: 'eu-west-1',
@@ -25,11 +28,13 @@ export default [
   },
   {
     id: 'sa-east-1',
-    name: 'São Paolo'
+    name: 'São Paolo',
+    external: true
   },
   {
     id: 'us-east-1',
-    name: 'N. Virginia'
+    name: 'N. Virginia',
+    external: true
   },
   {
     id: 'us-west-1',
@@ -37,6 +42,7 @@ export default [
   },
   {
     id: 'us-west-2',
-    name: 'Oregon'
+    name: 'Oregon',
+    external: true
   }
 ];
