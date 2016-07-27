@@ -108,7 +108,7 @@ const ViewHTTP = React.createClass({
     if (data && data.length){
       return (
         <Padding b={2}>
-          <Heading level={3}>Round-Trip Time</Heading>
+          <Heading level={3}>Round-Trip Time (max) - Last 2 Hours</Heading>
           <Padding b={1} className="display-flex flex-wrap">
             {_.chain(regions)
               .filter({external: true})
