@@ -164,7 +164,7 @@ export function getCheck(id){
                 operand
                 key
               }
-              metrics (metric_name: "request_latency", start_time: ${start2}, end_time: ${end}, aggregation: {unit: "minutes", period: 1, type:max}){
+              metrics (metric_name: "request_latency", start_time: ${start2}, end_time: ${end}, aggregation: {unit: "minutes", period: 60, type:avg}){
                 value
                 timestamp
                 tags {

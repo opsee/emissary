@@ -59,7 +59,7 @@ const PlanInfo = React.createClass({
                 <strong>Subscription Plan</strong><br/>
               </Col>
               <Col xs={12} sm={8}>
-                <Link to={`${base}/edit`}>{this.getPlan(team)}</Link>
+                <Link to={`/${base}/edit`}>{this.getPlan(team)}</Link>
               </Col>
             </Row>
           </td>
@@ -100,7 +100,7 @@ const PlanInfo = React.createClass({
                   <strong>Credit Card</strong><br/>
                 </Col>
                 <Col xs={12} sm={8}>
-                  <Link to={`${base}/edit`}>{cc.brand} ****{cc.last4} Exp {cc.exp_month}/{cc.exp_year}</Link>
+                  <Link to={`/${base}/edit`}>{cc.brand} ****{cc.last4} Exp {cc.exp_month}/{cc.exp_year}</Link>
                 </Col>
               </Row>
             </td>

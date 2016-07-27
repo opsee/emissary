@@ -10,8 +10,10 @@ import AssertionItemList from './AssertionItemList';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
 import HTTPRequestItem from './HTTPRequestItem';
-// import {MetricGraph} from '../global';
 import StateGraph from './StateGraph';
+// import {MetricGraph} from '../global';
+// import {regions} from '../../modules';
+// import {Button} from '../forms';
 
 const ViewHTTP = React.createClass({
   propTypes: {
@@ -22,15 +24,23 @@ const ViewHTTP = React.createClass({
       })
     })
   },
+  getInitialState() {
+    return {
+      rttRegion: 'us-west-1'
+    };
+  },
   getResponses(){
     return new List(this.props.redux.checks.responsesFormatted);
   },
   getRTTData(){
-    return _.map(this.props.check.metrics || [], m => {
+    return _.chain(this.props.check.metrics)
+    .filter(m => _.find(m.tags, {value: this.state.rttRegion}))
+    .map(this.props.check.metrics || [], m => {
       return _.assign(m, {
         name: 'request_latency'
       });
-    });
+    })
+    .value();
   },
   getRTTAssertion(){
     return _.chain(this.props.check.toJS())
@@ -40,6 +50,11 @@ const ViewHTTP = React.createClass({
       value: 'request_latency'
     })
     .value() || undefined;
+  },
+  handleRttClick(id){
+    this.setState({
+      rttRegion: id
+    });
   },
   renderNotifications(){
     let notifs = this.props.check.get('notifications');
@@ -95,6 +110,13 @@ const ViewHTTP = React.createClass({
     //   return (
     //     <Padding b={2}>
     //       <Heading level={3}>Round-Trip Time</Heading>
+    //       {regions.map(r => {
+    //         return (
+    //           <Padding inline r={1}>
+    //           <Button color="primary" flat={r.id !== this.state.rttRegion} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
+    //           </Padding>
+    //         )
+    //       })}
     //       <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
     //     </Padding>
     //   );
