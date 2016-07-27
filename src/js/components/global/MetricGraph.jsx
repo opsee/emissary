@@ -190,13 +190,14 @@ const MetricGraph = React.createClass({
     const aspect = isMobile ? this.props.aspectRatio * 1.5 : this.props.aspectRatio;
     const height = aspect * width;
     const margin = this.getMargin();
+    const operand = parseFloat(this.props.assertion.operand);
 
     // The maximum value for the y-scale should be the maximum of the threshold
     // or the highest data point. This lets the graph resize when the threshold
     // is well above the highest data point.
-    const yMax = Math.max(this.props.assertion.operand, d3.max(data, d => d.value)) || 1;
+    const yMax = Math.max(operand, d3.max(data, d => d.value)) || 1;
     //similar for ymin
-    let yMin = Math.min(this.props.assertion.operand, d3.min(data, d => d.value));
+    let yMin = Math.min(operand, d3.min(data, d => d.value));
     yMin = yMin > 0 ? 0 : yMin;
 
     // Calculate the dimensions of the graph itself to properly scale the axes.
@@ -304,14 +305,16 @@ const MetricGraph = React.createClass({
         .attr('id', 'clip-above')
       .append('rect')
         .attr('width', graphWidth)
-        .attr('height', y(_.clamp(this.props.assertion.operand, 0, Infinity)));
+        .attr('height', Math.ceil(y(_.clamp(operand, 0, Infinity))))
+        .attr('transform', 'translate(0, -1)');
 
     graphGroup.append('clipPath')
         .attr('id', 'clip-below')
       .append('rect')
-        .attr('y', y(this.props.assertion.operand))
+        .attr('y', y(operand))
         .attr('width', graphWidth)
-        .attr('height', _.clamp(graphHeight - y(this.props.assertion.operand), 0, Infinity));
+        .attr('height', Math.floor(_.clamp(graphHeight - y(operand), 0, Infinity)))
+        .attr('transform', 'translate(0, 1)');
 
     // Apply the clipping paths
     graphGroup.selectAll(style.line)
@@ -328,8 +331,8 @@ const MetricGraph = React.createClass({
         .attr('class', cx(style.thresholdLine, style[this.props.assertion.relationship || 'none']))
         .attr('x1', 0)
         .attr('x2', graphWidth)
-        .attr('y1', y(this.props.assertion.operand))
-        .attr('y2', y(this.props.assertion.operand));
+        .attr('y1', y(operand))
+        .attr('y2', y(operand));
     }
 
     // Append the current data point
