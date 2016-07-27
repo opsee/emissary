@@ -4,7 +4,10 @@ import {connect} from 'react-redux';
 const SlackConnect = React.createClass({
   propTypes: {
     redirect: PropTypes.string,
-    target: PropTypes.string
+    target: PropTypes.string,
+    redux: PropTypes.shape({
+      team: PropTypes.object.isRequired
+    }).isRequired
   },
   getDefaultProps() {
     return {
@@ -12,7 +15,7 @@ const SlackConnect = React.createClass({
     };
   },
   render() {
-    const redirect = this.props.redirect || 
+    const redirect = this.props.redirect ||
     (this.props.redux.team.users.size > 1 && `${window.location.origin}/team?slack=true`) ||
     `${window.location.origin}/profile?slack=true`;
     return (

@@ -104,7 +104,7 @@ const StateGraph = React.createClass({
     return {
       passing: _.chain(data).filter({to: 'ok'}).map('percent').sum().value(),
       failing: _.chain(data).filter({to: 'fail'}).map('percent').sum().value(),
-      warning: _.chain(data).filter(a => a.to.match('wait|warning')).map('percent').sum().value()
+      warning: _.chain(data).filter(a => a.to.match('wait|warn')).map('percent').sum().value()
     };
   },
   render(){
