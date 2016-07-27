@@ -109,13 +109,13 @@ const ViewHTTP = React.createClass({
       return (
         <Padding b={2}>
           <Heading level={3}>Round-Trip Time</Heading>
-          <Padding b={1}>
+          <Padding b={1} className="display-flex flex-wrap">
             {_.chain(regions)
               .filter({external: true})
               .reverse()
               .map(r => {
                 return (
-                  <Padding inline r={1}>
+                  <Padding r={1} b={1}>
                     <Button color="primary" flat={r.id !== this.state.rttRegion} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
                   </Padding>
                 );

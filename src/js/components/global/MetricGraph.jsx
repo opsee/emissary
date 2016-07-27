@@ -126,9 +126,15 @@ const MetricGraph = React.createClass({
     };
   },
   getTooltipDimensions() {
+    if (!this.props.showTooltip){
+      return {
+        width: 0,
+        height: 0
+      };
+    }
     return {
-      height: 35,
-      width: 35
+      width: 35,
+      height: 35
     };
   },
   getAssertionStatus(dataPoint) {
