@@ -374,6 +374,12 @@ function formatHttpCheck(data, forTestCheck){
   return _.chain(check)
   .assign({assertions})
   .pick(['target', 'spec', 'name', 'notifications', 'assertions', 'id', 'min_failing_count', 'min_failing_time'])
+  .mapValues((value, key) => {
+    if (key === 'notifications'){
+      return _.reject(value, n => (!n.value || !n.type));
+    }
+    return value;
+  })
   .omit(forTestCheck && ['min_failing_time', 'min_failing_count'] || [])
   .mapKeys((value, key) => {
     return key === 'spec' ? 'http_check' : key;
