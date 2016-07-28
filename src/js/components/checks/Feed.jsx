@@ -3,14 +3,16 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import _ from 'lodash';
+import TimeAgo from 'react-timeago';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
-import {Add} from '../icons';
+import {Time} from '../icons';
 import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
 import {Heading} from '../type';
+import AssertionCounter from './AssertionCounter';
 import {
   checks as actions,
   user as userActions,
@@ -18,7 +20,7 @@ import {
 } from '../../actions';
 import {Check} from '../../modules/schemas';
 
-const CheckList = React.createClass({
+const Feed = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
       getChecks: PropTypes.func.isRequired,
@@ -52,12 +54,26 @@ const CheckList = React.createClass({
   componentWillMount(){
     this.props.actions.getChecks();
   },
-  componentWillUpdate(nextProps) {
-    const oldStatus = this.props.redux.asyncActions.checksDelete.status;
-    const newStatus = nextProps.redux.asyncActions.checksDelete.status;
-    if (oldStatus !== newStatus && newStatus === 'success'){
-      this.props.actions.getChecks();
-    }
+  getData(){
+    const checks = this.props.redux.checks.checks.toJS();
+    return _.chain(checks)
+    .map(c => {
+      return _.map(c.state_transitions || [], t => {
+        return _.assign({}, t, _.pick(c, ['id', 'name']))
+      });
+    })
+    .flatten()
+    .reject(i => {
+      const arr = [
+        i.to.match('FAIL_WAIT|PASS_WAIT'),
+        i.to === 'WARN',
+        i.from === 'FAIL_WAIT' && i.to === 'OK',
+        i.from === 'PASS_WAIT' && i.to === 'FAIL'
+      ];
+      return _.some(arr);
+    })
+    .sortBy(i => i.occurred_at * -1)
+    .value();
   },
   getSelectedChecks(){
     return this.props.redux.checks.checks.filter(check => {
@@ -88,28 +104,6 @@ const CheckList = React.createClass({
   handleSelectorClick(){
     this.props.actions.selectToggle();
   },
-  handleDeleteClick(){
-    const selected = this.getSelectedChecks();
-    const {size} = selected;
-    const copy = size > 1 ? `these ${size} checks` : 'this check';
-    this.props.appActions.confirmOpen({
-      html: `<p>Are you sure you want to delete ${copy}?</p>`,
-      confirmText: 'Yes, delete',
-      color: 'danger',
-      onConfirm: this.props.actions.delSelected
-    });
-  },
-  renderAutoMessage(){
-    return (
-      <UserDataRequirement hideIf="hasDismissedCheckAssertionsHelp">
-        <Padding b={2}>
-          <Alert color="success" onDismiss={this.runDismissHelperText}>
-            Now the fun part. Assertions are used to determine passing or failing state. A simple and effective assertion might be: <strong>'Status Code equal to 200'</strong>. When defining multiple assertions, <strong>all</strong> must pass for the check to be deemed <em>passing</em>.
-          </Alert>
-        </Padding>
-      </UserDataRequirement>
-    );
-  },
   renderChecks(){
     if (!this.props.redux.checks.checks.size) {
       //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
@@ -132,46 +126,47 @@ const CheckList = React.createClass({
       </div>
     );
   },
-  renderActionBar(){
-    if (!this.props.redux.checks.checks.size) {
-      return null;
+  renderItem(item, i){
+    const passing = item.to === 'OK' ? true : false;
+    return (
+      <div key={`feed-item-${i}`}>
+        <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
+        <Link to={`/check/${item.id}`}>{item.name || item.id}</Link>
+        <Time inline/>&nbsp;<TimeAgo date={item.occurred_at}/>
+      </div>
+    )
+  },
+  renderInner(){
+    const data = this.getData();
+    const action = this.props.redux.asyncActions.getChecks;
+    if (!action.history.length){
+      return <StatusHandler status={action.status}/>
     }
-    const selected = this.getSelectedChecks();
-    const {size} = selected;
-    const isDeleting = this.props.redux.asyncActions.checksDelete.status === 'pending';
-    const isDisabled = isDeleting || size < 1;
-    if (this.props.redux.checks.checks.size) {
+    if (data.length){
       return (
-        <Padding t={1} b={2} className="display-flex">
-          <div className="flex-1 display-flex">
-            <Padding r={1}>
-              <Button to={{pathname: 'checks-notifications', query: {selected: JSON.stringify(_.map(selected.toJS(), 'id'))}}} flat color="default" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>Edit Notifications</Button>
-            </Padding>
-            <Padding r={1}>
-              <Button onClick={this.handleDeleteClick} flat color="danger" disabled={isDisabled} style={{opacity: isDisabled ? 0.3 : 1}}>{isDeleting ? 'Deleting...' : 'Delete'}</Button>
-            </Padding>
-          </div>
-        </Padding>
-      );
+        <div>
+          {data.map((item, i) => this.renderItem(item, i))}
+          {JSON.stringify(this.getData())}
+        </div>
+      )
     }
-    return null;
+    return (
+      <div>
+        No events in the last 24 hours
+      </div>
+    )
   },
   render() {
     return (
       <div>
-        <Toolbar title="Checks">
-          <Button to="/check-create" color="primary" fab title="Create New Check">
-            <Add btn/>
-          </Button>
-        </Toolbar>
+        <Toolbar title="Feed"/>
         <Padding b={2}>
           <Grid>
             <Row>
               <Col xs={12}>
                 <Panel>
                   <BastionRequirement>
-                    {this.renderActionBar()}
-                    {this.renderChecks()}
+                    {this.renderInner()}
                   </BastionRequirement>
                 </Panel>
               </Col>
@@ -190,7 +185,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
+  redux: state,
   scheme: state.app.scheme
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CheckList);
+export default connect(mapStateToProps, mapDispatchToProps)(Feed);

@@ -24,7 +24,7 @@ import {
 } from './constants';
 
 export function fetchChecks(state) {
-  const start = moment().subtract({hours: 12}).valueOf();
+  const start = moment().subtract({hours: 24}).valueOf();
   const end = Date.now().valueOf();
   return request
     .post(`${config.services.compost}`)

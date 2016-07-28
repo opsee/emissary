@@ -18,7 +18,8 @@ import CheckDebug from './CheckDebug';
 import {getCheckTypes, validate} from '../../modules';
 import {
   checks as actions,
-  env as envActions
+  env as envActions,
+  app as appActions
 } from '../../actions';
 import {Check} from '../../modules/schemas';
 
@@ -27,6 +28,9 @@ const CheckEdit = React.createClass({
     params: PropTypes.object,
     onFilterChange: PropTypes.func,
     filter: PropTypes.string,
+    appActions: PropTypes.shape({
+      confirmOpen: PropTypes.func.isRequired
+    }),
     actions: PropTypes.shape({
       getCheck: PropTypes.func,
       del: PropTypes.func,
@@ -87,7 +91,12 @@ const CheckEdit = React.createClass({
     return !!validate.check(this.getCheck()).length;
   },
   runRemoveCheck(){
-    this.props.actions.del([this.props.params.id]);
+    this.props.appActions.confirmOpen({
+      html: `<p>Are you sure you want to delete <br/><strong>${this.getCheck().name}?</strong></p>`,
+      confirmText: 'Yes, delete',
+      color: 'danger',
+      onConfirm: this.props.actions.del.bind(null, [this.props.params.id], true)
+    });
   },
   setData(data){
     this.setState({
@@ -201,7 +210,8 @@ const CheckEdit = React.createClass({
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  envActions: bindActionCreators(envActions, dispatch)
+  envActions: bindActionCreators(envActions, dispatch),
+  appActions: bindActionCreators(appActions, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(CheckEdit);
