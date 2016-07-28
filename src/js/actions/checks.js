@@ -426,6 +426,9 @@ export function test(data){
                 error
                 target {
                   id
+                  address
+                  name
+                  type
                 }
                 reply {
                   ...on schemaHttpResponse {

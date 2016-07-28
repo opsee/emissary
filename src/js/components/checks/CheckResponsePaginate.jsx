@@ -364,7 +364,7 @@ const CheckResponsePaginate = React.createClass({
     const id = _.get(selected, 'target.id');
     const address = _.get(selected, 'target.address');
     let title = id || address;
-    if (id && address){
+    if ((id && address) && id !== address){
       title = `${id} - ${address}`;
     }
     let region = bastions[selected.bastion_id] || null;
