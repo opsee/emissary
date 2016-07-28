@@ -108,9 +108,9 @@ export const statics = {
       return data;
     }
     if (data.error){
-      return {error: data.error};
+      return data;
     }
-    return {error: 'Something went wrong'};
+    return _.assign(data, {error: 'Something went wrong'});
   },
   getFormattedResponses(data){
     return data.map(d => statics.formatResponse(d)).toJS();
@@ -213,7 +213,7 @@ export default handleActions({
               if (http){
                 return {response: http, target: r.target, passing: !!r.passing};
               }
-              return {error: _.get(r, 'error')};
+              return _.assign(r, {error: _.get(r, 'error')});
             });
           }
           return value;

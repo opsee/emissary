@@ -239,9 +239,12 @@ const CheckResponsePaginate = React.createClass({
     }
     if (res.error){
       return (
-        <div className={this.getResponseClass(true)}>
+        <Padding className={this.getResponseClass(true)} a={1}>
+          <div style={{width: '100%'}}>
+            {this.renderTopArea()}
+          </div>
           <Alert color="danger" className="flex-1">{res.error}</Alert>
-        </div>
+        </Padding>
       );
     }
     return (
@@ -358,7 +361,12 @@ const CheckResponsePaginate = React.createClass({
   renderTopArea(){
     const arr = this.getFormattedResponses();
     const selected = arr[this.props.redux.checks.selectedResponse];
-    const title = _.get(selected, 'target.address') || _.get(selected, 'target.id');
+    const id = _.get(selected, 'target.id');
+    const address = _.get(selected, 'target.address');
+    let title = id || address;
+    if ((id && address) && id !== address){
+      title = `${id} - ${address}`;
+    }
     let region = bastions[selected.bastion_id] || null;
     region = region ? ` - ${region}` : null;
     if (arr.length){
@@ -371,7 +379,7 @@ const CheckResponsePaginate = React.createClass({
       }
       return (
         <div>
-          {responseTitle} ({this.props.redux.checks.selectedResponse + 1} of {arr.length})
+          ({this.props.redux.checks.selectedResponse + 1} of {arr.length})&nbsp;{responseTitle}
         </div>
       );
     }

@@ -155,6 +155,8 @@ export function getCheck(id){
                   target {
                     id
                     type
+                    address
+                    name
                   }
                 }
               }
@@ -424,6 +426,9 @@ export function test(data){
                 error
                 target {
                   id
+                  address
+                  name
+                  type
                 }
                 reply {
                   ...on schemaHttpResponse {
