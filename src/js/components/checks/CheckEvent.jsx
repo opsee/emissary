@@ -4,12 +4,15 @@ import {bindActionCreators} from 'redux';
 import {Map} from 'immutable';
 import TimeAgo from 'react-timeago';
 import {Link} from 'react-router';
+import _ from 'lodash';
 
 import {checks as actions} from '../../actions';
 import {Col, Grid, Padding, Row} from '../layout';
 import {Button} from '../forms';
 import {Toolbar} from '../global';
 import CheckResponsePaginate from './CheckResponsePaginate';
+import {InstanceItem, GroupItem} from '../env';
+import {Heading} from '../type';
 
 const CheckEvent = React.createClass({
   propTypes: {
@@ -67,11 +70,33 @@ const CheckEvent = React.createClass({
         To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
     );
   },
+  renderTarget(notif){
+    const target = _.get(notif.toJS(), 'target') || {};
+    if (target && (target.type === 'host' || target.type === 'external_host')){
+      return null;
+    }
+    let el;
+    switch (target.type){
+    case 'instance':
+      el = <InstanceItem target={target}/>;
+      break;
+    default:
+      el = <GroupItem target={target}/>;
+      break;
+    }
+    return (
+      <Padding b={1}>
+        <Heading level={3}>Target</Heading>
+        {el}
+      </Padding>
+    );
+  },
   renderInner() {
+    const notif = this.getNotification();
     if (!this.isJSONLoaded()) {
       return null;
     }
-    let d = this.getNotification().get('timestamp');
+    let d = notif.get('timestamp');
     if (typeof d === 'number'){
       d = new Date(d);
     } else if (typeof d === 'object' && d.toJS){
@@ -81,7 +106,8 @@ const CheckEvent = React.createClass({
       <div className="js-screenshot-results">
         <Padding tb={1}>
           {this.renderText()}
-          <CheckResponsePaginate responses={this.getNotification().get('responses')}
+          {this.renderTarget(notif)}
+          <CheckResponsePaginate responses={notif.get('responses')}
             allowCollapse={false} showRerunButton={false} date={d}/>
             <Padding t={2}>
               <Button href={this.props.location.query.json} target="_blank" flat color="default">View Raw Event JSON</Button>

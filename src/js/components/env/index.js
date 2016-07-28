@@ -1,5 +1,9 @@
-import EnvList from './EnvList.jsx';
+import EnvList from './EnvList';
+import InstanceItem from '../instances/InstanceItem';
+import GroupItem from '../groups/GroupItem';
 
 export {
-  EnvList
+  EnvList,
+  InstanceItem,
+  GroupItem
 };

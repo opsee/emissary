@@ -155,6 +155,8 @@ export function getCheck(id){
                   target {
                     id
                     type
+                    address
+                    name
                   }
                 }
               }
