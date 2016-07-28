@@ -24,6 +24,12 @@ const PlanInfo = React.createClass({
     if (plan === 'beta'){
       plan = 'Team (beta)';
     }
+    if (plan === 'developer_monthly'){
+      plan = 'Developer';
+    }
+    if (plan === 'team_monthly'){
+      plan = 'Team'
+    }
     return _.capitalize(plan);
   },
   getTrialEnding(team){
