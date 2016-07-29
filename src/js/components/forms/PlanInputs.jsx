@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
+import {connect} from 'react-redux';
 
 import {flag} from '../../modules';
 import CreditCard from './CreditCard';
@@ -11,7 +12,10 @@ import {Heading} from '../type';
 const PlanInputs = React.createClass({
   propTypes: {
     onChange: PropTypes.func.isRequired,
-    selected: PropTypes.string
+    selected: PropTypes.string,
+    redux: PropTypes.shape({
+      team: PropTypes.object.isRequired
+    }).isRequired
   },
   getInitialState() {
     return {
@@ -34,7 +38,7 @@ const PlanInputs = React.createClass({
   getPlans(){
     return _.chain(['free', 'developer_monthly', 'team_monthly', 'beta'])
     .filter(d => {
-      return flag(`team-plan-${d}`);
+      return flag(`team-plan-${d}`) || this.props.redux.team.get('subscription_plan') === d;
     })
     .map(id => {
       let label = _.capitalize(id);
@@ -105,4 +109,8 @@ const PlanInputs = React.createClass({
   }
 });
 
-export default PlanInputs;
+const mapStateToProps = (state) => ({
+  redux: state
+});
+
+export default connect(mapStateToProps)(PlanInputs);
