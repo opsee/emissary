@@ -220,6 +220,9 @@ export default handleActions({
         })
         .value();
       }
+      data = _.assign(data, {
+        name: data.check_name
+      });
       const notification = fromJS(data);
       let responses = notification.get('responses');
       responses = responses && responses.toJS ? responses : new List();

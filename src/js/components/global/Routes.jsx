@@ -120,8 +120,10 @@ const routes = (
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
     <Route path="/check/:id/event" component={auth(CheckEvent)}/>
+    <Route path="/check/:id/event/:state_transition_id" component={auth(CheckEvent)}/>
     <Route path="/check/:id" component={auth(CheckSingle)}/>
-    <Route path="/feed" component={auth(Feed)}/>
+    <Redirect from="/feed" to="/events" />
+    <Route path="/events" component={auth(Feed)}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>

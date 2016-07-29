@@ -20,8 +20,8 @@ const StateGraph = React.createClass({
   getDefaultProps() {
     return {
       transitions: [],
-      tickNumber: 6,
-      period: 6,
+      tickNumber: 8,
+      period: 24,
       unit: 'hours'
     };
   },

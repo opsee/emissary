@@ -23,124 +23,95 @@ import {Check} from '../../modules/schemas';
 const Feed = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getChecks: PropTypes.func.isRequired,
-      selectToggle: PropTypes.func.isRequired,
-      delSelected: PropTypes.func.isRequired
-    }),
-    userActions: PropTypes.shape({
-      putData: PropTypes.func
-    }),
-    appActions: PropTypes.shape({
-      confirmOpen: PropTypes.func
+      getChecks: PropTypes.func.isRequired
     }),
     redux: PropTypes.shape({
       checks: PropTypes.shape({
         checks: PropTypes.object
       }),
-      env: PropTypes.shape({
-        bastions: PropTypes.array
-      }),
       asyncActions: PropTypes.shape({
-        getChecks: PropTypes.object,
-        checksDelete: PropTypes.object
+        getChecks: PropTypes.object
       })
-    })
+    }),
+    id: PropTypes.string
   },
-  getInitialState() {
+  getDefaultProps() {
     return {
-      notifEditing: false
+      renderAsInclude: false
     };
   },
   componentWillMount(){
-    this.props.actions.getChecks();
+    if (!this.props.renderAsInclude){
+      this.props.actions.getChecks();
+    }
   },
-  getData(){
-    const checks = this.props.redux.checks.checks.toJS();
+  getFormatted(){
+    let checks = this.props.redux.checks.checks.toJS();
+    if (this.props.id){
+      checks = _.filter(checks, c => c.id === this.props.id);
+    }
     return _.chain(checks)
     .map(c => {
-      return _.map(c.state_transitions || [], t => {
-        return _.assign({}, t, _.pick(c, ['id', 'name']))
+      let trans = _.chain(c.state_transitions || [])
+      .sortBy(i => i.occurred_at * -1)
+      .map(t => {
+        return _.assign({}, t, {
+          check_id: c.id,
+          name: c.name
+        });
+      })
+      .value();
+      return trans.map((item, i) => {
+        const next = trans[i + 1];
+        if (next){
+          return _.assign(item, {
+            select: next.to !== 'WARN'
+          });
+        }
+        return item;
       });
     })
     .flatten()
-    .reject(i => {
-      const arr = [
-        i.to.match('FAIL_WAIT|PASS_WAIT'),
-        i.to === 'WARN',
-        i.from === 'FAIL_WAIT' && i.to === 'OK',
-        i.from === 'PASS_WAIT' && i.to === 'FAIL'
-      ];
-      return _.some(arr);
-    })
     .sortBy(i => i.occurred_at * -1)
     .value();
   },
-  getSelectedChecks(){
-    return this.props.redux.checks.checks.filter(check => {
-      return check.get('selected');
-    });
+  getData(){
+    return _.chain(this.getFormatted())
+    .filter({select: true})
+    .filter(i => {
+      const arr = [
+        i.to === 'FAIL' && i.from !== 'PASS_WAIT',
+        i.to === 'OK' && i.from !== 'FAIL_WAIT'
+      ];
+      return _.some(arr);
+    })
+    .value();
   },
-  getExtCheckUrl(){
-    let check = new Check().toJS();
-    let data = _.assign(check, {
-      type: 'http',
-      target: {
-        type: 'external_host'
-      }
-    });
-    //strip notifs and assertions because they are added later in the process
-    data = _.omit(data, ['notifications', 'assertions']);
-    data = window.encodeURIComponent(JSON.stringify(data));
-    return `/check-create/request?data=${data}`;
-  },
-  runDismissHelperText(){
-    this.props.userActions.putData('hasDismissedCheckTypeHelp');
-  },
-  handleNotifEdit(){
-    this.setState({
-      notifEditing: true
-    });
-  },
-  handleSelectorClick(){
-    this.props.actions.selectToggle();
-  },
-  renderChecks(){
-    if (!this.props.redux.checks.checks.size) {
-      //TODO - figure out why <Link> element is causing react to throw an error. Has something to do with statushandler and link.
+  renderLink(item){
+    if (!this.props.renderAsInclude){
       return (
-        <StatusHandler status={this.props.redux.asyncActions.getChecks.status}>
-          <Padding b={2}><Heading level={2}>Welcome to Opsee! Let&rsquo;s get started.</Heading></Padding>
-          <p>Thanks for signing up! Let&rsquo;s get your environment set up:</p>
-
-          <ol>
-            <li><Link to={this.getExtCheckUrl()} title="Create New Check">Create your first health check</Link> for any public URL</li>
-            <li>Keep your team in the loop by setting up <a href="/profile">Slack and Pagerduty integration</a> on your Profile page</li>
-            <li>If you&rsquo;re hosted in AWS, <a href="/start/launch-stack">add our EC2 instance</a> to run checks inside your environment too</li>
-          </ol>
-        </StatusHandler>
+        <Link to={`/check/${item.check_id}`}><span style={{fontWeight: '500'}}>{item.name || item.id}&nbsp;</span></Link>
       );
     }
-    return (
-      <div>
-        <CheckItemList title selectable/>
-      </div>
-    );
+    return null;
   },
   renderItem(item, i){
     const passing = item.to === 'OK' ? true : false;
     return (
-      <div key={`feed-item-${i}`} className="display-flex">
-        <div>
-          <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
-        </div>
-        <div>
-          <Link to={`/check/${item.id}`}>{item.name || item.id}</Link><br/>
-          <Time inline/>&nbsp;<TimeAgo date={item.occurred_at}/>
-        </div>
-      </div>
+      <Padding key={`feed-item-${i}`} b={1}>
+        <Row>
+          <Col xs={2} sm={1}>
+            <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
+          </Col>
+          <Col xs={10} sm={11}>
+            {this.renderLink(item)}{!this.renderAsInclude ? 'C' : 'c'}heck began to {passing ? 'pass' : 'fail'}<br/>
+            <Link to={`/check/${item.check_id}/event/${item.id}`}><Time inline fill="text"/>&nbsp;<TimeAgo date={item.occurred_at}/></Link>
+          </Col>
+        </Row>
+      </Padding>
     )
   },
-  renderInner(){
+  renderList(){
     const data = this.getData();
     const action = this.props.redux.asyncActions.getChecks;
     if (!action.history.length){
@@ -150,7 +121,6 @@ const Feed = React.createClass({
       return (
         <div>
           {data.map((item, i) => this.renderItem(item, i))}
-          {JSON.stringify(this.getData())}
         </div>
       )
     }
@@ -160,10 +130,33 @@ const Feed = React.createClass({
       </div>
     )
   },
-  render() {
+  renderDebugData(){
+    if (process.env.NODE_ENV === 'debug'){
+      return (
+        <Padding t={3}>
+          {JSON.stringify(this.getFormatted())}
+        </Padding>
+      );
+    }
+    return null;
+  },
+  renderInner(){
     return (
       <div>
-        <Toolbar title="Feed"/>
+        {this.renderList()}
+        {
+          // this.renderDebugData()
+        }
+      </div>
+    )
+  },
+  render() {
+    if (this.props.renderAsInclude){
+      return this.renderInner();
+    }
+    return (
+      <div>
+        <Toolbar title="Check Events"/>
         <Padding b={2}>
           <Grid>
             <Row>

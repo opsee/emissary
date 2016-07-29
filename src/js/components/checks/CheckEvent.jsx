@@ -7,19 +7,21 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 
 import {checks as actions} from '../../actions';
-import {Col, Grid, Padding, Row} from '../layout';
+import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
-import {Toolbar} from '../global';
+import {StatusHandler, Toolbar} from '../global';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import {InstanceItem, GroupItem} from '../env';
 import {Heading} from '../type';
+import ViewHTTP from './ViewHTTP';
+import ViewCloudwatch from './ViewCloudwatch';
 
 const CheckEvent = React.createClass({
   propTypes: {
     params: PropTypes.object,
     location: PropTypes.shape({
       query: PropTypes.shape({
-        json: PropTypes.string.isRequired
+        json: PropTypes.string
       })
     }),
     actions: PropTypes.shape({
@@ -27,48 +29,64 @@ const CheckEvent = React.createClass({
     }),
     redux: PropTypes.shape({
       checks: PropTypes.object
-    })
+    }),
+    s3: PropTypes.bool
+  },
+  getInitialState() {
+    return {
+      s3: !!this.props.location.query.json
+    };
   },
   componentWillMount() {
     // The JSON containing check notification data to populate the screenshot is
     // uploaded to S3 by the Notificaption service (but any JSON URL would work)
-    const jsonURI = this.props.location.query.json;
-    this.props.actions.getCheckFromURI(jsonURI);
-  },
-  getNotification() {
-    const notification = this.props.redux.checks.notification;
-    const hasData = !!notification && !notification.isEmpty();
-    return hasData ? notification : new Map({ check_id: this.props.params.id });
-  },
-  getFailingResponses() {
-    const notification = this.getNotification();
-    return notification.get('responses').filter(response => !response.passing);
-  },
-  getTitle(){
-    const name = this.getNotification().get('check_name') || '';
-    if (!name){
-      return '';
+    if (this.state.s3){
+      this.props.actions.getCheckFromURI(this.props.location.query.json);
     }
-    const bool = this.getNotification().get('passing') ? 'Passing' : 'Failure';
+    this.props.actions.getCheck(this.props.params.id, this.props.params.state_transition_id);
+  },
+  getData() {
+    if (this.state.s3){
+      const notification = this.props.redux.checks.notification;
+      const hasData = !!notification && !notification.isEmpty();
+      return hasData ? notification : new Map({ check_id: this.props.params.id });
+    }
+    return this.props.redux.checks.single;
+  },
+  getFailingResponses(check) {
+    return check.get('responses').filter(response => !response.passing);
+  },
+  getTitle(check){
+    const name = check.get('name') || '';
+    if (!name){
+      return 'Check Event';
+    }
+    const bool = check.get('passing') ? 'Passing' : 'Failure';
     return `${bool} Event: ${name}`;
   },
-  isJSONLoaded() {
-    // True if the JSON has been loaded from the S3 URL
-    return this.getNotification().get('check_name');
-  },
-  renderText(){
-    let stamp = this.getNotification().get('timestamp');
-    if (typeof stamp === 'number'){
-      stamp = new Date(stamp);
+  renderText(check){
+    if (check.get('name')){
+      let stamp = check.get('timestamp');
+      if (!stamp){
+        stamp = _.chain(check.toJS())
+        .get('state_transitions')
+        .find({id: parseInt(this.props.params.state_transition_id, 10)})
+        .get('occurred_at')
+        .value();
+      }
+      if (typeof stamp === 'number'){
+        stamp = new Date(stamp);
+      }
+      if (typeof stamp !== 'object'){
+        return null;
+      }
+      const bool = check.get('passing');
+      return (
+        <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={stamp}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
+          To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
+      );
     }
-    if (typeof stamp !== 'object'){
-      return null;
-    }
-    const bool = this.getNotification().get('passing');
-    return (
-      <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={stamp}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
-        To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
-    );
+    return null;
   },
   renderTarget(notif){
     const target = _.get(notif.toJS(), 'target') || {};
@@ -91,43 +109,73 @@ const CheckEvent = React.createClass({
       </Padding>
     );
   },
-  renderInner() {
-    const notif = this.getNotification();
-    if (!this.isJSONLoaded()) {
-      return null;
-    }
-    let d = notif.get('timestamp');
-    if (typeof d === 'number'){
-      d = new Date(d);
-    } else if (typeof d === 'object' && d.toJS){
-      d = new Date(d.get('seconds') * 1000);
-    }
-    return (
-      <div className="js-screenshot-results">
-        <Padding tb={1}>
-          {this.renderText()}
-          {this.renderTarget(notif)}
-          <CheckResponsePaginate responses={notif.get('responses')}
-            allowCollapse={false} showRerunButton={false} date={d}/>
-            <Padding t={2}>
-              <Button href={this.props.location.query.json} target="_blank" flat color="default">View Raw Event JSON</Button>
-            </Padding>
+  renderViewJSON(){
+    if (this.state.s3){
+      return (
+        <Padding t={2}>
+          <Button href={this.props.location.query.json} target="_blank" flat color="default">View Raw Event JSON</Button>
         </Padding>
-      </div>
-    );
+      );
+    }
+    return null;
+  },
+  renderInner(check) {
+    if (this.state.s3){
+      if (!check.get('name')) {
+        return null;
+      }
+      let d = check.get('timestamp');
+      if (typeof d === 'number'){
+        d = new Date(d);
+      } else if (typeof d === 'object' && d.toJS){
+        d = new Date(d.get('seconds') * 1000);
+      }
+      return (
+        <div className="js-screenshot-results">
+          <Padding tb={1}>
+            {this.renderTarget(check)}
+            <CheckResponsePaginate responses={check.get('responses')}
+              allowCollapse={false} showRerunButton={false} date={d}/>
+              {this.renderViewJSON(check)}
+          </Padding>
+        </div>
+      );
+    }
+    return this.renderView(check);
+  },
+  renderView(check){
+    if (this.props.redux.asyncActions.getCheck.status === 'pending'){
+      return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
+    }
+    if (check.get('tags').find(() => 'complete')){
+      const isCloudwatch = _.chain(check.toJS()).get('assertions').head().get('key').value() === 'cloudwatch';
+      if (isCloudwatch){
+        return (
+          <ViewCloudwatch check={check}/>
+        );
+      }
+      return (
+        <ViewHTTP check={check} redux={this.props.redux} sections={['assertions', 'responses', 'notifications']} historical={true}/>
+      );
+    }
+    return null;
   },
   render() {
+    const check = this.getData();
     let bg;
-    if (this.isJSONLoaded()){
-      bg = this.getNotification().get('passing') ? 'success' : 'danger';
+    if (check.get('name')){
+      bg = check.get('passing') ? 'success' : 'danger';
     }
     return (
       <div>
-        <Toolbar title={this.getTitle()} bg={bg}/>
-        <Grid>
+        <Toolbar title={this.getTitle(check)} bg={bg}/>
+        <Grid style={{minHeight: '400px'}}>
           <Row>
             <Col xs={12}>
-              {this.renderInner()}
+              <Panel>
+                {this.renderText(check)}
+                {this.renderInner(check)}
+              </Panel>
             </Col>
           </Row>
         </Grid>
