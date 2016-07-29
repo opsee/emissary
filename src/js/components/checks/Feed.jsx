@@ -129,10 +129,14 @@ const Feed = React.createClass({
   renderItem(item, i){
     const passing = item.to === 'OK' ? true : false;
     return (
-      <div key={`feed-item-${i}`}>
-        <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
-        <Link to={`/check/${item.id}`}>{item.name || item.id}</Link>
-        <Time inline/>&nbsp;<TimeAgo date={item.occurred_at}/>
+      <div key={`feed-item-${i}`} className="display-flex">
+        <div>
+          <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
+        </div>
+        <div>
+          <Link to={`/check/${item.id}`}>{item.name || item.id}</Link><br/>
+          <Time inline/>&nbsp;<TimeAgo date={item.occurred_at}/>
+        </div>
       </div>
     )
   },
