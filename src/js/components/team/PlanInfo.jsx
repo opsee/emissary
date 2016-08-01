@@ -20,10 +20,12 @@ const PlanInfo = React.createClass({
     };
   },
   getPlan(team){
-    let plan = team.subscription_plan;
-    if (plan === 'beta'){
-      plan = 'Team (beta)';
-    }
+    const obj = {
+      beta: 'Team (beta)',
+      developer_monthly: 'Developer',
+      team_monthly: 'Team'
+    };
+    const plan = obj[team.subscription_plan] || team.subscription_plan;
     return _.capitalize(plan);
   },
   getTrialEnding(team){

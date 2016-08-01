@@ -84,6 +84,7 @@ export function edit(data, redirect = '/team'){
               name
               id
               subscription
+              subscription_plan
               users {
                 status
                 name

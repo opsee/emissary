@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import TimeAgo from 'react-timeago';
+import moment from 'moment';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Time} from '../icons';
@@ -11,8 +12,9 @@ import {UserDataRequirement} from '../user';
 import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
-import {Heading} from '../type';
+import {Color, Heading} from '../type';
 import AssertionCounter from './AssertionCounter';
+import {config} from '../../modules';
 import {
   checks as actions,
   user as userActions,
@@ -40,11 +42,31 @@ const Feed = React.createClass({
       renderAsInclude: false
     };
   },
-  componentWillMount(){
-    if (!this.props.renderAsInclude){
-      this.props.actions.getChecks();
-    }
+  getInitialState() {
+    return {
+      hours: config.checkActivityStartHours
+    };
   },
+  getNewHours(h = this.props.redux.checks.startHours){
+    if (h < 72){
+      return 96;
+    }
+    if (h < 150){
+      return 168;
+    }
+    if (h < 300){
+      return 336;
+    }
+    if (h < 700){
+      return 744;
+    }
+    return 1200;
+  },
+  // componentWillMount(){
+  //   if (!this.props.renderAsInclude){
+  //     this.props.actions.getChecks();
+  //   }
+  // },
   getFormatted(){
     let checks = this.props.redux.checks.checks.toJS();
     if (this.props.id){
@@ -87,6 +109,12 @@ const Feed = React.createClass({
     })
     .value();
   },
+  handleMoreClick(){
+    const hours = this.getNewHours();
+    this.props.actions.getChecks({
+      hours
+    });
+  },
   renderLink(item){
     if (!this.props.renderAsInclude){
       return (
@@ -98,25 +126,39 @@ const Feed = React.createClass({
   renderItem(item, i){
     const passing = item.to === 'OK' ? true : false;
     return (
-      <Padding key={`feed-item-${i}`} b={1}>
+      <Padding key={`feed-item-${i}`} b={2}>
         <Row>
           <Col xs={2} sm={1}>
             <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
           </Col>
           <Col xs={10} sm={11}>
-            {this.renderLink(item)}{!this.renderAsInclude ? 'C' : 'c'}heck began to {passing ? 'pass' : 'fail'}<br/>
-            <Link to={`/check/${item.check_id}/event/${item.id}`}><Time inline fill="text"/>&nbsp;<TimeAgo date={item.occurred_at}/></Link>
+            {this.renderLink(item)}{this.props.renderAsInclude ? 'C' : 'c'}heck began to {passing ? 'pass' : 'fail'}&nbsp;<Link to={`/check/${item.check_id}/event/${item.id}`}><TimeAgo date={item.occurred_at}/></Link><br/>
+            <Link to={`/check/${item.check_id}/event/${item.id}`}>
+              <Time inline fill="text"/>&nbsp;&nbsp;<small><Color c="muted" scheme={this.props.scheme}>{new Date(item.occurred_at).toString()}</Color></small>
+            </Link>
           </Col>
         </Row>
       </Padding>
     )
   },
+  renderEndOfList(){
+    const ago = moment().subtract({hours: this.props.redux.checks.startHours}).fromNow();
+    let str = `End of events from ${ago}`;
+    if (this.props.redux.asyncActions.getChecks.status === 'pending'){
+      str = 'Loading more events...';
+    }
+    return (
+      <Padding t={2}>
+        <Alert>{str}</Alert>
+      </Padding>
+    );
+  },
   renderList(){
     const data = this.getData();
     const action = this.props.redux.asyncActions.getChecks;
-    if (!action.history.length){
-      return <StatusHandler status={action.status}/>
-    }
+    // if (!action.history.length){
+    //   return <StatusHandler status={action.status}/>
+    // }
     if (data.length){
       return (
         <div>
@@ -124,11 +166,7 @@ const Feed = React.createClass({
         </div>
       )
     }
-    return (
-      <div>
-        No events in the last 24 hours
-      </div>
-    )
+    return null;
   },
   renderDebugData(){
     if (process.env.NODE_ENV === 'debug'){
@@ -140,10 +178,22 @@ const Feed = React.createClass({
     }
     return null;
   },
+  renderMoreButton(){
+    if (this.props.redux.checks.startHours < 1200){
+      return (
+        <Padding t={2}>
+          <Button onClick={this.handleMoreClick} flat color="primary" disabled={this.props.redux.asyncActions.getChecks.status === 'pending'}>View More Events</Button>
+        </Padding>
+      );
+    }
+  },
   renderInner(){
     return (
       <div>
         {this.renderList()}
+        <StatusHandler status={this.props.redux.asyncActions.getChecks.status} timeout={0} persistent/>
+        {this.renderEndOfList()}
+        {this.renderMoreButton()}
         {
           // this.renderDebugData()
         }

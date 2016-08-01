@@ -135,7 +135,6 @@ const ViewHTTP = React.createClass({
     if (flag('graph-rtt') && this.isSection('rtt')){
       const assertion = this.getRTTAssertion(check);
       const data = this.getRTTData(check);
-      if (data && data.length){
         return (
           <Padding b={2}>
             <Heading level={3}>Round-Trip Time (max) - Last 2 Hours</Heading>
@@ -154,9 +153,8 @@ const ViewHTTP = React.createClass({
               }
             </Padding>
             <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
-          </Padding>
-        );
-      }
+        </Padding>
+      );
     }
     return null;
   },

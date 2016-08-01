@@ -4,7 +4,7 @@ import {parse} from 'query-string';
 import result from '../modules/result';
 import {handleActions} from 'redux-actions';
 import {Check, CheckEvent} from '../modules/schemas';
-import {itemsFilter, yeller} from '../modules';
+import {config, itemsFilter, yeller} from '../modules';
 import {
   GET_CHECK,
   GET_CHECK_FROM_S3,
@@ -142,7 +142,8 @@ const initial = {
   selectedResponse: 0,
   filtered: new List(),
   event: new CheckEvent(),
-  notification: new CheckEvent()
+  notification: new CheckEvent(),
+  startHours: config.checkActivityStartHours
 };
 
 export default handleActions({
@@ -181,7 +182,8 @@ export default handleActions({
     next(state, action){
       const checks = statics.checksFromJS(action.payload.data, state);
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
-      return _.assign({}, state, {checks, filtered});
+      const startHours = action.payload.hours;
+      return _.assign({}, state, {checks, filtered, startHours});
     },
     throw: yeller.reportAction
   },

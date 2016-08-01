@@ -20,6 +20,7 @@ import DocsBastion from 'react-proxy?name=docsBastion!exports?exports.default!..
 import DocsChecks from 'react-proxy?name=docsChecks!exports?exports.default!../docs/Checks.jsx';
 import DocsNotifications from 'react-proxy?name=docsNotifications!exports?exports.default!../docs/Notifications.jsx';
 import DocsPermissions from 'react-proxy?name=docsPermissions!exports?exports.default!../docs/Permissions.jsx';
+import DocsBilling from 'react-proxy?name=docsBilling!exports?exports.default!../docs/Billing.jsx';
 
 import CheckCreate from 'react-proxy?name=checkCreate!exports?exports.default!../checks/Create';
 import CheckCreateTarget from 'react-proxy?name=checkCreate!exports?exports.default!../checks/CheckCreateTarget';
@@ -176,6 +177,7 @@ const routes = (
     <Route path="/docs/checks" component={DocsChecks}/>
     <Route path="/docs/notifications" component={DocsNotifications}/>
     <Route path="/docs/permissions" component={DocsPermissions}/>
+    <Route path="/docs/billing" component={DocsBilling}/>
 
     <Route path="/integrations/slack" component={Slack}/>
 

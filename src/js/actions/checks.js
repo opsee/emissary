@@ -23,8 +23,9 @@ import {
   CHECK_CREATE_OR_EDIT
 } from './constants';
 
-export function fetchChecks(state) {
-  const start = moment().subtract({hours: 24}).valueOf();
+export function fetchChecks(state, kwargs = {}) {
+  const hours = kwargs.hours || state().checks.startHours || config.checkActivityStartHours;
+  const start = moment().subtract({hours}).valueOf();
   const end = Date.now().valueOf();
   return request
     .post(`${config.services.compost}`)
@@ -198,19 +199,13 @@ export function getCheck(id, state_transition_id){
   };
 }
 
-export function getChecks(redirect){
+export function getChecks(kwargs = {}){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECKS,
       payload: graphPromise('checks', () => {
-        return fetchChecks(state);
-      }, {search: state().search}, () => {
-        if (redirect){
-          setTimeout(() => {
-            dispatch(push('/'));
-          }, 30);
-        }
-      })
+        return fetchChecks(state, kwargs);
+      }, {search: state().search, hours: kwargs.hours || state().checks.startHours || config.checkActivityStartHours})
     });
   };
 }
