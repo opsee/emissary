@@ -168,12 +168,14 @@ export default handleActions({
       });
       const responsesFormatted = statics.getFormattedResponses(responses);
       const filtered = itemsFilter(checks, action.payload.search, 'checks');
+      const startHours = action.payload.hours;
       return _.assign({}, state, {
         single,
         checks,
         responses,
         responsesFormatted,
-        filtered
+        filtered,
+        startHours
       });
     },
     throw: yeller.reportAction

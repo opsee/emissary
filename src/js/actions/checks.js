@@ -81,13 +81,13 @@ export function getCheckFromURI(jsonURI) {
   };
 }
 
-export function getCheck(id, state_transition_id){
-  const start2 = moment().subtract({hours: 2}).valueOf();
-  const start6 = moment().subtract({hours: 6}).valueOf();
-  const start24 = moment().subtract({hours: 24}).valueOf();
-  const end = Date.now().valueOf();
-  const idArg = state_transition_id ? `id: "${id}", state_transition_id: ${state_transition_id}` : `id: "${id}"`;
+export function getCheck(id, transitionId, kwargs = {}){
   return (dispatch, state) => {
+    const hours = kwargs.hours || state().checks.startHours || config.checkActivityStartHours;
+    const start = moment().subtract({hours}).valueOf();
+    const start2 = moment().subtract({hours: 2}).valueOf();
+    const end = Date.now().valueOf();
+    const idArg = transitionId ? `id: "${id}", state_transition_id: ${transitionId}` : `id: "${id}"`;
     dispatch({
       type: GET_CHECK,
       payload: graphPromise('checks', () => {
@@ -185,7 +185,7 @@ export function getCheck(id, state_transition_id){
                   value
                 }
               }
-              state_transitions(start_time: ${start24}, end_time: ${end}){
+              state_transitions(start_time: ${start}, end_time: ${end}){
                 from
                 to
                 occurred_at
@@ -194,7 +194,11 @@ export function getCheck(id, state_transition_id){
             }
           }`
         });
-      }, {id, search: state().search})
+      }, {
+        id,
+        search: state().search,
+        hours: kwargs.hours || state().checks.startHours || config.checkActivityStartHours
+      })
     });
   };
 }

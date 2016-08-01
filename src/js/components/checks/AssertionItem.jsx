@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Grid, Row, Col} from '../layout';
+import {Row, Col} from '../layout';
 import AssertionCounter from './AssertionCounter.jsx';
 import relationships from 'slate/src/relationships';
 import types from 'slate/src/types';

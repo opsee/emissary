@@ -93,7 +93,6 @@ const Opsee = React.createClass({
     }
   },
   getMeatClass(){
-    console.log(this.shouldHideNav());
     return this.shouldHideNav() ? style.meatUp : style.meat;
   },
   shouldFullScreen() {

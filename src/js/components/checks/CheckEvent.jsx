@@ -25,10 +25,14 @@ const CheckEvent = React.createClass({
       })
     }),
     actions: PropTypes.shape({
-      getCheckFromURI: PropTypes.func.isRequired
-    }),
+      getCheckFromURI: PropTypes.func.isRequired,
+      getCheck: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
-      checks: PropTypes.object
+      checks: PropTypes.object,
+      asyncActions: PropTypes.shape({
+        getCheck: PropTypes.object
+      })
     }),
     s3: PropTypes.bool
   },
@@ -155,7 +159,7 @@ const CheckEvent = React.createClass({
         );
       }
       return (
-        <ViewHTTP check={check} redux={this.props.redux} sections={['assertions', 'responses', 'notifications']} historical={true}/>
+        <ViewHTTP check={check} redux={this.props.redux} sections={['assertions', 'responses', 'notifications']} historical/>
       );
     }
     return null;

@@ -21,7 +21,7 @@ const AssertionCounter = React.createClass({
   },
   getDefaultProps() {
     return {
-      passing: undefined  
+      passing: undefined
     };
   },
   getTitle(passing){

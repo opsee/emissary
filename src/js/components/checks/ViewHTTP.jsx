@@ -46,9 +46,14 @@ const ViewHTTP = React.createClass({
   getResponses(){
     return new List(this.props.redux.checks.responsesFormatted);
   },
-  getRTTData(){
+  getRTTData(check){
     return _.chain(this.props.check.metrics || [])
-    .filter(m => !!_.find(m.tags, t => t.value === this.state.rttRegion))
+    .filter(m => {
+      if (_.get(check, 'target.type') === 'host'){
+        return true;
+      }
+      return !!_.find(m.tags, t => t.value === this.state.rttRegion);
+    })
     .map(m => {
       return _.assign(m, {
         name: 'request_latency'
@@ -64,6 +69,17 @@ const ViewHTTP = React.createClass({
       value: 'request_latency'
     })
     .value() || undefined;
+  },
+  getRegions(check){
+    return _.chain(regions)
+    .filter(r => {
+      if (_.get(check, 'target.type') === 'host'){
+        return r.id === _.chain(check).get('metrics[0].tags').find({name: 'region'}).get('value').value();
+      }
+      return _.get(check, 'target.type') === 'host' ? true : !!r.external;
+    })
+    .reverse()
+    .value();
   },
   isSection(str){
     return _.includes(this.props.sections, str);
@@ -135,24 +151,19 @@ const ViewHTTP = React.createClass({
     if (flag('graph-rtt') && this.isSection('rtt')){
       const assertion = this.getRTTAssertion(check);
       const data = this.getRTTData(check);
-        return (
-          <Padding b={2}>
-            <Heading level={3}>Round-Trip Time (max) - Last 2 Hours</Heading>
-            <Padding b={1} className="display-flex flex-wrap">
-              {_.chain(regions)
-                .filter({external: true})
-                .reverse()
-                .map(r => {
-                  return (
-                    <Padding r={1} b={1}>
-                      <Button color="primary" flat={r.id !== this.state.rttRegion} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
-                    </Padding>
-                  );
-                })
-                .value()
-              }
-            </Padding>
-            <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
+      return (
+        <Padding b={2}>
+          <Heading level={3}>Round-Trip Time (max) - Last 2 Hours</Heading>
+          <Padding b={1} className="display-flex flex-wrap">
+            {this.getRegions(check).map(r => {
+              return (
+                <Padding r={1} b={1}>
+                  <Button color="primary" flat={r.id !== this.state.rttRegion && check.target.type !== 'host'} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
+                </Padding>
+              );
+            })}
+          </Padding>
+          <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
         </Padding>
       );
     }

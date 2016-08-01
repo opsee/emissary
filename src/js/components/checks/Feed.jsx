@@ -8,11 +8,9 @@ import moment from 'moment';
 
 import {BastionRequirement, Toolbar, StatusHandler} from '../global';
 import {Time} from '../icons';
-import {UserDataRequirement} from '../user';
-import CheckItemList from './CheckItemList.jsx';
 import {Button} from '../forms';
 import {Alert, Col, Grid, Padding, Panel, Row} from '../layout';
-import {Color, Heading} from '../type';
+import {Color} from '../type';
 import AssertionCounter from './AssertionCounter';
 import {config} from '../../modules';
 import {
@@ -20,22 +18,25 @@ import {
   user as userActions,
   app as appActions
 } from '../../actions';
-import {Check} from '../../modules/schemas';
 
 const Feed = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getChecks: PropTypes.func.isRequired
-    }),
+      getChecks: PropTypes.func.isRequired,
+      getCheck: PropTypes.func.isRequired
+    }).isRequired,
     redux: PropTypes.shape({
       checks: PropTypes.shape({
-        checks: PropTypes.object
+        checks: PropTypes.object,
+        startHours: PropTypes.number
       }),
       asyncActions: PropTypes.shape({
         getChecks: PropTypes.object
       })
     }),
-    id: PropTypes.string
+    id: PropTypes.string,
+    renderAsInclude: PropTypes.bool,
+    scheme: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -74,8 +75,7 @@ const Feed = React.createClass({
     }
     return _.chain(checks)
     .map(c => {
-      let trans = _.chain(c.state_transitions || [])
-      .sortBy(i => i.occurred_at * -1)
+      return _.chain(c.state_transitions || [])
       .map(t => {
         return _.assign({}, t, {
           check_id: c.id,
@@ -83,23 +83,13 @@ const Feed = React.createClass({
         });
       })
       .value();
-      return trans.map((item, i) => {
-        const next = trans[i + 1];
-        if (next){
-          return _.assign(item, {
-            select: next.to !== 'WARN'
-          });
-        }
-        return item;
-      });
     })
     .flatten()
     .sortBy(i => i.occurred_at * -1)
     .value();
   },
   getData(){
-    return _.chain(this.getFormatted())
-    .filter({select: true})
+    let data = _.chain(this.getFormatted())
     .filter(i => {
       const arr = [
         i.to === 'FAIL' && i.from !== 'PASS_WAIT',
@@ -107,11 +97,20 @@ const Feed = React.createClass({
       ];
       return _.some(arr);
     })
+    .reject(i => {
+      return i.from === 'WARN';
+    })
     .value();
+    return _.filter(data, (item, i) => {
+      return item.to !== _.get(data, `[${i + 1}].to`);
+    });
   },
   handleMoreClick(){
     const hours = this.getNewHours();
-    this.props.actions.getChecks({
+    if (this.props.id){
+      return this.props.actions.getCheck(this.props.id, null, {hours});
+    }
+    return this.props.actions.getChecks({
       hours
     });
   },
@@ -127,7 +126,7 @@ const Feed = React.createClass({
     const passing = item.to === 'OK' ? true : false;
     return (
       <Padding key={`feed-item-${i}`} b={2}>
-        <Row>
+        <Row className="align-items-center">
           <Col xs={2} sm={1}>
             <AssertionCounter passing={passing} title={passing ? 'Check Passing' : 'Check Failing'}/>
           </Col>
@@ -139,7 +138,7 @@ const Feed = React.createClass({
           </Col>
         </Row>
       </Padding>
-    )
+    );
   },
   renderEndOfList(){
     const ago = moment().subtract({hours: this.props.redux.checks.startHours}).fromNow();
@@ -155,16 +154,12 @@ const Feed = React.createClass({
   },
   renderList(){
     const data = this.getData();
-    const action = this.props.redux.asyncActions.getChecks;
-    // if (!action.history.length){
-    //   return <StatusHandler status={action.status}/>
-    // }
     if (data.length){
       return (
         <div>
           {data.map((item, i) => this.renderItem(item, i))}
         </div>
-      )
+      );
     }
     return null;
   },
@@ -186,6 +181,7 @@ const Feed = React.createClass({
         </Padding>
       );
     }
+    return null;
   },
   renderInner(){
     return (
@@ -194,11 +190,8 @@ const Feed = React.createClass({
         <StatusHandler status={this.props.redux.asyncActions.getChecks.status} timeout={0} persistent/>
         {this.renderEndOfList()}
         {this.renderMoreButton()}
-        {
-          // this.renderDebugData()
-        }
       </div>
-    )
+    );
   },
   render() {
     if (this.props.renderAsInclude){
