@@ -48,7 +48,27 @@ const Feed = React.createClass({
       hours: config.checkActivityStartHours
     };
   },
-  getNewHours(h = this.props.redux.checks.startHours){
+  componentWillMount(){
+    const data = this.getData();
+    if (
+      this.props.redux.asyncActions.getChecks.history.length &&
+      this.props.redux.asyncActions.getChecks.status !== 'pending' &&
+      !data.length
+    ){
+      this.handleMoreClick();
+    }
+  },
+  componentWillReceiveProps(nextProps) {
+    const stat = 'redux.asyncActions.getChecks.status';
+    if (_.get(nextProps, stat) === 'success' && _.get(this.props, stat) !== 'success'){
+      const nextItems = this.getData(nextProps);
+      if (!nextItems.length && this.getNewHours() < 1200){
+        this.handleMoreClick();
+      }
+    }
+  },
+  getNewHours(props = this.props){
+    const h = props.redux.checks.startHours;
     if (h < 72){
       return 96;
     }
@@ -63,15 +83,10 @@ const Feed = React.createClass({
     }
     return 1200;
   },
-  // componentWillMount(){
-  //   if (!this.props.renderAsInclude){
-  //     this.props.actions.getChecks();
-  //   }
-  // },
-  getFormatted(){
-    let checks = this.props.redux.checks.checks.toJS();
-    if (this.props.id){
-      checks = _.filter(checks, c => c.id === this.props.id);
+  getFormatted(props = this.props){
+    let checks = props.redux.checks.checks.toJS();
+    if (props.id){
+      checks = _.filter(checks, c => c.id === props.id);
     }
     return _.chain(checks)
     .map(c => {
@@ -88,8 +103,8 @@ const Feed = React.createClass({
     .sortBy(i => i.occurred_at * -1)
     .value();
   },
-  getData(){
-    let data = _.chain(this.getFormatted())
+  getData(props = this.props){
+    let data = _.chain(this.getFormatted(props))
     .filter(i => {
       const arr = [
         i.to === 'FAIL' && i.from !== 'PASS_WAIT',
@@ -105,10 +120,10 @@ const Feed = React.createClass({
       return item.to !== _.get(data, `[${i + 1}].to`);
     });
   },
-  handleMoreClick(){
-    const hours = this.getNewHours();
-    if (this.props.id){
-      return this.props.actions.getCheck(this.props.id, null, {hours});
+  handleMoreClick(props = this.props){
+    const hours = this.getNewHours(props);
+    if (props.id){
+      return this.props.actions.getCheck(props.id, null, {hours});
     }
     return this.props.actions.getChecks({
       hours

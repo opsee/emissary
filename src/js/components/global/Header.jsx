@@ -45,21 +45,21 @@ const Header = React.createClass({
         return (
           <Link to="/team" className={style.navbarLink} activeClassName="active">
             <Person nav/>&nbsp;
-            <span className={`${style.navbarTitle}`}>Team</span>
+            <span className={style.navbarTitle}>Team</span>
           </Link>
         );
       }
       return (
         <Link to="/profile" className={style.navbarLink} activeClassName="active">
           <Person nav/>&nbsp;
-          <span className={`${style.navbarTitle}`}>Profile</span>
+          <span className={style.navbarTitle}>Profile</span>
         </Link>
       );
     }
     return (
       <Link to="/login" className={style.navbarLink}>
         <Login nav/>&nbsp;
-        <span className={`${style.navbarTitle}`}>Login</span>
+        <span className={style.navbarTitle}>Login</span>
       </Link>
     );
   },
@@ -69,7 +69,7 @@ const Header = React.createClass({
          <li>
            <Link to="/env" className={style.navbarLink} activeClassName="active">
              <Cloud nav/>&nbsp;
-             <span className={`${style.navbarTitle}`}>Environment</span>
+             <span className={style.navbarTitle}>Env<span className="hidden-xs">ironment</span></span>
            </Link>
          </li>
       );
@@ -82,14 +82,20 @@ const Header = React.createClass({
         <li>
          <Link to="/" className={style.navbarLink} activeClassName="active">
            <Checks nav/>&nbsp;
-           <span className={`${style.navbarTitle}`}>Checks</span>
+           <span className={style.navbarTitle}>Checks</span>
+         </Link>
+       </li>
+       <li>
+         <Link to="/events" className={style.navbarLink} activeClassName="active">
+           <Cloud nav/>&nbsp;
+           <span className={style.navbarTitle}>Events</span>
          </Link>
        </li>
        {this.renderEnvironmentLink()}
         <li>
          <Link to="/help" className={style.navbarLink} activeClassName="active">
            <Help nav/>&nbsp;
-           <span className={`${style.navbarTitle}`}>Help</span>
+           <span className={style.navbarTitle}>Help</span>
          </Link>
        </li>
        <li>
