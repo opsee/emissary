@@ -22,7 +22,7 @@ export default function asyncActions(state, action = {type: null}) {
       //this allows the most recent pending request to trump all previous if the service is slow for some reason
       if (state[stripped] && state[stripped].id === action.payload.id){
         obj[stripped] = _.assign({}, action.payload, {meta: action.meta}, {
-          history: history.concat([action.payload])
+          history: history.concat([_.assign(action.payload, {meta: action.meta})])
         });
       }
     } else {
