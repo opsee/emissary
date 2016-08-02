@@ -127,6 +127,7 @@ export function getCheck(id){
                 bastion_id
                 timestamp
                 responses {
+                  error
                   passing
                   reply {
                     ...on schemaHttpResponse {
