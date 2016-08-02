@@ -23,8 +23,9 @@ import PlanInfo from './PlanInfo';
 const Profile = React.createClass({
   propTypes: {
     actions: PropTypes.shape({
-      getTeam: PropTypes.func
-    }),
+      getTeam: PropTypes.func.isRequired,
+      memberInvite: PropTypes.func.isRequired
+    }).isRequired,
     userActions: PropTypes.shape({
       logout: PropTypes.func.isRequired
     }).isRequired,
@@ -39,7 +40,8 @@ const Profile = React.createClass({
       }).isRequired,
       asyncActions: PropTypes.shape({
         teamGet: PropTypes.object,
-        onboardGetDefaultNotifs: PropTypes.object.isRequired
+        onboardGetDefaultNotifs: PropTypes.object.isRequired,
+        teamMemberInvite: PropTypes.object.isRequired
       }).isRequired,
       env: PropTypes.shape({
         activeBastion: PropTypes.object
@@ -61,7 +63,8 @@ const Profile = React.createClass({
   getInitialState() {
     return {
       start: {},
-      showInactive: false
+      showInactive: false,
+      resending: undefined
     };
   },
   getTeamData(){
@@ -91,11 +94,23 @@ const Profile = React.createClass({
     })
     .value();
   },
+  getHasResent(id){
+    return !!_.find(this.props.redux.asyncActions.teamMemberInvite.history, h => {
+      return _.get(h, 'meta.email') === id;
+    });
+  },
   runShowAll(e){
     e.preventDefault();
     this.setState({
       showInactive: true
     });
+  },
+  handleResend(e, data){
+    e.preventDefault();
+    this.setState({
+      resending: data.email
+    });
+    this.props.actions.memberInvite(data, null);
   },
   renderSlackArea(){
     if (flag('integrations-slack')){
@@ -313,7 +328,20 @@ const Profile = React.createClass({
       return <Link to={`/team/member/${member.id}/edit?ref=/team`} title={`Edit ${member.name || member.email}`}>Edit</Link>;
     }
     if (member.status === 'invited'){
-      return <span>{_.capitalize(member.status)}</span>;
+      let str = 'Resend Invite Email';
+      if (this.getHasResent(member.email)){
+        str = 'Sent.';
+      } else if (this.state.resending === member.email){
+        str = 'Sending...';
+      }
+      if (str.match('Resend')){
+        return (
+          <a href="#" onClick={(e) => this.handleResend(e, member)}>{str}</a>
+        );
+      }
+      return (
+        <span>{str}</span>
+      );
     }
     return null;
   },

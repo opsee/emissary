@@ -125,6 +125,9 @@ function member(data, type, redirect = '/team'){
   return (dispatch, state) => {
     dispatch({
       type,
+      meta: {
+        email: data.email
+      },
       payload: graphPromise('user', () => {
         return request
         .post(`${config.services.compost}`)
@@ -148,17 +151,19 @@ function member(data, type, redirect = '/team'){
             user
           }
         });
-      }, {search: state().search}, () => {
+      }, {search: state().search, email: data.email}, () => {
         setTimeout(() => {
-          dispatch(push(redirect));
+          if (redirect){
+            dispatch(push(redirect));
+          }
         }, 100);
       })
     });
   };
 }
 
-export function memberInvite(data){
-  return member(data, TEAM_MEMBER_INVITE);
+export function memberInvite(data, redirect){
+  return member(data, TEAM_MEMBER_INVITE, redirect);
 }
 
 export function memberEdit(data){
