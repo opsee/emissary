@@ -10,6 +10,7 @@ import {checks as actions} from '../../actions';
 import {Col, Grid, Padding, Panel, Row} from '../layout';
 import {Button} from '../forms';
 import {StatusHandler, Toolbar} from '../global';
+import {Close} from '../icons';
 import CheckResponsePaginate from './CheckResponsePaginate';
 import {InstanceItem, GroupItem} from '../env';
 import {Heading} from '../type';
@@ -69,14 +70,23 @@ const CheckEvent = React.createClass({
     return `${bool} Event: ${name}`;
   },
   renderText(check){
-    if (check.get('name')){
-      let stamp = check.get('timestamp');
+    const c = check.toJS();
+    const bool = !!c.passing;
+    if (c.name){
+      let stamp = c.timestamp;
       if (!stamp){
-        stamp = _.chain(check.toJS())
+        stamp = _.chain(c)
         .get('state_transitions')
         .find({id: parseInt(this.props.params.state_transition_id, 10)})
         .get('occurred_at')
         .value();
+        if (!stamp){
+          stamp = _.chain(c)
+          .get('results')
+          .map('timestamp')
+          .head()
+          .value();
+        }
       }
       if (typeof stamp === 'number'){
         stamp = new Date(stamp);
@@ -84,7 +94,6 @@ const CheckEvent = React.createClass({
       if (typeof stamp !== 'object'){
         return null;
       }
-      const bool = check.get('passing');
       return (
         <p>Your check began to {bool ? 'pass' : 'fail'} <TimeAgo date={stamp}/>. The responses are noted below for historical record. These responses are <strong>not</strong> live. <br/>
           To view the most current status of your check, <Link to={`/check/${this.props.params.id}`}>click here</Link>.</p>
@@ -172,7 +181,11 @@ const CheckEvent = React.createClass({
     }
     return (
       <div>
-        <Toolbar title={this.getTitle(check)} bg={bg}/>
+        <Toolbar title={this.getTitle(check)} bg={bg} btnPosition="midRight">
+          <Button to={`/check/${this.props.params.id}`} icon flat title="Return to Check">
+            <Close btn/>
+          </Button>
+        </Toolbar>
         <Grid style={{minHeight: '400px'}}>
           <Row>
             <Col xs={12}>

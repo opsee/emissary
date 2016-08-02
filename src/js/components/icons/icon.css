@@ -102,3 +102,11 @@
 .disabled.light {
   fill: var(--lightColorText);
 }
+
+.fillBg {
+  fill: var(--colorBackground);
+}
+
+.fillBg.light {
+  fill: #eee;
+}

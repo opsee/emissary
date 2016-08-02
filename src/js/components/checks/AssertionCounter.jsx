@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import slate from 'slate';
+import {connect} from 'react-redux';
+
 import {Close, Checkmark} from '../icons';
 import style from './assertionCounter.css';
 import {ScreenReaderOnly} from '../type';
@@ -17,7 +19,8 @@ const AssertionCounter = React.createClass({
       relationship: PropTypes.string.isRequired
     }),
     passing: PropTypes.bool,
-    title: PropTypes.string
+    title: PropTypes.string,
+    scheme: PropTypes.string
   },
   getDefaultProps() {
     return {
@@ -53,9 +56,9 @@ const AssertionCounter = React.createClass({
   },
   renderIcon(passing){
     return passing ? (
-      <Checkmark btn fill="#303030" style={{top: '0.3rem'}}/>
+      <Checkmark btn fill="bg" style={{top: '0.3rem'}} scheme={this.props.scheme}/>
     ) : (
-      <Close btn fill="#303030" style={{top: '0.3rem'}}/>
+      <Close btn fill="bg" style={{top: '0.3rem'}} scheme={this.props.scheme}/>
     );
   },
   render(){
@@ -70,4 +73,8 @@ const AssertionCounter = React.createClass({
   }
 });
 
-export default AssertionCounter;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(AssertionCounter);
