@@ -237,7 +237,7 @@ export function getData(){
         .set('Authorization', state().user.get('auth'))
         .then(res => {
           resolve(res.body);
-          const scheme = _.chain(res.body).get('scheme').thru(a => Array.isArray(a) ? a : []).last().get('data').value();
+          const scheme = _.chain(res.body).get('scheme').last().get('data').value();
           if (scheme){
             app.setScheme(scheme, false, false)(dispatch, state);
           }

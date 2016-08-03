@@ -515,7 +515,7 @@ export function createOrEdit(raw){
         });
       }, null, (payload) => {
         analytics.trackEvent('Check', 'create')(dispatch, state);
-        const id = _.chain(payload).get('data').thru(arr => arr || []).head().get('id').value();
+        const id = _.chain(payload).get('data').head().get('id').value();
         const redirect = id ? `/check/${id}` : '/';
         setTimeout(() => {
           dispatch(push(redirect));

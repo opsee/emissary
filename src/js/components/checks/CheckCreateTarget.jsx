@@ -77,6 +77,7 @@ const CheckCreateTarget = React.createClass({
     if (check.target.type === 'ecs'){
       check.target.cluster = _.head((check.target.id || '').split('/'));
       check.target.service = _.last((check.target.id || '').split('/'));
+      check.target.TaskDefinition = _.get(item, 'TaskDefinition');
     }
     this.props.onChange(check);
     const data = window.encodeURIComponent(JSON.stringify(check));

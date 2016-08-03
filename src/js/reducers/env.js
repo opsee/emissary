@@ -733,12 +733,10 @@ export default handleActions({
       if (_.get(action.payload, 'command') === 'bastions'){
         const activeBastion = _.chain(action.payload)
         .get('attributes.bastions')
-        .thru(arr => {
-          return Array.isArray(arr) ? arr : [];
-        })
         .find(msg => _.get(msg, 'connected'))
-        .value() || {};
-        if (activeBastion && activeBastion.region){
+        .defaultTo({})
+        .value();
+        if (_.get(activeBastion, 'region')){
           return _.assign({}, state, {
             activeBastion,
             region: activeBastion.region,

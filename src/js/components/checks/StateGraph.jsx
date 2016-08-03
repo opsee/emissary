@@ -102,9 +102,9 @@ const StateGraph = React.createClass({
   getStats(){
     const data = this.getData();
     return {
-      passing: _.chain(data).filter({to: 'ok'}).map('percent').sum().thru(n => n.toFixed(2)).value(),
-      failing: _.chain(data).filter({to: 'fail'}).map('percent').sum().thru(n => n.toFixed(2)).value(),
-      warning: _.chain(data).filter(a => a.to.match('wait|warn')).map('percent').sum().thru(n => n.toFixed(2)).value()
+      passing: _.chain(data).filter({to: 'ok'}).map('percent').sum().invoke('toFixed', 2).value(),
+      failing: _.chain(data).filter({to: 'fail'}).map('percent').sum().invoke('toFixed', 2).value(),
+      warning: _.chain(data).filter(a => a.to.match('wait|warn')).map('percent').sum().invoke('toFixed', 2).value()
     };
   },
   render(){
@@ -125,17 +125,17 @@ const StateGraph = React.createClass({
         </Padding>
         <div className={cx(style.wrapper, style[this.props.scheme])}>
           {
-            this.getData(true).map(d => {
+            this.getData(true).map((d, i) => {
               return (
-                <div className={cx(style.item, style[d.to])} style={{width: `calc(${d.percent}% - 2px)`}} title={this.getItemTitle(d)}/>
+                <div className={cx(style.item, style[d.to])} style={{width: `calc(${d.percent}% - 2px)`}} title={this.getItemTitle(d)} key={`stat-graph-${i}`}/>
               );
             })
           }
         </div>
         <div className={style.yaxis}>
-          {this.getTicks().map(t => {
+          {this.getTicks().map((t, i) => {
             return (
-              <div style={{width: `${100 / this.props.tickNumber}%`}} className={cx(style.tick, style[this.props.scheme])}>
+              <div style={{width: `${100 / this.props.tickNumber}%`}} className={cx(style.tick, style[this.props.scheme])} key={`tick-${i}`}>
                 {t}
               </div>
             );

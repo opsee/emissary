@@ -128,7 +128,7 @@ const ViewHTTP = React.createClass({
           <Padding b={1} className="display-flex flex-wrap">
             {this.getRegions(check).map(r => {
               return (
-                <Padding r={1} b={1}>
+                <Padding r={1} b={1} key={`region-${r.id}`}>
                   <Button color="primary" flat={r.id !== this.state.rttRegion && check.target.type !== 'host'} onClick={this.handleRttClick.bind(null, r.id)}>{r.name}</Button>
                 </Padding>
               );
