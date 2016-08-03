@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {List} from 'immutable';
 import cx from 'classnames';
+import _ from 'lodash';
 
 import {StatusHandler} from '../global';
 import {Alert} from '../layout';
@@ -103,10 +104,23 @@ const CheckItemList = React.createClass({
     if (noFilter){
       return data;
     }
-    if (this.props.target){
-      let tar = !Array.isArray(this.props.target) ? [this.props.target] : this.props.target;
+    const {target} = this.props;
+    if (target){
+      let tar = !Array.isArray(target) ? [target] : target;
       data = data.filter(c => {
-        return tar.indexOf(c.get('target').get('id')) > -1;
+        const cTar = c.get('target').get('id');
+        if (c.get('target').get('type') === 'ecs_service'){
+          const container = _.chain(cTar).thru(a => (a || '').split('/')).get(1).value();
+          const ecsTars = _.map(tar, xx => {
+            return _.chain(xx)
+            .thru(a => (a || '')
+            .split('/'))
+            .get(1)
+            .value();
+          });
+          return _.includes(ecsTars, container) || _.includes(tar, cTar);
+        }
+        return _.includes(tar, cTar);
       });
     }
     if (this.props.filter){

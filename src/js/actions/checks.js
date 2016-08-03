@@ -138,6 +138,7 @@ export function getCheck(id, transitionId, kwargs = {}){
                 bastion_id
                 timestamp
                 responses {
+                  error
                   passing
                   reply {
                     ...on schemaHttpResponse {
