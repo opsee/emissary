@@ -170,7 +170,7 @@ const CheckEvent = React.createClass({
     }
     return (
       <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>
-    )
+    );
   },
   render() {
     const check = this.getData();
