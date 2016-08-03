@@ -157,9 +157,6 @@ const CheckEvent = React.createClass({
     return this.renderView(check);
   },
   renderView(check){
-    if (this.props.redux.asyncActions.getCheck.status === 'pending'){
-      return <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>;
-    }
     if (check.get('tags').find(() => 'complete')){
       const isCloudwatch = _.chain(check.toJS()).get('assertions').head().get('key').value() === 'cloudwatch';
       if (isCloudwatch){
@@ -171,7 +168,9 @@ const CheckEvent = React.createClass({
         <ViewHTTP check={check} redux={this.props.redux} sections={['assertions', 'responses', 'notifications']} historical/>
       );
     }
-    return null;
+    return (
+      <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>
+    )
   },
   render() {
     const check = this.getData();

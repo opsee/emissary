@@ -178,7 +178,13 @@ export default handleActions({
         startHours
       });
     },
-    throw: yeller.reportAction
+    throw(state){
+      yeller.reportAction(state);
+      return _.assign({}, state, {
+        single: new Check(),
+        responsesFormatted: []
+      });
+    }
   },
   [GET_CHECKS]: {
     next(state, action){
