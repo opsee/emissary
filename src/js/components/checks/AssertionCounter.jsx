@@ -1,13 +1,15 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 import slate from 'slate';
+import {connect} from 'react-redux';
+
 import {Close, Checkmark} from '../icons';
 import style from './assertionCounter.css';
 import {ScreenReaderOnly} from '../type';
 
 const AssertionCounter = React.createClass({
   propTypes: {
-    response: PropTypes.object.isRequired,
+    response: PropTypes.object,
     item: PropTypes.shape({
       key: PropTypes.string.isRequired,
       operand: PropTypes.oneOfType([
@@ -15,14 +17,25 @@ const AssertionCounter = React.createClass({
         PropTypes.number
       ]),
       relationship: PropTypes.string.isRequired
-    }).isRequired
+    }),
+    passing: PropTypes.bool,
+    title: PropTypes.string,
+    scheme: PropTypes.string
   },
-  getTitle(){
-    return this.isPassing() ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
+  getDefaultProps() {
+    return {
+      passing: undefined
+    };
   },
-  getClass(){
-    if (this.props.response){
-      return this.isPassing() ? style.counterSuccess : style.counterDanger;
+  getTitle(passing){
+    if (this.props.title){
+      return this.props.title;
+    }
+    return passing ? 'Assertion is currently passing.' : 'Assertion is currently failing.';
+  },
+  getClass(passing){
+    if (this.props.response || this.props.passing !== undefined){
+      return passing ? style.counterSuccess : style.counterDanger;
     }
     return style.counterWaiting;
   },
@@ -32,31 +45,36 @@ const AssertionCounter = React.createClass({
     }
     return this.props.response;
   },
-  isPassing(){
-    const test = this.runTest();
-    return test && test.success;
-  },
   runTest(){
+    if (this.props.passing){
+      return {};
+    }
     let response = _.assign({}, this.getResponse()) || {};
     //cast to string because that's what slate wants
     response.body = typeof response.body === 'object' ? JSON.stringify(response.body) : response.body;
     return slate.checkAssertion(this.props.item, response);
   },
-  renderIcon(){
-    return this.isPassing() ? (
-      <Checkmark btn fill="#303030" style={{top: '0.3rem'}}/>
+  renderIcon(passing){
+    return passing ? (
+      <Checkmark btn fill="bg" style={{top: '0.3rem'}} scheme={this.props.scheme}/>
     ) : (
-      <Close btn fill="#303030" style={{top: '0.3rem'}}/>
+      <Close btn fill="bg" style={{top: '0.3rem'}} scheme={this.props.scheme}/>
     );
   },
   render(){
+    const result = this.runTest();
+    const passing = this.props.passing !== undefined ? this.props.passing : !!(result && result.success);
     return (
-      <div title={this.getTitle()} className={this.getClass()}>
-        {this.renderIcon()}
-        <ScreenReaderOnly>{this.runTest().error}</ScreenReaderOnly>
+      <div title={this.getTitle(passing)} className={this.getClass(passing)}>
+        {this.renderIcon(passing)}
+        <ScreenReaderOnly>{result.error}</ScreenReaderOnly>
     </div>
     );
   }
 });
 
-export default AssertionCounter;
+const mapStateToProps = (state) => ({
+  scheme: state.app.scheme
+});
+
+export default connect(mapStateToProps)(AssertionCounter);

@@ -8,6 +8,7 @@ import {Heading} from '../type';
 import AssertionMetric from './AssertionMetric';
 import NotificationItemList from './NotificationItemList';
 import StateGraph from './StateGraph';
+import Feed from './Feed';
 
 const ViewCloudwatch = React.createClass({
   propTypes: {
@@ -51,6 +52,9 @@ const ViewCloudwatch = React.createClass({
           {this.renderTarget()}
           <Padding b={2}>
             <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
+            <Padding t={3}>
+              <Feed id={check.id} renderAsInclude check={check}/>
+            </Padding>
           </Padding>
           <Padding b={1}>
             <Heading level={3}>Assertions</Heading>

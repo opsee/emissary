@@ -77,3 +77,7 @@
 .textSecondary.light, .textSecondary.light:hover, .textSecondary.light:focus, .textSecondary.light:active, .textSecondary.light:visited{
   color: var(--lightColorText2);
 }
+
+.muted, .muted:hover, .muted:focus, .muted:active, .muted:visited{
+  color: var(--colorGray5);
+}

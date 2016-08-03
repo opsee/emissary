@@ -4,6 +4,7 @@ export default {
   checkDefaultPort: null,
   checkDefaultProtocol: 'http',
   checkDefaultVerb: 'GET',
+  checkActivityStartHours: 72,
   cookieDomain: 'opsee.com',
   defaultBastionRegion: null,
   ghosting: false,

@@ -17,11 +17,13 @@ const StatusHandler = React.createClass({
     noFallback: PropTypes.bool,
     onDismiss: PropTypes.func,
     history: PropTypes.array,
-    waitingText: PropTypes.string
+    waitingText: PropTypes.string,
+    persistent: PropTypes.bool
   },
   getDefaultProps() {
     return {
-      history: []
+      history: [],
+      persistent: false
     };
   },
   getInitialState(){
@@ -78,7 +80,7 @@ const StatusHandler = React.createClass({
     if (this.state.dismissed){
       return null;
     }
-    if (this.props.status === 'pending' && this.state.attempts < 1){
+    if (this.props.status === 'pending' && (this.state.attempts < 1 || this.props.persistent)){
       if (this.props.waitingText){
         return (
           <div>
