@@ -6,7 +6,7 @@ import cx from 'classnames';
 
 import LogoColor from './LogoColor';
 import SearchBox from './SearchBox.jsx';
-import {Person, Checks, Help, Cloud, Login} from '../icons';
+import {Person, Checks, Feed, Help, Cloud, Login} from '../icons';
 import {Col, Grid, Row} from '../layout';
 import style from './header.css';
 
@@ -87,7 +87,7 @@ const Header = React.createClass({
        </li>
        <li>
          <Link to="/events" className={style.navbarLink} activeClassName="active">
-           <Cloud nav/>&nbsp;
+           <Feed nav/>&nbsp;
            <span className={style.navbarTitle}>Events</span>
          </Link>
        </li>
