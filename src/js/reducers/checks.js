@@ -50,7 +50,7 @@ export const statics = {
         });
       }
     }
-    const newData = _.assign({}, data, result.getFormattedData(data, true), {
+    const newData = _.assign({}, data, result.getFormattedData(data, state), {
       selected: !!state.checks.find(check => {
         return (check.get('id') === data.id) && (check.get('selected'));
       }),

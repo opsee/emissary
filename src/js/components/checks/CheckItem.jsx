@@ -26,10 +26,10 @@ const CheckItem = React.createClass({
   shouldComponentUpdate(nextProps) {
     return !is(this.props.item, nextProps.item);
   },
-  getInfoText(){
-    if (this.props.item.get('total')){
-      const passing = this.props.item.get('passing');
-      const failing = this.props.item.get('total') - passing;
+  getInfoText(item){
+    if (item.total){
+      const passing = item.passing;
+      const failing = item.total - passing;
       return (
         <span>
           <span title={`${passing} instance${passing === 1 ? '' : 's'} passing`}>
@@ -38,6 +38,10 @@ const CheckItem = React.createClass({
           &nbsp;&nbsp;
           <span title={`${failing} instance${failing === 1 ? '' : 's'} failing`}>
             <ListClose inline fill="textSecondary"/>{failing}
+          </span>
+          &nbsp;&nbsp;
+          <span>
+            passing: {item.stats.passing + item.stats.warning}
           </span>
         </span>
       );
@@ -57,11 +61,12 @@ const CheckItem = React.createClass({
     this.props.appActions.closeContextMenu();
   },
   render(){
-    if (this.props.item.get('name')){
+    const item = this.props.item.toJS();
+    if (item.name){
       return (
-        <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: this.props.item.get('name')}} onClick={this.props.onClick} item={this.props.item} {...this.getSelectable()}>
-          <div key="line1">{this.props.item.get('name')}</div>
-          <div key="line2">{this.getInfoText()}</div>
+        <ListItem type="check" link={`/check/${this.props.item.get('id')}`} params={{name: item.name}} onClick={this.props.onClick} item={this.props.item} {...this.getSelectable()}>
+          <div key="line1">{item.name}</div>
+          <div key="line2">{this.getInfoText(item)}</div>
         </ListItem>
       );
     }

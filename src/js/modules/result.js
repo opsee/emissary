@@ -1,6 +1,7 @@
 import {List, Record, Map} from 'immutable';
 import _ from 'lodash';
 import moment from 'moment';
+import checkStats from './checkStats';
 
 const OuterResponse = Record({
   passing: undefined,
@@ -46,7 +47,7 @@ function resultFromJS(data){
 }
 
 export default {
-  getFormattedData(data){
+  getFormattedData(data, state){
     let obj = {
       passing: undefined,
       total: undefined,
@@ -56,14 +57,21 @@ export default {
     if (obj.results && obj.results.size && obj.results.get(0)){
       let boolArray = _.chain(obj.results.toJS()).map('responses').flatten().map('passing').value();
       const passing = _.compact(boolArray);
-      obj.passing = passing.length;
-      obj.total = boolArray.length;
-      obj.health = Math.floor((passing.length / boolArray.length) * 100);
-      obj.state = obj.health === 100 ? 'passing' : 'failing';
+      const health = Math.floor((passing.length / boolArray.length) * 100);
+      obj = _.assign(obj, {
+        passing: passing.length,
+        total: boolArray.length,
+        health,
+        state: health === 100 ? 'passing' : 'failing'
+      })
       const d = moment.unix(obj.results.toJS()[0].time).toDate();
       if (_.isDate(d)){
         obj.lastChecked = d;
       }
+    }
+    if (data.state_transitions){
+      const stats = _.assign(checkStats(data.state_transitions, obj.state), {period: state.startHours});
+      obj = _.assign(obj, {stats});
     }
     return obj;
   }

@@ -1,4 +1,5 @@
 import config from './config';
+import checkStats from './checkStats';
 import bastions from './bastions';
 import flag from './flag';
 import getCheckTypes from './getCheckTypes';
@@ -15,6 +16,7 @@ import yeller from './yeller';
 
 export {
   config,
+  checkStats,
   bastions,
   flag,
   getCheckTypes,

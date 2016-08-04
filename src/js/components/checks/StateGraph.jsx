@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import style from './stateGraph.css';
 import {Color, Heading} from '../type';
+import {checkStats} from '../../modules';
 import {Padding} from '../layout';
 
 const StateGraph = React.createClass({
@@ -109,12 +110,7 @@ const StateGraph = React.createClass({
     return `Check was ${status}`;
   },
   getStats(){
-    const data = this.getData();
-    return {
-      passing: _.chain(data).filter({to: 'ok'}).map('percent').sum().invoke('toFixed', 2).value(),
-      failing: _.chain(data).filter({to: 'fail'}).map('percent').sum().invoke('toFixed', 2).value(),
-      warning: _.chain(data).filter(a => a.to.match('wait|warn')).map('percent').sum().invoke('toFixed', 2).value()
-    };
+    return checkStats(this.getData());
   },
   getLast(){
     const hours = this.props.redux.checks.startHours;
@@ -131,13 +127,13 @@ const StateGraph = React.createClass({
         <Heading level={3}>Activity - Last {this.getLast()}</Heading>
         <Padding b={1} className={cx(style.stats, 'display-flex', 'flex-wrap')}>
           <div>
-            <Color c="success"><strong>Passing:&nbsp;</strong></Color>{stats.passing}%&nbsp;&nbsp;
+            <Color c="success"><strong>Passing:&nbsp;</strong></Color>{stats.passing.toFixed(2)}%&nbsp;&nbsp;
           </div>
           <div>
-            <Color c="danger"><strong>Failing:&nbsp;</strong></Color>{stats.failing}%&nbsp;&nbsp;
+            <Color c="danger"><strong>Failing:&nbsp;</strong></Color>{stats.failing.toFixed(2)}%&nbsp;&nbsp;
           </div>
           <div>
-            <Color c="warning"><strong>Warning:&nbsp;</strong></Color>{stats.warning}%
+            <Color c="warning"><strong>Warning:&nbsp;</strong></Color>{stats.warning.toFixed(2)}%
           </div>
         </Padding>
         <div className={cx(style.wrapper, style[this.props.scheme])}>

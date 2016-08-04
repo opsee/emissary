@@ -192,7 +192,13 @@ export const Check = Record({
     metrics: new List()
   }),
   metrics: new List(),
-  state_transitions: new List()
+  state_transitions: new List(),
+  stats: new Map({
+    period: undefined,
+    passing: undefined,
+    failing: undefined,
+    warning: undefined
+  })
 });
 
 export const CheckEvent = Record({
