@@ -178,8 +178,8 @@ export default handleActions({
         startHours
       });
     },
-    throw(state){
-      yeller.reportAction(state);
+    throw(state, action){
+      yeller.reportAction(state, action);
       return _.assign({}, state, {
         single: new Check(),
         responsesFormatted: []
