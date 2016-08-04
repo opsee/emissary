@@ -11,6 +11,7 @@ import CheckResponsePaginate from './CheckResponsePaginate';
 import NotificationItemList from './NotificationItemList';
 import HTTPRequestItem from './HTTPRequestItem';
 import StateGraph from './StateGraph';
+import Feed from './Feed';
 import {MetricGraph} from '../global';
 import {flag, regions} from '../../modules';
 import {Button} from '../forms';
@@ -22,7 +23,20 @@ const ViewHTTP = React.createClass({
       checks: PropTypes.shape({
         responsesFormatted: PropTypes.array
       })
-    })
+    }),
+    sections: PropTypes.arrayOf(PropTypes.string),
+    historical: PropTypes.bool
+  },
+  getDefaultProps() {
+    return {
+      sections: [
+        'rtt',
+        'notifications',
+        'assertions',
+        'activity'
+      ],
+      historical: false
+    };
   },
   getInitialState() {
     return {
@@ -67,26 +81,28 @@ const ViewHTTP = React.createClass({
     .reverse()
     .value();
   },
+  isSection(str){
+    return _.includes(this.props.sections, str);
+  },
   handleRttClick(id){
     this.setState({
       rttRegion: id
     });
   },
-  renderNotifications(){
-    let notifs = this.props.check.get('notifications');
-    notifs = notifs.toJS ? notifs.toJS() : notifs;
-    if (_.find(this.props.check.toJS().tags, () => 'complete')){
+  renderNotifications(check){
+    const notifs = check.notifications || [];
+    if (_.find(check.tags, () => 'complete') && this.isSection('notifications')){
       return (
         <Padding b={1}>
-          <Heading level={3}>Notifications</Heading>
+          <Heading level={3}>Notifications{this.props.historical && <span>&nbsp;(historical)</span>}</Heading>
           <NotificationItemList notifications={notifs} />
         </Padding>
       );
     }
     return null;
   },
-  renderTarget(){
-    const target = _.get(this.props.check.toJS(), 'target') || {};
+  renderTarget(check){
+    const target = _.get(check, 'target') || {};
     if (target && (target.type === 'host' || target.type === 'external_host')){
       return null;
     }
@@ -106,8 +122,8 @@ const ViewHTTP = React.createClass({
       </Padding>
     );
   },
-  renderHeading(){
-    const targetType = _.get(this.props.check.toJS(), 'target.type');
+  renderHeading(check){
+    const targetType = _.get(check, 'target.type');
     let text = 'HTTP Request';
     if (targetType === 'host') {
       text = 'Internal HTTP Request';
@@ -118,9 +134,22 @@ const ViewHTTP = React.createClass({
       <Heading level={3}>{text}</Heading>
     );
   },
+  renderStateGraph(check){
+    if (this.isSection('activity')){
+      return (
+        <Padding b={2}>
+          <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
+          <Padding t={3}>
+            <Feed id={check.id} renderAsInclude check={check}/>
+          </Padding>
+        </Padding>
+      );
+    }
+    return null;
+  },
   renderRTT(check){
-    if (flag('graph-rtt')){
-      const assertion = this.getRTTAssertion();
+    if (flag('graph-rtt') && this.isSection('rtt')){
+      const assertion = this.getRTTAssertion(check);
       const data = this.getRTTData(check);
       return (
         <Padding b={2}>
@@ -134,7 +163,7 @@ const ViewHTTP = React.createClass({
               );
             })}
           </Padding>
-          <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion} status="success"/>
+          <MetricGraph metric={{units: 'ms'}} assertion={assertion} data={data} showTooltip={false} aspectRatio={0.3} threshold={!!assertion}/>
         </Padding>
       );
     }
@@ -147,14 +176,12 @@ const ViewHTTP = React.createClass({
     const d = _.chain(check.results).head().get('timestamp').thru(t => typeof t === 'number' ? new Date(t) : new Date()).value();
     return (
       <div>
-        {this.renderTarget()}
+        {this.renderTarget(check)}
         <Padding b={2}>
-          {this.renderHeading()}
+          {this.renderHeading(check)}
           <HTTPRequestItem spec={spec} target={target} />
         </Padding>
-        <Padding b={2}>
-          <StateGraph transitions={this.props.check.state_transitions} current={this.props.check.state}/>
-        </Padding>
+        {this.renderStateGraph(check)}
         <Padding b={1}>
           <Heading level={3}>Assertions</Heading>
           {_.find(check.tags, () => 'complete') && <AssertionItemList assertions={check.assertions}/>}
@@ -163,8 +190,7 @@ const ViewHTTP = React.createClass({
           <CheckResponsePaginate responses={this.getResponses()} date={d}/>
         </Padding>
         {this.renderRTT(check)}
-
-        {this.renderNotifications()}
+        {this.renderNotifications(check)}
       </div>
     );
   }

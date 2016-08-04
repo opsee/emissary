@@ -14,6 +14,7 @@ import CheckList from 'react-proxy?name=checks!exports?exports.default!../checks
 import CheckMultiEditNotifications from 'react-proxy?name=checks!exports?exports.default!../checks/MultiEditNotifications';
 import CheckSingle from 'react-proxy?name=checks!exports?exports.default!../checks/Single';
 import CheckEdit from 'react-proxy?name=checks!exports?exports.default!../checks/Edit';
+import Feed from 'react-proxy?name=checks!exports?exports.default!../checks/Feed';
 
 import DocsBastion from 'react-proxy?name=docsBastion!exports?exports.default!../docs/Bastion';
 import DocsChecks from 'react-proxy?name=docsChecks!exports?exports.default!../docs/Checks.jsx';
@@ -120,7 +121,10 @@ const routes = (
     </Route>
     <Route path="/check/edit/:id" component={auth(CheckEdit)}/>
     <Route path="/check/:id/event" component={auth(CheckEvent)}/>
+    <Route path="/check/:id/event/:state_transition_id" component={auth(CheckEvent)}/>
     <Route path="/check/:id" component={auth(CheckSingle)}/>
+    <Redirect from="/feed" to="/events" />
+    <Route path="/events" component={auth(Feed)}/>
 
     <Route path="/group/security/:id" component={auth(GroupSecurity)}/>
     <Route path="/group/asg/:id" component={auth(GroupAsg)}/>

@@ -15,13 +15,17 @@ const StateGraph = React.createClass({
     tickNumber: PropTypes.number,
     period: PropTypes.number,
     unit: PropTypes.string,
-    scheme: PropTypes.string
+    scheme: PropTypes.string,
+    redux: PropTypes.shape({
+      checks: PropTypes.shape({
+        startHours: PropTypes.number
+      })
+    })
   },
   getDefaultProps() {
     return {
       transitions: [],
-      tickNumber: 6,
-      period: 6,
+      tickNumber: 8,
       unit: 'hours'
     };
   },
@@ -36,7 +40,8 @@ const StateGraph = React.createClass({
     }
   },
   getData(filter){
-    const start = moment().subtract({[this.props.unit]: this.props.period}).valueOf();
+    const period = this.props.redux.checks.startHours;
+    const start = moment().subtract({[this.props.unit]: period}).valueOf();
     const end = Date.now();
     const diff = end - start;
     let {current} = this.props;
@@ -75,8 +80,12 @@ const StateGraph = React.createClass({
     return _.chain(_.rangeRight(divisor))
     .map(num => {
       const time = end - ((num + 1) * unit);
-      const z = this.props.unit;
-      const tick = moment().diff(moment(time), z);
+      let z = this.props.unit;
+      let tick = moment().diff(moment(time), z);
+      if (tick > 24 && z === 'hours'){
+        z = 'days';
+        tick = moment().diff(moment(time), z);
+      }
       return `-${tick}${z.charAt(0)}`;
     })
     .value();
@@ -107,11 +116,19 @@ const StateGraph = React.createClass({
       warning: _.chain(data).filter(a => a.to.match('wait|warn')).map('percent').sum().invoke('toFixed', 2).value()
     };
   },
+  getLast(){
+    const hours = this.props.redux.checks.startHours;
+    if (hours > 72){
+      const days = Math.floor(hours / 24);
+      return `${days} days`;
+    }
+    return `${hours} hours`;
+  },
   render(){
     const stats = this.getStats();
     return (
       <div>
-        <Heading level={3}>Activity - Last {this.props.period} {this.props.unit}</Heading>
+        <Heading level={3}>Activity - Last {this.getLast()}</Heading>
         <Padding b={1} className={cx(style.stats, 'display-flex', 'flex-wrap')}>
           <div>
             <Color c="success"><strong>Passing:&nbsp;</strong></Color>{stats.passing}%&nbsp;&nbsp;
@@ -127,7 +144,7 @@ const StateGraph = React.createClass({
           {
             this.getData(true).map((d, i) => {
               return (
-                <div className={cx(style.item, style[d.to])} style={{width: `calc(${d.percent}% - 2px)`}} title={this.getItemTitle(d)} key={`stat-graph-${i}`}/>
+                <div className={cx(style.item, style[d.to])} style={{width: `calc(${d.percent}% - 0px)`}} title={this.getItemTitle(d)} key={`stat-graph-${i}`}/>
               );
             })
           }
@@ -147,6 +164,7 @@ const StateGraph = React.createClass({
 });
 
 const mapStateToProps = (state) => ({
+  redux: state,
   scheme: state.app.scheme
 });
 

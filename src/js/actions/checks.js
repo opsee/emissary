@@ -23,7 +23,10 @@ import {
   CHECK_CREATE_OR_EDIT
 } from './constants';
 
-export function fetchChecks(state) {
+export function fetchChecks(state, kwargs = {}) {
+  const hours = kwargs.hours || state().checks.startHours || config.checkActivityStartHours;
+  const start = moment().subtract({hours}).valueOf();
+  const end = Date.now().valueOf();
   return request
     .post(`${config.services.compost}`)
     .query({type: 'FETCH_CHECKS'})
@@ -39,6 +42,12 @@ export function fetchChecks(state) {
           }
           response_count
           state
+          state_transitions(start_time: ${start}, end_time: ${end}){
+            from
+            to
+            occurred_at
+            id
+          }
           results {
             bastion_id
             passing
@@ -72,11 +81,13 @@ export function getCheckFromURI(jsonURI) {
   };
 }
 
-export function getCheck(id){
-  const start2 = moment().subtract({hours: 2}).valueOf();
-  const start6 = moment().subtract({hours: 6}).valueOf();
-  const end = Date.now().valueOf();
+export function getCheck(id, transitionId, kwargs = {}){
   return (dispatch, state) => {
+    const hours = kwargs.hours || state().checks.startHours || config.checkActivityStartHours;
+    const start = moment().subtract({hours}).valueOf();
+    const start2 = moment().subtract({hours: 2}).valueOf();
+    const end = Date.now().valueOf();
+    const idArg = transitionId ? `id: "${id}", state_transition_id: ${transitionId}` : `id: "${id}"`;
     dispatch({
       type: GET_CHECK,
       payload: graphPromise('checks', () => {
@@ -86,7 +97,7 @@ export function getCheck(id){
         .set('Authorization', state().user.get('auth'))
         .send({
           query: `{
-            checks (id: "${id}"){
+            checks (${idArg}){
               id
               notifications {
                 value
@@ -175,32 +186,31 @@ export function getCheck(id){
                   value
                 }
               }
-              state_transitions(start_time: ${start6}, end_time: ${end}){
+              state_transitions(start_time: ${start}, end_time: ${end}){
                 from
                 to
                 occurred_at
+                id
               }
             }
           }`
         });
-      }, {id, search: state().search})
+      }, {
+        id,
+        search: state().search,
+        hours: kwargs.hours || state().checks.startHours || config.checkActivityStartHours
+      })
     });
   };
 }
 
-export function getChecks(redirect){
+export function getChecks(kwargs = {}){
   return (dispatch, state) => {
     dispatch({
       type: GET_CHECKS,
       payload: graphPromise('checks', () => {
-        return fetchChecks(state);
-      }, {search: state().search}, () => {
-        if (redirect){
-          setTimeout(() => {
-            dispatch(push('/'));
-          }, 30);
-        }
-      })
+        return fetchChecks(state, kwargs);
+      }, {search: state().search, hours: kwargs.hours || state().checks.startHours || config.checkActivityStartHours})
     });
   };
 }

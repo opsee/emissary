@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import _ from 'lodash';
 
-import {Grid, Row, Col} from '../layout';
+import {Row, Col} from '../layout';
 import AssertionCounter from './AssertionCounter.jsx';
 import relationships from 'slate/src/relationships';
 import types from 'slate/src/types';
@@ -42,19 +42,17 @@ const AssertionItem = React.createClass({
   },
   render(){
     return (
-      <Grid fluid>
-        <Row className="flex-vertical-align">
-          <Col xs={2} sm={1}>
-            <AssertionCounter item={this.props.item} response={this.props.response}/>
-          </Col>
-          <Col xs={10} sm={11}>
-          {this.getKey()}&nbsp;
-          {this.props.item.value ? ` - ${this.getValue()} ` : null}
-          <span className="text-secondary">{this.getRelationship()}&nbsp;</span>
-          <strong>{this.getOperand()}</strong>
-          </Col>
-        </Row>
-      </Grid>
+      <Row className="flex-vertical-align">
+        <Col xs={2} sm={1}>
+          <AssertionCounter item={this.props.item} response={this.props.response}/>
+        </Col>
+        <Col xs={10} sm={11}>
+        {this.getKey()}&nbsp;
+        {this.props.item.value ? ` - ${this.getValue()} ` : null}
+        <span className="text-secondary">{this.getRelationship()}&nbsp;</span>
+        <strong>{this.getOperand()}</strong>
+        </Col>
+      </Row>
     );
   }
 });
