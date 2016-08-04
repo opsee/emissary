@@ -46,7 +46,6 @@ const AppStatus = React.createClass({
   getComponents(){
     return _.chain(this.getData())
     .get('components')
-    .thru(arr => arr || [])
     .filter(component => {
       return typeof _.get(component, 'status') === 'string' && component.status !== 'operational';
     })
@@ -58,7 +57,6 @@ const AppStatus = React.createClass({
   getIncidents(){
     return _.chain(this.getData())
     .get('incidents')
-    .thru(arr => arr || [])
     .sortBy(c => {
       return -1 * Date.parse(c.created_at);
     })
@@ -67,7 +65,6 @@ const AppStatus = React.createClass({
   getMaints(){
     return _.chain(this.getData())
     .get('scheduled_maintenances')
-    .thru(arr => arr || [])
     .sortBy(c => {
       return -1 * Date.parse(c.created_at);
     })

@@ -169,7 +169,7 @@ const CheckEvent = React.createClass({
       );
     }
     return (
-      <StatusHandler status={this.props.redux.asyncActions.getCheck.status}/>
+      <StatusHandler status={this.props.redux.asyncActions.getCheck.status} errorText="Could not load check event. This could be that your check event is too old. Events beyond a certain date are not supported."/>
     );
   },
   render() {

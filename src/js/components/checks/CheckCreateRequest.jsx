@@ -79,10 +79,10 @@ const CheckCreateRequest = React.createClass({
       }
       this.props.envActions.getTaskDefinition(tester);
       if (!check.target.cluster){
-        check.target.cluster = _.chain(check).get('target.id').thru(a => (a || '').split('/')).head().value() || undefined;
+        check.target.cluster = _.chain(check).get('target.id').split('/').head().value();
       }
       if (!check.target.service){
-        check.target.service = _.chain(check).get('target.id').thru(a => (a || '').split('/')).last().value() || undefined;
+        check.target.service = _.chain(check).get('target.id').split('/').last().value();
       }
     }
     return this.props.checkActions.testCheckReset();
@@ -128,10 +128,9 @@ const CheckCreateRequest = React.createClass({
   },
   getContainerPorts(props = this.props, check = this.props.check){
     let item = props.redux.env.taskDefinitions.find(t => {
-      // const id = _.last((check.target.id || '').split('/'));
       const arr = [
         t.get('TaskDefinitionArn') === check.target.TaskDefinition,
-        t.get('id') === _.chain(check.target.id || '').thru(a => a.split('/')).get(2).value()
+        t.get('id') === _.chain(check.target.id).defaultTo('').invoke('split', '/').get(2).value()
       ];
       return _.some(arr);
     }) || new Map();

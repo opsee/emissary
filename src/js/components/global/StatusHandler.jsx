@@ -61,9 +61,11 @@ const StatusHandler = React.createClass({
       let last = _.last(split);
       if (last && last.length){
         string = last;
+      } else {
+        string = undefined;
       }
     }
-    return string || 'Something went wrong.';
+    return string || this.props.errorText || 'Something went wrong.';
   },
   isError(){
     return !!(this.props.status && typeof this.props.status !== 'string');
