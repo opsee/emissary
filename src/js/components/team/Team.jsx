@@ -356,6 +356,11 @@ const Profile = React.createClass({
             <Row>
               <Col xs={12}>
                 <Panel>
+                  <Padding t={1} b={2}>
+                    <Button flat color="danger" onClick={this.props.userActions.logout}>
+                      <Logout inline fill="danger"/> Log Out
+                    </Button>
+                  </Padding>
                   <Heading level={3}>Your Profile</Heading>
                   <Table>
                     <tr>
