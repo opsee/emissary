@@ -46,9 +46,9 @@ const CheckEvent = React.createClass({
     // The JSON containing check notification data to populate the screenshot is
     // uploaded to S3 by the Notificaption service (but any JSON URL would work)
     if (this.state.s3){
-      this.props.actions.getCheckFromURI(this.props.location.query.json);
+      return this.props.actions.getCheckFromURI(this.props.location.query.json);
     }
-    this.props.actions.getCheck(this.props.params.id, this.props.params.state_transition_id);
+    return this.props.actions.getCheck(this.props.params.id, this.props.params.state_transition_id);
   },
   getData() {
     if (this.state.s3){
